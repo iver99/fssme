@@ -1,0 +1,8 @@
+apply plugin: 'java' 
+apply plugin: 'eclipse' 
+ 
+dependencies { 
+    compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
+    compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.1') 
+    compile(group: 'emaas.platform', name: 'registry-client', version: '0.1') 
+} 

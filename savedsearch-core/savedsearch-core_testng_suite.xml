@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="savedsearch-Core" parallel="tests">
+	<test name="savedsearch Model">
+		<classes>
+			<class name="oracle.sysman.emaas.savedsearch.BaseTest" />
+			<class name="oracle.sysman.emaas.savedsearch.CategoryTest" />
+			<class name="oracle.sysman.emaas.savedsearch.FolderManagerTest" />
+			<class name="oracle.sysman.emaas.savedsearch.SearchParamTest" />
+			<class name="oracle.sysman.emaas.savedsearch.SearchTest" />
+			<class name="oracle.sysman.emaas.savedsearch.Cleanup" />
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
