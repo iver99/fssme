@@ -1,0 +1,110 @@
+#
+# Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+#
+#    AUTHOR
+#      chandrashekhar.vaishnav@oracle.com
+#
+#    DESCRIPTION
+#	Specifies intentionally untracked files to ignore with git
+#
+#    NOTES
+#	File is maintained in two parts:
+#		(1) Files/File-pattern to ignore
+#		(2) Directories to ignore
+#	Keep the file in alphabetical order
+#
+
+##############################
+# Files/File-pattern to ignore
+##############################
+*.7z
+*.bak
+*.bz2
+*.bzip
+*.cab
+*.class
+*.deb
+*.dmg
+*.ear
+*.egg
+*.gem
+*.gz
+*.iso
+*.jar
+*.launch
+*.lck
+*.lzma
+*.msi
+*.msm
+*.msp
+*.orig
+*.rar
+*.rej
+*.rpm
+*.swp
+*.tar
+*.tmp
+*.un~
+*.war
+*.xpi
+*.xz
+*.zip
+*~
+*~.nib
+
+.buildpath
+.cproject
+.directory
+.gradle
+.hidden
+.jslint.*
+.loadpath
+.metadata
+.netrwhist
+.svn
+.target
+.texlipse
+
+create_plugin*.log
+DIFFS.txt
+distfiles
+gradle-app.setting
+hs_err_pid*
+local.properties
+make.state
+osp.err
+osp.log
+osp.properties
+OUTPUT.txt
+plugin_validation_report_*.xml
+rcu.log
+Session.vim
+
+########################################
+# Directory/Directory pattern to ignore
+########################################
+.ade_path/
+.data/
+.DS_Store/
+.externalToolBuilders/
+.gradle/
+.hg/
+.hgtags/
+.mtj.tmp/
+.nb-gradle/
+.settings/
+.sonar/
+.svn/
+
+bin/
+build/
+classes/
+CVS/
+deploy/
+dist/
+nbproject/
+test-coverage/
+test-reports/
+tmp/
+work/
+
