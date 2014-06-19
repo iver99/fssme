@@ -3,7 +3,7 @@
   <display-name>savedsearch-ee</display-name>
   <module>
     <web>
-      <web-uri>savedsearch-ws.war</web-uri>
+      <web-uri>savedsearch-web.war</web-uri>
       <context-root>savedsearch</context-root>
     </web>
   </module>

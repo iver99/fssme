@@ -128,7 +128,7 @@ class EmAnalyticsObjectUtil
 
 		// param handling !!
 		List<Parameter> params = category.getParameters();
-		Map<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam> newParams = new HashMap<>();
+		Map<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam> newParams = new HashMap<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam>();
 		for (Parameter param : params) {
 			EmAnalyticsCategoryParam newCatParam = new EmAnalyticsCategoryParam();
 			EmAnalyticsCategoryParamPK newPK = new EmAnalyticsCategoryParamPK();
@@ -245,7 +245,7 @@ class EmAnalyticsObjectUtil
 		List<SearchParameter> params = search.getParameters();
 		// Params handling !!
 		Set<EmAnalyticsSearchParam> existingParams = Collections.synchronizedSet(searchEntity.getEmAnalyticsSearchParams());
-		Map<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam> newParams = new HashMap<>();
+		Map<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam> newParams = new HashMap<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam>();
 		if (params != null) {
 			for (SearchParameter param : params) {
 				EmAnalyticsSearchParam newSearchParam = new EmAnalyticsSearchParam();

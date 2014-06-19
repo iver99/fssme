@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="savedsearch-ee">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="log4j-1.2.17.jar" deploy-path="/lib" handle="module:/classpath/lib//net/slc04wjk/scratch/download/ssf_jars/log4j-1.2.17.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="savedsearch-core.jar" deploy-path="/lib" handle="module:/resource/savedsearch-core/savedsearch-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="registry-client-0.2.jar" deploy-path="/lib" handle="module:/classpath/lib//net/slc04wjk/scratch/download/ssf_jars/registry-client-0.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="registry-lookup-client-0.1.jar" deploy-path="/lib" handle="module:/classpath/lib//net/slc04wjk/scratch/download/ssf_jars/registry-lookup-client-0.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="savedsearch-webutils.jar" deploy-path="/lib" handle="module:/resource/savedsearch-webutils/savedsearch-webutils">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="savedsearch-db.jar" deploy-path="/lib" handle="module:/resource/savedsearch-db/savedsearch-db">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="savedsearch-web.war" deploy-path="/" handle="module:/resource/savedsearch-web/savedsearch-web">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

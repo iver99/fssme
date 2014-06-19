@@ -4,9 +4,9 @@
 	<comment></comment>
 	<projects>
 		<project>savedsearch-core</project>
-		<project>savedsearch-db</project>
-		<project>savedsearch-ws</project>
 		<project>savedsearch-webutils</project>
+		<project>savedsearch-db</project>
+		<project>savedsearch-web</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
