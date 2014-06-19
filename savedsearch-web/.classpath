@@ -23,7 +23,18 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="lib" path="/net/slc03qyl.us.oracle.com/scratch/dpanchal/gradle/caches/modules-2/files-2.1/com.jayway.restassured/json-path/2.3.1/4215c03a7cd44fbbc724870ec773aa45b0b4b71/json-path-2.3.1.jar"/>
-	<classpathentry kind="lib" path="/net/slc03qyl.us.oracle.com/scratch/dpanchal/gradle/caches/modules-2/files-2.1/com.jayway.restassured/rest-assured/2.3.1/a679b8c60563952a07b8e014f3f2f2e60d1b231d/rest-assured-2.3.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/json-path-2.3.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/rest-assured-2.3.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jersey-core-1.17.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/wlfullclient.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jackson-jaxrs-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jackson-mapper-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jackson-xc-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jersey-client-1.17.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jersey-json-1.17.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jersey-multipart-1.17.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jersey-servlet-1.17.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

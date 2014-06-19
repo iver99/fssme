@@ -8,7 +8,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="/home/sdhamdhe/.gradle/caches/modules-2/files-2.1/emaas.platform/registry-client/0.1/512bf213c6d8e546b42e83509c406f08e1667f19/registry-client-0.1.jar"/>
-	<classpathentry kind="lib" path="/home/sdhamdhe/.gradle/caches/modules-2/files-2.1/emaas.platform/registry-lookup-client/0.1/cbbe7e1aa4146bb6dedc141637bb3a7ab3c958fe/registry-lookup-client-0.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/registry-client-0.2.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/registry-lookup-client-0.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/wlfullclient.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

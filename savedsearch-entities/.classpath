@@ -13,12 +13,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/savedsearch-ee"/>
-	<classpathentry kind="lib" path="/home/sdhamdhe/.gradle/caches/modules-2/files-2.1/org.eclipse.persistence/javax.persistence/2.0.5/e28c710137a7e6eba12ba95217c5ea0db5e71b83/javax.persistence-2.0.5.jar"/>
 	<classpathentry kind="src" path=".apt_src">
 		<attributes>
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/sdhamdhe/.gradle/caches/modules-2/files-2.1/org.eclipse.persistence/eclipselink/2.4.2/f3bce3faeb4f9be18a422cb39dcfe654a5b476ad/eclipselink-2.4.2.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/eclipselink-2.4.2.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/javax.persistence-2.0.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
