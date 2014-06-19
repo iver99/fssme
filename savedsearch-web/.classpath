@@ -30,5 +30,7 @@
 	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/rest-assured-2.3.1.jar"/>
 	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/testng-6.8.jar"/>
 	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/wlfullclient.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/savedsearch-core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/savedsearch-webutils"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
