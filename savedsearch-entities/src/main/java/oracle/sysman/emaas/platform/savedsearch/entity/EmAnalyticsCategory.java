@@ -1,28 +1,14 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
+
+import javax.persistence.*;
+
+import org.eclipse.persistence.annotations.PrivateOwned;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.eclipse.persistence.annotations.PrivateOwned;
 
 /**
  * The persistent class for the EM_ANALYTICS_CATEGORY database table.
@@ -90,70 +76,7 @@ public class EmAnalyticsCategory implements Serializable
 
 	public long getCategoryId()
 	{
-		return categoryId;
-	}
-
-	public Date getCreationDate()
-	{
-		return creationDate;
-	}
-
-	public String getDescription()
-	{
-		return description;
-	}
-
-	public String getDescriptionNlsid()
-	{
-		return descriptionNlsid;
-	}
-
-	public String getDescriptionSubsystem()
-	{
-		return descriptionSubsystem;
-	}
-
-	public Set<EmAnalyticsCategoryParam> getEmAnalyticsCategoryParams()
-	{
-		if (emAnalyticsCategoryParams == null) {
-			emAnalyticsCategoryParams = new HashSet<EmAnalyticsCategoryParam>();
-		}
-		return emAnalyticsCategoryParams;
-	}
-
-	public EmAnalyticsFolder getEmAnalyticsFolder()
-	{
-		return emAnalyticsFolder;
-	}
-
-	public Set<EmAnalyticsSearch> getEmAnalyticsSearches()
-	{
-		return emAnalyticsSearches;
-	}
-
-	public String getEmPluginId()
-	{
-		return emPluginId;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public String getNameNlsid()
-	{
-		return nameNlsid;
-	}
-
-	public String getNameSubsystem()
-	{
-		return nameSubsystem;
-	}
-
-	public String getOwner()
-	{
-		return owner;
+		return this.categoryId;
 	}
 
 	public void setCategoryId(long categoryId)
@@ -161,9 +84,19 @@ public class EmAnalyticsCategory implements Serializable
 		this.categoryId = categoryId;
 	}
 
+	public Date getCreationDate()
+	{
+		return this.creationDate;
+	}
+
 	public void setCreationDate(Date creationDate)
 	{
 		this.creationDate = creationDate;
+	}
+
+	public String getDescription()
+	{
+		return this.description;
 	}
 
 	public void setDescription(String description)
@@ -171,9 +104,19 @@ public class EmAnalyticsCategory implements Serializable
 		this.description = description;
 	}
 
+	public String getDescriptionNlsid()
+	{
+		return this.descriptionNlsid;
+	}
+
 	public void setDescriptionNlsid(String descriptionNlsid)
 	{
 		this.descriptionNlsid = descriptionNlsid;
+	}
+
+	public String getDescriptionSubsystem()
+	{
+		return this.descriptionSubsystem;
 	}
 
 	public void setDescriptionSubsystem(String descriptionSubsystem)
@@ -181,19 +124,9 @@ public class EmAnalyticsCategory implements Serializable
 		this.descriptionSubsystem = descriptionSubsystem;
 	}
 
-	public void setEmAnalyticsCategoryParams(Set<EmAnalyticsCategoryParam> emAnalyticsCategoryParams)
+	public String getEmPluginId()
 	{
-		this.emAnalyticsCategoryParams = emAnalyticsCategoryParams;
-	}
-
-	public void setEmAnalyticsFolder(EmAnalyticsFolder emAnalyticsFolder)
-	{
-		this.emAnalyticsFolder = emAnalyticsFolder;
-	}
-
-	public void setEmAnalyticsSearches(Set<EmAnalyticsSearch> emAnalyticsSearches)
-	{
-		this.emAnalyticsSearches = emAnalyticsSearches;
+		return this.emPluginId;
 	}
 
 	public void setEmPluginId(String emPluginId)
@@ -201,9 +134,19 @@ public class EmAnalyticsCategory implements Serializable
 		this.emPluginId = emPluginId;
 	}
 
+	public String getName()
+	{
+		return this.name;
+	}
+
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public String getNameNlsid()
+	{
+		return this.nameNlsid;
 	}
 
 	public void setNameNlsid(String nameNlsid)
@@ -211,14 +154,56 @@ public class EmAnalyticsCategory implements Serializable
 		this.nameNlsid = nameNlsid;
 	}
 
+	public String getNameSubsystem()
+	{
+		return this.nameSubsystem;
+	}
+
 	public void setNameSubsystem(String nameSubsystem)
 	{
 		this.nameSubsystem = nameSubsystem;
 	}
 
+	public String getOwner()
+	{
+		return this.owner;
+	}
+
 	public void setOwner(String owner)
 	{
 		this.owner = owner;
+	}
+
+	public EmAnalyticsFolder getEmAnalyticsFolder()
+	{
+		return this.emAnalyticsFolder;
+	}
+
+	public void setEmAnalyticsFolder(EmAnalyticsFolder emAnalyticsFolder)
+	{
+		this.emAnalyticsFolder = emAnalyticsFolder;
+	}
+
+	public Set<EmAnalyticsCategoryParam> getEmAnalyticsCategoryParams()
+	{
+		if (emAnalyticsCategoryParams == null)
+			emAnalyticsCategoryParams = new HashSet<EmAnalyticsCategoryParam>();
+		return this.emAnalyticsCategoryParams;
+	}
+
+	public void setEmAnalyticsCategoryParams(Set<EmAnalyticsCategoryParam> emAnalyticsCategoryParams)
+	{
+		this.emAnalyticsCategoryParams = emAnalyticsCategoryParams;
+	}
+
+	public Set<EmAnalyticsSearch> getEmAnalyticsSearches()
+	{
+		return this.emAnalyticsSearches;
+	}
+
+	public void setEmAnalyticsSearches(Set<EmAnalyticsSearch> emAnalyticsSearches)
+	{
+		this.emAnalyticsSearches = emAnalyticsSearches;
 	}
 
 }

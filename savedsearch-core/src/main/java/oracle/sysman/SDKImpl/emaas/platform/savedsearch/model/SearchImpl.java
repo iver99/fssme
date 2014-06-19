@@ -12,7 +12,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
 @XmlRootElement
 @XmlType(propOrder = { "id", "name", "description", "guid", "folderId", "categoryId", "owner", "creationDate", "lastModifiedBy",
-		"lastModificationDate", "metadata", "queryStr", "locked", "uiHidden", "parameters" })
+		"lastModificationDate","lastAccessDate", "metadata", "queryStr", "locked", "uiHidden", "parameters" })
 public class SearchImpl extends SearchSummaryImpl implements Search
 {
 

@@ -30,6 +30,145 @@ import org.codehaus.jettison.json.JSONObject;
 public class CategoryAPI
 {
 
+	@DELETE
+	@Path("{id : [0-9]*}")
+	public Response deleteCategory(@PathParam("id") int categoryId)
+	{
+		//Response res=Response.ok().build();
+		int statusCode = 204;
+
+		CategoryManager catMan = CategoryManager.getInstance();
+		try {
+			catMan.deleteCategory(categoryId);
+
+		}
+		catch (EMAnalyticsFwkException e) {
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+		}
+		return Response.status(statusCode).build();
+	}
+
+	@DELETE
+	public Response deleteCategoryByName(@QueryParam("name") String name)
+	{
+
+		int statusCode = 204;
+		if (name == null) {
+			return Response.status(400).entity("please give category name").build();
+		}
+		else if (name.equals("")) {
+			return Response.status(400).entity("please give category name").build();
+		}
+		CategoryManager catMan = CategoryManager.getInstance();
+		try {
+			Category category = catMan.getCategory(name);
+			int categoryId = category.getId();
+			catMan.deleteCategory(categoryId);
+
+		}
+		catch (EMAnalyticsFwkException e) {
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+		}
+		return Response.status(statusCode).build();
+	}
+
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("{id : [0-9]*}")
+	public Response editCategory(JSONObject inputJsonObj, @PathParam("id") int categoryId)
+	{
+		String sMsg = "";
+		int statusCode = 200;
+		CategoryManager catMan = CategoryManager.getInstance();
+		try {
+			Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(categoryId));
+			objCategory = catMan.editCategory(objCategory);
+			sMsg = JSONUtil.ObjectToJSONString(objCategory);
+		}
+		catch (EMAnalyticsFwkException e) {
+			sMsg = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		catch (EMAnalyticsWSException e) {
+			sMsg = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		return Response.status(statusCode).entity(sMsg).build();
+	}
+
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editCategoryByName(JSONObject inputJsonObj, @QueryParam("name") String name)
+	{
+		String sMsg = "";
+		int statusCode = 200;
+		if (name == null) {
+			return Response.status(400).entity("please give category name").build();
+		}
+		else if (name.equals("")) {
+			return Response.status(400).entity("please give category name").build();
+		}
+		CategoryManager catMan = CategoryManager.getInstance();
+		try {
+			Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(name));
+			objCategory = catMan.editCategory(objCategory);
+			sMsg = JSONUtil.ObjectToJSONString(objCategory);
+		}
+		catch (EMAnalyticsFwkException e) {
+			sMsg = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		catch (EMAnalyticsWSException e) {
+			sMsg = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		return Response.status(statusCode).entity(sMsg).build();
+	}
+
+	@GET
+	@Path("/get/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllCategory()
+	{
+		String message = null;
+		int statusCode = 200;
+		JSONArray jsonArray = new JSONArray();
+		Category category;
+		List<Category> catList = new ArrayList<Category>();
+
+		CategoryManager catMan = CategoryManager.getInstance();
+		try {
+
+			catList = catMan.getAllCategories();
+			try {
+				for (int i = 0; i < catList.size(); i++) {
+					category = catList.get(i);
+					try {
+						jsonArray.put(JSONUtil.ObjectToJSONObject(category));
+					}
+					catch (JSONException e) {
+						message = e.getMessage();
+						statusCode = 500;
+						return Response.status(statusCode).entity(message).build();
+					}
+				}
+				message = jsonArray.toString();
+			}
+			catch (EMAnalyticsWSException e) {
+				message = e.getMessage();
+				statusCode = e.getStatusCode();
+				return Response.status(statusCode).entity(message).build();
+			}
+		}
+		catch (EMAnalyticsFwkException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		return Response.status(statusCode).entity(message).build();
+	}
+
 	@GET
 	@Path("{id: [0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -41,6 +180,35 @@ public class CategoryAPI
 		try {
 
 			Category category = catMan.getCategory(categoryId);
+			message = JSONUtil.ObjectToJSONString(category);
+		}
+		catch (EMAnalyticsFwkException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		catch (EMAnalyticsWSException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		return Response.status(statusCode).entity(message).build();
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCategoryByName(@QueryParam("name") String name)
+	{
+		String message = null;
+		int statusCode = 200;
+		if (name == null) {
+			return Response.status(400).entity("please give category name").build();
+		}
+		else if (name.equals("")) {
+			return Response.status(400).entity("please give category name").build();
+		}
+		CategoryManager catMan = CategoryManager.getInstance();
+		try {
+
+			Category category = catMan.getCategory(name);
 			message = JSONUtil.ObjectToJSONString(category);
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -78,126 +246,6 @@ public class CategoryAPI
 			statusCode = e.getStatusCode();
 		}
 		return Response.status(statusCode).entity(sMsg).build();
-	}
-
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("{id : [0-9]*}")
-	public Response editCategory(JSONObject inputJsonObj, @PathParam("id") int categoryId)
-	{
-		String sMsg = "";
-		int statusCode = 200;
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(categoryId));
-			objCategory = catMan.editCategory(objCategory);
-			sMsg = JSONUtil.ObjectToJSONString(objCategory);
-		}
-		catch (EMAnalyticsFwkException e) {
-			sMsg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		catch (EMAnalyticsWSException e) {
-			sMsg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		return Response.status(statusCode).entity(sMsg).build();
-	}
-
-	@DELETE
-	@Path("{id : [0-9]*}")
-	public Response deleteCategory(@PathParam("id") int categoryId)
-	{
-		//Response res=Response.ok().build();
-		int statusCode = 204;
-
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			catMan.deleteCategory(categoryId);
-
-		}
-		catch (EMAnalyticsFwkException e) {
-			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-		}
-		return Response.status(statusCode).build();
-	}
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getCategoryByName(@QueryParam("name") String name)
-	{
-		String message = null;
-		int statusCode = 200;
-		if (name == null)
-			return Response.status(400).entity("please give category name").build();
-		else if (name.equals(""))
-			return Response.status(400).entity("please give category name").build();
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-
-			Category category = catMan.getCategory(name);
-			message = JSONUtil.ObjectToJSONString(category);
-		}
-		catch (EMAnalyticsFwkException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		catch (EMAnalyticsWSException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		return Response.status(statusCode).entity(message).build();
-	}
-
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response editCategoryByName(JSONObject inputJsonObj, @QueryParam("name") String name)
-	{
-		String sMsg = "";
-		int statusCode = 200;
-		if (name == null)
-			return Response.status(400).entity("please give category name").build();
-		else if (name.equals(""))
-			return Response.status(400).entity("please give category name").build();
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(name));
-			objCategory = catMan.editCategory(objCategory);
-			sMsg = JSONUtil.ObjectToJSONString(objCategory);
-		}
-		catch (EMAnalyticsFwkException e) {
-			sMsg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		catch (EMAnalyticsWSException e) {
-			sMsg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		return Response.status(statusCode).entity(sMsg).build();
-	}
-
-	@DELETE
-	public Response deleteCategoryByName(@QueryParam("name") String name)
-	{
-
-		int statusCode = 204;
-		if (name == null)
-			return Response.status(400).entity("please give category name").build();
-		else if (name.equals(""))
-			return Response.status(400).entity("please give category name").build();
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			Category category = catMan.getCategory(name);
-			int categoryId = category.getId();
-			catMan.deleteCategory(categoryId);
-
-		}
-		catch (EMAnalyticsFwkException e) {
-			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-		}
-		return Response.status(statusCode).build();
 	}
 
 	private Category createCategoryObjectForAdd(JSONObject inputJsonObj) throws EMAnalyticsWSException

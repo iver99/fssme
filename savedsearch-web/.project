@@ -3,8 +3,6 @@
 	<name>savedsearch-web</name>
 	<comment></comment>
 	<projects>
-		<project>savedsearch-core</project>
-		<project>savedsearch-webutils</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

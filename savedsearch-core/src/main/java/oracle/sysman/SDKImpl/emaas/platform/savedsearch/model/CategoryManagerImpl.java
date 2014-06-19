@@ -53,6 +53,11 @@ public class CategoryManagerImpl extends CategoryManager
 
 	private static final CategoryManagerImpl _instance = new CategoryManagerImpl();
 
+	public static CategoryManager getInstance()
+	{
+		return _instance;
+	}
+
 	/**
 	 * Private Constructor
 	 */
@@ -61,274 +66,11 @@ public class CategoryManagerImpl extends CategoryManager
 
 	}
 
-	public static CategoryManager getInstance()
-	{
-		return _instance;
-	}
-
-	@Override
-	public List<Category> getAllCategories() throws EMAnalyticsFwkException
-	{
-		List<Category> categories = null;
-		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			EntityManager em = emf.createEntityManager();
-
-			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory").getResultList();
-			for (EmAnalyticsCategory categoriesObj : emcategories) {
-				if (categories == null)
-					categories = new ArrayList<Category>();
-				Category category = createCategoryObject(categoriesObj, null);
-				categories.add(category);
-			}
-
-		}
-		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving all the categories", e);
-				throw new EMAnalyticsFwkException("Error while retrieving all the categories",
-						EMAnalyticsFwkException.ERR_GET_CATEGORIES, null, e);
-			}
-		}
-		return categories;
-	}
-
-	@Override
-	public Category getCategory(String categoryName) throws EMAnalyticsFwkException
-	{
-
-		Category category = null;
-		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			EntityManager em = emf.createEntityManager();
-
-			EmAnalyticsCategory categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
-					.setParameter("categoryName", categoryName).getSingleResult();
-
-			if (categoryObj != null)
-				category = createCategoryObject(categoryObj, null);
-		}
-		catch (Exception e) {
-			_logger.error("Error while getting the category object by Name: " + categoryName, e);
-			e.printStackTrace();
-			throw new EMAnalyticsFwkException("Category object by Name: " + categoryName + " does not exist",
-					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName }, e);
-		}
-		if (category == null) {
-			_logger.error("Category object by name: " + categoryName + " does not exist");
-			throw new EMAnalyticsFwkException("Category object by name: " + categoryName + " does not exist",
-					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName });
-		}
-		return category;
-	}
-
-	@Override
-	public Category getCategory(long categoryId) throws EMAnalyticsFwkException
-	{
-		Category category = null;
-		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			EntityManager em = emf.createEntityManager();
-			EmAnalyticsCategory categoryObj = em.find(EmAnalyticsCategory.class, categoryId);
-
-			if (categoryObj != null)
-				category = createCategoryObject(categoryObj, null);
-		}
-		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while getting the category object by ID: " + categoryId, e);
-				throw new EMAnalyticsFwkException("category object by ID: " + categoryId + " does not exist",
-						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID, new Object[] { categoryId }, e);
-			}
-		}
-		if (category == null) {
-			_logger.error("Category identified by ID: " + categoryId + " does not exist");
-			throw new EMAnalyticsFwkException("Category object by ID: " + categoryId + " does not exist",
-					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, new Object[] { categoryId });
-		}
-		return category;
-	}
-
-	@Override
-	public Category saveCategory(Category category) throws EMAnalyticsFwkException
-	{
-		EntityManager em = null;
-
-		try {
-			EntityManagerFactory emf;
-			emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
-			em.getTransaction().begin();
-			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
-			em.persist(categoryObj);
-			em.getTransaction().commit();
-			return createCategoryObject(categoryObj, null);
-		}
-		catch (EMAnalyticsFwkException eme) {
-			_logger.error("category with name " + category.getName() + " was saved but could not be retrieved back", eme);
-			throw eme;
-		}
-		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("EM_ANALYICS_CATEGORY_U01"))
-				throw new EMAnalyticsFwkException("Category name " + category.getName() + " already exist",
-						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
-			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_CATEGORY_FK1"))
-				throw new EMAnalyticsFwkException("Default folder with id " + category.getDefaultFolderId() + " missing: "
-						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
-			else {
-				_logger.error("Error while saving the category: " + category.getName(), dmlce);
-				throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
-						EMAnalyticsFwkException.ERR_CREATE_CATEGORY, null, dmlce);
-			}
-		}
-		catch (Exception e) {
-			_logger.error("Error while saving the category: " + category.getName(), e);
-			throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
-					EMAnalyticsFwkException.ERR_CREATE_CATEGORY, null, e);
-		}
-		finally {
-			if (em != null)
-				em.close();
-		}
-
-	}
-
-	private Category createCategoryObject(EmAnalyticsCategory category, Category categoryObj) throws Exception
-	{
-		CategoryImpl rtnObj = null;
-		try {
-
-			if (categoryObj != null) {
-				// populate the current object
-				rtnObj = (CategoryImpl) categoryObj;
-			}
-			else {
-				rtnObj = new CategoryImpl();
-			}
-			rtnObj.setId((int) category.getCategoryId());
-			if (category.getEmAnalyticsFolder() != null) {
-				Long id = category.getEmAnalyticsFolder().getFolderId();
-				rtnObj.setDefaultFolderId(id == 0 ? null : (int) id.intValue());
-			}
-			else {
-				rtnObj.setDefaultFolderId(0);
-			}
-			// TODO : Abhinav Handle the internationalization via MGMT_MESSAGES
-			// handling name here
-			String nlsid = category.getNameNlsid();
-			String subsystem = category.getNameSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0)
-				rtnObj.setName(category.getName());
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setName(category.getName());
-			}
-
-			nlsid = category.getDescriptionNlsid();
-			subsystem = category.getDescriptionSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0)
-				rtnObj.setDescription(category.getDescription());
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setDescription(category.getDescription());
-			}
-
-			// handle params
-
-			Set<EmAnalyticsCategoryParam> params = category.getEmAnalyticsCategoryParams();
-			if (params != null && params.size() > 0) {
-				List<Parameter> categoryParams = new ArrayList<Parameter>();
-				for (EmAnalyticsCategoryParam paramObj : params) {
-					Parameter param = new Parameter();
-					param.setName(paramObj.getId().getName());
-					param.setType(ParameterType.STRING);
-					param.setValue(paramObj.getValue());
-					categoryParams.add(param);
-				}
-				rtnObj.setParameters(categoryParams);
-			}
-
-			return rtnObj;
-		}
-		catch (Exception e) {
-			_logger.error("Error while creating the category object", e);
-			throw e;
-		}
-	}
-
 	@Override
 	public Category createNewCategory()
 	{
 
 		return new CategoryImpl();
-	}
-
-	@Override
-	public Category editCategory(Category category) throws EMAnalyticsFwkException
-	{
-		EntityManager em = null;
-		try {
-			EntityManagerFactory emf;
-			emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
-			EmAnalyticsCategory categoryEntity = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
-			em.getTransaction().begin();
-			em.merge(categoryEntity);
-			em.getTransaction().commit();
-			return createCategoryObject(categoryEntity, null);
-		}
-		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Category with name " + category.getName() + " was saved but could not bve retrieved back", eme);
-			throw eme;
-		}
-		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("EM_ANALYICS_CATEGORY_U01"))
-				throw new EMAnalyticsFwkException("Duplicate category name " + category.getName(),
-						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
-			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_CATEGORY_FK1"))
-				throw new EMAnalyticsFwkException("Parent folder with id " + category.getDefaultFolderId() + " missing: "
-						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
-			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while updating the category: " + category.getName(), dmlce);
-				throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
-						EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, dmlce);
-			}
-		}
-		catch (Exception e) {
-			_logger.error("Error while updating the category: " + category.getName(), e);
-			throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
-					EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, e);
-		}
-		finally {
-			if (em != null)
-				em.close();
-		}
 	}
 
 	@Override
@@ -368,8 +110,211 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 		}
 		finally {
-			if (em != null)
+			if (em != null) {
 				em.close();
+			}
+		}
+
+	}
+
+	@Override
+	public Category editCategory(Category category) throws EMAnalyticsFwkException
+	{
+		EntityManager em = null;
+		try {
+			EntityManagerFactory emf;
+			emf = PersistenceManager.getInstance().getEntityManagerFactory();
+			em = emf.createEntityManager();
+			EmAnalyticsCategory categoryEntity = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
+			em.getTransaction().begin();
+			em.merge(categoryEntity);
+			em.getTransaction().commit();
+			return createCategoryObject(categoryEntity, null);
+		}
+		catch (EMAnalyticsFwkException eme) {
+			_logger.error("Category with name " + category.getName() + " was saved but could not bve retrieved back", eme);
+			throw eme;
+		}
+		catch (PersistenceException dmlce) {
+			if (dmlce.getCause().getMessage().contains("EM_ANALYICS_CATEGORY_U01")) {
+				throw new EMAnalyticsFwkException("Duplicate category name " + category.getName(),
+						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
+			}
+			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_CATEGORY_FK1")) {
+				throw new EMAnalyticsFwkException("Parent folder with id " + category.getDefaultFolderId() + " missing: "
+						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
+			}
+			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
+				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
+				throw new EMAnalyticsFwkException(
+						"Error while connecting to data source, please check the data source details: ",
+						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
+			}
+			else {
+				_logger.error("Error while updating the category: " + category.getName(), dmlce);
+				throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
+						EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, dmlce);
+			}
+		}
+		catch (Exception e) {
+			_logger.error("Error while updating the category: " + category.getName(), e);
+			throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
+					EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, e);
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	@Override
+	public List<Category> getAllCategories() throws EMAnalyticsFwkException
+	{
+		List<Category> categories = null;
+		try {
+			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+			EntityManager em = emf.createEntityManager();
+
+			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory").getResultList();
+			for (EmAnalyticsCategory categoriesObj : emcategories) {
+				if (categories == null) {
+					categories = new ArrayList<Category>();
+				}
+				Category category = createCategoryObject(categoriesObj, null);
+				categories.add(category);
+			}
+
+		}
+		catch (Exception e) {
+			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
+				throw new EMAnalyticsFwkException(
+						"Error while connecting to data source, please check the data source details: ",
+						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
+			}
+			else {
+				_logger.error("Error while retrieving all the categories", e);
+				throw new EMAnalyticsFwkException("Error while retrieving all the categories",
+						EMAnalyticsFwkException.ERR_GET_CATEGORIES, null, e);
+			}
+		}
+		return categories;
+	}
+
+	@Override
+	public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+	{
+		Category category = null;
+		try {
+			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+			EntityManager em = emf.createEntityManager();
+			EmAnalyticsCategory categoryObj = em.find(EmAnalyticsCategory.class, categoryId);
+
+			if (categoryObj != null) {
+				category = createCategoryObject(categoryObj, null);
+			}
+		}
+		catch (Exception e) {
+			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
+				throw new EMAnalyticsFwkException(
+						"Error while connecting to data source, please check the data source details: ",
+						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
+			}
+			else {
+				_logger.error("Error while getting the category object by ID: " + categoryId, e);
+				throw new EMAnalyticsFwkException("category object by ID: " + categoryId + " does not exist",
+						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID, new Object[] { categoryId }, e);
+			}
+		}
+		if (category == null) {
+			_logger.error("Category identified by ID: " + categoryId + " does not exist");
+			throw new EMAnalyticsFwkException("Category object by ID: " + categoryId + " does not exist",
+					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, new Object[] { categoryId });
+		}
+		return category;
+	}
+
+	@Override
+	public Category getCategory(String categoryName) throws EMAnalyticsFwkException
+	{
+
+		Category category = null;
+		try {
+			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+			EntityManager em = emf.createEntityManager();
+
+			EmAnalyticsCategory categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
+					.setParameter("categoryName", categoryName).getSingleResult();
+
+			if (categoryObj != null) {
+				category = createCategoryObject(categoryObj, null);
+			}
+		}
+		catch (Exception e) {
+			_logger.error("Error while getting the category object by Name: " + categoryName, e);
+			e.printStackTrace();
+			throw new EMAnalyticsFwkException("Category object by Name: " + categoryName + " does not exist",
+					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName }, e);
+		}
+		if (category == null) {
+			_logger.error("Category object by name: " + categoryName + " does not exist");
+			throw new EMAnalyticsFwkException("Category object by name: " + categoryName + " does not exist",
+					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName });
+		}
+		return category;
+	}
+
+	@Override
+	public Category saveCategory(Category category) throws EMAnalyticsFwkException
+	{
+		EntityManager em = null;
+
+		try {
+			EntityManagerFactory emf;
+			emf = PersistenceManager.getInstance().getEntityManagerFactory();
+			em = emf.createEntityManager();
+			em.getTransaction().begin();
+			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
+			em.persist(categoryObj);
+			em.getTransaction().commit();
+			return createCategoryObject(categoryObj, null);
+		}
+		catch (EMAnalyticsFwkException eme) {
+			_logger.error("category with name " + category.getName() + " was saved but could not be retrieved back", eme);
+			throw eme;
+		}
+		catch (PersistenceException dmlce) {
+			if (dmlce.getCause().getMessage().contains("EM_ANALYICS_CATEGORY_U01")) {
+				throw new EMAnalyticsFwkException("Category name " + category.getName() + " already exist",
+						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
+			}
+			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
+				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
+				throw new EMAnalyticsFwkException(
+						"Error while connecting to data source, please check the data source details: ",
+						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
+			}
+			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_CATEGORY_FK1")) {
+				throw new EMAnalyticsFwkException("Default folder with id " + category.getDefaultFolderId() + " missing: "
+						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
+			}
+			else {
+				_logger.error("Error while saving the category: " + category.getName(), dmlce);
+				throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
+						EMAnalyticsFwkException.ERR_CREATE_CATEGORY, null, dmlce);
+			}
+		}
+		catch (Exception e) {
+			_logger.error("Error while saving the category: " + category.getName(), e);
+			throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_CATEGORY, null, e);
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 
 	}
@@ -426,8 +371,9 @@ public class CategoryManagerImpl extends CategoryManager
 									}
 									else if (obj instanceof Integer) {
 										EmAnalyticsFolder tmpfld = em.find(EmAnalyticsFolder.class, ((Integer) obj).longValue());
-										if (tmpfld != null)
+										if (tmpfld != null) {
 											category.setDefaultFolderId((Integer) obj);
+										}
 										else {
 											importedList.add((ImportCategoryImpl) category);
 											continue;
@@ -450,10 +396,12 @@ public class CategoryManagerImpl extends CategoryManager
 					break;
 				}
 			}
-			if (bCommit)
+			if (bCommit) {
 				em.getTransaction().commit();
-			else
+			}
+			else {
 				em.getTransaction().rollback();
+			}
 		}
 		catch (Exception e) {
 			importedList.clear();
@@ -462,10 +410,78 @@ public class CategoryManagerImpl extends CategoryManager
 			// throw e;
 		}
 		finally {
-			if (em != null)
+			if (em != null) {
 				em.close();
+			}
 		}
 		return importedList;
+	}
+
+	private Category createCategoryObject(EmAnalyticsCategory category, Category categoryObj) throws Exception
+	{
+		CategoryImpl rtnObj = null;
+		try {
+
+			if (categoryObj != null) {
+				// populate the current object
+				rtnObj = (CategoryImpl) categoryObj;
+			}
+			else {
+				rtnObj = new CategoryImpl();
+			}
+			rtnObj.setId((int) category.getCategoryId());
+			if (category.getEmAnalyticsFolder() != null) {
+				Long id = category.getEmAnalyticsFolder().getFolderId();
+				rtnObj.setDefaultFolderId(id == 0 ? null : (int) id.intValue());
+			}
+			else {
+				rtnObj.setDefaultFolderId(0);
+			}
+			// TODO : Abhinav Handle the internationalization via MGMT_MESSAGES
+			// handling name here
+			String nlsid = category.getNameNlsid();
+			String subsystem = category.getNameSubsystem();
+			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
+				rtnObj.setName(category.getName());
+			}
+			else {
+				// here the code should come !! get localized stuff from
+				// MGMT_MESSAGES
+				rtnObj.setName(category.getName());
+			}
+
+			nlsid = category.getDescriptionNlsid();
+			subsystem = category.getDescriptionSubsystem();
+			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
+				rtnObj.setDescription(category.getDescription());
+			}
+			else {
+				// here the code should come !! get localized stuff from
+				// MGMT_MESSAGES
+				rtnObj.setDescription(category.getDescription());
+			}
+
+			// handle params
+
+			Set<EmAnalyticsCategoryParam> params = category.getEmAnalyticsCategoryParams();
+			if (params != null && params.size() > 0) {
+				List<Parameter> categoryParams = new ArrayList<Parameter>();
+				for (EmAnalyticsCategoryParam paramObj : params) {
+					Parameter param = new Parameter();
+					param.setName(paramObj.getId().getName());
+					param.setType(ParameterType.STRING);
+					param.setValue(paramObj.getValue());
+					categoryParams.add(param);
+				}
+				rtnObj.setParameters(categoryParams);
+			}
+
+			return rtnObj;
+		}
+		catch (Exception e) {
+			_logger.error("Error while creating the category object", e);
+			throw e;
+		}
 	}
 
 }

@@ -14,12 +14,12 @@ import org.testng.annotations.Test;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
-public class SavedSearchNavigations
-{
+public class SavedSearchNavigations {
 
 	/**
-	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
-	 * executing test cases
+	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the
+	 * inputs from the testenv.properties file before executing test cases
+	 * 
 	 */
 
 	static String HOSTNAME;
@@ -27,8 +27,7 @@ public class SavedSearchNavigations
 	static String serveruri;
 
 	@BeforeClass
-	public static void setUp()
-	{
+	public static void setUp() {
 		CommonTest ct = new CommonTest();
 		HOSTNAME = ct.getHOSTNAME();
 		portno = ct.getPortno();
@@ -40,11 +39,12 @@ public class SavedSearchNavigations
 	/**
 	 * Check for root search folder
 	 */
-	public void getMainFolder()
-	{
+	public void getMainFolder() {
 		try {
 			System.out.println("This test is to get the root folder details");
-			Response res = given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when().get("/");
+			Response res = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type       :" + jp.get("type[0]"));
@@ -56,8 +56,7 @@ public class SavedSearchNavigations
 			Assert.assertTrue(res.getStatusCode() == 200);
 			System.out.println("------------------------------------------");
 			System.out.println("											");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -66,13 +65,14 @@ public class SavedSearchNavigations
 	/**
 	 * Check for system folders
 	 */
-	public void getallDefaultFolders()
-	{
+	public void getallDefaultFolders() {
 		try {
-			System.out.println("This test is to get all the folders available with details");
+			System.out
+					.println("This test is to get all the folders available with details");
 			int position = -1;
-			Response res = given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/1?type=folder");
+			Response res = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/1?type=folder");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type        :" + jp.get("type[0]"));
@@ -81,14 +81,15 @@ public class SavedSearchNavigations
 			System.out.println("Folder URLs :" + jp.get("link"));
 			List<String> a = new ArrayList<String>();
 			a = jp.get("name");
-
+			
 			for (int i = 0; i < a.size(); i++) {
 				if (a.get(i).equals("ITA_searches")) {
 					position = i;
 					String myvalue = a.get(position);
 					System.out.println("My Search name is:" + myvalue);
 					Assert.assertEquals(a.get(position), "ITA_searches");
-					System.out.println("==GET & Assert operations are succeeded");
+					System.out
+							.println("==GET & Assert operations are succeeded");
 
 				}
 			}
@@ -98,8 +99,7 @@ public class SavedSearchNavigations
 			Assert.assertTrue(res.getStatusCode() == 200);
 			System.out.println("------------------------------------------");
 			System.out.println("											");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

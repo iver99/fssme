@@ -85,4 +85,6 @@ public interface SearchSummary
 	 * @return tags
 	 */
 	public String[] getTags();
+	
+	public Date getLastAccessDate();
 }

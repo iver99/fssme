@@ -133,9 +133,10 @@ public class FolderManagerTest
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
-		String path = objFolder.getPathForFolderId(folderId);
+		String[] path = objFolder.getPathForFolderId(folderId);
 
 		Assert.assertNotNull(path);
+		Assert.assertNotNull(path.length>0);
 
 	}
 

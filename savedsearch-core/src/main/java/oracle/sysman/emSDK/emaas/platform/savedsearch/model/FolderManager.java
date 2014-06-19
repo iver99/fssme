@@ -72,7 +72,7 @@ public abstract class FolderManager
 	 * @return path of the folder from root
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract String getPathForFolderId(long folderId) throws EMAnalyticsFwkException;
+	public abstract String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns a list of sub-folders, <code>null</code> if there are none.
@@ -93,6 +93,6 @@ public abstract class FolderManager
 	 */
 	public abstract void deleteFolder(long folderId) throws EMAnalyticsFwkException;
 
-	public abstract Folder savePath(Folder objFld) throws EMAnalyticsFwkException;
+	public abstract Folder savePath(Folder objFld) throws EMAnalyticsFwkException;  
 
 }

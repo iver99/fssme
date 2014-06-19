@@ -1,5 +1,4 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
-
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -23,23 +22,25 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+
 @XmlRootElement(name = "SearchSet")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType (XmlAccessType.FIELD)
 public class SearchSet
 {
-
-	private List<ImportSearchImpl> search = null;
-
-	public List<ImportSearchImpl> getSearchSet()
-	{
-		if (search == null)
-			search = new ArrayList<ImportSearchImpl>();
-		return search;
-	}
-
-	public void setSearchSet(List<ImportSearchImpl> d)
-	{
-		this.search = d;
-	}
-
+    
+    private List<ImportSearchImpl> search = null;
+ 
+    
+    public List<ImportSearchImpl> getSearchSet() {
+    	if(search==null)
+    		search = new ArrayList<ImportSearchImpl>();
+        return search;
+    }
+ 
+    public void setSearchSet(List<ImportSearchImpl> d) {
+        this.search = d;
+    }
+    
+       
+    
 }

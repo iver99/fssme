@@ -24,21 +24,19 @@ import org.xml.sax.InputSource;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportCategoryImpl;
 
 @XmlRootElement(name = "CategorySet")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class CategorySet
-{
-	private List<ImportCategoryImpl> Category = null;
-
-	public List<ImportCategoryImpl> getCategorySet()
-	{
-		if (Category == null)
-			Category = new ArrayList<ImportCategoryImpl>();
-		return Category;
-	}
-
-	public void setCategorySet(List<ImportCategoryImpl> category)
-	{
-		this.Category = category;
-	}
-
-}
+@XmlAccessorType (XmlAccessType.FIELD)
+public class CategorySet 
+{   
+    private List<ImportCategoryImpl> Category = null;
+ 
+    public List<ImportCategoryImpl> getCategorySet() {
+    	if(Category==null)
+    		Category = new ArrayList<ImportCategoryImpl>();
+        return Category;
+    }
+ 
+    public void setCategorySet(List<ImportCategoryImpl> category) {
+        this.Category = category;
+    }
+    
+   }

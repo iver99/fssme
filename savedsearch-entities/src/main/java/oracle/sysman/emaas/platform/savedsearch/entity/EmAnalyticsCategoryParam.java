@@ -2,12 +2,7 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * The persistent class for the EM_ANALYTICS_CATEGORY_PARAMS database table.
@@ -24,6 +19,9 @@ public class EmAnalyticsCategoryParam implements Serializable
 	@Column(name = "PARAM_VALUE")
 	private String value;
 
+	//@Column(name="NAME")
+	//private String name;
+
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID")
@@ -31,6 +29,56 @@ public class EmAnalyticsCategoryParam implements Serializable
 
 	public EmAnalyticsCategoryParam()
 	{
+	}
+
+	public EmAnalyticsCategoryParamPK getId()
+	{
+		return this.id;
+	}
+
+	public void setId(EmAnalyticsCategoryParamPK id)
+	{
+		this.id = id;
+	}
+
+	public String getValue()
+	{
+		return this.value;
+	}
+
+	public void setValue(String value)
+	{
+		this.value = value;
+	}
+
+	/*public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}*/
+	public EmAnalyticsCategory getEmAnalyticsCategory()
+	{
+		return this.emAnalyticsCategory;
+	}
+
+	public void setEmAnalyticsCategory(EmAnalyticsCategory emAnalyticsCategory)
+	{
+		this.emAnalyticsCategory = emAnalyticsCategory;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -66,56 +114,6 @@ public class EmAnalyticsCategoryParam implements Serializable
 			return false;
 		}
 		return true;
-	}
-
-	/*public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}*/
-	public EmAnalyticsCategory getEmAnalyticsCategory()
-	{
-		return emAnalyticsCategory;
-	}
-
-	public EmAnalyticsCategoryParamPK getId()
-	{
-		return id;
-	}
-
-	public String getValue()
-	{
-		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (id == null ? 0 : id.hashCode());
-		result = prime * result + (value == null ? 0 : value.hashCode());
-		return result;
-	}
-
-	public void setEmAnalyticsCategory(EmAnalyticsCategory emAnalyticsCategory)
-	{
-		this.emAnalyticsCategory = emAnalyticsCategory;
-	}
-
-	public void setId(EmAnalyticsCategoryParamPK id)
-	{
-		this.id = id;
-	}
-
-	public void setValue(String value)
-	{
-		this.value = value;
 	}
 
 }

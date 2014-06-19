@@ -15,70 +15,65 @@ import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class JSONUtil
-{
 
-	public static String ObjectToJSONString(Object object) throws EMAnalyticsWSException
+
+public class JSONUtil {
+
+		
+	public static String ObjectToJSONString(Object object) throws  EMAnalyticsWSException
 	{
 		return ObjectToJSONString(object, null);
 	}
-
 	public static String ObjectToJSONString(Object object, String[] requiredFieldItems) throws EMAnalyticsWSException
-	{
-		try {
-
+	{		
+		try{
+			
 			OutputStream os = new ByteArrayOutputStream();
-			ObjectWriter writer;
+			ObjectWriter writer ;
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.setSerializationInclusion(Inclusion.NON_NULL);
-			if (requiredFieldItems != null) {
-				FilterProvider filters = new SimpleFilterProvider().addFilter("select_prop_by_name",
-						SimpleBeanPropertyFilter.filterOutAllExcept(requiredFieldItems));
-				writer = mapper.writer(filters);
+			if(requiredFieldItems != null)
+			{	
+				FilterProvider filters = new SimpleFilterProvider().addFilter("select_prop_by_name",SimpleBeanPropertyFilter.filterOutAllExcept(requiredFieldItems));  
+			   	writer = mapper.writer(filters);
 			}
-			writer = mapper.writer();
-
+			writer = mapper.writer() ;
+			
 			writer.writeValue(os, object);
-			return os.toString();
+			 return os.toString() ;
+		}catch(Exception e){
+			throw new EMAnalyticsWSException("Error converting to JSON string",EMAnalyticsWSException.JSON_OBJECT_TO_JSON_EXCEPTION,e);
 		}
-		catch (Exception e) {
-			throw new EMAnalyticsWSException("Error converting to JSON string",
-					EMAnalyticsWSException.JSON_OBJECT_TO_JSON_EXCEPTION, e);
-		}
-
+		 
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public static Object JSONToObject(JSONObject inputJsonObj, Class classname) throws EMAnalyticsWSException
-	{
-		try {
-			Object obj = null;
-			ObjectMapper mapper = new ObjectMapper();
-			obj = mapper.readValue(inputJsonObj.toString(), classname);
-			return classname.cast(obj);
-		}
-		catch (Exception e) {
-			throw new EMAnalyticsWSException("error converting JSONObject to Object", EMAnalyticsWSException.JSON_JSON_TO_OBJECT,
-					e);
+	{	
+		try{
+		Object obj=null;
+		ObjectMapper mapper = new ObjectMapper();
+		obj = mapper.readValue(inputJsonObj.toString(), classname);
+		return classname.cast(obj);}
+		catch(Exception e){
+			throw new EMAnalyticsWSException("error converting JSONObject to Object",EMAnalyticsWSException.JSON_JSON_TO_OBJECT,e);
 		}
 	}
 
-	public static JSONObject ObjectToJSONObject(Object object) throws JSONException, EMAnalyticsWSException
+	public static JSONObject ObjectToJSONObject(Object object) throws JSONException,EMAnalyticsWSException
 	{
-		return ObjectToJSONObject(object, null);
-
+		return ObjectToJSONObject(object,null) ;
+		
 	}
-
-	public static JSONObject ObjectToJSONObject(Object object, String[] requiredFiledItems) throws JSONException,
-			EMAnalyticsWSException
+	public static JSONObject ObjectToJSONObject(Object object, String[] requiredFiledItems) throws JSONException,EMAnalyticsWSException
 	{
-
-		return new JSONObject(ObjectToJSONString(object, requiredFiledItems));
+		
+		return new JSONObject(ObjectToJSONString(object,requiredFiledItems) );
 	}
-
-	@JsonFilter("select_prop_by_name")
-	class PropertyFilterMixIn
-	{
-	}
-
+	
+		
+	@JsonFilter("select_prop_by_name")  
+	class PropertyFilterMixIn {} 
+    
+	
 }

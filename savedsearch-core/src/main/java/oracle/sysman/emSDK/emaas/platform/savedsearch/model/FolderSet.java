@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -27,24 +28,23 @@ import org.xml.sax.InputSource;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 
 @XmlRootElement(name = "FolderSet")
-@XmlAccessorType(XmlAccessType.NONE)
+@XmlAccessorType (XmlAccessType.NONE)
 @XmlType(propOrder = {})
+
 public class FolderSet
 {
-
-	private List<FolderImpl> Folder = null;
-
-	@XmlElement(name = "Folder")
-	// @XmlElementWrapper(name = "FolderSet")    
-	public List<FolderImpl> getFolderSet()
-	{
-		if (Folder == null)
-			Folder = new ArrayList<FolderImpl>();
-		return Folder;
-	}
-
-	public void setFolderSet(List<FolderImpl> d)
-	{
-		this.Folder = d;
-	}
-}
+    
+    private List<FolderImpl> Folder = null;
+ 
+    @XmlElement(name = "Folder")
+   // @XmlElementWrapper(name = "FolderSet")    
+    public List<FolderImpl> getFolderSet() {
+    	if(Folder==null)
+    		Folder = new ArrayList<FolderImpl>();
+        return Folder;
+    }
+ 
+    public void setFolderSet(List<FolderImpl> d) {
+        this.Folder = d;
+    }
+    }

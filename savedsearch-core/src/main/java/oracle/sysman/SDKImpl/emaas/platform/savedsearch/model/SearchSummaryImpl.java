@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlTransient;
@@ -22,6 +23,16 @@ public class SearchSummaryImpl implements SearchSummary
 	protected Date creationDate;
 	protected String lastModifiedBy;
 	protected Date lastModificationDate;
+	protected Date lastAccessDate;
+	@Override
+	public Date getLastAccessDate() {
+		return lastAccessDate;
+	}
+
+	public void setLastAccessDate(Date lastAccessDate) {
+		this.lastAccessDate = lastAccessDate;
+	}
+
 	protected String[] tags;
 
 	@Override

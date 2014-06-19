@@ -4,168 +4,165 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 
+
 @XmlRootElement
-@XmlType(propOrder = { "id", "name", "description", "parentId", "creationDate", "lastModificationDate", "owner",
-		"lastModifiedBy", "systemFolder", "uiHidden" })
-public class FolderImpl implements Folder
+@XmlType(propOrder={"id","name","description","parentId","creationDate","lastModificationDate","owner","lastModifiedBy","systemFolder","uiHidden"})
+public class FolderImpl
+    implements Folder
 {
-	protected Integer id;
-	protected String name;
-
-	protected Integer parentId;
-	protected String description;
-
-	protected Date creationDate;
-	protected Date lastModificationDate;
-	protected String owner;
-	protected String lastModifiedBy;
-	protected boolean systemFolder;
-	protected boolean uiHidden;
-
-	//protected String emPluginId;
-
-	@Override
-	public Date getCreationDate()
-	{
-		return creationDate;
-	}
-
-	@Override
-	public String getDescription()
-	{
-		return description;
-	}
-
-	@Override
-	public Integer getId()
-	{
-		return id;
-	}
-
-	@Override
-	public Date getLastModificationDate()
-	{
-		return lastModificationDate;
-	}
-
-	@Override
-	public String getLastModifiedBy()
-	{
-		return lastModifiedBy;
-	}
-
-	@Override
+    protected Integer id;
+    protected String name;
+       
+    protected Integer parentId;
+    protected String description;
+       
+    protected Date creationDate;
+    protected Date lastModificationDate;
+    protected String owner;
+    protected String lastModifiedBy;
+    protected boolean systemFolder;
+    protected boolean uiHidden;
+    
+    //protected String emPluginId;
+   
+    @Override
 	public String getName()
-	{
-		return name;
-	}
+    {
+        return name;
+    }
 
-	@Override
-	public String getOwner()
-	{
-		return owner;
-	}
-
-	@Override
+    @Override
 	public Integer getParentId()
-	{
-		return parentId;
-	}
+    {
+        return parentId;
+    }
 
-	@Override
+    @Override
+	public String getDescription()
+    {
+        return description;
+    }
+
+    @Override
+	public Date getCreationDate()
+    {
+        return creationDate;
+    }
+
+    @Override
+	public Date getLastModificationDate()
+    {
+        return lastModificationDate;
+    }
+
+    @Override
+	public String getOwner()
+    {
+        return owner;
+    }
+
+    @Override
+	public String getLastModifiedBy()
+    {
+        return lastModifiedBy;
+    }
+
+    @Override
 	public boolean isSystemFolder()
-	{
-		return systemFolder;
-	}
+    {
+        return systemFolder;
+    }
 
-	@Override
-	public boolean isUiHidden()
-	{
-		return uiHidden;
-	}
+    @Override
+	public void setName(String name)
+    {
+        this.name = name;
+    }
 
-	/**
-	 * @param creationDate
-	 *            the creationDate to set
-	 */
-	public void setCreationDate(Date creationDate)
-	{
-		this.creationDate = creationDate;
-	}
-
-	@Override
+   
+    @Override
 	public void setDescription(String description)
-	{
-		this.description = description;
-	}
+    {
+        this.description = description;
+    }
+      
+    @Override
+	public Integer getId()
+    {
+        return id;
+    }
+
+    @Override
+	public void setParentId(Integer parentId)
+    {
+        this.parentId=parentId;
+    }
+
+    
+    
+    @Override
+	public void setUiHidden(boolean uiHidden)
+    {
+        this.uiHidden = uiHidden;
+    }
+
+    @Override
+	public boolean isUiHidden()
+    {
+        return uiHidden;
+    }
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
-	public void setId(Integer id)
-	{
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
 	/**
-	 * @param lastModificationDate
-	 *            the lastModificationDate to set
+	 * @param creationDate the creationDate to set
 	 */
-	public void setLastModificationDate(Date lastModificationDate)
-	{
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	/**
+	 * @param lastModificationDate the lastModificationDate to set
+	 */
+	public void setLastModificationDate(Date lastModificationDate) {
 		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**
-	 * @param lastModifiedBy
-	 *            the lastModifiedBy to set
+	 * @param owner the owner to set
 	 */
-	public void setLastModifiedBy(String lastModifiedBy)
-	{
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	@Override
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	/**
-	 * @param owner
-	 *            the owner to set
-	 */
-	public void setOwner(String owner)
-	{
+	public void setOwner(String owner) {
 		this.owner = owner;
 	}
 
-	@Override
-	public void setParentId(Integer parentId)
-	{
-		this.parentId = parentId;
+	/**
+	 * @param lastModifiedBy the lastModifiedBy to set
+	 */
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	/**
-	 * @param systemFolder
-	 *            the systemFolder to set
+	 * @param systemFolder the systemFolder to set
 	 */
-
-	public void setSystemFolder(boolean systemFolder)
-	{
+	
+	public void setSystemFolder(boolean systemFolder) {
 		this.systemFolder = systemFolder;
 	}
 
-	@Override
-	public void setUiHidden(boolean uiHidden)
-	{
-		this.uiHidden = uiHidden;
-	}
-
+	
+	
 }
+
