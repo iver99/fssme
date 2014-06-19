@@ -1,7 +1,7 @@
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 
-war.archiveName "savedsearch-ws.war"
+war.archiveName "savedsearch-web.war"
 
 war {
 	from('src/main/java') { 
