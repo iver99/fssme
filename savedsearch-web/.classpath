@@ -31,5 +31,10 @@
 	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/testng-6.8.jar"/>
 	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/wlfullclient.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/savedsearch-core"/>
+	<classpathentry kind="src" path=".apt_src">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

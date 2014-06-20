@@ -25,5 +25,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/testng-6.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
