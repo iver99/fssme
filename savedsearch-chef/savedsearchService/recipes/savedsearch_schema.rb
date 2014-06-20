@@ -16,7 +16,7 @@
 ruby_block "get database entity" do
   block do
     if node["is_db_lookup"] == "true"
-    node.default["databaseInfos"] = `cat /tmp/databaseLookup.out`
+    node.default["databaseInfos"] = `cat /tmp/savedSearchDatabaseLookup.out`
     databaseInfos =  node["databaseInfos"]
     databaseInfos = databaseInfos.tr("\n","").split(/;\s*/)
     for databaseInfo in databaseInfos

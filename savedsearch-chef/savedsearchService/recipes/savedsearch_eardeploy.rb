@@ -78,7 +78,7 @@ bash "start_server" do
     # switch on -e again
     set -e
     echo "nohup #{node["oracle_home"]}/user_projects/domains/base_domain/startWebLogic.sh" >> /tmp/datasource.log 
-    nohup #{node["oracle_home"]}/user_projects/domains/base_domain/startWebLogic.sh >> /tmp/datasource.log 2>&1 &
+    nohup #{node["oracle_home"]}/user_projects/domains/base_domain/startWebLogic.sh >> /tmp/startWebLogic.log 2>&1 &
 
     nohup_status=$?
     echo "nohup_status=$nohup_status"
@@ -89,7 +89,7 @@ end
 ruby_block "get database entity" do
   block do
     if is_lookup == "true"
-    node.default["databaseInfos"] = `cat /tmp/databaseLookup.out`
+    node.default["databaseInfos"] = `cat /tmp/savedSearchDatabaseLookup.out`
     databaseInfos =  node["databaseInfos"]
     databaseInfos = databaseInfos.tr("\n","").split(/;\s*/)
     for databaseInfo in databaseInfos
