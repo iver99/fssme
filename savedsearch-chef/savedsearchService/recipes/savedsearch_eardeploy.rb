@@ -82,7 +82,37 @@ bash "start_server" do
 
     nohup_status=$?
     echo "nohup_status=$nohup_status"
-    sleep 1m
+    # sleep in seconds
+    export SLEEPTIME=10
+    export START_WLS_TIMEOUT=#{node["start_wls_timeout_insecs"]}
+    if [[ -z "$START_WLS_TIMEOUT" ]]; then
+     START_WLS_TIMEOUT=600
+    fi
+    echo "START_WLS_TIMEOUT=$START_WLS_TIMEOUT"
+    export NO_OF_ITERATIONS=$(( START_WLS_TIMEOUT / SLEEPTIME ))
+    # temporarily switch off -e option
+    set +e
+    started="false"
+    #Loop determining state of WLS
+    COUNTER=0
+    while [  $COUNTER -lt $NO_OF_ITERATIONS ]; do
+      status=`lwp-request -P http://#{node["hostname"]}:7001 | grep "Error 404--Not Found" | wc -l`
+      echo "status=$status"
+      if  [  "$status" -ne 0 ]; then
+        echo "\nWebLogic Server started. "
+        started="true"
+        break
+      else
+        echo "\nWaiting for WebLogic to get started..."
+      fi
+        sleep $SLEEPTIME
+        let COUNTER=COUNTER+1
+    done
+    if [ "$started" != "true" ]; then
+        echo "WebLogic has not started after waiting for $START_WLS_TIMEOUT seconds. Exiting."
+        exit 1
+    fi
+    sleep 30
   EOF
 end
 
