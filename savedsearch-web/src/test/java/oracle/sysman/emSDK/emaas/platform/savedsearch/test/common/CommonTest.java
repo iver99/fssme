@@ -42,7 +42,7 @@ public class CommonTest {
 		serveruri = "http://" + HOSTNAME + ":" + portno;
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = serveruri;
-		RestAssured.basePath = "/emaas/savedsearch/v1";
+		RestAssured.basePath = "/savedsearch/v1";
 		RestAssured.config = config().logConfig(
 				logConfig().enablePrettyPrinting(false));
 
