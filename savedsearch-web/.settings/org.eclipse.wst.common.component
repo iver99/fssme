@@ -3,6 +3,7 @@
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_src"/>
         <property name="context-root" value="savedsearch-web"/>
         <property name="java-output-path" value="/savedsearch-web/build/classes"/>
     </wb-module>

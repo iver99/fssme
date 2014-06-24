@@ -63,7 +63,9 @@ task appServerInit << {
 
 	dependencies 
 	{
-		appServer files("${project.dependenciesDir}/wlfullclient.jar") 
+	        // we are pulling in wlfullclient from "http://artifactory.oraclecorp.com/artifactory/emaas-sandbox-local/" as a temp measure
+          	// once we get right set of JARs figured out - we will remove this
+        	appServer compile(group: 'test', name: 'wlfullclient', version: '2.6')
 	} 
 	if (!project.hasProperty('serverHost')) { 
 		project.ext.serverHost = "$appServerconfig.serverName"; 
@@ -80,7 +82,7 @@ task appServerInit << {
 
 	project.ext.t3URL = "t3://${serverHost}:${adminServerPost}" 
 	
-	ant.propertyfile(file: "../web/testenv.properties") 
+	ant.propertyfile(file: "../savedsearch-web/testenv.properties") 
 	{
 		entry( key:"hostname",  value: "${serverHost}" )
 		entry( key: "port", value: "${appServerconfig.port}")

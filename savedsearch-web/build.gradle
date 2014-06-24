@@ -1,7 +1,7 @@
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 
-war.archiveName "savedsearch-ws.war"
+war.archiveName "savedsearch-web.war"
 
 war {
 	from('src/main/java') { 
@@ -12,7 +12,7 @@ war {
 
 task runQATestSuite(type: Test){
         useTestNG(){
-        dependsOn ':ear:ear', ':ear:appServerRedeploy'
+        dependsOn ':savedsearch-ear:ear', ':savedsearch-ear:appServerRedeploy'
         useDefaultListeners = true
         outputDirectory = file("$buildDir/testngoutput")
         suites file('testngsuite.xml')
