@@ -166,7 +166,13 @@ public class FolderAPI {
 			throws  EMAnalyticsWSException {
 		Folder objFld = FolderManager.getInstance().createNewFolder();		
 		try{
-			objFld.setName(folderObj.getString("name"));
+			String name=folderObj.getString("name");
+			if(name == null)
+				throw new EMAnalyticsWSException("The name key for folder can not be null in the input JSON Object",EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
+			if(name !=null && name.equals(""))
+				throw new EMAnalyticsWSException("The name key for folder can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
+			
+			objFld.setName(name);
 		}catch(JSONException e){
 			throw new EMAnalyticsWSException("The name key for folder is missing in the input JSON Object", EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING, e);
 		}

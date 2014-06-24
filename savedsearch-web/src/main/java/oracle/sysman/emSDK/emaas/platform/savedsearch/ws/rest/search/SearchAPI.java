@@ -149,7 +149,12 @@ public class SearchAPI {
 		Search searchObj = new SearchImpl();
 		// Data population !
 			try{
-			searchObj.setName(json.getString("name"));
+				String name=json.getString("name");
+				if(name == null)
+					throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+				if(name !=null && name.equals(""))
+					throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+				searchObj.setName(name);
 			}
 			catch(JSONException je){
 				throw new EMAnalyticsWSException("The name key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING,je);
@@ -192,7 +197,13 @@ public class SearchAPI {
 			    	if(jsonParam.has("attributes"))
 			    		searchParam.setAttributes(jsonParam.optString("attributes"));
 			    	try{
-			    		searchParam.setName(jsonParam.getString("name"));
+			    		String name=jsonParam.getString("name");
+						if(name == null)
+							throw new EMAnalyticsWSException("The name key for search param can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
+						if(name !=null && name.equals(""))
+							throw new EMAnalyticsWSException("The name key for search param can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
+					
+			    		searchParam.setName(name);
 						}
 					catch(JSONException je){
 						throw new EMAnalyticsWSException("The name key for search parameter is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING,je);
@@ -206,7 +217,7 @@ public class SearchAPI {
 			    	if(type.equals("STRING") | type.equals("CLOB"))
 			    		searchParam.setType(ParameterType.valueOf(type));
 			    	else
-			    		throw new EMAnalyticsWSException("Invalid type please specify either STRING or CLOB", EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_INVALID);
+			    		throw new EMAnalyticsWSException("Invalid param type, please specify either STRING or CLOB", EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_INVALID);
 			    	
 			    	searchParam.setValue(jsonParam.optString("value"));
 			    	searchParamList.add(searchParam);

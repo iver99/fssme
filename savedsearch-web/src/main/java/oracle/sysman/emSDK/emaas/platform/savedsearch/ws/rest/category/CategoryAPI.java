@@ -252,7 +252,13 @@ public class CategoryAPI
 	{
 		Category category = CategoryManager.getInstance().createNewCategory();
 		try {
-			category.setName(inputJsonObj.getString("name"));
+			String name=inputJsonObj.getString("name");
+			if(name == null)
+				throw new EMAnalyticsWSException("The name key for category can not be null in the input JSON Object",EMAnalyticsWSException.JSON_CATEGORY_NAME_MISSING);
+			if(name !=null && name.equals(""))
+				throw new EMAnalyticsWSException("The name key for category can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_CATEGORY_NAME_MISSING);
+			category.setName(name);
+			
 		}
 		catch (JSONException je) {
 			throw new EMAnalyticsWSException("The name key for category is missing in the input JSON Object",
@@ -273,7 +279,13 @@ public class CategoryAPI
 				JSONObject jsonParam = jsonArr.optJSONObject(index);
 
 				try {
-					categoryParam.setName(jsonParam.getString("name"));
+					String name=jsonParam.getString("name");
+					if(name == null)
+						throw new EMAnalyticsWSException("The name key for category param can not be null in the input JSON Object",EMAnalyticsWSException.JSON_CATEGORY_PARAM_NAME_MISSING);
+					if(name !=null && name.equals(""))
+						throw new EMAnalyticsWSException("The name key for category param can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_CATEGORY_PARAM_NAME_MISSING);
+					
+					categoryParam.setName("name");
 				}
 				catch (JSONException je) {
 					throw new EMAnalyticsWSException("The name key for category param is missing in the input JSON Object",

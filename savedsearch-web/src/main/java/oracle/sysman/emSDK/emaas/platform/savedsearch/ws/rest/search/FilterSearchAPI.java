@@ -40,11 +40,11 @@ public class FilterSearchAPI {
 				return Response.status(400).entity("please give either category id or name").build();
 			}
 			else if(catId !=null && catId.equals("") && name !=null && name.equals("") )
-				return Response.status(400).entity("please give either category id or name").build();
+				return Response.status(400).entity("Please give either category Id or name").build();
 			else if(catId ==null && name !=null && name.equals("") )
-				return Response.status(400).entity("please give either category id or name").build();
+				return Response.status(400).entity("Please give either category Id or name").build();
 			else if(name ==null && catId !=null && catId.equals(""))
-				return Response.status(400).entity("please give either category id or name").build();
+				return Response.status(400).entity("Please give either category Id or name").build();
 		
 		
 		try{	
@@ -114,9 +114,9 @@ public class FilterSearchAPI {
 	
 		String message="";
 		if(foldId == null)
-			return Response.status(400).entity("please give folder id").build();
+			return Response.status(400).entity("Please give folder Id").build();
 		else if(foldId !=null &&foldId.equals(""))
-			return Response.status(400).entity("please give folder id").build();
+			return Response.status(400).entity("Please give folder Id").build();
 		
 		
 		try{	
@@ -125,7 +125,7 @@ public class FilterSearchAPI {
 			id=Integer.parseInt(foldId);
 		}
 		catch(NumberFormatException e){
-			return Response.status(404).entity("folder with id: "+foldId +" does not exist").build();
+			return Response.status(400).entity("Folder Id should be a numeric and not alphanumeric").build();
 		}
 		int statusCode=200;
 		JSONArray jsonArray=new JSONArray();
