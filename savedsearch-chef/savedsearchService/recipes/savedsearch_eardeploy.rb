@@ -78,18 +78,48 @@ bash "start_server" do
     # switch on -e again
     set -e
     echo "nohup #{node["oracle_home"]}/user_projects/domains/base_domain/startWebLogic.sh" >> /tmp/datasource.log 
-    nohup #{node["oracle_home"]}/user_projects/domains/base_domain/startWebLogic.sh >> /tmp/datasource.log 2>&1 &
+    nohup #{node["oracle_home"]}/user_projects/domains/base_domain/startWebLogic.sh >> /tmp/startWebLogic.log 2>&1 &
 
     nohup_status=$?
     echo "nohup_status=$nohup_status"
-    sleep 1m
+    # sleep in seconds
+    export SLEEPTIME=10
+    export START_WLS_TIMEOUT=#{node["start_wls_timeout_insecs"]}
+    if [[ -z "$START_WLS_TIMEOUT" ]]; then
+     START_WLS_TIMEOUT=600
+    fi
+    echo "START_WLS_TIMEOUT=$START_WLS_TIMEOUT"
+    export NO_OF_ITERATIONS=$(( START_WLS_TIMEOUT / SLEEPTIME ))
+    # temporarily switch off -e option
+    set +e
+    started="false"
+    #Loop determining state of WLS
+    COUNTER=0
+    while [  $COUNTER -lt $NO_OF_ITERATIONS ]; do
+      status=`lwp-request -P http://#{node["hostname"]}:7001 | grep "Error 404--Not Found" | wc -l`
+      echo "status=$status"
+      if  [  "$status" -ne 0 ]; then
+        echo "\nWebLogic Server started. "
+        started="true"
+        break
+      else
+        echo "\nWaiting for WebLogic to get started..."
+      fi
+        sleep $SLEEPTIME
+        let COUNTER=COUNTER+1
+    done
+    if [ "$started" != "true" ]; then
+        echo "WebLogic has not started after waiting for $START_WLS_TIMEOUT seconds. Exiting."
+        exit 1
+    fi
+    sleep 30
   EOF
 end
 
 ruby_block "get database entity" do
   block do
     if is_lookup == "true"
-    node.default["databaseInfos"] = `cat /tmp/databaseLookup.out`
+    node.default["databaseInfos"] = `cat /tmp/savedSearchDatabaseLookup.out`
     databaseInfos =  node["databaseInfos"]
     databaseInfos = databaseInfos.tr("\n","").split(/;\s*/)
     for databaseInfo in databaseInfos
