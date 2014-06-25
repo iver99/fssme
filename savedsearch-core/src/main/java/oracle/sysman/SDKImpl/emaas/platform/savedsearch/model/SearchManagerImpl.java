@@ -422,8 +422,8 @@ public class SearchManagerImpl extends SearchManager {
 			}
 
 			rtnObj.setId((int) searchObj.getId());
-			if (searchObj.getSearchGuid() != null)
-				rtnObj.setGuid(searchObj.getSearchGuid().toString());
+			//if (searchObj.getSearchGuid() != null)
+				//rtnObj.setGuid(searchObj.getSearchGuid().toString());
 
 			// TODO : Abhinav Handle the internationalization via MGMT_MESSAGES
 			// handling name here
