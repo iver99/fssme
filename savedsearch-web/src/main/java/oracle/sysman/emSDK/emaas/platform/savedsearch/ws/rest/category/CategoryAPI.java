@@ -128,7 +128,7 @@ public class CategoryAPI
 	}
 
 	@GET
-	@Path("/get/all")
+	@Path("/categories")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllCategory()
 	{
