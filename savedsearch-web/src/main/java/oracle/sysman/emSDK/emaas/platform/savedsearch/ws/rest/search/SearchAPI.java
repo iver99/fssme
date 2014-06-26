@@ -14,10 +14,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -40,8 +38,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 public class SearchAPI {
 
 	private static final String FOLDER_PATH="flattenedFolderPath";
-	@Context
-	UriInfo uri;
 	
 	@GET
 	@Path("{id: [0-9]*}")
@@ -65,9 +61,9 @@ public class SearchAPI {
 				 for(String p: pathArray){
 					 jsonPathArray.put(p);
 				 }
-				 jsonObj.put(FOLDER_PATH, jsonPathArray);
+				 jsonObj.put(FOLDER_PATH, jsonPathArray);				 
+				
 			}
-			jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
 			 message=jsonObj.toString();
 		} catch (EMAnalyticsFwkException e) {
 			message=e.getMessage();

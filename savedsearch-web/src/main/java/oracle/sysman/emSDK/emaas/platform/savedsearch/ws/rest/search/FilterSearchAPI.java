@@ -22,54 +22,48 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
-@Path("searches")
+@Path("findsearch")
 public class FilterSearchAPI {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllSearchByCategory(@QueryParam("categoryId") String catId,@QueryParam("categoryName") String name,@QueryParam("folderId") String foldId){
+	@Path("/category")
+	public Response getAllSearchByCategory(@QueryParam("id") String catId,@QueryParam("name") String name){
 		SearchManager searchMan=SearchManager.getInstance();
 		CategoryManager catMan=CategoryManager.getInstance();
 		Search search;
-		int categId=0;
-		int folId=0;
+		int id=0;
 		Category category;
 		String message="";
 		
-			if(catId==null && name== null && foldId == null){
-				return Response.status(400).entity("please give either categoryId,categoryName or folderId").build();
+			if(catId==null && name== null){
+				return Response.status(400).entity("please give either category id or name").build();
 			}
-			else if(catId !=null && catId.equals("") && name !=null && name.equals("") && foldId !=null && foldId.equals(""))
-				return Response.status(400).entity("please give either categoryId,categoryName or folderId").build();
-			else if(catId ==null && foldId ==null && name !=null && name.equals("") )
-				return Response.status(400).entity("please give either categoryId,categoryName or folderId").build();
-			else if(name ==null && foldId == null && catId !=null && catId.equals(""))
-				return Response.status(400).entity("please give either categoryId,categoryName or folderId").build();
-			else if(name ==null && catId == null && foldId !=null && foldId.equals(""))
-				return Response.status(400).entity("please give either categoryId,categoryName or folderId").build();
+			else if(catId !=null && catId.equals("") && name !=null && name.equals("") )
+				return Response.status(400).entity("Please give either category Id or name").build();
+			else if(catId ==null && name !=null && name.equals("") )
+				return Response.status(400).entity("Please give either category Id or name").build();
+			else if(name ==null && catId !=null && catId.equals(""))
+				return Response.status(400).entity("Please give either category Id or name").build();
 		
 		
 		try{	
 			
 			if(catId !=null && !catId.equals(""))
-			categId=Integer.parseInt(catId);
-			if(foldId !=null && !foldId.equals(""))
-				folId=Integer.parseInt(foldId);
+			id=Integer.parseInt(catId);
 		}
 		catch(NumberFormatException e){
-			return Response.status(404).entity("Id should be a numeric and not alphanumeric.").build();
+			return Response.status(404).entity("Category with id: "+catId +" does not exist").build();
 		}
 		int statusCode=200;
 		JSONArray jsonArray=new JSONArray();
 		List<Search> searchList=new ArrayList<Search>();
-		if(folId !=0){
-			return getAllSearchByFolder(folId);
-		}
-		if(categId==0 && name !=null){
+		
+		if(id==0 && name !=null){
 
 			try {
 				category=catMan.getCategory(name);
-				categId=category.getId();
+				id=category.getId();
 			} catch (EMAnalyticsFwkException e) {
 				message=e.getMessage();
 				statusCode=e.getStatusCode();
@@ -78,8 +72,8 @@ public class FilterSearchAPI {
 		}
 		try {
 			//just for checking whether category with given Id exist or not
-			category=catMan.getCategory(categId);
-			searchList=searchMan.getSearchListByCategoryId(categId);
+			category=catMan.getCategory(id);
+			searchList=searchMan.getSearchListByCategoryId(id);
 		} catch (EMAnalyticsFwkException e) {
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
@@ -109,15 +103,17 @@ public class FilterSearchAPI {
 	}
 
 	
-	
-	private Response getAllSearchByFolder(int foldId){
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/folder")
+	public Response getAllSearchByFolder(@QueryParam("id") String foldId){
 		SearchManager searchMan=SearchManager.getInstance();
 		FolderManager foldMan=FolderManager.getInstance();
 		Search search;
-		
+		int id=0;
 	
 		String message="";
-		/*if(foldId == null)
+		if(foldId == null)
 			return Response.status(400).entity("Please give folder Id").build();
 		else if(foldId !=null &&foldId.equals(""))
 			return Response.status(400).entity("Please give folder Id").build();
@@ -130,15 +126,26 @@ public class FilterSearchAPI {
 		}
 		catch(NumberFormatException e){
 			return Response.status(400).entity("Folder Id should be a numeric and not alphanumeric").build();
-		}*/
+		}
 		int statusCode=200;
 		JSONArray jsonArray=new JSONArray();
 		List<Search> searchList=new ArrayList<Search>();
 		
-				try {
-			//just for checking whether folder with given Id exist or not
-			foldMan.getFolder(foldId);
-			searchList=searchMan.getSearchListByFolderId(foldId);
+		/*if(id==0 && name !=null){
+
+			try {
+				folder=foldMan.getCategory(name);
+				id=category.getId();
+			} catch (EMAnalyticsFwkException e) {
+				message=e.getMessage();
+				statusCode=e.getStatusCode();
+				return Response.status(statusCode).entity(message).build();
+			}
+		}*/
+		try {
+			//just for checking whether category with given Id exist or not
+			foldMan.getFolder(id);
+			searchList=searchMan.getSearchListByFolderId(id);
 		} catch (EMAnalyticsFwkException e) {
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
