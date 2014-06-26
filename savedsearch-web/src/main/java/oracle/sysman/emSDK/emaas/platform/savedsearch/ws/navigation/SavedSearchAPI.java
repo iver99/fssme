@@ -100,39 +100,7 @@ public class SavedSearchAPI {
 			}
 
 		}
-		/*if (type.equals(search)) {
-			SearchManager sman = SearchManager.getInstance();
-			Search searchObj = null;
-
-			try {
-				searchObj = sman.getSearch(id);
-			} catch (EMAnalyticsFwkException e) {
-				e.printStackTrace();
-				return Response.status(e.getStatusCode())
-						.entity(e.getMessage()).build();
-			}
-			try {
-				JSONObject jsonObj = JSONUtil.ObjectToJSONObject(searchObj);
-				jsonObj.put("type", search);
-				jsonObj.put("link", uri.getBaseUri() + "" + searchObj.getId()
-						+ "?type=" + search);
-
-				message = jsonObj.toString(1);
-
-			} catch (EMAnalyticsWSException e) {
-				e.printStackTrace();
-				return Response.status(e.getStatusCode())
-						.entity(e.getMessage()).build();
-
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return Response.status(500).entity(e.getMessage()).build();
-			}
-
-		} else {
-			return Response.status(400).entity("Type not supported").build();
-		}*/
-		return Response.status(200).entity(message).build();
+				return Response.status(200).entity(message).build();
 	}
 
 	private String getFolderDetails(long id, String catName, String orderBy)
