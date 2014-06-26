@@ -12,7 +12,7 @@ import com.jayway.restassured.RestAssured;
 
 public class CommonTest {
 
-	private String hostname;
+	private String HOSTNAME;
 	private String portno;
 	private String serveruri;
 
@@ -29,7 +29,7 @@ public class CommonTest {
 			prop.load(input);
 			System.out.println("---------------------------------------------------------------------");
 			System.out.println("The property values - Hostname: "
-					+ prop.getProperty("hostname")+ " and Port: " +prop.getProperty("port"));
+					+ prop.getProperty("Hostname")+ " and Port: " +prop.getProperty("Port"));
 			System.out.println("---------------------------------------------------------------------");
 			System.out.println("											");
 		} catch (IOException e) {
@@ -37,9 +37,9 @@ public class CommonTest {
 			e.printStackTrace();
 		}
 
-		hostname = prop.getProperty("hostname");
-		portno = prop.getProperty("port");
-		serveruri = "http://" + hostname + ":" + portno;
+		HOSTNAME = prop.getProperty("Hostname");
+		portno = prop.getProperty("Port");
+		serveruri = "http://" + HOSTNAME + ":" + portno;
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = serveruri;
 		RestAssured.basePath = "/savedsearch/v1";
@@ -49,7 +49,7 @@ public class CommonTest {
 	}
 
 	public String getHOSTNAME() {
-		return hostname;
+		return HOSTNAME;
 	}
 
 	public String getPortno() {
