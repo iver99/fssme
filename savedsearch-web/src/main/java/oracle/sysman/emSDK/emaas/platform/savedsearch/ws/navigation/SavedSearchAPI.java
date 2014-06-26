@@ -151,6 +151,15 @@ public class SavedSearchAPI {
 				jsonObj.put("id", folderObj.getId());
 				jsonObj.put("name", folderObj.getName());
 				jsonObj.put("type", folder);
+				
+				if (folderObj.getCreationDate()!=null){
+					jsonObj.put("createdOn", folderObj.getCreationDate().getTime());
+				}
+				jsonObj.put("description", folderObj.getDescription());
+				if (folderObj.getLastModificationDate()!=null){
+					jsonObj.put("lastModifiedOn", folderObj.getLastModificationDate().getTime());
+				}
+				
 				StringBuilder linkBuilder = new StringBuilder(uri.getBaseUri()+""+folderObj.getId()+"?type="+folder);
 				if(catName!=null && catName.trim().length()!=0)
 					linkBuilder.append("&category="+URLEncoder.encode(catName,"UTF-8"));
