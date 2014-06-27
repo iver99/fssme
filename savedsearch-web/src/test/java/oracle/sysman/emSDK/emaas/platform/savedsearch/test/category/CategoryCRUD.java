@@ -553,13 +553,13 @@ public class CategoryCRUD {
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when()
-					.get("/findsearch/category?name=invalidCategory&id=9999");
+					.get("/searches?categoryName=invalidCategory");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println(res.asString());
 			Assert.assertEquals(res.asString(),
-					"Category object by ID: 9999 does not exist");
+					"Category object by Name: invalidCategory does not exist");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 
@@ -572,19 +572,44 @@ public class CategoryCRUD {
 	 * searches by category with category name
 	 */
 	@Test
-	public void searchesbyCategory_caseCheck() {
+	public void searchesbyCategory_caseCheck1() {
 		try {
 			System.out
 					.println("This test is to validate the response when the search by category");
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/findsearch/category?name=ita");
+					.everything().when().get("/searches?categoryName=it analytics");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println(res.asString());
 			Assert.assertEquals(res.asString(),
-					"Category object by Name: ita does not exist");
+					"Category object by Name: it analytics does not exist");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * searches by category with category name
+	 */
+	@Test
+	public void searchesbyCategory_caseCheck2() {
+		try {
+			System.out
+					.println("This test is to validate the response when the search by category(query case check)");
+			Response res = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/searches?categoryname=it analytics");
+
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			Assert.assertEquals(res.asString(),
+					"please give either categoryId,categoryName or folderId");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 
@@ -603,7 +628,7 @@ public class CategoryCRUD {
 					.println("Case1:This test is to validate the response and status when the search by category with name & id combinations");
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/findsearch/category?id&name=LA");
+					.everything().when().get("/searches/category?id&name=LA");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
@@ -615,7 +640,7 @@ public class CategoryCRUD {
 			Response res1 = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when()
-					.get("/findsearch/category?id=4321&name=LA");
+					.get("/searches/category?id=4321&name=LA");
 
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 404);
@@ -627,7 +652,7 @@ public class CategoryCRUD {
 			Response res2 = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when()
-					.get("/findsearch/category?id=1&name=LA");
+					.get("/searches/category?id=1&name=LA");
 
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 200);
