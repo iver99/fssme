@@ -7,11 +7,11 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * The persistent class for the EM_ANALYTICS_SEARCH_PARAMS database table.
+ * The persistent class for the EMS_ANALYTICS_SEARCH_PARAMS database table.
  */
 
 @Entity
-@Table(name = "EM_ANALYTICS_SEARCH_PARAMS")
+@Table(name = "EMS_ANALYTICS_SEARCH_PARAMS")
 public class EmAnalyticsSearchParam implements Serializable
 {
 	private static final long serialVersionUID = 1L;
