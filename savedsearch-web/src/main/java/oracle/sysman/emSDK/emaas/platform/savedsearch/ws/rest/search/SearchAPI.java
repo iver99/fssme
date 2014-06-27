@@ -55,8 +55,10 @@ public class SearchAPI {
 			
 		 
 			Search searchObj = sman.getSearch(searchid);
-			jsonObj =JSONUtil.ObjectToJSONObject(searchObj);		
-			
+			jsonObj =JSONUtil.ObjectToJSONObject(searchObj);
+			jsonObj.put("creationDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("creationDate"))));
+			jsonObj.put("lastModificationDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModificationDate"))));
+			jsonObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
 			if(bPath)
 			{  
 				 FolderManager folderMgr = FolderManager.getInstance();	
