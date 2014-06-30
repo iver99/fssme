@@ -6,7 +6,7 @@
 		<project>savedsearch-core</project>
 		<project>savedsearch-webutils</project>
 		<project>savedsearch-db</project>
-		<project>savedsearch-web</project>
+		<project>savedsearch-ws</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

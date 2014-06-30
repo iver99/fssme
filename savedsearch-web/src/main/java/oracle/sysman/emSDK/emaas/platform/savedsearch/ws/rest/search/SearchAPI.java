@@ -56,9 +56,8 @@ public class SearchAPI {
 		 
 			Search searchObj = sman.getSearch(searchid);
 			jsonObj =JSONUtil.ObjectToJSONObject(searchObj);
-			jsonObj.put("creationDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("creationDate"))));
-			jsonObj.put("lastModificationDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModificationDate"))));
-			jsonObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
+			//here convert the date into utc format
+			jsonObj =addHref(jsonObj);
 			if(bPath)
 			{  
 				 FolderManager folderMgr = FolderManager.getInstance();	
@@ -66,11 +65,12 @@ public class SearchAPI {
 				 String[] pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
 				 for(String p: pathArray){
 					 jsonPathArray.put(p);
-				 }
+			 }
+							 
 				 jsonObj.put(FOLDER_PATH, jsonPathArray);
 			}
 			jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
-			 message=jsonObj.toString();
+			message=jsonObj.toString();
 		} catch (EMAnalyticsFwkException e) {
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
@@ -79,11 +79,42 @@ public class SearchAPI {
 			statusCode=e.getStatusCode();
 		} catch (JSONException e) {
 			statusCode=404;
+			message=e.getMessage();
 		}
 		
         return Response.status(statusCode).entity(message).build();
     }
+	private JSONObject addHref(JSONObject jsonObj) throws JSONException{
+		JSONObject rtnObj=new JSONObject();
+		JSONObject jsonCat= new JSONObject();
+		jsonCat.put("id", jsonObj.getInt("categoryId"));
+		jsonCat.put("href",uri.getBaseUri() +"category/" +jsonObj.getInt("categoryId"));
+		JSONObject jsonFold = new JSONObject();
+		jsonFold.put("id", jsonObj.getInt("folderId"));
+		jsonFold.put("href",uri.getBaseUri() +"folder/" +jsonObj.getInt("folderId"));
+		jsonObj.put("createdOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("createdOn"))));
+		jsonObj.put("lastModifiedOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModifiedOn"))));
+		jsonObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
+		rtnObj.put("id", jsonObj.optInt("id"));
+		rtnObj.put("name", jsonObj.optString("name"));
+		if(jsonObj.has("description"))
+			rtnObj.put("description",jsonObj.getString("description"));
+		rtnObj.put("category",jsonCat);
+		rtnObj.put("folder",jsonFold);
+		rtnObj.put("owner", jsonObj.optString("owner"));
+		rtnObj.put("createdOn",jsonObj.optString("createdOn"));
+		rtnObj.put("lastModifiedBy",jsonObj.optString("lastModifiedBy"));
+		rtnObj.put("lastModifiedOn", jsonObj.optString("lastModifiedOn"));
+		rtnObj.put("lastAccessDate", jsonObj.optString("lastAccessDate"));
+		if(jsonObj.has("queryStr"))
+		rtnObj.put("queryStr", jsonObj.getString("queryStr"));
+		if(jsonObj.has("parameters"))
+		rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
 		
+		
+		return rtnObj;
+		
+	}
 	@DELETE
 	@Path("{id: [0-9]*}")
 	public Response deleteSearch(@PathParam("id") long searchId ) {
@@ -108,17 +139,25 @@ public class SearchAPI {
 	 {
 		String message="";
 		int statusCode=201;
+		JSONObject jsonObj;
 		SearchManager sman =SearchManager.getInstance() ;
 		try {
 			Search searchObj = createSearchObjectForAdd(inputJsonObj);
 			Search savedSearch = sman.saveSearch(searchObj);
-			message = JSONUtil.ObjectToJSONString(savedSearch);			 
+			jsonObj=JSONUtil.ObjectToJSONObject(savedSearch);
+			jsonObj=addHref(jsonObj);
+			message=jsonObj.toString();
+			//message = JSONUtil.ObjectToJSONString(savedSearch);			 
 		} catch (EMAnalyticsFwkException e) {
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
 		}catch(EMAnalyticsWSException e){
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
+		} catch (JSONException e) {
+			e.printStackTrace();
+			statusCode=404;
+			message=e.getMessage();
 		}
 		return Response.status(statusCode).entity(message).build() ;
 	}
@@ -131,11 +170,15 @@ public class SearchAPI {
 	{
 		String message=null;
 		int statusCode=200;
+		JSONObject jsonObj;
 		SearchManager sman =SearchManager.getInstance() ;
 		try {
 			Search searchObj = createSearchObjectForEdit(inputJsonObj, sman.getSearch(searchId));
 		    Search savedSearch = sman.editSearch(searchObj);
-			message  = JSONUtil.ObjectToJSONString(savedSearch);
+		    jsonObj=JSONUtil.ObjectToJSONObject(savedSearch);
+			jsonObj=addHref(jsonObj);
+			message=jsonObj.toString();
+			
 		}
 		catch (EMAnalyticsFwkException e) {
 				message=e.getMessage();
@@ -143,6 +186,11 @@ public class SearchAPI {
 		}catch(EMAnalyticsWSException e){
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			statusCode=404;
+			message=e.getMessage();
 		}
 		
 		return Response.status(statusCode).entity(message).build() ;
@@ -186,8 +234,8 @@ public class SearchAPI {
 		    searchObj.setQueryStr(json.optString("queryStr", searchObj.getQueryStr()));
 		    searchObj.setDescription(json.optString("description", searchObj.getDescription() ));
 		    // non-nullable with db defaults !!
-		    searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked() ) ) ) );
-		    searchObj.setUiHidden( Boolean.parseBoolean(json.optString("uiHidden" , Boolean.toString(searchObj.isUiHidden() ) ) ) );
+		    //searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked() ) ) ) );
+		    //searchObj.setUiHidden( Boolean.parseBoolean(json.optString("uiHidden" , Boolean.toString(searchObj.isUiHidden() ) ) ) );
 		    
 		    // Parameters
 		    if(json.has("parameters"))
@@ -254,8 +302,8 @@ public class SearchAPI {
 		    searchObj.setCategoryId(Integer.parseInt(json.optString("categoryId", searchObj.getCategoryId().toString() )));
 		    searchObj.setFolderId(Integer.parseInt(json.optString("folderId" , searchObj.getFolderId().toString() ) ) );
 		        
-		    searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked() ) ) ) );
-		    searchObj.setUiHidden( Boolean.parseBoolean(json.optString("uiHidden" , Boolean.toString(searchObj.isUiHidden() ) ) ) );
+		    //searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked() ) ) ) );
+		    //searchObj.setUiHidden( Boolean.parseBoolean(json.optString("uiHidden" , Boolean.toString(searchObj.isUiHidden() ) ) ) );
 		    
 		    // Nullable properties !
 		    searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));
@@ -304,5 +352,6 @@ public class SearchAPI {
 		
 		
 	}
+	
 }
 

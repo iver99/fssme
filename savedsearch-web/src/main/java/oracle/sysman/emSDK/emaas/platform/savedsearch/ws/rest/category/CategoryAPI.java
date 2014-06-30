@@ -80,6 +80,7 @@ public class CategoryAPI
 	{
 		String sMsg = "";
 		int statusCode = 200;
+		JSONObject jsonObj;
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
 			Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(categoryId));

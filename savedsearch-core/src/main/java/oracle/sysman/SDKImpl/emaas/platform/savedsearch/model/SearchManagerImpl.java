@@ -450,9 +450,9 @@ public class SearchManagerImpl extends SearchManager {
 			}
 
 			rtnObj.setOwner(searchObj.getOwner());
-			rtnObj.setCreationDate(searchObj.getCreationDate());
+			rtnObj.setCreatedOn(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
-			rtnObj.setLastModificationDate(searchObj.getLastModificationDate());
+			rtnObj.setLastModifiedOn(searchObj.getLastModificationDate());
 			rtnObj.setLastAccessDate(searchObj.getAccessDate());
 			if (searchObj.getMetadataClob() != null
 					&& searchObj.getMetadataClob().length() > 0) {
@@ -464,16 +464,16 @@ public class SearchManagerImpl extends SearchManager {
 			}
 
 			rtnObj.setQueryStr(searchObj.getSearchDisplayStr());
-			rtnObj.setLocked(searchObj.getIsLocked().intValue() == 1 ? true
-					: false);
+			//rtnObj.setLocked(searchObj.getIsLocked().intValue() == 1 ? true
+				//	: false);
 			rtnObj.setCategoryId((int) searchObj.getEmAnalyticsCategory()
 					.getCategoryId());
 
 			rtnObj.setFolderId((int) searchObj.getEmAnalyticsFolder()
 					.getFolderId());
 
-			rtnObj.setUiHidden(searchObj.getUiHidden().intValue() == new BigDecimal(
-					0).intValue() ? false : true);
+			//rtnObj.setUiHidden(searchObj.getUiHidden().intValue() == new BigDecimal(
+				//	0).intValue() ? false : true);
 					rtnObj.setLastAccessDate(searchObj.getAccessDate());
 
 			{

@@ -102,7 +102,7 @@ public class CategoryManagerImpl extends CategoryManager
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (e.getCause().getMessage().contains("EMCLAAAS_DEV.EM_ANALYTICS_SEARCH_FK1")) {
+			else if (e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
 				_logger.error("Error while deleting the category" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while deleting the category as it has associated searches",

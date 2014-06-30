@@ -39,12 +39,15 @@ public class FolderAPI {
 	public Response createFolder(JSONObject folderObj) {
 		Folder objFld = null;
 		String msg = "";
+		JSONObject jsonObj;
 		int statusCode=201;
 		try {
 			objFld = getFolderFromJsonForCreate(folderObj);
 			FolderManager mgrFolder = FolderManager.getInstance();
 			objFld = mgrFolder.saveFolder(objFld);
-			msg = JSONUtil.ObjectToJSONString(objFld);
+			jsonObj=JSONUtil.ObjectToJSONObject(objFld);
+			jsonObj = modifyFolder(jsonObj);
+			msg = jsonObj.toString();
 		} catch (EMAnalyticsFwkException e) {
 			msg=e.getMessage();
 			statusCode=e.getStatusCode();
@@ -52,6 +55,11 @@ public class FolderAPI {
 		catch(EMAnalyticsWSException e){
 			msg=e.getMessage();
 			statusCode=e.getStatusCode();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			statusCode=404;
+			msg=e.getMessage();
 		}
 		return Response.status(statusCode).entity(msg).build();
 	}
@@ -81,6 +89,7 @@ public class FolderAPI {
 			statusCode=e.getStatusCode();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
+			msg=e.getMessage();
 			e.printStackTrace();
 		}
 		return Response.status(statusCode).entity(msg).build();
@@ -107,10 +116,13 @@ public class FolderAPI {
 	public Response getFolder(@PathParam("id") long id) {
 		String msg ="";
 		int statusCode=200;
+		JSONObject jsonObj;
 		try {
 			FolderManager mgrFolder = FolderManager.getInstance();
 			Folder tmp = mgrFolder.getFolder(id);
-			msg = JSONUtil.ObjectToJSONString(tmp);
+			jsonObj = JSONUtil.ObjectToJSONObject(tmp);
+			jsonObj = modifyFolder(jsonObj);
+			msg = jsonObj.toString();
 		} catch (EMAnalyticsFwkException  e) {
 			msg = e.getMessage();
 			statusCode=e.getStatusCode();
@@ -118,6 +130,10 @@ public class FolderAPI {
 		catch(EMAnalyticsWSException e){
 			msg=e.getMessage();
 			statusCode=e.getStatusCode();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			statusCode=404;
 		}
 		return Response.status(statusCode).entity(msg).build();
 	}
@@ -130,13 +146,16 @@ public class FolderAPI {
 	public Response editFolder(JSONObject folderObj, @PathParam("id") long id) {
 		Folder objFld = null;
 		String msg = "";
+		JSONObject jsonObj;
 		int statusCode=200;
 		try {
 			FolderManager mgrFolder = FolderManager.getInstance();
 			objFld = getFolderFromJsonForEdit(folderObj,
 					mgrFolder.getFolder(id));
 			objFld = mgrFolder.updateFolder(objFld);
-			msg = JSONUtil.ObjectToJSONString(objFld);
+			jsonObj = JSONUtil.ObjectToJSONObject(objFld);
+			jsonObj = modifyFolder(jsonObj);
+			msg = jsonObj.toString();
 			statusCode=200;
 		}catch (EMAnalyticsFwkException e) {
 				msg=e.getMessage();
@@ -145,6 +164,10 @@ public class FolderAPI {
 		}catch(EMAnalyticsWSException e){
 			msg=e.getMessage();
 			statusCode=e.getStatusCode();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			statusCode=404;
 		}
 		return Response.status(statusCode).entity(msg).build();
 	}
@@ -154,10 +177,13 @@ public class FolderAPI {
 		folder.setName(folderObj.optString("name", folder.getName()));
 		folder.setDescription(folderObj.optString("description",
 				folder.getDescription()));
-		folder.setUiHidden(folderObj.optBoolean("uiHidden", folder.isUiHidden()));
-		if(folderObj.has("parentId") )
-			folder.setParentId(folderObj.optInt("parentId"));
-		
+		//folder.setUiHidden(folderObj.optBoolean("uiHidden", folder.isUiHidden()));
+		int parentId=folderObj.optInt("parentId");
+		if( parentId ==0 )
+			folder.setParentId(1);
+		else
+		folder.setParentId(parentId);
+	
 		return folder;
 	}
 	
@@ -179,10 +205,41 @@ public class FolderAPI {
 		// nullables !!
 		objFld.setDescription(folderObj.optString("description",
 				objFld.getDescription()));
-		objFld.setUiHidden(folderObj.optBoolean("uiHidden", objFld.isUiHidden()));
-		if(folderObj.has("parentId") )
-			objFld.setParentId(folderObj.optInt("parentId"));
+		//objFld.setUiHidden(folderObj.optBoolean("uiHidden", objFld.isUiHidden()));
+		//if(folderObj.has("parentId") ){
+			int parentId=folderObj.optInt("parentId");
+			if( parentId ==0 )
+				objFld.setParentId(1);
+			else
+			objFld.setParentId(parentId);
+		
 		return objFld;
 	}
 
+private JSONObject modifyFolder(JSONObject jsonObj) throws JSONException{
+	JSONObject rtnObj=new JSONObject();
+	jsonObj.put("createdOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("createdOn"))));
+	jsonObj.put("lastModifiedOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModifiedOn"))));
+	rtnObj.put("id", jsonObj.getInt("id"));
+	rtnObj.put("name", jsonObj.optString("name"));
+	if(jsonObj.has("parentId"))
+	{
+		JSONObject jsonFold = new JSONObject();
+		jsonFold.put("id", jsonObj.getInt("parentId"));
+		jsonFold.put("href",uri.getBaseUri() +"folder/" +jsonObj.getInt("parentId"));
+		rtnObj.put("parentFolder", jsonFold);
+	}
+	if(jsonObj.has("description"))
+		rtnObj.put("description",jsonObj.getString("description"));
+	if(jsonObj.has("owner"))
+		rtnObj.put("owner", jsonObj.getString("owner"));
+	rtnObj.put("createdOn",jsonObj.optString("createdOn"));
+	if(jsonObj.has("lastModifiedBy"))
+	rtnObj.put("lastModifiedBy",jsonObj.optString("lastModifiedBy"));
+	rtnObj.put("lastModifiedOn", jsonObj.optString("lastModifiedOn"));
+	rtnObj.put("systemFolder", jsonObj.optBoolean("systemFolder"));
+	rtnObj.put("href",uri.getBaseUri() +"folder/" +jsonObj.getInt("id"));
+	return rtnObj;
+	
+}
 }
