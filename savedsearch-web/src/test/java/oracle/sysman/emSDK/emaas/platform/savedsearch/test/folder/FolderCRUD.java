@@ -11,9 +11,11 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
+
 
 public class FolderCRUD {
 	/**
@@ -34,6 +36,7 @@ public class FolderCRUD {
 		serveruri = ct.getServeruri();
 
 	}
+	
 
 	@Test
 	/**
@@ -132,7 +135,7 @@ public class FolderCRUD {
 			System.out.println("											");
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/3?type=folder");
+					.everything().when().get("/entities?folderId=3");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -161,6 +164,7 @@ public class FolderCRUD {
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when().delete("/folder/" + jp1.get("id"));
 			System.out.println(res2.asString());
+			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 204);
 			System.out.println("------------------------------------------");
 			System.out.println("											");
@@ -282,7 +286,7 @@ public class FolderCRUD {
 					System.out.println("											");
 					System.out.println("Status code is: "
 							+ res1.getStatusCode());
-					System.out.println("											");
+					//System.out.println("											");
 					System.out.println(res1.asString());
 					Assert.assertTrue(res1.getStatusCode() == 204);
 					System.out
@@ -398,10 +402,10 @@ public class FolderCRUD {
 		}
 	}
 
-	@Test
-	/**
+	/*@Test
+	*//**
 	 * Folder Negative Case2:
-	 */
+	 *//*
 	public void folder_noType() {
 		try {
 			System.out.println("Negative Case2 for FOLDER");
@@ -424,7 +428,7 @@ public class FolderCRUD {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	@Test
 	/**
@@ -440,13 +444,13 @@ public class FolderCRUD {
 
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/1?type=me");
+					.everything().when().get("/entities?folderId=me");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
 			System.out.println(res.asString());
-			Assert.assertEquals(res.asString(), "Type not supported");
+			Assert.assertEquals(res.asString(), "Folder Id should be a numeric and not alphanumeric");
 			System.out.println("											");
 
 			System.out.println("------------------------------------------");
@@ -478,7 +482,7 @@ public class FolderCRUD {
 			System.out.println("											");
 			Assert.assertEquals(res.asString(),
 					"The name key for folder is missing in the input JSON Object");
-			System.out.println("											");
+			//System.out.println("											");
 			System.out.println("------------------------------------------");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -528,7 +532,7 @@ public class FolderCRUD {
 			System.out.println("											");
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/99999?type=folder");
+					.everything().when().get("/entities?folderId=99999999999");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -536,7 +540,9 @@ public class FolderCRUD {
 			System.out.println("											");
 			System.out.println(res.asString());
 			Assert.assertEquals(res.asString(),
-					"Folder with the Id 99999 does not exist");
+					"Folder with the Id 99999999999 does not exist");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -563,10 +569,256 @@ public class FolderCRUD {
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 500);
-			Assert.assertEquals(res.asString(),
-					"Folder with id:" + 1 +" is a system folder and cant be deleted");
+			Assert.assertEquals(res.asString(), "Folder with id:" + 1
+					+ " is a system folder and cant be deleted");
 			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	@Test
+	/**
+	 * create a folder and searches in it using post method to verify the functionality of find searches by folderId
+	 */
+	public void searchesByFolderId() {
+		try {
+			System.out
+					.println("POST method is in-progress to create a new folder and then to create searches in it");
+
+			String jsonString1 = "{ \"name\":\"Folder_searches\",\"description\":\"Folder for EMAAS searches\"}";
+			Response res1 = given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString1).when().post("/folder");
+			JsonPath jp1 = res1.jsonPath();
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("FolderName :" + jp1.get("name"));
+			System.out.println("Folder ID  :" + jp1.get("id"));
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out
+					.println("POST method is in-progress to create searches in the folder whose Id is: "
+							+ jp1.get("id"));
+			String jsonString2 = "{\"name\":\"Search_s1\",\"categoryId\":1,\"folderId\":"
+					+ jp1.get("id")
+					+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
+			Response res2 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString2).when().post("/search");
+			JsonPath jp2 = res2.jsonPath();
+
+			System.out.println("Status code is: " + res2.getStatusCode());
+
+			System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 201);
+			System.out.println("											");
+			System.out.println("Search Name :" + jp2.get("name"));
+			System.out.println("Search ID  :" + jp2.get("id"));
+			System.out.println("											");
+			String jsonString3 = "{\"name\":\"Search_s2\",\"categoryId\":2,\"folderId\":"
+					+ jp1.get("id")
+					+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample2\",\"type\":STRING,\"value\":\"my_value\"}]}";
+			Response res3 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString3).when().post("/search");
+			JsonPath jp3 = res3.jsonPath();
+
+			System.out.println("Status code is: " + res3.getStatusCode());
+
+			System.out.println(res3.asString());
+			Assert.assertTrue(res3.getStatusCode() == 201);
+			System.out.println("											");
+			System.out.println("Search Name :" + jp3.get("name"));
+			System.out.println("Search ID  :" + jp3.get("id"));
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out
+					.println("GET method is in-progress to list all the searches in the folderId: "
+							+ jp1.get("id"));
+			Response res4 = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when()
+					.get("/entities?folderId=" + jp1.get("id"));
+			JsonPath jp4 = res4.jsonPath();
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res4.getStatusCode());
+			System.out.println(res4.asString());
+			Assert.assertTrue(res4.getStatusCode() == 200);
+			System.out.println("Searches in folder id: " + jp1.get("id")
+					+ " are -> " + jp4.get("name"));
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out
+					.println("Delete the folder while it has searches in it using DELETE method");
+			System.out.println("											");
+			Response res5 = given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().delete("/folder/" + jp1.get("id"));
+			System.out.println("											");
+			System.out.println("Status code is: " + res5.getStatusCode());
+			System.out.println(res5.asString());
+			Assert.assertTrue(res5.getStatusCode() == 500);
+			Assert.assertEquals(res5.asString(),
+					"folder with id " + jp1.get("id") + " has search child");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("Delete the searches from folderId: "
+					+ jp1.get("id"));
+
+			if (jp4.get("name[0]") == "Search_s2") {
+				Response res6 = RestAssured.given()
+						.contentType(ContentType.JSON)
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+						.everything().when().delete("/search/" + jp3.get("id"));
+				System.out.println("											");
+				System.out.println("Status code is: " + res6.getStatusCode());
+				Assert.assertTrue(res6.getStatusCode() == 204);
+				System.out.println("											");
+				Response res7 = RestAssured.given()
+						.contentType(ContentType.JSON)
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+						.everything().when().delete("/search/" + jp2.get("id"));
+				System.out.println("											");
+				System.out.println("Status code is: " + res7.getStatusCode());
+				Assert.assertTrue(res7.getStatusCode() == 204);
+			} else {
+
+				Response res7 = RestAssured.given()
+						.contentType(ContentType.JSON)
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+						.everything().when().delete("/search/" + jp2.get("id"));
+				System.out.println("											");
+				System.out.println("Status code is: " + res7.getStatusCode());
+				Assert.assertTrue(res7.getStatusCode() == 204);
+				Response res6 = RestAssured.given()
+						.contentType(ContentType.JSON)
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+						.everything().when().delete("/search/" + jp3.get("id"));
+				System.out.println("											");
+				System.out.println("Status code is: " + res6.getStatusCode());
+				Assert.assertTrue(res6.getStatusCode() == 204);
+				System.out.println("											");
+				System.out
+						.println("------------------------------------------");
+			}
+			System.out.println("Delete the folder whose Id is: "
+					+ jp1.get("id"));
+			Response res8 = given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().delete("/folder/" + jp1.get("id"));
+			System.out.println("											");
+			System.out.println("Status code is: " + res8.getStatusCode());
+			//System.out.println(res8.asString());
+			Assert.assertTrue(res8.getStatusCode() == 204);
+			//System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("Delete the folder again whose Id is: "
+					+ jp1.get("id"));
+			Response res9 = given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().delete("/folder/" + jp1.get("id"));
+			System.out.println("											");
+			System.out.println("Status code is: " + res9.getStatusCode());
+			System.out.println(res9.asString());
+			Assert.assertTrue(res9.getStatusCode() == 404);
+			Assert.assertEquals(res9.asString(),
+					"folder with id " + jp1.get("id") + " does not Exist");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	/**
+	 * create a folder and searches in it using post method to verify the functionality of find searches by folderId
+	 */
+	public void searches_ByFoldernameANDbadURLs() {
+		try {
+			System.out
+					.println("Use GET method to get list of the searches by folder Name - verify the status code and response");
+			Response res1 = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/searches?folderId=sravan");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			System.out.println(res1.asString());
+			Assert.assertTrue(res1.getStatusCode() == 404);
+			Assert.assertEquals(res1.asString(), "Id should be a numeric and not alphanumeric.");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out
+					.println("Use GET method to get list of the searches by folder id=null - verify the status code and response");
+			Response res2 = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/searches?folderId=");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.asString(), "please give either categoryId,categoryName or folderId");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out
+					.println("Use GET method to get list of the searches by folder id=Non-Numeric - verify the status code and response");
+			Response res3 = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when()
+					.get("/searches?folderId=Non-Numeric");
+			System.out.println("Status code is: " + res3.getStatusCode());
+			System.out.println(res3.asString());
+			Assert.assertTrue(res3.getStatusCode() == 404);
+			Assert.assertEquals(res3.asString(),
+					"Id should be a numeric and not alphanumeric.");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out
+					.println("Use GET method to get list of the searches by folder incomplete URL - verify the status code and response");
+			Response res4 = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/searches?folderId");
+			System.out.println("Status code is: " + res4.getStatusCode());
+			System.out.println(res4.asString());
+			Assert.assertTrue(res4.getStatusCode() == 400);
+			Assert.assertEquals(res4.asString(), "please give either categoryId,categoryName or folderId");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("Find searches by folder id using wrong methods - verify the status code and the response");
+			Response res5 = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().post("/searches?folderId=1");
+			System.out.println("											");
+			System.out.println("Status code is: " + res5.getStatusCode());
+			Assert.assertTrue(res5.getStatusCode() == 405);
+			System.out.println(res5.asString());
+			Assert.assertEquals(res5.asString(), "Method Not Allowed");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			Response res6 = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().put("/searches?folderId=1");
+			System.out.println("											");
+			System.out.println("Status code is: " + res6.getStatusCode());
+			Assert.assertTrue(res6.getStatusCode() == 405);
+			System.out.println(res6.asString());
+			Assert.assertEquals(res6.asString(), "Method Not Allowed");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			Response res7 = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().delete("/searches?folderId=1");
+			System.out.println("											");
+			System.out.println("Status code is: " + res7.getStatusCode());
+			Assert.assertTrue(res7.getStatusCode() == 405);
+			System.out.println(res7.asString());
+			Assert.assertEquals(res7.asString(), "Method Not Allowed");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

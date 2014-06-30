@@ -37,7 +37,7 @@ public class SearchesCRUD {
 	/**
 	 * Search Negative Case1:
 	 */
-	public void search_badURLs() {
+	public void search_badURLsANDMethods() {
 		try {
 			System.out.println("Negative Case1 for SEARCH");
 			System.out.println("											");
@@ -89,6 +89,32 @@ public class SearchesCRUD {
 			Assert.assertTrue(res3.getStatusCode() == 405);
 			System.out.println(res3.asString());
 			Assert.assertEquals(res3.asString(), "Method Not Allowed");
+			System.out.println("											");
+			String jsonString4 = "";
+			Response res4 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString4).when().post("/search");
+			System.out.println("Status code is: " + res4.getStatusCode());
+			System.out.println(res4.asString());
+			Assert.assertTrue(res4.getStatusCode() == 400);
+			Assert.assertEquals(res4.asString(), "Bad Request");
+			System.out.println("											");
+			Response res5 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().post("/search/12345");
+			System.out.println("Status code is: " + res5.getStatusCode());
+			System.out.println(res5.asString());
+			Assert.assertTrue(res5.getStatusCode() == 405);
+			Assert.assertEquals(res5.asString(), "Method Not Allowed");
+			System.out.println("											");
+			String jsonString6 = "";
+			Response res6 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString6).when().put("/search/12345");
+			System.out.println("Status code is: " + res6.getStatusCode());
+			System.out.println(res6.asString());
+			Assert.assertTrue(res6.getStatusCode() == 400);
+			Assert.assertEquals(res6.asString(), "Bad Request");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
@@ -143,10 +169,12 @@ public class SearchesCRUD {
 			Response res1 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/search");
+			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			System.out.println("											");
 			System.out.println(res1.asString());
+			System.out.println("Custom Search Id is :" + jp1.get("id"));
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			System.out.println("==POST operation is completed");
 			System.out.println("											");
@@ -172,7 +200,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res = RestAssured.given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/2?type=folder");
+					.everything().when().get("/entities?folderId=2");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -196,7 +224,15 @@ public class SearchesCRUD {
 			if (position == -1) {
 				System.out.println("search does not exist");
 			}
-
+			/*
+			 * Response res3 =
+			 * RestAssured.given().contentType(ContentType.JSON).
+			 * headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
+			 * .log().everything().when().delete("/search/"+jp1.get("id"));
+			 * //JsonPath jp6 = res6.jsonPath();
+			 * System.out.println(res3.asString());
+			 * Assert.assertTrue(res3.getStatusCode() == 204);
+			 */
 			System.out.println("------------------------------------------");
 			System.out.println("											");
 		} catch (Exception e) {
@@ -284,9 +320,9 @@ public class SearchesCRUD {
 			System.out
 					.println(res1.asString()
 							+ ", hence POST operation to create a search is not success");
-			Assert.assertTrue(res1.getStatusCode() == 404);
+			Assert.assertTrue(res1.getStatusCode() == 400);
 			Assert.assertEquals(res1.asString(),
-					"Invalid param type, please specify either STRING or CLOB.");
+					"Invalid param type, please specify either STRING or CLOB");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 		} catch (Exception e) {
@@ -308,7 +344,7 @@ public class SearchesCRUD {
 			int position = -1;
 			Response res = RestAssured.given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/2?type=folder");
+					.everything().when().get("/entities?folderId=2");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -362,35 +398,30 @@ public class SearchesCRUD {
 		}
 	}
 
-	@Test
-	/**
+	/*
+	 * @Test
+	 *//**
 	 * Search Negative Case3:
 	 */
-	public void search_InvalidType() {
-		try {
-			System.out.println("Negative Case3 for SEARCH");
-			System.out.println("											");
-			System.out
-					.println("GET operation is in-progress with Invalid Type");
-			System.out.println("											");
-
-			Response res = RestAssured.given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/1?type=me");
-
-			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 400);
-			System.out.println(res.asString());
-			Assert.assertEquals(res.asString(), "Type not supported");
-			System.out.println("											");
-
-			System.out.println("------------------------------------------");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	/*
+	 * public void search_InvalidType() { try {
+	 * System.out.println("Negative Case3 for SEARCH");
+	 * System.out.println("											"); System.out
+	 * .println("GET operation is in-progress with Invalid Type");
+	 * System.out.println("											");
+	 * 
+	 * Response res = RestAssured.given()
+	 * .headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+	 * .everything().when().get("/1?type=me");
+	 * 
+	 * System.out.println("											"); System.out.println("Status code is: "
+	 * + res.getStatusCode()); Assert.assertTrue(res.getStatusCode() == 400);
+	 * System.out.println(res.asString()); Assert.assertEquals(res.asString(),
+	 * "Type not supported"); System.out.println("											");
+	 * 
+	 * System.out.println("------------------------------------------"); } catch
+	 * (Exception e) { e.printStackTrace(); } }
+	 */
 	@Test
 	/**
 	 * Search Negative Case4:
@@ -510,22 +541,22 @@ public class SearchesCRUD {
 	/**
 	 * Search Negative Case2:
 	 */
-	public void search_noType() {
+	public void search_useInvalidMethod() {
 		try {
 			System.out.println("Negative Case2 for SEARCH");
 			System.out.println("											");
-			System.out.println("GET operation is in-progress with No Type");
+			System.out.println("POST operation is in-progress with No Type");
 			System.out.println("											");
 
 			Response res = RestAssured.given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/1");
+					.everything().when().post("/");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 400);
+			Assert.assertTrue(res.getStatusCode() == 405);
 			System.out.println(res.asString());
-			Assert.assertEquals(res.asString(), "please specify Type");
+			Assert.assertEquals(res.asString(), "Method Not Allowed");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
 
@@ -549,7 +580,7 @@ public class SearchesCRUD {
 			int position = -1;
 			Response res = RestAssured.given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/2?type=folder");
+					.everything().when().get("/entities?folderId=2");
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
 			System.out.println("											");
@@ -654,7 +685,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res3 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/lastaccess/2?type=search");
+					.everything().when().get("/lastaccess/searches/2");
 			JsonPath jp3 = res3.jsonPath();
 			// System.out.println(res3.asString());
 			System.out.println("Last accessed top 2 search Id's are  :"
@@ -672,7 +703,7 @@ public class SearchesCRUD {
 			Response res4 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when()
-					.put("/lastaccess/" + jp3.get("id[1]") + "?type=search");
+					.put("/lastaccess/search/" + jp3.get("id[1]"));
 			// JsonPath jp4 = res4.jsonPath();
 			System.out.println(res4.asString());
 			System.out.println("											");
@@ -690,7 +721,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res5 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/lastaccess/2?type=search");
+					.everything().when().get("/lastaccess/searches/2");
 			JsonPath jp5 = res5.jsonPath();
 			// System.out.println(res5.asString());
 			System.out.println("Last accessed top 2 search Id's are  :"
@@ -716,4 +747,118 @@ public class SearchesCRUD {
 		}
 	}
 
+	@Test
+	/**
+	 * Test to return all last accessed searches
+	 */
+	public void returnAlllastaccessedSearches() {
+		try {
+			System.out
+					.println("This test is to return all the last accessed searches with GET method");
+			System.out.println("											");
+			Response res = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/lastaccess/searches/0");
+			// JsonPath jp = res.jsonPath();
+			// System.out.println(res.asString());
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertNotNull(res.asString());
+			Assert.assertTrue(res.getStatusCode() == 200);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	/**
+	 * Test verify the status and response with invalid methods 
+	 */
+	public void lastaccessedSearches_invalidMethod1() {
+		try {
+			System.out
+					.println("Case1:This test is to check the status and response with invalid methods");
+			System.out.println("											");
+			Response res = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/lastaccess/search/11410");
+			System.out.println(res.asString());
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertEquals(res.asString(),"Method Not Allowed");
+			Assert.assertTrue(res.getStatusCode() == 405);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	/**
+	 * Test verify the status and response with invalid methods 
+	 */
+	public void lastaccessedSearches_invalidMethod2() {
+		try {
+			System.out
+					.println("Case2:This test is to check the status and response with invalid methods");
+			System.out.println("											");
+			Response res = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().post("/lastaccess/search/11410");
+			System.out.println(res.asString());
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertEquals(res.asString(),"Method Not Allowed");
+			Assert.assertTrue(res.getStatusCode() == 405);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	@Test
+	/**
+	 * Test verify the status and response with invalid methods on a correct url path
+	 */
+	public void lastaccessedSearches_invalidMethod3() {
+		try {
+			System.out
+					.println("Case3:This test is to check the status and response with invalid methods");
+			System.out.println("											");
+			Response res = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().delete("/lastaccess/search/11410");
+			System.out.println(res.asString());
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertEquals(res.asString(),"Method Not Allowed");
+			Assert.assertTrue(res.getStatusCode() == 405);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	/**
+	 * Test verify the status and response with invalid methods on a correct url path
+	 */
+	public void lastaccessedSearches_invalidMethod4() {
+		try {
+			System.out
+					.println("Case4:This test is to check the status and response with invalid methods");
+			System.out.println("											");
+			Response res = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().put("/lastaccess/search/");
+			System.out.println(res.asString());
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertEquals(res.asString(),"Please specify the searchId");
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -10,7 +10,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
@@ -85,7 +86,7 @@ public class SavedSearchNavigations {
 			int position = -1;
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/1?type=folder");
+					.everything().when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type        :" + jp.get("type[0]"));
@@ -120,4 +121,49 @@ public class SavedSearchNavigations {
 		}
 	}
 
+	@Test
+	/**
+	 * Check for status and response with bad methods
+	 */
+	public void applyBadMethods() {
+		try {
+			System.out
+					.println("This test is to verify response and status with bad use of bad methods");
+			System.out.println("Case1");
+			String jsonString1 = "{\"name\":\"check1\",\"categoryId\":3,\"folderId\":3,\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString1).when().post("/");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			System.out.println(res1.asString());
+			Assert.assertTrue(res1.getStatusCode() == 405);
+			Assert.assertEquals(res1.asString(), "Method Not Allowed");
+			System.out.println("											");
+			System.out.println("Case2");
+			System.out.println("											");
+			String jsonString2 = "{\"name\":\"check1\",\"categoryId\":3,\"folderId\":3,\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
+			Response res2 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString2).when().put("/");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 405);
+			Assert.assertEquals(res2.asString(), "Method Not Allowed");
+			System.out.println("											");
+			System.out.println("Case3");
+			System.out.println("											");
+			String jsonString3 = "{\"name\":\"check1\",\"categoryId\":3,\"folderId\":3,\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
+			Response res3 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString3).when().delete("/");
+			System.out.println("Status code is: " + res3.getStatusCode());
+			System.out.println(res3.asString());
+			Assert.assertTrue(res3.getStatusCode() == 405);
+			Assert.assertEquals(res3.asString(), "Method Not Allowed");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
