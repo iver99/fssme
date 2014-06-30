@@ -11,22 +11,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The persistent class for the EM_ANALYTICS_CATEGORY database table.
+ * The persistent class for the EMS_ANALYTICS_CATEGORY database table.
  */
 @Entity
-@Table(name = "EM_ANALYTICS_CATEGORY")
+@Table(name = "EMS_ANALYTICS_CATEGORY")
 @NamedQueries({
 		@NamedQuery(name = "Category.getAllCategory", query = "SELECT e FROM EmAnalyticsCategory e"),
 		@NamedQuery(name = "Category.getCategoryByName", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
 				+ ":categoryName") })
-@SequenceGenerator(name = "EM_ANALYTICS_CATEGORY_SEQ", sequenceName = "EM_ANALYTICS_CATEGORY_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "EMS_ANALYTICS_CATEGORY_SEQ", sequenceName = "EMS_ANALYTICS_CATEGORY_SEQ", allocationSize = 1)
 public class EmAnalyticsCategory implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "CATEGORY_ID")
-	@GeneratedValue(generator = "EM_ANALYTICS_CATEGORY_SEQ", strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = "EMS_ANALYTICS_CATEGORY_SEQ", strategy = GenerationType.SEQUENCE)
 	private long categoryId;
 
 	@Temporal(TemporalType.TIMESTAMP)

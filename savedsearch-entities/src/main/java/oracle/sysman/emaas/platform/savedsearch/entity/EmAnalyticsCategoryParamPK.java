@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * The primary key class for the EM_ANALYTICS_CATEGORY_PARAMS database table.
+ * The primary key class for the EMS_ANALYTICS_CATEGORY_PARAMS database table.
  */
 @Embeddable
 public class EmAnalyticsCategoryParamPK implements Serializable
