@@ -120,7 +120,10 @@ public class SavedSearchAPI {
 			jsonObj.put("id", folderObj.getId());
 			jsonObj.put("name", folderObj.getName());
 			jsonObj.put("type", folder);
-			StringBuilder linkBuilder = new StringBuilder(uri.getBaseUri() + "entities?folderId=" + folderObj.getId() );
+			jsonObj.put("createdOn", JSONUtil.getDate(folderObj.getCreatedOn().getTime()));
+			jsonObj.put("description", folderObj.getDescription());
+			jsonObj.put("lastModifiedOn", JSONUtil.getDate(folderObj.getLastModifiedOn().getTime()));
+			StringBuilder linkBuilder = new StringBuilder(uri.getBaseUri() + "folder/" + folderObj.getId() );
 			if (catName != null && catName.trim().length() != 0)
 				linkBuilder.append("&category="
 						+ URLEncoder.encode(catName, "UTF-8"));
@@ -148,15 +151,10 @@ public class SavedSearchAPI {
 			jsonObj.put("type", search);
 			jsonObj.put("categoryId", searchObj.getCategoryId());
 			jsonObj.put("folderId", searchObj.getFolderId());
+			jsonObj.put("createdOn", JSONUtil.getDate(searchObj.getCreatedOn().getTime()));
+			jsonObj.put("description", searchObj.getDescription());
+			jsonObj.put("lastModiedOn", JSONUtil.getDate(searchObj.getLastModifiedOn().getTime()));
 			jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
-			FolderManager folderMgr = FolderManager.getInstance();
-			JSONArray jsonPathArray = new JSONArray();
-			String[] pathArray = folderMgr.getPathForFolderId(searchObj
-					.getFolderId());
-			for (String p : pathArray) {
-				jsonPathArray.put(p);
-			}
-			jsonObj.put(FOLDER_PATH, jsonPathArray);
 			jsonArray.put(jsonObj);
 		}
 		message = jsonArray.toString(1);
@@ -164,17 +162,37 @@ public class SavedSearchAPI {
 		return message;
 
 	}
-
+/*
 	@GET
-	@Path("lastaccess/searches/{id: [0-9]*}")
+	@Path("searches")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearchListByAccessTime(@PathParam("id") int id) {
+	public Response getSearchListByAccessTime(@Context UriInfo uri, @QueryParam("lastAccessCount") String id) {
 		String message = "";
 		JSONObject jsonObj;
+		int count=0;
+		String query=uri.getRequestUri().getQuery();
+		if(query == null)
+			count=0;
+		else if(query !=null && !query.equals("")){
+			try{
+				String[] input = query.split("=");
+				if (input.length == 2) {
+					count=Integer.parseInt(id);
+					if(count==0)
+						return Response.status(200).build();
+				
+				} else
+				return Response.status(400)
+					.entity("Please give the value for " + input[0]).build();
+			}
+			catch(NumberFormatException e){
+				return Response.status(400).entity("Count should be numeric, not alphanumeric").build();
+			}
+		}
 		JSONArray jsonArray = new JSONArray();
 		try {
 			List<Search> searchList = SearchManager.getInstance()
-					.getSearchListByLastAccessDate(id);
+					.getSearchListByLastAccessDate(count);
 			for (Search searchObj : searchList) {
 				jsonObj = new JSONObject();
 				jsonObj.put("id", searchObj.getId());
@@ -183,19 +201,13 @@ public class SavedSearchAPI {
 				jsonObj.put("type", search);
 				jsonObj.put("categoryId", searchObj.getCategoryId());
 				jsonObj.put("folderId", searchObj.getFolderId());
-				jsonObj.put("lastAccessDate", searchObj.getLastAccessDate()
-						.getTime());
+				jsonObj.put("createdOn", JSONUtil.getDate(searchObj.getCreatedOn().getTime()));
+				jsonObj.put("lastModifiedOn", JSONUtil.getDate(searchObj.getLastModifiedOn().getTime()));
+				jsonObj.put("lastAccessDate", JSONUtil.getDate(searchObj.getLastAccessDate()
+						.getTime()));
 				jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
-				FolderManager folderMgr = FolderManager.getInstance();
-				JSONArray jsonPathArray = new JSONArray();
-				String[] folderPath = folderMgr.getPathForFolderId(searchObj
-						.getFolderId());
-				for (String p : folderPath) {
-					jsonPathArray.put(p);
-				}
-				jsonObj.put(FOLDER_PATH, jsonPathArray);
-
 				jsonArray.put(jsonObj);
+				
 			}
 			message = jsonArray.toString(1);
 		} catch (EMAnalyticsFwkException e) {
@@ -212,7 +224,7 @@ public class SavedSearchAPI {
 		}
 		return Response.status(200).entity(message).build();
 	}
-
+*/
 	@GET
 	@Path("/categories")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -254,17 +266,20 @@ public class SavedSearchAPI {
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-
+/*
 	@PUT
-	@Path("lastaccess/search/{id: [0-9]*}")
+	@Path("search/{id: [0-9]*}")
 	public Response editSearchAccessDate(@PathParam("id") long searchId) {
 		String message = null;
 		int statusCode = 200;
+		if(searchId == 0){
+			return Response.status(400).entity("Please specify the searchId").build();
+		}
 		try {
-
 			SearchManager sman = SearchManager.getInstance();
+			sman.getSearch(searchId);
 			java.util.Date date = sman.modifyLastAccessDate(searchId);
-			message = String.valueOf(date.getTime());
+			message = String.valueOf(JSONUtil.getDate(date.getTime()));
 
 		} catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -273,5 +288,5 @@ public class SavedSearchAPI {
 		return Response.status(statusCode).entity(message).build();
 
 	}
-
+*/
 }

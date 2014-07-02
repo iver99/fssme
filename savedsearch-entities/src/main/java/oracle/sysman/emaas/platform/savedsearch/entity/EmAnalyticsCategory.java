@@ -29,7 +29,7 @@ public class EmAnalyticsCategory implements Serializable
 	@GeneratedValue(generator = "EMS_ANALYTICS_CATEGORY_SEQ", strategy = GenerationType.SEQUENCE)
 	private long categoryId;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE")
 	private Date creationDate;
 

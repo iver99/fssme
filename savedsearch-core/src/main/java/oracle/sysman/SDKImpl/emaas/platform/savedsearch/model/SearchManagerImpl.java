@@ -86,14 +86,14 @@ public class SearchManagerImpl extends SearchManager {
 			throw eme;
 		} catch (PersistenceException dmlce) {
 			if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_U01"))
+					.contains("ANALYTICS_SEARCH_U01"))
 
 				throw new EMAnalyticsFwkException("search name "
 						+ search.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME,
 						new Object[] { search.getName() });
 			else if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_FK2"))
+					.contains("ANALYTICS_SEARCH_FK2"))
 
 				throw new EMAnalyticsFwkException("Parent folder with id "
 						+ search.getFolderId() + " missing: "
@@ -155,14 +155,14 @@ public class SearchManagerImpl extends SearchManager {
 			throw eme;
 		} catch (PersistenceException dmlce) {
 			if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_U01"))
+					.contains("ANALYTICS_SEARCH_U01"))
 
 				throw new EMAnalyticsFwkException("Search name "
 						+ search.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME,
 						new Object[] { search.getName() });
 			else if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_FK2"))
+					.contains("ANALYTICS_SEARCH_FK2"))
 
 				throw new EMAnalyticsFwkException("Parent folder with id "
 						+ search.getFolderId() + " missing: "
@@ -177,7 +177,7 @@ public class SearchManagerImpl extends SearchManager {
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			} else if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_FK1"))
+					.contains("ANALYTICS_SEARCH_FK1"))
 
 				throw new EMAnalyticsFwkException("Category with id "
 						+ search.getCategoryId() + " missing: "
@@ -450,9 +450,9 @@ public class SearchManagerImpl extends SearchManager {
 			}
 
 			rtnObj.setOwner(searchObj.getOwner());
-			rtnObj.setCreationDate(searchObj.getCreationDate());
+			rtnObj.setCreatedOn(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
-			rtnObj.setLastModificationDate(searchObj.getLastModificationDate());
+			rtnObj.setLastModifiedOn(searchObj.getLastModificationDate());
 			rtnObj.setLastAccessDate(searchObj.getAccessDate());
 			if (searchObj.getMetadataClob() != null
 					&& searchObj.getMetadataClob().length() > 0) {

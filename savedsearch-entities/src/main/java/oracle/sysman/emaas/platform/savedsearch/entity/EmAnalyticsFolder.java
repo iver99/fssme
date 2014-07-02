@@ -27,7 +27,7 @@ public class EmAnalyticsFolder implements Serializable
 	@GeneratedValue(generator = "EMS_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
 	private long folderId;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE", insertable = false)
 	private Date creationDate;
 
@@ -42,7 +42,7 @@ public class EmAnalyticsFolder implements Serializable
 	@Column(name = "EM_PLUGIN_ID")
 	private String emPluginId;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFICATION_DATE", insertable = false)
 	private Date lastModificationDate;
 

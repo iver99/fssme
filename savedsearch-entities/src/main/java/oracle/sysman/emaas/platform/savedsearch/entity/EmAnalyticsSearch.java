@@ -51,7 +51,7 @@ public class EmAnalyticsSearch implements Serializable
 	@GeneratedValue(generator = "EMS_ANALYTICS_SEARCH_SEQ", strategy = GenerationType.SEQUENCE)
 	private long id;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE", insertable = false)
 	private Date creationDate;
 
@@ -69,7 +69,7 @@ public class EmAnalyticsSearch implements Serializable
 	@Column(name = "IS_LOCKED")
 	private BigDecimal isLocked;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFICATION_DATE", insertable = false)
 	private Date lastModificationDate;
 
