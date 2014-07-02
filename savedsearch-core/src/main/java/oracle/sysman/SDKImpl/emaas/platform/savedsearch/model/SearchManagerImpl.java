@@ -86,14 +86,14 @@ public class SearchManagerImpl extends SearchManager {
 			throw eme;
 		} catch (PersistenceException dmlce) {
 			if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_U01"))
+					.contains("ANALYTICS_SEARCH_U01"))
 
 				throw new EMAnalyticsFwkException("search name "
 						+ search.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME,
 						new Object[] { search.getName() });
 			else if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_FK2"))
+					.contains("ANALYTICS_SEARCH_FK2"))
 
 				throw new EMAnalyticsFwkException("Parent folder with id "
 						+ search.getFolderId() + " missing: "
@@ -155,14 +155,14 @@ public class SearchManagerImpl extends SearchManager {
 			throw eme;
 		} catch (PersistenceException dmlce) {
 			if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_U01"))
+					.contains("ANALYTICS_SEARCH_U01"))
 
 				throw new EMAnalyticsFwkException("Search name "
 						+ search.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME,
 						new Object[] { search.getName() });
 			else if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_FK2"))
+					.contains("ANALYTICS_SEARCH_FK2"))
 
 				throw new EMAnalyticsFwkException("Parent folder with id "
 						+ search.getFolderId() + " missing: "
@@ -177,7 +177,7 @@ public class SearchManagerImpl extends SearchManager {
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			} else if (dmlce.getCause().getMessage()
-					.contains("EM_ANALYTICS_SEARCH_FK1"))
+					.contains("ANALYTICS_SEARCH_FK1"))
 
 				throw new EMAnalyticsFwkException("Category with id "
 						+ search.getCategoryId() + " missing: "
@@ -464,16 +464,16 @@ public class SearchManagerImpl extends SearchManager {
 			}
 
 			rtnObj.setQueryStr(searchObj.getSearchDisplayStr());
-			//rtnObj.setLocked(searchObj.getIsLocked().intValue() == 1 ? true
-				//	: false);
+			rtnObj.setLocked(searchObj.getIsLocked().intValue() == 1 ? true
+					: false);
 			rtnObj.setCategoryId((int) searchObj.getEmAnalyticsCategory()
 					.getCategoryId());
 
 			rtnObj.setFolderId((int) searchObj.getEmAnalyticsFolder()
 					.getFolderId());
 
-			//rtnObj.setUiHidden(searchObj.getUiHidden().intValue() == new BigDecimal(
-				//	0).intValue() ? false : true);
+			rtnObj.setUiHidden(searchObj.getUiHidden().intValue() == new BigDecimal(
+					0).intValue() ? false : true);
 					rtnObj.setLastAccessDate(searchObj.getAccessDate());
 
 			{

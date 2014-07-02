@@ -172,9 +172,17 @@ public class FolderAPI {
 		return Response.status(statusCode).entity(msg).build();
 	}
 
-	private Folder getFolderFromJsonForEdit(JSONObject folderObj, Folder folder) {
-
-		folder.setName(folderObj.optString("name", folder.getName()));
+	private Folder getFolderFromJsonForEdit(JSONObject folderObj, Folder folder) throws EMAnalyticsWSException {
+		
+		if(folderObj.has("name")){
+			String name=folderObj.optString("name");
+			if(name == null)
+				throw new EMAnalyticsWSException("The name key for folder can not be null in the input JSON Object",EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
+			if(name !=null && name.trim().equals(""))
+				throw new EMAnalyticsWSException("The name key for folder can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
+			folder.setName(name);
+		}else 
+			folder.setName(folderObj.optString("name", folder.getName()));
 		folder.setDescription(folderObj.optString("description",
 				folder.getDescription()));
 		//folder.setUiHidden(folderObj.optBoolean("uiHidden", folder.isUiHidden()));
@@ -195,7 +203,7 @@ public class FolderAPI {
 			String name=folderObj.getString("name");
 			if(name == null)
 				throw new EMAnalyticsWSException("The name key for folder can not be null in the input JSON Object",EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
-			if(name !=null && name.equals(""))
+			if(name !=null && name.trim().equals(""))
 				throw new EMAnalyticsWSException("The name key for folder can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
 			
 			objFld.setName(name);

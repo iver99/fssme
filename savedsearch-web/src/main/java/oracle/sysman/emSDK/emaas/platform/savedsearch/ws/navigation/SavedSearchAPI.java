@@ -162,19 +162,28 @@ public class SavedSearchAPI {
 		return message;
 
 	}
-
+/*
 	@GET
-	@Path("lastaccess/searches/{id: [0-9]*}")
+	@Path("searches")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearchListByAccessTime(@Context UriInfo uri, @PathParam("id") int id) {
+	public Response getSearchListByAccessTime(@Context UriInfo uri, @QueryParam("lastAccessCount") String id) {
 		String message = "";
 		JSONObject jsonObj;
-		String query=uri.getPathParameters().getFirst("id");
-		if(!query.equals("")){
+		int count=0;
+		String query=uri.getRequestUri().getQuery();
+		if(query == null)
+			count=0;
+		else if(query !=null && !query.equals("")){
 			try{
-				id=Integer.parseInt(query);
-				if(id==0)
-					return Response.status(200).build();
+				String[] input = query.split("=");
+				if (input.length == 2) {
+					count=Integer.parseInt(id);
+					if(count==0)
+						return Response.status(200).build();
+				
+				} else
+				return Response.status(400)
+					.entity("Please give the value for " + input[0]).build();
 			}
 			catch(NumberFormatException e){
 				return Response.status(400).entity("Count should be numeric, not alphanumeric").build();
@@ -183,7 +192,7 @@ public class SavedSearchAPI {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			List<Search> searchList = SearchManager.getInstance()
-					.getSearchListByLastAccessDate(id);
+					.getSearchListByLastAccessDate(count);
 			for (Search searchObj : searchList) {
 				jsonObj = new JSONObject();
 				jsonObj.put("id", searchObj.getId());
@@ -215,7 +224,7 @@ public class SavedSearchAPI {
 		}
 		return Response.status(200).entity(message).build();
 	}
-
+*/
 	@GET
 	@Path("/categories")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -257,9 +266,9 @@ public class SavedSearchAPI {
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-
+/*
 	@PUT
-	@Path("lastaccess/search/{id: [0-9]*}")
+	@Path("search/{id: [0-9]*}")
 	public Response editSearchAccessDate(@PathParam("id") long searchId) {
 		String message = null;
 		int statusCode = 200;
@@ -279,5 +288,5 @@ public class SavedSearchAPI {
 		return Response.status(statusCode).entity(message).build();
 
 	}
-
+*/
 }

@@ -31,6 +31,7 @@ public class FilterSearchAPI {
 	@Context
 	UriInfo uri;
 	
+	private final String search = "search";
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllSearches(@Context UriInfo uri,
@@ -46,10 +47,7 @@ public class FilterSearchAPI {
 		String value;
 		String query = uri.getRequestUri().getQuery();
 		if(query ==null)
-			return Response
-					.status(400)
-					.entity("please give either categoryId,categoryName or folderId")
-					.build();
+		return getLastAccessSearch(0);
 		String[] param = query.split("&");
 		if (param.length > 0) {
 			String firstParam = param[0];
@@ -64,11 +62,23 @@ public class FilterSearchAPI {
 			try {
 				if (key.equals("categoryId") && value != null) {
 					categId = Integer.parseInt(value);
+					if(categId <0)
+						throw new NumberFormatException();
 					return getAllSearchByCategory(categId);
 				} else if (key.equals("folderId") && value != null) {
 					folId = Integer.parseInt(value);
+					if(folId <0)
+						throw new NumberFormatException();
 					return getAllSearchByFolder(folId);
-				} else if (key.equals("categoryName") && value != null) {
+				}else if(key.equals("lastAccessCount") && value!= null){
+					int count=Integer.parseInt(value);
+					if(count < 0)
+						throw new NumberFormatException();
+					if(count == 0)
+						return Response.status(200).build();
+					return getLastAccessSearch(count);
+				}
+				else if (key.equals("categoryName") && value != null) {
 					try {
 						category = catMan.getCategory(value);
 						categId = category.getId();
@@ -82,17 +92,17 @@ public class FilterSearchAPI {
 				} else
 					return Response
 							.status(400)
-							.entity("please give either categoryId,categoryName or folderId")
+							.entity("please give either categoryId,categoryName,folderId or lastAccessCount")
 							.build();
 			} catch (NumberFormatException e) {
-				return Response.status(404)
-						.entity("Id should be a numeric and not alphanumeric.")
+				return Response.status(400)
+						.entity("Id/count should be a positive number and not an alphanumeric.")
 						.build();
 			}
 		} else
 			return Response
 					.status(400)
-					.entity("please give either categoryId,categoryName or folderId")
+					.entity("please give either categoryId,categoryName,folderId,lastAccessDate")
 					.build();
 
 			}
@@ -182,7 +192,46 @@ public class FilterSearchAPI {
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
+	private Response getLastAccessSearch(int count){
+		JSONObject jsonObj;
+		String message="";
+		JSONArray jsonArray = new JSONArray();
+		try {
+			List<Search> searchList = SearchManager.getInstance()
+					.getSearchListByLastAccessDate(count);
+			for (Search searchObj : searchList) {
+				jsonObj = new JSONObject();
+				jsonObj.put("id", searchObj.getId());
+				jsonObj.put("name", searchObj.getName());
+				jsonObj.put("description", searchObj.getDescription());
+				jsonObj.put("type", search);
+				jsonObj.put("categoryId", searchObj.getCategoryId());
+				jsonObj.put("folderId", searchObj.getFolderId());
+				jsonObj.put("createdOn", JSONUtil.getDate(searchObj.getCreatedOn().getTime()));
+				jsonObj.put("lastModifiedOn", JSONUtil.getDate(searchObj.getLastModifiedOn().getTime()));
+				jsonObj.put("lastAccessDate", JSONUtil.getDate(searchObj.getLastAccessDate()
+						.getTime()));
+				jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
+				jsonArray.put(jsonObj);
+				
+			}
+			message = jsonArray.toString(1);
+		} catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+			return Response.status(e.getStatusCode()).entity(e.getMessage())
+					.build();
 
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return Response.status(500).entity(e.getMessage()).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(500).entity(e.getMessage()).build();
+		}
+		return Response.status(200).entity(message).build();
+
+	}
+	
 	private JSONObject modifyObject(JSONObject jsonObj) throws JSONException{
 		JSONObject rtnObj=new JSONObject();
 		JSONObject jsonCat= new JSONObject();
@@ -193,7 +242,6 @@ public class FilterSearchAPI {
 		jsonFold.put("href",uri.getBaseUri() +"folder/" +jsonObj.getInt("folderId"));
 		jsonObj.put("createdOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("createdOn"))));
 		jsonObj.put("lastModifiedOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModifiedOn"))));
-		jsonObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
 		rtnObj.put("id", jsonObj.optInt("id"));
 		rtnObj.put("name", jsonObj.optString("name"));
 		if(jsonObj.has("description"))
@@ -204,9 +252,10 @@ public class FilterSearchAPI {
 		rtnObj.put("createdOn",jsonObj.optString("createdOn"));
 		rtnObj.put("lastModifiedBy",jsonObj.optString("lastModifiedBy"));
 		rtnObj.put("lastModifiedOn", jsonObj.optString("lastModifiedOn"));
-		rtnObj.put("lastAccessDate", jsonObj.optString("lastAccessDate"));
+		if(jsonObj.has("lastAccessDate"))
+			rtnObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
 		if(jsonObj.has("queryStr"))
-		rtnObj.put("queryStr", jsonObj.getString("queryStr"));
+			rtnObj.put("queryStr", jsonObj.getString("queryStr"));
 		if(jsonObj.has("parameters"))
 		rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
 		return rtnObj;

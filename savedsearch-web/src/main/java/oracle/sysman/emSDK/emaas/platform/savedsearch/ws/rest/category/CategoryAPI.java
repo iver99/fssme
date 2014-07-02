@@ -30,7 +30,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class CategoryAPI
 {
 
-	@DELETE
+/*	@DELETE
 	@Path("{id : [0-9]*}")
 	public Response deleteCategory(@PathParam("id") int categoryId)
 	{
@@ -169,7 +169,7 @@ public class CategoryAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-
+*/
 	@GET
 	@Path("{id: [0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -193,7 +193,7 @@ public class CategoryAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-
+/*
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCategoryByName(@QueryParam("name") String name)
@@ -337,5 +337,5 @@ public class CategoryAPI
 		return category;
 
 	}
-
+*/
 }
