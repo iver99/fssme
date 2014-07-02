@@ -68,7 +68,7 @@ project(':savedsearch-web'){
 	task ftp<<{
 		ant{
                 	taskdef(name:'ftp',classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',classpath:configurations.ftpAntTask.asPath)
-                	ftp(server:'scl36023.us.oracle.com',userid:'ssfjavadoc',password:'ssfjavadoc'){
+                	ftp(server: ftpserver, userid: username, password: password, remotedir: remote_javadoc_dir){
 			fileset(dir:'build/docs')
              		}	
         	}
