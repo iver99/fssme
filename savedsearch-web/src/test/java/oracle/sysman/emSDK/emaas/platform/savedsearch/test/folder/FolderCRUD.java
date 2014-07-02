@@ -16,7 +16,6 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
-
 public class FolderCRUD {
 	/**
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the
@@ -36,7 +35,6 @@ public class FolderCRUD {
 		serveruri = ct.getServeruri();
 
 	}
-	
 
 	@Test
 	/**
@@ -55,6 +53,7 @@ public class FolderCRUD {
 			System.out.println("==POST operation is done");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
 			System.out.println("											");
 
 			System.out
@@ -75,11 +74,11 @@ public class FolderCRUD {
 			System.out.println("    ");
 
 			System.out
-					.println("Verifying weather the folder created or not with GET method");
+					.println("Verifying weather the folder created in a specified location or not with GET method");
 			System.out.println("											");
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/");
+					.everything().when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -187,7 +186,7 @@ public class FolderCRUD {
 			int position = -1;
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/");
+					.everything().when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -224,6 +223,7 @@ public class FolderCRUD {
 					String c;
 					JsonPath jp1 = res1.jsonPath();
 					c = jp1.get("name");
+					Assert.assertEquals(c, "Custom Folder_Edit");
 					System.out.println("Asserted & FolderName After Edit is:"
 							+ c);
 					System.out.println("											");
@@ -254,7 +254,7 @@ public class FolderCRUD {
 			int position = -1;
 			Response res = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/");
+					.everything().when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -286,7 +286,7 @@ public class FolderCRUD {
 					System.out.println("											");
 					System.out.println("Status code is: "
 							+ res1.getStatusCode());
-					//System.out.println("											");
+					// System.out.println("											");
 					System.out.println(res1.asString());
 					Assert.assertTrue(res1.getStatusCode() == 204);
 					System.out
@@ -402,33 +402,30 @@ public class FolderCRUD {
 		}
 	}
 
-	/*@Test
-	*//**
+	/*
+	 * @Test
+	 *//**
 	 * Folder Negative Case2:
-	 *//*
-	public void folder_noType() {
-		try {
-			System.out.println("Negative Case2 for FOLDER");
-			System.out.println("											");
-			System.out.println("GET operation is in-progress with No Type");
-			System.out.println("											");
-
-			Response res = given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/1");
-
-			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 400);
-			System.out.println(res.asString());
-			Assert.assertEquals(res.asString(), "please specify Type");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
+	 */
+	/*
+	 * public void folder_noType() { try {
+	 * System.out.println("Negative Case2 for FOLDER");
+	 * System.out.println("											");
+	 * System.out.println("GET operation is in-progress with No Type");
+	 * System.out.println("											");
+	 * 
+	 * Response res = given() .headers("X-USER-IDENTITY-DOMAIN-NAME",
+	 * HOSTNAME).log() .everything().when().get("/1");
+	 * 
+	 * System.out.println("											"); System.out.println("Status code is: "
+	 * + res.getStatusCode()); Assert.assertTrue(res.getStatusCode() == 400);
+	 * System.out.println(res.asString()); Assert.assertEquals(res.asString(),
+	 * "please specify Type");
+	 * System.out.println("------------------------------------------");
+	 * System.out.println("											");
+	 * 
+	 * } catch (Exception e) { e.printStackTrace(); } }
+	 */
 
 	@Test
 	/**
@@ -450,7 +447,8 @@ public class FolderCRUD {
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
 			System.out.println(res.asString());
-			Assert.assertEquals(res.asString(), "Folder Id should be a numeric and not alphanumeric");
+			Assert.assertEquals(res.asString(),
+					"Folder Id should be a numeric and not alphanumeric");
 			System.out.println("											");
 
 			System.out.println("------------------------------------------");
@@ -482,7 +480,7 @@ public class FolderCRUD {
 			System.out.println("											");
 			Assert.assertEquals(res.asString(),
 					"The name key for folder is missing in the input JSON Object");
-			//System.out.println("											");
+			// System.out.println("											");
 			System.out.println("------------------------------------------");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -543,6 +541,35 @@ public class FolderCRUD {
 					"Folder with the Id 99999999999 does not exist");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	/**
+	 * Folder Negative Case7:
+	 */
+	public void folder_missingInfo_path() {
+		try {
+			System.out.println("Negative Case7 for FOLDER");
+			System.out.println("											");
+			System.out
+					.println("GET operation on URL which is lagging with some info");
+			System.out.println("											");
+
+			Response res = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/entities?folderId");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			Assert.assertEquals(res.asString(), "please give folderId");
+			System.out.println("											");
+
+			System.out.println("------------------------------------------");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -714,9 +741,9 @@ public class FolderCRUD {
 					.everything().when().delete("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res8.getStatusCode());
-			//System.out.println(res8.asString());
+			// System.out.println(res8.asString());
 			Assert.assertTrue(res8.getStatusCode() == 204);
-			//System.out.println("											");
+			// System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("Delete the folder again whose Id is: "
 					+ jp1.get("id"));
@@ -750,7 +777,8 @@ public class FolderCRUD {
 			System.out.println("Status code is: " + res1.getStatusCode());
 			System.out.println(res1.asString());
 			Assert.assertTrue(res1.getStatusCode() == 404);
-			Assert.assertEquals(res1.asString(), "Id should be a numeric and not alphanumeric.");
+			Assert.assertEquals(res1.asString(),
+					"Id/count should be a positive number and not an alphanumeric.");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out
@@ -761,20 +789,20 @@ public class FolderCRUD {
 			System.out.println("Status code is: " + res2.getStatusCode());
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
-			Assert.assertEquals(res2.asString(), "please give either categoryId,categoryName or folderId");
+			Assert.assertEquals(res2.asString(),
+					"Please give the value for folderId");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out
 					.println("Use GET method to get list of the searches by folder id=Non-Numeric - verify the status code and response");
 			Response res3 = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when()
-					.get("/searches?folderId=Non-Numeric");
+					.everything().when().get("/searches?folderId=-1");
 			System.out.println("Status code is: " + res3.getStatusCode());
 			System.out.println(res3.asString());
 			Assert.assertTrue(res3.getStatusCode() == 404);
 			Assert.assertEquals(res3.asString(),
-					"Id should be a numeric and not alphanumeric.");
+					"Id/count should be a positive number and not an alphanumeric.");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out
@@ -785,10 +813,12 @@ public class FolderCRUD {
 			System.out.println("Status code is: " + res4.getStatusCode());
 			System.out.println(res4.asString());
 			Assert.assertTrue(res4.getStatusCode() == 400);
-			Assert.assertEquals(res4.asString(), "please give either categoryId,categoryName or folderId");
+			Assert.assertEquals(res4.asString(),
+					"Please give the value for folderId");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
-			System.out.println("Find searches by folder id using wrong methods - verify the status code and the response");
+			System.out
+					.println("Find searches by folder id using wrong methods - verify the status code and the response");
 			Response res5 = given()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when().post("/searches?folderId=1");
@@ -817,6 +847,32 @@ public class FolderCRUD {
 			Assert.assertTrue(res7.getStatusCode() == 405);
 			System.out.println(res7.asString());
 			Assert.assertEquals(res7.asString(), "Method Not Allowed");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	/**
+	 * create a folder using post method
+	 */
+	public void folder_createwithEmptyName() {
+		try {
+			System.out
+					.println("POST method is in-progress to create a new folder with blank name");
+			String jsonString = "{ \"name\":\" \",\"description\":\"Folder for EMAAS searches\"}";
+			Response res1 = given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString).when().post("/folder");
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertEquals(res1.asString(),
+					"The name key for folder can not be empty in the input JSON Object");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 		} catch (Exception e) {
