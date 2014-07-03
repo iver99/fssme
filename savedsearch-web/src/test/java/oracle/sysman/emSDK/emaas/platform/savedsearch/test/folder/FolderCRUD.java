@@ -776,7 +776,7 @@ public class FolderCRUD {
 					.everything().when().get("/searches?folderId=sravan");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			System.out.println(res1.asString());
-			Assert.assertTrue(res1.getStatusCode() == 404);
+			Assert.assertTrue(res1.getStatusCode() == 400);
 			Assert.assertEquals(res1.asString(),
 					"Id/count should be a positive number and not an alphanumeric.");
 			System.out.println("											");
@@ -800,7 +800,7 @@ public class FolderCRUD {
 					.everything().when().get("/searches?folderId=-1");
 			System.out.println("Status code is: " + res3.getStatusCode());
 			System.out.println(res3.asString());
-			Assert.assertTrue(res3.getStatusCode() == 404);
+			Assert.assertTrue(res3.getStatusCode() == 400);
 			Assert.assertEquals(res3.asString(),
 					"Id/count should be a positive number and not an alphanumeric.");
 			System.out.println("											");
