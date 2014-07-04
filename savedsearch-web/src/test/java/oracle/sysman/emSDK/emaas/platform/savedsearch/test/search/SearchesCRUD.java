@@ -58,7 +58,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			System.out.println("POST operation is in-progress with bad URL");
 			System.out.println("											");
-			String jsonString1 = "{\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"name\": \"target\"}";
+			String jsonString1 = "{\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"name\": \"target\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString1).when().post("/");
@@ -70,7 +70,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			System.out.println("PUT operation is in-progress with bad URL");
 			System.out.println("											");
-			String jsonString2 = "{\"displayName\":\"My_Search!!!\",\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"name\": \"target\"}";
+			String jsonString2 = "{\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"name\": \"target\"}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString2).when().put("/");
@@ -82,7 +82,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			System.out.println("DELETE operation is in-progress with bad URL");
 			System.out.println("											");
-			String jsonString3 = "{\"displayName\":\"My_Search!!!\",\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"name\": \"target\"}";
+			String jsonString3 = "{\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"name\": \"target\"}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString3).when().delete("/");
@@ -167,7 +167,7 @@ public class SearchesCRUD {
 					.println("This test is to create a search with POST method");
 			System.out.println("											");
 			int position = -1;
-			String jsonString = "{\"name\":\"Custom Search\",\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\"Custom Search\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/search");
@@ -185,7 +185,7 @@ public class SearchesCRUD {
 					.println("This test is to check for the duplicate entry with re-post");
 			System.out.println("											");
 
-			String jsonString2 = "{\"name\":\"Custom Search\",\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString2 = "{\"name\":\"Custom Search\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString2).when().post("/search");
@@ -252,7 +252,7 @@ public class SearchesCRUD {
 					.println("This test is to create a search with POST method using invalid categoryId");
 			System.out.println("											");
 
-			String jsonString = "{\"name\":\"TestSearch\",\"categoryId\":2000,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\"TestSearch\",\"category\":{\"id\":12000},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/search");
@@ -264,7 +264,7 @@ public class SearchesCRUD {
 							+ ", hence POST operation to create a search is not success");
 			Assert.assertTrue(res1.getStatusCode() == 404);
 			Assert.assertEquals(res1.asString(),
-					"Can not find category with id: 2000");
+					"Can not find category with id: 12000");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 		} catch (Exception e) {
@@ -282,7 +282,7 @@ public class SearchesCRUD {
 					.println("This test is to create a search with POST method using invalid folderId");
 			System.out.println("											");
 
-			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"categoryId\":1,\"folderId\":3000,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":3000},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/search");
@@ -312,7 +312,7 @@ public class SearchesCRUD {
 					.println("This test is to create a search with POST method using invalid paramType");
 			System.out.println("											");
 
-			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"categoryId\":1,\"folderId\":3000,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":\"text\",\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":3000},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":\"text\",\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/search");
@@ -435,7 +435,7 @@ public class SearchesCRUD {
 			System.out
 					.println("POST operation is in-progress & missing with required field: Name");
 			System.out.println("											");
-			String jsonString = "{\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString = "{\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/search");
@@ -469,7 +469,7 @@ public class SearchesCRUD {
 			System.out
 					.println("POST operation is in-progress & missing with required field: categoryId");
 			System.out.println("											");
-			String jsonString2 = "{\"name\":\"MyLostSearch\",\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString2 = "{\"name\":\"MyLostSearch\",\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString2).when().post("/search");
@@ -480,12 +480,12 @@ public class SearchesCRUD {
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			System.out.println("											");
 			Assert.assertEquals(res2.asString(),
-					"The categoryId key for search is missing in the input JSON Object");
+					"The category key for search is missing in the input JSON Object");
 			System.out.println("											");
 			System.out
 					.println("POST operation is in-progress & missing with required field: folderId");
 			System.out.println("											");
-			String jsonString3 = "{\"displayName\":\"My_Search!!!\",\"categoryId\":1,\"name\":\"My_Search\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString3 = "{\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"name\":\"My_Search\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString3).when().post("/search");
@@ -496,12 +496,12 @@ public class SearchesCRUD {
 			Assert.assertTrue(res3.getStatusCode() == 400);
 			System.out.println("											");
 			Assert.assertEquals(res3.asString(),
-					"The folderId key for search is missing in the input JSON Object");
+					"The folder key for search is missing in the input JSON Object");
 			System.out.println("											");
 			System.out
 					.println("POST operation is in-progress & missing with required field: name from parameter section");
 			System.out.println("											");
-			String jsonString4 = "{\"name\":\"Custom Search\",\"displayName\":\"My_Search!!!\",\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString4 = "{\"name\":\"Custom Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString4).when().post("/search");
@@ -518,7 +518,7 @@ public class SearchesCRUD {
 			System.out
 					.println("POST operation is in-progress & missing with required field: type from parameter section");
 			System.out.println("											");
-			String jsonString5 = "{\"name\":\"Custom Search\",\"displayName\":\"My_Search!!!\",\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
+			String jsonString5 = "{\"name\":\"Custom Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
 			Response res5 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString5).when().post("/search");
@@ -604,6 +604,25 @@ public class SearchesCRUD {
 					System.out.println("==GET operation is completed");
 					System.out.println("											");
 					System.out
+							.println("Read the search details before its deletion");
+					Response res0 = given()
+							.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
+							.log().everything().when()
+							.get("/search/" + mysearchID);
+					JsonPath jp0 = res0.jsonPath();
+					System.out.println("											");
+					Assert.assertEquals(jp0.get("name"), "Custom Search_Edit");
+					Assert.assertEquals(jp0.get("id"), +mysearchID);
+					Assert.assertEquals(jp0.get("description"),
+							"mydb.mydomain error logs (ORA*)!!!");
+					Assert.assertEquals(jp0.getMap("category").get("id"), 1);
+					Assert.assertEquals(jp0.getMap("folder").get("id"), 2);
+					Assert.assertEquals(jp0.get("href"), "http://" + HOSTNAME
+							+ ":" + portno + "/savedsearch/v1/search/"
+							+ mysearchID);
+					System.out
+							.println("------------------------------------------");
+					System.out
 							.println("DELETE operation is in-progress to delete the selected search");
 					System.out.println("											");
 					Response res1 = RestAssured.given()
@@ -647,7 +666,7 @@ public class SearchesCRUD {
 					.println("This test is to create a search with POST method");
 			System.out.println("											");
 
-			String jsonString1 = "{\"name\":\"SearchSet1\",\"categoryId\":3,\"folderId\":3,\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
+			String jsonString1 = "{\"name\":\"SearchSet1\",\"category\":{\"id\":3},\"folder\":{\"id\":3},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString1).when().post("/search");
@@ -663,7 +682,7 @@ public class SearchesCRUD {
 			} catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
 			}
-			String jsonString2 = "{\"name\":\"SearchSet2\",\"categoryId\":2,\"folderId\":2,\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
+			String jsonString2 = "{\"name\":\"SearchSet2\",\"category\":{\"id\":3},\"folder\":{\"id\":3},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString2).when().post("/search");
@@ -702,10 +721,15 @@ public class SearchesCRUD {
 			System.out
 					.println("Now set the last access time to the search whose id: "
 							+ jp3.get("id[1]") + " with PUT method");
-			Response res4 = RestAssured.given().contentType(ContentType.JSON)
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when()
-					.put("/search/" + jp3.get("id[1]")+"?updateLastAccessTime=true");
+			Response res4 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
+					.log()
+					.everything()
+					.when()
+					.put("/search/" + jp3.get("id[1]")
+							+ "?updateLastAccessTime=true");
 			// JsonPath jp4 = res4.jsonPath();
 			System.out.println(res4.asString());
 			System.out.println("											");
@@ -761,11 +785,11 @@ public class SearchesCRUD {
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when().get("/searches/");
-			//System.out.println(res.asString());
+			// System.out.println(res.asString());
 			JsonPath jp = res.jsonPath();
-			System.out.println("Searches Last Accessed Are :"+ jp.get("name"));
+			System.out.println("Searches Last Accessed Are :" + jp.get("name"));
 			System.out.println("Status code is: " + res.getStatusCode());
-			//Assert.assertNotEquals(res.asString(),"");
+			// Assert.assertNotEquals(res.asString(),"");
 			Assert.assertTrue(res.getStatusCode() == 200);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -776,7 +800,7 @@ public class SearchesCRUD {
 
 	@Test
 	/**
-	 * Test to return all last accessed searches
+	 * Test to return NO last accessed searches
 	 */
 	public void returnNolastaccessedSearches() {
 		try {
@@ -787,9 +811,9 @@ public class SearchesCRUD {
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when().get("/searches?lastAccessCount=0");
 			// JsonPath jp = res.jsonPath();
-			//System.out.println(res.asString());
+			// System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"");
+			Assert.assertEquals(res.asString(), "");
 			Assert.assertTrue(res.getStatusCode() == 200);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -797,7 +821,7 @@ public class SearchesCRUD {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	/**
 	 * Test to return all last accessed searches with negative count
@@ -811,9 +835,10 @@ public class SearchesCRUD {
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when().get("/searches?lastAccessCount=-1");
 			// JsonPath jp = res.jsonPath();
-			//System.out.println(res.asString());
+			// System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"Id/count should be a positive number and not an alphanumeric.");
+			Assert.assertEquals(res.asString(),
+					"Id/count should be a positive number and not an alphanumeric.");
 			Assert.assertTrue(res.getStatusCode() == 400);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -821,10 +846,10 @@ public class SearchesCRUD {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	/**
-	 * Test to return all last accessed searches with text count
+	 * Test to return all last accessed searches with text as count
 	 */
 	public void returnNolastaccessedSearches_textCount() {
 		try {
@@ -833,11 +858,13 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/searches?lastAccessCount=sravan");
+					.everything().when()
+					.get("/searches?lastAccessCount=sravan");
 			// JsonPath jp = res.jsonPath();
-			//System.out.println(res.asString());
+			// System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"Id/count should be a positive number and not an alphanumeric.");
+			Assert.assertEquals(res.asString(),
+					"Id/count should be a positive number and not an alphanumeric.");
 			Assert.assertTrue(res.getStatusCode() == 400);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -845,7 +872,7 @@ public class SearchesCRUD {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	/**
 	 * Test verify the status and response with invalid methods 
@@ -857,10 +884,12 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/search/10000000087?updateLastAccessTime=true");
+					.everything().when()
+					.get("/search/10000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"search object by ID: 10000000087 does not exist");
+			Assert.assertEquals(res.asString(),
+					"search object by ID: 10000000087 does not exist");
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -868,7 +897,7 @@ public class SearchesCRUD {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	/**
 	 * Test verify the status and response with invalid methods 
@@ -880,10 +909,11 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().post("/search/100000087?updateLastAccessTime=true");
+					.everything().when()
+					.post("/search/100000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"Method Not Allowed");
+			Assert.assertEquals(res.asString(), "Method Not Allowed");
 			Assert.assertTrue(res.getStatusCode() == 405);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -891,6 +921,7 @@ public class SearchesCRUD {
 			e.printStackTrace();
 		}
 	}
+
 	@Test
 	/**
 	 * Test verify the status and response with invalid objects on a correct url path
@@ -902,10 +933,12 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().delete("/search/1000000087?updateLastAccessTime=true");
+					.everything().when()
+					.delete("/search/1000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"Search with Id: 1000000087 does not exist");
+			Assert.assertEquals(res.asString(),
+					"Search with Id: 1000000087 does not exist");
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -913,7 +946,7 @@ public class SearchesCRUD {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	/**
 	 * Test verify the status and response with invalid objects on a correct url path
@@ -925,10 +958,12 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().put("/search/100000000087?updateLastAccessTime=true");
+					.everything().when()
+					.put("/search/100000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"search object by ID: 100000000087 does not exist");
+			Assert.assertEquals(res.asString(),
+					"search object by ID: 100000000087 does not exist");
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -936,7 +971,7 @@ public class SearchesCRUD {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	/**
 	 * create a search using post method
@@ -945,7 +980,7 @@ public class SearchesCRUD {
 		try {
 			System.out
 					.println("POST method is in-progress to create a new search with blank name");
-			String jsonString = "{\"name\":\" \",\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\" \",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/search");
@@ -962,4 +997,89 @@ public class SearchesCRUD {
 			e.printStackTrace();
 		}
 	}
+
+	@Test
+	/**
+	 * Test to verify the flattened folder path details for a search
+	 */
+	public void flattenedFolderPath() {
+		try {
+			System.out
+					.println("Create a folder and a serch in it to see the hierarchy of folder path");
+			// int position = -1;
+			System.out.println("Creating a Folder");
+			String jsonString = "{ \"name\":\"Folder_cont1\",\"description\":\"Folder for EMAAS searches\"}";
+			Response res1 = given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString).when().post("/folder");
+			JsonPath jp1 = res1.jsonPath();
+			// System.out.println(res1.asString());
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			System.out.println("FolderName :" + jp1.get("name"));
+			System.out.println("Folder ID  :" + jp1.get("id"));
+			System.out.println("											");
+			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("Creating a Search");
+			String jsonString2 = "{\"name\":\"Search_cont1\",\"categoryId\":1,\"folderId\":"
+					+ jp1.get("id")
+					+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
+			Response res2 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString2).when().post("/search");
+			JsonPath jp2 = res2.jsonPath();
+			System.out.println("Status code is: " + res2.getStatusCode());
+			// System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 201);
+			System.out.println("											");
+			System.out.println("Search Name :" + jp2.get("name"));
+			System.out.println("Search ID  :" + jp2.get("id"));
+			System.out.println("											");
+			System.out
+					.println("Trying to get search with flattened folder details");
+			Response res3 = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
+					.log()
+					.everything()
+					.when()
+					.get("/search/" + jp2.get("id")
+							+ "?flattenedFolderPath=true");
+			JsonPath jp3 = res3.jsonPath();
+			System.out.println("Status code is: " + res3.getStatusCode());
+			System.out.println(res3.asString());
+			System.out.println("Search Name :" + jp3.get("name"));
+			System.out.println("Search ID  :" + jp3.get("id"));
+			System.out.println("flattenedFolderPath :"
+					+ jp3.get("flattenedFolderPath"));
+			Assert.assertEquals(jp3.get("flattenedFolderPath[0]"),
+					"Folder_cont1");
+			Assert.assertEquals(jp3.get("flattenedFolderPath[1]"),
+					"All Searches");
+			System.out.println("											");
+			System.out.println("Deleting search created above");
+			System.out.println("											");
+			Response res4 = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().delete("/search/" + jp2.get("id"));
+			// System.out.println(res4.asString());
+			System.out.println("Status code is: " + res4.getStatusCode());
+			System.out.println("											");
+			System.out.println("Deleting folder created above");
+			System.out.println("											");
+			Response res5 = given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().delete("/folder/" + jp1.get("id"));
+			System.out.println("											");
+			System.out.println("Status code is: " + res5.getStatusCode());
+			// System.out.println("											");
+			// System.out.println(res5.asString());
+			Assert.assertTrue(res5.getStatusCode() == 204);
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -54,6 +54,8 @@ public class CategoryCRUD {
 			System.out.println("Categories existed :" + jp1.get("name"));
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 200);
+			System.out.println(jp1.getList("name").size());
+			Assert.assertTrue(jp1.getList("name").size() > 0);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 		} catch (Exception e) {
@@ -62,10 +64,10 @@ public class CategoryCRUD {
 	}
 
 	/**
-	 * Read Category Details :
+	 * Read Category Details by Id:
 	 */
 	@Test
-	public void getCategory_details() {
+	public void getCategory_detailsbyId() {
 		try {
 
 			System.out
@@ -81,9 +83,12 @@ public class CategoryCRUD {
 			System.out.println("Category Name :" + jp.get("name"));
 			System.out.println("Category Id   :" + jp.get("id"));
 			System.out.println("Description   :" + jp.get("description"));
+			System.out.println("defaultFolder :" + jp.get("defaultFolder"));
 			Assert.assertEquals(jp.get("description"),
 					"Search Category for Log Analytics");
 			Assert.assertEquals(jp.get("name"), "Log Analytics");
+			Assert.assertEquals(jp.get("id"), 1);
+			Assert.assertEquals(jp.getMap("defaultFolder").get("id"), 2);
 			Assert.assertTrue(res.getStatusCode() == 200);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -92,6 +97,42 @@ public class CategoryCRUD {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Read Category Details by name:
+	 */
+	@Test
+	public void getCategory_detailsbyName() {
+		try {
+
+			System.out
+					.println("GET operation is in-progress to read category details");
+			System.out.println("											");
+
+			Response res = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/category?name=Log Analytics");
+			JsonPath jp = res.jsonPath();
+			System.out.println("											");
+			System.out.println("Status code is : " + res.getStatusCode());
+			System.out.println("Category Name  :" + jp.get("name"));
+			System.out.println("Category Id    :" + jp.get("id"));
+			System.out.println("Description    :" + jp.get("description"));
+			System.out.println("defaultFolderId:" +jp.get("defaultFolderId"));
+			Assert.assertEquals(jp.get("description"),
+					"Search Category for Log Analytics");
+			Assert.assertEquals(jp.get("name"), "Log Analytics");
+			Assert.assertEquals(jp.get("id"), 1);
+			Assert.assertEquals(jp.getMap("defaultFolder").get("id"), 2);
+			Assert.assertTrue(res.getStatusCode() == 200);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	/**
 	 * Category Negative Case1:
@@ -134,7 +175,7 @@ public class CategoryCRUD {
 					.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;
-			String jsonString1 = "{\"name\":\"Search_B\",\"categoryId\":3,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString1 = "{\"name\":\"Search_B\",\"category\":{\"id\":3},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString1).when().post("/search");
@@ -207,7 +248,7 @@ public class CategoryCRUD {
 					.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;
-			String jsonString1 = "{\"name\":\"Search_A\",\"categoryId\":3,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString1 = "{\"name\":\"Search_A\",\"category\":{\"id\":3},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString1).when().post("/search");
