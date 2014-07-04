@@ -78,7 +78,7 @@ public class SearchAPI {
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
 		} catch (JSONException e) {
-			statusCode=404;
+			statusCode=400;
 			message=e.getMessage();
 		}
 		
@@ -235,16 +235,18 @@ public class SearchAPI {
 			}
 			 
 			try{
-				searchObj.setCategoryId(Integer.parseInt(json.getString("categoryId")));
+				JSONObject jsonObj=json.getJSONObject("category");
+				searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
 				}
 				catch(JSONException je){
-					throw new EMAnalyticsWSException("The categoryId key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_CATEGORY_ID_MISSING,je);
+					throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_CATEGORY_ID_MISSING,je);
 				}
 			try{
-				searchObj.setFolderId(Integer.parseInt(json.getString("folderId" ) ) );
+				JSONObject jsonFold=json.getJSONObject("folder");
+				searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id" ) ) );
 				}
 				catch(JSONException je){
-					throw new EMAnalyticsWSException("The folderId key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING,je);
+					throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING,je);
 				}
 		    
 		    	    
@@ -327,9 +329,27 @@ public class SearchAPI {
 		}else 
 			searchObj.setName(json.optString("name", searchObj.getName() ));
 		    searchObj.setDescription(json.optString("description", searchObj.getDescription() ));
-		    
-		    searchObj.setCategoryId(Integer.parseInt(json.optString("categoryId", searchObj.getCategoryId().toString() )));
-		    searchObj.setFolderId(Integer.parseInt(json.optString("folderId" , searchObj.getFolderId().toString() ) ) );
+		    if(json.has("category")){
+		    	try{
+					JSONObject jsonObj=json.getJSONObject("category");
+					searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
+					}
+					catch(JSONException je){
+						throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_CATEGORY_ID_MISSING,je);
+					}
+		    }else
+		    	searchObj.setCategoryId(Integer.parseInt(searchObj.getCategoryId().toString()));
+		    if(json.has("folder"))
+		    {
+		    	try{
+					JSONObject jsonFold=json.getJSONObject("folder");
+					searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id" ) ) );
+					}
+					catch(JSONException je){
+						throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING,je);
+					}
+		    }else
+		    	searchObj.setFolderId(Integer.parseInt(searchObj.getFolderId().toString() ));
 		        
 		    searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked() ) ) ) );
 		    searchObj.setUiHidden( Boolean.parseBoolean(json.optString("uiHidden" , Boolean.toString(searchObj.isUiHidden() ) ) ) );
