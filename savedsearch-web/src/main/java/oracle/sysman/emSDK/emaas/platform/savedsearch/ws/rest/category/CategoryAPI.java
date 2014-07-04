@@ -193,7 +193,7 @@ public class CategoryAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-/*
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCategoryByName(@QueryParam("name") String name)
@@ -223,6 +223,7 @@ public class CategoryAPI
 		return Response.status(statusCode).entity(message).build();
 	}
 
+	/*	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
