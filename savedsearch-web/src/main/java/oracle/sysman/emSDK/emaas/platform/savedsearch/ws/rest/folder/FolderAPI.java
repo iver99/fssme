@@ -185,12 +185,16 @@ public class FolderAPI {
 			folder.setName(folderObj.optString("name", folder.getName()));
 		folder.setDescription(folderObj.optString("description",
 				folder.getDescription()));
-		//folder.setUiHidden(folderObj.optBoolean("uiHidden", folder.isUiHidden()));
-		int parentId=folderObj.optInt("parentId");
-		if( parentId ==0 )
+		folder.setUiHidden(folderObj.optBoolean("uiHidden", folder.isUiHidden()));
+		if(folderObj.has("parentFolder") ){
+			JSONObject jsonFol=folderObj.optJSONObject("parentFolder");
+			int parentId=jsonFol.optInt("id");
+			if( parentId ==0 )
+				folder.setParentId(1);
+			else
+				folder.setParentId(parentId);
+		}else
 			folder.setParentId(1);
-		else
-		folder.setParentId(parentId);
 	
 		return folder;
 	}
@@ -213,14 +217,16 @@ public class FolderAPI {
 		// nullables !!
 		objFld.setDescription(folderObj.optString("description",
 				objFld.getDescription()));
-		//objFld.setUiHidden(folderObj.optBoolean("uiHidden", objFld.isUiHidden()));
-		//if(folderObj.has("parentId") ){
-			int parentId=folderObj.optInt("parentId");
+		objFld.setUiHidden(folderObj.optBoolean("uiHidden", objFld.isUiHidden()));
+		if(folderObj.has("parentFolder") ){
+			JSONObject jsonFol=folderObj.optJSONObject("parentFolder");
+			int parentId=jsonFol.optInt("id");
 			if( parentId ==0 )
 				objFld.setParentId(1);
 			else
-			objFld.setParentId(parentId);
-		
+				objFld.setParentId(parentId);
+		}else
+			objFld.setParentId(1);
 		return objFld;
 	}
 

@@ -8,13 +8,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
-import org.apache.log4j.Logger;
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
+
+import org.apache.log4j.Logger;
 
 
 
@@ -107,7 +107,7 @@ public class FolderManagerImpl extends FolderManager
         try{
         	EntityManagerFactory emf =PersistenceManager.getInstance().getEntityManagerFactory();
         	em = emf.createEntityManager();
-        	EmAnalyticsFolder folderObj = em.find(EmAnalyticsFolder.class, new Long(folderId));
+        	EmAnalyticsFolder folderObj =EmAnalyticsObjectUtil.getFolderById(folderId, em);
         	if(folderObj == null){
             	_logger.error("folder with id" +folderId + "does not exist");
                 throw new EMAnalyticsFwkException("Folder with the Id "+folderId + " " +"does not exist", EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID, null);
@@ -253,7 +253,9 @@ public class FolderManagerImpl extends FolderManager
         try{
         	EntityManagerFactory emf =PersistenceManager.getInstance().getEntityManagerFactory();
         	em = emf.createEntityManager();
-        	EmAnalyticsFolder folderObj = em.find(EmAnalyticsFolder.class, new Long(folderId));
+        	EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(folderId,em);
+        	if(folderObj==null)
+        		return path;
         	List<String> pathList = getPath(folderObj, em);
         	path = pathList.toArray(new String[pathList.size()]);
         	//folder= createFolderObject(folderObj,null);
@@ -284,7 +286,7 @@ public class FolderManagerImpl extends FolderManager
         	
         	else
         	{
-        		EmAnalyticsFolder folderObj = em.find(EmAnalyticsFolder.class, new Long(folderId));
+        		EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(folderId,em);
         		String parentFolder = "parentFolder";
         		folderList = (List<EmAnalyticsFolder>)em.createNamedQuery("Folder.getSubFolder")
 	        			.setParameter(parentFolder, folderObj).getResultList();
@@ -316,15 +318,20 @@ public class FolderManagerImpl extends FolderManager
         try{
         	EntityManagerFactory emf =PersistenceManager.getInstance().getEntityManagerFactory();
         	em = emf.createEntityManager();
-        	folderObj = em.find(EmAnalyticsFolder.class, new Long(folderId));
+        	folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
         	if(folderObj == null){
             	_logger.error("folder with id " +folderId +" does not Exist");
             	throw new EMAnalyticsFwkException("folder with id " +folderId +" does not Exist",EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID,null);
             }
         	if(folderObj.getSystemFolder().intValue()==1)
         		throw new EMAnalyticsFwkException("Folder with id:" +folderId +" is a system folder and cant be deleted",EMAnalyticsFwkException.ERR_DELETE_FOLDER,null);
+        	
+        	
+        	EmAnalyticsObjectUtil.canDeleteFolder(folderId, em);
+        			
+        	folderObj.setDeleted(new BigDecimal(1));
         	em.getTransaction().begin();
-        	em.remove(folderObj);
+        	em.persist(folderObj);
         	em.getTransaction().commit();
         }catch(EMAnalyticsFwkException eme){
             _logger.error("Folder with id: "+folderId +"is a system folder", eme);
@@ -411,7 +418,7 @@ public class FolderManagerImpl extends FolderManager
         return rtnObj;
     }
     
-    private List<String> getPath(EmAnalyticsFolder folderObj,EntityManager em)
+    private List<String> getPath(EmAnalyticsFolder folderObj,EntityManager em) throws EMAnalyticsFwkException 
     {
         
 //        String fs=",";
@@ -424,7 +431,7 @@ public class FolderManagerImpl extends FolderManager
         {   
         		pId= tmpFolder.getFolderId();
             	arrPath.add(tmpFolder.getName());
-            	tmpFolder = em.find(EmAnalyticsFolder.class, pId).getEmAnalyticsFolder();
+            	tmpFolder = EmAnalyticsObjectUtil.getFolderById(pId,em).getEmAnalyticsFolder();
             
         }
         return arrPath;
@@ -456,7 +463,7 @@ public class FolderManagerImpl extends FolderManager
         	       	
         	else
         	{
-	        	EmAnalyticsFolder parentFolderObj = em.find(EmAnalyticsFolder.class, parentId);
+	        	EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(parentId, em);
 	        	String parentFolder = "parentFolder";
 	        	folderObj =  (EmAnalyticsFolder)em.createNamedQuery("Folder.getSubFolderByName")
 	        			.setParameter(parentFolder, parentFolderObj).setParameter("foldername", name).getSingleResult();
@@ -550,7 +557,7 @@ public class FolderManagerImpl extends FolderManager
 		
 	}
 	
-	
+    
 	
 }
 

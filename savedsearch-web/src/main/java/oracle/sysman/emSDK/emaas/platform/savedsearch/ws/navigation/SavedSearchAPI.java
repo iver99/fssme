@@ -244,7 +244,9 @@ public class SavedSearchAPI {
 				for (int i = 0; i < catList.size(); i++) {
 					category = catList.get(i);
 					try {
-						jsonArray.put(JSONUtil.ObjectToJSONObject(category));
+						JSONObject jsonCat=JSONUtil.ObjectToJSONObject(category);
+						jsonCat=modifyCategoryResponse(jsonCat);
+						jsonArray.put(jsonCat);
 					}
 					catch (JSONException e) {
 						message = e.getMessage();
@@ -289,4 +291,22 @@ public class SavedSearchAPI {
 
 	}
 */
+	private JSONObject modifyCategoryResponse(JSONObject jsonObj) throws JSONException{
+		JSONObject rtnObj=new JSONObject();
+		rtnObj.put("id",jsonObj.optInt("id"));
+		rtnObj.put("name", jsonObj.getString("name"));
+		if(jsonObj.has("description"))
+			rtnObj.put("description",jsonObj.getString("description"));
+		if(jsonObj.has("defaultFolderId")){
+			JSONObject fold=new JSONObject();
+			fold.put("id", jsonObj.optInt("defaultFolderId"));
+			fold.put("href",uri.getBaseUri() +"folder/" +jsonObj.getInt("defaultFolderId"));
+			rtnObj.put("defaultFolder", fold);
+		}
+		if(jsonObj.has("parameters"))
+			rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
+		rtnObj.put("href",uri.getBaseUri() +"category/" +jsonObj.getInt("id"));
+		return rtnObj;
+	}
+
 }
