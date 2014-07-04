@@ -27,8 +27,9 @@ public class SearchParamTest
 	@AfterClass
 	public static void testEndSearchparam() throws Exception
 	{
+		Search tmpSearch=null;
 		try {
-			Search tmpSearch = SearchManagerImpl.getInstance().getSearch(searchObj.getId());
+			tmpSearch = SearchManagerImpl.getInstance().getSearch(searchObj.getId());
 			List<SearchParameter> paraList = tmpSearch.getParameters();
 			AssertJUnit.assertTrue(paraList.size() == 4);
 			SearchParameter sp1 = new SearchParameter();
@@ -47,21 +48,24 @@ public class SearchParamTest
 			paraList = tmpSearch.getParameters();
 			AssertJUnit.assertTrue(paraList.size() == 1);
 
+			
+
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(e);
+		}finally{
 			//now delete all the searchParams and search and folder
 
 			tmpSearch.setParameters(new ArrayList<SearchParameter>());
 			tmpSearch = SearchManagerImpl.getInstance().editSearch(tmpSearch);
-
 			//now delete the search
 			SearchManagerImpl objSearch = SearchManagerImpl.getInstance();
 			objSearch.deleteSearch(tmpSearch.getId());
 
 			//now delete the folder
 			FolderManagerImpl.getInstance().deleteFolder(folderId);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
 		}
 	}
 
@@ -73,14 +77,14 @@ public class SearchParamTest
 
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
-			folder.setName("SearchPramTest");
+			folder.setName("SearchPramTest23");
 			folder.setDescription("Test Parameter Description");
 			folder.setUiHidden(false);
 			folder = objFolder.saveFolder(folder);
 			folderId = folder.getId();
 
 			searchObj = new SearchImpl();
-			searchObj.setName("Test Parameter");
+			searchObj.setName("Test Parameter1");
 			searchObj.setDescription("analyze Parameter");
 			searchObj.setFolderId(folderId);
 			searchObj.setCategoryId(1);
