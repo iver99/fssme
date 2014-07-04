@@ -193,25 +193,16 @@ public class FilterSearchAPI {
 		return Response.status(statusCode).entity(message).build();
 	}
 	private Response getLastAccessSearch(int count){
-		JSONObject jsonObj;
 		String message="";
 		JSONArray jsonArray = new JSONArray();
 		try {
 			List<Search> searchList = SearchManager.getInstance()
 					.getSearchListByLastAccessDate(count);
 			for (Search searchObj : searchList) {
-				jsonObj = new JSONObject();
-				jsonObj.put("id", searchObj.getId());
-				jsonObj.put("name", searchObj.getName());
-				jsonObj.put("description", searchObj.getDescription());
-				jsonObj.put("type", search);
-				jsonObj.put("categoryId", searchObj.getCategoryId());
-				jsonObj.put("folderId", searchObj.getFolderId());
-				jsonObj.put("createdOn", JSONUtil.getDate(searchObj.getCreatedOn().getTime()));
-				jsonObj.put("lastModifiedOn", JSONUtil.getDate(searchObj.getLastModifiedOn().getTime()));
-				jsonObj.put("lastAccessDate", JSONUtil.getDate(searchObj.getLastAccessDate()
-						.getTime()));
+				JSONObject jsonObj=JSONUtil.ObjectToJSONObject(searchObj);
+				jsonObj=modifyObject(jsonObj);
 				jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
+				
 				jsonArray.put(jsonObj);
 				
 			}
