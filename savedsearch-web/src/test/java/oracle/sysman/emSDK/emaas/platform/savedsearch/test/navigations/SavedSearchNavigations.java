@@ -10,6 +10,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
@@ -50,9 +51,13 @@ public class SavedSearchNavigations {
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type       :" + jp.get("type"));
-			System.out.println("FolderName :" + jp.get("name"));
-			System.out.println("Folder ID  :" + jp.get("id"));
-			System.out.println("Folder URL :" + jp.get("link"));
+			System.out.println("Name 	   :" + jp.get("name"));
+			System.out.println("ID   	   :" + jp.get("id"));
+			System.out.println("URL  	   :" + jp.get("href"));
+			System.out.println("Description:" + jp.get("description"));
+			System.out.println("CreatedOn  :" + jp.get("createdOn"));
+			System.out.println("ModifiedOn :" + jp.get("lastModifiedOn"));
+			
 			List<String> a = new ArrayList<String>();
 			a = jp.get("name");
 
@@ -65,7 +70,7 @@ public class SavedSearchNavigations {
 					Assert.assertEquals(a.get(position), "All Searches");
 				}
 			}
-			// Assert.assertEquals(jp.getString("name"), "[All Searches]");
+			
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
 			System.out.println("------------------------------------------");
@@ -92,7 +97,7 @@ public class SavedSearchNavigations {
 			System.out.println("Type        :" + jp.get("type[0]"));
 			System.out.println("FolderNames :" + jp.get("name"));
 			System.out.println("Folder IDs  :" + jp.get("id"));
-			System.out.println("Folder URLs :" + jp.get("link"));
+			System.out.println("Folder URLs :" + jp.get("href"));
 			List<String> a = new ArrayList<String>();
 			a = jp.get("name");
 
@@ -123,8 +128,37 @@ public class SavedSearchNavigations {
 
 	@Test
 	/**
-	 * Check for status and response with bad methods
+	 * Checking details of the root folder
 	 */
+	public void rootFolderDetails() {
+		try {
+			System.out
+					.println("This test is to get the details of the top root folder");
+			Response res = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/folder/1");
+			JsonPath jp = res.jsonPath();
+			System.out.println("											");
+			System.out.println("FolderName  :" + jp.get("name"));
+			System.out.println("ID   		:" + jp.get("id"));
+			System.out.println("Link 		:" + jp.get("href"));
+			System.out.println("CreatedOn   :" + jp.get("createdOn"));
+			System.out.println("ModifiedOn  :" + jp.get("lastModifiedOn"));
+			Assert.assertEquals(jp.get("id"),1);
+			Assert.assertEquals(jp.get("name"),"All Searches");
+			Assert.assertEquals(jp.get("description"),"Search Console Root Folder");
+			Assert.assertEquals(jp.get("systemFolder"), true);
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	/*@Test
+	*//**
+	 * Check for status and response with bad methods
+	 *//*
 	public void applyBadMethods() {
 		try {
 			System.out
@@ -165,5 +199,7 @@ public class SavedSearchNavigations {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
+	
+
 }

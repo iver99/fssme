@@ -105,7 +105,7 @@ public class CategoryManagerImpl extends CategoryManager
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (e.getCause().getMessage().contains("EMCLAAAS_DEV.EM_ANALYTICS_SEARCH_FK1")) {
+			else if (e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
 				_logger.error("Error while deleting the category" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while deleting the category as it has associated searches",
@@ -145,11 +145,11 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("EM_ANALYICS_CATEGORY_U01")) {
+			if (dmlce.getCause().getMessage().contains("ANALYICS_CATEGORY_U01")) {
 				throw new EMAnalyticsFwkException("Duplicate category name " + category.getName(),
 						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
 			}
-			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_CATEGORY_FK1")) {
+			else if (dmlce.getCause().getMessage().contains("ANALYTICS_CATEGORY_FK1")) {
 				throw new EMAnalyticsFwkException("Parent folder with id " + category.getDefaultFolderId() + " missing: "
 						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
 			}
@@ -294,7 +294,7 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("EM_ANALYICS_CATEGORY_U01")) {
+			if (dmlce.getCause().getMessage().contains("ANALYICS_CATEGORY_U01")) {
 				throw new EMAnalyticsFwkException("Category name " + category.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
 			}
@@ -304,7 +304,7 @@ public class CategoryManagerImpl extends CategoryManager
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_CATEGORY_FK1")) {
+			else if (dmlce.getCause().getMessage().contains("ANALYTICS_CATEGORY_FK1")) {
 				throw new EMAnalyticsFwkException("Default folder with id " + category.getDefaultFolderId() + " missing: "
 						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
 			}

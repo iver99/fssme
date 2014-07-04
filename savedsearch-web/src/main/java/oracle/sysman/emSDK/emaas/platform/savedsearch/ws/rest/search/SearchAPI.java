@@ -40,6 +40,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 public class SearchAPI {
 
 	private static final String FOLDER_PATH="flattenedFolderPath";
+	
 	@Context
 	UriInfo uri;
 	
@@ -56,9 +57,8 @@ public class SearchAPI {
 		 
 			Search searchObj = sman.getSearch(searchid);
 			jsonObj =JSONUtil.ObjectToJSONObject(searchObj);
-			jsonObj.put("creationDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("creationDate"))));
-			jsonObj.put("lastModificationDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModificationDate"))));
-			jsonObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
+			//here convert the date into utc format
+			jsonObj =addHref(jsonObj);
 			if(bPath)
 			{  
 				 FolderManager folderMgr = FolderManager.getInstance();	
@@ -66,11 +66,11 @@ public class SearchAPI {
 				 String[] pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
 				 for(String p: pathArray){
 					 jsonPathArray.put(p);
-				 }
+			 }
+							 
 				 jsonObj.put(FOLDER_PATH, jsonPathArray);
 			}
-			jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
-			 message=jsonObj.toString();
+			message=jsonObj.toString();
 		} catch (EMAnalyticsFwkException e) {
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
@@ -79,11 +79,42 @@ public class SearchAPI {
 			statusCode=e.getStatusCode();
 		} catch (JSONException e) {
 			statusCode=404;
+			message=e.getMessage();
 		}
 		
         return Response.status(statusCode).entity(message).build();
     }
+	private JSONObject addHref(JSONObject jsonObj) throws JSONException{
+		JSONObject rtnObj=new JSONObject();
+		JSONObject jsonCat= new JSONObject();
+		jsonCat.put("id", jsonObj.getInt("categoryId"));
+		jsonCat.put("href",uri.getBaseUri() +"category/" +jsonObj.getInt("categoryId"));
+		JSONObject jsonFold = new JSONObject();
+		jsonFold.put("id", jsonObj.getInt("folderId"));
+		jsonFold.put("href",uri.getBaseUri() +"folder/" +jsonObj.getInt("folderId"));
+		jsonObj.put("createdOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("createdOn"))));
+		jsonObj.put("lastModifiedOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModifiedOn"))));
+		rtnObj.put("id", jsonObj.optInt("id"));
+		rtnObj.put("name", jsonObj.optString("name"));
+		if(jsonObj.has("description"))
+			rtnObj.put("description",jsonObj.getString("description"));
+		rtnObj.put("category",jsonCat);
+		rtnObj.put("folder",jsonFold);
+		rtnObj.put("owner", jsonObj.optString("owner"));
+		rtnObj.put("createdOn",jsonObj.optString("createdOn"));
+		rtnObj.put("lastModifiedBy",jsonObj.optString("lastModifiedBy"));
+		rtnObj.put("lastModifiedOn", jsonObj.optString("lastModifiedOn"));
+		if(jsonObj.has("lastAccessDate"))
+			rtnObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
+		if(jsonObj.has("queryStr"))
+		rtnObj.put("queryStr", jsonObj.getString("queryStr"));
+		if(jsonObj.has("parameters"))
+		rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
+		rtnObj.put("href", uri.getBaseUri() + "search/" + jsonObj.getInt("id"));
 		
+		return rtnObj;
+		
+	}
 	@DELETE
 	@Path("{id: [0-9]*}")
 	public Response deleteSearch(@PathParam("id") long searchId ) {
@@ -108,21 +139,47 @@ public class SearchAPI {
 	 {
 		String message="";
 		int statusCode=201;
+		JSONObject jsonObj;
 		SearchManager sman =SearchManager.getInstance() ;
 		try {
 			Search searchObj = createSearchObjectForAdd(inputJsonObj);
 			Search savedSearch = sman.saveSearch(searchObj);
-			message = JSONUtil.ObjectToJSONString(savedSearch);			 
+			jsonObj=JSONUtil.ObjectToJSONObject(savedSearch);
+			jsonObj=addHref(jsonObj);
+			message=jsonObj.toString();
+			//message = JSONUtil.ObjectToJSONString(savedSearch);			 
 		} catch (EMAnalyticsFwkException e) {
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
 		}catch(EMAnalyticsWSException e){
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
+		} catch (JSONException e) {
+			e.printStackTrace();
+			statusCode=404;
+			message=e.getMessage();
 		}
 		return Response.status(statusCode).entity(message).build() ;
 	}
     
+	@PUT
+	@Path("{id: [0-9]*}")
+	public Response editSearchAccessDate(@PathParam("id") long searchId,@QueryParam("updateLastAccessTime") boolean update) {
+		String query=uri.getRequestUri().getQuery();
+		if(query == null)
+			return Response.status(400).entity("Please specify updateLastAccessTime true or false").build();
+		String[] input=query.split("=");
+		if(input.length ==2){
+			if(update)
+				return updateLastAccessTime(searchId);
+			else
+				return Response.status(200).build();
+		}
+		else
+		return Response.status(400).entity("please give the value for updateLastAccessTime").build();
+	}
+
+	
 	@PUT
 	@Path("{id: [0-9]*}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -131,11 +188,16 @@ public class SearchAPI {
 	{
 		String message=null;
 		int statusCode=200;
+		JSONObject jsonObj;
+		
 		SearchManager sman =SearchManager.getInstance() ;
 		try {
 			Search searchObj = createSearchObjectForEdit(inputJsonObj, sman.getSearch(searchId));
 		    Search savedSearch = sman.editSearch(searchObj);
-			message  = JSONUtil.ObjectToJSONString(savedSearch);
+		    jsonObj=JSONUtil.ObjectToJSONObject(savedSearch);
+			jsonObj=addHref(jsonObj);
+			message=jsonObj.toString();
+			
 		}
 		catch (EMAnalyticsFwkException e) {
 				message=e.getMessage();
@@ -143,6 +205,11 @@ public class SearchAPI {
 		}catch(EMAnalyticsWSException e){
 			message=e.getMessage();
 			statusCode=e.getStatusCode();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			statusCode=404;
+			message=e.getMessage();
 		}
 		
 		return Response.status(statusCode).entity(message).build() ;
@@ -156,9 +223,10 @@ public class SearchAPI {
 		// Data population !
 			try{
 				String name=json.getString("name");
-				if(name == null)
+				
+				if(name.trim() == null)
 					throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-				if(name !=null && name.equals(""))
+				if(name !=null && name.trim().equals(""))
 					throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 				searchObj.setName(name);
 			}
@@ -204,9 +272,9 @@ public class SearchAPI {
 			    		searchParam.setAttributes(jsonParam.optString("attributes"));
 			    	try{
 			    		String name=jsonParam.getString("name");
-						if(name == null)
+						if(name.trim() == null)
 							throw new EMAnalyticsWSException("The name key for search param can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
-						if(name !=null && name.equals(""))
+						if(name !=null && name.trim().equals(""))
 							throw new EMAnalyticsWSException("The name key for search param can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
 					
 			    		searchParam.setName(name);
@@ -248,6 +316,15 @@ public class SearchAPI {
 			  * json.optString() returns second String if the key is not found 
 			  * Useful for edit
 			  */
+		if(json.has("name")){
+			String name=json.optString("name");
+		
+		if(name.trim() == null)
+			throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+		if(name !=null && name.trim().equals(""))
+			throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+		searchObj.setName(name);
+		}else 
 			searchObj.setName(json.optString("name", searchObj.getName() ));
 		    searchObj.setDescription(json.optString("description", searchObj.getDescription() ));
 		    
@@ -275,8 +352,13 @@ public class SearchAPI {
 			    	searchParam.setAttributes(jsonParam.optString("attributes"));
 			    	
 			    	try{
-			    		searchParam.setName(jsonParam.getString("name"));
-						}
+			    		String name=jsonParam.getString("name");
+			    		if(name.trim() == null)
+							throw new EMAnalyticsWSException("The name key for search param can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+						if(name !=null && name.trim().equals(""))
+							throw new EMAnalyticsWSException("The name key for search param can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+						searchParam.setName(name);
+					}
 					catch(JSONException je){
 						throw new EMAnalyticsWSException("The name key for search param is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING,je);
 					}
@@ -303,6 +385,23 @@ public class SearchAPI {
 		return searchObj;
 		
 		
+	}
+	public Response updateLastAccessTime(long searchId){
+		String message = null;
+		int statusCode = 200;
+		try {
+			SearchManager sman = SearchManager.getInstance();
+			sman.getSearch(searchId);
+			java.util.Date date = sman.modifyLastAccessDate(searchId);
+			message = String.valueOf(JSONUtil.getDate(date.getTime()));
+
+		} catch (EMAnalyticsFwkException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		return Response.status(statusCode).entity(message).build();
+
+
 	}
 }
 

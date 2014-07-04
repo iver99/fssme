@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.search;
 
+import static com.jayway.restassured.RestAssured.given;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -685,7 +687,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res3 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/lastaccess/searches/2");
+					.everything().when().get("/searches?lastAccessCount=2");
 			JsonPath jp3 = res3.jsonPath();
 			// System.out.println(res3.asString());
 			System.out.println("Last accessed top 2 search Id's are  :"
@@ -703,7 +705,7 @@ public class SearchesCRUD {
 			Response res4 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().when()
-					.put("/lastaccess/search/" + jp3.get("id[1]"));
+					.put("/search/" + jp3.get("id[1]")+"?updateLastAccessTime=true");
 			// JsonPath jp4 = res4.jsonPath();
 			System.out.println(res4.asString());
 			System.out.println("											");
@@ -721,7 +723,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res5 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/lastaccess/searches/2");
+					.everything().when().get("/searches?lastAccessCount=2");
 			JsonPath jp5 = res5.jsonPath();
 			// System.out.println(res5.asString());
 			System.out.println("Last accessed top 2 search Id's are  :"
@@ -758,11 +760,12 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/lastaccess/searches/0");
-			// JsonPath jp = res.jsonPath();
-			// System.out.println(res.asString());
+					.everything().when().get("/searches/");
+			//System.out.println(res.asString());
+			JsonPath jp = res.jsonPath();
+			System.out.println("Searches Last Accessed Are :"+ jp.get("name"));
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertNotNull(res.asString());
+			//Assert.assertNotEquals(res.asString(),"");
 			Assert.assertTrue(res.getStatusCode() == 200);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -773,20 +776,92 @@ public class SearchesCRUD {
 
 	@Test
 	/**
+	 * Test to return all last accessed searches
+	 */
+	public void returnNolastaccessedSearches() {
+		try {
+			System.out
+					.println("This test is NOT to return any last accessed searches with GET method");
+			System.out.println("											");
+			Response res = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/searches?lastAccessCount=0");
+			// JsonPath jp = res.jsonPath();
+			//System.out.println(res.asString());
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertEquals(res.asString(),"");
+			Assert.assertTrue(res.getStatusCode() == 200);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	/**
+	 * Test to return all last accessed searches with negative count
+	 */
+	public void returnNolastaccessedSearches_NegCount() {
+		try {
+			System.out
+					.println("This test is NOT to return any last accessed searches with GET method for negative count");
+			System.out.println("											");
+			Response res = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/searches?lastAccessCount=-1");
+			// JsonPath jp = res.jsonPath();
+			//System.out.println(res.asString());
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertEquals(res.asString(),"Id/count should be a positive number and not an alphanumeric.");
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	/**
+	 * Test to return all last accessed searches with text count
+	 */
+	public void returnNolastaccessedSearches_textCount() {
+		try {
+			System.out
+					.println("This test is NOT to return any last accessed searches with GET method for text count");
+			System.out.println("											");
+			Response res = RestAssured.given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/searches?lastAccessCount=sravan");
+			// JsonPath jp = res.jsonPath();
+			//System.out.println(res.asString());
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertEquals(res.asString(),"Id/count should be a positive number and not an alphanumeric.");
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	/**
 	 * Test verify the status and response with invalid methods 
 	 */
-	public void lastaccessedSearches_invalidMethod1() {
+	public void lastaccessedSearches_invalidObjects1() {
 		try {
 			System.out
 					.println("Case1:This test is to check the status and response with invalid methods");
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/lastaccess/search/11410");
+					.everything().when().get("/search/10000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"Method Not Allowed");
-			Assert.assertTrue(res.getStatusCode() == 405);
+			Assert.assertEquals(res.asString(),"search object by ID: 10000000087 does not exist");
+			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 		} catch (Exception e) {
@@ -805,7 +880,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().post("/lastaccess/search/11410");
+					.everything().when().post("/search/100000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertEquals(res.asString(),"Method Not Allowed");
@@ -818,20 +893,20 @@ public class SearchesCRUD {
 	}
 	@Test
 	/**
-	 * Test verify the status and response with invalid methods on a correct url path
+	 * Test verify the status and response with invalid objects on a correct url path
 	 */
-	public void lastaccessedSearches_invalidMethod3() {
+	public void lastaccessedSearches_invalidObjects3() {
 		try {
 			System.out
 					.println("Case3:This test is to check the status and response with invalid methods");
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().delete("/lastaccess/search/11410");
+					.everything().when().delete("/search/1000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"Method Not Allowed");
-			Assert.assertTrue(res.getStatusCode() == 405);
+			Assert.assertEquals(res.asString(),"Search with Id: 1000000087 does not exist");
+			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 		} catch (Exception e) {
@@ -841,20 +916,46 @@ public class SearchesCRUD {
 	
 	@Test
 	/**
-	 * Test verify the status and response with invalid methods on a correct url path
+	 * Test verify the status and response with invalid objects on a correct url path
 	 */
-	public void lastaccessedSearches_invalidMethod4() {
+	public void lastaccessedSearches_invalidObjects4() {
 		try {
 			System.out
 					.println("Case4:This test is to check the status and response with invalid methods");
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().put("/lastaccess/search/");
+					.everything().when().put("/search/100000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(),"Please specify the searchId");
-			Assert.assertTrue(res.getStatusCode() == 400);
+			Assert.assertEquals(res.asString(),"search object by ID: 100000000087 does not exist");
+			Assert.assertTrue(res.getStatusCode() == 404);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	/**
+	 * create a search using post method
+	 */
+	public void search_createwithEmptyName() {
+		try {
+			System.out
+					.println("POST method is in-progress to create a new search with blank name");
+			String jsonString = "{\"name\":\" \",\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			Response res1 = given().contentType(ContentType.JSON)
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().body(jsonString).when().post("/search");
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertEquals(res1.asString(),
+					"The name key for search can not be empty in the input JSON Object");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 		} catch (Exception e) {

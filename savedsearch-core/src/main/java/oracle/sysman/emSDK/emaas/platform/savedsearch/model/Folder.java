@@ -54,7 +54,7 @@ public interface Folder
 	 * 
 	 * @return creation date
 	 */
-	public Date getCreationDate();
+	public Date getCreatedOn();
 
 	/**
 	 * Returns the user who last modified the search.
@@ -68,7 +68,7 @@ public interface Folder
 	 * 
 	 * @return last modification date
 	 */
-	public Date getLastModificationDate();
+	public Date getLastModifiedOn();
 
 	/**
 	 * Returns <code>true</code> if the folder is created by application (and not user created).

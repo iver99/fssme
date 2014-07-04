@@ -76,9 +76,9 @@ public class FolderManagerImpl extends FolderManager
             _logger.error("Folder with name "+folder.getName()+" was saved but could not bve retrieved back", eme);
             throw eme;
         }catch(PersistenceException dmlce){
-            if(dmlce.getCause().getMessage().contains("EM_ANALYTICS_FOLDERS_U01"))
+            if(dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01"))
                 throw new EMAnalyticsFwkException("Folder with name "+folder.getName() +" already exist", EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[]{folder.getName()});
-            else if(dmlce.getCause().getMessage().contains("EM_ANALYTICS_FOLDERS_FK1"))
+            else if(dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1"))
                 throw new EMAnalyticsFwkException("Parent folder with id "+folder.getParentId()+" does not exist: ", EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
             else if(dmlce.getCause().getMessage().contains("Cannot acquire data source"))
         	{
@@ -221,9 +221,9 @@ public class FolderManagerImpl extends FolderManager
             _logger.error("Folder with name "+folder.getName()+" was saved but could not bve retrieved back", eme);
             throw eme;
         }catch(PersistenceException dmlce){
-            if(dmlce.getCause().getMessage().contains("EM_ANALYTICS_FOLDERS_U01"))
+            if(dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01"))
                 throw new EMAnalyticsFwkException("Folder name "+folder.getName() +" already exist", EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[]{folder.getName()});
-            else if(dmlce.getCause().getMessage().contains("EM_ANALYTICS_FOLDERS_FK1"))
+            else if(dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1"))
                 throw new EMAnalyticsFwkException("Parent folder with id "+folder.getParentId()+" missing: "+folder.getName(), EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
             if(dmlce.getCause().getMessage().contains("Cannot acquire data source"))
         	{
@@ -342,9 +342,9 @@ public class FolderManagerImpl extends FolderManager
         	_logger.error("Error while acquiring the data source" +e.getMessage(), e);
         	throw new EMAnalyticsFwkException("Error while connecting to data source, please check the data source details: ", EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null, e);
         	}
-        	else if(e.getCause().getMessage().contains("EM_ANALYTICS_SEARCH_FK2"))
+        	else if(e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK2"))
         		throw new EMAnalyticsFwkException("folder with id " +folderId +" has search child",EMAnalyticsFwkException.ERR_DELETE_FOLDER,null,e);
-        	else if(e.getCause().getMessage().contains("EM_ANALYTICS_SEARCH_FK1"))
+        	else if(e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1"))
         		throw new EMAnalyticsFwkException("folder with id " +folderId +" has category child",EMAnalyticsFwkException.ERR_DELETE_FOLDER,null,e);
         	else{
         	_logger.error("Error while deleting the folder with id:"+folderId, e);
@@ -374,6 +374,7 @@ public class FolderManagerImpl extends FolderManager
             
             rtnObj.setId((int)(folderObj.getFolderId()));
             EmAnalyticsFolder parentfolder = (EmAnalyticsFolder)folderObj.getEmAnalyticsFolder();
+            
             if(parentfolder!=null && parentfolder.getFolderId() != 0 )
                 rtnObj.setParentId((int)(parentfolder.getFolderId()));
             
@@ -403,11 +404,11 @@ public class FolderManagerImpl extends FolderManager
  			}
             //
             rtnObj.setOwner(folderObj.getOwner());
-            rtnObj.setCreationDate(folderObj.getCreationDate());
+            rtnObj.setCreatedOn(folderObj.getCreationDate());
             rtnObj.setLastModifiedBy(folderObj.getLastModifiedBy());
-            rtnObj.setLastModificationDate(folderObj.getLastModificationDate());
+            rtnObj.setLastModifiedOn(folderObj.getLastModificationDate());
             rtnObj.setSystemFolder(((int)folderObj.getSystemFolder().intValueExact()==0? false:true));
-            rtnObj.setUiHidden(folderObj.getUiHidden().intValueExact()==0?false:true);          
+            //rtnObj.setUiHidden(folderObj.getUiHidden().intValueExact()==0?false:true);          
            
             
         }catch(Exception e){
@@ -523,11 +524,11 @@ public class FolderManagerImpl extends FolderManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_FOLDERS_U01")) {
+			if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01")) {
 				throw new EMAnalyticsFwkException("Folder with name " + folder.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[] { folder.getName() });
 			}
-			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_FOLDERS_FK1")) {
+			else if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1")) {
 				throw new EMAnalyticsFwkException("Parent folder with id " + folder.getParentId() + " does not exist: ",
 						EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
 			}
