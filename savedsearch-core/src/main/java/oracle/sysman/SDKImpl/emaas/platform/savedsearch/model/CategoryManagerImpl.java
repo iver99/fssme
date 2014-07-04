@@ -24,6 +24,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
  *  @since   release specific (what release of product did this appear in)
  */
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -81,14 +82,16 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			categoryObj = em.find(EmAnalyticsCategory.class, categoryId);
+			categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId,em);
 			if (categoryObj == null) {
 				_logger.error("Category object by Id: " + categoryId + " " + "does not exist");
 				throw new EMAnalyticsFwkException("Category object by Id: " + categoryId + " " + "does not exist",
 						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, null);
 			}
+			boolean bResult =EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
+			categoryObj.setDeleted(new BigDecimal(1));
 			em.getTransaction().begin();
-			em.remove(categoryObj);
+			em.persist(categoryObj);
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
@@ -215,8 +218,7 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			EntityManager em = emf.createEntityManager();
-			EmAnalyticsCategory categoryObj = em.find(EmAnalyticsCategory.class, categoryId);
-
+			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			if (categoryObj != null) {
 				category = createCategoryObject(categoryObj, null);
 			}
@@ -376,7 +378,7 @@ public class CategoryManagerImpl extends CategoryManager
 										}
 									}
 									else if (obj instanceof Integer) {
-										EmAnalyticsFolder tmpfld = em.find(EmAnalyticsFolder.class, ((Integer) obj).longValue());
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(), em);												
 										if (tmpfld != null) {
 											category.setDefaultFolderId((Integer) obj);
 										}
