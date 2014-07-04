@@ -12,11 +12,12 @@ import java.util.Set;
 @Entity
 @Table(name = "EMS_ANALYTICS_FOLDERS")
 @NamedQueries({
+	    @NamedQuery(name = "Folder.getFolderById", query = "Select o from EmAnalyticsFolder o where  o.folderId=:id AND O.deleted =0") ,
 		@NamedQuery(name = "Folder.getSubFolder", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= "
-				+ ":parentFolder"),
-		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null"),
-		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername"),
-		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername") })
+				+ ":parentFolder" + " AND o.deleted=0"),
+		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.deleted=0"),
+		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername AND O.deleted =0"),
+		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername AND O.deleted =0") })
 @SequenceGenerator(name = "EMS_ANALYTICS_FOLDERS_SEQ", sequenceName = "EMS_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
 public class EmAnalyticsFolder implements Serializable
 {
@@ -64,6 +65,10 @@ public class EmAnalyticsFolder implements Serializable
 
 	@Column(name = "UI_HIDDEN")
 	private BigDecimal uiHidden;
+	
+
+	@Column(name = "DELETED")
+	private BigDecimal deleted;
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@OneToMany(mappedBy = "emAnalyticsFolder")
@@ -224,6 +229,16 @@ public class EmAnalyticsFolder implements Serializable
 	public void setUiHidden(BigDecimal uiHidden)
 	{
 		this.uiHidden = uiHidden;
+	}
+	
+	public BigDecimal getDeleted()
+	{
+		return this.deleted;
+	}
+
+	public void setDeleted(BigDecimal deleted) 
+	{
+		this.deleted = deleted;
 	}
 
 	public Set<EmAnalyticsCategory> getEmAnalyticsCategories()

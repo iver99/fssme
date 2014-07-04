@@ -213,14 +213,15 @@ public class SearchManagerImpl extends SearchManager {
 			EntityManagerFactory emf = PersistenceManager.getInstance()
 					.getEntityManagerFactory();
 			em = emf.createEntityManager();
-			searchObj = em.find(EmAnalyticsSearch.class, searchId);
+			searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
 			if (searchObj == null)
 				throw new EMAnalyticsFwkException("Search with Id: " + searchId
 						+ " does not exist",
 						EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null);
 
+			searchObj.setDeleted(new BigDecimal(1));
 			em.getTransaction().begin();
-			em.remove(searchObj);
+			em.persist(searchObj);
 			em.getTransaction().commit();
 		} catch (EMAnalyticsFwkException eme) {
 			_logger.error("Search with Id: " + searchId + " does not exist",
@@ -342,8 +343,7 @@ public class SearchManagerImpl extends SearchManager {
 			EntityManagerFactory emf;
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsFolder folder = em.find(EmAnalyticsFolder.class,
-					new Long(folderId));
+			EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);				
 			List<EmAnalyticsSearch> searchList = em
 					.createNamedQuery("Search.getSearchListByFolder")
 					.setParameter("folder", folder).getResultList();
@@ -385,8 +385,7 @@ public class SearchManagerImpl extends SearchManager {
 			EntityManagerFactory emf;
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsCategory category = em.find(EmAnalyticsCategory.class,
-					categoryId);
+			EmAnalyticsCategory category = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);					
 			List<EmAnalyticsSearch> searchList = em
 					.createNamedQuery("Search.getSearchListByCategory")
 					.setParameter("category", category).getResultList();
@@ -539,8 +538,7 @@ public class SearchManagerImpl extends SearchManager {
 			EntityManagerFactory emf;
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsFolder folder = em.find(EmAnalyticsFolder.class,
-					new Long(folderId));
+			EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			searchEntity = (EmAnalyticsSearch) em
 					.createNamedQuery("Search.getSearchByName")
 					.setParameter("folder", folder)
@@ -600,8 +598,7 @@ public class SearchManagerImpl extends SearchManager {
 						try {
 							if (obj != null && obj instanceof Integer) {
 								long id = ((Integer) (obj)).longValue();
-								EmAnalyticsFolder folderObj = em.find(
-										EmAnalyticsFolder.class, id);
+								EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(id, em);
 								searchEntity = (EmAnalyticsSearch) em
 										.createNamedQuery(
 												"Search.getSearchByName")
@@ -626,9 +623,7 @@ public class SearchManagerImpl extends SearchManager {
 							}
 							if (obj != null) {
 								if (obj instanceof Integer) {
-									EmAnalyticsFolder tmpfld = em.find(
-											EmAnalyticsFolder.class,
-											((Integer) obj).longValue());
+									EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(), em);										
 									if (tmpfld != null)
 										search.setFolderId((Integer) obj);
 									else {
@@ -642,9 +637,7 @@ public class SearchManagerImpl extends SearchManager {
 								continue;
 							}
 							if ((cateObj instanceof Integer)) {
-								EmAnalyticsCategory categoryObj = em.find(
-										EmAnalyticsCategory.class,
-										((Integer) cateObj).longValue());
+								EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getCategoryById(((Integer) cateObj).longValue(), em);								
 								if (categoryObj != null)
 									search.setCategoryId((Integer) cateObj);
 								else {
@@ -690,10 +683,9 @@ public class SearchManagerImpl extends SearchManager {
 							if (search != null) {
 								if (search.getFolderId() != null) {
 									try {
-										EmAnalyticsFolder fObj = em.find(
-												EmAnalyticsFolder.class, search
-														.getFolderId()
-														.longValue());
+										EmAnalyticsFolder fObj = EmAnalyticsObjectUtil.getFolderById(search
+												.getFolderId()
+												.longValue(), em);												
 										searchEntity = (EmAnalyticsSearch) em
 												.createNamedQuery(
 														"Search.getSearchByName")
@@ -771,8 +763,7 @@ public class SearchManagerImpl extends SearchManager {
 		EmAnalyticsFolder folder = null;
 		try {
 			if (search.getFolderId() != null)
-				folder = em.find(EmAnalyticsFolder.class,
-						new Long(search.getFolderId()));
+				folder =EmAnalyticsObjectUtil.getFolderById(search.getFolderId(), em);				
 			else {
 				if (search.getFolderDetails() != null) {
 
@@ -801,8 +792,7 @@ public class SearchManagerImpl extends SearchManager {
 		EmAnalyticsCategory category = null;
 		try {
 			if (search.getCategoryId() != null)
-				category = em.find(EmAnalyticsCategory.class,
-						new Long(search.getCategoryId()));
+				category = EmAnalyticsObjectUtil.getCategoryById(search.getCategoryId(), em);				
 			else {
 				if (search.getCategoryDetails() != null) {
 					category = EmAnalyticsObjectUtil
@@ -828,8 +818,7 @@ public class SearchManagerImpl extends SearchManager {
 			StringBuilder query = new StringBuilder(FOLDER_ORDERBY);
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsFolder folder = em.find(EmAnalyticsFolder.class,
-					folderId);
+			EmAnalyticsFolder folder =EmAnalyticsObjectUtil.getFolderById(folderId,em);
 
 			if (catName != null && catName.trim().length() != 0) {
 				EmAnalyticsCategory category = null;
@@ -959,7 +948,7 @@ public class SearchManagerImpl extends SearchManager {
 			Date tmp=null;
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsSearch searchObj = em.find(EmAnalyticsSearch.class,searchId);
+			EmAnalyticsSearch searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
 			EmAnalyticsLastAccess accessObj = null;
 			if(searchObj!=null)
 			{
@@ -980,9 +969,6 @@ public class SearchManagerImpl extends SearchManager {
 			}else{
 				throw new Exception("Invalid search id: "+searchId);
 			}
-			
-				
-		
 		} catch (Exception e) {
 			if (e.getCause() != null
 					&& e.getCause().getMessage()

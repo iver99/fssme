@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.*;
 
@@ -16,9 +17,11 @@ import java.util.Set;
 @Entity
 @Table(name = "EMS_ANALYTICS_CATEGORY")
 @NamedQueries({
-		@NamedQuery(name = "Category.getAllCategory", query = "SELECT e FROM EmAnalyticsCategory e"),
+		@NamedQuery(name = "Category.getCategoryById", query = "SELECT e FROM EmAnalyticsCategory e Where e.categoryId = :id  AND e.deleted =0 "),
+		@NamedQuery(name = "Category.getCategoryByFolder", query = "SELECT e FROM EmAnalyticsCategory e Where e.emAnalyticsFolder = :id  AND e.deleted =0 "),
+		@NamedQuery(name = "Category.getAllCategory", query = "SELECT e FROM EmAnalyticsCategory e Where e.deleted =0 "),
 		@NamedQuery(name = "Category.getCategoryByName", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
-				+ ":categoryName") })
+				+ ":categoryName" + " AND e.deleted = 0 " ) })
 @SequenceGenerator(name = "EMS_ANALYTICS_CATEGORY_SEQ", sequenceName = "EMS_ANALYTICS_CATEGORY_SEQ", allocationSize = 1)
 public class EmAnalyticsCategory implements Serializable
 {
@@ -59,6 +62,10 @@ public class EmAnalyticsCategory implements Serializable
 	@ManyToOne
 	@JoinColumn(name = "DEFAULT_FOLDER_ID")
 	private EmAnalyticsFolder emAnalyticsFolder;
+	
+
+	@Column(name = "DELETED")
+	private BigDecimal deleted;
 
 	//bi-directional many-to-one association to EmAnalyticsCategoryParam
 
@@ -182,6 +189,16 @@ public class EmAnalyticsCategory implements Serializable
 	public void setEmAnalyticsFolder(EmAnalyticsFolder emAnalyticsFolder)
 	{
 		this.emAnalyticsFolder = emAnalyticsFolder;
+	}
+	
+	public BigDecimal getDeleted()
+	{
+		return this.deleted;
+	}
+
+	public void setDeleted(BigDecimal deleted) 
+        {
+		this.deleted = deleted;
 	}
 
 	public Set<EmAnalyticsCategoryParam> getEmAnalyticsCategoryParams()
