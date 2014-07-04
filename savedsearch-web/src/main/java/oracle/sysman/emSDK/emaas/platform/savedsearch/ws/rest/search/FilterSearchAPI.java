@@ -201,6 +201,12 @@ public class FilterSearchAPI {
 			for (Search searchObj : searchList) {
 				JSONObject jsonObj=JSONUtil.ObjectToJSONObject(searchObj);
 				jsonObj=modifyObject(jsonObj);
+				FolderManager folderMgr = FolderManager.getInstance();	
+				 JSONArray jsonPathArray = new JSONArray();
+				 String[] pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
+				 for(String p: pathArray)
+					 jsonPathArray.put(p);
+				jsonObj.put("flattenedFolderPath", jsonPathArray);	 
 				jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
 				
 				jsonArray.put(jsonObj);

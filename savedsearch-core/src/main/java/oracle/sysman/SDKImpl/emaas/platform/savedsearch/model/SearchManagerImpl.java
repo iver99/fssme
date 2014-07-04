@@ -307,6 +307,7 @@ public class SearchManagerImpl extends SearchManager {
 					.createNamedQuery("Search.getSearchCountByFolder")
 					.setParameter("folder", folderId).getSingleResult())
 					.intValue();
+			return count;
 		} catch (Exception e) {
 			if (e.getCause().getMessage()
 					.contains("Cannot acquire data source")) {
@@ -326,8 +327,11 @@ public class SearchManagerImpl extends SearchManager {
 						EMAnalyticsFwkException.ERR_GENERIC, null, e);
 			}
 		}
-
-		return count; // getSearchListByFolderId(folderId).size();
+		finally {
+			if (em != null)
+				em.close();
+		}
+		
 	}
 
 	@Override
@@ -366,6 +370,10 @@ public class SearchManagerImpl extends SearchManager {
 						EMAnalyticsFwkException.ERR_GENERIC, null, e);
 			}
 		}
+		finally {
+			if (em != null)
+				em.close();
+		}
 	}
 
 	@Override
@@ -403,6 +411,10 @@ public class SearchManagerImpl extends SearchManager {
 								+ categoryId,
 						EMAnalyticsFwkException.ERR_GENERIC, null, e);
 			}
+		}
+		finally {
+			if (em != null)
+				em.close();
 		}
 
 	}
@@ -977,11 +989,10 @@ public class SearchManagerImpl extends SearchManager {
 						EMAnalyticsFwkException.ERR_GENERIC, null, e);
 			}
 		}
-		
-	
-	
-		
-		
+		finally {
+			if (em != null)
+				em.close();
+		}
 	}
 
 	/*
