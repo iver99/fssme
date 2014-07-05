@@ -39,10 +39,10 @@ public class SearchManagerImpl extends SearchManager {
 	private static final Logger _logger = Logger
 			.getLogger(SearchManagerImpl.class);
 	public static final SearchManagerImpl _instance = new SearchManagerImpl();
-	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder ";
-	private static final String FILTER_BY_CATEGORY = "and e.emAnalyticsCategory = :category";
+	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.deleted=0 ";
+	private static final String FILTER_BY_CATEGORY = "and e.emAnalyticsCategory = :category ";
 	private static final String SEARCH_ENT_PREFIX = "e.";
-	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e order by e.accessDate DESC";
+	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.accessDate DESC ";
 			//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
 	/**
