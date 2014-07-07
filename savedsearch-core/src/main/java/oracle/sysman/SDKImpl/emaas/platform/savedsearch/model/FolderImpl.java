@@ -13,7 +13,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 
 
 @XmlRootElement
-@XmlType(propOrder={"id","name","description","parentId","creationDate","lastModificationDate","owner","lastModifiedBy","systemFolder","uiHidden"})
+@XmlType(propOrder={"id","name","description","parentId","createdOn","owner","lastModifiedOn","systemFolder","uiHidden","lastModifiedBy"})
 public class FolderImpl
     implements Folder
 {
