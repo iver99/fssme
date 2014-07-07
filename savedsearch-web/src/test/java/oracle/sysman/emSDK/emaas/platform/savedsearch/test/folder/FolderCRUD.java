@@ -708,7 +708,7 @@ public class FolderCRUD {
 			System.out.println(res5.asString());
 			Assert.assertTrue(res5.getStatusCode() == 500);
 			Assert.assertEquals(res5.asString(),
-					"folder with id " + jp1.get("id") + " has search child");
+					"The folder can not be deleted as folder is associated with searches");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("Delete the searches from folderId: "

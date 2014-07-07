@@ -149,8 +149,16 @@ public class SavedSearchAPI {
 			jsonObj.put("id", searchObj.getId());
 			jsonObj.put("name", searchObj.getName());
 			jsonObj.put("type", search);
-			jsonObj.put("categoryId", searchObj.getCategoryId());
-			jsonObj.put("folderId", searchObj.getFolderId());
+			JSONObject categoryObj = new JSONObject();
+			categoryObj.put("id",searchObj.getCategoryId());
+			categoryObj.put("href",uri.getBaseUri()+"category/"+searchObj.getCategoryId());
+//			jsonObj.put("categoryId", searchObj.getCategoryId());
+			jsonObj.put("category", categoryObj);
+			JSONObject folderObj = new JSONObject();
+			folderObj.put("id",searchObj.getFolderId());
+			folderObj.put("href",uri.getBaseUri()+"folder/"+searchObj.getCategoryId());
+			jsonObj.put("folder", folderObj);
+//			jsonObj.put("folderId", searchObj.getFolderId());
 			jsonObj.put("createdOn", JSONUtil.getDate(searchObj.getCreatedOn().getTime()));
 			jsonObj.put("description", searchObj.getDescription());
 			jsonObj.put("lastModiedOn", JSONUtil.getDate(searchObj.getLastModifiedOn().getTime()));
