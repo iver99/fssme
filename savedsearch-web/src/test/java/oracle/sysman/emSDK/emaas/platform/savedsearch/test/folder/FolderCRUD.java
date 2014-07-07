@@ -118,7 +118,7 @@ public class FolderCRUD {
 			System.out
 					.println("POST method is in-progress to create a new folder in a specified directory");
 			int position = -1;
-			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentId\":3}";
+			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":3}}";
 			Response res1 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/folder");
@@ -468,7 +468,7 @@ public class FolderCRUD {
 			System.out
 					.println("POST operation is in-progress & missing with required field: Name");
 			System.out.println("											");
-			String jsonString = "{\"parentId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\"}";
+			String jsonString = "{\"parent\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\"}";
 			Response res = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/folder");
@@ -497,7 +497,7 @@ public class FolderCRUD {
 			System.out
 					.println("POST method is in-progress to create a new folder with invalidParentId");
 
-			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentId\":333333}";
+			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":333333}}";
 			Response res1 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/folder");
@@ -621,19 +621,35 @@ public class FolderCRUD {
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
+			
 			System.out.println("FolderName :" + jp1.get("name"));
 			System.out.println("Folder ID  :" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("------------------------------------------");
+			System.out.println("Asserting the details of the folder");
+			Response res = given()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+					.everything().when().get("/folder/" + jp1.get("id"));
+			JsonPath jp0 = res.jsonPath();
+			Assert.assertEquals(jp0.get("name"),"Folder_searches");
+			Assert.assertEquals(jp0.get("id"),jp1.get("id"));
+			Assert.assertEquals(jp0.getMap("parentFolder").get("id"), 1);
+			Assert.assertEquals(jp0.getMap("parentFolder").get("href"), "http://"+HOSTNAME+":"+portno+"/savedsearch/v1/folder/1");
+			Assert.assertEquals(jp0.get("href"),"http://"+HOSTNAME+":"+portno+"/savedsearch/v1/folder/"+ jp0.get("id"));
+			Assert.assertEquals(jp0.get("description"),"Folder for EMAAS searches");
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			System.out.println("											");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out
 					.println("POST method is in-progress to create searches in the folder whose Id is: "
 							+ jp1.get("id"));
-			String jsonString2 = "{\"name\":\"Search_s1\",\"categoryId\":1,\"folderId\":"
+			String jsonString2 = "{\"name\":\"Search_s1\",\"category\":{\"id\":1},\"folder\":{\"id\":"
 					+ jp1.get("id")
-					+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
+					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString2).when().post("/search");
@@ -647,9 +663,9 @@ public class FolderCRUD {
 			System.out.println("Search Name :" + jp2.get("name"));
 			System.out.println("Search ID  :" + jp2.get("id"));
 			System.out.println("											");
-			String jsonString3 = "{\"name\":\"Search_s2\",\"categoryId\":2,\"folderId\":"
+			String jsonString3 = "{\"name\":\"Search_s2\",\"category\":{\"id\":2},\"folder\":{\"id\":"
 					+ jp1.get("id")
-					+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample2\",\"type\":STRING,\"value\":\"my_value\"}]}";
+					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample2\",\"type\":STRING,\"value\":\"my_value\"}]}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString3).when().post("/search");
@@ -692,7 +708,7 @@ public class FolderCRUD {
 			System.out.println(res5.asString());
 			Assert.assertTrue(res5.getStatusCode() == 500);
 			Assert.assertEquals(res5.asString(),
-					"folder with id " + jp1.get("id") + " has search child");
+					"The folder can not be deleted as folder is associated with searches");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("Delete the searches from folderId: "
