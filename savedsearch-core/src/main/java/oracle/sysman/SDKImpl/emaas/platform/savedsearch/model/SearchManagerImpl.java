@@ -27,11 +27,8 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
 import org.apache.log4j.Logger;
-
-import com.sun.jmx.snmp.Timestamp;
 
 public class SearchManagerImpl extends SearchManager {
 
@@ -221,7 +218,7 @@ public class SearchManagerImpl extends SearchManager {
 
 			searchObj.setDeleted(new BigDecimal(1));
 			em.getTransaction().begin();
-			em.persist(searchObj);
+			em.merge(searchObj);
 			em.getTransaction().commit();
 		} catch (EMAnalyticsFwkException eme) {
 			_logger.error("Search with Id: " + searchId + " does not exist",
@@ -260,9 +257,9 @@ public class SearchManagerImpl extends SearchManager {
 			EntityManagerFactory emf = PersistenceManager.getInstance()
 					.getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsSearch searchObj = em.getReference(
-					EmAnalyticsSearch.class, new Long(searchId));
+			EmAnalyticsSearch searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
 			if (searchObj != null) {
+				em.refresh(searchObj);
 				search = createSearchObject(searchObj, null);
 			}
 		} catch (Exception e) {

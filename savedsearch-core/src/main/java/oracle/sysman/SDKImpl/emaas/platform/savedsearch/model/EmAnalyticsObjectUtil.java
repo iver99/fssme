@@ -38,7 +38,9 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 	
 	 public static  EmAnalyticsFolder getEmAnalyticsFolderForAdd(Folder folder, EntityManager em) throws EMAnalyticsFwkException  
 	    {
-	    	EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
+		 	if(isFolderExist(folder))
+		 	    throw new EMAnalyticsFwkException("Folder  with this name "+folder.getName()+" is already exist", EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, null);
+	    	EmAnalyticsFolder folderObj = new EmAnalyticsFolder();		 	
 			folderObj.setDescription(folder.getDescription());        		
 			folderObj.setName(folder.getName());
 			folderObj.setUiHidden(new BigDecimal(0));
@@ -87,9 +89,11 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
     
     public static  EmAnalyticsCategory getEmAnalyticsCategoryForAdd(Category category,EntityManager em) throws EMAnalyticsFwkException
 	{
+    	if(getCategoryByName(category.getName(),em)!=null)
+            throw new EMAnalyticsFwkException("Category with name "+category.getName() +" "+" is already exist ", EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, null);
+    		
 		EmAnalyticsCategory categoryObj = new EmAnalyticsCategory();
-		categoryObj.setName(category.getName());
-		categoryObj.setName(category.getName());
+		categoryObj.setName(category.getName());		
 		categoryObj.setDescription(category.getDescription());
 		categoryObj.setOwner("sysman"); // TO DO fix it
 		categoryObj.setDeleted(new BigDecimal(0));
@@ -168,7 +172,8 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 	public static EmAnalyticsSearch getEmAnalyticsSearchForAdd(Search search,
 			EntityManager em) throws EMAnalyticsFwkException {
 		EmAnalyticsSearch searchEntity  = new EmAnalyticsSearch();
-	    // Copy all the data to entity !!
+	    // Copy all the data to entity !!	
+		
 	    searchEntity.setName(search.getName());
 	    searchEntity.setDescription(search.getDescription());
         EmAnalyticsFolder folderObj = getFolderById(search.getFolderId(), em);
@@ -178,6 +183,22 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
         else
             searchEntity.setEmAnalyticsFolder(folderObj);
         
+        EmAnalyticsSearch  searchObj= null;
+        try{	        	
+        String str_folder = "folder";
+        String str_searchName="searchName";
+        searchObj =  (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchByName")
+	        			.setParameter(str_folder, folderObj)
+	        			.setParameter(str_searchName, search.getName())
+	        			 .getSingleResult();
+        	if(searchObj!=null)
+        	   throw new EMAnalyticsFwkException("Search with this name already exist: "+search.getName(), EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, null);
+        }catch(Exception nre)
+        {
+           // do nothing no search found.	
+        }
+        if(searchObj!=null)
+     	   throw new EMAnalyticsFwkException("Search with this name already exist: "+search.getName(), EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, null);
         EmAnalyticsCategory categoryObj=  getCategoryById(search.getCategoryId(), em) ;
         if(categoryObj == null)
         {
@@ -430,6 +451,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
     }
     
     
+    
     public static boolean canDeleteFolder(long folderId , EntityManager em)  throws EMAnalyticsFwkException
     {
     	EmAnalyticsFolder folder =	getFolderById(folderId, em);
@@ -485,6 +507,17 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
     		return false;
     	}
     	return true;
+    }
+    
+    
+    public static EmAnalyticsCategory getCategoryByName(String categoryName,EntityManager em) {
+        try {
+            return (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName").
+                    setParameter("categoryName", categoryName).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+
+        }
     }
 
 }
