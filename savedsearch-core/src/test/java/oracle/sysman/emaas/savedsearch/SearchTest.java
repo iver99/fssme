@@ -255,7 +255,7 @@ public class SearchTest
 			search.setDescription("temporary search");
 			search.setName("My Search");
 
-			search.setFolderId(1011);
+			search.setFolderId(101143254);
 			search.setCategoryId(1);
 			try {
 				searchObj = objSearch.saveSearch(search);
@@ -271,7 +271,7 @@ public class SearchTest
 			search.setName("My Search");
 
 			search.setFolderId(folderId);
-			search.setCategoryId(1023);
+			search.setCategoryId(102386576);
 			try {
 				searchObj = objSearch.saveSearch(search);
 			}

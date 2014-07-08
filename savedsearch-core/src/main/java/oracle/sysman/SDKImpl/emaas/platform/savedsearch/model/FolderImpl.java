@@ -13,7 +13,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 
 
 @XmlRootElement
-@XmlType(propOrder={"id","name","description","parentId","creationDate","lastModificationDate","owner","lastModifiedBy","systemFolder","uiHidden"})
+@XmlType(propOrder={"id","name","description","parentId","createdOn","owner","lastModifiedOn","systemFolder","uiHidden","lastModifiedBy"})
 public class FolderImpl
     implements Folder
 {
@@ -23,8 +23,8 @@ public class FolderImpl
     protected Integer parentId;
     protected String description;
        
-    protected Date creationDate;
-    protected Date lastModificationDate;
+    protected Date createdOn;
+    protected Date lastModifiedOn;
     protected String owner;
     protected String lastModifiedBy;
     protected boolean systemFolder;
@@ -51,15 +51,15 @@ public class FolderImpl
     }
 
     @Override
-	public Date getCreationDate()
+	public Date getCreatedOn()
     {
-        return creationDate;
+        return createdOn;
     }
 
     @Override
-	public Date getLastModificationDate()
+	public Date getLastModifiedOn()
     {
-        return lastModificationDate;
+        return lastModifiedOn;
     }
 
     @Override
@@ -129,15 +129,15 @@ public class FolderImpl
 	/**
 	 * @param creationDate the creationDate to set
 	 */
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	public void setCreatedOn(Date createdOn) {
+		this.createdOn = createdOn;
 	}
 
 	/**
 	 * @param lastModificationDate the lastModificationDate to set
 	 */
-	public void setLastModificationDate(Date lastModificationDate) {
-		this.lastModificationDate = lastModificationDate;
+	public void setLastModifiedOn(Date lastModifiedOn) {
+		this.lastModifiedOn = lastModifiedOn;
 	}
 
 	/**

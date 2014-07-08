@@ -38,14 +38,17 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 	
 	 public static  EmAnalyticsFolder getEmAnalyticsFolderForAdd(Folder folder, EntityManager em) throws EMAnalyticsFwkException  
 	    {
-	    	EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
+		 	if(isFolderExist(folder))
+		 	    throw new EMAnalyticsFwkException("Folder  with this name "+folder.getName()+" is already exist", EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, null);
+	    	EmAnalyticsFolder folderObj = new EmAnalyticsFolder();		 	
 			folderObj.setDescription(folder.getDescription());        		
 			folderObj.setName(folder.getName());
 			folderObj.setUiHidden(new BigDecimal(0));
 			folderObj.setSystemFolder(new BigDecimal(0));
+			folderObj.setDeleted(new BigDecimal(0));
 			if(folder.getParentId()!=null)
 			{
-				EmAnalyticsFolder parentFolderObj = em.find(EmAnalyticsFolder.class, new Long(folder.getParentId()));
+				EmAnalyticsFolder parentFolderObj = getFolderById(folder.getParentId(), em);
 				if(parentFolderObj == null)
 
 	                throw new EMAnalyticsFwkException("Parent folder with id "+folder.getParentId()+" does not exist", EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
@@ -60,7 +63,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 		{
 			EmAnalyticsFolder folderObj=null;
 			
-	    	folderObj = em.find(EmAnalyticsFolder.class, new Long(folder.getId()));
+	    	folderObj =   EmAnalyticsObjectUtil.getFolderById(folder.getId(), em);  
 	    	if(folderObj!=null)
 	    	{
 	        	folderObj.setName(folder.getName());
@@ -68,9 +71,10 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 	        	//folderObj.setLastModifiedBy(EMSecurityContext.getSecurityContext().getEMUser()); // fix me to do
 	        	folderObj.setSystemFolder(folder.isSystemFolder()==true?  new BigDecimal(1):new BigDecimal(0));
 	        	folderObj.setUiHidden(folder.isUiHidden()==true?new BigDecimal(1):new BigDecimal(0));
+	        	folderObj.setDeleted(new BigDecimal(0));
 	            if(folder.getParentId()!=null)
 	            {
-	                EmAnalyticsFolder parentFolderObj = em.find(EmAnalyticsFolder.class, new Long(folder.getParentId()));
+	                EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
 	                if(parentFolderObj == null)
 	                    throw new EMAnalyticsFwkException("Parent folder with id "+folder.getParentId()+" does not exist", EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
 	                folderObj.setEmAnalyticsFolder(parentFolderObj);                    
@@ -85,14 +89,16 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
     
     public static  EmAnalyticsCategory getEmAnalyticsCategoryForAdd(Category category,EntityManager em) throws EMAnalyticsFwkException
 	{
+    	if(getCategoryByName(category.getName(),em)!=null)
+            throw new EMAnalyticsFwkException("Category with name "+category.getName() +" "+" is already exist ", EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, null);
+    		
 		EmAnalyticsCategory categoryObj = new EmAnalyticsCategory();
-		categoryObj.setName(category.getName());
-		categoryObj.setName(category.getName());
+		categoryObj.setName(category.getName());		
 		categoryObj.setDescription(category.getDescription());
 		categoryObj.setOwner("sysman"); // TO DO fix it
+		categoryObj.setDeleted(new BigDecimal(0));
 		if (category.getDefaultFolderId() != null) {
-            EmAnalyticsFolder defaultFolderObj=em.find(EmAnalyticsFolder.class,
-                    new Long(category.getDefaultFolderId()));
+            EmAnalyticsFolder defaultFolderObj=  getFolderById(category.getDefaultFolderId(), em);
             if(defaultFolderObj == null){
                 throw new EMAnalyticsFwkException("Folder with id "+category.getDefaultFolderId() +" "+"does not exist", EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
             }
@@ -122,16 +128,14 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
     
     public static EmAnalyticsCategory getEmAnalyticsCategoryForEdit(Category category,EntityManager em)
 	{ 
-		EmAnalyticsCategory categoryEntity = em.find(
-				EmAnalyticsCategory.class, new Long(category.getId()));
+		EmAnalyticsCategory categoryEntity = EmAnalyticsObjectUtil.getCategoryById(category.getId(),em);
 		em.refresh(categoryEntity);
 		categoryEntity.setName(category.getName());
 		categoryEntity.setDescription(category.getDescription());
 		categoryEntity.setOwner("sysman"); // TO DO fix it
+		categoryEntity.setDeleted(new BigDecimal(0));
 		if(category.getDefaultFolderId()!=null){
-		categoryEntity.setEmAnalyticsFolder(em.find(
-				EmAnalyticsFolder.class,
-				new Long(category.getDefaultFolderId())));
+			categoryEntity.setEmAnalyticsFolder(getFolderById(category.getDefaultFolderId(),em));
 		}
 
 		// param handling !!
@@ -168,23 +172,44 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 	public static EmAnalyticsSearch getEmAnalyticsSearchForAdd(Search search,
 			EntityManager em) throws EMAnalyticsFwkException {
 		EmAnalyticsSearch searchEntity  = new EmAnalyticsSearch();
-	    // Copy all the data to entity !!
+	    // Copy all the data to entity !!	
+		
 	    searchEntity.setName(search.getName());
 	    searchEntity.setDescription(search.getDescription());
-        EmAnalyticsFolder folderObj = em.find(EmAnalyticsFolder.class, new Long(search.getFolderId()));
+        EmAnalyticsFolder folderObj = getFolderById(search.getFolderId(), em);
         if(folderObj == null){
             throw new EMAnalyticsFwkException("Can not find folder with id: "+search.getFolderId(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER, null);
         }
         else
             searchEntity.setEmAnalyticsFolder(folderObj);
         
-        EmAnalyticsCategory categoryObj=em.find(EmAnalyticsCategory.class, new Long(search.getCategoryId()));
+        
+        EmAnalyticsCategory categoryObj=  getCategoryById(search.getCategoryId(), em) ;
         if(categoryObj == null)
         {
             throw new EMAnalyticsFwkException("Can not find category with id: "+search.getCategoryId(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY, null);
         }
         else
             searchEntity.setEmAnalyticsCategory(categoryObj);
+        
+
+        EmAnalyticsSearch  searchObj= null;
+        try{	        	
+        String str_folder = "folder";
+        String str_searchName="searchName";
+        String str_category="category";
+        searchObj =  (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchDetails")
+	        			.setParameter(str_folder, folderObj)
+	        			.setParameter(str_searchName, search.getName())
+	        			.setParameter(str_category, categoryObj)
+	        			.getSingleResult();        	
+        }catch(Exception nre)
+        {
+           // do nothing no search found.	
+        }
+        
+        if(searchObj!=null)
+      	   throw new EMAnalyticsFwkException("Search with this name already exist: "+search.getName(), EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, null);
 //TODO FIX this : Abhinav 
 	    //get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser() 
 	    searchEntity.setOwner("SYSMAN");
@@ -193,7 +218,8 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 	    searchEntity.setIsLocked(search.isLocked()?(new java.math.BigDecimal(1)):(new java.math.BigDecimal(0)));
 	    searchEntity.setMetadataClob(search.getMetadata());
 	    searchEntity.setSearchDisplayStr(search.getQueryStr());		    
-	    searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden()?1:0));		    		    
+	    searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden()?1:0));	
+	    searchEntity.setDeleted(new BigDecimal(0));
 	    List<SearchParameter> params = search.getParameters();
 	    if(params!=null && params.size()!=0)
         {	        	
@@ -227,20 +253,22 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
 	public static  EmAnalyticsSearch getEmAnalyticsSearchForEdit(Search search,
 			EntityManager em) throws EMAnalyticsFwkException {
-		EmAnalyticsSearch searchEntity  = em.find(EmAnalyticsSearch.class, new Long(search.getId()));
+		EmAnalyticsSearch searchEntity  = getSearchById(search.getId(), em);				
 	    em.refresh(searchEntity);
 	    // Copy all the data to entity !!
 	    searchEntity.setName(search.getName());
 	       
 	    searchEntity.setDescription(search.getDescription());
-        EmAnalyticsFolder folderObj = em.find(EmAnalyticsFolder.class, new Long(search.getFolderId()));
+        EmAnalyticsFolder folderObj = getFolderById(search.getFolderId(), em);
+        
         if(folderObj == null){
             throw new EMAnalyticsFwkException("Can not find folder with id: "+search.getFolderId(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER, null);
         }
         else
             searchEntity.setEmAnalyticsFolder(folderObj);
         
-        EmAnalyticsCategory categoryObj=em.find(EmAnalyticsCategory.class, new Long(search.getCategoryId()));
+        EmAnalyticsCategory categoryObj=getCategoryById(search.getCategoryId(), em);
+        		
         if(categoryObj == null)
         {
             throw new EMAnalyticsFwkException("Can not find category with id: "+search.getCategoryId(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY, null);
@@ -257,6 +285,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 	    searchEntity.setMetadataClob(search.getMetadata());
 	    searchEntity.setSearchDisplayStr(search.getQueryStr());
 	    searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden()?1:0));
+	    searchEntity.setDeleted(new BigDecimal(0));
 	    List<SearchParameter> params = search.getParameters();
 	    // Params handling !!
 	    Set<EmAnalyticsSearchParam> existingParams = Collections.synchronizedSet(searchEntity.getEmAnalyticsSearchParams());
@@ -319,7 +348,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
         	else
         	{	if(folder.getParentId()!=null)
         	{
-	        	EmAnalyticsFolder parentFolderObj = em.find(EmAnalyticsFolder.class, folder.getParentId().longValue());
+	        	EmAnalyticsFolder parentFolderObj = getFolderById(folder.getParentId().longValue(), em);	        			
 	        	String parentFolder = "parentFolder";
 	        	folderObj =  (EmAnalyticsFolder)em.createNamedQuery("Folder.getSubFolderByName")
 	        			.setParameter(parentFolder, parentFolderObj).setParameter("foldername", folder.getName()).getSingleResult();
@@ -356,7 +385,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
     		else
     		{	if(folder.getParentId()!=null)
     		{
-    			EmAnalyticsFolder parentFolderObj = em.find(EmAnalyticsFolder.class, folder.getParentId().longValue());
+    			EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId().longValue(), em);    					
     			if(parentFolderObj==null)
     				return folderObj;
     			String parentFolder = "parentFolder";
@@ -379,6 +408,120 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
     	return folderObj;    	
     }
 
+    public static EmAnalyticsFolder getFolderById(long id , EntityManager em) 
+    {
+    
+    	EmAnalyticsFolder  folderObj= null;
+        try{	        	String str_id = "id";
+	        	folderObj =  (EmAnalyticsFolder)em.createNamedQuery("Folder.getFolderById")
+	        			.setParameter(str_id, id).getSingleResult();
+        }catch(Exception nre)
+        {
+          return null;	
+        }
+        
+		return folderObj;    	
+    }
+    
+    
+    public static EmAnalyticsCategory getCategoryById(long id , EntityManager em)
+    {
+    
+    	EmAnalyticsCategory  cateObj= null;
+        try{	        	String str_id = "id";
+        	cateObj =  (EmAnalyticsCategory)em.createNamedQuery("Category.getCategoryById")
+	        			.setParameter(str_id, id).getSingleResult();
+        }catch(Exception nre)
+        {
+          return null;	
+        }
+        
+		return cateObj;    	
+    }
+    
+    public static EmAnalyticsSearch getSearchById(long id , EntityManager em)
+    {
+    
+    	EmAnalyticsSearch  searchObj= null;
+        try{	        	String str_id = "id";
+        searchObj =  (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchById")
+	        			.setParameter(str_id, id).getSingleResult();
+        }catch(Exception nre)
+        {
+          return null;	
+        }
+        
+		return searchObj;    	
+    }
+    
+    
+    
+    public static boolean canDeleteFolder(long folderId , EntityManager em)  throws EMAnalyticsFwkException
+    {
+    	EmAnalyticsFolder folder =	getFolderById(folderId, em);
+    	int count = ((Number) em
+				.createNamedQuery("Search.getSearchCountByFolder")
+				.setParameter("folder", folder).getSingleResult())
+				.intValue();
+    	
+    	if(count>0)
+    	{
+    		throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with searches",EMAnalyticsFwkException.ERR_DELETE_FOLDER,null);
+    	}
+    	
+    	 if(em
+			.createNamedQuery("Category.getCategoryByFolder")
+			.setParameter("id", folder).getResultList().size() >0)
+    	 { 
+    		 throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with categories",EMAnalyticsFwkException.ERR_DELETE_FOLDER,null);
+    	 }
+    	
+    	try
+    	{
+    	EmAnalyticsFolder folderObj = folder;
+		String parentFolder = "parentFolder";
+		List<EmAnalyticsFolder> folderList = (List<EmAnalyticsFolder>)em.createNamedQuery("Folder.getSubFolder")
+    			.setParameter(parentFolder, folderObj).getResultList();
 
+    	if(folderList.size()>0)
+    		throw new EMAnalyticsFwkException("Sub folders founds",EMAnalyticsFwkException.ERR_DELETE_FOLDER,null);
+    	}catch(NoResultException e)
+    	{
+    		
+    	}
+    	return true;
+    }
+	
+    public static boolean canDeleteCategory(long categoryId,EntityManager em)
+    {	
+    	EmAnalyticsCategory cat= null;
+    	
+    	try
+    	{
+    	cat = (EmAnalyticsCategory)  em
+		.createNamedQuery("Category.getCategoryById")
+		.setParameter("id", categoryId).getSingleResult();
+    	
+    	 if(em.createNamedQuery("Search.getSearchListByCategory")
+    				.setParameter("category", cat).getResultList().size() >0)
+    	 { 
+    		 throw new EMAnalyticsFwkException("The category can not be deleted as category is associated with searches",EMAnalyticsFwkException.ERR_DELETE_CATEGORY,null);
+    	 }
+    	}catch(Exception e){
+    		return false;
+    	}
+    	return true;
+    }
+    
+    
+    public static EmAnalyticsCategory getCategoryByName(String categoryName,EntityManager em) {
+        try {
+            return (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName").
+                    setParameter("categoryName", categoryName).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+
+        }
+    }
 
 }

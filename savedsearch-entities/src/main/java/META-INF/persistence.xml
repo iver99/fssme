@@ -40,6 +40,7 @@
 			<property name="eclipselink.session.include.descriptor.queries"
 				value="true" />
 			<property name="eclipselink.cache.size.default" value="65535" />
+			<property name="eclipselink.query-results-cache" value="false"/>
 		</properties>
 	</persistence-unit>
 
@@ -72,6 +73,7 @@
 			<property name="eclipselink.session.include.descriptor.queries"
 				value="true" />
 			<property name="eclipselink.cache.size.default" value="65535" />
+			<property name="eclipselink.query-results-cache" value="false"/>
 		</properties>
 	</persistence-unit>
 

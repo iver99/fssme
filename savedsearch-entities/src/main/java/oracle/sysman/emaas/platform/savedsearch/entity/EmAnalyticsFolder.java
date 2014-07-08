@@ -7,27 +7,28 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * The persistent class for the EM_ANALYTICS_FOLDERS database table.
+ * The persistent class for the EMS_ANALYTICS_FOLDERS database table.
  */
 @Entity
-@Table(name = "EM_ANALYTICS_FOLDERS")
+@Table(name = "EMS_ANALYTICS_FOLDERS")
 @NamedQueries({
+	    @NamedQuery(name = "Folder.getFolderById", query = "Select o from EmAnalyticsFolder o where  o.folderId=:id AND O.deleted =0") ,
 		@NamedQuery(name = "Folder.getSubFolder", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= "
-				+ ":parentFolder"),
-		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null"),
-		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername"),
-		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername") })
-@SequenceGenerator(name = "EM_ANALYTICS_FOLDERS_SEQ", sequenceName = "EM_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
+				+ ":parentFolder" + " AND o.deleted=0"),
+		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.deleted=0"),
+		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername AND O.deleted =0"),
+		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername AND O.deleted =0") })
+@SequenceGenerator(name = "EMS_ANALYTICS_FOLDERS_SEQ", sequenceName = "EMS_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
 public class EmAnalyticsFolder implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "FOLDER_ID")
-	@GeneratedValue(generator = "EM_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = "EMS_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
 	private long folderId;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE", insertable = false)
 	private Date creationDate;
 
@@ -42,7 +43,7 @@ public class EmAnalyticsFolder implements Serializable
 	@Column(name = "EM_PLUGIN_ID")
 	private String emPluginId;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFICATION_DATE", insertable = false)
 	private Date lastModificationDate;
 
@@ -64,6 +65,10 @@ public class EmAnalyticsFolder implements Serializable
 
 	@Column(name = "UI_HIDDEN")
 	private BigDecimal uiHidden;
+	
+
+	@Column(name = "DELETED")
+	private BigDecimal deleted;
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@OneToMany(mappedBy = "emAnalyticsFolder")
@@ -224,6 +229,16 @@ public class EmAnalyticsFolder implements Serializable
 	public void setUiHidden(BigDecimal uiHidden)
 	{
 		this.uiHidden = uiHidden;
+	}
+	
+	public BigDecimal getDeleted()
+	{
+		return this.deleted;
+	}
+
+	public void setDeleted(BigDecimal deleted) 
+	{
+		this.deleted = deleted;
 	}
 
 	public Set<EmAnalyticsCategory> getEmAnalyticsCategories()

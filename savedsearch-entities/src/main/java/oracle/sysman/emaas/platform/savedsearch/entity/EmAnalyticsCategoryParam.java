@@ -5,10 +5,10 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 /**
- * The persistent class for the EM_ANALYTICS_CATEGORY_PARAMS database table.
+ * The persistent class for the EMS_ANALYTICS_CATEGORY_PARAMS database table.
  */
 @Entity
-@Table(name = "EM_ANALYTICS_CATEGORY_PARAMS")
+@Table(name = "EMS_ANALYTICS_CATEGORY_PARAMS")
 public class EmAnalyticsCategoryParam implements Serializable
 {
 	private static final long serialVersionUID = 1L;

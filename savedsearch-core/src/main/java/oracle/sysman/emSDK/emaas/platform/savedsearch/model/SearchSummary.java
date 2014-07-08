@@ -63,7 +63,7 @@ public interface SearchSummary
 	 * 
 	 * @return creation date
 	 */
-	public Date getCreationDate();
+	public Date getCreatedOn();
 
 	/**
 	 * Returns the user who last modified the search.
@@ -77,7 +77,7 @@ public interface SearchSummary
 	 * 
 	 * @return last modification date
 	 */
-	public Date getLastModificationDate();
+	public Date getLastModifiedOn();
 
 	/**
 	 * Returns the tags for search.

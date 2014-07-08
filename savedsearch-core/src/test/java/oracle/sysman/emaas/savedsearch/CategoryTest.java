@@ -67,7 +67,7 @@ public class CategoryTest
 		// This is not correct.. as when there will be changes to our schema seed data
 		// more data will be added to our tables this test will fail. 
 		// This will probably have no valid test case !! unless we clear all category data, add our entries only and all that will require new schema creation at each test launch.
-		//  AssertJUnit.assertEquals(new Integer(catMan.getAllCategories().size()), new Integer(4));
+		 AssertJUnit.assertNotNull(new Integer(catMan.getAllCategories().size()));
 	}
 
 	@Test
@@ -81,14 +81,14 @@ public class CategoryTest
 	public void testGetCategoryByName() throws Exception
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
-		AssertJUnit.assertNotNull(catMan.getCategory("LA"));
+		AssertJUnit.assertNotNull(catMan.getCategory("Log Analytics"));
 	}
 
 	@Test
 	public void testDefaultFolder() throws Exception
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
-		Assert.assertNotNull(catMan.getCategory("LA").getDefaultFolderId());
+		Assert.assertNotNull(catMan.getCategory("Log Analytics").getDefaultFolderId());
 	}
 
 	@Test

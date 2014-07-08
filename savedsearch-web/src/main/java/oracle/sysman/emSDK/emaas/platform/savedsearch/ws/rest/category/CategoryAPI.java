@@ -12,8 +12,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -30,7 +32,9 @@ import org.codehaus.jettison.json.JSONObject;
 public class CategoryAPI
 {
 
-	@DELETE
+	@Context
+	private UriInfo uri;
+/*	@DELETE
 	@Path("{id : [0-9]*}")
 	public Response deleteCategory(@PathParam("id") int categoryId)
 	{
@@ -80,6 +84,7 @@ public class CategoryAPI
 	{
 		String sMsg = "";
 		int statusCode = 200;
+		JSONObject jsonObj;
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
 			Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(categoryId));
@@ -168,7 +173,7 @@ public class CategoryAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-
+*/
 	@GET
 	@Path("{id: [0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -180,7 +185,9 @@ public class CategoryAPI
 		try {
 
 			Category category = catMan.getCategory(categoryId);
-			message = JSONUtil.ObjectToJSONString(category);
+			JSONObject jsonObj = JSONUtil.ObjectToJSONObject(category);
+			jsonObj=modifyResponse(jsonObj);
+			message=jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -189,6 +196,11 @@ public class CategoryAPI
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			statusCode=400;
+			message=e.getMessage();
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -209,7 +221,9 @@ public class CategoryAPI
 		try {
 
 			Category category = catMan.getCategory(name);
-			message = JSONUtil.ObjectToJSONString(category);
+			JSONObject jsonObj = JSONUtil.ObjectToJSONObject(category);
+			jsonObj=modifyResponse(jsonObj);
+			message=jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -218,10 +232,16 @@ public class CategoryAPI
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			statusCode=400;
+			message=e.getMessage();
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
 
+	/*	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -336,5 +356,22 @@ public class CategoryAPI
 		return category;
 
 	}
-
+*/
+	private JSONObject modifyResponse(JSONObject jsonObj) throws JSONException{
+		JSONObject rtnObj=new JSONObject();
+		rtnObj.put("id",jsonObj.optInt("id"));
+		rtnObj.put("name", jsonObj.getString("name"));
+		if(jsonObj.has("description"))
+			rtnObj.put("description",jsonObj.getString("description"));
+		if(jsonObj.has("defaultFolderId")){
+			JSONObject fold=new JSONObject();
+			fold.put("id", jsonObj.optInt("defaultFolderId"));
+			fold.put("href",uri.getBaseUri() +"folder/" +jsonObj.getInt("defaultFolderId"));
+			rtnObj.put("defaultFolder", fold);
+		}
+		if(jsonObj.has("parameters"))
+			rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
+		rtnObj.put("href",uri.getBaseUri() +"category/" +jsonObj.getInt("id"));
+		return rtnObj;
+	}
 }

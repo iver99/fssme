@@ -1,12 +1,13 @@
 import java.util.logging.LogManager.Cleaner;  
 
-ext.distDir = "${rootDir}/../../dist"  
+//ext.distDir = "${rootDir}/../../dist" 
+ext.distDir = "${rootDir}/dist"  
 ext.artifactPrefix = 'emaas-applications-' 
 ext.projectVersion = '0.1-SNAPSHOT'  
 ext.appName="${artifactPrefix}savedsearch-ear" 
 ext.serviceName = "${artifactPrefix}savedsearch" 
 ext.serviceInstallPath = "/opt/ORCLemaas/Applications/${serviceName}/${projectVersion}" 
-ext.serviceDistDir = "${distDir}${serviceInstallPath}"  
+ext.serviceDistDir = "${distDir}${serviceInstallPath}" 
 
 apply plugin: 'java' 
 
@@ -51,6 +52,42 @@ subprojects {
 	jar { manifest.attributes provider: 'Oracle EMaaS Applications' } 
 	ext.archiveBaseName = artifactPrefix + project.name  
 } 
+
+project(':savedsearch-web'){
+	configurations {
+		ftpAntTask
+	}
+	javadoc {
+        	options {
+                  locale = 'en_US'
+                  encoding = 'UTF-8'
+                }
+        source = [sourceSets.main.allJava,fileTree(dir:'../savedsearch-web/src/test'),fileTree(dir:'../savedsearch-core/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../savedsearch-entities/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../savedsearch-web-utils/src',exclude:['**/*.MF','**/*.properties'])]
+	}
+
+	task ftp<<{
+		ant{
+                	taskdef(name:'ftp',classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',classpath:configurations.ftpAntTask.asPath)
+                	ftp(server: ftpserver, userid: username, password: password, remotedir: remote_javadoc_dir){
+			fileset(dir:'build/docs')
+             		}	
+        	}
+	}
+	
+	dependencies{			
+		compile project(':savedsearch-entities')
+		compile project(':savedsearch-core')
+				
+		compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
+    		compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.1') 
+		compile(group: 'emaas.platform', name: 'registry-client', version: '0.1') 
+		ftpAntTask('org.apache.ant:ant-commons-net:1.8.4'){
+			module('commons-net:commons-net:1.4.1'){
+				dependencies 'oro:oro:2.0.8:jar'
+			}
+		}
+	}
+}
 
 buildscript {  
 	repositories {  

@@ -2,6 +2,9 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 
@@ -71,7 +74,16 @@ public class JSONUtil {
 		return new JSONObject(ObjectToJSONString(object,requiredFiledItems) );
 	}
 	
-		
+	public static String getDate(Long timeValue){
+		//we need to ensure timeValue is got from a Datetime with timezone:UTC
+		//Important: each date stored in our table should be a UTC time
+		Date date = new Date(timeValue); 
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+//        fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return fmt.format(date);
+	}
+	
+	
 	@JsonFilter("select_prop_by_name")  
 	class PropertyFilterMixIn {} 
     

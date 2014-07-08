@@ -24,6 +24,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
  *  @since   release specific (what release of product did this appear in)
  */
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -81,14 +82,16 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			categoryObj = em.find(EmAnalyticsCategory.class, categoryId);
+			categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId,em);
 			if (categoryObj == null) {
 				_logger.error("Category object by Id: " + categoryId + " " + "does not exist");
 				throw new EMAnalyticsFwkException("Category object by Id: " + categoryId + " " + "does not exist",
 						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, null);
 			}
+			boolean bResult =EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
+			categoryObj.setDeleted(new BigDecimal(1));
 			em.getTransaction().begin();
-			em.remove(categoryObj);
+			em.persist(categoryObj);
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
@@ -102,7 +105,7 @@ public class CategoryManagerImpl extends CategoryManager
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (e.getCause().getMessage().contains("EMCLAAAS_DEV.EM_ANALYTICS_SEARCH_FK1")) {
+			else if (e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
 				_logger.error("Error while deleting the category" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while deleting the category as it has associated searches",
@@ -142,11 +145,11 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("EM_ANALYICS_CATEGORY_U01")) {
+			if (dmlce.getCause().getMessage().contains("ANALYICS_CATEGORY_U01")) {
 				throw new EMAnalyticsFwkException("Duplicate category name " + category.getName(),
 						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
 			}
-			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_CATEGORY_FK1")) {
+			else if (dmlce.getCause().getMessage().contains("ANALYTICS_CATEGORY_FK1")) {
 				throw new EMAnalyticsFwkException("Parent folder with id " + category.getDefaultFolderId() + " missing: "
 						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
 			}
@@ -215,8 +218,7 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			EntityManager em = emf.createEntityManager();
-			EmAnalyticsCategory categoryObj = em.find(EmAnalyticsCategory.class, categoryId);
-
+			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			if (categoryObj != null) {
 				category = createCategoryObject(categoryObj, null);
 			}
@@ -292,7 +294,7 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("EM_ANALYICS_CATEGORY_U01")) {
+			if (dmlce.getCause().getMessage().contains("ANALYICS_CATEGORY_U01")) {
 				throw new EMAnalyticsFwkException("Category name " + category.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
 			}
@@ -302,7 +304,7 @@ public class CategoryManagerImpl extends CategoryManager
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_CATEGORY_FK1")) {
+			else if (dmlce.getCause().getMessage().contains("ANALYTICS_CATEGORY_FK1")) {
 				throw new EMAnalyticsFwkException("Default folder with id " + category.getDefaultFolderId() + " missing: "
 						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
 			}
@@ -376,7 +378,7 @@ public class CategoryManagerImpl extends CategoryManager
 										}
 									}
 									else if (obj instanceof Integer) {
-										EmAnalyticsFolder tmpfld = em.find(EmAnalyticsFolder.class, ((Integer) obj).longValue());
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(), em);												
 										if (tmpfld != null) {
 											category.setDefaultFolderId((Integer) obj);
 										}

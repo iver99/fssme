@@ -1,6 +1,5 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlTransient;
@@ -20,9 +19,9 @@ public class SearchSummaryImpl implements SearchSummary
 	protected Integer folderId;
 
 	protected String owner;
-	protected Date creationDate;
+	protected Date createdOn;
 	protected String lastModifiedBy;
-	protected Date lastModificationDate;
+	protected Date lastModifiedOn;
 	protected Date lastAccessDate;
 	@Override
 	public Date getLastAccessDate() {
@@ -42,9 +41,9 @@ public class SearchSummaryImpl implements SearchSummary
 	}
 
 	@Override
-	public Date getCreationDate()
+	public Date getCreatedOn()
 	{
-		return creationDate;
+		return createdOn;
 	}
 
 	@Override
@@ -71,9 +70,9 @@ public class SearchSummaryImpl implements SearchSummary
 	}
 
 	@Override
-	public Date getLastModificationDate()
+	public Date getLastModifiedOn()
 	{
-		return lastModificationDate;
+		return lastModifiedOn;
 	}
 
 	@Override
@@ -106,9 +105,9 @@ public class SearchSummaryImpl implements SearchSummary
 		this.categoryId = categoryId;
 	}
 
-	public void setCreationDate(Date creationDate)
+	public void setCreatedOn(Date createdOn)
 	{
-		this.creationDate = creationDate;
+		this.createdOn = createdOn;
 	}
 
 	public void setDescription(String description)
@@ -131,9 +130,9 @@ public class SearchSummaryImpl implements SearchSummary
 		this.id = id;
 	}
 
-	public void setLastModificationDate(Date lastModificationDate)
+	public void setLastModifiedOn(Date lastModifiedOn)
 	{
-		this.lastModificationDate = lastModificationDate;
+		this.lastModifiedOn = lastModifiedOn;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy)
