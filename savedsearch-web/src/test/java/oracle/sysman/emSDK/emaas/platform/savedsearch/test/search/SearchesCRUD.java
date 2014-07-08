@@ -1008,7 +1008,7 @@ public class SearchesCRUD {
 					.println("Create a folder and a serch in it to see the hierarchy of folder path");
 			// int position = -1;
 			System.out.println("Creating a Folder");
-			String jsonString = "{ \"name\":\"Folder_cont1\",\"description\":\"Folder for EMAAS searches\"}";
+			String jsonString = "{ \"name\":\"Folder_cont\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/folder");
@@ -1021,8 +1021,7 @@ public class SearchesCRUD {
 			System.out.println("											");
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			System.out.println("Creating a Search");
-			String jsonString2 = "{\"name\":\"Search_cont1\",\"categoryId\":1,\"folderId\":"
-					+ jp1.get("id")
+			String jsonString2 = "{\"name\":\"Search_cont\",\"category\":{\"id\":1},\"folder\":{\"id\":"+ jp1.get("id")+"}"
 					+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
@@ -1052,7 +1051,7 @@ public class SearchesCRUD {
 			System.out.println("flattenedFolderPath :"
 					+ jp3.get("flattenedFolderPath"));
 			Assert.assertEquals(jp3.get("flattenedFolderPath[0]"),
-					"Folder_cont1");
+					"Folder_cont");
 			Assert.assertEquals(jp3.get("flattenedFolderPath[1]"),
 					"All Searches");
 			System.out.println("											");
