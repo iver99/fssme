@@ -146,7 +146,7 @@ public class SearchesCRUD {
 			System.out.println("Result:" + resbody);
 
 			Assert.assertEquals(res.asString(),
-					"search object by ID: 555 does not exist");
+					"Search identified by ID: 555 does not exist");
 
 			System.out.println("Asserted the search and its non existance");
 			System.out.println("------------------------------------------");
@@ -167,7 +167,7 @@ public class SearchesCRUD {
 					.println("This test is to create a search with POST method");
 			System.out.println("											");
 			int position = -1;
-			String jsonString = "{\"name\":\"Custom Search\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\"Custom_Search\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/search");
@@ -176,7 +176,7 @@ public class SearchesCRUD {
 			System.out.println("Status code is: " + res1.getStatusCode());
 			System.out.println("											");
 			System.out.println(res1.asString());
-			System.out.println("Custom Search Id is :" + jp1.get("id"));
+			System.out.println("Custom_Search Id is :" + jp1.get("id"));
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			System.out.println("==POST operation is completed");
 			System.out.println("											");
@@ -185,7 +185,7 @@ public class SearchesCRUD {
 					.println("This test is to check for the duplicate entry with re-post");
 			System.out.println("											");
 
-			String jsonString2 = "{\"name\":\"Custom Search\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString2 = "{\"name\":\"Custom_Search\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString2).when().post("/search");
@@ -195,7 +195,7 @@ public class SearchesCRUD {
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.asString(),
-					"search name Custom Search already exist");
+					"Search with this name already exist: Custom_Search");
 			System.out.println("    ");
 			System.out
 					.println("GET operation is in-progress to assert the successful search creation");
@@ -212,12 +212,12 @@ public class SearchesCRUD {
 			a = jp.get("name");
 
 			for (int i = 0; i < a.size(); i++) {
-				if (a.get(i).equals("Custom Search")) {
+				if (a.get(i).equals("Custom_Search")) {
 					position = i;
 
 					String myvalue = a.get(position);
 					System.out.println("My new Search name is:" + myvalue);
-					Assert.assertEquals(a.get(position), "Custom Search");
+					Assert.assertEquals(a.get(position), "Custom_Search");
 					System.out
 							.println("==GET & Assert operations are succeeded");
 
@@ -359,18 +359,18 @@ public class SearchesCRUD {
 			b = jp.get("id");
 
 			for (int i = 0; i < a.size(); i++) {
-				if (a.get(i).equals("Custom Search")) {
+				if (a.get(i).equals("Custom_Search")) {
 					position = i;
 
 					int searchID = b.get(position);
 
-					Assert.assertEquals(a.get(position), "Custom Search");
+					Assert.assertEquals(a.get(position), "Custom_Search");
 					System.out.println("==GET operation is completed");
 					System.out.println("											");
 					System.out
 							.println("PUT operation is in-progress to edit search");
 					System.out.println("											");
-					String jsonString = "{ \"name\":\"Custom Search_Edit\", \"queryStr\": \"target.name=mydb.mydomain message like ERR1*\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					String jsonString = "{ \"name\":\"Custom_Search_Edit\", \"queryStr\": \"target.name=mydb.mydomain message like ERR1*\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
 					Response res1 = RestAssured.given()
 							.contentType(ContentType.JSON)
@@ -386,7 +386,7 @@ public class SearchesCRUD {
 					JsonPath jp1 = res1.jsonPath();
 					c = jp1.get("name");
 					System.out.println("SearchName after Edit is :" + c);
-					Assert.assertEquals(jp1.get("name"), "Custom Search_Edit");
+					Assert.assertEquals(jp1.get("name"), "Custom_Search_Edit");
 					System.out.println("==PUT operation is succeeded");
 
 					Assert.assertTrue(res.getStatusCode() == 200);
@@ -501,7 +501,7 @@ public class SearchesCRUD {
 			System.out
 					.println("POST operation is in-progress & missing with required field: name from parameter section");
 			System.out.println("											");
-			String jsonString4 = "{\"name\":\"Custom Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString4 = "{\"name\":\"Custom_Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString4).when().post("/search");
@@ -518,7 +518,7 @@ public class SearchesCRUD {
 			System.out
 					.println("POST operation is in-progress & missing with required field: type from parameter section");
 			System.out.println("											");
-			String jsonString5 = "{\"name\":\"Custom Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
+			String jsonString5 = "{\"name\":\"Custom_Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
 			Response res5 = RestAssured.given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString5).when().post("/search");
@@ -595,7 +595,7 @@ public class SearchesCRUD {
 			b = jp.get("id");
 
 			for (int i = 0; i < a.size(); i++) {
-				if (a.get(i).equals("Custom Search_Edit")) {
+				if (a.get(i).equals("Custom_Search_Edit")) {
 					position = i;
 					System.out.println("Index is:" + position);
 					int mysearchID = b.get(position);
@@ -611,7 +611,7 @@ public class SearchesCRUD {
 							.get("/search/" + mysearchID);
 					JsonPath jp0 = res0.jsonPath();
 					System.out.println("											");
-					Assert.assertEquals(jp0.get("name"), "Custom Search_Edit");
+					Assert.assertEquals(jp0.get("name"), "Custom_Search_Edit");
 					Assert.assertEquals(jp0.get("id"), +mysearchID);
 					Assert.assertEquals(jp0.get("description"),
 							"mydb.mydomain error logs (ORA*)!!!");
@@ -889,7 +889,7 @@ public class SearchesCRUD {
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertEquals(res.asString(),
-					"search object by ID: 10000000087 does not exist");
+					"Search identified by ID: 10000000087 does not exist");
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -963,7 +963,7 @@ public class SearchesCRUD {
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertEquals(res.asString(),
-					"search object by ID: 100000000087 does not exist");
+					"Search identified by ID: 100000000087 does not exist");
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
