@@ -45,7 +45,7 @@ public class FolderCRUD {
 			System.out
 					.println("POST method is in-progress to create a new folder");
 			int position = -1;
-			String jsonString = "{ \"name\":\"Custom Folder\",\"description\":\"Folder for EMAAS searches\"}";
+			String jsonString = "{ \"name\":\"Custom_Folder\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString).when().post("/folder");
@@ -60,7 +60,7 @@ public class FolderCRUD {
 					.println("This test is to check for the duplicate entry with re-post");
 			System.out.println("											");
 
-			String jsonString2 = "{ \"name\":\"Custom Folder\" }";
+			String jsonString2 = "{ \"name\":\"Custom_Folder\" }";
 			Response res2 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString2).when().post("/folder");
@@ -70,7 +70,7 @@ public class FolderCRUD {
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.asString(),
-					"Folder with name Custom Folder already exist");
+					"Folder  with this name Custom_Folder is already exist");
 			System.out.println("    ");
 
 			System.out
@@ -88,12 +88,12 @@ public class FolderCRUD {
 			a = jp.get("name");
 
 			for (int i = 0; i < a.size(); i++) {
-				if (a.get(i).equals("Custom Folder")) {
+				if (a.get(i).equals("Custom_Folder")) {
 					position = i;
 
 					String myvalue = a.get(position);
 					System.out.println("==My New Folder is:" + myvalue);
-					Assert.assertEquals(a.get(position), "Custom Folder");
+					Assert.assertEquals(a.get(position), "Custom_Folder");
 					System.out
 							.println("==GET and assertion operation are successfully completed");
 				}
@@ -199,7 +199,7 @@ public class FolderCRUD {
 			b = jp.get("id");
 
 			for (int i = 0; i < a.size(); i++) {
-				if (a.get(i).equals("Custom Folder")) {
+				if (a.get(i).equals("Custom_Folder")) {
 					position = i;
 
 					int myfolderID = b.get(position);
@@ -209,7 +209,7 @@ public class FolderCRUD {
 
 					System.out
 							.println("PUT operation to edit the selected folder is in-progress");
-					String jsonString = "{ \"name\":\"Custom Folder_Edit\" }";
+					String jsonString = "{ \"name\":\"Custom_Folder_Edit\" }";
 
 					Response res1 = given().contentType(ContentType.JSON)
 							.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
@@ -223,7 +223,7 @@ public class FolderCRUD {
 					String c;
 					JsonPath jp1 = res1.jsonPath();
 					c = jp1.get("name");
-					Assert.assertEquals(c, "Custom Folder_Edit");
+					Assert.assertEquals(c, "Custom_Folder_Edit");
 					System.out.println("Asserted & FolderName After Edit is:"
 							+ c);
 					System.out.println("											");
@@ -267,7 +267,7 @@ public class FolderCRUD {
 			b = jp.get("id");
 
 			for (int i = 0; i < a.size(); i++) {
-				if (a.get(i).equals("Custom Folder_Edit")) {
+				if (a.get(i).equals("Custom_Folder_Edit")) {
 					position = i;
 					System.out.println("Index is:" + position);
 					int myfolderID = b.get(position);
@@ -360,7 +360,7 @@ public class FolderCRUD {
 			System.out.println("											");
 			System.out.println("POST operation is in-progress with bad URL");
 			System.out.println("											");
-			String jsonString1 = "{ \"name\":\"Custom Folder\"}";
+			String jsonString1 = "{ \"name\":\"Custom_Folder\"}";
 			Response res1 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString1).when().post("/");
@@ -372,7 +372,7 @@ public class FolderCRUD {
 			System.out.println("											");
 			System.out.println("PUT operation is in-progress with bad URL");
 			System.out.println("											");
-			String jsonString2 = "{ \"name\":\"Custom Folder\"}";
+			String jsonString2 = "{ \"name\":\"Custom_Folder\"}";
 			Response res2 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString2).when().put("/");
@@ -384,7 +384,7 @@ public class FolderCRUD {
 			System.out.println("											");
 			System.out.println("DELETE operation is in-progress with bad URL");
 			System.out.println("											");
-			String jsonString3 = "{ \"name\":\"Custom Folder\"}";
+			String jsonString3 = "{ \"name\":\"Custom_Folder\"}";
 			Response res3 = given().contentType(ContentType.JSON)
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
 					.everything().body(jsonString3).when().post("/");
