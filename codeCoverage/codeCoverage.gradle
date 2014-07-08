@@ -216,6 +216,9 @@ else if (rootProject.name == 'emcpsm') {
 else if (rootProject.name == 'clientservices') {
   remoteServers = ['slc00azc.us.oracle.com':8035,'slc06qba.us.oracle.com':8035,'slc04rin.us.oracle.com':8035]
 }
+else if (rootProject.name == 'emcpssf') {
+  remoteServers = ['slc05zch.us.oracle.com':8035]
+}
 
 // Retrieves JaCoCo CC data from a remote WLS machine (jacoco agent must be
 // running in the remote machine)
