@@ -183,22 +183,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
         else
             searchEntity.setEmAnalyticsFolder(folderObj);
         
-        EmAnalyticsSearch  searchObj= null;
-        try{	        	
-        String str_folder = "folder";
-        String str_searchName="searchName";
-        searchObj =  (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchByName")
-	        			.setParameter(str_folder, folderObj)
-	        			.setParameter(str_searchName, search.getName())
-	        			 .getSingleResult();
-        	if(searchObj!=null)
-        	   throw new EMAnalyticsFwkException("Search with this name already exist: "+search.getName(), EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, null);
-        }catch(Exception nre)
-        {
-           // do nothing no search found.	
-        }
-        if(searchObj!=null)
-     	   throw new EMAnalyticsFwkException("Search with this name already exist: "+search.getName(), EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, null);
+        
         EmAnalyticsCategory categoryObj=  getCategoryById(search.getCategoryId(), em) ;
         if(categoryObj == null)
         {
@@ -206,6 +191,25 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
         }
         else
             searchEntity.setEmAnalyticsCategory(categoryObj);
+        
+
+        EmAnalyticsSearch  searchObj= null;
+        try{	        	
+        String str_folder = "folder";
+        String str_searchName="searchName";
+        String str_category="category";
+        searchObj =  (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchDetails")
+	        			.setParameter(str_folder, folderObj)
+	        			.setParameter(str_searchName, search.getName())
+	        			.setParameter(str_category, categoryObj)
+	        			.getSingleResult();        	
+        }catch(Exception nre)
+        {
+           // do nothing no search found.	
+        }
+        
+        if(searchObj!=null)
+      	   throw new EMAnalyticsFwkException("Search with this name already exist: "+search.getName(), EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, null);
 //TODO FIX this : Abhinav 
 	    //get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser() 
 	    searchEntity.setOwner("SYSMAN");

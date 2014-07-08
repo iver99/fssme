@@ -39,6 +39,7 @@ import org.eclipse.persistence.annotations.PrivateOwned;
 		@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0 "),
 		@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory = :category  AND e.deleted =0 "),
 		@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0"),
+		@NamedQuery(name = "Search.getSearchDetails", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.name = :searchName  AND e.emAnalyticsCategory = :category AND e.deleted =0"),
 		@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.name = :searchName  AND e.deleted =0")})
 @SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
 public class EmAnalyticsSearch implements Serializable
