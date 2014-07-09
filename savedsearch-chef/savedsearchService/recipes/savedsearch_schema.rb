@@ -16,7 +16,7 @@
 ruby_block "get database entity" do
   block do
     if node["is_db_lookup"] == "true"
-    node.default["databaseInfos"] = `cat /tmp/savedSearchDatabaseLookup.out`
+    node.default["databaseInfos"] = `cat #{node["log_dir"]}/savedSearchDatabaseLookup.out`
     databaseInfos =  node["databaseInfos"]
     databaseInfos = databaseInfos.tr("\n","").split(/;\s*/)
     for databaseInfo in databaseInfos
@@ -54,8 +54,8 @@ end
 
 bash "create_schema" do
   code lazy {<<-EOH
-rm -f /tmp/datasource.log
-echo "---------------------------- starting create schema--------------" >> /tmp/datasource.log
+rm -f #{node["log_dir"]}/savedSearchDatasource.log
+echo "---------------------------- starting create schema--------------" >> #{node["log_dir"]}/savedSearchDatasource.log
 export ORACLE_HOME=#{node["dbhome"]}
 
 cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}
@@ -64,26 +64,26 @@ cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}
 tar xzf #{node["sql_bundle"]}#{node["SAAS_version"]}.tgz
 cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}
 
-echo "db_servicename = #{node["db_service"]}, SAAS_schema_user = #{node["SAAS_schema_user"]}, SYS_password = #{node["db_syspassword"]} db_port=#{node["db_port"]} db_host=#{node["db_host"]} home=#{node["dbhome"]}" >> /tmp/datasource.log
+echo "db_servicename = #{node["db_service"]}, SAAS_schema_user = #{node["SAAS_schema_user"]}, SYS_password = #{node["db_syspassword"]} db_port=#{node["db_port"]} db_host=#{node["db_host"]} home=#{node["dbhome"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
 export LD_LIBRARY_PATH=#{node["dbhome"]}/lib
 
-echo "#{node["dbhome"]}/bin/sqlplus #{node["sys_user"]}/#{node["db_syspassword"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} as sysdba" >> /tmp/datasource.log
-#{node["dbhome"]}/bin/sqlplus #{node["sys_user"]}/#{node["db_syspassword"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} as sysdba << disp > /tmp/sql.txt 2>&1 >> /tmp/datasource.log
+echo "#{node["dbhome"]}/bin/sqlplus #{node["sys_user"]}/#{node["db_syspassword"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} as sysdba" >> #{node["log_dir"]}/savedSearchDatasource.log
+#{node["dbhome"]}/bin/sqlplus #{node["sys_user"]}/#{node["db_syspassword"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} as sysdba << disp > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
 CREATE USER #{node["SAAS_schema_user"]} identified by #{node["SAAS_schema_password"]};
 ALTER USER #{node["SAAS_schema_user"]} default tablespace users temporary tablespace temp;
 GRANT CONNECT,RESOURCE TO #{node["SAAS_schema_user"]};
 GRANT CREATE SESSION TO #{node["SAAS_schema_user"]};
 GRANT UNLIMITED TABLESPACE TO #{node["SAAS_schema_user"]};
 disp
-echo "done with creating user" >> /tmp/datasource.log
+echo "done with creating user" >> #{node["log_dir"]}/savedSearchDatasource.log
 
-echo "running the script now" >> /tmp/datasource.log
-echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> /tmp/datasource.log
-echo "CWD:" >> /tmp/datasource.log
-pwd >> /tmp/datasource.log
+echo "running the script now" >> #{node["log_dir"]}/savedSearchDatasource.log
+echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
+echo "CWD:" >> #{node["log_dir"]}/savedSearchDatasource.log
+pwd >> #{node["log_dir"]}/savedSearchDatasource.log
 for file in init.sql
 do
-#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} << eof_sql > /tmp/sql.txt 2>&1 >> /tmp/datasource.log
+#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} << eof_sql > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
 @$file
 eof_sql
 done

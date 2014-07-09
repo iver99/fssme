@@ -2,8 +2,11 @@
 # Cookbook Name::datasource 
 #
 
-default["installer"]["download_dir"] = "/scratch/downloads"
+default["run_dir"] = "/var/opt/ORCLemaas"
+default["installer"]["download_dir"] = "#{node["run_dir"]}/downloads"
+default["oracle_base"] = "#{node["run_dir"]}/oracle"
 default["base_dir"] = "/opt/ORCLemaas"
+default["log_dir"] = "#{node["run_dir"]}/logs"
 
 # basic directories
 default["infra_dir"] = "#{node["base_dir"]}/InfrastructureSoftware"
@@ -15,20 +18,28 @@ default["jdk_dir"] = "#{node["infra_dir"]}/java"
 default["java_home"] = "#{node["jdk_dir"]}/jdk1.7.0_51"
 
 # wls and db attributes 
-default["file"]["domain"] = "/tmp/createDomain.py"
 default["mid_home"] = "#{node["infra_dir"]}/WLS12c"
 default["oracle_home"] = "#{node["mid_home"]}/oracle_home"
 default["wls_home"] = "#{node["oracle_home"]}/wlserver"
-default["wlsuser"]="weblogic"
-default["wlspassword"]="password1"
+default["file_domain_create"] = "#{node["log_dir"]}/messageControllerCreateDomain.py"
+default["domain_name"] = "base_domain"
+default["domain_dir"] = "#{node["oracle_home"]}/user_projects/domains/#{node["domain_name"]}"
+default["wlscheck_path"]="console"
+default["wlscheck_statuscode"]="200 OK"
+default["wls_adminserver_name"] = "AdminServer"
+default["wls_port"] = "7001"
+default["wls_ssl_port"] = "7002"
+default["wls_admin_user"] = "weblogic"
+default["wls_admin_password"] = "password1"
+default["wls_memory_config"]="-Xms512m -Xmx1024m -XX:CompileThreshold=8000 -XX:PermSize=128m -XX:MaxPermSize=256m"
+
 default["myApplicationName"]="emaas-applications-savedsearch-ear"
-default["target"]="AdminServer"
+default["target"]="#{node["wls_adminserver_name"]}"
 
 default["dbhome"]="#{node["infra_dir"]}/rdbms/12.1.0" 
-default["oracle_base"] = "/scratch/oracle"
+default["oracle_base"] = "#{node["run_dir"]}/oracle"
 default["SAAS_datasourcename"]="emaas_savesearch_ds"
 default["SAAS_jndiname"]="jdbc/emaas_savesearch_ds"
-default["weblogic_servername"]="AdminServer"
 default["sql_bundle"]="emaas-applications-savedsearch-schema-"
 default["sql_dir"]="emaas-applications-savedsearch-schema"
 
