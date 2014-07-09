@@ -82,7 +82,44 @@ public class SearchTest
 			e.printStackTrace();
 		}
 	}
-
+	
+	@Test
+	public void testSearchNotExist()throws Exception
+	{
+		SearchManager search=SearchManager.getInstance();
+		try {
+			search.getSearch(9999999999L);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
+		}
+	}
+	
+	@Test
+	public void testGetSearchByInvalidCategoryId() throws Exception
+	{
+		SearchManager search=SearchManager.getInstance();
+		try{
+			search.getSearchListByCategoryId(9999999999L);
+		}catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_GENERIC));
+		}
+	}
+	
+	@Test
+	public void testGetSearchByInvalidFolderId() throws Exception
+	{
+		SearchManager search=SearchManager.getInstance();
+		try{
+			search.getSearchListByFolderId(9999999999L);
+		}catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_GENERIC));
+		}
+	}
+	
 	@Test
 	public void testDuplicate() throws Exception
 	{
@@ -191,7 +228,7 @@ public class SearchTest
 			snew = objSearch.saveSearch(search);
 
 			//now get the count of the search inside this folder
-			AssertJUnit.assertEquals(2, objSearch.getSearchCountByFolderId(folderId));
+			AssertJUnit.assertEquals(2,objSearch.getSearchListByFolderId(folderId).size());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -245,7 +282,7 @@ public class SearchTest
 	}
 
 	@Test
-	public void testInvalidData() throws Exception
+	public void testInvalidDataForEdit() throws Exception
 	{
 		SearchManager objSearch = SearchManager.getInstance();
 		Search searchObj = null;
@@ -288,4 +325,60 @@ public class SearchTest
 
 	}
 
+	@Test
+	public void testInvalidDataForSave() throws Exception
+	{
+		SearchManager objSearch = SearchManager.getInstance();
+		Search searchObj = null;
+		try {
+			///check with invalid folder id
+			Search search = objSearch.createNewSearch();
+			search.setDescription("temporary search");
+			search.setName("My Search");
+
+			search.setFolderId(101143254);
+			search.setCategoryId(1);
+			try {
+				searchObj = objSearch.saveSearch(search);
+			}
+			catch (EMAnalyticsFwkException emanfe) {
+				AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+						EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER));
+			}
+
+			//check with invalid category id
+			search = objSearch.createNewSearch();
+			search.setDescription("temporary search");
+			search.setName("My Search");
+
+			search.setFolderId(folderId);
+			search.setCategoryId(102386576);
+			try {
+				searchObj = objSearch.saveSearch(search);
+			}
+			catch (EMAnalyticsFwkException emanfe) {
+				AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+						EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY));
+			}
+		}
+		finally {
+			if (searchObj != null) {
+				objSearch.deleteSearch(searchObj.getId());
+			}
+		}
+
+	}
+
+	@Test
+	public void testDeleteInvalidSearchId() throws Exception
+	{
+		SearchManager sman=SearchManager.getInstance();
+		try{
+			sman.deleteSearch(99898987898L);
+		
+	}catch (EMAnalyticsFwkException emanfe) {
+		AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+				EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
+	}
+	}
 }
