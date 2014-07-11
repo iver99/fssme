@@ -20,6 +20,11 @@ war {
 		include '**/*.properties'
 		into('WEB-INF/classes') 
 	}
+	from('WebContent/WEB-INF') {
+                include '**/web.xml'
+                into('WEB-INF')
+        }
+
 }
 
 task runQATestSuite(type: Test){

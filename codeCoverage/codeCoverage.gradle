@@ -1,8 +1,8 @@
 /*
- QATools Code Coverage Gradle script. 
- 
+ QATools Code Coverage Gradle script.
+
  This script enables Sonar reporting on the main project and its subprojects,
- when in a multi-project build it should always be included (apply from) 
+ when in a multi-project build it should always be included (apply from)
  from the MAIN build.gradle.
 
  It also sets the jacoco exec file to be test.exec for all tasks of type Test
@@ -12,7 +12,7 @@
 
 */
 
-println "Applying codeCoverage.gradle... (#V: Wed Jul 02 2014#)"
+println "Applying codeCoverage.gradle... (#V: Wed Jul 09 2014#)"
 
 // Load configuration settings from settings.groovy, mostly settings used to
 // define the Sonar server to use.
@@ -97,64 +97,14 @@ allprojects {
           html.destination "${buildDir}/reports/jacoco"
         }
       }
-    }
 
-    // Iterate on tasks of type test for this project
-    project.tasks.withType(Test) { task ->
+      // Iterate on tasks of type test for this project
+      project.tasks.withType(Test) { task ->
 
-      // All test type tasks save jacoco data into a test.exec
-      task.jacoco {
-        destinationFile = file("${buildDir}/jacoco/test.exec")
-      }
-
-      // Create a new sourceSet called AllTestsSourceSet to contain all test
-      // type source sets existing for this project, this will be used to
-      // configure smokeTests level X tasks.
-
-      def Set<SourceSet> mySets = new HashSet<SourceSet>();
-
-      for (s in project.sourceSets) {
-        if (s.name.contains(task.name)) {
-          mySets.add(s)
-        } 
-      }
-
-      for (set in mySets) {
-        project.sourceSets {
-          allTestsSourceSet {
-            java {
-              srcDirs += set.getJava().getSrcDirs()
-            }
-            resources {
-              srcDirs += set.getResources().getSrcDirs()
-            }
-            compileClasspath += sourceSets.main.output + sourceSets.test.output
-            runtimeClasspath += sourceSets.main.output + sourceSets.test.output
-          }
+        // All test type tasks save jacoco data into a test.exec
+        task.jacoco {
+          destinationFile = file("${buildDir}/jacoco/test.exec")
         }
-      }
-
-      configurations {
-        allTestsSourceSetCompile.extendsFrom testCompile
-        allTestsSourceSetRuntime.extendsFrom testCompile
-      }
-    }
-
-    // Create smokeTest tasks leve 1, 2, etc. Overwrite tasks if they exist.
-
-    task smokeTest_lvl1(type: Test, overwrite: true) {
-      testClassesDir = sourceSets.allTestsSourceSet.output.classesDir
-      classpath      = sourceSets.allTestsSourceSet.runtimeClasspath
-      useTestNG() {
-        includeGroups 'smokeTest_lvl1'
-      }
-    }
-
-    task smokeTest_lvl2(type: Test, overwrite: true) {
-      testClassesDir = sourceSets.allTestsSourceSet.output.classesDir
-      classpath      = sourceSets.allTestsSourceSet.runtimeClasspath
-      useTestNG() {
-        includeGroups 'smokeTest_lvl2'
       }
     }
 
@@ -291,7 +241,7 @@ task configureCCoverageDataModel << {
 
         // Gather jacoco execution data files
         if (p.getPlugins().hasPlugin('jacoco')) {
-            for ( t in p.tasks ) { 
+            for ( t in p.tasks ) {
                 JacocoTaskExtension jacoco = t.getConvention().findByType(JacocoTaskExtension.class)
 
                 if (jacoco != null) {
@@ -326,7 +276,7 @@ task ccoverageDataModel(type: JacocoReport, dependsOn: configureCCoverageDataMod
 //
 task mergeCoverageData << {
   def mergeTask = project.getTasksByName('mergeData', false).iterator().next()
-  def filePath  = new File("${buildDir}/jacoco/merged.exec") 
+  def filePath  = new File("${buildDir}/jacoco/merged.exec")
 
   def Set<File> jacocoExecFiles = new HashSet<File>()
 
@@ -369,7 +319,7 @@ task copyMergedFile << {
         if (jacoco != null) {
           File execFile= t.jacoco.destinationFile
           ant.copy(file: mergeTask.destinationFile, tofile: execFile)
-        } 
+        }
         else {
           def tmpJacoco = new File("${p.buildDir}/jacoco")
 
@@ -404,7 +354,7 @@ task copyExecFiles << {
   String execDestinationDir = "${fileServerLocation}/exec"
 
   def folder = new File(execSourceDir)
- 
+
   if( !folder.exists() ) {
     println "No coverage exec file to upload at $execSourceDir"
     return
