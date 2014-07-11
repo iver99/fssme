@@ -36,5 +36,12 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/groovy-all-2.3.0-beta-2.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/httpclient-4.2.6.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/httpcore-4.2.5.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/httpmime-4.2.6.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
