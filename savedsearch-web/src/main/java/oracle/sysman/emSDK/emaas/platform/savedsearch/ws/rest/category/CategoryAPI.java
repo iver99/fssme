@@ -1,13 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.category;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -20,160 +13,189 @@ import javax.ws.rs.core.UriInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+/**
+ * The Category Services
+ */
 @Path("category")
 public class CategoryAPI
 {
 
 	@Context
 	private UriInfo uri;
-/*	@DELETE
-	@Path("{id : [0-9]*}")
-	public Response deleteCategory(@PathParam("id") int categoryId)
-	{
-		//Response res=Response.ok().build();
-		int statusCode = 204;
 
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			catMan.deleteCategory(categoryId);
+	/*	@DELETE
+		@Path("{id : [0-9]*}")
+		public Response deleteCategory(@PathParam("id") int categoryId)
+		{
+			//Response res=Response.ok().build();
+			int statusCode = 204;
 
-		}
-		catch (EMAnalyticsFwkException e) {
-			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-		}
-		return Response.status(statusCode).build();
-	}
-
-	@DELETE
-	public Response deleteCategoryByName(@QueryParam("name") String name)
-	{
-
-		int statusCode = 204;
-		if (name == null) {
-			return Response.status(400).entity("please give category name").build();
-		}
-		else if (name.equals("")) {
-			return Response.status(400).entity("please give category name").build();
-		}
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			Category category = catMan.getCategory(name);
-			int categoryId = category.getId();
-			catMan.deleteCategory(categoryId);
-
-		}
-		catch (EMAnalyticsFwkException e) {
-			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-		}
-		return Response.status(statusCode).build();
-	}
-
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("{id : [0-9]*}")
-	public Response editCategory(JSONObject inputJsonObj, @PathParam("id") int categoryId)
-	{
-		String sMsg = "";
-		int statusCode = 200;
-		JSONObject jsonObj;
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(categoryId));
-			objCategory = catMan.editCategory(objCategory);
-			sMsg = JSONUtil.ObjectToJSONString(objCategory);
-		}
-		catch (EMAnalyticsFwkException e) {
-			sMsg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		catch (EMAnalyticsWSException e) {
-			sMsg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		return Response.status(statusCode).entity(sMsg).build();
-	}
-
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response editCategoryByName(JSONObject inputJsonObj, @QueryParam("name") String name)
-	{
-		String sMsg = "";
-		int statusCode = 200;
-		if (name == null) {
-			return Response.status(400).entity("please give category name").build();
-		}
-		else if (name.equals("")) {
-			return Response.status(400).entity("please give category name").build();
-		}
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(name));
-			objCategory = catMan.editCategory(objCategory);
-			sMsg = JSONUtil.ObjectToJSONString(objCategory);
-		}
-		catch (EMAnalyticsFwkException e) {
-			sMsg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		catch (EMAnalyticsWSException e) {
-			sMsg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		return Response.status(statusCode).entity(sMsg).build();
-	}
-
-	@GET
-	@Path("/get/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllCategory()
-	{
-		String message = null;
-		int statusCode = 200;
-		JSONArray jsonArray = new JSONArray();
-		Category category;
-		List<Category> catList = new ArrayList<Category>();
-
-		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-
-			catList = catMan.getAllCategories();
+			CategoryManager catMan = CategoryManager.getInstance();
 			try {
-				for (int i = 0; i < catList.size(); i++) {
-					category = catList.get(i);
-					try {
-						jsonArray.put(JSONUtil.ObjectToJSONObject(category));
-					}
-					catch (JSONException e) {
-						message = e.getMessage();
-						statusCode = 500;
-						return Response.status(statusCode).entity(message).build();
-					}
-				}
-				message = jsonArray.toString();
+				catMan.deleteCategory(categoryId);
+
+			}
+			catch (EMAnalyticsFwkException e) {
+				return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+			}
+			return Response.status(statusCode).build();
+		}
+
+		@DELETE
+		public Response deleteCategoryByName(@QueryParam("name") String name)
+		{
+
+			int statusCode = 204;
+			if (name == null) {
+				return Response.status(400).entity("please give category name").build();
+			}
+			else if (name.equals("")) {
+				return Response.status(400).entity("please give category name").build();
+			}
+			CategoryManager catMan = CategoryManager.getInstance();
+			try {
+				Category category = catMan.getCategory(name);
+				int categoryId = category.getId();
+				catMan.deleteCategory(categoryId);
+
+			}
+			catch (EMAnalyticsFwkException e) {
+				return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+			}
+			return Response.status(statusCode).build();
+		}
+
+		@PUT
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("{id : [0-9]*}")
+		public Response editCategory(JSONObject inputJsonObj, @PathParam("id") int categoryId)
+		{
+			String sMsg = "";
+			int statusCode = 200;
+			JSONObject jsonObj;
+			CategoryManager catMan = CategoryManager.getInstance();
+			try {
+				Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(categoryId));
+				objCategory = catMan.editCategory(objCategory);
+				sMsg = JSONUtil.ObjectToJSONString(objCategory);
+			}
+			catch (EMAnalyticsFwkException e) {
+				sMsg = e.getMessage();
+				statusCode = e.getStatusCode();
 			}
 			catch (EMAnalyticsWSException e) {
+				sMsg = e.getMessage();
+				statusCode = e.getStatusCode();
+			}
+			return Response.status(statusCode).entity(sMsg).build();
+		}
+
+		@PUT
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response editCategoryByName(JSONObject inputJsonObj, @QueryParam("name") String name)
+		{
+			String sMsg = "";
+			int statusCode = 200;
+			if (name == null) {
+				return Response.status(400).entity("please give category name").build();
+			}
+			else if (name.equals("")) {
+				return Response.status(400).entity("please give category name").build();
+			}
+			CategoryManager catMan = CategoryManager.getInstance();
+			try {
+				Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(name));
+				objCategory = catMan.editCategory(objCategory);
+				sMsg = JSONUtil.ObjectToJSONString(objCategory);
+			}
+			catch (EMAnalyticsFwkException e) {
+				sMsg = e.getMessage();
+				statusCode = e.getStatusCode();
+			}
+			catch (EMAnalyticsWSException e) {
+				sMsg = e.getMessage();
+				statusCode = e.getStatusCode();
+			}
+			return Response.status(statusCode).entity(sMsg).build();
+		}
+
+		@GET
+		@Path("/get/all")
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getAllCategory()
+		{
+			String message = null;
+			int statusCode = 200;
+			JSONArray jsonArray = new JSONArray();
+			Category category;
+			List<Category> catList = new ArrayList<Category>();
+
+			CategoryManager catMan = CategoryManager.getInstance();
+			try {
+
+				catList = catMan.getAllCategories();
+				try {
+					for (int i = 0; i < catList.size(); i++) {
+						category = catList.get(i);
+						try {
+							jsonArray.put(JSONUtil.ObjectToJSONObject(category));
+						}
+						catch (JSONException e) {
+							message = e.getMessage();
+							statusCode = 500;
+							return Response.status(statusCode).entity(message).build();
+						}
+					}
+					message = jsonArray.toString();
+				}
+				catch (EMAnalyticsWSException e) {
+					message = e.getMessage();
+					statusCode = e.getStatusCode();
+					return Response.status(statusCode).entity(message).build();
+				}
+			}
+			catch (EMAnalyticsFwkException e) {
 				message = e.getMessage();
 				statusCode = e.getStatusCode();
-				return Response.status(statusCode).entity(message).build();
 			}
+			return Response.status(statusCode).entity(message).build();
 		}
-		catch (EMAnalyticsFwkException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		return Response.status(statusCode).entity(message).build();
-	}
-*/
+	*/
+	/**
+	 * Get the details of category with the given category Id
+	 * 
+	 * @param categoryId
+	 *            The category Id which user want to read
+	 * @return Return the complete details of category with given category Id<br>
+	 *         Response Sample:<br>
+	 *         {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 1, <br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Log Analytics",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Category for Log Analytics",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "defaultFolder": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 2,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/2"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "CATEGORY_PARAM_VIEW_TASKFLOW",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":
+	 *         "/WEB-INF/core/loganalytics/obssearch/plugins/dashboard-flow-definition.xml#dashboard-flow-definition",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
+	 *         }
+	 */
 	@GET
 	@Path("{id: [0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -186,8 +208,8 @@ public class CategoryAPI
 
 			Category category = catMan.getCategory(categoryId);
 			JSONObject jsonObj = JSONUtil.ObjectToJSONObject(category);
-			jsonObj=modifyResponse(jsonObj);
-			message=jsonObj.toString();
+			jsonObj = modifyResponse(jsonObj);
+			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -196,15 +218,43 @@ public class CategoryAPI
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-		} catch (JSONException e) {
+		}
+		catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			statusCode=400;
-			message=e.getMessage();
+			statusCode = 400;
+			message = e.getMessage();
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
 
+	/**
+	 * Get the details of category with given name
+	 * 
+	 * @param name
+	 *            The name of category which users wants to get the details
+	 * @return Return the complete details of category with given category Id<br>
+	 *         Response Sample:<br>
+	 *         {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 1, <br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Log Analytics",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Category for Log Analytics",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "defaultFolder": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 2,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/2"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "CATEGORY_PARAM_VIEW_TASKFLOW",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":
+	 *         "/WEB-INF/core/loganalytics/obssearch/plugins/dashboard-flow-definition.xml#dashboard-flow-definition",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
+	 *         }
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCategoryByName(@QueryParam("name") String name)
@@ -222,8 +272,8 @@ public class CategoryAPI
 
 			Category category = catMan.getCategory(name);
 			JSONObject jsonObj = JSONUtil.ObjectToJSONObject(category);
-			jsonObj=modifyResponse(jsonObj);
-			message=jsonObj.toString();
+			jsonObj = modifyResponse(jsonObj);
+			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -232,16 +282,17 @@ public class CategoryAPI
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-		} catch (JSONException e) {
+		}
+		catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			statusCode=400;
-			message=e.getMessage();
+			statusCode = 400;
+			message = e.getMessage();
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
 
-	/*	
+	/*
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -278,7 +329,7 @@ public class CategoryAPI
 			if(name !=null && name.equals(""))
 				throw new EMAnalyticsWSException("The name key for category can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_CATEGORY_NAME_MISSING);
 			category.setName(name);
-			
+
 		}
 		catch (JSONException je) {
 			throw new EMAnalyticsWSException("The name key for category is missing in the input JSON Object",
@@ -293,7 +344,7 @@ public class CategoryAPI
 		if (inputJsonObj.has("parameters")) {
 			JSONArray jsonArr = inputJsonObj.optJSONArray("parameters");
 
-			// FIltering values with Map .. not exactly required .. duplicate params if any will be discarded at persistence layer !!			  		    
+			// FIltering values with Map .. not exactly required .. duplicate params if any will be discarded at persistence layer !!
 			for (int index = 0; index < jsonArr.length(); index++) {
 				Parameter categoryParam = new Parameter();
 				JSONObject jsonParam = jsonArr.optJSONObject(index);
@@ -304,7 +355,7 @@ public class CategoryAPI
 						throw new EMAnalyticsWSException("The name key for category param can not be null in the input JSON Object",EMAnalyticsWSException.JSON_CATEGORY_PARAM_NAME_MISSING);
 					if(name !=null && name.equals(""))
 						throw new EMAnalyticsWSException("The name key for category param can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_CATEGORY_PARAM_NAME_MISSING);
-					
+
 					categoryParam.setName("name");
 				}
 				catch (JSONException je) {
@@ -336,7 +387,7 @@ public class CategoryAPI
 		if (inputJsonObj.has("parameters")) {
 			JSONArray jsonArr = inputJsonObj.optJSONArray("parameters");
 
-			// FIltering values with Map .. not exactly required .. duplicate params if any will be discarded at persistence layer !!			  		    
+			// FIltering values with Map .. not exactly required .. duplicate params if any will be discarded at persistence layer !!
 			for (int index = 0; index < jsonArr.length(); index++) {
 				Parameter categoryParam = new Parameter();
 				JSONObject jsonParam = jsonArr.optJSONObject(index);
@@ -356,22 +407,25 @@ public class CategoryAPI
 		return category;
 
 	}
-*/
-	private JSONObject modifyResponse(JSONObject jsonObj) throws JSONException{
-		JSONObject rtnObj=new JSONObject();
-		rtnObj.put("id",jsonObj.optInt("id"));
+	*/
+	private JSONObject modifyResponse(JSONObject jsonObj) throws JSONException
+	{
+		JSONObject rtnObj = new JSONObject();
+		rtnObj.put("id", jsonObj.optInt("id"));
 		rtnObj.put("name", jsonObj.getString("name"));
-		if(jsonObj.has("description"))
-			rtnObj.put("description",jsonObj.getString("description"));
-		if(jsonObj.has("defaultFolderId")){
-			JSONObject fold=new JSONObject();
+		if (jsonObj.has("description")) {
+			rtnObj.put("description", jsonObj.getString("description"));
+		}
+		if (jsonObj.has("defaultFolderId")) {
+			JSONObject fold = new JSONObject();
 			fold.put("id", jsonObj.optInt("defaultFolderId"));
-			fold.put("href",uri.getBaseUri() +"folder/" +jsonObj.getInt("defaultFolderId"));
+			fold.put("href", uri.getBaseUri() + "folder/" + jsonObj.getInt("defaultFolderId"));
 			rtnObj.put("defaultFolder", fold);
 		}
-		if(jsonObj.has("parameters"))
+		if (jsonObj.has("parameters")) {
 			rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
-		rtnObj.put("href",uri.getBaseUri() +"category/" +jsonObj.getInt("id"));
+		}
+		rtnObj.put("href", uri.getBaseUri() + "category/" + jsonObj.getInt("id"));
 		return rtnObj;
 	}
 }

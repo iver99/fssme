@@ -1,7 +1,5 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +16,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -36,377 +27,338 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 
-@Path("search")
-public class SearchAPI {
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
-	private static final String FOLDER_PATH="flattenedFolderPath";
-	
+/**
+ * The Search Services
+ */
+@Path("search")
+public class SearchAPI
+{
+
+	private static final String FOLDER_PATH = "flattenedFolderPath";
+
 	@Context
 	UriInfo uri;
-	
-	@GET
-	@Path("{id: [0-9]*}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearch( @PathParam("id") long searchid , @QueryParam("flattenedFolderPath") boolean bPath ) {
-		String message=null;
-		int statusCode=200;		
-		JSONObject jsonObj ;
-		SearchManager sman = SearchManager.getInstance();
-		try {
-			
-		 
-			Search searchObj = sman.getSearch(searchid);
-			jsonObj =JSONUtil.ObjectToJSONObject(searchObj);
-			//here convert the date into utc format
-			jsonObj =addHref(jsonObj);
-			if(bPath)
-			{  
-				 FolderManager folderMgr = FolderManager.getInstance();	
-				 JSONArray jsonPathArray = new JSONArray();
-				 String[] pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
-				 for(String p: pathArray){
-					 jsonPathArray.put(p);
-			 }
-							 
-				 jsonObj.put(FOLDER_PATH, jsonPathArray);
-			}
-			message=jsonObj.toString();
-		} catch (EMAnalyticsFwkException e) {
-			message=e.getMessage();
-			statusCode=e.getStatusCode();
-		}catch(EMAnalyticsWSException e){
-			message=e.getMessage();
-			statusCode=e.getStatusCode();
-		} catch (JSONException e) {
-			statusCode=400;
-			message=e.getMessage();
-		}
-		
-        return Response.status(statusCode).entity(message).build();
-    }
-	private JSONObject addHref(JSONObject jsonObj) throws JSONException{
-		JSONObject rtnObj=new JSONObject();
-		JSONObject jsonCat= new JSONObject();
-		jsonCat.put("id", jsonObj.getInt("categoryId"));
-		jsonCat.put("href",uri.getBaseUri() +"category/" +jsonObj.getInt("categoryId"));
-		JSONObject jsonFold = new JSONObject();
-		jsonFold.put("id", jsonObj.getInt("folderId"));
-		jsonFold.put("href",uri.getBaseUri() +"folder/" +jsonObj.getInt("folderId"));
-		jsonObj.put("createdOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("createdOn"))));
-		jsonObj.put("lastModifiedOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModifiedOn"))));
-		rtnObj.put("id", jsonObj.optInt("id"));
-		rtnObj.put("name", jsonObj.optString("name"));
-		if(jsonObj.has("description"))
-			rtnObj.put("description",jsonObj.getString("description"));
-		rtnObj.put("category",jsonCat);
-		rtnObj.put("folder",jsonFold);
-		rtnObj.put("owner", jsonObj.optString("owner"));
-		rtnObj.put("createdOn",jsonObj.optString("createdOn"));
-		rtnObj.put("lastModifiedBy",jsonObj.optString("lastModifiedBy"));
-		rtnObj.put("lastModifiedOn", jsonObj.optString("lastModifiedOn"));
-		if(jsonObj.has("lastAccessDate"))
-			rtnObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
-		if(jsonObj.has("queryStr"))
-		rtnObj.put("queryStr", jsonObj.getString("queryStr"));
-		if(jsonObj.has("parameters"))
-		rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
-		rtnObj.put("href", uri.getBaseUri() + "search/" + jsonObj.getInt("id"));
-		
-		return rtnObj;
-		
-	}
-	@DELETE
-	@Path("{id: [0-9]*}")
-	public Response deleteSearch(@PathParam("id") long searchId ) {
-		int statusCode=204;
-		
-		SearchManager sman = SearchManager.getInstance();
-		try {
-			sman.deleteSearch(searchId);
-			
-		} catch (EMAnalyticsFwkException e) {
-			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-			
-		}
-		
-		return Response.status(statusCode).build();
-    }
-	
+
+	/**
+	 * Create a search
+	 *
+	 * @param inputJsonObj
+	 *            The search details <br>
+	 *            Input Sample:<br>
+	 *            {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search 2x",//required<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"categoryId": 4,//required<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"folderId": 5,//required<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",//optional<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"time",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"STRING",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"ALL"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"additionalInfo",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"CLOB",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"this is a demo"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+	 *            } <br>
+	 * @return Return Complete details of search with search Id generated automatically.<br>
+	 *         Response Sample:<br>
+	 *         {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"id": 10011,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search 2x",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"categoryId": 4,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"folderId": 5,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"creationDate": 1403865821000,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModifiedBy": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModificationDate": 1403865821000,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastAccessDate": 1403840621000,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"time",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"STRING",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"ALL"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"additionalInfo",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"CLOB",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"this is a demo"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+	 *         } <br>
+	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createSearch(JSONObject inputJsonObj ) 
-	 {
-		String message="";
-		int statusCode=201;
+	public Response createSearch(JSONObject inputJsonObj)
+	{
+		String message = "";
+		int statusCode = 201;
 		JSONObject jsonObj;
-		SearchManager sman =SearchManager.getInstance() ;
+		SearchManager sman = SearchManager.getInstance();
 		try {
 			Search searchObj = createSearchObjectForAdd(inputJsonObj);
 			Search savedSearch = sman.saveSearch(searchObj);
-			jsonObj=JSONUtil.ObjectToJSONObject(savedSearch);
-			jsonObj=addHref(jsonObj);
-			message=jsonObj.toString();
-			//message = JSONUtil.ObjectToJSONString(savedSearch);			 
-		} catch (EMAnalyticsFwkException e) {
-			message=e.getMessage();
-			statusCode=e.getStatusCode();
-		}catch(EMAnalyticsWSException e){
-			message=e.getMessage();
-			statusCode=e.getStatusCode();
-		} catch (JSONException e) {
+			jsonObj = JSONUtil.ObjectToJSONObject(savedSearch);
+			jsonObj = addHref(jsonObj);
+			message = jsonObj.toString();
+			//message = JSONUtil.ObjectToJSONString(savedSearch);
+		}
+		catch (EMAnalyticsFwkException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		catch (EMAnalyticsWSException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		catch (JSONException e) {
 			e.printStackTrace();
-			statusCode=404;
-			message=e.getMessage();
+			statusCode = 404;
+			message = e.getMessage();
 		}
-		return Response.status(statusCode).entity(message).build() ;
-	}
-    
-	@PUT
-	@Path("{id: [0-9]*}")
-	public Response editSearchAccessDate(@PathParam("id") long searchId,@QueryParam("updateLastAccessTime") boolean update) {
-		String query=uri.getRequestUri().getQuery();
-		if(query == null)
-			return Response.status(400).entity("Please specify updateLastAccessTime true or false").build();
-		String[] input=query.split("=");
-		if(input.length ==2){
-			if(update)
-				return updateLastAccessTime(searchId);
-			else
-				return Response.status(200).build();
-		}
-		else
-		return Response.status(400).entity("please give the value for updateLastAccessTime").build();
+		return Response.status(statusCode).entity(message).build();
 	}
 
-	
+	/**
+	 * Delete a saved-search with the given id
+	 *
+	 * @param searchId
+	 *            The id of saved-search which user wants to delete
+	 * @return return the status of the request. 204 No Content means it was successful and nothing to return in the response body
+	 */
+	@DELETE
+	@Path("{id: [0-9]*}")
+	public Response deleteSearch(@PathParam("id") long searchId)
+	{
+		int statusCode = 204;
+
+		SearchManager sman = SearchManager.getInstance();
+		try {
+			sman.deleteSearch(searchId);
+
+		}
+		catch (EMAnalyticsFwkException e) {
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+
+		}
+
+		return Response.status(statusCode).build();
+	}
+
+	/**
+	 * Edit the search with given search Id
+	 *
+	 * @param inputJsonObj
+	 *            JSON string which contains all key value pairs that the user wants to edit.<br>
+	 *            Input Sample:<br>
+	 *            {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search 2x",//required<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"categoryId": 4,//required<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"folderId": 5,//required<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",//optional<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"time",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"STRING",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"ALL"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"additionalInfo",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"CLOB",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"this is a demo"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+	 *            }<br>
+	 * @param searchId
+	 *            The saved-search id to edit
+	 * @return complete details of search with gived search Id <br>
+	 *         Response Sample:<br>
+	 *         {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"id": 10011,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search 2x",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"categoryId": 4,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"folderId": 5,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"creationDate": 1403865821000,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModifiedBy": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModificationDate": 1403865821000,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastAccessDate": 1403840621000,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"time",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"STRING",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"ALL"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"additionalInfo",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"CLOB",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"this is a demo"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+	 *         }
+	 */
 	@PUT
 	@Path("{id: [0-9]*}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response editSearch(JSONObject inputJsonObj, @PathParam("id") long searchId)
 	{
-		String message=null;
-		int statusCode=200;
+		String message = null;
+		int statusCode = 200;
 		JSONObject jsonObj;
-		
-		SearchManager sman =SearchManager.getInstance() ;
+
+		SearchManager sman = SearchManager.getInstance();
 		try {
 			Search searchObj = createSearchObjectForEdit(inputJsonObj, sman.getSearch(searchId));
-		    Search savedSearch = sman.editSearch(searchObj);
-		    jsonObj=JSONUtil.ObjectToJSONObject(savedSearch);
-			jsonObj=addHref(jsonObj);
-			message=jsonObj.toString();
-			
+			Search savedSearch = sman.editSearch(searchObj);
+			jsonObj = JSONUtil.ObjectToJSONObject(savedSearch);
+			jsonObj = addHref(jsonObj);
+			message = jsonObj.toString();
+
 		}
 		catch (EMAnalyticsFwkException e) {
-				message=e.getMessage();
-				statusCode=e.getStatusCode();
-		}catch(EMAnalyticsWSException e){
-			message=e.getMessage();
-			statusCode=e.getStatusCode();
-		} catch (JSONException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		catch (EMAnalyticsWSException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			statusCode=404;
-			message=e.getMessage();
+			statusCode = 404;
+			message = e.getMessage();
 		}
-		
-		return Response.status(statusCode).entity(message).build() ;
-		
-		
-	}
-	
-	
-	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException {
-		Search searchObj = new SearchImpl();
-		// Data population !
-			try{
-				String name=json.getString("name");
-				
-				if(name.trim() == null)
-					throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-				if(name !=null && name.trim().equals(""))
-					throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-				searchObj.setName(name);
-			}
-			catch(JSONException je){
-				throw new EMAnalyticsWSException("The name key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING,je);
-			}
-			 
-			try{
-				JSONObject jsonObj=json.getJSONObject("category");
-				searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
-				}
-				catch(JSONException je){
-					throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_CATEGORY_ID_MISSING,je);
-				}
-			try{
-				JSONObject jsonFold=json.getJSONObject("folder");
-				searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id" ) ) );
-				}
-				catch(JSONException je){
-					throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING,je);
-				}
-		    
-		    	    
-		    
-		    // Nullable properties !
-		    searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));
-		    searchObj.setQueryStr(json.optString("queryStr", searchObj.getQueryStr()));
-		    searchObj.setDescription(json.optString("description", searchObj.getDescription() ));
-		    // non-nullable with db defaults !!
-		    searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked() ) ) ) );
-		    searchObj.setUiHidden( Boolean.parseBoolean(json.optString("uiHidden" , Boolean.toString(searchObj.isUiHidden() ) ) ) );
-		    
-		    // Parameters
-		    if(json.has("parameters"))
-		    {
-			    JSONArray jsonArr = json.optJSONArray("parameters");
-			    List<SearchParameter> searchParamList = new ArrayList<SearchParameter>() ;
-			    // FIltering values with Map .. not exactly required .. duplicate params if any will be discarded at persistence layer !!
-			  	String type;	    
-			    for(int i=0 ; i < jsonArr.length() ; i++)
-			    {
-			    	SearchParameter searchParam = new SearchParameter();
-			    	JSONObject jsonParam = jsonArr.optJSONObject(i);
-			    	if(jsonParam.has("attributes"))
-			    		searchParam.setAttributes(jsonParam.optString("attributes"));
-			    	try{
-			    		String name=jsonParam.getString("name");
-						if(name.trim() == null)
-							throw new EMAnalyticsWSException("The name key for search param can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
-						if(name !=null && name.trim().equals(""))
-							throw new EMAnalyticsWSException("The name key for search param can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
-					
-			    		searchParam.setName(name);
-						}
-					catch(JSONException je){
-						throw new EMAnalyticsWSException("The name key for search parameter is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING,je);
-					}
-			    	try{
-			    		type=jsonParam.getString("type");
-			    	}
-			    	catch(JSONException je){
-						throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING,je);
-					}
-			    	if(type.equals("STRING") | type.equals("CLOB"))
-			    		searchParam.setType(ParameterType.valueOf(type));
-			    	else
-			    		throw new EMAnalyticsWSException("Invalid param type, please specify either STRING or CLOB", EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_INVALID);
-			    	
-			    	searchParam.setValue(jsonParam.optString("value"));
-			    	searchParamList.add(searchParam);
-			    	
-			    }
-			    searchObj.setParameters(searchParamList);
-			    
-		    }
-		    else
-		    	searchObj.setParameters(null);
-		    
-		 
-		return searchObj;
+
+		return Response.status(statusCode).entity(message).build();
+
 	}
 
-	private Search createSearchObjectForEdit(JSONObject json, Search searchObj) throws EMAnalyticsWSException
+	/**
+	 * Set last access time to the saved search with given search Id
+	 *
+	 * @param searchId
+	 *            The saved-search id to edit
+	 * @param update
+	 *            If set the last access time to the saved search. "True" means last access time will be updated
+	 * @return Response body will be shown the set access date ie: "lastAccessDate" in LONG format<br>
+	 *         Response Sample:<br>
+	 *         2014-07-11T02:20:32.112Z<br>
+	 */
+
+	@PUT
+	@Path("{id: [0-9]*}")
+	public Response editSearchAccessDate(@PathParam("id") long searchId, @QueryParam("updateLastAccessTime") boolean update)
 	{
-		// Data population !
-		 
-			 /*
-			  * Quick Note:
-			  * json.optString() returns second String if the key is not found 
-			  * Useful for edit
-			  */
-		if(json.has("name")){
-			String name=json.optString("name");
-		
-		if(name.trim() == null)
-			throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-		if(name !=null && name.trim().equals(""))
-			throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-		searchObj.setName(name);
-		}else 
-			searchObj.setName(json.optString("name", searchObj.getName() ));
-		    searchObj.setDescription(json.optString("description", searchObj.getDescription() ));
-		    if(json.has("category")){
-		    	try{
-					JSONObject jsonObj=json.getJSONObject("category");
-					searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
-					}
-					catch(JSONException je){
-						throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_CATEGORY_ID_MISSING,je);
-					}
-		    }else
-		    	searchObj.setCategoryId(Integer.parseInt(searchObj.getCategoryId().toString()));
-		    if(json.has("folder"))
-		    {
-		    	try{
-					JSONObject jsonFold=json.getJSONObject("folder");
-					searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id" ) ) );
-					}
-					catch(JSONException je){
-						throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING,je);
-					}
-		    }else
-		    	searchObj.setFolderId(Integer.parseInt(searchObj.getFolderId().toString() ));
-		        
-		    searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked() ) ) ) );
-		    searchObj.setUiHidden( Boolean.parseBoolean(json.optString("uiHidden" , Boolean.toString(searchObj.isUiHidden() ) ) ) );
-		    
-		    // Nullable properties !
-		    searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));
-		    searchObj.setQueryStr(json.optString("queryStr", searchObj.getQueryStr()));
-		    
-		    // Parameters
-		    if(json.has("parameters"))
-		    {
-			    JSONArray jsonArr = json.optJSONArray("parameters");
-			    List<SearchParameter> searchParamList = new ArrayList<SearchParameter>() ;
-			    // FIltering values with Map .. not exactly required .. duplicate params if any will be discarded at persistence layer !!
-			    String type;	    
-			    for(int i=0 ; i < jsonArr.length() ; i++)
-			    {
-			    	SearchParameter searchParam = new SearchParameter();
-			    	JSONObject jsonParam = jsonArr.optJSONObject(i);
-			    	searchParam.setAttributes(jsonParam.optString("attributes"));
-			    	
-			    	try{
-			    		String name=jsonParam.getString("name");
-			    		if(name.trim() == null)
-							throw new EMAnalyticsWSException("The name key for search param can not be null in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-						if(name !=null && name.trim().equals(""))
-							throw new EMAnalyticsWSException("The name key for search param can not be empty in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-						searchParam.setName(name);
-					}
-					catch(JSONException je){
-						throw new EMAnalyticsWSException("The name key for search param is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING,je);
-					}
-			    	try{
-			    		type=jsonParam.getString("type");
-			    	}
-			    	catch(JSONException je){
-						throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING,je);
-					}
-			    	if(type.equals("STRING") | type.equals("CLOB"))
-			    		searchParam.setType(ParameterType.valueOf(type));
-			    	else
-			    		throw new EMAnalyticsWSException(" Invalid param type, please specify either STRING or CLOB.", EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_INVALID);
-			    	searchParam.setValue(jsonParam.optString("value"));
-			    	searchParamList.add(searchParam);
-			    	
-			    }
-			    searchObj.setParameters(searchParamList);
-			    
-		    }
-		    else
-		    	searchObj.setParameters(null);
-		    
-		return searchObj;
-		
-		
+		String query = uri.getRequestUri().getQuery();
+		if (query == null) {
+			return Response.status(400).entity("Please specify updateLastAccessTime true or false").build();
+		}
+		String[] input = query.split("=");
+		if (input.length == 2) {
+			if (update) {
+				return updateLastAccessTime(searchId);
+			}
+			else {
+				return Response.status(200).build();
+			}
+		}
+		else {
+			return Response.status(400).entity("please give the value for updateLastAccessTime").build();
+		}
 	}
-	public Response updateLastAccessTime(long searchId){
+
+	/**
+	 * Get details of saved-search with given id
+	 *
+	 * @param searchid
+	 *            The id of saved-search which user wants to read
+	 * @param bPath
+	 *            The parameter value is true or false. If set true it will return the flattenedFolderPath of this search.
+	 * @return Return complete details of search with given search Id <br>
+	 *         Response Sample:<br>
+	 *         {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10011,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "sample for creation 2c",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/999"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "folder": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/999"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-04T12:03:03.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-04T12:03:03.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastAccessDate": "2014-07-08T22:25:52.857Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10011",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "flattenedFolderPath": [<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Demo Searches",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "All Searches"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+	 *         }
+	 */
+	@GET
+	@Path("{id: [0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSearch(@PathParam("id") long searchid, @QueryParam("flattenedFolderPath") boolean bPath)
+	{
+		String message = null;
+		int statusCode = 200;
+		JSONObject jsonObj;
+		SearchManager sman = SearchManager.getInstance();
+		try {
+
+			Search searchObj = sman.getSearch(searchid);
+			jsonObj = JSONUtil.ObjectToJSONObject(searchObj);
+			//here convert the date into utc format
+			jsonObj = addHref(jsonObj);
+			if (bPath) {
+				FolderManager folderMgr = FolderManager.getInstance();
+				JSONArray jsonPathArray = new JSONArray();
+				String[] pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
+				for (String p : pathArray) {
+					jsonPathArray.put(p);
+				}
+
+				jsonObj.put(FOLDER_PATH, jsonPathArray);
+			}
+			message = jsonObj.toString();
+		}
+		catch (EMAnalyticsFwkException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		catch (EMAnalyticsWSException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
+		catch (JSONException e) {
+			statusCode = 400;
+			message = e.getMessage();
+		}
+
+		return Response.status(statusCode).entity(message).build();
+	}
+
+	public Response updateLastAccessTime(long searchId)
+	{
 		String message = null;
 		int statusCode = 200;
 		try {
@@ -415,13 +367,274 @@ public class SearchAPI {
 			java.util.Date date = sman.modifyLastAccessDate(searchId);
 			message = String.valueOf(JSONUtil.getDate(date.getTime()));
 
-		} catch (EMAnalyticsFwkException e) {
+		}
+		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 		}
 		return Response.status(statusCode).entity(message).build();
 
+	}
+
+	private JSONObject addHref(JSONObject jsonObj) throws JSONException
+	{
+		JSONObject rtnObj = new JSONObject();
+		JSONObject jsonCat = new JSONObject();
+		jsonCat.put("id", jsonObj.getInt("categoryId"));
+		jsonCat.put("href", uri.getBaseUri() + "category/" + jsonObj.getInt("categoryId"));
+		JSONObject jsonFold = new JSONObject();
+		jsonFold.put("id", jsonObj.getInt("folderId"));
+		jsonFold.put("href", uri.getBaseUri() + "folder/" + jsonObj.getInt("folderId"));
+		jsonObj.put("createdOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("createdOn"))));
+		jsonObj.put("lastModifiedOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModifiedOn"))));
+		rtnObj.put("id", jsonObj.optInt("id"));
+		rtnObj.put("name", jsonObj.optString("name"));
+		if (jsonObj.has("description")) {
+			rtnObj.put("description", jsonObj.getString("description"));
+		}
+		rtnObj.put("category", jsonCat);
+		rtnObj.put("folder", jsonFold);
+		rtnObj.put("owner", jsonObj.optString("owner"));
+		rtnObj.put("createdOn", jsonObj.optString("createdOn"));
+		rtnObj.put("lastModifiedBy", jsonObj.optString("lastModifiedBy"));
+		rtnObj.put("lastModifiedOn", jsonObj.optString("lastModifiedOn"));
+		if (jsonObj.has("lastAccessDate")) {
+			rtnObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
+		}
+		if (jsonObj.has("queryStr")) {
+			rtnObj.put("queryStr", jsonObj.getString("queryStr"));
+		}
+		if (jsonObj.has("parameters")) {
+			rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
+		}
+		rtnObj.put("href", uri.getBaseUri() + "search/" + jsonObj.getInt("id"));
+
+		return rtnObj;
+
+	}
+
+	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException
+	{
+		Search searchObj = new SearchImpl();
+		// Data population !
+		try {
+			String name = json.getString("name");
+
+			if (name.trim() == null) {
+				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
+						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+			}
+			if (name != null && name.trim().equals("")) {
+				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
+						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+			}
+			searchObj.setName(name);
+		}
+		catch (JSONException je) {
+			throw new EMAnalyticsWSException("The name key for search is missing in the input JSON Object",
+					EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING, je);
+		}
+
+		try {
+			JSONObject jsonObj = json.getJSONObject("category");
+			searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
+		}
+		catch (JSONException je) {
+			throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",
+					EMAnalyticsWSException.JSON_SEARCH_CATEGORY_ID_MISSING, je);
+		}
+		try {
+			JSONObject jsonFold = json.getJSONObject("folder");
+			searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id")));
+		}
+		catch (JSONException je) {
+			throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",
+					EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING, je);
+		}
+
+		// Nullable properties !
+		searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));
+		searchObj.setQueryStr(json.optString("queryStr", searchObj.getQueryStr()));
+		searchObj.setDescription(json.optString("description", searchObj.getDescription()));
+		// non-nullable with db defaults !!
+		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
+		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
+
+		// Parameters
+		if (json.has("parameters")) {
+			JSONArray jsonArr = json.optJSONArray("parameters");
+			List<SearchParameter> searchParamList = new ArrayList<SearchParameter>();
+			// FIltering values with Map .. not exactly required .. duplicate params if any will be discarded at persistence layer !!
+			String type;
+			for (int i = 0; i < jsonArr.length(); i++) {
+				SearchParameter searchParam = new SearchParameter();
+				JSONObject jsonParam = jsonArr.optJSONObject(i);
+				if (jsonParam.has("attributes")) {
+					searchParam.setAttributes(jsonParam.optString("attributes"));
+				}
+				try {
+					String name = jsonParam.getString("name");
+					if (name.trim() == null) {
+						throw new EMAnalyticsWSException(
+								"The name key for search param can not be null in the input JSON Object",
+								EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
+					}
+					if (name != null && name.trim().equals("")) {
+						throw new EMAnalyticsWSException(
+								"The name key for search param can not be empty in the input JSON Object",
+								EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
+					}
+
+					searchParam.setName(name);
+				}
+				catch (JSONException je) {
+					throw new EMAnalyticsWSException("The name key for search parameter is missing in the input JSON Object",
+							EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING, je);
+				}
+				try {
+					type = jsonParam.getString("type");
+				}
+				catch (JSONException je) {
+					throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
+							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
+				}
+				if (type.equals("STRING") | type.equals("CLOB")) {
+					searchParam.setType(ParameterType.valueOf(type));
+				}
+				else {
+					throw new EMAnalyticsWSException("Invalid param type, please specify either STRING or CLOB",
+							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_INVALID);
+				}
+
+				searchParam.setValue(jsonParam.optString("value"));
+				searchParamList.add(searchParam);
+
+			}
+			searchObj.setParameters(searchParamList);
+
+		}
+		else {
+			searchObj.setParameters(null);
+		}
+
+		return searchObj;
+	}
+
+	private Search createSearchObjectForEdit(JSONObject json, Search searchObj) throws EMAnalyticsWSException
+	{
+		// Data population !
+
+		/*
+		 * Quick Note:
+		 * json.optString() returns second String if the key is not found
+		 * Useful for edit
+		 */
+		if (json.has("name")) {
+			String name = json.optString("name");
+
+			if (name.trim() == null) {
+				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
+						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+			}
+			if (name != null && name.trim().equals("")) {
+				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
+						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+			}
+			searchObj.setName(name);
+		}
+		else {
+			searchObj.setName(json.optString("name", searchObj.getName()));
+		}
+		searchObj.setDescription(json.optString("description", searchObj.getDescription()));
+		if (json.has("category")) {
+			try {
+				JSONObject jsonObj = json.getJSONObject("category");
+				searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
+			}
+			catch (JSONException je) {
+				throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",
+						EMAnalyticsWSException.JSON_SEARCH_CATEGORY_ID_MISSING, je);
+			}
+		}
+		else {
+			searchObj.setCategoryId(Integer.parseInt(searchObj.getCategoryId().toString()));
+		}
+		if (json.has("folder")) {
+			try {
+				JSONObject jsonFold = json.getJSONObject("folder");
+				searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id")));
+			}
+			catch (JSONException je) {
+				throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",
+						EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING, je);
+			}
+		}
+		else {
+			searchObj.setFolderId(Integer.parseInt(searchObj.getFolderId().toString()));
+		}
+
+		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
+		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
+
+		// Nullable properties !
+		searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));
+		searchObj.setQueryStr(json.optString("queryStr", searchObj.getQueryStr()));
+
+		// Parameters
+		if (json.has("parameters")) {
+			JSONArray jsonArr = json.optJSONArray("parameters");
+			List<SearchParameter> searchParamList = new ArrayList<SearchParameter>();
+			// FIltering values with Map .. not exactly required .. duplicate params if any will be discarded at persistence layer !!
+			String type;
+			for (int i = 0; i < jsonArr.length(); i++) {
+				SearchParameter searchParam = new SearchParameter();
+				JSONObject jsonParam = jsonArr.optJSONObject(i);
+				searchParam.setAttributes(jsonParam.optString("attributes"));
+
+				try {
+					String name = jsonParam.getString("name");
+					if (name.trim() == null) {
+						throw new EMAnalyticsWSException(
+								"The name key for search param can not be null in the input JSON Object",
+								EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+					}
+					if (name != null && name.trim().equals("")) {
+						throw new EMAnalyticsWSException(
+								"The name key for search param can not be empty in the input JSON Object",
+								EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+					}
+					searchParam.setName(name);
+				}
+				catch (JSONException je) {
+					throw new EMAnalyticsWSException("The name key for search param is missing in the input JSON Object",
+							EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING, je);
+				}
+				try {
+					type = jsonParam.getString("type");
+				}
+				catch (JSONException je) {
+					throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
+							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
+				}
+				if (type.equals("STRING") | type.equals("CLOB")) {
+					searchParam.setType(ParameterType.valueOf(type));
+				}
+				else {
+					throw new EMAnalyticsWSException(" Invalid param type, please specify either STRING or CLOB.",
+							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_INVALID);
+				}
+				searchParam.setValue(jsonParam.optString("value"));
+				searchParamList.add(searchParam);
+
+			}
+			searchObj.setParameters(searchParamList);
+
+		}
+		else {
+			searchObj.setParameters(null);
+		}
+
+		return searchObj;
 
 	}
 }
-
