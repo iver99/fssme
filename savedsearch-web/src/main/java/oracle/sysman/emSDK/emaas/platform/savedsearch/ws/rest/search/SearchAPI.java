@@ -44,56 +44,67 @@ public class SearchAPI
 	UriInfo uri;
 
 	/**
-	 * Create a search
+	 * Create a search<br>
+	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/search</font><br>
+	 * The string "search" in the URL signifies create operation on search.
 	 *
 	 * @param inputJsonObj
 	 *            The search details <br>
 	 *            Input Sample:<br>
-	 *            {<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search 2x",//required<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"categoryId": 4,//required<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"folderId": 5,//required<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",//optional<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional<br>
+	 *            <font color="DarkCyan"> {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search", //required<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"category": {"id":999},//required <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"folder": {"id":999},//required <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",//optional <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"time",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"STRING",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"ALL"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name":"time",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type":"STRING",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":"ALL"<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"additionalInfo",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"CLOB",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"this is a demo"<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;]<br>
-	 *            } <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name":"additionalInfo",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type":"CLOB",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":"this is a demo"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+	 *            } </font><br>
 	 * @return Return Complete details of search with search Id generated automatically.<br>
 	 *         Response Sample:<br>
-	 *         {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"id": 10011,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search 2x",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"categoryId": 4,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"folderId": 5,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"creationDate": 1403865821000,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModifiedBy": "SYSMAN",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModificationDate": 1403865821000,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastAccessDate": 1403840621000,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"time",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"STRING",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"ALL"<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"additionalInfo",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"CLOB",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"this is a demo"<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;]<br>
-	 *         } <br>
+	 *         <font color="DarkCyan"> {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10438,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Demo Search",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/999"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "folder": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/999"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-14T05:19:26.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-14T05:19:26.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastAccessDate": "2014-07-13T22:19:26.358Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "additionalInfo",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "this is a demo",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "CLOB"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; "name": "time",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "ALL",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10438"<br>
+	 *         } </font><br>
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -160,53 +171,71 @@ public class SearchAPI
 	 * @param inputJsonObj
 	 *            JSON string which contains all key value pairs that the user wants to edit.<br>
 	 *            Input Sample:<br>
-	 *            {<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search 2x",//required<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"categoryId": 4,//required<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"folderId": 5,//required<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",//optional<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"time",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"STRING",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"ALL"<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"additionalInfo",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"CLOB",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"this is a demo"<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;]<br>
-	 *            }<br>
+	 *            <font color="DarkCyan"> {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; "name": "Demo Search X1",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *            "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/999"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; "folder": {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *            "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/999"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*1",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "additionalInfo x1",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "this is a demo",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "CLOB"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "time X2",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "ALL",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+	 *            }</font><br>
 	 * @param searchId
 	 *            The saved-search id to edit
 	 * @return complete details of search with gived search Id <br>
 	 *         Response Sample:<br>
-	 *         {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"id": 10011,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search 2x",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"categoryId": 4,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"folderId": 5,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"creationDate": 1403865821000,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModifiedBy": "SYSMAN",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModificationDate": 1403865821000,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastAccessDate": 1403840621000,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"time",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"STRING",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"ALL"<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"additionalInfo",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type":"CLOB",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value":"this is a demo"<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;]<br>
-	 *         }
+	 *         <font color="DarkCyan"> {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10438,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Demo Search X1",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/999"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "folder": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/999"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-14T05:19:26.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-14T05:19:26.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastAccessDate": "2014-07-13T22:19:26.358Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "additionalInfo x1",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "this is a demo",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "CLOB"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; "name": "time X2",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "ALL",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10438"<br>
+	 *         } </font><br>
 	 */
 	@PUT
 	@Path("{id: [0-9]*}")
@@ -255,7 +284,7 @@ public class SearchAPI
 	 *            If set the last access time to the saved search. "True" means last access time will be updated
 	 * @return Response body will be shown the set access date ie: "lastAccessDate" in LONG format<br>
 	 *         Response Sample:<br>
-	 *         2014-07-11T02:20:32.112Z<br>
+	 *         <font color="DarkCyan">2014-07-11T02:20:32.112Z</font><br>
 	 */
 
 	@PUT
@@ -289,7 +318,7 @@ public class SearchAPI
 	 *            The parameter value is true or false. If set true it will return the flattenedFolderPath of this search.
 	 * @return Return complete details of search with given search Id <br>
 	 *         Response Sample:<br>
-	 *         {<br>
+	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10011,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "sample for creation 2c",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
@@ -312,7 +341,7 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Demo Searches",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "All Searches"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
-	 *         }
+	 *         }</font><br>
 	 */
 	@GET
 	@Path("{id: [0-9]*}")
