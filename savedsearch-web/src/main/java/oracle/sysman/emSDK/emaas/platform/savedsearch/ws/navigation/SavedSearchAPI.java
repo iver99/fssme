@@ -123,10 +123,9 @@ public class SavedSearchAPI
 	/**
 	 * List all searches which has the given folder Id<br>
 	 * <br>
-	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port
-	 * number&gt;/savedsearch/v1/entities?folderId=&lt;folderId&gt;</font><br>
-	 * The string "entities?folderId=&lt;folder Id&gt;" in the URL signifies get the search operation on search with given folder
-	 * id and category name, and all the listed searches will order by the given field name <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/entities?folderId=&lt;folder
+	 * Id&gt;</font><br>
+	 * The string "entities?folderId=&lt;folder Id&gt;" in the URL signifies read operation on search with given folder id<br>
 	 *
 	 * @since 0.1
 	 * @param id
@@ -216,7 +215,8 @@ public class SavedSearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-03T11:07:21.000Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Console Root Folder",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-03T11:07:21.000Z",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1" <br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1" <br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
 	 */
