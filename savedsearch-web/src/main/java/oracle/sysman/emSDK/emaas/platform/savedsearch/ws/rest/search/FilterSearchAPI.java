@@ -28,7 +28,7 @@ import org.codehaus.jettison.json.JSONObject;
 /**
  * Find Searches by Category Name/Category Id/ Folder Id
  *
- * @author shangwan
+ * @since 0.1
  */
 @Path("searches")
 public class FilterSearchAPI
@@ -40,6 +40,26 @@ public class FilterSearchAPI
 	private final String search = "search";
 
 	/**
+	 * List all the searches with given category Id/category name/folder Id<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/searches?categoryId=&lt;category
+	 * Id&gt;</font><br>
+	 * The string "searches?categoryId=&lt;category Id&gt;" in the URL signifies read operation on search with given category Id.<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/searches?categoryName=&lt;category
+	 * name&gt;</font><br>
+	 * The string "searches?categoryName=&lt;category name&gt;" in the URL signifies read operation on search with given category
+	 * name<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/searches?folderId=&lt;folder
+	 * Id&gt;</font><br>
+	 * The string "searches?folderId=&lt;folder Id&gt;" in the URL signifies read operation on search with given folder Id.<br>
+	 * <br>
+	 * Note:<br>
+	 * <font color="red">If more than one query parameters are given, only the first one is applied and all the others are
+	 * ignored</font>
+	 *
+	 * @since 0.1
 	 * @param uri
 	 * @param catId
 	 *            The category Id which user wants to get the details
@@ -48,14 +68,15 @@ public class FilterSearchAPI
 	 * @param foldId
 	 *            The folder Id which user wants to get the details
 	 * @return Lists all the searches <br>
-	 *         If give category Id as the parameter, it will list all the searches present in the category whose id is the given
-	 *         category Id<br>
-	 *         If give category name as the parameter, it will list all the searches present in the category whose name is the
+	 *         If category Id is given as the parameter, it will list all the searches present in the category whose id is the
+	 *         given category Id<br>
+	 *         If category name is given as the parameter, it will list all the searches present in the category whose name is the
 	 *         given category name<br>
-	 *         If give folder Id as the parameter, it will list all the searches present in the folder whose id is the given
+	 *         If folder Id is given as the parameter, it will list all the searches present in the folder whose id is the given
 	 *         folder Id<br>
+	 * <br>
 	 *         Response Sample:<br>
-	 *         [<br>
+	 *         <font color="DarkCyan">[<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 10003,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "sample for creation1",<br>
@@ -78,7 +99,7 @@ public class FilterSearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10003"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
-	 *         ]<br>
+	 *         ]</font><br>
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

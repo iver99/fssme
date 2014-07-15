@@ -28,9 +28,9 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
- * Save Search Service
- * 
- * @author shangwan
+ * Saved Search Service
+ *
+ * @since 0.1
  */
 @Path("")
 public class SavedSearchAPI
@@ -42,34 +42,39 @@ public class SavedSearchAPI
 	UriInfo uri;
 
 	/**
-	 * Get list of all existed categories
-	 * 
-	 * @return Lists all the existed categories Response Sample:<br>
-	 *         [<br>
+	 * Get list of all existed categories<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/categories</font><br>
+	 * The string "categories" in the URL signifies read operation on category.
+	 *
+	 * @since 0.1
+	 * @return Lists all the existed categories<br>
+	 *         Response Sample:<br>
+	 *         <font color="DarkCyan">[<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 1,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "Log Analytics",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Category for Log Analytics",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "defaultFolder":<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "id": 2,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "href":
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 2,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/2"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "parameters":<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name":
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name":
 	 *         "CATEGORY_PARAM_VIEW_TASKFLOW",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":
 	 *         "/WEB-INF/core/loganalytics/obssearch/plugins/dashboard-flow-definition.xml#dashboard-flow-definition" ,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; }<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
-	 *         ]<br>
+	 *         ]</font><br>
 	 */
 	@GET
 	@Path("/categories")
@@ -116,29 +121,33 @@ public class SavedSearchAPI
 	}
 
 	/**
+	 * List all searches which has the given folder Id<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port
+	 * number&gt;/savedsearch/v1/entities?folderId=&lt;folderId&gt;</font><br>
+	 * The string "entities?folderId=&lt;folder Id&gt;" in the URL signifies get the search operation on search with given folder
+	 * id and category name, and all the listed searches will order by the given field name <br>
+	 *
+	 * @since 0.1
 	 * @param id
 	 *            The folder Id which user wants to get the search details
-	 * @param catName
-	 *            The category name which user wants to get the search details
-	 * @param orderBy
-	 *            The field uses to order, like "name", "id"
 	 * @return Lists all the searches with the given folder Id<br>
 	 *         Response Sample:<br>
-	 *         [<br>
+	 *         <font color="DarkCyan">[<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": 9998,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search 1",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "search",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "category":<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "id": 999,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "href":
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/999"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "folder":<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "id": 999,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "href":
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/999"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-03T11:07:24.000Z",<br>
@@ -146,9 +155,8 @@ public class SavedSearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/9998"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
-	 *         ]<br>
+	 *         ]</font><br>
 	 */
-
 	@GET
 	@Path("/entities")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -193,13 +201,14 @@ public class SavedSearchAPI
 	}
 
 	/**
-	 * @param catName
-	 *            The category name which user wants to get the search details
-	 * @param orderBy
-	 *            The field uses to order, like "name", "id"
-	 * @return Lists all the searches with the given category name<br>
+	 * List all root folders<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1</font><br>
+	 *
+	 * @since 0.1
+	 * @return Lists all the root folders<br>
 	 *         Response Sample:<br>
-	 *         [<br>
+	 *         <font color="DarkCyan">[<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 1,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "All Searches",<br>
@@ -207,10 +216,9 @@ public class SavedSearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-03T11:07:21.000Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Console Root Folder",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-03T11:07:21.000Z",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href":
-	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1&category=Log+Analytics&orderby=name" <br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1" <br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
-	 *         ]<br>
+	 *         ]</font><br>
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

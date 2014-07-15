@@ -21,6 +21,8 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Category Services
+ *
+ * @since 0.1
  */
 @Path("category")
 public class CategoryAPI
@@ -168,15 +170,19 @@ public class CategoryAPI
 			}
 			return Response.status(statusCode).entity(message).build();
 		}
-	*/
+	 */
 	/**
-	 * Get the details of category with the given category Id
-	 * 
+	 * Get the details of category with the given category Id<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category/&lt;id&gt;</font><br>
+	 * The string "/category/&lt;id&gt;" in the URL signifies read operation on category with given category Id.
+	 *
+	 * @since 0.1
 	 * @param categoryId
-	 *            The category Id which user want to read
+	 *            The category Id which user want to read the details
 	 * @return Return the complete details of category with given category Id<br>
 	 *         Response Sample:<br>
-	 *         {<br>
+	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 1, <br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Log Analytics",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Category for Log Analytics",<br>
@@ -194,7 +200,7 @@ public class CategoryAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
-	 *         }
+	 *         }</font><br>
 	 */
 	@GET
 	@Path("{id: [0-9]*}")
@@ -229,13 +235,17 @@ public class CategoryAPI
 	}
 
 	/**
-	 * Get the details of category with given name
-	 * 
+	 * Get the details of category with given category name<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category?name=&lt;name&gt;</font><br>
+	 * The string "/category?name=&lt;name&gt;" in the URL signifies read operation on category with given category name.
+	 *
+	 * @since 0.1
 	 * @param name
 	 *            The name of category which users wants to get the details
 	 * @return Return the complete details of category with given category Id<br>
 	 *         Response Sample:<br>
-	 *         {<br>
+	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 1, <br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Log Analytics",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Category for Log Analytics",<br>
@@ -253,7 +263,7 @@ public class CategoryAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
-	 *         }
+	 *         }</font><br>
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -407,7 +417,7 @@ public class CategoryAPI
 		return category;
 
 	}
-	*/
+	 */
 	private JSONObject modifyResponse(JSONObject jsonObj) throws JSONException
 	{
 		JSONObject rtnObj = new JSONObject();

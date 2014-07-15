@@ -34,6 +34,8 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Search Services
+ *
+ * @since 0.1
  */
 @Path("search")
 public class SearchAPI
@@ -46,9 +48,11 @@ public class SearchAPI
 
 	/**
 	 * Create a search<br>
-	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/search</font><br>
-	 * The string "search" in the URL signifies create operation on search.
-	 * 
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search</font><br>
+	 * The string "search" in the URL signifies create operation on search.<br>
+	 *
+	 * @since 0.1
 	 * @param inputJsonObj
 	 *            The search details <br>
 	 *            Input Sample:<br>
@@ -60,14 +64,14 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "name":"time",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "type":"STRING",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "value":"ALL"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name":"time",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type":"STRING",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":"ALL"<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "name":"additionalInfo",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "type":"CLOB",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "value":"this is a demo"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name":"additionalInfo",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type":"CLOB",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":"this is a demo"<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
 	 *            } </font><br>
@@ -94,14 +98,14 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "name": "additionalInfo",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "value": "this is a demo",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "type": "CLOB"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "additionalInfo",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "this is a demo",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "CLOB"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; "name": "time",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "value": "ALL",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "type": "STRING"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "ALL",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10438"<br>
@@ -141,11 +145,15 @@ public class SearchAPI
 	}
 
 	/**
-	 * Delete a saved-search with the given id
-	 * 
+	 * Delete a saved-search with the given id<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
+	 * The string "search/&lt;id&gt;" in the URL signifies delete operation on search with given id.
+	 *
+	 * @since 0.1
 	 * @param searchId
 	 *            The id of saved-search which user wants to delete
-	 * @return return the status of the request. 204 No Content means it was successful and nothing to return in the response body
+	 * @return Return the status of the request. 204 No Content means it was successful and nothing to return in the response body
 	 */
 	@DELETE
 	@Path("{id: [0-9]*}")
@@ -167,8 +175,12 @@ public class SearchAPI
 	}
 
 	/**
-	 * Edit the search with given search Id
-	 * 
+	 * Edit the search with given search Id <br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
+	 * The string "search/&lt;id&gt;" in the URL signifies edit operation on search with given id.
+	 *
+	 * @since 0.1
 	 * @param inputJsonObj
 	 *            JSON string which contains all key value pairs that the user wants to edit.<br>
 	 *            Input Sample:<br>
@@ -177,7 +189,7 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
-	 *            "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/999" <br>
+	 *            "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/999"<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; },<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "folder": {<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
@@ -189,20 +201,22 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*1",<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "name": "additionalInfo x1",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "value": "this is a demo",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "type": "CLOB"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "additionalInfo x1",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "this is a demo",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "CLOB"<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "name": "time X2",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "value": "ALL",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& nbsp;&nbsp; "type": "STRING"<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "time X2",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "ALL",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
 	 *            }</font><br>
 	 * @param searchId
 	 *            The saved-search id to edit
-	 * @return complete details of search with gived search Id <br>
+	 * @param updateCategory
+	 *            INTERNAL USE ONLY
+	 * @return Return complete details of search with gived search Id <br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan"> {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10438,<br>
@@ -225,14 +239,14 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "name": "additionalInfo x1",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "value": "this is a demo",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "type": "CLOB"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "additionalInfo x1",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "this is a demo",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "CLOB"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; "name": "time X2",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "value": "ALL",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp; "type": "STRING"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value": "ALL",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10438"<br>
@@ -284,8 +298,14 @@ public class SearchAPI
 	}
 
 	/**
-	 * Set last access time to the saved search with given search Id
-	 * 
+	 * Set last access time to the saved search with given search Id<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port
+	 * number&gt;/savedsearch/v1/search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;</font><br>
+	 * The string "search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;" in the URL signifies set last accesst time
+	 * operation on search with given id.
+	 *
+	 * @since 0.1
 	 * @param searchId
 	 *            The saved-search id to edit
 	 * @param update
@@ -294,7 +314,6 @@ public class SearchAPI
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">2014-07-11T02:20:32.112Z</font><br>
 	 */
-
 	@PUT
 	@Path("{id: [0-9]*}")
 	public Response editSearchAccessDate(@PathParam("id") long searchId, @QueryParam("updateLastAccessTime") boolean update)
@@ -318,8 +337,15 @@ public class SearchAPI
 	}
 
 	/**
-	 * Get details of saved-search with given id
-	 * 
+	 * Get details of saved-search with given id<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port
+	 * number&gt;/savedsearch/v1/search/&lt;id&gt;?flattenedFolderPath=&lt;boolean value&gt;</font><br>
+	 * The string "search/&lt;id&gt;?flattenedFolderPath=&lt;boolean value&gt;" in the URL signifies get the search operation on
+	 * search with given id. <br>
+	 * If "flattenedFolderPath = true", the flattened folder hierarchy will be added to any search
+	 *
+	 * @since 0.1
 	 * @param searchid
 	 *            The id of saved-search which user wants to read
 	 * @param bPath
