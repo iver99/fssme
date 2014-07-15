@@ -1,7 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.navigation;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,6 @@ import org.codehaus.jettison.json.JSONObject;
 public class SavedSearchAPI {
 	private final String search = "search";
 	private final String folder = "folder";
-	private final String ORDERBY_SEPARATOR = ",";
 	private static final String FOLDER_PATH = "flattenedFolderPath";
 	@Context
 	UriInfo uri;
@@ -169,9 +167,7 @@ public class SavedSearchAPI {
 	@GET
 	@Path("/entities")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDetails(@QueryParam("folderId") String id,
-			@QueryParam("category") String catName,
-			@QueryParam("orderby") String orderBy) {
+	public Response getDetails(@QueryParam("folderId") String id) {
 		String message = null;
 		Long folderId = 0L;
 		if (id == null) {
@@ -192,8 +188,7 @@ public class SavedSearchAPI {
 		}
 		if (folderId != 0L) {
 			try {
-				return Response.status(200)
-						.entity(getFolderDetails(folderId, catName, orderBy))
+				return Response.status(200).entity(getFolderDetails(folderId))
 						.build();
 			} catch (EMAnalyticsFwkException e) {
 				e.printStackTrace();
@@ -239,12 +234,11 @@ public class SavedSearchAPI {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getRootFolders(@QueryParam("category") String catName,
-			@QueryParam("orderby") String orderBy) {
+	public Response getRootFolders() {
 
 		String message = "";
 		try {
-			message = getFolderDetails(0, catName, orderBy);
+			message = getFolderDetails(0);
 		} catch (EMAnalyticsFwkException e) {
 			e.printStackTrace();
 			return Response.status(e.getStatusCode()).entity(e.getMessage())
@@ -261,9 +255,8 @@ public class SavedSearchAPI {
 
 	}
 
-	private String getFolderDetails(long id, String catName, String orderBy)
-			throws EMAnalyticsFwkException, JSONException,
-			UnsupportedEncodingException {
+	private String getFolderDetails(long id) throws EMAnalyticsFwkException,
+			JSONException, UnsupportedEncodingException {
 
 		String message = new String();
 		FolderManager fman = FolderManager.getInstance();
@@ -286,29 +279,16 @@ public class SavedSearchAPI {
 					JSONUtil.getDate(folderObj.getLastModifiedOn().getTime()));
 			StringBuilder linkBuilder = new StringBuilder(uri.getBaseUri()
 					+ "folder/" + folderObj.getId());
-			if (catName != null && catName.trim().length() != 0) {
-				linkBuilder.append("&category="
-						+ URLEncoder.encode(catName, "UTF-8"));
-			}
-			if (orderBy != null && orderBy.trim().length() != 0) {
-				linkBuilder.append("&orderby="
-						+ URLEncoder.encode(orderBy, "UTF-8"));
-			}
 
 			jsonObj.put("href", linkBuilder.toString());
-
 			jsonArray.put(jsonObj);
 		}
 
 		// Get Searches too !!
 		List<Search> searchList;
-		if (orderBy != null) {
-			searchList = sman.getSearchListByFolderIdCategoryFilter(id,
-					catName, orderBy.split(ORDERBY_SEPARATOR));
-		} else {
-			searchList = sman.getSearchListByFolderIdCategoryFilter(id,
-					catName, null);
-		}
+
+		searchList = sman.getSearchListByFolderIdCategoryFilter(id);
+
 		for (Search searchObj : searchList) {
 			jsonObj = new JSONObject();
 			jsonObj.put("id", searchObj.getId());
