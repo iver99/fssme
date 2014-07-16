@@ -201,6 +201,30 @@ public class CategoryAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
 	 *         }</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>List catergory details successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Category object by ID: &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>&nbsp;</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@GET
 	@Path("{id: [0-9]*}")
@@ -264,6 +288,30 @@ public class CategoryAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
 	 *         }</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>List category details successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Category object by name: &lt;name&gt; does not exist</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>please give category name</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

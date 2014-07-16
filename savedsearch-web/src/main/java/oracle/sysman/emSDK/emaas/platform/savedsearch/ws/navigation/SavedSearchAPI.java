@@ -75,6 +75,25 @@ public class SavedSearchAPI
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>List all exists categories successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Server Error</td>
+	 *         <td>&nbsp;</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@GET
 	@Path("/categories")
@@ -155,6 +174,37 @@ public class SavedSearchAPI
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/9998"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>List all searches successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Folder with the Id &lt;folder Id&gt; does not exist</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>could be the following errors:<br>
+	 *         1.please give folderId<br>
+	 *         2.Folder Id should be a numeric and not alphanumeric</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Server Error</td>
+	 *         <td>&nbsp;</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@GET
 	@Path("/entities")
@@ -219,6 +269,25 @@ public class SavedSearchAPI
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1" <br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>List all the root folders successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Server Error</td>
+	 *         <td>&nbsp;</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

@@ -67,6 +67,30 @@ public class FolderAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;"systemFolder": false, <br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;"href": "http://slc06byz.us.oracle.com:7001/savedsearch/v1/folder/1368" <br>
 	 *         }</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>201</td>
+	 *         <td>Created</td>
+	 *         <td>create folder successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>&nbsp;</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>The name key for folder is missing in the input JSON Object</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -136,7 +160,25 @@ public class FolderAPI
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which user wants to delete
-	 * @return Nothing will return in response body
+	 * @return Nothing will return in response body <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>204</td>
+	 *         <td>No Content</td>
+	 *         <td>Delete folder successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Folder with the Id &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@DELETE
 	@Path("{id: [0-9]*}")
@@ -191,6 +233,25 @@ public class FolderAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "systemFolder": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1368"<br>
 	 *         }</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>Edit folder successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Folder with the Id &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -253,6 +314,25 @@ public class FolderAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "systemFolder": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1368"<br>
 	 *         }</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>List all searches successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Folder with the Id &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@GET
 	@Path("{id: [0-9]*}")

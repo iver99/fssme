@@ -110,6 +110,33 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10438"<br>
 	 *         } </font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>201</td>
+	 *         <td>Created</td>
+	 *         <td>Create search successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>&nbsp;</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>could be the following errors:<br>
+	 *         1.The name key for search is missing in the input JSON Object<br>
+	 *         2.The category key for search is missing in the input JSON Object<br>
+	 *         3.The folder key for search is missing in the input JSON Object</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -153,7 +180,26 @@ public class SearchAPI
 	 * @since 0.1
 	 * @param searchId
 	 *            The id of saved-search which user wants to delete
-	 * @return Return the status of the request. 204 No Content means it was successful and nothing to return in the response body
+	 * @return Nothing to return in the response body<br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>204</td>
+	 *         <td>No Content</td>
+	 *         <td>Delete search successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Search with Id: &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@DELETE
 	@Path("{id: [0-9]*}")
@@ -251,6 +297,25 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10438"<br>
 	 *         } </font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>Edit search successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Search with Id: &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@PUT
 	@Path("{id: [0-9]*}")
@@ -313,6 +378,30 @@ public class SearchAPI
 	 * @return Response body will be shown the set access date ie: "lastAccessDate" in LONG format<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">2014-07-11T02:20:32.112Z</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>Update last access time of search successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Search with Id: &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>Please specify updateLastAccessTime true or false</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@PUT
 	@Path("{id: [0-9]*}")
@@ -376,6 +465,30 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "All Searches"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
 	 *         }</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>List search successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>Search with Id: &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>&nbsp;</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@GET
 	@Path("{id: [0-9]*}")

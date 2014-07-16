@@ -27,7 +27,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Find Searches by Category Name/Category Id/ Folder Id
- * 
+ *
  * @since 0.1
  */
 @Path("searches")
@@ -42,6 +42,9 @@ public class FilterSearchAPI
 	/**
 	 * List all the searches with given category Id/category name/folder Id<br>
 	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/searches</font><br>
+	 * The string "searches" in the URL signifies read operation on search. It will list all the exists searches.<br>
+	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/searches?categoryId=&lt;category
 	 * Id&gt;</font><br>
 	 * The string "searches?categoryId=&lt;category Id&gt;" in the URL signifies read operation on search with given category Id.<br>
@@ -55,16 +58,22 @@ public class FilterSearchAPI
 	 * Id&gt;</font><br>
 	 * The string "searches?folderId=&lt;folder Id&gt;" in the URL signifies read operation on search with given folder Id.<br>
 	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port
+	 * number&gt;/savedsearch/v1/searches?lastAccessCount=&lt;number&gt;</font><br>
+	 * The string "searches?lastAccessCount=&lt;number&gt;" in the URL signifies that to return last accessed &lt;number&gt; saved
+	 * searches .<br>
 	 * Note:<br>
 	 * <font color="red">If more than one query parameters are given, only the first one is applied and all the others are
 	 * ignored</font>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param uri
 	 * @param catId
 	 *            The category Id which user wants to get the details
 	 * @param name
 	 *            The category name which user wants to get the details
+	 * @param lastAccessCount
+	 *            The number which user want to get the last accessed saved search
 	 * @param foldId
 	 *            The folder Id which user wants to get the details
 	 * @return Lists all the searches <br>
@@ -74,6 +83,7 @@ public class FilterSearchAPI
 	 *         given category name<br>
 	 *         If folder Id is given as the parameter, it will list all the searches present in the folder whose id is the given
 	 *         folder Id<br>
+	 *         If lastAccessCount is given as the parameter, it will list the last account number saved search<br>
 	 * <br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">[<br>
@@ -100,6 +110,44 @@ public class FilterSearchAPI
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10003"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>List searches successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>could be the following errors:<br>
+	 *         1.Category object by ID: &lt;category Id&gt; does not exist<br>
+	 *         2.Category object by Name: &lt;category name&gt; does not exist<br>
+	 *         3.Folder with the Id &lt;folder Id&gt; does not exist</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>could be the following errors:<br>
+	 *         1.please give the value for categoryId<br>
+	 *         2.please give the value for categoryName<br>
+	 *         3.please give folderId<br>
+	 *         4.please give either categoryId,categoryName,folderId or lastAccessCount<br>
+	 *         5.Id/count should be a positive number and not an alphanumeric.<br>
+	 *         6.please give either categoryId,categoryName,folderId,lastAccessDate</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Server Error</td>
+	 *         <td>&nbsp;</td>
+	 *         </tr>
+	 *         </table>
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
