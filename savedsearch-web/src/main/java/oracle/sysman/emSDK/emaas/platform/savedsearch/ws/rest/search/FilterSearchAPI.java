@@ -27,7 +27,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Find Searches by Category Name/Category Id/ Folder Id
- *
+ * 
  * @since 0.1
  */
 @Path("searches")
@@ -58,7 +58,7 @@ public class FilterSearchAPI
 	 * Note:<br>
 	 * <font color="red">If more than one query parameters are given, only the first one is applied and all the others are
 	 * ignored</font>
-	 *
+	 * 
 	 * @since 0.1
 	 * @param uri
 	 * @param catId
@@ -104,7 +104,8 @@ public class FilterSearchAPI
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllSearches(@Context UriInfo uri, @QueryParam("categoryId") String catId,
-			@QueryParam("categoryName") String name, @QueryParam("folderId") String foldId)
+			@QueryParam("categoryName") String name, @QueryParam("lastAccessCount") String lastAccessCount,
+			@QueryParam("folderId") String foldId)
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
 		int categId = 0;
