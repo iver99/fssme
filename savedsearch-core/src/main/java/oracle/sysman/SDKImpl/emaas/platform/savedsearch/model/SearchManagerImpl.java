@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 public class SearchManagerImpl extends SearchManager
 {
 
-	// Logger
+	//  Logger    
 	private static final Logger _logger = Logger.getLogger(SearchManagerImpl.class);
 	public static final SearchManagerImpl _instance = new SearchManagerImpl();
 	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.deleted=0 ";
