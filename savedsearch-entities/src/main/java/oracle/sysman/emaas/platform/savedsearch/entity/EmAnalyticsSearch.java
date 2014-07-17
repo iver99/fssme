@@ -35,12 +35,12 @@ import org.eclipse.persistence.annotations.PrivateOwned;
 @Table(name = "EMS_ANALYTICS_SEARCH")
 @SecondaryTable(name = "EMS_ANALYTICS_LAST_ACCESS", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "OBJECT_ID", referencedColumnName = "SEARCH_ID") })
 @NamedQueries({
-	    @NamedQuery(name = "Search.getSearchById", query = "SELECT e FROM EmAnalyticsSearch e where e.id = :id  AND e.deleted =0 "),
+		@NamedQuery(name = "Search.getSearchById", query = "SELECT e FROM EmAnalyticsSearch e where e.id = :id  AND e.deleted =0 "),
 		@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0 "),
 		@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory = :category  AND e.deleted =0 "),
 		@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0"),
 		@NamedQuery(name = "Search.getSearchDetails", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.name = :searchName  AND e.emAnalyticsCategory = :category AND e.deleted =0"),
-		@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.name = :searchName  AND e.deleted =0")})
+		@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.name = :searchName  AND e.deleted =0") })
 @SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
 public class EmAnalyticsSearch implements Serializable
 {
@@ -101,10 +101,9 @@ public class EmAnalyticsSearch implements Serializable
 
 	@Column(name = "UI_HIDDEN")
 	private BigDecimal uiHidden;
-	
-	
+
 	@Column(name = "DELETED")
-	private BigDecimal deleted;
+	private long deleted;
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne
@@ -152,6 +151,11 @@ public class EmAnalyticsSearch implements Serializable
 	public Date getCreationDate()
 	{
 		return creationDate;
+	}
+
+	public long getDeleted()
+	{
+		return deleted;
 	}
 
 	public String getDescription()
@@ -285,6 +289,11 @@ public class EmAnalyticsSearch implements Serializable
 		this.creationDate = creationDate;
 	}
 
+	public void setDeleted(long deleted)
+	{
+		this.deleted = deleted;
+	}
+
 	public void setDescription(String description)
 	{
 		this.description = description;
@@ -397,16 +406,6 @@ public class EmAnalyticsSearch implements Serializable
 	public void setUiHidden(BigDecimal uiHidden)
 	{
 		this.uiHidden = uiHidden;
-	}
-	
-	public BigDecimal getDeleted()
-	{
-		return this.deleted;
-	}
-
-	public void setDeleted(BigDecimal deleted) 
-    {
-		this.deleted = deleted;
 	}
 
 }

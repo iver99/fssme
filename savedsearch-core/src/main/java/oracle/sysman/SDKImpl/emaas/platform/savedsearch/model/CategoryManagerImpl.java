@@ -24,7 +24,6 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
  *  @since   release specific (what release of product did this appear in)
  */
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -82,16 +81,16 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId,em);
+			categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			if (categoryObj == null) {
 				_logger.error("Category object by Id: " + categoryId + " " + "does not exist");
 				throw new EMAnalyticsFwkException("Category object by Id: " + categoryId + " " + "does not exist",
 						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, null);
 			}
-			boolean bResult =EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
-			categoryObj.setDeleted(new BigDecimal(1));
+			boolean bResult = EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
+			categoryObj.setDeleted(categoryId);
 			em.getTransaction().begin();
-			em.persist(categoryObj);
+			em.merge(categoryObj);
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
@@ -107,8 +106,7 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 			else if (e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
 				_logger.error("Error while deleting the category" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while deleting the category as it has associated searches",
+				throw new EMAnalyticsFwkException("Error while deleting the category as it has associated searches",
 						EMAnalyticsFwkException.ERR_DELETE_CATEGORY, null);
 			}
 			else {
@@ -220,6 +218,7 @@ public class CategoryManagerImpl extends CategoryManager
 			EntityManager em = emf.createEntityManager();
 			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			if (categoryObj != null) {
+				em.refresh(categoryObj);
 				category = createCategoryObject(categoryObj, null);
 			}
 		}
@@ -365,8 +364,11 @@ public class CategoryManagerImpl extends CategoryManager
 
 									if (obj instanceof Folder) {
 										Folder folder = (Folder) obj;
-										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil
-												.getEmAnalyticsFolderByFolderObject(folder);
+										if (folder.getParentId() == null || folder.getParentId() == 0) {
+											folder.setParentId(1);
+										}
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(folder.getParentId()
+												.longValue(), em);
 
 										if (tmpfld == null) {
 											EmAnalyticsFolder fld = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
@@ -378,7 +380,8 @@ public class CategoryManagerImpl extends CategoryManager
 										}
 									}
 									else if (obj instanceof Integer) {
-										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(), em);												
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(
+												((Integer) obj).longValue(), em);
 										if (tmpfld != null) {
 											category.setDefaultFolderId((Integer) obj);
 										}

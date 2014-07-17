@@ -1,8 +1,5 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
-
-
-
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
@@ -15,57 +12,93 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
-
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 @Path("importsearches")
-public class ImportSearchSet {
-	
-	private final String resourcePath="oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
-	@POST	
-	@Produces({ MediaType.APPLICATION_JSON })	
-	@Consumes("application/xml") 
-	public Response importSearches(String  xml) {		
-		Response res=null;
-		if(xml!=null && xml.length()==0)
-			return res =Response.status(Status.BAD_REQUEST).entity("Please specify input with valid format").build();
+public class ImportSearchSet
+{
+
+	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
+
+	@POST
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes("application/xml")
+	public Response importSearches(String xml)
+	{
+		Response res = null;
+		if (xml != null && xml.length() == 0) {
+			return res = Response.status(Status.BAD_REQUEST).entity("Please specify input with valid format").build();
+		}
 		res = Response.ok().build();
 		String msg = "";
-		try {			
-			    InputStream stream=  ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);			    
-			    StringBuffer xmlStr = new StringBuffer( xml);
-				StringReader sReader =new StringReader( xmlStr.toString() ) ;			    
-			    SearchSet searches = (SearchSet)JAXBUtil.unmarshal( sReader,stream,JAXBUtil.getJAXBContext(SearchSet.class));
-			    List<ImportSearchImpl>  list =   searches.getSearchSet();
-			    if(list.size()==0)
-			    	return res =Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
-			    List<ImportSearchImpl> addedList = SearchManagerImpl.getInstance().saveMultipleSearch(list);
-			    JSONArray  jsonArray = new JSONArray();
-			    for(ImportSearchImpl impSearch : addedList)
-			    {
-			    	JSONObject jObj = new JSONObject();
-			    	jObj.put("id", impSearch.getId());
-			    	jObj.put("name", impSearch.getName());
-			    	jsonArray.put(jObj);
-			    }
-				res = Response.status(Status.OK).entity(jsonArray).build();		
-		}catch (ImportException e) {
+		try {
+			InputStream stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			StringBuffer xmlStr = new StringBuffer(xml);
+			StringReader sReader = new StringReader(xmlStr.toString());
+			SearchSet searches = (SearchSet) JAXBUtil.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(SearchSet.class));
+			List<ImportSearchImpl> list = searches.getSearchSet();
+			if (list.size() == 0) {
+				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
+			}
+			if (validateData(list)) {
+				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
+			}
+			List<ImportSearchImpl> addedList = SearchManagerImpl.getInstance().saveMultipleSearch(list);
+			JSONArray jsonArray = new JSONArray();
+			for (ImportSearchImpl impSearch : addedList) {
+				JSONObject jObj = new JSONObject();
+				jObj.put("id", impSearch.getId());
+				jObj.put("name", impSearch.getName());
+				jsonArray.put(jObj);
+			}
+			res = Response.status(Status.OK).entity(jsonArray).build();
+		}
+		catch (ImportException e) {
 			msg = e.getMessage();
-			e.printStackTrace();			
-			res =Response.status(Status.BAD_REQUEST).entity(msg).build();			
-		}catch (Exception e) {
-		 msg="An internal error has occurred" ;
-		 res =Response.status(Status.INTERNAL_SERVER_ERROR)
-				 .entity(msg).build();	
-	}
+			e.printStackTrace();
+			res = Response.status(Status.BAD_REQUEST).entity(msg).build();
+		}
+		catch (Exception e) {
+			msg = "An internal error has occurred";
+			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+		}
 		return res;
 	}
-		  
+
+	private boolean validateData(List<ImportSearchImpl> list)
+	{
+		for (ImportSearchImpl obj : list) {
+			if (!(obj.getName() != null && obj.getName().trim().length() > 0)) {
+				return true;
+			}
+			if (obj.getCategoryDetails() != null) {
+				if (obj.getCategoryDetails() instanceof CategoryImpl) {
+					CategoryImpl objCat = (CategoryImpl) obj.getCategoryDetails();
+					if (!(obj.getName() != null && objCat.getName().trim().length() > 0)) {
+						return true;
+					}
+				}
+			}
+			if (obj.getFolderDetails() != null) {
+				if (obj.getFolderDetails() instanceof FolderImpl) {
+					FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
+					if (!(obj.getName() != null && objFolder.getName().trim().length() > 0)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+
+	}
+
 }

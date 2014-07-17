@@ -39,8 +39,7 @@
 			<property name="eclipselink.logging.timestamp" value="true" />
 			<property name="eclipselink.session.include.descriptor.queries"
 				value="true" />
-			<property name="eclipselink.cache.size.default" value="65535" />
-			<property name="eclipselink.query-results-cache" value="false"/>
+			<property name="eclipselink.cache.size.default" value="65535" />			
 		</properties>
 	</persistence-unit>
 
@@ -72,8 +71,7 @@
 			<property name="eclipselink.logging.timestamp" value="true" />
 			<property name="eclipselink.session.include.descriptor.queries"
 				value="true" />
-			<property name="eclipselink.cache.size.default" value="65535" />
-			<property name="eclipselink.query-results-cache" value="false"/>
+			<property name="eclipselink.cache.size.default" value="65535" />			
 		</properties>
 	</persistence-unit>
 
