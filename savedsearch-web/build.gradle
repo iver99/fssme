@@ -20,6 +20,11 @@ war {
 		include '**/*.properties'
 		into('WEB-INF/classes') 
 	}
+	from('WebContent/WEB-INF') {
+                include '**/web.xml'
+                into('WEB-INF')
+        }
+
 }
 
 task runQATestSuite(type: Test){
@@ -38,7 +43,7 @@ task restDoc {
  
     // Configure task input and output to not generate the doc again when the 
     // source file have not changed
-    inputs.files 'src/main/java/oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest'    
+    inputs.files 'src/main/java/oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest',  'src/main/java/oracle/sysman/emSDK/emaas/platform/savedsearch/ws/navigation'
     outputs.dir restDocOutputDir
 }
 restDoc << {
@@ -54,10 +59,10 @@ restDoc << {
     // Define classpath for running enunciate
     ant.path(id:'enunciateRuntimePath') {
         pathelement(path: configurations.restDoc.asPath)
-    }   
-  
+    }  
+
     // Run the enunciate task
-    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest',
+    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emSDK/emaas/platform/savedsearch/ws/',
             classpathRef: 'enunciateRuntimePath',
             verbose: 'true', 
             debug: 'true', 
@@ -65,9 +70,10 @@ restDoc << {
             javacSourceVersion: '7') {
         
         include(name: '**/*.java')
+	exclude(name: '*/exception')
         export(artifactId: 'docs', destination: restDocOutputDir)
         javacArgument(argument: '-g')
-    }
+    }	
 }
 
 /**

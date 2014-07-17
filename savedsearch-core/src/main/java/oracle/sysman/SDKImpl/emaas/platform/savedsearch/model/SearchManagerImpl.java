@@ -350,7 +350,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public List<Search> getSearchListByFolderIdCategoryFilter(long folderId, String catName, String[] orderBy)
+	public List<Search> getSearchListByFolderIdCategoryFilter(long folderId)
 			throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
@@ -362,29 +362,7 @@ public class SearchManagerImpl extends SearchManager
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
 			EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
-
-			if (catName != null && catName.trim().length() != 0) {
-				EmAnalyticsCategory category = null;
-				try {
-					category = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
-							.setParameter("categoryName", catName).getSingleResult();
-				}
-				catch (NoResultException nre) {
-					_logger.error("Error while retrieving the category " + catName, nre);
-					throw new EMAnalyticsFwkException("Error while retrieving the category " + catName,
-							EMAnalyticsFwkException.ERR_GENERIC, null, nre);
-
-				}
-				query.append(FILTER_BY_CATEGORY);
-				OrderBybuilder(query, orderBy);
-				searchList = em.createQuery(query.toString()).setParameter("folder", folder).setParameter("category", category)
-						.getResultList();
-			}
-			else {
-				OrderBybuilder(query, orderBy);
-				searchList = em.createQuery(query.toString()).setParameter("folder", folder).getResultList();
-
-			}
+			searchList = em.createQuery(query.toString()).setParameter("folder", folder).getResultList();
 
 			for (EmAnalyticsSearch searchObj : searchList) {
 				rtnobj.add(createSearchObject(searchObj, null));
