@@ -1,10 +1,25 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the EMS_ANALYTICS_FOLDERS database table.
@@ -12,7 +27,7 @@ import java.util.Set;
 @Entity
 @Table(name = "EMS_ANALYTICS_FOLDERS")
 @NamedQueries({
-	    @NamedQuery(name = "Folder.getFolderById", query = "Select o from EmAnalyticsFolder o where  o.folderId=:id AND O.deleted =0") ,
+		@NamedQuery(name = "Folder.getFolderById", query = "Select o from EmAnalyticsFolder o where  o.folderId= :id AND O.deleted =0"),
 		@NamedQuery(name = "Folder.getSubFolder", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= "
 				+ ":parentFolder" + " AND o.deleted=0"),
 		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.deleted=0"),
@@ -65,10 +80,9 @@ public class EmAnalyticsFolder implements Serializable
 
 	@Column(name = "UI_HIDDEN")
 	private BigDecimal uiHidden;
-	
 
 	@Column(name = "DELETED")
-	private BigDecimal deleted;
+	private long deleted;
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@OneToMany(mappedBy = "emAnalyticsFolder")
@@ -91,19 +105,99 @@ public class EmAnalyticsFolder implements Serializable
 	{
 	}
 
-	public long getFolderId()
-	{
-		return this.folderId;
-	}
-
-	public void setFolderId(long folderId)
-	{
-		this.folderId = folderId;
-	}
-
 	public Date getCreationDate()
 	{
-		return this.creationDate;
+		return creationDate;
+	}
+
+	public long getDeleted()
+	{
+		return deleted;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public String getDescriptionNlsid()
+	{
+		return descriptionNlsid;
+	}
+
+	public String getDescriptionSubsystem()
+	{
+		return descriptionSubsystem;
+	}
+
+	public Set<EmAnalyticsCategory> getEmAnalyticsCategories()
+	{
+		return emAnalyticsCategories;
+	}
+
+	public EmAnalyticsFolder getEmAnalyticsFolder()
+	{
+		return emAnalyticsFolder;
+	}
+
+	public Set<EmAnalyticsFolder> getEmAnalyticsFolders()
+	{
+		return emAnalyticsFolders;
+	}
+
+	public Set<EmAnalyticsSearch> getEmAnalyticsSearches()
+	{
+		return emAnalyticsSearches;
+	}
+
+	public String getEmPluginId()
+	{
+		return emPluginId;
+	}
+
+	public long getFolderId()
+	{
+		return folderId;
+	}
+
+	public Date getLastModificationDate()
+	{
+		return lastModificationDate;
+	}
+
+	public String getLastModifiedBy()
+	{
+		return lastModifiedBy;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public String getNameNlsid()
+	{
+		return nameNlsid;
+	}
+
+	public String getNameSubsystem()
+	{
+		return nameSubsystem;
+	}
+
+	public String getOwner()
+	{
+		return owner;
+	}
+
+	public BigDecimal getSystemFolder()
+	{
+		return systemFolder;
+	}
+
+	public BigDecimal getUiHidden()
+	{
+		return uiHidden;
 	}
 
 	public void setCreationDate(Date creationDate)
@@ -111,9 +205,9 @@ public class EmAnalyticsFolder implements Serializable
 		this.creationDate = creationDate;
 	}
 
-	public String getDescription()
+	public void setDeleted(long deleted)
 	{
-		return this.description;
+		this.deleted = deleted;
 	}
 
 	public void setDescription(String description)
@@ -121,19 +215,9 @@ public class EmAnalyticsFolder implements Serializable
 		this.description = description;
 	}
 
-	public String getDescriptionNlsid()
-	{
-		return this.descriptionNlsid;
-	}
-
 	public void setDescriptionNlsid(String descriptionNlsid)
 	{
 		this.descriptionNlsid = descriptionNlsid;
-	}
-
-	public String getDescriptionSubsystem()
-	{
-		return this.descriptionSubsystem;
 	}
 
 	public void setDescriptionSubsystem(String descriptionSubsystem)
@@ -141,119 +225,9 @@ public class EmAnalyticsFolder implements Serializable
 		this.descriptionSubsystem = descriptionSubsystem;
 	}
 
-	public String getEmPluginId()
-	{
-		return this.emPluginId;
-	}
-
-	public void setEmPluginId(String emPluginId)
-	{
-		this.emPluginId = emPluginId;
-	}
-
-	public Date getLastModificationDate()
-	{
-		return this.lastModificationDate;
-	}
-
-	public void setLastModificationDate(Date lastModificationDate)
-	{
-		this.lastModificationDate = lastModificationDate;
-	}
-
-	public String getLastModifiedBy()
-	{
-		return this.lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy)
-	{
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public String getName()
-	{
-		return this.name;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	public String getNameNlsid()
-	{
-		return this.nameNlsid;
-	}
-
-	public void setNameNlsid(String nameNlsid)
-	{
-		this.nameNlsid = nameNlsid;
-	}
-
-	public String getNameSubsystem()
-	{
-		return this.nameSubsystem;
-	}
-
-	public void setNameSubsystem(String nameSubsystem)
-	{
-		this.nameSubsystem = nameSubsystem;
-	}
-
-	public String getOwner()
-	{
-		return this.owner;
-	}
-
-	public void setOwner(String owner)
-	{
-		this.owner = owner;
-	}
-
-	public BigDecimal getSystemFolder()
-	{
-		return this.systemFolder;
-	}
-
-	public void setSystemFolder(BigDecimal systemFolder)
-	{
-		this.systemFolder = systemFolder;
-	}
-
-	public BigDecimal getUiHidden()
-	{
-		return this.uiHidden;
-	}
-
-	public void setUiHidden(BigDecimal uiHidden)
-	{
-		this.uiHidden = uiHidden;
-	}
-	
-	public BigDecimal getDeleted()
-	{
-		return this.deleted;
-	}
-
-	public void setDeleted(BigDecimal deleted) 
-	{
-		this.deleted = deleted;
-	}
-
-	public Set<EmAnalyticsCategory> getEmAnalyticsCategories()
-	{
-		return this.emAnalyticsCategories;
-	}
-
 	public void setEmAnalyticsCategories(Set<EmAnalyticsCategory> emAnalyticsCategories)
 	{
 		this.emAnalyticsCategories = emAnalyticsCategories;
-	}
-
-	public EmAnalyticsFolder getEmAnalyticsFolder()
-	{
-		return this.emAnalyticsFolder;
 	}
 
 	public void setEmAnalyticsFolder(EmAnalyticsFolder emAnalyticsFolder)
@@ -261,24 +235,64 @@ public class EmAnalyticsFolder implements Serializable
 		this.emAnalyticsFolder = emAnalyticsFolder;
 	}
 
-	public Set<EmAnalyticsFolder> getEmAnalyticsFolders()
-	{
-		return this.emAnalyticsFolders;
-	}
-
 	public void setEmAnalyticsFolders(Set<EmAnalyticsFolder> emAnalyticsFolders)
 	{
 		this.emAnalyticsFolders = emAnalyticsFolders;
 	}
 
-	public Set<EmAnalyticsSearch> getEmAnalyticsSearches()
-	{
-		return this.emAnalyticsSearches;
-	}
-
 	public void setEmAnalyticsSearches(Set<EmAnalyticsSearch> emAnalyticsSearches)
 	{
 		this.emAnalyticsSearches = emAnalyticsSearches;
+	}
+
+	public void setEmPluginId(String emPluginId)
+	{
+		this.emPluginId = emPluginId;
+	}
+
+	public void setFolderId(long folderId)
+	{
+		this.folderId = folderId;
+	}
+
+	public void setLastModificationDate(Date lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy)
+	{
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public void setNameNlsid(String nameNlsid)
+	{
+		this.nameNlsid = nameNlsid;
+	}
+
+	public void setNameSubsystem(String nameSubsystem)
+	{
+		this.nameSubsystem = nameSubsystem;
+	}
+
+	public void setOwner(String owner)
+	{
+		this.owner = owner;
+	}
+
+	public void setSystemFolder(BigDecimal systemFolder)
+	{
+		this.systemFolder = systemFolder;
+	}
+
+	public void setUiHidden(BigDecimal uiHidden)
+	{
+		this.uiHidden = uiHidden;
 	}
 
 }

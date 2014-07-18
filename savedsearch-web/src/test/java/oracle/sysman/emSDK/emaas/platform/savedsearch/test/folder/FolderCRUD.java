@@ -70,7 +70,7 @@ public class FolderCRUD {
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.asString(),
-					"Folder  with this name Custom_Folder is already exist");
+					"Folder with name Custom_Folder already exist");
 			System.out.println("    ");
 
 			System.out
@@ -337,70 +337,70 @@ public class FolderCRUD {
 		}
 	}
 
-	@Test
-	/**
-	 * Folder Negative Case1:
-	 */
-	public void folder_badURLs() {
-		try {
-			System.out.println("Negative Case1 for FOLDER");
-			System.out.println("											");
-			System.out.println("GET operation is in-progress with bad URL");
-			System.out.println("											");
-
-			Response res = given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/folder");
-
-			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 405);
-			System.out.println(res.asString());
-			Assert.assertEquals(res.asString(), "Method Not Allowed");
-			System.out.println("											");
-			System.out.println("POST operation is in-progress with bad URL");
-			System.out.println("											");
-			String jsonString1 = "{ \"name\":\"Custom_Folder\"}";
-			Response res1 = given().contentType(ContentType.JSON)
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().body(jsonString1).when().post("/");
-			System.out.println("											");
-			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 405);
-			System.out.println(res1.asString());
-			Assert.assertEquals(res1.asString(), "Method Not Allowed");
-			System.out.println("											");
-			System.out.println("PUT operation is in-progress with bad URL");
-			System.out.println("											");
-			String jsonString2 = "{ \"name\":\"Custom_Folder\"}";
-			Response res2 = given().contentType(ContentType.JSON)
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().body(jsonString2).when().put("/");
-			System.out.println("											");
-			System.out.println("Status code is: " + res2.getStatusCode());
-			Assert.assertTrue(res2.getStatusCode() == 405);
-			System.out.println(res2.asString());
-			Assert.assertEquals(res2.asString(), "Method Not Allowed");
-			System.out.println("											");
-			System.out.println("DELETE operation is in-progress with bad URL");
-			System.out.println("											");
-			String jsonString3 = "{ \"name\":\"Custom_Folder\"}";
-			Response res3 = given().contentType(ContentType.JSON)
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().body(jsonString3).when().post("/");
-			System.out.println("											");
-			System.out.println("Status code is: " + res3.getStatusCode());
-			Assert.assertTrue(res3.getStatusCode() == 405);
-			System.out.println(res3.asString());
-			Assert.assertEquals(res3.asString(), "Method Not Allowed");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	@Test
+//	/**
+//	 * Folder Negative Case1:
+//	 */
+//	public void folder_badURLs() {
+//		try {
+//			System.out.println("Negative Case1 for FOLDER");
+//			System.out.println("											");
+//			System.out.println("GET operation is in-progress with bad URL");
+//			System.out.println("											");
+//
+//			Response res = given()
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().when().get("/folder");
+//
+//			System.out.println("											");
+//			System.out.println("Status code is: " + res.getStatusCode());
+//			Assert.assertTrue(res.getStatusCode() == 405);
+//			System.out.println(res.asString());
+//			Assert.assertEquals(res.asString(), "Method Not Allowed");
+//			System.out.println("											");
+//			System.out.println("POST operation is in-progress with bad URL");
+//			System.out.println("											");
+//			String jsonString1 = "{ \"name\":\"Custom_Folder\"}";
+//			Response res1 = given().contentType(ContentType.JSON)
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().body(jsonString1).when().post("/");
+//			System.out.println("											");
+//			System.out.println("Status code is: " + res1.getStatusCode());
+//			Assert.assertTrue(res1.getStatusCode() == 405);
+//			System.out.println(res1.asString());
+//			Assert.assertEquals(res1.asString(), "Method Not Allowed");
+//			System.out.println("											");
+//			System.out.println("PUT operation is in-progress with bad URL");
+//			System.out.println("											");
+//			String jsonString2 = "{ \"name\":\"Custom_Folder\"}";
+//			Response res2 = given().contentType(ContentType.JSON)
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().body(jsonString2).when().put("/");
+//			System.out.println("											");
+//			System.out.println("Status code is: " + res2.getStatusCode());
+//			Assert.assertTrue(res2.getStatusCode() == 405);
+//			System.out.println(res2.asString());
+//			Assert.assertEquals(res2.asString(), "Method Not Allowed");
+//			System.out.println("											");
+//			System.out.println("DELETE operation is in-progress with bad URL");
+//			System.out.println("											");
+//			String jsonString3 = "{ \"name\":\"Custom_Folder\"}";
+//			Response res3 = given().contentType(ContentType.JSON)
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().body(jsonString3).when().post("/");
+//			System.out.println("											");
+//			System.out.println("Status code is: " + res3.getStatusCode());
+//			Assert.assertTrue(res3.getStatusCode() == 405);
+//			System.out.println(res3.asString());
+//			Assert.assertEquals(res3.asString(), "Method Not Allowed");
+//			System.out.println("											");
+//			System.out.println("------------------------------------------");
+//			System.out.println("											");
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	/*
 	 * @Test
@@ -779,96 +779,96 @@ public class FolderCRUD {
 		}
 	}
 
-	@Test
-	/**
-	 * create a folder and searches in it using post method to verify the functionality of find searches by folderId
-	 */
-	public void searches_ByFoldernameANDbadURLs() {
-		try {
-			System.out
-					.println("Use GET method to get list of the searches by folder Name - verify the status code and response");
-			Response res1 = given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/searches?folderId=sravan");
-			System.out.println("Status code is: " + res1.getStatusCode());
-			System.out.println(res1.asString());
-			Assert.assertTrue(res1.getStatusCode() == 400);
-			Assert.assertEquals(res1.asString(),
-					"Id/count should be a positive number and not an alphanumeric.");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out
-					.println("Use GET method to get list of the searches by folder id=null - verify the status code and response");
-			Response res2 = given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/searches?folderId=");
-			System.out.println("Status code is: " + res2.getStatusCode());
-			System.out.println(res2.asString());
-			Assert.assertTrue(res2.getStatusCode() == 400);
-			Assert.assertEquals(res2.asString(),
-					"Please give the value for folderId");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out
-					.println("Use GET method to get list of the searches by folder id=Non-Numeric - verify the status code and response");
-			Response res3 = given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/searches?folderId=-1");
-			System.out.println("Status code is: " + res3.getStatusCode());
-			System.out.println(res3.asString());
-			Assert.assertTrue(res3.getStatusCode() == 400);
-			Assert.assertEquals(res3.asString(),
-					"Id/count should be a positive number and not an alphanumeric.");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out
-					.println("Use GET method to get list of the searches by folder incomplete URL - verify the status code and response");
-			Response res4 = given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().get("/searches?folderId");
-			System.out.println("Status code is: " + res4.getStatusCode());
-			System.out.println(res4.asString());
-			Assert.assertTrue(res4.getStatusCode() == 400);
-			Assert.assertEquals(res4.asString(),
-					"Please give the value for folderId");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out
-					.println("Find searches by folder id using wrong methods - verify the status code and the response");
-			Response res5 = given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().post("/searches?folderId=1");
-			System.out.println("											");
-			System.out.println("Status code is: " + res5.getStatusCode());
-			Assert.assertTrue(res5.getStatusCode() == 405);
-			System.out.println(res5.asString());
-			Assert.assertEquals(res5.asString(), "Method Not Allowed");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			Response res6 = given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().put("/searches?folderId=1");
-			System.out.println("											");
-			System.out.println("Status code is: " + res6.getStatusCode());
-			Assert.assertTrue(res6.getStatusCode() == 405);
-			System.out.println(res6.asString());
-			Assert.assertEquals(res6.asString(), "Method Not Allowed");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			Response res7 = given()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
-					.everything().when().delete("/searches?folderId=1");
-			System.out.println("											");
-			System.out.println("Status code is: " + res7.getStatusCode());
-			Assert.assertTrue(res7.getStatusCode() == 405);
-			System.out.println(res7.asString());
-			Assert.assertEquals(res7.asString(), "Method Not Allowed");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	@Test
+//	/**
+//	 * create a folder and searches in it using post method to verify the functionality of find searches by folderId
+//	 */
+//	public void searches_ByFoldernameANDbadURLs() {
+//		try {
+//			System.out
+//					.println("Use GET method to get list of the searches by folder Name - verify the status code and response");
+//			Response res1 = given()
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().when().get("/searches?folderId=sravan");
+//			System.out.println("Status code is: " + res1.getStatusCode());
+//			System.out.println(res1.asString());
+//			Assert.assertTrue(res1.getStatusCode() == 400);
+//			Assert.assertEquals(res1.asString(),
+//					"Id/count should be a positive number and not an alphanumeric.");
+//			System.out.println("											");
+//			System.out.println("------------------------------------------");
+//			System.out
+//					.println("Use GET method to get list of the searches by folder id=null - verify the status code and response");
+//			Response res2 = given()
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().when().get("/searches?folderId=");
+//			System.out.println("Status code is: " + res2.getStatusCode());
+//			System.out.println(res2.asString());
+//			Assert.assertTrue(res2.getStatusCode() == 400);
+//			Assert.assertEquals(res2.asString(),
+//					"Please give the value for folderId");
+//			System.out.println("											");
+//			System.out.println("------------------------------------------");
+//			System.out
+//					.println("Use GET method to get list of the searches by folder id=Non-Numeric - verify the status code and response");
+//			Response res3 = given()
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().when().get("/searches?folderId=-1");
+//			System.out.println("Status code is: " + res3.getStatusCode());
+//			System.out.println(res3.asString());
+//			Assert.assertTrue(res3.getStatusCode() == 400);
+//			Assert.assertEquals(res3.asString(),
+//					"Id/count should be a positive number and not an alphanumeric.");
+//			System.out.println("											");
+//			System.out.println("------------------------------------------");
+//			System.out
+//					.println("Use GET method to get list of the searches by folder incomplete URL - verify the status code and response");
+//			Response res4 = given()
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().when().get("/searches?folderId");
+//			System.out.println("Status code is: " + res4.getStatusCode());
+//			System.out.println(res4.asString());
+//			Assert.assertTrue(res4.getStatusCode() == 400);
+//			Assert.assertEquals(res4.asString(),
+//					"Please give the value for folderId");
+//			System.out.println("											");
+//			System.out.println("------------------------------------------");
+//			System.out
+//					.println("Find searches by folder id using wrong methods - verify the status code and the response");
+//			Response res5 = given()
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().when().post("/searches?folderId=1");
+//			System.out.println("											");
+//			System.out.println("Status code is: " + res5.getStatusCode());
+//			Assert.assertTrue(res5.getStatusCode() == 405);
+//			System.out.println(res5.asString());
+//			Assert.assertEquals(res5.asString(), "Method Not Allowed");
+//			System.out.println("											");
+//			System.out.println("------------------------------------------");
+//			Response res6 = given()
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().when().put("/searches?folderId=1");
+//			System.out.println("											");
+//			System.out.println("Status code is: " + res6.getStatusCode());
+//			Assert.assertTrue(res6.getStatusCode() == 405);
+//			System.out.println(res6.asString());
+//			Assert.assertEquals(res6.asString(), "Method Not Allowed");
+//			System.out.println("											");
+//			System.out.println("------------------------------------------");
+//			Response res7 = given()
+//					.headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log()
+//					.everything().when().delete("/searches?folderId=1");
+//			System.out.println("											");
+//			System.out.println("Status code is: " + res7.getStatusCode());
+//			Assert.assertTrue(res7.getStatusCode() == 405);
+//			System.out.println(res7.asString());
+//			Assert.assertEquals(res7.asString(), "Method Not Allowed");
+//			System.out.println("											");
+//			System.out.println("------------------------------------------");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Test
 	/**

@@ -21,7 +21,6 @@ public class SearchParamTest
 {
 
 	private static Integer folderId;
-	private static Integer searchID;
 	private static Search searchObj;
 
 	@AfterClass
