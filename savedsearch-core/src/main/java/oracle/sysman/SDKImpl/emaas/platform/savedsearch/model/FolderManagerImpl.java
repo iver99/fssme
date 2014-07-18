@@ -195,14 +195,16 @@ public class FolderManagerImpl extends FolderManager
 				String parentFolder = "parentFolder";
 				folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj).getResultList();
 			}
-
-			for (EmAnalyticsFolder folder : folderList) {
-				retList.add(createFolderObject(folder, null));
+			
+			if (folderList!=null){
+				for (EmAnalyticsFolder folder : folderList) {
+					retList.add(createFolderObject(folder, null));
+				}
 			}
 			return retList;
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause()!=null && e.getCause().getMessage()!=null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",

@@ -669,7 +669,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (PersistenceException dmlce) {
 			if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_U01")) {
-				throw new EMAnalyticsFwkException("search name " + search.getName() + " already exist",
+				throw new EMAnalyticsFwkException("Search with this name already exist: " + search.getName(),
 						EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, new Object[] { search.getName() });
 			}
 			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK2")) {
