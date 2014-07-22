@@ -69,57 +69,34 @@ public class SearchTest
 			SearchManager objSearch = SearchManagerImpl.getInstance();
 			Search search = objSearch.getSearch(searchId);
 			AssertJUnit.assertNotNull(search);
-			objSearch.deleteSearch(search.getId());
+			objSearch.deleteSearch(search.getId(), true);
 
 			//search=objSearch.getSearch(searchId);
 			//Assert.assertNull(search);
 
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			objFolder.deleteFolder(folderId);
+			objFolder.deleteFolder(folderId, true);
 			//Assert.assertNull(objFolder.getFolder(folderId));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
-	public void testSearchNotExist()throws Exception
+	public void testDeleteInvalidSearchId() throws Exception
 	{
-		SearchManager search=SearchManager.getInstance();
+		SearchManager sman = SearchManager.getInstance();
 		try {
-			search.getSearch(9999999999L);
+			sman.deleteSearch(99898987898L, true);
+
 		}
 		catch (EMAnalyticsFwkException emanfe) {
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
 					EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
 		}
 	}
-	
-	@Test
-	public void testGetSearchByInvalidCategoryId() throws Exception
-	{
-		SearchManager search=SearchManager.getInstance();
-		try{
-			search.getSearchListByCategoryId(9999999999L);
-		}catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GENERIC));
-		}
-	}
-	
-	@Test
-	public void testGetSearchByInvalidFolderId() throws Exception
-	{
-		SearchManager search=SearchManager.getInstance();
-		try{
-			search.getSearchListByFolderId(9999999999L);
-		}catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GENERIC));
-		}
-	}
-	
+
 	@Test
 	public void testDuplicate() throws Exception
 	{
@@ -149,7 +126,7 @@ public class SearchTest
 		}
 		finally {
 			///delete the search created before
-			objSearch.deleteSearch(dupSearch.getId());
+			objSearch.deleteSearch(dupSearch.getId(), true);
 		}
 
 	}
@@ -211,6 +188,30 @@ public class SearchTest
 	}
 
 	@Test
+	public void testGetSearchByInvalidCategoryId() throws Exception
+	{
+		SearchManager search = SearchManager.getInstance();
+		try {
+			search.getSearchListByCategoryId(9999999999L);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_GENERIC));
+		}
+	}
+
+	@Test
+	public void testGetSearchByInvalidFolderId() throws Exception
+	{
+		SearchManager search = SearchManager.getInstance();
+		try {
+			search.getSearchListByFolderId(9999999999L);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_GENERIC));
+		}
+	}
+
+	@Test
 	public void testGetSearchCountByFolderId() throws Exception
 	{
 
@@ -228,14 +229,14 @@ public class SearchTest
 			snew = objSearch.saveSearch(search);
 
 			//now get the count of the search inside this folder
-			AssertJUnit.assertEquals(2,objSearch.getSearchListByFolderId(folderId).size());
+			AssertJUnit.assertEquals(2, objSearch.getSearchListByFolderId(folderId).size());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		finally {
 			//delete the new search
-			objSearch.deleteSearch(snew.getId());
+			objSearch.deleteSearch(snew.getId(), true);
 		}
 	}
 
@@ -276,7 +277,7 @@ public class SearchTest
 		}
 		finally {
 			//delete the new search
-			objSearch.deleteSearch(snew.getId());
+			objSearch.deleteSearch(snew.getId(), true);
 		}
 
 	}
@@ -319,7 +320,7 @@ public class SearchTest
 		}
 		finally {
 			if (searchObj != null) {
-				objSearch.deleteSearch(searchObj.getId());
+				objSearch.deleteSearch(searchObj.getId(), true);
 			}
 		}
 
@@ -363,22 +364,22 @@ public class SearchTest
 		}
 		finally {
 			if (searchObj != null) {
-				objSearch.deleteSearch(searchObj.getId());
+				objSearch.deleteSearch(searchObj.getId(), true);
 			}
 		}
 
 	}
 
 	@Test
-	public void testDeleteInvalidSearchId() throws Exception
+	public void testSearchNotExist() throws Exception
 	{
-		SearchManager sman=SearchManager.getInstance();
-		try{
-			sman.deleteSearch(99898987898L);
-		
-	}catch (EMAnalyticsFwkException emanfe) {
-		AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-				EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
-	}
+		SearchManager search = SearchManager.getInstance();
+		try {
+			search.getSearch(9999999999L);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
+		}
 	}
 }
