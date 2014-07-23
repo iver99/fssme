@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/registry-client-0.2.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/registry-lookup-client-0.1.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/registry-client-0.4.jar"/>
+	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/registry-lookup-client-0.3.jar"/>
 	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/wlfullclient.jar"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
 		<attributes>
