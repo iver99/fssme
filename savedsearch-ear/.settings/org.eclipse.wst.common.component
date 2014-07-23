@@ -7,12 +7,6 @@
         <dependent-module archiveName="savedsearch-core.jar" deploy-path="/lib" handle="module:/resource/savedsearch-core/savedsearch-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="registry-client-0.2.jar" deploy-path="/lib" handle="module:/classpath/lib//net/slc04wjk/scratch/download/ssf_jars/registry-client-0.2.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="registry-lookup-client-0.1.jar" deploy-path="/lib" handle="module:/classpath/lib//net/slc04wjk/scratch/download/ssf_jars/registry-lookup-client-0.1.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="savedsearch-webutils.jar" deploy-path="/lib" handle="module:/resource/savedsearch-webutils/savedsearch-webutils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -21,6 +15,12 @@
         </dependent-module>
         <dependent-module archiveName="savedsearch-web.war" deploy-path="/" handle="module:/resource/savedsearch-web/savedsearch-web">
             <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="registry-lookup-client-0.3.jar" deploy-path="/lib" handle="module:/classpath/lib//net/slc04wjk/scratch/download/ssf_jars/registry-lookup-client-0.3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="registry-client-0.4.jar" deploy-path="/lib" handle="module:/classpath/lib//net/slc04wjk/scratch/download/ssf_jars/registry-client-0.4.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>
