@@ -22,12 +22,73 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
+/**
+ * Import Category Services
+ *
+ * @since 0.1
+ */
 @Path("importcategories")
 public class ImportCategorySet
 {
 
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/category.xsd";
 
+	/**
+	 * Import the category with defined XML file<br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importcategories</font><br>
+	 * The string "importcategories" in the URL signifies import operation on category.<br>
+	 *
+	 * @since 0.1
+	 * @param xml
+	 *            "xml" is the XML definition used to import category<br>
+	 *            Input Sample:<br>
+	 *            <font color="DarkCyan">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;CategorySet&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Category&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Category123&lt;/name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;defaultFolderId&gt;1&lt;/
+	 *            defaultFolderId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- optional, if we don't specify it will take '1' as default
+	 *            else it will take the one which is as input --&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Category&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/CategorySet&gt;</font><br>
+	 * @return The category with id and name<br>
+	 *         Response Sample:<br>
+	 *         <font color="DarkCyan">[<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 1121,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "Category123"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *         ]</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>import category successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>could be the following errors:<br>
+	 *         1. If missing some necessary element in XML, it would return 400 error<br>
+	 *         For example, if there is no "name" in described in XML, it would return the error message<br>
+	 *         Error at line 4 , column 22 Invalid content was found starting with element 'defaultFolderId'. One of '{id, name}'
+	 *         is expected.<br>
+	 *         2. If the XML format is wrong, it would return the error message "Please specify input with valid format"</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Server Error</td>
+	 *         <td>An internal error has occurred</td>
+	 *         </tr>
+	 *         </table>
+	 */
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes("application/xml")

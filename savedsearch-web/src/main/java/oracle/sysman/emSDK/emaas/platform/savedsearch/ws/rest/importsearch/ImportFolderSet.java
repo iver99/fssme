@@ -22,11 +22,72 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
+/**
+ * Import Folders Services
+ *
+ * @since 0.1
+ */
 @Path("importfolders")
 public class ImportFolderSet
 {
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/folder.xsd";
 
+	/**
+	 * Import the folders with defined XML file<br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importfolders</font><br>
+	 * The string "importfolders" in the URL signifies import operation on folder.<br>
+	 *
+	 * @since 0.1
+	 * @param xml
+	 *            "xml" is the XML definition used to import folder<br>
+	 *            input Sample:<br>
+	 *            <font color="DarkCyan">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;<br>
+	 *            &lt;FolderSet&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Folder&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Folder2&lt;/name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;parentId&gt;1&lt;/parentId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!
+	 *            -- optional, if we don't specify it will take '1' as default else it will take the one which is as input --&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;uiHidden&gt;false&lt;/uiHidden&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Folder&gt;<br>
+	 *            &lt;/FolderSet&gt;</font><br>
+	 * @return The folder with id and name<br>
+	 *         Response Sample:<br>
+	 *         <font color="DarkCyan">[<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 1643,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "Folder2"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *         ]</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>import folder successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>could be the following errors:<br>
+	 *         1. If missing some necessary element in XML, it would return 400 error<br>
+	 *         For example, if there is no "name" in described in XML, it would return the error message<br>
+	 *         Error at line 4 , column 15 Invalid content was found starting with element 'parentId'. One of '{id, name}' is
+	 *         expected. <br>
+	 *         2. If the XML format is wrong, it would return the error message "Please specify input with valid format"</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Server Error</td>
+	 *         <td>An internal error has occurred while importing folder</td>
+	 *         </tr>
+	 *         </table>
+	 */
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes("application/xml")
@@ -87,5 +148,5 @@ public class ImportFolderSet
 }
 
 /*FolderSet fSet = new FolderSet();
-fSet.setFolderSet(rejectedList);				
+fSet.setFolderSet(rejectedList);
 result=result+JAXBUtil.marshal(jaxbContext,ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath), fSet);*/
