@@ -24,7 +24,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Folder Services
- *
+ * 
  * @since 0.1
  */
 @Path("folder")
@@ -38,7 +38,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder</font><br>
 	 * The string "folder" in the URL signifies create operation on search.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param folderObj
 	 *            "folderObj" is the input JSON string which contains all the information needed to create a new folder.<br>
@@ -156,7 +156,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder/&lt;id&gt;</font><br>
 	 * The string "folder/&lt;id&gt;" in the URL signifies delete operation with given folder Id.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which user wants to delete
@@ -188,7 +188,7 @@ public class FolderAPI
 		try {
 
 			FolderManager mgrFolder = FolderManager.getInstance();
-			mgrFolder.deleteFolder(id);
+			mgrFolder.deleteFolder(id, false);
 
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -202,7 +202,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder/&lt;id&gt;</font><br>
 	 * The string "folder/&lt;id&gt;" in the URL signifies edit operation with given folder Id.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which the user wants to edit<br>
@@ -294,7 +294,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder/&lt;id&gt;</font><br>
 	 * The string "folder/&lt;id&gt;" in the URL signifies read operation with given folder Id.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which user wants to get the details.

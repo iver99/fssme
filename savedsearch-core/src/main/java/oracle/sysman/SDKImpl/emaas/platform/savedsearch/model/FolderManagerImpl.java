@@ -49,14 +49,19 @@ public class FolderManagerImpl extends FolderManager
 	}
 
 	@Override
-	public void deleteFolder(long folderId) throws EMAnalyticsFwkException
+	public void deleteFolder(long folderId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		EmAnalyticsFolder folderObj = null;
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
+			if (permanently) {
+				folderObj = EmAnalyticsObjectUtil.getFolderByIdForDelete(folderId, em);
+			}
+			else {
+				folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
+			}
 			if (folderObj == null) {
 				_logger.error("folder with id " + folderId + " does not Exist");
 				throw new EMAnalyticsFwkException("folder with id " + folderId + " does not Exist",
@@ -71,7 +76,12 @@ public class FolderManagerImpl extends FolderManager
 
 			folderObj.setDeleted(folderId);
 			em.getTransaction().begin();
-			em.merge(folderObj);
+			if (permanently) {
+				em.remove(folderObj);
+			}
+			else {
+				em.merge(folderObj);
+			}
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
@@ -79,7 +89,7 @@ public class FolderManagerImpl extends FolderManager
 			throw eme;
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
@@ -130,7 +140,7 @@ public class FolderManagerImpl extends FolderManager
 			throw eme;
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
@@ -195,8 +205,8 @@ public class FolderManagerImpl extends FolderManager
 				String parentFolder = "parentFolder";
 				folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj).getResultList();
 			}
-			
-			if (folderList!=null){
+
+			if (folderList != null) {
 				for (EmAnalyticsFolder folder : folderList) {
 					retList.add(createFolderObject(folder, null));
 				}
@@ -204,7 +214,8 @@ public class FolderManagerImpl extends FolderManager
 			return retList;
 		}
 		catch (Exception e) {
-			if (e.getCause()!=null && e.getCause().getMessage()!=null && e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage() != null
+					&& e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",

@@ -110,6 +110,28 @@ class EmAnalyticsObjectUtil
 		return cateObj;
 	}
 
+	public static EmAnalyticsCategory getCategoryByIdForDelete(long id, EntityManager em)
+	{
+
+		EmAnalyticsCategory cateObj = null;
+		try {
+
+			cateObj = em.find(EmAnalyticsCategory.class, id);
+			if (cateObj != null) {
+
+				return cateObj;
+			}
+			else {
+				cateObj = null;
+			}
+
+		}
+		catch (Exception nre) {
+			// do nothing	
+		}
+		return cateObj;
+	}
+
 	public static EmAnalyticsCategory getCategoryByName(String categoryName, EntityManager em)
 	{
 		try {
@@ -465,6 +487,31 @@ class EmAnalyticsObjectUtil
 		return folderObj;
 	}
 
+	public static EmAnalyticsFolder getFolderByIdForDelete(long id, EntityManager em)
+	{
+
+		EmAnalyticsFolder folderObj = null;
+		Object op = null;
+
+		try {
+
+			folderObj = em.find(EmAnalyticsFolder.class, id);
+			if (folderObj != null) {
+
+				return folderObj;
+			}
+			else {
+				folderObj = null;
+			}
+
+		}
+		catch (Exception nre) {
+			//do nothing	
+
+		}
+		return folderObj;
+	}
+
 	public static EmAnalyticsSearch getSearchById(long id, EntityManager em)
 	{
 
@@ -481,6 +528,27 @@ class EmAnalyticsObjectUtil
 					searchObj = null;
 				}
 			}
+		}
+		catch (Exception nre) {
+			//don nothing	
+		}
+		return searchObj;
+	}
+
+	public static EmAnalyticsSearch getSearchByIdForDelete(long id, EntityManager em)
+	{
+
+		EmAnalyticsSearch searchObj = null;
+		try {
+
+			searchObj = em.find(EmAnalyticsSearch.class, id);
+			if (searchObj != null) {
+				return searchObj;
+			}
+			else {
+				searchObj = null;
+			}
+
 		}
 		catch (Exception nre) {
 			//don nothing	

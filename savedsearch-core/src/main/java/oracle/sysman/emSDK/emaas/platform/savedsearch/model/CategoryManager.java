@@ -31,14 +31,11 @@ public abstract class CategoryManager
 	public abstract Category createNewCategory();
 
 	/**
-	 * Saves a completely specified Category entity in the analytics sub-system.
-	 * 
-	 * @param Category
-	 *            Category to be saved
-	 * @return re-loaded Category object with generated ids and dates
+	 * @param categoryId
+	 * @param permanently
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Category saveCategory(Category category) throws EMAnalyticsFwkException;
+	public abstract void deleteCategory(long categoryId, boolean permanently) throws EMAnalyticsFwkException;
 
 	/**
 	 * Edits an existing Category entity in the analytics sub-system.
@@ -59,6 +56,16 @@ public abstract class CategoryManager
 	public abstract List<Category> getAllCategories() throws EMAnalyticsFwkException;
 
 	/**
+	 * Returns the category identified by its unique identifier.
+	 * 
+	 * @param categoryId
+	 *            unique identifier
+	 * @return category
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Category getCategory(long categoryId) throws EMAnalyticsFwkException;
+
+	/**
 	 * Returns the category identified by its internal name.
 	 * 
 	 * @param categoryName
@@ -69,15 +76,13 @@ public abstract class CategoryManager
 	public abstract Category getCategory(String categoryName) throws EMAnalyticsFwkException;
 
 	/**
-	 * Returns the category identified by its unique identifier.
+	 * Saves a completely specified Category entity in the analytics sub-system.
 	 * 
-	 * @param categoryId
-	 *            unique identifier
-	 * @return category
+	 * @param Category
+	 *            Category to be saved
+	 * @return re-loaded Category object with generated ids and dates
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Category getCategory(long categoryId) throws EMAnalyticsFwkException;
-
-	public abstract void deleteCategory(long categoryId) throws EMAnalyticsFwkException;
+	public abstract Category saveCategory(Category category) throws EMAnalyticsFwkException;
 
 }

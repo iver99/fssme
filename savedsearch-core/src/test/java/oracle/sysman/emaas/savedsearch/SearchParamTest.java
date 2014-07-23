@@ -26,7 +26,7 @@ public class SearchParamTest
 	@AfterClass
 	public static void testEndSearchparam() throws Exception
 	{
-		Search tmpSearch=null;
+		Search tmpSearch = null;
 		try {
 			tmpSearch = SearchManagerImpl.getInstance().getSearch(searchObj.getId());
 			List<SearchParameter> paraList = tmpSearch.getParameters();
@@ -46,25 +46,22 @@ public class SearchParamTest
 			tmpSearch = SearchManagerImpl.getInstance().getSearch(searchObj.getId());
 			paraList = tmpSearch.getParameters();
 			AssertJUnit.assertTrue(paraList.size() == 1);
-
-			
-
-			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(e);
-		}finally{
+		}
+		finally {
 			//now delete all the searchParams and search and folder
 
 			tmpSearch.setParameters(new ArrayList<SearchParameter>());
 			tmpSearch = SearchManagerImpl.getInstance().editSearch(tmpSearch);
 			//now delete the search
 			SearchManagerImpl objSearch = SearchManagerImpl.getInstance();
-			objSearch.deleteSearch(tmpSearch.getId());
+			objSearch.deleteSearch(tmpSearch.getId(), true);
 
 			//now delete the folder
-			FolderManagerImpl.getInstance().deleteFolder(folderId);
+			FolderManagerImpl.getInstance().deleteFolder(folderId, true);
 		}
 	}
 
