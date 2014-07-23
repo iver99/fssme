@@ -70,7 +70,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public void deleteSearch(long searchId) throws EMAnalyticsFwkException
 	{
-
+		_logger.info("Deleting search with id: " + searchId);
 		EntityManager em = null;
 		EmAnalyticsSearch searchObj = null;
 		try {
@@ -114,6 +114,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public Search editSearch(Search search) throws EMAnalyticsFwkException
 	{
+		_logger.info("Editing search with id : " + search.getId());
 		EntityManager em = null;
 		try {
 			EntityManagerFactory emf;
@@ -170,6 +171,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public Search getSearch(long searchId) throws EMAnalyticsFwkException
 	{
+		_logger.info("Retrieving search with id: " + searchId);
 		EntityManager em = null;
 		Search search = null;
 		try {
@@ -205,6 +207,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public Search getSearchByName(String name, long folderId) throws EMAnalyticsFwkException
 	{
+		_logger.info("Retrieving search with name " + name + " in folder id: " + folderId);
 		EntityManager em = null;
 		EmAnalyticsSearch searchEntity = null;
 		try {
@@ -350,8 +353,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public List<Search> getSearchListByFolderIdCategoryFilter(long folderId)
-			throws EMAnalyticsFwkException
+	public List<Search> getSearchListByFolderIdCategoryFilter(long folderId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		try {
