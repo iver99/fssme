@@ -7,25 +7,23 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 
 /**
- * The class <code>SearchManager</code> provides CRUD and other management
- * operations over the Search entity in EM Analytics.
+ * The class <code>SearchManager</code> provides CRUD and other management operations over the Search entity in EM Analytics.
  * 
  * @see Search
- * 
- * @version $Header:
- *          emcore/jsrc/sdkcore/SdkcoreEmanalyticsPublicModel/src/oracle
- *          /sysman/emSDK/core/emanalytics/api/search/SearchManager.java
- *          /st_emgc_pt-13.1mstr/2 2014/02/03 02:51:01 saurgarg Exp $
+ * @version $Header: emcore/jsrc/sdkcore/SdkcoreEmanalyticsPublicModel/src/oracle
+ *          /sysman/emSDK/core/emanalytics/api/search/SearchManager.java /st_emgc_pt-13.1mstr/2 2014/02/03 02:51:01 saurgarg Exp $
  * @author saurgarg
  * @since 13.1.0.0
  */
-public abstract class SearchManager {
+public abstract class SearchManager
+{
 	/**
 	 * Returns an instance of the manager.
 	 * 
 	 * @return instance of the manager
 	 */
-	public static SearchManager getInstance() {
+	public static SearchManager getInstance()
+	{
 		return SearchManagerImpl.getInstance();
 	}
 
@@ -37,15 +35,11 @@ public abstract class SearchManager {
 	public abstract Search createNewSearch();
 
 	/**
-	 * Saves a completely specified search entity in the analytics sub-system.
-	 * 
-	 * @param search
-	 *            search to be saved
-	 * @return re-loaded search object with generated ids and dates
+	 * @param searchId
+	 * @param permanently
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Search saveSearch(Search search)
-			throws EMAnalyticsFwkException;
+	public abstract void deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException;
 
 	/**
 	 * Edits an existing search entity in the analytics sub-system.
@@ -55,18 +49,7 @@ public abstract class SearchManager {
 	 * @return re-loaded search object with generated dates
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Search editSearch(Search search)
-			throws EMAnalyticsFwkException;
-
-	/**
-	 * Deletes the search entity.
-	 * 
-	 * @param search
-	 *            search to be deleted
-	 * @throws EMAnalyticsFwkException
-	 */
-	public abstract void deleteSearch(long searchId)
-			throws EMAnalyticsFwkException;
+	public abstract Search editSearch(Search search) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the search object identified by the given identifier.
@@ -76,8 +59,15 @@ public abstract class SearchManager {
 	 * @return search
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Search getSearch(long searchId)
-			throws EMAnalyticsFwkException;
+	public abstract Search getSearch(long searchId) throws EMAnalyticsFwkException;
+
+	/**
+	 * @param name
+	 * @param folderId
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Search getSearchByName(String name, long folderId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the count of (accessible) search entities in a folder.
@@ -87,20 +77,7 @@ public abstract class SearchManager {
 	 * @return count of seacrh entities
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract int getSearchCountByFolderId(long folderId)
-			throws EMAnalyticsFwkException;
-
-	/**
-	 * Returns the list of search entities contained (directly) in the specified
-	 * folder.
-	 * 
-	 * @param folderId
-	 *            identifier of the folder
-	 * @return list of search entities (<code>null</code> if none are contained)
-	 * @throws EMAnalyticsFwkException
-	 */
-	public abstract List<Search> getSearchListByFolderId(long folderId)
-			throws EMAnalyticsFwkException;
+	public abstract int getSearchCountByFolderId(long folderId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the list of search entities belonging to a category.
@@ -108,34 +85,42 @@ public abstract class SearchManager {
 	 * @param categoryId
 	 *            identifier of the category
 	 * @return list of search entities belonging to a category
-	 * 
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract List<Search> getSearchListByCategoryId(long categoryId)
-			throws EMAnalyticsFwkException;
+	public abstract List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException;
 
 	/**
-	 * @param name
+	 * Returns the list of search entities contained (directly) in the specified folder.
+	 * 
 	 * @param folderId
-	 * @return
+	 *            identifier of the folder
+	 * @return list of search entities (<code>null</code> if none are contained)
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Search getSearchByName(String name, long folderId)
-			throws EMAnalyticsFwkException;
+	public abstract List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException;
 
-	public List<Search> getSearchListByFolderIdCategoryFilter(long folderId)
-			throws EMAnalyticsFwkException {
+	public List<Search> getSearchListByFolderIdCategoryFilter(long folderId) throws EMAnalyticsFwkException
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public List<Search> getSearchListByLastAccessDate(int count)
-			throws EMAnalyticsFwkException {
+	public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public abstract Date modifyLastAccessDate(long searchId)
-			throws EMAnalyticsFwkException;
+	public abstract Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException;
+
+	/**
+	 * Saves a completely specified search entity in the analytics sub-system.
+	 * 
+	 * @param search
+	 *            search to be saved
+	 * @return re-loaded search object with generated ids and dates
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Search saveSearch(Search search) throws EMAnalyticsFwkException;
 
 }

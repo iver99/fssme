@@ -15,59 +15,30 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class FolderManagerTest {
+public class FolderManagerTest
+{
 
 	private static int folderId;
 	private static int childFolderId;
 
 	@AfterClass
-	public static void DeleteFolder() throws Exception {
+	public static void DeleteFolder() throws Exception
+	{
 
 		try {
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
-			objFolder.deleteFolder(folderId);
+			objFolder.deleteFolder(folderId, true);
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	@Test
-	public void testDeleteInvalidFolderId() throws Exception {
-		FolderManager foldMan = FolderManager.getInstance();
-		try {
-			foldMan.deleteFolder(987656788498L);
-		} catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
-					new Integer(EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
-		}
-	}
-
-	@Test
-	public void testGetInvalidFolderId() throws Exception {
-		FolderManager foldMan = FolderManager.getInstance();
-		try {
-			foldMan.getFolder(987656788498L);
-		} catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
-					new Integer(EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
-		}
-	}
-
-	@Test
-	public void testDeleteSystemFolder() throws Exception {
-		FolderManager foldMan = FolderManager.getInstance();
-		try {
-			foldMan.deleteFolder(1);
-		} catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
-					new Integer(EMAnalyticsFwkException.ERR_DELETE_FOLDER));
-		}
-	}
-
 	@BeforeClass
-	public static void testSaveFolder() throws Exception {
+	public static void testSaveFolder() throws Exception
+	{
 		try {
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
@@ -81,17 +52,43 @@ public class FolderManagerTest {
 			// cross check the content of the folder being saves
 			folder = objFolder.getFolder(folderId);
 			AssertJUnit.assertTrue("FolderTest".equals(folder.getName()));
-			AssertJUnit.assertTrue("TestFolderDescription".equals(folder
-					.getDescription()));
+			AssertJUnit.assertTrue("TestFolderDescription".equals(folder.getDescription()));
 			AssertJUnit.assertTrue(folder.isUiHidden() == false);
 			AssertJUnit.assertTrue(folder.isSystemFolder() == false);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Test
-	public void testDuplicate() throws Exception {
+	public void testDeleteInvalidFolderId() throws Exception
+	{
+		FolderManager foldMan = FolderManager.getInstance();
+		try {
+			foldMan.deleteFolder(987656788498L, true);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
+		}
+	}
+
+	@Test
+	public void testDeleteSystemFolder() throws Exception
+	{
+		FolderManager foldMan = FolderManager.getInstance();
+		try {
+			foldMan.deleteFolder(1, true);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_DELETE_FOLDER));
+		}
+	}
+
+	@Test
+	public void testDuplicate() throws Exception
+	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 			// create one folder
@@ -114,49 +111,65 @@ public class FolderManagerTest {
 			fi2.setParentId(folderId);
 			try {
 				objFolder.saveFolder(fi2);
-			} catch (EMAnalyticsFwkException emanfe) {
-				AssertJUnit
-						.assertEquals(
-								new Integer(emanfe.getErrorCode()),
-								new Integer(
-										EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME));
+			}
+			catch (EMAnalyticsFwkException emanfe) {
+				AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+						EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME));
 			}
 
 		}
 
 		finally {
 			// delete the child folder
-			objFolder.deleteFolder(childFolderId);
+			objFolder.deleteFolder(childFolderId, true);
 		}
 	}
 
 	@Test
-	public void testGetFolder() throws Exception {
+	public void testGetFolder() throws Exception
+	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 			Folder folder = objFolder.getFolder(folderId);
 			AssertJUnit.assertNotNull(folder);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
 	@Test
-	public void testGetInstance() {
+	public void testGetInstance()
+	{
 		try {
 			AssertJUnit.assertTrue(FolderManagerImpl.getInstance() != null);
 			// test for Singleton
 			FolderManagerImpl ins1 = FolderManagerImpl.getInstance();
 			FolderManagerImpl ins2 = FolderManagerImpl.getInstance();
 			AssertJUnit.assertTrue(ins1 == ins2);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			AssertJUnit.assertFalse(ex.getMessage(), true);
 		}
 	}
 
 	@Test
-	public void testGetpathforFolderId() throws Exception {
+	public void testGetInvalidFolderId() throws Exception
+	{
+		FolderManager foldMan = FolderManager.getInstance();
+		try {
+			foldMan.getFolder(987656788498L);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
+		}
+	}
+
+	@Test
+	public void testGetpathforFolderId() throws Exception
+	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
 		String[] path = objFolder.getPathForFolderId(folderId);
@@ -167,7 +180,8 @@ public class FolderManagerTest {
 	}
 
 	@Test
-	public void testGetSubFolder() throws Exception {
+	public void testGetSubFolder() throws Exception
+	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		List<Folder> folderList = new ArrayList<Folder>();
 		try {
@@ -193,30 +207,50 @@ public class FolderManagerTest {
 			// get the sub folder inside the folderId
 			folderList = objFolder.getSubFolders(folderId);
 
-			AssertJUnit.assertEquals(new Integer(2),
-					new Integer(folderList.size()));
+			AssertJUnit.assertEquals(new Integer(2), new Integer(folderList.size()));
 
 			// cross check the things
 			if (folderList.get(0).getName().equals("TestAnalytics")) {
-				AssertJUnit.assertEquals("TestAnalytics2", folderList.get(1)
-						.getName());
-			} else if (folderList.get(0).getName().equals("TestAnalytics2")) {
-				AssertJUnit.assertEquals("TestAnalytics", folderList.get(1)
-						.getName());
+				AssertJUnit.assertEquals("TestAnalytics2", folderList.get(1).getName());
+			}
+			else if (folderList.get(0).getName().equals("TestAnalytics2")) {
+				AssertJUnit.assertEquals("TestAnalytics", folderList.get(1).getName());
 			}
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
-		} finally {
+		}
+		finally {
 			// delete the sub folder we created
-			objFolder.deleteFolder(folderList.get(0).getId());
-			objFolder.deleteFolder(folderList.get(1).getId());
+			objFolder.deleteFolder(folderList.get(0).getId(), true);
+			objFolder.deleteFolder(folderList.get(1).getId(), true);
 		}
 
 	}
 
 	@Test
-	public void testupdate() throws EMAnalyticsFwkException {
+	public void testInvalidParentFolder() throws Exception
+	{
+		FolderManager fman = FolderManager.getInstance();
+
+		Folder folder = fman.createNewFolder();
+		folder.setName("harsh kumar");
+		folder.setParentId(987876788);
+		try {
+			fman.saveFolder(folder);
+
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT));
+		}
+
+	}
+
+	@Test
+	public void testupdate() throws EMAnalyticsFwkException
+	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 
@@ -233,29 +267,11 @@ public class FolderManagerTest {
 			AssertJUnit.assertNotNull(folder);
 
 			AssertJUnit.assertEquals("My folder", folder.getName());
-			AssertJUnit
-					.assertEquals("Database search", folder.getDescription());
+			AssertJUnit.assertEquals("Database search", folder.getDescription());
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Test
-	public void testInvalidParentFolder() throws Exception {
-		FolderManager fman = FolderManager.getInstance();
-
-		Folder folder = fman.createNewFolder();
-		folder.setName("harsh kumar");
-		folder.setParentId(987876788);
-		try {
-			fman.saveFolder(folder);
-
-		} catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
-					new Integer(
-							EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT));
-		}
-
 	}
 }

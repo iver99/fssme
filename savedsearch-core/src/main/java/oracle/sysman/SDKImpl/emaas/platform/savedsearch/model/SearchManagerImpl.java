@@ -68,7 +68,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public void deleteSearch(long searchId) throws EMAnalyticsFwkException
+	public void deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		_logger.info("Deleting search with id: " + searchId);
 		EntityManager em = null;
@@ -76,7 +76,12 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
+			if (permanently) {
+				searchObj = EmAnalyticsObjectUtil.getSearchByIdForDelete(searchId, em);
+			}
+			else {
+				searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
+			}
 			if (searchObj == null) {
 				throw new EMAnalyticsFwkException("Search with Id: " + searchId + " does not exist",
 						EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null);
@@ -84,7 +89,12 @@ public class SearchManagerImpl extends SearchManager
 
 			searchObj.setDeleted(searchId);
 			em.getTransaction().begin();
-			em.merge(searchObj);
+			if (permanently) {
+				em.remove(searchObj);
+			}
+			else {
+				em.merge(searchObj);
+			}
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
@@ -184,7 +194,7 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
@@ -225,7 +235,7 @@ public class SearchManagerImpl extends SearchManager
 			return null;
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
@@ -254,7 +264,7 @@ public class SearchManagerImpl extends SearchManager
 			return count;
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
@@ -294,7 +304,7 @@ public class SearchManagerImpl extends SearchManager
 			return rtnobj;
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
@@ -333,7 +343,7 @@ public class SearchManagerImpl extends SearchManager
 			return rtnobj;
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
