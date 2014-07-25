@@ -12,14 +12,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -105,7 +105,6 @@ public class FilterSearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-04T02:20:07.000Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastAccessDate": "2014-07-03T19:21:35.062Z",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "ALL_TIME;",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10003"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
@@ -255,9 +254,7 @@ public class FilterSearchAPI
 			for (int i = 0; i < searchList.size(); i++) {
 				search = searchList.get(i);
 				try {
-					JSONObject jsonObj = JSONUtil.ObjectToJSONObject(search);
-					jsonObj = modifyObject(jsonObj);
-					jsonObj.put("href", uri.getBaseUri() + "search/" + search.getId());
+					JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), search);
 					jsonArray.put(jsonObj);
 				}
 				catch (JSONException e) {
@@ -268,7 +265,7 @@ public class FilterSearchAPI
 			}
 			message = jsonArray.toString();
 		}
-		catch (EMAnalyticsWSException e) {
+		catch (EMAnalyticsFwkJsonException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 			return Response.status(statusCode).entity(message).build();
@@ -303,9 +300,7 @@ public class FilterSearchAPI
 			for (int i = 0; i < searchList.size(); i++) {
 				search = searchList.get(i);
 				try {
-					JSONObject jsonObj = JSONUtil.ObjectToJSONObject(search);
-					jsonObj = modifyObject(jsonObj);
-					jsonObj.put("href", uri.getBaseUri() + "search/" + search.getId());
+					JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), search);
 					jsonArray.put(jsonObj);
 				}
 				catch (JSONException e) {
@@ -316,7 +311,7 @@ public class FilterSearchAPI
 			}
 			message = jsonArray.toString();
 		}
-		catch (EMAnalyticsWSException e) {
+		catch (EMAnalyticsFwkJsonException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 			return Response.status(statusCode).entity(message).build();
@@ -331,17 +326,9 @@ public class FilterSearchAPI
 		try {
 			List<Search> searchList = SearchManager.getInstance().getSearchListByLastAccessDate(count);
 			for (Search searchObj : searchList) {
-				JSONObject jsonObj = JSONUtil.ObjectToJSONObject(searchObj);
-				jsonObj = modifyObject(jsonObj);
 				FolderManager folderMgr = FolderManager.getInstance();
-				JSONArray jsonPathArray = new JSONArray();
 				String[] pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
-				for (String p : pathArray) {
-					jsonPathArray.put(p);
-				}
-				jsonObj.put("flattenedFolderPath", jsonPathArray);
-				jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
-
+				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchObj, pathArray, false);
 				jsonArray.put(jsonObj);
 
 			}
@@ -364,37 +351,4 @@ public class FilterSearchAPI
 
 	}
 
-	private JSONObject modifyObject(JSONObject jsonObj) throws JSONException
-	{
-		JSONObject rtnObj = new JSONObject();
-		JSONObject jsonCat = new JSONObject();
-		jsonCat.put("id", jsonObj.getInt("categoryId"));
-		jsonCat.put("href", uri.getBaseUri() + "category/" + jsonObj.getInt("categoryId"));
-		JSONObject jsonFold = new JSONObject();
-		jsonFold.put("id", jsonObj.getInt("folderId"));
-		jsonFold.put("href", uri.getBaseUri() + "folder/" + jsonObj.getInt("folderId"));
-		jsonObj.put("createdOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("createdOn"))));
-		jsonObj.put("lastModifiedOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModifiedOn"))));
-		rtnObj.put("id", jsonObj.optInt("id"));
-		rtnObj.put("name", jsonObj.optString("name"));
-		if (jsonObj.has("description")) {
-			rtnObj.put("description", jsonObj.getString("description"));
-		}
-		rtnObj.put("category", jsonCat);
-		rtnObj.put("folder", jsonFold);
-		rtnObj.put("owner", jsonObj.getString("owner"));
-		rtnObj.put("createdOn", jsonObj.optString("createdOn"));
-		rtnObj.put("lastModifiedBy", jsonObj.optString("lastModifiedBy"));
-		rtnObj.put("lastModifiedOn", jsonObj.optString("lastModifiedOn"));
-		if (jsonObj.has("lastAccessDate")) {
-			rtnObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
-		}
-		if (jsonObj.has("queryStr")) {
-			rtnObj.put("queryStr", jsonObj.getString("queryStr"));
-		}
-		if (jsonObj.has("parameters")) {
-			rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
-		}
-		return rtnObj;
-	}
 }

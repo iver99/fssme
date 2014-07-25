@@ -19,6 +19,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -30,7 +31,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("importcategories")
 public class ImportCategorySet
 {
-
+	private static final Logger _logger = Logger.getLogger(ImportCategorySet.class);
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/category.xsd";
 
 	/**
@@ -47,7 +48,7 @@ public class ImportCategorySet
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Category123&lt;/name&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;defaultFolderId&gt;1&lt;/
-	 *            defaultFolderId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- optional, if we don't specify it will take '1' as default
+	 *            defaultFolderId&gt; &nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- optional, if we don't specify it will take '1' as default
 	 *            else it will take the one which is as input --&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/CategorySet&gt;</font><br>
@@ -94,6 +95,7 @@ public class ImportCategorySet
 	@Consumes("application/xml")
 	public Response importsCategories(String xml)
 	{
+		_logger.info("import categories: \n" + xml);
 		Response res = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity("Please specify input with valid format").build();
@@ -125,11 +127,13 @@ public class ImportCategorySet
 			res = Response.status(Status.OK).entity(jsonArray).build();
 		}
 		catch (ImportException e) {
+			_logger.error("Failed to import categories (1)", e);
 			msg = e.getMessage();
 			e.printStackTrace();
 			res = Response.status(Status.BAD_REQUEST).entity(msg).build();
 		}
 		catch (Exception e) {
+			_logger.error("Failed to import categories (2)", e);
 			msg = "An internal error has occurred";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 		}

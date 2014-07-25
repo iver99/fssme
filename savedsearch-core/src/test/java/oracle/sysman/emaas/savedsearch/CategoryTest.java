@@ -15,7 +15,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class CategoryTest
+public class CategoryTest extends BaseTest
 {
 	private static Integer categoryId;
 

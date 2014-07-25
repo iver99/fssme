@@ -19,6 +19,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -31,6 +32,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class ImportFolderSet
 {
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/folder.xsd";
+	private static final Logger _logger = Logger.getLogger(ImportFolderSet.class);
 
 	/**
 	 * Import the folders with defined XML file<br>
@@ -45,11 +47,13 @@ public class ImportFolderSet
 	 *            &lt;FolderSet&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Folder&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Folder2&lt;/name&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;parentId&gt;1&lt;/parentId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!
-	 *            -- optional, if we don't specify it will take '1' as default else it will take the one which is as input --&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;parentId&gt;1&lt;/parentId&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;uiHidden&gt;false&lt;/uiHidden&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Folder&gt;<br>
 	 *            &lt;/FolderSet&gt;</font><br>
+	 *            Note:<br>
+	 *            parentId is optional, if we don't specify it will take '1' as default else it will take the one which is as
+	 *            input<br>
 	 * @return The folder with id and name<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">[<br>
@@ -93,6 +97,7 @@ public class ImportFolderSet
 	@Consumes("application/xml")
 	public Response importsFolders(String xml)
 	{
+		_logger.info("import folders: \n" + xml);
 		Response res = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
@@ -123,11 +128,12 @@ public class ImportFolderSet
 			res = Response.status(Status.OK).entity(jsonArray).build();
 		}
 		catch (ImportException e) {
+			_logger.error("Failed to import folders (1)", e);
 			msg = e.getMessage();
-			e.printStackTrace();
 			res = Response.status(Status.BAD_REQUEST).entity(msg).build();
 		}
 		catch (Exception e) {
+			_logger.error("Failed to import folders (2)", e);
 			msg = "An internal error has occurred  while importing folder ";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 			e.printStackTrace();

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,6 +78,7 @@ public class EmAnalyticsSearch implements Serializable
 	private String lastModifiedBy;
 
 	@Lob()
+	@Basic(fetch = FetchType.LAZY)
 	@Column(name = "METADATA_CLOB")
 	private String metadataClob;
 
@@ -90,6 +92,8 @@ public class EmAnalyticsSearch implements Serializable
 
 	private String owner;
 
+	@Lob()
+	@Basic(fetch = FetchType.LAZY)
 	@Column(name = "SEARCH_DISPLAY_STR")
 	private String searchDisplayStr;
 

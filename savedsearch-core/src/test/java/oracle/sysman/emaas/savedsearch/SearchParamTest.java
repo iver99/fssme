@@ -17,7 +17,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class SearchParamTest
+public class SearchParamTest extends BaseTest
 {
 
 	private static Integer folderId;

@@ -456,7 +456,7 @@ public class CategoryManagerImpl extends CategoryManager
 				rtnObj.setDefaultFolderId(id == 0 ? null : (int) id.intValue());
 			}
 			else {
-				rtnObj.setDefaultFolderId(0);
+				rtnObj.setDefaultFolderId(null);
 			}
 			// TODO : Abhinav Handle the internationalization via MGMT_MESSAGES
 			// handling name here
@@ -481,6 +481,9 @@ public class CategoryManagerImpl extends CategoryManager
 				// MGMT_MESSAGES
 				rtnObj.setDescription(category.getDescription());
 			}
+
+			rtnObj.setOwner(category.getOwner());
+			rtnObj.setCreatedOn(category.getCreationDate());
 
 			// handle params
 

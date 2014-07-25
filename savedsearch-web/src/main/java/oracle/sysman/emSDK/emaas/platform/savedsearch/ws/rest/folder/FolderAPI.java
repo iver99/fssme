@@ -13,18 +13,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Folder Services
- * 
+ *
  * @since 0.1
  */
 @Path("folder")
@@ -38,7 +39,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder</font><br>
 	 * The string "folder" in the URL signifies create operation on search.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param folderObj
 	 *            "folderObj" is the input JSON string which contains all the information needed to create a new folder.<br>
@@ -105,8 +106,7 @@ public class FolderAPI
 			objFld = getFolderFromJsonForCreate(folderObj);
 			FolderManager mgrFolder = FolderManager.getInstance();
 			objFld = mgrFolder.saveFolder(objFld);
-			jsonObj = JSONUtil.ObjectToJSONObject(objFld);
-			jsonObj = modifyFolder(jsonObj);
+			jsonObj = EntityJsonUtil.getFullFolderJsonObj(uri.getBaseUri(), objFld);
 			msg = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -122,6 +122,10 @@ public class FolderAPI
 			e.printStackTrace();
 			statusCode = 404;
 			msg = e.getMessage();
+		}
+		catch (EMAnalyticsFwkJsonException e) {
+			msg = e.getMessage();
+			statusCode = e.getStatusCode();
 		}
 		return Response.status(statusCode).entity(msg).build();
 	}
@@ -156,7 +160,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder/&lt;id&gt;</font><br>
 	 * The string "folder/&lt;id&gt;" in the URL signifies delete operation with given folder Id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which user wants to delete
@@ -202,7 +206,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder/&lt;id&gt;</font><br>
 	 * The string "folder/&lt;id&gt;" in the URL signifies edit operation with given folder Id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which the user wants to edit<br>
@@ -267,8 +271,7 @@ public class FolderAPI
 			FolderManager mgrFolder = FolderManager.getInstance();
 			objFld = getFolderFromJsonForEdit(folderObj, mgrFolder.getFolder(id));
 			objFld = mgrFolder.updateFolder(objFld);
-			jsonObj = JSONUtil.ObjectToJSONObject(objFld);
-			jsonObj = modifyFolder(jsonObj);
+			jsonObj = EntityJsonUtil.getFullFolderJsonObj(uri.getBaseUri(), objFld);
 			msg = jsonObj.toString();
 			statusCode = 200;
 		}
@@ -286,6 +289,10 @@ public class FolderAPI
 			e.printStackTrace();
 			statusCode = 404;
 		}
+		catch (EMAnalyticsFwkJsonException e) {
+			msg = e.getMessage();
+			statusCode = e.getStatusCode();
+		}
 		return Response.status(statusCode).entity(msg).build();
 	}
 
@@ -294,7 +301,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder/&lt;id&gt;</font><br>
 	 * The string "folder/&lt;id&gt;" in the URL signifies read operation with given folder Id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which user wants to get the details.
@@ -345,15 +352,10 @@ public class FolderAPI
 		try {
 			FolderManager mgrFolder = FolderManager.getInstance();
 			Folder tmp = mgrFolder.getFolder(id);
-			jsonObj = JSONUtil.ObjectToJSONObject(tmp);
-			jsonObj = modifyFolder(jsonObj);
+			jsonObj = EntityJsonUtil.getFullFolderJsonObj(uri.getBaseUri(), tmp);
 			msg = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-			msg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		catch (EMAnalyticsWSException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
 		}
@@ -361,6 +363,10 @@ public class FolderAPI
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			statusCode = 404;
+		}
+		catch (EMAnalyticsFwkJsonException e) {
+			msg = e.getMessage();
+			statusCode = e.getStatusCode();
 		}
 		return Response.status(statusCode).entity(msg).build();
 	}
@@ -439,35 +445,5 @@ public class FolderAPI
 		}
 
 		return folder;
-	}
-
-	private JSONObject modifyFolder(JSONObject jsonObj) throws JSONException
-	{
-		JSONObject rtnObj = new JSONObject();
-		jsonObj.put("createdOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("createdOn"))));
-		jsonObj.put("lastModifiedOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModifiedOn"))));
-		rtnObj.put("id", jsonObj.getInt("id"));
-		rtnObj.put("name", jsonObj.optString("name"));
-		if (jsonObj.has("parentId")) {
-			JSONObject jsonFold = new JSONObject();
-			jsonFold.put("id", jsonObj.getInt("parentId"));
-			jsonFold.put("href", uri.getBaseUri() + "folder/" + jsonObj.getInt("parentId"));
-			rtnObj.put("parentFolder", jsonFold);
-		}
-		if (jsonObj.has("description")) {
-			rtnObj.put("description", jsonObj.getString("description"));
-		}
-		if (jsonObj.has("owner")) {
-			rtnObj.put("owner", jsonObj.getString("owner"));
-		}
-		rtnObj.put("createdOn", jsonObj.optString("createdOn"));
-		if (jsonObj.has("lastModifiedBy")) {
-			rtnObj.put("lastModifiedBy", jsonObj.optString("lastModifiedBy"));
-		}
-		rtnObj.put("lastModifiedOn", jsonObj.optString("lastModifiedOn"));
-		rtnObj.put("systemFolder", jsonObj.optBoolean("systemFolder"));
-		rtnObj.put("href", uri.getBaseUri() + "folder/" + jsonObj.getInt("id"));
-		return rtnObj;
-
 	}
 }

@@ -1,10 +1,11 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * TODO: all java-docs need to be defined once MRS gets finalized in subsequent txn
- * 
+ *
  * @version $Header: emcore/jsrc/sdkcore/SdkcoreEmanalyticsPublicModel/src/oracle/sysman/emSDK/core/emanalytics/api/Category.java
  *          /st_emgc_pt-13.1mstr/2 2014/02/03 02:50:59 saurgarg Exp $
  * @author saurgarg
@@ -26,63 +27,95 @@ public interface Category
 	public static final String CATEGORY_PARAM_VIEW_TASKFLOW = "CATEGORY_PARAM_VIEW_TASKFLOW";
 
 	/**
+	 * Get creation date of this category
+	 *
+	 * @return
+	 */
+	public Date getCreatedOn();
+
+	/**
+	 * Returns the default folder id associated with the category (if any, <code>null</code> otherwise).
+	 *
+	 * @return default folder id associated with the category
+	 */
+	public Integer getDefaultFolderId();
+
+	/**
+	 * Returns the (localized based on current context locale) description of the category.
+	 *
+	 * @return localized description
+	 */
+	public String getDescription();
+
+	/**
 	 * Returns the identifier of the category.
-	 * 
+	 *
 	 * @return identifier
 	 */
 	public Integer getId();
 
 	/**
 	 * Returns the internal name of the category.
-	 * 
+	 *
 	 * @return internal name
 	 */
 	public String getName();
 
 	/**
-	 * Returns the (localized based on current context locale) description of the category.
-	 * 
-	 * @return localized description
+	 * Return owner of this category
 	 */
-	public String getDescription();
-
-	/**
-	 * Returns the default folder id associated with the category (if any, <code>null</code> otherwise).
-	 * 
-	 * @return default folder id associated with the category
-	 */
-	public Integer getDefaultFolderId();
+	public String getOwner();
 
 	/**
 	 * Returns the list of parameters for the category.
-	 * 
+	 *
 	 * @return category parameters
 	 */
 	public List<Parameter> getParameters();
 
-	public void setParameters(List<Parameter> param);
+	/**
+	 * Set creation date of this category
+	 *
+	 * @param date
+	 */
+	public void setCreatedOn(Date date);
 
 	/**
-	 * Sets the name for the category.
-	 * 
-	 * @param name
-	 *            name
+	 * set the default folder id associated with the category (if any, <code>null</code> otherwise).
+	 *
+	 * @return default folder id associated with the category
 	 */
-	public void setName(String name);
+	public void setDefaultFolderId(Integer id);
 
 	/**
 	 * Sets the description for the category.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 */
 	public void setDescription(String description);
 
 	/**
-	 * set the default folder id associated with the category (if any, <code>null</code> otherwise).
-	 * 
-	 * @return default folder id associated with the category
+	 * Sets the name for the category.
+	 *
+	 * @param name
+	 *            name
 	 */
-	public void setDefaultFolderId(Integer id);
+	public void setName(String name);
+
+	/**
+	 * Set owner of this category
+	 *
+	 * @param owner
+	 */
+	public void setOwner(String owner);
+
+	/**
+	 * Set parameters of category
+	 *
+	 * @param param
+	 *            List of parameters
+	 */
+	public void setParameters(List<Parameter> param);
 
 }

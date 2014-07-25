@@ -14,6 +14,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -33,7 +34,7 @@ import org.apache.log4j.Logger;
 public class SearchManagerImpl extends SearchManager
 {
 
-	//  Logger    
+	//  Logger
 	private static final Logger _logger = Logger.getLogger(SearchManagerImpl.class);
 	public static final SearchManagerImpl _instance = new SearchManagerImpl();
 	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.deleted=0 ";
@@ -45,7 +46,7 @@ public class SearchManagerImpl extends SearchManager
 
 	/**
 	 * Get SearchManagerImpl singleton instance.
-	 * 
+	 *
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
@@ -457,7 +458,7 @@ public class SearchManagerImpl extends SearchManager
 				pk.setObjectType(searchObj.getObjectType());
 				accessObj = em.find(EmAnalyticsLastAccess.class, pk);
 				if (accessObj != null) {
-					tmp = new Date();
+					tmp = DateUtil.getCurrentUTCTime();
 					accessObj.setAccessDate(tmp);
 					em.getTransaction().begin();
 					em.persist(accessObj);
@@ -891,13 +892,13 @@ public class SearchManagerImpl extends SearchManager
 	 * =em.find(EmAnalyticsFolder.class , new
 	 * Long(category.getDefaultFolderId())); else {
 	 * if(category.getFolderDetails()!=null){
-	 * 
-	 * 
+	 *
+	 *
 	 * try { folder = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(
 	 * (Folder)category.getFolderDetails(),em); folder =(EmAnalyticsFolder)
 	 * em.createNamedQuery("Folder.getRootFolderByName").
 	 * setParameter("foldername", folder.getName()). getSingleResult();
-	 * 
+	 *
 	 * }catch(NoResultException e){ folder=null; } } } } catch
 	 * (EMAnalyticsFwkException e) { folder =null; } return folder; }
 	 */

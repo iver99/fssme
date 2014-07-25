@@ -19,22 +19,25 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Search Services
- * 
+ *
  * @since 0.1
  */
 @Path("search")
@@ -42,7 +45,7 @@ public class SearchAPI
 {
 
 	private static final String FOLDER_PATH = "flattenedFolderPath";
-
+	private static final Logger _logger = Logger.getLogger(SearchAPI.class);
 	@Context
 	UriInfo uri;
 
@@ -51,7 +54,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search</font><br>
 	 * The string "search" in the URL signifies create operation on search.<br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            The search details <br>
@@ -143,6 +146,7 @@ public class SearchAPI
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createSearch(JSONObject inputJsonObj)
 	{
+		_logger.info("create search: \n" + inputJsonObj);
 		String message = "";
 		int statusCode = 201;
 		JSONObject jsonObj;
@@ -150,23 +154,28 @@ public class SearchAPI
 		try {
 			Search searchObj = createSearchObjectForAdd(inputJsonObj);
 			Search savedSearch = sman.saveSearch(searchObj);
-			jsonObj = JSONUtil.ObjectToJSONObject(savedSearch);
-			jsonObj = addHref(jsonObj);
+			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch);
 			message = jsonObj.toString();
-			// message = JSONUtil.ObjectToJSONString(savedSearch);
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
+			_logger.error(message, e);
+		}
+		catch (EMAnalyticsFwkJsonException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+			_logger.error(message, e);
+		}
+		catch (JSONException e) {
+			statusCode = 404;
+			message = e.getMessage();
+			_logger.error(message, e);
 		}
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-		}
-		catch (JSONException e) {
-			e.printStackTrace();
-			statusCode = 404;
-			message = e.getMessage();
+			_logger.error(message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -176,7 +185,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies delete operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The id of saved-search which user wants to delete
@@ -225,7 +234,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies edit operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            JSON string which contains all key value pairs that the user wants to edit.<br>
@@ -324,6 +333,7 @@ public class SearchAPI
 	public Response editSearch(JSONObject inputJsonObj, @HeaderParam("X_SSF_API_AUTH") String updateCategory,
 			@PathParam("id") long searchId)
 	{
+		_logger.info("edit search: \n" + inputJsonObj);
 		String message = null;
 		int statusCode = 200;
 		JSONObject jsonObj;
@@ -338,24 +348,31 @@ public class SearchAPI
 				searchObj = createSearchObjectForEdit(inputJsonObj, sman.getSearch(searchId), false);
 			}
 			Search savedSearch = sman.editSearch(searchObj);
-			jsonObj = JSONUtil.ObjectToJSONObject(savedSearch);
-			jsonObj = addHref(jsonObj);
+			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch);
 			message = jsonObj.toString();
 
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
+			_logger.error(message, e);
 		}
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
+			_logger.error(message, e);
 		}
 		catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			statusCode = 404;
 			message = e.getMessage();
+			_logger.error(message, e);
+		}
+		catch (EMAnalyticsFwkJsonException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+			_logger.error(message, e);
 		}
 
 		return Response.status(statusCode).entity(message).build();
@@ -369,7 +386,7 @@ public class SearchAPI
 	 * number&gt;/savedsearch/v1/search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;</font><br>
 	 * The string "search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;" in the URL signifies set last accesst time
 	 * operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The saved-search id to edit
@@ -433,7 +450,7 @@ public class SearchAPI
 	 * The string "search/&lt;id&gt;?flattenedFolderPath=&lt;boolean value&gt;" in the URL signifies get the search operation on
 	 * search with given id. <br>
 	 * If "flattenedFolderPath = true", the flattened folder hierarchy will be added to any search
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchid
 	 *            The id of saved-search which user wants to read
@@ -502,32 +519,28 @@ public class SearchAPI
 		try {
 
 			Search searchObj = sman.getSearch(searchid);
-			jsonObj = JSONUtil.ObjectToJSONObject(searchObj);
-			// here convert the date into utc format
-			jsonObj = addHref(jsonObj);
+			String[] pathArray = null;
 			if (bPath) {
 				FolderManager folderMgr = FolderManager.getInstance();
-				JSONArray jsonPathArray = new JSONArray();
-				String[] pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
-				for (String p : pathArray) {
-					jsonPathArray.put(p);
-				}
-
-				jsonObj.put(FOLDER_PATH, jsonPathArray);
+				pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
 			}
+			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj, pathArray);
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-		}
-		catch (EMAnalyticsWSException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
+			_logger.error(message, e);
 		}
 		catch (JSONException e) {
 			statusCode = 400;
 			message = e.getMessage();
+			_logger.error(message, e);
+		}
+		catch (EMAnalyticsFwkJsonException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+			_logger.error(message, e);
 		}
 
 		return Response.status(statusCode).entity(message).build();
@@ -541,7 +554,7 @@ public class SearchAPI
 			SearchManager sman = SearchManager.getInstance();
 			sman.getSearch(searchId);
 			java.util.Date date = sman.modifyLastAccessDate(searchId);
-			message = String.valueOf(JSONUtil.getDate(date.getTime()));
+			message = String.valueOf(DateUtil.getDateFormatter().format(date));
 
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -549,43 +562,6 @@ public class SearchAPI
 			statusCode = e.getStatusCode();
 		}
 		return Response.status(statusCode).entity(message).build();
-
-	}
-
-	private JSONObject addHref(JSONObject jsonObj) throws JSONException
-	{
-		JSONObject rtnObj = new JSONObject();
-		JSONObject jsonCat = new JSONObject();
-		jsonCat.put("id", jsonObj.getInt("categoryId"));
-		jsonCat.put("href", uri.getBaseUri() + "category/" + jsonObj.getInt("categoryId"));
-		JSONObject jsonFold = new JSONObject();
-		jsonFold.put("id", jsonObj.getInt("folderId"));
-		jsonFold.put("href", uri.getBaseUri() + "folder/" + jsonObj.getInt("folderId"));
-		jsonObj.put("createdOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("createdOn"))));
-		jsonObj.put("lastModifiedOn", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastModifiedOn"))));
-		rtnObj.put("id", jsonObj.optInt("id"));
-		rtnObj.put("name", jsonObj.optString("name"));
-		if (jsonObj.has("description")) {
-			rtnObj.put("description", jsonObj.getString("description"));
-		}
-		rtnObj.put("category", jsonCat);
-		rtnObj.put("folder", jsonFold);
-		rtnObj.put("owner", jsonObj.optString("owner"));
-		rtnObj.put("createdOn", jsonObj.optString("createdOn"));
-		rtnObj.put("lastModifiedBy", jsonObj.optString("lastModifiedBy"));
-		rtnObj.put("lastModifiedOn", jsonObj.optString("lastModifiedOn"));
-		if (jsonObj.has("lastAccessDate")) {
-			rtnObj.put("lastAccessDate", JSONUtil.getDate(Long.parseLong(jsonObj.getString("lastAccessDate"))));
-		}
-		if (jsonObj.has("queryStr")) {
-			rtnObj.put("queryStr", jsonObj.getString("queryStr"));
-		}
-		if (jsonObj.has("parameters")) {
-			rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
-		}
-		rtnObj.put("href", uri.getBaseUri() + "search/" + jsonObj.getInt("id"));
-
-		return rtnObj;
 
 	}
 

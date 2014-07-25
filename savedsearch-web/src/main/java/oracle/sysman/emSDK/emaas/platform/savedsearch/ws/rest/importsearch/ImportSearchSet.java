@@ -20,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -31,7 +32,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("importsearches")
 public class ImportSearchSet
 {
-
+	private static final Logger _logger = Logger.getLogger(ImportSearchSet.class);
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
 
 	/**
@@ -133,6 +134,7 @@ public class ImportSearchSet
 	@Consumes("application/xml")
 	public Response importSearches(String xml)
 	{
+		_logger.info("import searches: \n" + xml);
 		Response res = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity("Please specify input with valid format").build();
@@ -162,11 +164,13 @@ public class ImportSearchSet
 			res = Response.status(Status.OK).entity(jsonArray).build();
 		}
 		catch (ImportException e) {
+			_logger.error("Failed to import searches (1)", e);
 			msg = e.getMessage();
 			e.printStackTrace();
 			res = Response.status(Status.BAD_REQUEST).entity(msg).build();
 		}
 		catch (Exception e) {
+			_logger.error("Failed to import searches (2)", e);
 			msg = "An internal error has occurred";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 		}

@@ -13,7 +13,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -21,8 +24,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -38,6 +41,7 @@ public class SavedSearchAPI
 	private final String search = "search";
 	private final String folder = "folder";
 	private static final String FOLDER_PATH = "flattenedFolderPath";
+	private static final Logger _logger = Logger.getLogger(SearchManagerImpl.class);
 	@Context
 	UriInfo uri;
 
@@ -55,22 +59,8 @@ public class SavedSearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 1,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "Log Analytics",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Category for Log Analytics",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "defaultFolder":<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 2,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
-	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/2"<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "parameters":<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name":
-	 *         "CATEGORY_PARAM_VIEW_TASKFLOW",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":
-	 *         "/WEB-INF/core/loganalytics/obssearch/plugins/dashboard-flow-definition.xml#dashboard-flow-definition" ,<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "STRING"<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-22T14:48:53.048Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
@@ -103,44 +93,42 @@ public class SavedSearchAPI
 		String message = null;
 		int statusCode = 200;
 		JSONArray jsonArray = new JSONArray();
-		Category category;
 		List<Category> catList = new ArrayList<Category>();
 
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
-
 			catList = catMan.getAllCategories();
-			try {
-				for (int i = 0; i < catList.size(); i++) {
-					category = catList.get(i);
-					try {
-						JSONObject jsonCat = JSONUtil.ObjectToJSONObject(category);
-						jsonCat = modifyCategoryResponse(jsonCat);
-						jsonArray.put(jsonCat);
-					}
-					catch (JSONException e) {
-						message = e.getMessage();
-						statusCode = 500;
-						return Response.status(statusCode).entity(message).build();
-					}
-				}
-				message = jsonArray.toString();
+			for (Category category : catList) {
+				JSONObject jsonCat = EntityJsonUtil.getSimpleCategoryJsonObj(uri.getBaseUri(), category);
+				jsonArray.put(jsonCat);
 			}
-			catch (EMAnalyticsWSException e) {
-				message = e.getMessage();
-				statusCode = e.getStatusCode();
-				return Response.status(statusCode).entity(message).build();
-			}
+			message = jsonArray.toString();
+		}
+		catch (JSONException e) {
+			message = e.getMessage();
+			statusCode = 500;
+			_logger.error("Failed to get category JSON string (1), statusCode:" + statusCode + " ,err:" + message, e);
+		}
+		catch (EMAnalyticsFwkJsonException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+			_logger.error("Failed to get category JSON string (2), statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
+			_logger.error("Failed to get all categories, statusCode:" + statusCode + " ,err:" + message, e);
+		}
+		catch (Exception e) {
+			message = e.getMessage();
+			statusCode = 500;
+			_logger.error("Unknow error when retrieving all categories, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
 
 	/**
-	 * List all searches which has the given folder Id<br>
+	 * List all entities (search or folder or both) which have the given folder Id<br>
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/entities?folderId=&lt;folder
 	 * Id&gt;</font><br>
@@ -148,8 +136,8 @@ public class SavedSearchAPI
 	 *
 	 * @since 0.1
 	 * @param id
-	 *            The folder Id which user wants to get the search details
-	 * @return Lists all the searches with the given folder Id<br>
+	 *            The folder Id by which user wants to get the entity details
+	 * @return Lists all the entities with the given folder Id<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">[<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;{<br>
@@ -172,7 +160,16 @@ public class SavedSearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModiedOn": "2014-07-03T11:07:24.000Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/9998"<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": 1011,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Folder",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "folder",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-03T11:07:24.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModiedOn": "2014-07-03T11:07:24.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1011"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
 	 *         ]</font><br>
 	 * <br>
 	 *         Response Code:<br>
@@ -185,7 +182,7 @@ public class SavedSearchAPI
 	 *         <tr>
 	 *         <td>200</td>
 	 *         <td>OK</td>
-	 *         <td>List all searches successfully</td>
+	 *         <td>List all entities successfully</td>
 	 *         </tr>
 	 *         <tr>
 	 *         <td>404</td>
@@ -243,6 +240,16 @@ public class SavedSearchAPI
 			}
 			catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
+			}
+			catch (EMAnalyticsWSException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+			}
+			catch (EMAnalyticsFwkJsonException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 			}
 
 		}
@@ -315,7 +322,8 @@ public class SavedSearchAPI
 
 	}
 
-	private String getFolderDetails(long id) throws EMAnalyticsFwkException, JSONException, UnsupportedEncodingException
+	private String getFolderDetails(long id) throws EMAnalyticsFwkException, JSONException, UnsupportedEncodingException,
+	EMAnalyticsWSException, EMAnalyticsFwkJsonException
 	{
 
 		String message = new String();
@@ -328,16 +336,7 @@ public class SavedSearchAPI
 		JSONObject jsonObj;
 		List<Folder> folderList = fman.getSubFolders(id);
 		for (Folder folderObj : folderList) {
-			jsonObj = new JSONObject();
-			jsonObj.put("id", folderObj.getId());
-			jsonObj.put("name", folderObj.getName());
-			jsonObj.put("type", folder);
-			jsonObj.put("createdOn", JSONUtil.getDate(folderObj.getCreatedOn().getTime()));
-			jsonObj.put("description", folderObj.getDescription());
-			jsonObj.put("lastModifiedOn", JSONUtil.getDate(folderObj.getLastModifiedOn().getTime()));
-			StringBuilder linkBuilder = new StringBuilder(uri.getBaseUri() + "folder/" + folderObj.getId());
-
-			jsonObj.put("href", linkBuilder.toString());
+			jsonObj = EntityJsonUtil.getSimpleFolderJsonObj(uri.getBaseUri(), folderObj, true);
 			jsonArray.put(jsonObj);
 		}
 
@@ -347,51 +346,13 @@ public class SavedSearchAPI
 		searchList = sman.getSearchListByFolderIdCategoryFilter(id);
 
 		for (Search searchObj : searchList) {
-			jsonObj = new JSONObject();
-			jsonObj.put("id", searchObj.getId());
-			jsonObj.put("name", searchObj.getName());
-			jsonObj.put("type", search);
-			JSONObject categoryObj = new JSONObject();
-			categoryObj.put("id", searchObj.getCategoryId());
-			categoryObj.put("href", uri.getBaseUri() + "category/" + searchObj.getCategoryId());
-			// jsonObj.put("categoryId", searchObj.getCategoryId());
-			jsonObj.put("category", categoryObj);
-			JSONObject folderObj = new JSONObject();
-			folderObj.put("id", searchObj.getFolderId());
-			folderObj.put("href", uri.getBaseUri() + "folder/" + searchObj.getCategoryId());
-			jsonObj.put("folder", folderObj);
-			// jsonObj.put("folderId", searchObj.getFolderId());
-			jsonObj.put("createdOn", JSONUtil.getDate(searchObj.getCreatedOn().getTime()));
-			jsonObj.put("description", searchObj.getDescription());
-			jsonObj.put("lastModiedOn", JSONUtil.getDate(searchObj.getLastModifiedOn().getTime()));
-			jsonObj.put("href", uri.getBaseUri() + "search/" + searchObj.getId());
+			jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchObj, null, true);
 			jsonArray.put(jsonObj);
 		}
 		message = jsonArray.toString(1);
 
 		return message;
 
-	}
-
-	private JSONObject modifyCategoryResponse(JSONObject jsonObj) throws JSONException
-	{
-		JSONObject rtnObj = new JSONObject();
-		rtnObj.put("id", jsonObj.optInt("id"));
-		rtnObj.put("name", jsonObj.getString("name"));
-		if (jsonObj.has("description")) {
-			rtnObj.put("description", jsonObj.getString("description"));
-		}
-		if (jsonObj.has("defaultFolderId")) {
-			JSONObject fold = new JSONObject();
-			fold.put("id", jsonObj.optInt("defaultFolderId"));
-			fold.put("href", uri.getBaseUri() + "folder/" + jsonObj.getInt("defaultFolderId"));
-			rtnObj.put("defaultFolder", fold);
-		}
-		if (jsonObj.has("parameters")) {
-			rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
-		}
-		rtnObj.put("href", uri.getBaseUri() + "category/" + jsonObj.getInt("id"));
-		return rtnObj;
 	}
 
 }
