@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -11,7 +12,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 
 @XmlRootElement
-@XmlType(propOrder = { "id", "name", "description", "defaultFolderId", "parameters" })
+@XmlType(propOrder = { "id", "name", "description", "owner", "createdOn", "defaultFolderId", "parameters" })
 public class CategoryImpl implements Category
 {
 	private Integer id;
@@ -19,6 +20,17 @@ public class CategoryImpl implements Category
 	private String description;
 	private Integer defaultFolderId;
 	private List<Parameter> parameters;
+	private String owner;
+	private Date creationDate;
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category#getCreationDate()
+	 */
+	@Override
+	public Date getCreatedOn()
+	{
+		return creationDate;
+	}
 
 	@Override
 	public Integer getDefaultFolderId()
@@ -44,10 +56,29 @@ public class CategoryImpl implements Category
 		return name;
 	}
 
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category#getOwner()
+	 */
+	@Override
+	public String getOwner()
+	{
+		return owner;
+	}
+
 	@Override
 	public List<Parameter> getParameters()
 	{
 		return parameters;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category#setCreationDate(java.util.Date)
+	 */
+	@Override
+	public void setCreatedOn(Date date)
+	{
+		creationDate = date;
+
 	}
 
 	@Override
@@ -72,6 +103,16 @@ public class CategoryImpl implements Category
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category#setOwner(java.lang.String)
+	 */
+	@Override
+	public void setOwner(String owner)
+	{
+		this.owner = owner;
+
 	}
 
 	@Override

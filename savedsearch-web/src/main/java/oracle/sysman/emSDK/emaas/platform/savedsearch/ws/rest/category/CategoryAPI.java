@@ -10,11 +10,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JSONUtil;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -186,6 +186,8 @@ public class CategoryAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 1, <br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Log Analytics",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Category for Log Analytics",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-22T14:48:53.048Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "defaultFolder": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 2,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
@@ -237,15 +239,10 @@ public class CategoryAPI
 		try {
 
 			Category category = catMan.getCategory(categoryId);
-			JSONObject jsonObj = JSONUtil.ObjectToJSONObject(category);
-			jsonObj = modifyResponse(jsonObj);
+			JSONObject jsonObj = EntityJsonUtil.getFullCategoryJsonObj(uri.getBaseUri(), category);
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 		}
@@ -254,6 +251,10 @@ public class CategoryAPI
 			e.printStackTrace();
 			statusCode = 400;
 			message = e.getMessage();
+		}
+		catch (EMAnalyticsFwkJsonException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -273,6 +274,8 @@ public class CategoryAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 1, <br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Log Analytics",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "description": "Search Category for Log Analytics",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-22T14:48:53.048Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "defaultFolder": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 2,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
@@ -329,15 +332,10 @@ public class CategoryAPI
 		try {
 
 			Category category = catMan.getCategory(name);
-			JSONObject jsonObj = JSONUtil.ObjectToJSONObject(category);
-			jsonObj = modifyResponse(jsonObj);
+			JSONObject jsonObj = EntityJsonUtil.getFullCategoryJsonObj(uri.getBaseUri(), category);
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
-		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 		}
@@ -346,6 +344,10 @@ public class CategoryAPI
 			e.printStackTrace();
 			statusCode = 400;
 			message = e.getMessage();
+		}
+		catch (EMAnalyticsFwkJsonException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -466,24 +468,4 @@ public class CategoryAPI
 
 	}
 	 */
-	private JSONObject modifyResponse(JSONObject jsonObj) throws JSONException
-	{
-		JSONObject rtnObj = new JSONObject();
-		rtnObj.put("id", jsonObj.optInt("id"));
-		rtnObj.put("name", jsonObj.getString("name"));
-		if (jsonObj.has("description")) {
-			rtnObj.put("description", jsonObj.getString("description"));
-		}
-		if (jsonObj.has("defaultFolderId")) {
-			JSONObject fold = new JSONObject();
-			fold.put("id", jsonObj.optInt("defaultFolderId"));
-			fold.put("href", uri.getBaseUri() + "folder/" + jsonObj.getInt("defaultFolderId"));
-			rtnObj.put("defaultFolder", fold);
-		}
-		if (jsonObj.has("parameters")) {
-			rtnObj.put("parameters", jsonObj.getJSONArray("parameters"));
-		}
-		rtnObj.put("href", uri.getBaseUri() + "category/" + jsonObj.getInt("id"));
-		return rtnObj;
-	}
 }

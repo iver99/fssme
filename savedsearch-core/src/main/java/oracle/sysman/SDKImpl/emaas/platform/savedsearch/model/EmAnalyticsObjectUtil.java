@@ -1,9 +1,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,6 +14,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -105,7 +104,29 @@ class EmAnalyticsObjectUtil
 
 		}
 		catch (Exception nre) {
-			// do nothing	
+			// do nothing
+		}
+		return cateObj;
+	}
+
+	public static EmAnalyticsCategory getCategoryByIdForDelete(long id, EntityManager em)
+	{
+
+		EmAnalyticsCategory cateObj = null;
+		try {
+
+			cateObj = em.find(EmAnalyticsCategory.class, id);
+			if (cateObj != null) {
+
+				return cateObj;
+			}
+			else {
+				cateObj = null;
+			}
+
+		}
+		catch (Exception nre) {
+			// do nothing
 		}
 		return cateObj;
 	}
@@ -197,7 +218,7 @@ class EmAnalyticsObjectUtil
 		}
 
 		existingParams.addAll(newParams.values()); // Set addition takes
-													// care of duplicates !!
+		// care of duplicates !!
 		return categoryEntity;
 	}
 
@@ -246,6 +267,8 @@ class EmAnalyticsObjectUtil
 		EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
 		folderObj.setDescription(folder.getDescription());
 		folderObj.setName(folder.getName());
+		folderObj.setLastModifiedBy("SYSMAN");//TODO fix me when security is enabled.
+		folderObj.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		folderObj.setUiHidden(new BigDecimal(0));
 		folderObj.setSystemFolder(new BigDecimal(0));
 		folderObj.setDeleted(0);
@@ -269,7 +292,8 @@ class EmAnalyticsObjectUtil
 		if (folderObj != null) {
 			folderObj.setName(folder.getName());
 			folderObj.setDescription(folder.getDescription());
-			//folderObj.setLastModifiedBy(EMSecurityContext.getSecurityContext().getEMUser()); // fix me to do
+			folderObj.setLastModifiedBy("SYSMAN"); // fix me to do
+			folderObj.setLastModificationDate(DateUtil.getCurrentUTCTime());
 			folderObj.setSystemFolder(folder.isSystemFolder() == true ? new BigDecimal(1) : new BigDecimal(0));
 			folderObj.setUiHidden(folder.isUiHidden() == true ? new BigDecimal(1) : new BigDecimal(0));
 			folderObj.setDeleted(0);
@@ -294,7 +318,7 @@ class EmAnalyticsObjectUtil
 	public static EmAnalyticsSearch getEmAnalyticsSearchForAdd(Search search, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsSearch searchEntity = new EmAnalyticsSearch();
-		// Copy all the data to entity !!	
+		// Copy all the data to entity !!
 
 		searchEntity.setName(search.getName());
 		searchEntity.setDescription(search.getDescription());
@@ -316,8 +340,8 @@ class EmAnalyticsObjectUtil
 			searchEntity.setEmAnalyticsCategory(categoryObj);
 		}
 
-		//TODO FIX this : Abhinav 
-		//get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser() 
+		//TODO FIX this : Abhinav
+		//get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser()
 		searchEntity.setOwner("SYSMAN");
 		searchEntity.setLastModifiedBy("SYSMAN");
 		searchEntity.setSystemSearch(new java.math.BigDecimal(0));
@@ -350,8 +374,7 @@ class EmAnalyticsObjectUtil
 			}
 		}
 
-		searchEntity.setAccessDate(new Timestamp(new Date().getTime()));
-		;
+		searchEntity.setAccessDate(DateUtil.getCurrentUTCTime());
 		searchEntity.setObjectId(searchEntity.getId());
 		searchEntity.setAccessedBy("SYSMAN");
 		searchEntity.setObjectType(2);
@@ -386,10 +409,11 @@ class EmAnalyticsObjectUtil
 			searchEntity.setEmAnalyticsCategory(categoryObj);
 		}
 
-		//TODO FIX this : Abhinav 
-		//get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser() 
+		//TODO FIX this : Abhinav
+		//get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser()
 		searchEntity.setOwner("SYSMAN");
 		searchEntity.setLastModifiedBy("SYSMAN");
+		searchEntity.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		searchEntity.setSystemSearch(new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setMetadataClob(search.getMetadata());
@@ -432,7 +456,7 @@ class EmAnalyticsObjectUtil
 		}
 		existingParams.addAll(newParams.values());
 
-		searchEntity.setAccessDate(new Timestamp(new Date().getTime()));
+		searchEntity.setAccessDate(DateUtil.getCurrentUTCTime());
 		;
 		searchEntity.setObjectId(searchEntity.getId());
 		searchEntity.setAccessedBy("SYSMAN");
@@ -459,7 +483,32 @@ class EmAnalyticsObjectUtil
 
 		}
 		catch (Exception nre) {
-			//do nothing	
+			//do nothing
+
+		}
+		return folderObj;
+	}
+
+	public static EmAnalyticsFolder getFolderByIdForDelete(long id, EntityManager em)
+	{
+
+		EmAnalyticsFolder folderObj = null;
+		Object op = null;
+
+		try {
+
+			folderObj = em.find(EmAnalyticsFolder.class, id);
+			if (folderObj != null) {
+
+				return folderObj;
+			}
+			else {
+				folderObj = null;
+			}
+
+		}
+		catch (Exception nre) {
+			//do nothing
 
 		}
 		return folderObj;
@@ -483,7 +532,28 @@ class EmAnalyticsObjectUtil
 			}
 		}
 		catch (Exception nre) {
-			//don nothing	
+			//don nothing
+		}
+		return searchObj;
+	}
+
+	public static EmAnalyticsSearch getSearchByIdForDelete(long id, EntityManager em)
+	{
+
+		EmAnalyticsSearch searchObj = null;
+		try {
+
+			searchObj = em.find(EmAnalyticsSearch.class, id);
+			if (searchObj != null) {
+				return searchObj;
+			}
+			else {
+				searchObj = null;
+			}
+
+		}
+		catch (Exception nre) {
+			//don nothing
 		}
 		return searchObj;
 	}

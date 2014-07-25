@@ -74,14 +74,19 @@ public class CategoryManagerImpl extends CategoryManager
 	}
 
 	@Override
-	public void deleteCategory(long categoryId) throws EMAnalyticsFwkException
+	public void deleteCategory(long categoryId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		EmAnalyticsCategory categoryObj = null;
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
+			if (permanently) {
+				categoryObj = EmAnalyticsObjectUtil.getCategoryByIdForDelete(categoryId, em);
+			}
+			else {
+				categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
+			}
 			if (categoryObj == null) {
 				_logger.error("Category object by Id: " + categoryId + " " + "does not exist");
 				throw new EMAnalyticsFwkException("Category object by Id: " + categoryId + " " + "does not exist",
@@ -90,7 +95,12 @@ public class CategoryManagerImpl extends CategoryManager
 			boolean bResult = EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
 			categoryObj.setDeleted(categoryId);
 			em.getTransaction().begin();
-			em.merge(categoryObj);
+			if (permanently) {
+				em.remove(categoryObj);
+			}
+			else {
+				em.merge(categoryObj);
+			}
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
@@ -98,13 +108,13 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
+			else if (e.getCause() != null && e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
 				_logger.error("Error while deleting the category" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException("Error while deleting the category as it has associated searches",
 						EMAnalyticsFwkException.ERR_DELETE_CATEGORY, null);
@@ -194,7 +204,7 @@ public class CategoryManagerImpl extends CategoryManager
 
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
@@ -223,7 +233,7 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 		}
 		catch (Exception e) {
-			if (e.getCause().getMessage().contains("Cannot acquire data source")) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
@@ -446,7 +456,7 @@ public class CategoryManagerImpl extends CategoryManager
 				rtnObj.setDefaultFolderId(id == 0 ? null : (int) id.intValue());
 			}
 			else {
-				rtnObj.setDefaultFolderId(0);
+				rtnObj.setDefaultFolderId(null);
 			}
 			// TODO : Abhinav Handle the internationalization via MGMT_MESSAGES
 			// handling name here
@@ -471,6 +481,9 @@ public class CategoryManagerImpl extends CategoryManager
 				// MGMT_MESSAGES
 				rtnObj.setDescription(category.getDescription());
 			}
+
+			rtnObj.setOwner(category.getOwner());
+			rtnObj.setCreatedOn(category.getCreationDate());
 
 			// handle params
 

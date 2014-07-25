@@ -31,7 +31,7 @@ Rem ** Indexes on folder and category  tables to help with tree creation
 Rem ** query performance.
 Rem ********************************************************************
 
-CREATE INDEX EMS_ANALYTICS_FOLDERS_IDX1 ON EMS_ANALYTICS_FOLDERS(PARENT_ID) COMPRESS ;
+--CREATE INDEX EMS_ANALYTICS_FOLDERS_IDX1 ON EMS_ANALYTICS_FOLDERS(PARENT_ID) COMPRESS ;
 
 
 Rem ********************************************************************

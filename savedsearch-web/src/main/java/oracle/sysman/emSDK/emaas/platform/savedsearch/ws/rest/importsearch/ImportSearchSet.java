@@ -20,20 +20,121 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
+/**
+ * Import Searches Services
+ *
+ * @since 0.1
+ */
 @Path("importsearches")
 public class ImportSearchSet
 {
-
+	private static final Logger _logger = Logger.getLogger(ImportSearchSet.class);
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
+
+	/**
+	 * Import the searches with defined XML file<br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importsearches</font><br>
+	 * The string "importsearches" in the URL signifies import operation on search.<br>
+	 *
+	 * @since 0.1
+	 * @param xml
+	 *            "xml" is the XML definition used to import search<br>
+	 *            Input Sample - Importing the search with category name & folder name objects:<br>
+	 *            <font color="DarkCyan">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;<br>
+	 *            &lt;SearchSet&gt;<br>
+	 *            &nbsp;&nbsp;&lt;search&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Search1234&lt;/name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameters&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameter&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Param1&lt;/name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type&gt;STRING&lt;/type&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameter&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameters&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Category&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;cat_name&lt;/name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
+	 *            category name is not existed, it would create a new category with the given name --&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Category&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Folder&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;fol_name&lt;/name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
+	 *            folder name is not existed, it would create a new folder with the given name --&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;uiHidden&gt;false&lt;/uiHidden&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Folder&gt;<br>
+	 *            &nbsp;&nbsp;&lt;/search&gt;<br>
+	 *            &lt;/SearchSet&gt;</font> <br>
+	 *            Input Sample - Importing the search with categoryId & folderId objects:<br>
+	 *            <font color="DarkCyan">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;<br>
+	 *            &lt;SearchSet&gt;<br>
+	 *            &nbsp;&nbsp;&lt;search&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Search1&lt;/name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameters&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameter&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Param1&lt;/name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type&gt;STRING&lt;/type&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameter&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameters&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;categoryId&gt;1122&lt;/categoryId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
+	 *            categoryId is not existed, importing search would failed --&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;folderId&gt;1644&lt;/folderId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the folderId is
+	 *            not existed, importing search would failed --&gt;<br>
+	 *            &nbsp;&nbsp;&lt;/search&gt;<br>
+	 *            &lt;/SearchSet&gt;</font><br>
+	 * @return The search with id and name which means the importing successfully<br>
+	 *         Response Sample:<br>
+	 *         <font color="DarkCyan">[<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 10665,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "Search1234"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *         ]</font><br>
+	 *         The search with name which means the importing failed<br>
+	 *         Response Sample:<br>
+	 *         <font color="DarkCyan">[<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "Search1234"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
+	 *         ]</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>If the response content contains search id and name, it means the search is created.<br>
+	 *         If the response content contains only name, it means the search is not created.</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>could be the following errors:<br>
+	 *         1. If missing some necessary element in XML, it would return 400 error<br>
+	 *         For example, if there is no "category" in described in XML, it would return the error message<br>
+	 *         Error at line 12 , column 14 Invalid content was found starting with element 'Folder'. One of '{Category,
+	 *         categoryId}' is expected.<br>
+	 *         2. If the XML format is wrong, it would return the error message "Please specify input with valid format"</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Server Error</td>
+	 *         <td>An internal error has occurred</td>
+	 *         </tr>
+	 *         </table>
+	 */
 
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes("application/xml")
 	public Response importSearches(String xml)
 	{
+		_logger.info("import searches: \n" + xml);
 		Response res = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity("Please specify input with valid format").build();
@@ -63,11 +164,13 @@ public class ImportSearchSet
 			res = Response.status(Status.OK).entity(jsonArray).build();
 		}
 		catch (ImportException e) {
+			_logger.error("Failed to import searches (1)", e);
 			msg = e.getMessage();
 			e.printStackTrace();
 			res = Response.status(Status.BAD_REQUEST).entity(msg).build();
 		}
 		catch (Exception e) {
+			_logger.error("Failed to import searches (2)", e);
 			msg = "An internal error has occurred";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 		}

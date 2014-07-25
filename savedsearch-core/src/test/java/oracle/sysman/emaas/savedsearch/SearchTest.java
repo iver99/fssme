@@ -10,16 +10,19 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 
+import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class SearchTest
+public class SearchTest extends BaseTest
 {
 
 	private static Integer folderId;
+
 	private static Integer searchId;
+
 	private static Search dupSearch;
 
 	@BeforeClass
@@ -69,57 +72,76 @@ public class SearchTest
 			SearchManager objSearch = SearchManagerImpl.getInstance();
 			Search search = objSearch.getSearch(searchId);
 			AssertJUnit.assertNotNull(search);
-			objSearch.deleteSearch(search.getId());
+			objSearch.deleteSearch(search.getId(), true);
 
 			//search=objSearch.getSearch(searchId);
 			//Assert.assertNull(search);
 
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			objFolder.deleteFolder(folderId);
+			objFolder.deleteFolder(folderId, true);
 			//Assert.assertNull(objFolder.getFolder(folderId));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
-	public void testSearchNotExist()throws Exception
+	public void testBigQueryStr() throws Exception
 	{
-		SearchManager search=SearchManager.getInstance();
+		//test big query str (length>4000)
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 500; i++) {
+			sb.append("I am a big query str");
+		}
+		final String BIG_QUERYSTR = sb.toString(); //length=10000
+		Integer sid = 0;
+		SearchManager searchMgr = SearchManager.getInstance();
 		try {
-			search.getSearch(9999999999L);
+
+			Search search = searchMgr.createNewSearch();
+			search.setDescription("testing big query str");
+			search.setName("Search with big query str");
+			search.setFolderId(1);
+			search.setCategoryId(1);
+			search.setQueryStr(BIG_QUERYSTR);
+			Search savedSearch = searchMgr.saveSearch(search);
+			Assert.assertNotNull(savedSearch, "Get NULL search from saveeSearch()");
+			sid = savedSearch.getId();
+			Assert.assertNotNull(sid, "Search id is  NULL");
+			Assert.assertNotNull(savedSearch.getQueryStr(), "Get NULL query str");
+			Assert.assertEquals(savedSearch.getQueryStr().length(), BIG_QUERYSTR.length(),
+					"Get a different size of big query str");
+			Assert.assertEquals(savedSearch.getQueryStr(), BIG_QUERYSTR, "Get a different big query str");
+
+			Search freshSearch = searchMgr.getSearch(sid);
+			Assert.assertNotNull(freshSearch, "Get NULL search from getSearch()");
+			Assert.assertNotNull(freshSearch.getQueryStr(), "Get NULL query str");
+			Assert.assertEquals(freshSearch.getQueryStr().length(), BIG_QUERYSTR.length(),
+					"Get a different size of big query str");
+			Assert.assertEquals(freshSearch.getQueryStr(), BIG_QUERYSTR, "Get a different big query str");
+		}
+		finally {
+			if (sid != null && sid > 0) {
+				searchMgr.deleteSearch(sid, true);
+			}
+		}
+	}
+
+	@Test
+	public void testDeleteInvalidSearchId() throws Exception
+	{
+		SearchManager sman = SearchManager.getInstance();
+		try {
+			sman.deleteSearch(99898987898L, true);
+
 		}
 		catch (EMAnalyticsFwkException emanfe) {
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
 					EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
 		}
 	}
-	
-	@Test
-	public void testGetSearchByInvalidCategoryId() throws Exception
-	{
-		SearchManager search=SearchManager.getInstance();
-		try{
-			search.getSearchListByCategoryId(9999999999L);
-		}catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GENERIC));
-		}
-	}
-	
-	@Test
-	public void testGetSearchByInvalidFolderId() throws Exception
-	{
-		SearchManager search=SearchManager.getInstance();
-		try{
-			search.getSearchListByFolderId(9999999999L);
-		}catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GENERIC));
-		}
-	}
-	
+
 	@Test
 	public void testDuplicate() throws Exception
 	{
@@ -149,7 +171,7 @@ public class SearchTest
 		}
 		finally {
 			///delete the search created before
-			objSearch.deleteSearch(dupSearch.getId());
+			objSearch.deleteSearch(dupSearch.getId(), true);
 		}
 
 	}
@@ -162,11 +184,11 @@ public class SearchTest
 			SearchManager objSearch = SearchManager.getInstance();
 			Search search = objSearch.getSearch(searchId);
 			AssertJUnit.assertNotNull(search);
-			//now set the some value 
+			//now set the some value
 			search.setName("testName");
 			search.setDescription("testcase checking");
 
-			//now update the 
+			//now update the
 			objSearch.editSearch(search);
 
 			search = objSearch.getSearch(searchId);
@@ -211,6 +233,30 @@ public class SearchTest
 	}
 
 	@Test
+	public void testGetSearchByInvalidCategoryId() throws Exception
+	{
+		SearchManager search = SearchManager.getInstance();
+		try {
+			search.getSearchListByCategoryId(9999999999L);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_GENERIC));
+		}
+	}
+
+	@Test
+	public void testGetSearchByInvalidFolderId() throws Exception
+	{
+		SearchManager search = SearchManager.getInstance();
+		try {
+			search.getSearchListByFolderId(9999999999L);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_GENERIC));
+		}
+	}
+
+	@Test
 	public void testGetSearchCountByFolderId() throws Exception
 	{
 
@@ -228,14 +274,14 @@ public class SearchTest
 			snew = objSearch.saveSearch(search);
 
 			//now get the count of the search inside this folder
-			AssertJUnit.assertEquals(2,objSearch.getSearchListByFolderId(folderId).size());
+			AssertJUnit.assertEquals(2, objSearch.getSearchListByFolderId(folderId).size());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		finally {
 			//delete the new search
-			objSearch.deleteSearch(snew.getId());
+			objSearch.deleteSearch(snew.getId(), true);
 		}
 	}
 
@@ -267,7 +313,7 @@ public class SearchTest
 			else if (searchList.get(1).getName().equals("Dummy Search")) {
 				AssertJUnit.assertEquals("MySearch", searchList.get(0).getName());
 				/* Assert.assertEquals("Dummy Search", search.getName());
-				 Assert.assertEquals("testing purpose", search.getDescription()); 
+				 Assert.assertEquals("testing purpose", search.getDescription());
 				 Assert.assertEquals("Display dummy Search", search.getDisplayName());*/
 			}
 		}
@@ -276,7 +322,7 @@ public class SearchTest
 		}
 		finally {
 			//delete the new search
-			objSearch.deleteSearch(snew.getId());
+			objSearch.deleteSearch(snew.getId(), true);
 		}
 
 	}
@@ -319,7 +365,7 @@ public class SearchTest
 		}
 		finally {
 			if (searchObj != null) {
-				objSearch.deleteSearch(searchObj.getId());
+				objSearch.deleteSearch(searchObj.getId(), true);
 			}
 		}
 
@@ -363,22 +409,22 @@ public class SearchTest
 		}
 		finally {
 			if (searchObj != null) {
-				objSearch.deleteSearch(searchObj.getId());
+				objSearch.deleteSearch(searchObj.getId(), true);
 			}
 		}
 
 	}
 
 	@Test
-	public void testDeleteInvalidSearchId() throws Exception
+	public void testSearchNotExist() throws Exception
 	{
-		SearchManager sman=SearchManager.getInstance();
-		try{
-			sman.deleteSearch(99898987898L);
-		
-	}catch (EMAnalyticsFwkException emanfe) {
-		AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-				EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
-	}
+		SearchManager search = SearchManager.getInstance();
+		try {
+			search.getSearch(9999999999L);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
+		}
 	}
 }

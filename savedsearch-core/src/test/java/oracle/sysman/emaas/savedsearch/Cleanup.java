@@ -1,9 +1,10 @@
 package oracle.sysman.emaas.savedsearch;
 
-import org.testng.annotations.Test;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 
-public class Cleanup
+import org.testng.annotations.Test;
+
+public class Cleanup extends BaseTest
 {
 	@Test
 	public void closeConnection()

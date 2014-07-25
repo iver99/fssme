@@ -35,14 +35,11 @@ public abstract class FolderManager
 	public abstract Folder createNewFolder();
 
 	/**
-	 * Saves the folder into the system.
-	 * 
-	 * @param folder
-	 *            folder to be saved
-	 * @return re-loaded folder object with generated ids and dates
+	 * @param folderId
+	 * @param permanently
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Folder saveFolder(Folder folder) throws EMAnalyticsFwkException;
+	public abstract void deleteFolder(long folderId, boolean permanently) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the folder object identified by the given identifier.
@@ -53,16 +50,6 @@ public abstract class FolderManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Folder getFolder(long folderId) throws EMAnalyticsFwkException;
-
-	/**
-	 * Edits the folder into the system.
-	 * 
-	 * @param folder
-	 *            folder to be saved
-	 * @return re-loaded folder object with generated ids and dates
-	 * @throws EMAnalyticsFwkException
-	 */
-	public abstract Folder updateFolder(Folder folder) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the string representation of path of folder (from root, "/" separated).
@@ -85,14 +72,25 @@ public abstract class FolderManager
 	public abstract List<Folder> getSubFolders(long folderId) throws EMAnalyticsFwkException;
 
 	/**
-	 * Deletes the folder.
+	 * Saves the folder into the system.
 	 * 
-	 * @param folderId
-	 *            folder id
+	 * @param folder
+	 *            folder to be saved
+	 * @return re-loaded folder object with generated ids and dates
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract void deleteFolder(long folderId) throws EMAnalyticsFwkException;
+	public abstract Folder saveFolder(Folder folder) throws EMAnalyticsFwkException;
 
-	public abstract Folder savePath(Folder objFld) throws EMAnalyticsFwkException;  
+	public abstract Folder savePath(Folder objFld) throws EMAnalyticsFwkException;
+
+	/**
+	 * Edits the folder into the system.
+	 * 
+	 * @param folder
+	 *            folder to be saved
+	 * @return re-loaded folder object with generated ids and dates
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Folder updateFolder(Folder folder) throws EMAnalyticsFwkException;
 
 }

@@ -1,16 +1,20 @@
 package oracle.sysman.emaas.savedsearch;
 
-import org.testng.annotations.Test;
+import java.util.TimeZone;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 
-public class BaseTest
+/**
+ * Each test needs to inherit from this
+ *
+ * @author miao
+ */
+public abstract class BaseTest
 {
 	protected static PersistenceManager pm;
-
-	@Test
-	public void getConnection()
-	{
-		PersistenceManager.IS_TEST_ENV = true;
+	static {
+		PersistenceManager.setTestEnv(true);
+		DateUtil.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 }
