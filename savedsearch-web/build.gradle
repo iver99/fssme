@@ -29,7 +29,7 @@ war {
 
 task runQATestSuite(type: Test){
         useTestNG(){
-        dependsOn ':savedsearch-ear:ear', ':savedsearch-ear:appServerRedeploy'
+        dependsOn ':savedsearch-ear:ear'
         useDefaultListeners = true
         outputDirectory = file("$buildDir/testngoutput")
         suites file('testngsuite.xml')
