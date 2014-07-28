@@ -63,6 +63,7 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search", //required<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"category": {"id":999},//required <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"folder": {"id":999},//required <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"description": "Search for Demo", //optional<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",//optional <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
@@ -83,6 +84,7 @@ public class SearchAPI
 	 *         <font color="DarkCyan"> {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10438,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Demo Search",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"description": "Search for Demo",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
@@ -241,6 +243,7 @@ public class SearchAPI
 	 *            Input Sample:<br>
 	 *            <font color="DarkCyan"> {<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "name": "Demo Search X1",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"description": "Search for Demo",<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
@@ -276,6 +279,7 @@ public class SearchAPI
 	 *         <font color="DarkCyan"> {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10438,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Demo Search X1",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"description": "Search for Demo",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
@@ -461,6 +465,7 @@ public class SearchAPI
 	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10011,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "sample for creation 2c",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "description": "Search for Demo",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
