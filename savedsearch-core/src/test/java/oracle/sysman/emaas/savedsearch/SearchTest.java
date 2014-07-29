@@ -24,6 +24,7 @@ public class SearchTest extends BaseTest
 	private static Integer searchId;
 
 	private static Search dupSearch;
+	private static final int TA_SEARCH_ID = 3000;//a system search that always exists
 
 	@BeforeClass
 	public static void initialization() throws Exception
@@ -73,7 +74,6 @@ public class SearchTest extends BaseTest
 			Search search = objSearch.getSearch(searchId);
 			AssertJUnit.assertNotNull(search);
 			objSearch.deleteSearch(search.getId(), true);
-
 			//search=objSearch.getSearch(searchId);
 			//Assert.assertNull(search);
 
@@ -143,6 +143,21 @@ public class SearchTest extends BaseTest
 	}
 
 	@Test
+	public void testDeleteSystemSearch() throws Exception
+	{
+		try {
+			SearchManager objSearch = SearchManagerImpl.getInstance();
+			objSearch.deleteSearch(TA_SEARCH_ID, true);
+			Assert.assertTrue(false, "A system search with id:" + TA_SEARCH_ID + " is deleted unexpectedly");
+		}
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+			Assert.assertEquals(EMAnalyticsFwkException.ERR_DELETE_SEARCH, e.getErrorCode(),
+					"unexpected error code: " + e.getErrorCode());
+		}
+	}
+
+	@Test
 	public void testDuplicate() throws Exception
 	{
 		SearchManager objSearch = SearchManager.getInstance();
@@ -179,7 +194,6 @@ public class SearchTest extends BaseTest
 	@Test
 	public void testEditSearch() throws Exception
 	{
-
 		try {
 			SearchManager objSearch = SearchManager.getInstance();
 			Search search = objSearch.getSearch(searchId);
@@ -199,6 +213,29 @@ public class SearchTest extends BaseTest
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testEditSystemSearch() throws Exception
+	{
+		try {
+			SearchManager objSearch = SearchManager.getInstance();
+			Search search = objSearch.getSearch(TA_SEARCH_ID);
+			AssertJUnit.assertNotNull("A system search with id:" + TA_SEARCH_ID + " doesn't exist", search);
+			//now set the some value
+			search.setName("testName");
+			search.setDescription("testcase checking");
+
+			//now update the
+			objSearch.editSearch(search);
+			AssertJUnit.assertTrue("A system search with id:" + TA_SEARCH_ID + " is updated", false);
+
+		}
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+			Assert.assertEquals(EMAnalyticsFwkException.ERR_UPDATE_SEARCH, e.getErrorCode(),
+					"unexpected error code: " + e.getErrorCode());
 		}
 	}
 

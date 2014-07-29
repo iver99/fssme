@@ -23,15 +23,7 @@ public class SearchSummaryImpl implements SearchSummary
 	protected String lastModifiedBy;
 	protected Date lastModifiedOn;
 	protected Date lastAccessDate;
-	@Override
-	public Date getLastAccessDate() {
-		return lastAccessDate;
-	}
-
-	public void setLastAccessDate(Date lastAccessDate) {
-		this.lastAccessDate = lastAccessDate;
-	}
-
+	protected boolean systemSearch;
 	protected String[] tags;
 
 	@Override
@@ -70,15 +62,21 @@ public class SearchSummaryImpl implements SearchSummary
 	}
 
 	@Override
-	public Date getLastModifiedOn()
+	public Date getLastAccessDate()
 	{
-		return lastModifiedOn;
+		return lastAccessDate;
 	}
 
 	@Override
 	public String getLastModifiedBy()
 	{
 		return lastModifiedBy;
+	}
+
+	@Override
+	public Date getLastModifiedOn()
+	{
+		return lastModifiedOn;
 	}
 
 	@Override
@@ -98,6 +96,15 @@ public class SearchSummaryImpl implements SearchSummary
 	public String[] getTags()
 	{
 		return tags;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSummary#isSystemSearch()
+	 */
+	@Override
+	public boolean isSystemSearch()
+	{
+		return systemSearch;
 	}
 
 	public void setCategoryId(Integer categoryId)
@@ -130,14 +137,19 @@ public class SearchSummaryImpl implements SearchSummary
 		this.id = id;
 	}
 
-	public void setLastModifiedOn(Date lastModifiedOn)
+	public void setLastAccessDate(Date lastAccessDate)
 	{
-		this.lastModifiedOn = lastModifiedOn;
+		this.lastAccessDate = lastAccessDate;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy)
 	{
 		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public void setLastModifiedOn(Date lastModifiedOn)
+	{
+		this.lastModifiedOn = lastModifiedOn;
 	}
 
 	public void setName(String name)
@@ -148,6 +160,11 @@ public class SearchSummaryImpl implements SearchSummary
 	public void setOwner(String owner)
 	{
 		this.owner = owner;
+	}
+
+	public void setSystemSearch(boolean value)
+	{
+		systemSearch = value;
 	}
 
 	public void setTags(String[] tags)

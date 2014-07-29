@@ -44,7 +44,7 @@ public class EmAnalyticsFolder implements Serializable
 	private long folderId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATION_DATE", insertable = false)
+	@Column(name = "CREATION_DATE")
 	private Date creationDate;
 
 	private String description;
@@ -59,7 +59,7 @@ public class EmAnalyticsFolder implements Serializable
 	private String emPluginId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "LAST_MODIFICATION_DATE", insertable = false)
+	@Column(name = "LAST_MODIFICATION_DATE")
 	private Date lastModificationDate;
 
 	@Column(name = "LAST_MODIFIED_BY")

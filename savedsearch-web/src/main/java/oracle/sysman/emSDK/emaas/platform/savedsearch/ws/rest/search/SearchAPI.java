@@ -63,6 +63,7 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Search", //required<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"category": {"id":999},//required <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"folder": {"id":999},//required <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"description": "Search for Demo", //optional<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",//optional <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
@@ -83,6 +84,7 @@ public class SearchAPI
 	 *         <font color="DarkCyan"> {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10438,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Demo Search",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"description": "Search for Demo",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
@@ -98,6 +100,7 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-14T05:19:26.000Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastAccessDate": "2014-07-13T22:19:26.358Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "systemSearch": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; {<br>
@@ -208,6 +211,11 @@ public class SearchAPI
 	 *         <td>Not Found</td>
 	 *         <td>Search with Id: &lt;id&gt; does not exist</td>
 	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Error</td>
+	 *         <td>Search with Id: &lt;id&gt; is system search and NOT allowed to delete</td>
+	 *         </tr>
 	 *         </table>
 	 */
 	@DELETE
@@ -241,6 +249,7 @@ public class SearchAPI
 	 *            Input Sample:<br>
 	 *            <font color="DarkCyan"> {<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "name": "Demo Search X1",<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;"description": "Search for Demo",<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
@@ -276,6 +285,7 @@ public class SearchAPI
 	 *         <font color="DarkCyan"> {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10438,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "Demo Search X1",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"description": "Search for Demo",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
@@ -291,6 +301,7 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-14T05:19:26.000Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastAccessDate": "2014-07-13T22:19:26.358Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "systemSearch": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; {<br>
@@ -323,6 +334,11 @@ public class SearchAPI
 	 *         <td>404</td>
 	 *         <td>Not Found</td>
 	 *         <td>Search with Id: &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Error</td>
+	 *         <td>Search with Id: &lt;id&gt; is system search and NOT allowed to update</td>
 	 *         </tr>
 	 *         </table>
 	 */
@@ -461,6 +477,7 @@ public class SearchAPI
 	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "id": 10011,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "name": "sample for creation 2c",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "description": "Search for Demo",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 999,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
@@ -476,6 +493,7 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-04T12:03:03.000Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastAccessDate": "2014-07-08T22:25:52.857Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "systemSearch": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10011",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "flattenedFolderPath": [<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Demo Searches",<br>

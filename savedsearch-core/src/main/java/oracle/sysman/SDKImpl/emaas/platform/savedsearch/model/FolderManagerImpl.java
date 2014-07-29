@@ -25,7 +25,7 @@ public class FolderManagerImpl extends FolderManager
 
 	/**
 	 * Get FolderManagerImpl singleton instance.
-	 * 
+	 *
 	 * @return Instance of FolderManagerImpl
 	 */
 	public static FolderManagerImpl getInstance()
@@ -67,8 +67,8 @@ public class FolderManagerImpl extends FolderManager
 				throw new EMAnalyticsFwkException("folder with id " + folderId + " does not Exist",
 						EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID, null);
 			}
-			if (folderObj.getSystemFolder().intValue() == 1) {
-				throw new EMAnalyticsFwkException("Folder with id:" + folderId + " is a system folder and cant be deleted",
+			if (folderObj.getSystemFolder() != null && folderObj.getSystemFolder().intValue() == 1) {
+				throw new EMAnalyticsFwkException("Folder with id " + folderId + " is system folder and NOT allowed to delete",
 						EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 			}
 
@@ -438,6 +438,10 @@ public class FolderManagerImpl extends FolderManager
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
 			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, em);
+			if (folderObj != null && folderObj.getSystemFolder() != null && folderObj.getSystemFolder().intValue() == 1) {
+				throw new EMAnalyticsFwkException("Folder with id " + folderObj.getFolderId()
+						+ " is system folder and NOT allowed to edit", EMAnalyticsFwkException.ERR_UPDATE_FOLDER, null);
+			}
 			em.getTransaction().begin();
 			em.persist(folderObj);
 			em.getTransaction().commit();
@@ -526,7 +530,7 @@ public class FolderManagerImpl extends FolderManager
 			rtnObj.setLastModifiedBy(folderObj.getLastModifiedBy());
 			rtnObj.setLastModifiedOn(folderObj.getLastModificationDate());
 			rtnObj.setSystemFolder(folderObj.getSystemFolder().intValueExact() == 0 ? false : true);
-			//rtnObj.setUiHidden(folderObj.getUiHidden().intValueExact()==0?false:true);          
+			//rtnObj.setUiHidden(folderObj.getUiHidden().intValueExact()==0?false:true);
 
 		}
 		catch (Exception e) {
@@ -585,12 +589,12 @@ public class FolderManagerImpl extends FolderManager
 		return arrPath;
 		//        sb.append("[");
 		//        for(int i = (arrPath.size()-1); i>=0 ; i--)
-		//        {   
+		//        {
 		//            sb.append("" +arrPath.get(i) + "");
 		//            if(i!=0)
 		//             sb.append(fs);
 		//        }
-		//        
+		//
 		//        sb.append("]");
 		//        return sb.toString();
 

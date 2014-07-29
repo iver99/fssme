@@ -63,6 +63,7 @@ public class EntityJsonUtilTest extends BaseTest
 		search.setOwner("SYSMAN");
 		search.setLocked(false);
 		search.setUiHidden(false);
+		search.setSystemSearch(true);
 		search.setCreatedOn(d);
 		search.setLastModifiedOn(d);
 		search.setLastModifiedBy("SYSMAN");
@@ -143,6 +144,7 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/folder\\/1\"}";
 		final String VERIFY_STRING6 = "\"parentFolderId\"";
 		final String VERIFY_STRING7 = "\"uiHidden\":false";
+		final String VERIFY_STRING8 = "\"systemFolder\":false";
 		final String VERIFY_STRING9 = "\"owner\":\"SYSMAN\"";
 		final String VERIFY_STRING10 = "\"lastModifiedBy\":\"SYSMAN\"";
 
@@ -154,6 +156,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is NOT found as expected");
 		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is found unexpected");
+		Assert.assertTrue(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
 	}
@@ -183,6 +186,7 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING10 = "\"uiHidden\":false";
 		final String VERIFY_STRING11 = "\"flattenedFolderPath\":[\"parent Folder\",\"Root Folder\"]";
 		final String VERIFY_STRING12 = "\"guid\":";
+		final String VERIFY_STRING13 = "\"systemSearch\":true";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
@@ -197,6 +201,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is found unexpected");
+		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
 
 		Assert.assertTrue(output2.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
 		Assert.assertFalse(output2.contains(VERIFY_STRING12), VERIFY_STRING12 + " is found unexpected");
@@ -217,6 +222,7 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/folder\\/1\"}";
 		final String VERIFY_STRING6 = "\"defaultFolderId\"";
 		final String VERIFY_STRING7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
+		final String VERIFY_STRING8 = "\"owner\":\"SYSMAN\"";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
@@ -226,6 +232,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is found unexpected");
+		Assert.assertFalse(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
 	}
 
 	@Test
@@ -249,11 +256,12 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING8 = "\"type\":\"folder\"";
 		final String VERIFY_STRING9 = "\"owner\":\"SYSMAN\"";
 		final String VERIFY_STRING10 = "\"lastModifiedBy\":\"SYSMAN\"";
+		final String VERIFY_STRING11 = "\"systemFolder\":false";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
 		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is found unexpected");
+		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
 		Assert.assertFalse(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
@@ -261,6 +269,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is found unexpected");
+		Assert.assertTrue(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
 
 		Assert.assertTrue(output2.contains(VERIFY_STRING8), VERIFY_STRING8 + " is NOT found as expected");
 	}
@@ -295,6 +304,7 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING11 = "\"flattenedFolderPath\":[\"parent Folder\",\"Root Folder\"]";
 		final String VERIFY_STRING12 = "\"guid\":";
 		final String VERIFY_STRING13 = "\"type\":\"search\"";
+		final String VERIFY_STRING14 = "\"systemSearch\":true";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
@@ -309,6 +319,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is found unexpected");
+		Assert.assertTrue(output.contains(VERIFY_STRING14), VERIFY_STRING14 + " is NOT found as expected");
 
 		Assert.assertTrue(output2.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
 		Assert.assertFalse(output2.contains(VERIFY_STRING12), VERIFY_STRING12 + " is found unexpected");
