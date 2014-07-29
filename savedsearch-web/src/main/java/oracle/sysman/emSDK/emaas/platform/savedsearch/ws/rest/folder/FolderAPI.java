@@ -224,23 +224,24 @@ public class FolderAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"description": "Folder for demo_Edit",<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"parentFolder":{ <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":1 //optional<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;},<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"systemFolder": false <br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 	 *            }</font><br>
 	 * @return Return the complete details of folder with given folder Id <br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;"id": 1368,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Folder_Edit",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"description": "Folder for demo_Edit",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"createdOn": "2014-07-10T07:05:14.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModifiedOn": "2014-07-10T07:05:14.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModifiedBy": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"systemFolder": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;"parentFolder": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": 1,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"description": "Folder for demo_Edit",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-10T07:05:14.000Z",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-10T07:05:14.000Z",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp; "systemFolder": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1368"<br>
 	 *         }</font><br>
 	 * <br>
@@ -321,15 +322,17 @@ public class FolderAPI
 	 *         {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;"id": 1368,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;"name": "Demo Folder_Edit",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"description": "Folder for demo_Edit",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"createdOn": "2014-07-10T07:05:14.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModifiedOn": "2014-07-10T07:05:14.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"lastModifiedBy": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"systemFolder": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;"parentFolder": {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": 1,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; },<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;"description": "Folder for demo_Edit",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-10T07:05:14.000Z",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-10T07:05:14.000Z",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp; "systemFolder": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "href": "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/1368"<br>
 	 *         }</font><br>
 	 * <br>

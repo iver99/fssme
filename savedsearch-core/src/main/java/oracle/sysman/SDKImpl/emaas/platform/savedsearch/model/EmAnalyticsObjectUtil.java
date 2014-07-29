@@ -2,6 +2,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -265,11 +266,13 @@ class EmAnalyticsObjectUtil
 	public static EmAnalyticsFolder getEmAnalyticsFolderForAdd(Folder folder, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
+		Date utcNow = DateUtil.getCurrentUTCTime();
 		folderObj.setDescription(folder.getDescription());
 		folderObj.setName(folder.getName());
 		folderObj.setOwner("SYAMAN");//TODO fix me when security is enabled.
+		folderObj.setCreationDate(utcNow);
 		folderObj.setLastModifiedBy("SYSMAN");//TODO fix me when security is enabled.
-		folderObj.setLastModificationDate(DateUtil.getCurrentUTCTime());
+		folderObj.setLastModificationDate(utcNow);
 		folderObj.setUiHidden(new BigDecimal(0));
 		folderObj.setSystemFolder(new BigDecimal(0));
 		folderObj.setDeleted(0);
@@ -294,7 +297,8 @@ class EmAnalyticsObjectUtil
 			folderObj.setName(folder.getName());
 			folderObj.setDescription(folder.getDescription());
 			folderObj.setLastModifiedBy("SYSMAN"); // fix me to do
-			folderObj.setLastModificationDate(DateUtil.getCurrentUTCTime());
+			Date utcNow = DateUtil.getCurrentUTCTime();
+			folderObj.setLastModificationDate(utcNow);
 			folderObj.setSystemFolder(folder.isSystemFolder() == true ? new BigDecimal(1) : new BigDecimal(0));
 			folderObj.setUiHidden(folder.isUiHidden() == true ? new BigDecimal(1) : new BigDecimal(0));
 			folderObj.setDeleted(0);
@@ -343,8 +347,11 @@ class EmAnalyticsObjectUtil
 
 		//TODO FIX this : Abhinav
 		//get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser()
+		Date utcDate = DateUtil.getCurrentUTCTime();
 		searchEntity.setOwner("SYSMAN");
+		searchEntity.setCreationDate(utcDate);
 		searchEntity.setLastModifiedBy("SYSMAN");
+		searchEntity.setLastModificationDate(utcDate);
 		searchEntity.setSystemSearch(new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setMetadataClob(search.getMetadata());
@@ -412,9 +419,10 @@ class EmAnalyticsObjectUtil
 
 		//TODO FIX this : Abhinav
 		//get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser()
+		Date utcNow = DateUtil.getCurrentUTCTime();
 		searchEntity.setOwner("SYSMAN");
 		searchEntity.setLastModifiedBy("SYSMAN");
-		searchEntity.setLastModificationDate(DateUtil.getCurrentUTCTime());
+		searchEntity.setLastModificationDate(utcNow);
 		searchEntity.setSystemSearch(search != null && search.isSystemSearch() ? new java.math.BigDecimal(1)
 				: new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
