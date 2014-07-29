@@ -2,7 +2,6 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.io.Reader;
 import java.io.StringReader;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +35,7 @@ public class SearchManagerImpl extends SearchManager
 
 	//  Logger
 	private static final Logger _logger = Logger.getLogger(SearchManagerImpl.class);
+
 	public static final SearchManagerImpl _instance = new SearchManagerImpl();
 	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.deleted=0 ";
 	private static final String FILTER_BY_CATEGORY = "and e.emAnalyticsCategory = :category ";
@@ -88,6 +88,10 @@ public class SearchManagerImpl extends SearchManager
 						EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null);
 			}
 
+			if (searchObj.getSystemSearch() != null && searchObj.getSystemSearch().intValue() == 1) {
+				throw new EMAnalyticsFwkException("Search with Id: " + searchId + " is system search and NOT allowed to delete",
+						EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
+			}
 			searchObj.setDeleted(searchId);
 			em.getTransaction().begin();
 			if (permanently) {
@@ -132,6 +136,10 @@ public class SearchManagerImpl extends SearchManager
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
 			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
+			if (searchEntity != null && searchEntity.getSystemSearch() != null && searchEntity.getSystemSearch().intValue() == 1) {
+				throw new EMAnalyticsFwkException("Search with Id: " + searchEntity.getId()
+						+ " is system search and NOT allowed to edit", EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);
+			}
 			em.getTransaction().begin();
 			em.merge(searchEntity);
 			em.getTransaction().commit();
@@ -773,12 +781,14 @@ public class SearchManagerImpl extends SearchManager
 			}
 
 			rtnObj.setQueryStr(searchObj.getSearchDisplayStr());
-			rtnObj.setLocked(searchObj.getIsLocked().intValue() == 1 ? true : false);
+			rtnObj.setLocked(searchObj.getIsLocked() != null && searchObj.getIsLocked().intValue() == 1 ? true : false);
 			rtnObj.setCategoryId((int) searchObj.getEmAnalyticsCategory().getCategoryId());
 
 			rtnObj.setFolderId((int) searchObj.getEmAnalyticsFolder().getFolderId());
 
-			rtnObj.setUiHidden(searchObj.getUiHidden().intValue() == new BigDecimal(0).intValue() ? false : true);
+			rtnObj.setUiHidden(searchObj.getUiHidden() != null && searchObj.getUiHidden().intValue() == 1 ? true : false);
+			rtnObj.setSystemSearch(searchObj.getSystemSearch() != null && searchObj.getSystemSearch().intValue() == 1 ? true
+					: false);
 			rtnObj.setLastAccessDate(searchObj.getAccessDate());
 
 			{

@@ -267,6 +267,7 @@ class EmAnalyticsObjectUtil
 		EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
 		folderObj.setDescription(folder.getDescription());
 		folderObj.setName(folder.getName());
+		folderObj.setOwner("SYAMAN");//TODO fix me when security is enabled.
 		folderObj.setLastModifiedBy("SYSMAN");//TODO fix me when security is enabled.
 		folderObj.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		folderObj.setUiHidden(new BigDecimal(0));
@@ -414,11 +415,12 @@ class EmAnalyticsObjectUtil
 		searchEntity.setOwner("SYSMAN");
 		searchEntity.setLastModifiedBy("SYSMAN");
 		searchEntity.setLastModificationDate(DateUtil.getCurrentUTCTime());
-		searchEntity.setSystemSearch(new java.math.BigDecimal(0));
-		searchEntity.setIsLocked(search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
+		searchEntity.setSystemSearch(search != null && search.isSystemSearch() ? new java.math.BigDecimal(1)
+				: new java.math.BigDecimal(0));
+		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setMetadataClob(search.getMetadata());
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
-		searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden() ? 1 : 0));
+		searchEntity.setUiHidden(new java.math.BigDecimal(search != null && search.isUiHidden() ? 1 : 0));
 		searchEntity.setDeleted(0);
 		List<SearchParameter> params = search.getParameters();
 		// Params handling !!

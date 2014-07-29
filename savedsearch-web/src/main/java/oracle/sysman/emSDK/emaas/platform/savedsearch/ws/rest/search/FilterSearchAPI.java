@@ -42,10 +42,6 @@ public class FilterSearchAPI
 	/**
 	 * List all the searches with given category Id/category name/folder Id<br>
 	 * <br>
-	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/searches</font><br>
-	 * The string "searches" in the URL signifies read operation on search. It will list all the exists searches orderby
-	 * lastAccessDate.<br>
-	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/searches?categoryId=&lt;category
 	 * Id&gt;</font><br>
 	 * The string "searches?categoryId=&lt;category Id&gt;" in the URL signifies read operation on search with given category Id.<br>
@@ -102,10 +98,9 @@ public class FilterSearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/2"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-04T02:20:07.000Z",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-04T02:20:07.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "systemSearch": "false",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10003"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
@@ -131,10 +126,9 @@ public class FilterSearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Demo Searches",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "All Searches"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-04T02:20:07.000Z",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-04T02:20:07.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "systemSearch": "false",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/search/10003"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
@@ -167,9 +161,8 @@ public class FilterSearchAPI
 	 *         1.please give the value for categoryId<br>
 	 *         2.please give the value for categoryName<br>
 	 *         3.please give folderId<br>
-	 *         4.please give either categoryId,categoryName,folderId or lastAccessCount<br>
+	 *         4.Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount<br>
 	 *         5.Id/count should be a positive number and not an alphanumeric.<br>
-	 *         6.please give either categoryId,categoryName,folderId,lastAccessDate</td>
 	 *         </tr>
 	 *         <tr>
 	 *         <td>500</td>
@@ -184,6 +177,7 @@ public class FilterSearchAPI
 			@QueryParam("categoryName") String name, @QueryParam("lastAccessCount") String lastAccessCount,
 			@QueryParam("folderId") String foldId)
 	{
+		final String ERR_MSG = "Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount";
 		CategoryManager catMan = CategoryManager.getInstance();
 		int categId = 0;
 		int folId = 0;
@@ -193,7 +187,9 @@ public class FilterSearchAPI
 		String value;
 		String query = uri.getRequestUri().getQuery();
 		if (query == null) {
-			return getLastAccessSearch(0);
+			//now we disallow to return all searches
+			//			return getLastAccessSearch(0);
+			return Response.status(400).entity(ERR_MSG).build();
 		}
 		String[] param = query.split("&");
 		if (param.length > 0) {
@@ -245,8 +241,7 @@ public class FilterSearchAPI
 
 				}
 				else {
-					return Response.status(400).entity("please give either categoryId,categoryName,folderId or lastAccessCount")
-							.build();
+					return Response.status(400).entity(ERR_MSG).build();
 				}
 			}
 			catch (NumberFormatException e) {
@@ -254,7 +249,7 @@ public class FilterSearchAPI
 			}
 		}
 		else {
-			return Response.status(400).entity("please give either categoryId,categoryName,folderId,lastAccessDate").build();
+			return Response.status(400).entity(ERR_MSG).build();
 		}
 
 	}

@@ -19,7 +19,10 @@ public class FolderManagerTest extends BaseTest
 {
 
 	private static int folderId;
+
 	private static int childFolderId;
+
+	private static final int TA_FOLDER_ID = 300;
 
 	@AfterClass
 	public static void DeleteFolder() throws Exception
@@ -48,7 +51,7 @@ public class FolderManagerTest extends BaseTest
 			folder = objFolder.saveFolder(folder);
 			folderId = folder.getId();
 			AssertJUnit.assertFalse(folderId == 0);
-
+			AssertJUnit.assertNotNull(folder.getOwner());
 			// cross check the content of the folder being saves
 			folder = objFolder.getFolder(folderId);
 			AssertJUnit.assertTrue("FolderTest".equals(folder.getName()));
@@ -79,10 +82,11 @@ public class FolderManagerTest extends BaseTest
 	{
 		FolderManager foldMan = FolderManager.getInstance();
 		try {
-			foldMan.deleteFolder(1, true);
+			foldMan.deleteFolder(TA_FOLDER_ID, true);
+			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is deleted unexpectedly", false);
 		}
 		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_DELETE_FOLDER));
+			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_DELETE_FOLDER, emanfe.getErrorCode());
 		}
 	}
 
@@ -249,7 +253,7 @@ public class FolderManagerTest extends BaseTest
 	}
 
 	@Test
-	public void testupdate() throws EMAnalyticsFwkException
+	public void testUpdate() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
@@ -272,6 +276,27 @@ public class FolderManagerTest extends BaseTest
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testUpdateSystemFolder() throws EMAnalyticsFwkException
+	{
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		try {
+
+			Folder folder = objFolder.getFolder(TA_FOLDER_ID);
+			AssertJUnit.assertNotNull(folder);
+			folder.setName("My folder");
+			folder.setDescription("Database search");
+
+			// update the folder
+			objFolder.updateFolder(folder);
+			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is updated unexpectedly", false);
+		}
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_UPDATE_FOLDER, e.getErrorCode());
 		}
 	}
 }

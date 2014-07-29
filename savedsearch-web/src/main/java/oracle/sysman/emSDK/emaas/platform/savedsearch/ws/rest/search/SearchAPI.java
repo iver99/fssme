@@ -100,6 +100,7 @@ public class SearchAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-14T05:19:26.000Z",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastAccessDate": "2014-07-13T22:19:26.358Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "systemSearch": false,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*",<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; {<br>
@@ -209,6 +210,11 @@ public class SearchAPI
 	 *         <td>404</td>
 	 *         <td>Not Found</td>
 	 *         <td>Search with Id: &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Error</td>
+	 *         <td>Search with Id: &lt;id&gt; is system search and NOT allowed to delete</td>
 	 *         </tr>
 	 *         </table>
 	 */
@@ -327,6 +333,11 @@ public class SearchAPI
 	 *         <td>404</td>
 	 *         <td>Not Found</td>
 	 *         <td>Search with Id: &lt;id&gt; does not exist</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Error</td>
+	 *         <td>Search with Id: &lt;id&gt; is system search and NOT allowed to update</td>
 	 *         </tr>
 	 *         </table>
 	 */
