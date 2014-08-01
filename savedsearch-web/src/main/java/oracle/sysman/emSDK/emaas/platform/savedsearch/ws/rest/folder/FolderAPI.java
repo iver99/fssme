@@ -51,6 +51,37 @@ public class FolderAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":1 //optional<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 	 *            }</font><br>
+	 *            Input Spec:<br>
+	 *            <table border="1">
+	 *            <tr>
+	 *            <th>Field Name</th>
+	 *            <th>Type</th>
+	 *            <th>Required
+	 *            <th>Default Value</th>
+	 *            <th>Comments</th>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>description</td>
+	 *            <td>VARCHAR2(256 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>parentFolder id</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            </table>
 	 * @return Return the complete details of folder with generated folder Id <br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">{<br>
@@ -226,6 +257,37 @@ public class FolderAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":1 //optional<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 	 *            }</font><br>
+	 *            Input Spec:<br>
+	 *            <table border="1">
+	 *            <tr>
+	 *            <th>Field Name</th>
+	 *            <th>Type</th>
+	 *            <th>Required
+	 *            <th>Default Value</th>
+	 *            <th>Comments</th>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>description</td>
+	 *            <td>VARCHAR2(256 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>parentFolder id</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            </table>
 	 * @return Return the complete details of folder with given folder Id <br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">{<br>
