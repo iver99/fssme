@@ -6,7 +6,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,10 +17,11 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "EMS_ANALYTICS_LAST_ACCESS")
-@NamedQuery(name = "EmsAnalyticsLastAccess.findAll", query = "SELECT e FROM EmAnalyticsLastAccess e")
 public class EmAnalyticsLastAccess implements Serializable
 {
 	private static final long serialVersionUID = 1L;
+
+	public static final int LAST_ACCESS_TYPE_SEARCH = 2;
 
 	@EmbeddedId
 	private EmAnalyticsLastAccessPK id;
@@ -32,6 +32,14 @@ public class EmAnalyticsLastAccess implements Serializable
 
 	public EmAnalyticsLastAccess()
 	{
+	}
+
+	public EmAnalyticsLastAccess(long objectId, String accessedBy, long objectType)
+	{
+		id = new EmAnalyticsLastAccessPK();
+		id.setObjectId(objectId);
+		id.setAccessedBy(accessedBy);
+		id.setObjectType(objectType);
 	}
 
 	public Date getAccessDate()

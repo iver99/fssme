@@ -15,13 +15,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -34,15 +34,12 @@ import org.eclipse.persistence.annotations.PrivateOwned;
  */
 @Entity
 @Table(name = "EMS_ANALYTICS_SEARCH")
-@SecondaryTable(name = "EMS_ANALYTICS_LAST_ACCESS", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "OBJECT_ID", referencedColumnName = "SEARCH_ID") })
 @NamedQueries({
-	@NamedQuery(name = "Search.getSearchById", query = "SELECT e FROM EmAnalyticsSearch e where e.id = :id  AND e.deleted =0 "),
-	@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0 "),
-	@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory = :category  AND e.deleted =0 "),
-	@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0"),
-	@NamedQuery(name = "Search.getSearchDetails", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.name = :searchName  AND e.emAnalyticsCategory = :category AND e.deleted =0"),
-	@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.name = :searchName  AND e.deleted =0") })
-@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
+		@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0 "),
+		@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 "),
+		@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0"),
+		@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.name = :searchName  AND e.deleted =0") })
+@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 10)
 public class EmAnalyticsSearch implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -125,7 +122,14 @@ public class EmAnalyticsSearch implements Serializable
 	@PrivateOwned
 	private Set<EmAnalyticsSearchParam> emAnalyticsSearchParams;
 
-	@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "OBJECT_ID")
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumns(value = {
+			@JoinColumn(name = "SEARCH_ID", referencedColumnName = "OBJECT_ID", insertable = false, updatable = false),
+			@JoinColumn(name = "OWNER", referencedColumnName = "ACCESSED_BY", insertable = false, updatable = false),
+			@JoinColumn(name = "'2'", referencedColumnName = "OBJECT_TYPE", insertable = false, updatable = false) })
+	private EmAnalyticsLastAccess lastAccess;
+
+	/*@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "OBJECT_ID")
 	private long objectId;
 
 	@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "ACCESSED_BY")
@@ -136,7 +140,7 @@ public class EmAnalyticsSearch implements Serializable
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "ACCESS_DATE")
-	private Date accessDate;
+	private Date accessDate;*/
 
 	public EmAnalyticsSearch()
 	{
@@ -144,16 +148,25 @@ public class EmAnalyticsSearch implements Serializable
 
 	public Date getAccessDate()
 	{
-		return accessDate;
+		if (lastAccess == null) {
+			return null;
+		}
+		return lastAccess.getAccessDate();
 	}
 
 	public String getAccessedBy()
 	{
-		return accessedBy;
+		if (lastAccess == null) {
+			return null;
+		}
+		return lastAccess.getAccessedBy();
 	}
 
 	public Date getCreationDate()
 	{
+		if (lastAccess == null) {
+			return null;
+		}
 		return creationDate;
 	}
 
@@ -213,6 +226,14 @@ public class EmAnalyticsSearch implements Serializable
 		return isLocked;
 	}
 
+	/**
+	 * @return the lastAccess
+	 */
+	public EmAnalyticsLastAccess getLastAccess()
+	{
+		return lastAccess;
+	}
+
 	public Date getLastModificationDate()
 	{
 		return lastModificationDate;
@@ -243,14 +264,20 @@ public class EmAnalyticsSearch implements Serializable
 		return nameSubsystem;
 	}
 
-	public long getObjectId()
+	public Long getObjectId()
 	{
-		return objectId;
+		if (lastAccess == null) {
+			return null;
+		}
+		return lastAccess.getObjectId();
 	}
 
-	public long getObjectType()
+	public Long getObjectType()
 	{
-		return objectType;
+		if (lastAccess == null) {
+			return null;
+		}
+		return lastAccess.getObjectType();
 	}
 
 	public String getOwner()
@@ -278,14 +305,13 @@ public class EmAnalyticsSearch implements Serializable
 		return uiHidden;
 	}
 
+	//	public void setAccessedBy(String accessedBy)
+	//	{
+	//	}
+
 	public void setAccessDate(Date accessDate)
 	{
-		this.accessDate = accessDate;
-	}
-
-	public void setAccessedBy(String accessedBy)
-	{
-		this.accessedBy = accessedBy;
+		lastAccess.setAccessDate(accessDate);
 	}
 
 	public void setCreationDate(Date creationDate)
@@ -347,6 +373,15 @@ public class EmAnalyticsSearch implements Serializable
 		this.isLocked = isLocked;
 	}
 
+	/**
+	 * @param lastAccess
+	 *            the lastAccess to set
+	 */
+	public void setLastAccess(EmAnalyticsLastAccess lastAccess)
+	{
+		this.lastAccess = lastAccess;
+	}
+
 	public void setLastModificationDate(Date lastModificationDate)
 	{
 		this.lastModificationDate = lastModificationDate;
@@ -367,6 +402,16 @@ public class EmAnalyticsSearch implements Serializable
 		this.name = name;
 	}
 
+	//	public void setObjectId(long objectId)
+	//	{
+	//		this.objectId = objectId;
+	//	}
+	//
+	//	public void setObjectType(long objectType)
+	//	{
+	//		this.objectType = objectType;
+	//	}
+
 	public void setNameNlsid(String nameNlsid)
 	{
 		this.nameNlsid = nameNlsid;
@@ -375,16 +420,6 @@ public class EmAnalyticsSearch implements Serializable
 	public void setNameSubsystem(String nameSubsystem)
 	{
 		this.nameSubsystem = nameSubsystem;
-	}
-
-	public void setObjectId(long objectId)
-	{
-		this.objectId = objectId;
-	}
-
-	public void setObjectType(long objectType)
-	{
-		this.objectType = objectType;
 	}
 
 	public void setOwner(String owner)

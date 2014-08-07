@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ import javax.persistence.NoResultException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -33,26 +33,6 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
 class EmAnalyticsObjectUtil
 {
-
-	public static boolean canDeleteCategory(long categoryId, EntityManager em)
-	{
-		EmAnalyticsCategory cat = null;
-
-		try {
-			cat = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryById").setParameter("id", categoryId)
-					.getSingleResult();
-
-			if (em.createNamedQuery("Search.getSearchListByCategory").setParameter("category", cat).getResultList().size() > 0) {
-				throw new EMAnalyticsFwkException("The category can not be deleted as category is associated with searches",
-						EMAnalyticsFwkException.ERR_DELETE_CATEGORY, null);
-			}
-		}
-		catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
-
 	public static boolean canDeleteFolder(long folderId, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
@@ -150,7 +130,8 @@ class EmAnalyticsObjectUtil
 		EmAnalyticsCategory categoryObj = new EmAnalyticsCategory();
 		categoryObj.setName(category.getName());
 		categoryObj.setDescription(category.getDescription());
-		categoryObj.setOwner("sysman"); // TO DO fix it
+		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+		categoryObj.setOwner(currentUser);
 		categoryObj.setDeleted(0);
 		if (category.getDefaultFolderId() != null) {
 			EmAnalyticsFolder defaultFolderObj = EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em);
@@ -161,7 +142,7 @@ class EmAnalyticsObjectUtil
 			categoryObj.setEmAnalyticsFolder(defaultFolderObj);
 		}
 		List<Parameter> params = category.getParameters();
-		Set<EmAnalyticsCategoryParam> paramSet = new HashSet<EmAnalyticsCategoryParam>();
+		//Set<EmAnalyticsCategoryParam> paramSet = new HashSet<EmAnalyticsCategoryParam>();
 		if (params != null && params.size() != 0) {
 			for (Parameter param : params) {
 				EmAnalyticsCategoryParam categoryParamEntity = new EmAnalyticsCategoryParam();
@@ -187,7 +168,8 @@ class EmAnalyticsObjectUtil
 		em.refresh(categoryEntity);
 		categoryEntity.setName(category.getName());
 		categoryEntity.setDescription(category.getDescription());
-		categoryEntity.setOwner("sysman"); // TO DO fix it
+		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+		categoryEntity.setOwner(currentUser);
 		categoryEntity.setDeleted(0);
 		if (category.getDefaultFolderId() != null) {
 			categoryEntity.setEmAnalyticsFolder(EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em));
@@ -269,9 +251,10 @@ class EmAnalyticsObjectUtil
 		Date utcNow = DateUtil.getCurrentUTCTime();
 		folderObj.setDescription(folder.getDescription());
 		folderObj.setName(folder.getName());
-		folderObj.setOwner("SYAMAN");//TODO fix me when security is enabled.
+		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+		folderObj.setOwner(currentUser);
 		folderObj.setCreationDate(utcNow);
-		folderObj.setLastModifiedBy("SYSMAN");//TODO fix me when security is enabled.
+		folderObj.setLastModifiedBy(currentUser);
 		folderObj.setLastModificationDate(utcNow);
 		folderObj.setUiHidden(new BigDecimal(0));
 		folderObj.setSystemFolder(new BigDecimal(0));
@@ -296,7 +279,8 @@ class EmAnalyticsObjectUtil
 		if (folderObj != null) {
 			folderObj.setName(folder.getName());
 			folderObj.setDescription(folder.getDescription());
-			folderObj.setLastModifiedBy("SYSMAN"); // fix me to do
+			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+			folderObj.setLastModifiedBy(currentUser);
 			Date utcNow = DateUtil.getCurrentUTCTime();
 			folderObj.setLastModificationDate(utcNow);
 			folderObj.setSystemFolder(folder.isSystemFolder() == true ? new BigDecimal(1) : new BigDecimal(0));
@@ -345,12 +329,11 @@ class EmAnalyticsObjectUtil
 			searchEntity.setEmAnalyticsCategory(categoryObj);
 		}
 
-		//TODO FIX this : Abhinav
-		//get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser()
 		Date utcDate = DateUtil.getCurrentUTCTime();
-		searchEntity.setOwner("SYSMAN");
+		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+		searchEntity.setOwner(currentUser);
 		searchEntity.setCreationDate(utcDate);
-		searchEntity.setLastModifiedBy("SYSMAN");
+		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcDate);
 		searchEntity.setSystemSearch(new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
@@ -381,11 +364,6 @@ class EmAnalyticsObjectUtil
 				searchEntity.getEmAnalyticsSearchParams().add(searchParamEntity);
 			}
 		}
-
-		searchEntity.setAccessDate(DateUtil.getCurrentUTCTime());
-		searchEntity.setObjectId(searchEntity.getId());
-		searchEntity.setAccessedBy("SYSMAN");
-		searchEntity.setObjectType(2);
 		return searchEntity;
 	}
 
@@ -417,11 +395,10 @@ class EmAnalyticsObjectUtil
 			searchEntity.setEmAnalyticsCategory(categoryObj);
 		}
 
-		//TODO FIX this : Abhinav
-		//get logged in user ,      // EMSecurityContext.getSecurityContext().getEMUser()
 		Date utcNow = DateUtil.getCurrentUTCTime();
-		searchEntity.setOwner("SYSMAN");
-		searchEntity.setLastModifiedBy("SYSMAN");
+		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+		searchEntity.setOwner(currentUser);
+		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcNow);
 		searchEntity.setSystemSearch(search != null && search.isSystemSearch() ? new java.math.BigDecimal(1)
 				: new java.math.BigDecimal(0));
@@ -467,10 +444,6 @@ class EmAnalyticsObjectUtil
 		existingParams.addAll(newParams.values());
 
 		searchEntity.setAccessDate(DateUtil.getCurrentUTCTime());
-		;
-		searchEntity.setObjectId(searchEntity.getId());
-		searchEntity.setAccessedBy("SYSMAN");
-		searchEntity.setObjectType(2);
 		return searchEntity;
 	}
 

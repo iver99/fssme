@@ -10,6 +10,8 @@
 			<class name="oracle.sysman.emaas.savedsearch.FolderManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.SearchParamTest" />
 			<class name="oracle.sysman.emaas.savedsearch.SearchTest" />
+			<class name="oracle.sysman.emaas.savedsearch.CategoryManagerTest" />
+			<class name="oracle.sysman.emaas.savedsearch.SearchManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.Cleanup" />
 		</classes>
 	</test> <!-- Test -->

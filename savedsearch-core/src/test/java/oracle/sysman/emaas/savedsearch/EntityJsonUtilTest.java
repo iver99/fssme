@@ -22,6 +22,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
@@ -38,6 +39,7 @@ public class EntityJsonUtilTest extends BaseTest
 	private static FolderImpl folder = new FolderImpl();
 	private static CategoryImpl category = new CategoryImpl();
 	private static URI uri = null;
+	private static String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 	static {
 		try {
 			uri = new URL("http://slc04pxi.us.oracle.com:7001/savedsearch/v1/").toURI();
@@ -60,13 +62,13 @@ public class EntityJsonUtilTest extends BaseTest
 		search.setName("Search for UT");
 		search.setDescription("desc for UT");
 		search.setQueryStr("*");
-		search.setOwner("SYSMAN");
+		search.setOwner(currentUser);
 		search.setLocked(false);
 		search.setUiHidden(false);
 		search.setSystemSearch(true);
 		search.setCreatedOn(d);
 		search.setLastModifiedOn(d);
-		search.setLastModifiedBy("SYSMAN");
+		search.setLastModifiedBy(currentUser);
 		search.setLastAccessDate(d);
 
 		List<SearchParameter> params = new ArrayList<SearchParameter>();
@@ -81,9 +83,9 @@ public class EntityJsonUtilTest extends BaseTest
 		folder.setName("Folder for UT");
 		folder.setDescription("desc for UT");
 		folder.setCreatedOn(d);
-		folder.setOwner("SYSMAN");
+		folder.setOwner(currentUser);
 		folder.setLastModifiedOn(d);
-		folder.setLastModifiedBy("SYSMAN");
+		folder.setLastModifiedBy(currentUser);
 		folder.setParentId(1);
 		folder.setSystemFolder(false);
 		folder.setUiHidden(false);
@@ -93,7 +95,7 @@ public class EntityJsonUtilTest extends BaseTest
 		category.setDescription("desc for UT");
 		category.setCreatedOn(d);
 		category.setDefaultFolderId(1);
-		category.setOwner("SYSMAN");
+		category.setOwner(currentUser);
 		List<Parameter> catParams = new ArrayList<Parameter>();
 		Parameter cp1 = new Parameter();
 		cp1.setName("CATEGORY_PARAM_VIEW_TASKFLOW");

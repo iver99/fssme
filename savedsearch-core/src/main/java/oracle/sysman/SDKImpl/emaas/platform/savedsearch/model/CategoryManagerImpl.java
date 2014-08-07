@@ -92,7 +92,7 @@ public class CategoryManagerImpl extends CategoryManager
 				throw new EMAnalyticsFwkException("Category object by Id: " + categoryId + " " + "does not exist",
 						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, null);
 			}
-			boolean bResult = EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
+			//boolean bResult = EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
 			categoryObj.setDeleted(categoryId);
 			em.getTransaction().begin();
 			if (permanently) {
@@ -104,7 +104,7 @@ public class CategoryManagerImpl extends CategoryManager
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Category object by Id: " + categoryId + " " + "does not exist");
+			_logger.error(eme.getMessage());
 			throw eme;
 		}
 		catch (Exception e) {
@@ -114,7 +114,7 @@ public class CategoryManagerImpl extends CategoryManager
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (e.getCause() != null && e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
+			else if (e.getCause() != null && e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) { // handles the scenario trying to delete category associated with search
 				_logger.error("Error while deleting the category" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException("Error while deleting the category as it has associated searches",
 						EMAnalyticsFwkException.ERR_DELETE_CATEGORY, null);
@@ -194,10 +194,10 @@ public class CategoryManagerImpl extends CategoryManager
 			EntityManager em = emf.createEntityManager();
 
 			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory").getResultList();
+			if (categories == null) {
+				categories = new ArrayList<Category>();
+			}
 			for (EmAnalyticsCategory categoriesObj : emcategories) {
-				if (categories == null) {
-					categories = new ArrayList<Category>();
-				}
 				Category category = createCategoryObject(categoriesObj, null);
 				categories.add(category);
 			}

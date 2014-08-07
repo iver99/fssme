@@ -14,6 +14,7 @@ import javax.persistence.PersistenceException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -37,7 +38,7 @@ public class SearchManagerImpl extends SearchManager
 	private static final Logger _logger = Logger.getLogger(SearchManagerImpl.class);
 
 	public static final SearchManagerImpl _instance = new SearchManagerImpl();
-	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder and e.deleted=0 ";
+	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.deleted=0 ";
 	private static final String FILTER_BY_CATEGORY = "and e.emAnalyticsCategory = :category ";
 	private static final String SEARCH_ENT_PREFIX = "e.";
 	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.accessDate DESC ";
@@ -46,7 +47,7 @@ public class SearchManagerImpl extends SearchManager
 
 	/**
 	 * Get SearchManagerImpl singleton instance.
-	 *
+	 * 
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
@@ -234,8 +235,8 @@ public class SearchManagerImpl extends SearchManager
 			EntityManagerFactory emf;
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
-			searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName").setParameter("folder", folder)
+			//EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
+			searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName").setParameter("folderId", folderId)
 					.setParameter("searchName", name).getSingleResult();
 
 			return createSearchObject(searchEntity, null);
@@ -302,9 +303,9 @@ public class SearchManagerImpl extends SearchManager
 			EntityManagerFactory emf;
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsCategory category = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
+			//			EmAnalyticsCategory category = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByCategory")
-					.setParameter("category", category).getResultList();
+					.setParameter("categoryId", categoryId).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
 				em.refresh(searchObj);
 				rtnobj.add(createSearchObject(searchObj, null));
@@ -342,9 +343,9 @@ public class SearchManagerImpl extends SearchManager
 			EntityManagerFactory emf;
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
+			//EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByFolder")
-					.setParameter("folder", folder).getResultList();
+					.setParameter("folderId", folderId).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
 				rtnobj.add(createSearchObject(searchObj, null));
 			}
@@ -382,8 +383,8 @@ public class SearchManagerImpl extends SearchManager
 			StringBuilder query = new StringBuilder(FOLDER_ORDERBY);
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
-			EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
-			searchList = em.createQuery(query.toString()).setParameter("folder", folder).getResultList();
+			//EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
+			searchList = em.createQuery(query.toString()).setParameter("folderId", folderId).getResultList();
 
 			for (EmAnalyticsSearch searchObj : searchList) {
 				rtnobj.add(createSearchObject(searchObj, null));
@@ -680,6 +681,7 @@ public class SearchManagerImpl extends SearchManager
 			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
 			em.getTransaction().begin();
 			em.persist(searchEntity);
+			updateSearchLastAccess(searchEntity);
 			em.getTransaction().commit();
 			em.refresh(searchEntity);
 			return createSearchObject(searchEntity, null);
@@ -892,6 +894,19 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 
+	}
+
+	private void updateSearchLastAccess(EmAnalyticsSearch search)
+	{
+		if (search == null) {
+			return;
+		}
+		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+		if (search.getLastAccess() == null) {
+			search.setLastAccess(new EmAnalyticsLastAccess(search.getId(), currentUser,
+					EmAnalyticsLastAccess.LAST_ACCESS_TYPE_SEARCH));
+		}
+		search.setAccessDate(DateUtil.getCurrentUTCTime());
 	}
 
 	/*
