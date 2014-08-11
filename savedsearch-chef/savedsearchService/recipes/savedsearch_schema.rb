@@ -4,46 +4,7 @@
 # This recipe creates DB schema
 #
 
-#
-# Once the database instance is found, process the output
-# file to glean the parameters where 
-# we can then assign to the node attributes for
-# subsequent processing
-#
-# Then, set the connection information based
-# on the looked up database instance
-#
-ruby_block "get database entity" do
-  block do
-    if node["is_db_lookup"] == "true"
-    node.default["databaseInfos"] = `cat #{node["log_dir"]}/savedSearchDatabaseLookup.out`
-    databaseInfos =  node["databaseInfos"]
-    databaseInfos = databaseInfos.tr("\n","").split(/;\s*/)
-    for databaseInfo in databaseInfos
-      index = databaseInfo.index(':')
-      if index > 0 and index < databaseInfo.length-1
-        infokey = databaseInfo[0,index]
-        infovalue = databaseInfo[index+1, databaseInfo.length-index-1]
-        puts "debugging with "+infokey+":"+infovalue
-        if infokey == "db_host"
-          node.default["db_host"] = infovalue
-        elsif infokey == "db_port"
-          node.default["db_port"] = infovalue
-        elsif infokey == "db_sid"
-          node.default["db_sid"] = infovalue
-        elsif infokey == "sys_password"
-          node.default["db_syspassword"] = infovalue
-        elsif infokey == "db_service"
-          node.default["db_service"] = infovalue
-        end
-      end
-    end
-    node.default["db_connectinfo"] = "jdbc:oracle:thin:@#{node["db_host"]}:#{node["db_port"]}:#{node["db_sid"]}"
-    node.default["db_sysuser"] = "sys"
-  end
-  end
-  action :create
-end
+include_recipe 'emsaas-weblogic::datasource_dependency'
 
 ruby_block "set_LDLibrary" do
   block do

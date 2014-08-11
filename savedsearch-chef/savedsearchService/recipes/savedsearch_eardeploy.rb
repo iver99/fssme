@@ -41,34 +41,7 @@ end
 
 include_recipe 'emsaas-weblogic::default'
 
-ruby_block "get database entity" do
-  block do
-    if is_lookup == "true"
-    node.default["databaseInfos"] = `cat #{node["log_dir"]}/savedSearchDatabaseLookup.out`
-    databaseInfos =  node["databaseInfos"]
-    databaseInfos = databaseInfos.tr("\n","").split(/;\s*/)
-    for databaseInfo in databaseInfos
-      index = databaseInfo.index(':')
-      if index > 0 and index < databaseInfo.length-1
-        infokey = databaseInfo[0,index]
-        infovalue = databaseInfo[index+1, databaseInfo.length-index-1]
-        puts "debugging with "+infokey+":"+infovalue
-        if infokey == "db_host"
-          node.default["db_host"] = infovalue
-        elsif infokey == "db_port"
-          node.default["db_port"] = infovalue
-        elsif infokey == "db_sid"
-          node.default["db_sid"] = infovalue
-        elsif infokey == "db_service"
-          node.default["db_service"] = infovalue
-        end
-      end
-    end
-    node.default["db_connectinfo"] = "jdbc:oracle:thin:@#{node["db_host"]}:#{node["db_port"]}:#{node["db_sid"]}"
-  end
-  end
-  action :create
-end
+include_recipe 'emsaas-weblogic::datasource_dependency'
 
 template "#{node["log_dir"]}/wls_datasources_savedSearch.py" do
     source "wls_datasources.py.erb"
