@@ -26,6 +26,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 
 @XmlRootElement(name = "FolderSet")
 @XmlAccessorType (XmlAccessType.NONE)
@@ -34,17 +35,17 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 public class FolderSet
 {
     
-    private List<FolderImpl> Folder = null;
+    private List<FolderDetails> Folder = null;
  
     @XmlElement(name = "Folder")
    // @XmlElementWrapper(name = "FolderSet")    
-    public List<FolderImpl> getFolderSet() {
+    public List<FolderDetails> getFolderSet() {
     	if(Folder==null)
-    		Folder = new ArrayList<FolderImpl>();
+    		Folder = new ArrayList<FolderDetails>();
         return Folder;
     }
  
-    public void setFolderSet(List<FolderImpl> d) {
+    public void setFolderSet(List<FolderDetails> d) {
         this.Folder = d;
     }
     }

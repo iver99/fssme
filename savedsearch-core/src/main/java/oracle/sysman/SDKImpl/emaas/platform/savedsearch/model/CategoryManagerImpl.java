@@ -343,18 +343,21 @@ public class CategoryManagerImpl extends CategoryManager
 		boolean bResult = false;
 		EntityManagerFactory emf = null;
 		EntityManager em = null;
+		Category category=null;
 		List<ImportCategoryImpl> importedList = new ArrayList<ImportCategoryImpl>();
 		try {
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
 
 			em.getTransaction().begin();
-			for (Category category : categories) {
+			for (ImportCategoryImpl categorytmp : categories) {
 				try {
+					category =categorytmp.getCategoryDetails();
 					if (category.getId() != null && category.getId() > 0) {
 						EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
 						em.merge(emCategory);
-						importedList.add((ImportCategoryImpl) createCategoryObject(emCategory, category));
+						categorytmp.setId((int)emCategory.getCategoryId());
+						importedList.add(categorytmp);
 						iCount++;
 					}
 					else {
@@ -362,14 +365,15 @@ public class CategoryManagerImpl extends CategoryManager
 						try {
 							categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
 									.setParameter("categoryName", category.getName()).getSingleResult();
-							importedList.add((ImportCategoryImpl) createCategoryObject(categoryObj, category));
+							categorytmp.setId((int)categoryObj.getCategoryId());
+							importedList.add(categorytmp);
 						}
 						catch (NoResultException e) {
 							categoryObj = null;
 						}
 						if (categoryObj == null) {
 							if (category instanceof ImportCategoryImpl) {
-								Object obj = ((ImportCategoryImpl) category).getFolder();
+								Object obj = ((ImportCategoryImpl) category).getFolderDetails();
 								if (obj != null) {
 
 									if (obj instanceof Folder) {
@@ -396,7 +400,7 @@ public class CategoryManagerImpl extends CategoryManager
 											category.setDefaultFolderId((Integer) obj);
 										}
 										else {
-											importedList.add((ImportCategoryImpl) category);
+											importedList.add(categorytmp);
 											continue;
 										}
 									}
@@ -404,7 +408,8 @@ public class CategoryManagerImpl extends CategoryManager
 							}
 							EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
 							em.persist(emCategory);
-							importedList.add((ImportCategoryImpl) createCategoryObject(emCategory, category));
+							categorytmp.setId((int)emCategory.getCategoryId());
+							importedList.add(categorytmp);							
 							iCount++;
 						}
 					}

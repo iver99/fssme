@@ -8,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -286,20 +287,22 @@ public class FolderManagerImpl extends FolderManager
 
 	}
 
-	public List<FolderImpl> saveMultipleFolders(List<FolderImpl> folders) throws Exception
+	public List<FolderImpl> saveMultipleFolders(List<FolderDetails> folders) throws Exception
 	{
 		int iCount = 0;
 		boolean bCommit = true;
 		EmAnalyticsFolder folderObj = null;
 		EntityManagerFactory emf = null;
 		EntityManager em = null;
+		Folder folder=null;
 		List<FolderImpl> importedList = new ArrayList<FolderImpl>();
 		try {
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
-			for (Folder folder : folders) {
+			for (FolderDetails folderDet : folders) {
 				try {
+					folder = folderDet.getFolder();
 					if (folder.getId() != null && folder.getId() > 0) {
 						EmAnalyticsFolder emFolder = EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, em);
 						em.merge(emFolder);

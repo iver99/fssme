@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="Folder" type="folderImpl"/>
+  <xs:element name="Folder" type="folderDetails"/>
   <xs:element name="FolderSet" type="folderSet"/>
   <xs:complexType name="folderSet">
     <xs:sequence>
-      <xs:element name="Folder" type="folderImpl" nillable="true" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="Folder" type="folderDetails" nillable="true" minOccurs="1" maxOccurs="unbounded"/>
       <xs:element name="FolderSet" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="FolderImpl" type="folderImpl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="FolderImpl" type="folderDetails" minOccurs="0" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="folderImpl">
-    <xs:sequence>
-      <xs:element name="id" type="xs:int" minOccurs="0"/>
-      <xs:element name="name" minOccurs="1" nillable="false">
+  <xs:complexType name="folderDetails">
+    <xs:all>
+      <xs:element name="Id" type="xs:int" minOccurs="0"/>
+      <xs:element name="Name" minOccurs="1" nillable="false">
 		  <xs:simpleType>
 		     <xs:restriction base="xs:string">
 		       <xs:minLength value="1"/>
 		     </xs:restriction>
 		  </xs:simpleType>
 		</xs:element>     
-      <xs:element name="description" type="xs:string" nillable="true" minOccurs="0"/>
-      <xs:element name="parentId" type="xs:int" minOccurs="0"/>
-      <xs:element name="uiHidden" type="xs:boolean"  />
-    </xs:sequence>
+      <xs:element name="Description" type="xs:string" nillable="true" minOccurs="0"/>
+      <xs:element name="ParentId" type="xs:int" minOccurs="0"/>
+      <xs:element name="UiHidden" type="xs:boolean"  />
+    </xs:all>
   </xs:complexType>
 </xs:schema>
 

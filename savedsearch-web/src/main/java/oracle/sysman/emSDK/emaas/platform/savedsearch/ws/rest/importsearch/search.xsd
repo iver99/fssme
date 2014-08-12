@@ -1,120 +1,123 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <xs:element name="Folder" type="folderImpl"/>
-
   <xs:element name="SearchSet" type="searchSet"/>
+  
 
-  <xs:element name="searchImpl" type="searchImpl"/>
 
   <xs:complexType name="searchSet">
     <xs:sequence>
-      <xs:element name="search" type="importSearchImpl" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Search" type="importSearchImpl" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="importSearchImpl">
-    <xs:complexContent>
-      <xs:extension base="searchImpl">
-        <xs:sequence>
-          <xs:choice>
-            <xs:element name="Category" type="categoryImpl"/>
-            <xs:element name="categoryId" type="xs:int"/>
-          </xs:choice>
-          <xs:choice>
-            <xs:element ref="Folder"/>
-            <xs:element name="folderId" type="xs:int"/>
-          </xs:choice>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
+  
 
-  <xs:complexType name="searchImpl">
-    <xs:sequence>
-      <xs:element name="id" type="xs:int" minOccurs="0"/>
-      <xs:element name="name" minOccurs="1" nillable="false">
+  <xs:complexType name="importSearchImpl">
+    <xs:all>
+     <xs:element name="Id" type="xs:int" minOccurs="0"/>
+      <xs:element name="Name" minOccurs="1" nillable="false">
 		  <xs:simpleType>
 		     <xs:restriction base="xs:string">
 		       <xs:minLength value="1"/>
 		     </xs:restriction>
 		  </xs:simpleType>
 		</xs:element>
-      <xs:element name="description" type="xs:string" minOccurs="0"/>      
-      <xs:element name="metadata" type="xs:string" minOccurs="0"/>
-      <xs:element name="queryStr" type="xs:string" minOccurs="0"/>
-      <xs:element name="locked" type="xs:boolean" minOccurs="0"/>
-      <xs:element name="uiHidden" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="Description" type="xs:string" minOccurs="0"/>      
+      <xs:element name="Metadata" type="xs:string" minOccurs="0"/>
+      <xs:element name="QueryStr" type="xs:string" minOccurs="0"/>
+      <xs:element name="Locked" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="UiHidden" type="xs:boolean" minOccurs="0"/>
       <xs:element name="SearchParameters" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="SearchParameter" type="searchParameter" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="SearchParameter" type="searchParameterDetails" minOccurs="0" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-    </xs:sequence>
+      <xs:element ref="categoryDet" />
+      <xs:element ref="folderDet" />  
+    </xs:all>
   </xs:complexType>
 
-  <xs:complexType name="categoryImpl">
-    <xs:sequence>
-      <xs:element name="id" type="xs:int" minOccurs="0"/>
-      <xs:element name="name" minOccurs="1" nillable="false">
+
+    <xs:element name="categoryDet" abstract="true" />
+    <xs:element name="Category" type="categoryDetails"   substitutionGroup="categoryDet"  />
+    <xs:element name="CategoryId" type="xs:int" substitutionGroup="categoryDet"/>
+    
+    
+    <xs:element name="folderDet" abstract="true" />
+    <xs:element name="Folder"  type="folderDetails"  substitutionGroup="folderDet"  />
+    <xs:element name="FolderId" type="xs:int" substitutionGroup="folderDet"/>
+
+
+  
+<xs:complexType name="categoryDetails">
+    <xs:all>      
+      <xs:element name="Name" minOccurs="1" nillable="false">
 		  <xs:simpleType>
 		     <xs:restriction base="xs:string">
 		       <xs:minLength value="1"/>
 		     </xs:restriction>
 		  </xs:simpleType>
 		</xs:element>
-      <xs:element name="description" type="xs:string" minOccurs="0"/>
-      <xs:element name="defaultFolderId" type="xs:int" minOccurs="0"/>
-      <xs:element name="parameters" minOccurs="0">
+      <xs:element name="Description" type="xs:string" minOccurs="0"/>
+      <xs:element name="DefaultFolderId" type="xs:int" minOccurs="0"/>     
+      <xs:element name="Parameters" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="parameter" type="parameter" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Parameter" type="parameter" minOccurs="0" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-    </xs:sequence>
+    </xs:all>
   </xs:complexType>
 
-  <xs:complexType name="parameter">
-    <xs:sequence>
-      <xs:element name="name" minOccurs="1" nillable="false">
-		  <xs:simpleType>
-		     <xs:restriction base="xs:string">
-		       <xs:minLength value="1"/>
-		     </xs:restriction>
-		  </xs:simpleType>
-		</xs:element>
-      <xs:element name="value" type="xs:string"  minOccurs="0"/>
-      <xs:element name="type" type="parameterType"/>
-    </xs:sequence>
-  </xs:complexType>
 
-  <xs:complexType name="folderImpl">
-    <xs:sequence>
-      <xs:element name="id" type="xs:int" minOccurs="0"/>
-      <xs:element name="name" minOccurs="1" nillable="false">
+<xs:complexType name="folderDetails">
+    <xs:all>      
+      <xs:element name="Name" minOccurs="1" nillable="false">
 		  <xs:simpleType>
 		     <xs:restriction base="xs:string">
 		       <xs:minLength value="1"/>
 		     </xs:restriction>
 		  </xs:simpleType>
 		</xs:element>      
-      <xs:element name="description" type="xs:string" nillable="true" minOccurs="0"/>
-      <xs:element name="parentId" type="xs:int" minOccurs="0"/>      
-      <xs:element name="uiHidden" type="xs:boolean"/>
-    </xs:sequence>
+      <xs:element name="Description" type="xs:string" nillable="true" minOccurs="0"/>
+      <xs:element name="ParentId" type="xs:int" minOccurs="0"/>      
+      <xs:element name="UiHidden" type="xs:boolean"/>
+    </xs:all>
+  </xs:complexType>
+       
+
+  <xs:complexType name="searchParameterDetails">    
+        <xs:all>
+        <xs:element name="Name" minOccurs="1" nillable="false">
+		  <xs:simpleType>
+		     <xs:restriction base="xs:string">
+		       <xs:minLength value="1"/>
+		     </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+     	 <xs:element name="Value" type="xs:string" minOccurs="0"/>
+      	 <xs:element name="Type" type="parameterType"/>
+          <xs:element name="Attributes" type="xs:string" minOccurs="0"/>
+        </xs:all>
+     
   </xs:complexType>
 
-  <xs:complexType name="searchParameter">
-    <xs:complexContent>
-      <xs:extension base="parameter">
-        <xs:sequence>
-          <xs:element name="attributes" type="xs:string" minOccurs="0"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
+  <xs:complexType name="parameter">
+    <xs:sequence>
+       <xs:element name="Name" minOccurs="1" nillable="false">
+		  <xs:simpleType>
+		     <xs:restriction base="xs:string">
+		       <xs:minLength value="1"/>
+		     </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+      <xs:element name="Value" type="xs:string" minOccurs="0"/>
+      <xs:element name="Type" type="parameterType"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:simpleType name="parameterType">
@@ -124,4 +127,3 @@
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>
-

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CategorySet> 
+  <Category>
+     <Name>MyCategory</Name> 
+  </Category>  
+  <Category>
+     <Name>MyCategory1</Name> 
+     <DefaultFolderId>1</DefaultFolderId>
+  </Category>
+   <Category>
+     <Name>MyCategory3</Name> 
+     <Parameters>
+       <Parameter>
+       	<Name>Param1</Name> 
+       </Parameter>
+     </Parameters>
+     <Folder>
+      <Name>Category1</Name>
+      <UiHidden>false</UiHidden>
+    </Folder>
+  </Category>
+</CategorySet>

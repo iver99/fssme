@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportCategoryImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
@@ -46,9 +47,9 @@ public class ImportCategorySet
 	 *            <font color="DarkCyan">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;CategorySet&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Category&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Category123&lt;/name&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;defaultFolderId&gt;1&lt;/
-	 *            defaultFolderId&gt; &nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- optional, if we don't specify it will take '1' as default
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Category123&lt;/Name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;DefaultFolderId&gt;1&lt;/
+	 *            DefaultFolderId&gt; &nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- optional, if we don't specify it will insert null 
 	 *            else it will take the one which is as input --&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/CategorySet&gt;</font><br>
@@ -107,7 +108,7 @@ public class ImportCategorySet
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			CategorySet categories = (CategorySet) JAXBUtil
-					.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(CategorySet.class));
+					.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(ObjectFactory.class));
 			List<ImportCategoryImpl> list = categories.getCategorySet();
 			if (list.size() == 0) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
@@ -147,9 +148,9 @@ public class ImportCategorySet
 				return true;
 			}
 
-			if (obj.getFolder() != null) {
-				if (obj.getFolder() instanceof FolderImpl) {
-					FolderImpl objFolder = (FolderImpl) obj.getFolder();
+			if (obj.getFolderDet()!= null) {
+				if (obj.getFolderDetails() instanceof FolderImpl) {
+					FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
 					if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
 						return true;
 					}

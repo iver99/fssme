@@ -346,6 +346,7 @@ public class SearchManagerImpl extends SearchManager
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByFolder")
 					.setParameter("folderId", folderId).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
+				em.refresh(searchObj);
 				rtnobj.add(createSearchObject(searchObj, null));
 			}
 
@@ -386,6 +387,7 @@ public class SearchManagerImpl extends SearchManager
 			searchList = em.createQuery(query.toString()).setParameter("folderId", folderId).getResultList();
 
 			for (EmAnalyticsSearch searchObj : searchList) {
+				em.refresh(searchObj);
 				rtnobj.add(createSearchObject(searchObj, null));
 			}
 
@@ -497,7 +499,7 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 	}
-
+	
 	public List<ImportSearchImpl> saveMultipleSearch(List<ImportSearchImpl> searchList) throws Exception
 	{
 		int iCount = 0;
@@ -510,26 +512,28 @@ public class SearchManagerImpl extends SearchManager
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
-			for (Search search : searchList) {
-				Object obj = ((ImportSearchImpl) search).getFolderDetails();
-				Object cateObj = ((ImportSearchImpl) search).getCategoryDetails();
+			for (ImportSearchImpl tmpImportSrImpl : searchList) {
+				Search search = tmpImportSrImpl.getSearch();
+				Object obj = tmpImportSrImpl.getFolderDetails();
+				Object cateObj = tmpImportSrImpl.getCategoryDetails();
 				try {
 					if (search.getId() != null && search.getId() > 0) {
 						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
 						em.merge(emSearch);
-						importedList.add((ImportSearchImpl) createSearchObject(emSearch, search));
+						tmpImportSrImpl.setId((int)emSearch.getId());
+						importedList.add(tmpImportSrImpl);
 						iCount++;
 					}
 					else {
 						EmAnalyticsSearch searchEntity = null;
 						try {
 							if (obj != null && obj instanceof Integer) {
-								long id = ((Integer) obj).longValue();
-								EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(id, em);
+								long id = ((Integer) obj).longValue();								
 								searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
-										.setParameter("folder", folderObj).setParameter("searchName", search.getName())
+										.setParameter("folderId", id).setParameter("searchName", search.getName())
 										.getSingleResult();
-								importedList.add((ImportSearchImpl) createSearchObject(searchEntity, search));
+								tmpImportSrImpl.setId((int)searchEntity.getId());
+								importedList.add(tmpImportSrImpl);								
 							}
 						}
 						catch (NoResultException e) {
@@ -551,7 +555,8 @@ public class SearchManagerImpl extends SearchManager
 										search.setFolderId((Integer) obj);
 									}
 									else {
-										importedList.add((ImportSearchImpl) search);
+										tmpImportSrImpl.setId((int)search.getId());
+										importedList.add(tmpImportSrImpl);										
 										continue;
 									}
 								}
@@ -565,8 +570,9 @@ public class SearchManagerImpl extends SearchManager
 								if (categoryObj != null) {
 									search.setCategoryId((Integer) cateObj);
 								}
-								else {
-									importedList.add((ImportSearchImpl) search);
+								else {									
+									tmpImportSrImpl.setId((int)search.getId());
+									importedList.add(tmpImportSrImpl);			
 									continue;
 								}
 							}
@@ -603,17 +609,17 @@ public class SearchManagerImpl extends SearchManager
 							if (search != null) {
 								if (search.getFolderId() != null) {
 									try {
-										EmAnalyticsFolder fObj = EmAnalyticsObjectUtil.getFolderById(search.getFolderId()
-												.longValue(), em);
+										
 										searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
-												.setParameter("folder", fObj).setParameter("searchName", search.getName())
+												.setParameter("folderId", search.getFolderId()).setParameter("searchName", search.getName())
 												.getSingleResult();
 									}
 									catch (NoResultException e) {
-
+												
 									}
 									if (searchEntity != null) {
-										importedList.add((ImportSearchImpl) createSearchObject(searchEntity, search));
+										tmpImportSrImpl.setId((int)searchEntity.getId());
+										importedList.add(tmpImportSrImpl);
 										continue;
 									}
 								}
@@ -621,7 +627,7 @@ public class SearchManagerImpl extends SearchManager
 
 							if (obj instanceof FolderImpl) {
 								if (search.getFolderId() == null) {
-									folder = getEmAnalyticsFolderBySearch((ImportSearchImpl) search, em);
+									folder = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
 									em.persist(folder);
 									search.setFolderId((int) folder.getFolderId());
 								}
@@ -629,7 +635,7 @@ public class SearchManagerImpl extends SearchManager
 
 							if (cateObj instanceof CategoryImpl) {
 								if (search.getCategoryId() == null) {
-									EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch((ImportSearchImpl) search, em);
+									EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
 									em.persist(iCategory);
 									search.setCategoryId((int) iCategory.getCategoryId());
 								}
@@ -637,7 +643,8 @@ public class SearchManagerImpl extends SearchManager
 
 							EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
 							em.persist(emSearch);
-							importedList.add((ImportSearchImpl) createSearchObject(emSearch, search));
+							tmpImportSrImpl.setId((int)emSearch.getId());
+							importedList.add(tmpImportSrImpl);
 							iCount++;
 						}
 					}
@@ -669,7 +676,9 @@ public class SearchManagerImpl extends SearchManager
 		return importedList;
 	}
 
-	@Override
+
+
+		@Override
 	public Search saveSearch(Search search) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
@@ -834,8 +843,8 @@ public class SearchManagerImpl extends SearchManager
 	{
 		EmAnalyticsCategory category = null;
 		try {
-			if (search.getCategoryId() != null) {
-				category = EmAnalyticsObjectUtil.getCategoryById(search.getCategoryId(), em);
+			if (search.getSearch().getCategoryId() != null) {
+				category = EmAnalyticsObjectUtil.getCategoryById(search.getSearch().getCategoryId(), em);
 			}
 			else {
 				if (search.getCategoryDetails() != null) {
@@ -854,8 +863,8 @@ public class SearchManagerImpl extends SearchManager
 	{
 		EmAnalyticsFolder folder = null;
 		try {
-			if (search.getFolderId() != null) {
-				folder = EmAnalyticsObjectUtil.getFolderById(search.getFolderId(), em);
+			if (search.getSearch().getFolderId() != null) {
+				folder = EmAnalyticsObjectUtil.getFolderById(search.getSearch().getFolderId(), em);
 			}
 			else {
 				if (search.getFolderDetails() != null) {
@@ -877,7 +886,6 @@ public class SearchManagerImpl extends SearchManager
 		}
 		return folder;
 	}
-
 	private void OrderBybuilder(StringBuilder query, String[] orderBy)
 	{
 		// incidentally the field names for EmAnalyticsSearch and SearchImpl is
