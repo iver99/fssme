@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -122,12 +121,8 @@ public class EmAnalyticsSearch implements Serializable
 	@PrivateOwned
 	private Set<EmAnalyticsSearchParam> emAnalyticsSearchParams;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumns(value = {
-			@JoinColumn(name = "SEARCH_ID", referencedColumnName = "OBJECT_ID", insertable = false, updatable = false),
-			@JoinColumn(name = "OWNER", referencedColumnName = "ACCESSED_BY", insertable = false, updatable = false),
-			@JoinColumn(name = "'2'", referencedColumnName = "OBJECT_TYPE", insertable = false, updatable = false) })
-	private EmAnalyticsLastAccess lastAccess;
+	@OneToOne(mappedBy = "emAnalyticsSearch", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private EmAnalyticsSearchLastAccess lastAccess;
 
 	/*@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "OBJECT_ID")
 	private long objectId;
@@ -164,9 +159,6 @@ public class EmAnalyticsSearch implements Serializable
 
 	public Date getCreationDate()
 	{
-		if (lastAccess == null) {
-			return null;
-		}
 		return creationDate;
 	}
 
@@ -311,6 +303,10 @@ public class EmAnalyticsSearch implements Serializable
 
 	public void setAccessDate(Date accessDate)
 	{
+		if (lastAccess == null) {
+			lastAccess = new EmAnalyticsSearchLastAccess(getId(), getOwner());
+			lastAccess.setEmAnalyticsSearch(this);
+		}
 		lastAccess.setAccessDate(accessDate);
 	}
 
@@ -373,14 +369,14 @@ public class EmAnalyticsSearch implements Serializable
 		this.isLocked = isLocked;
 	}
 
-	/**
-	 * @param lastAccess
-	 *            the lastAccess to set
-	 */
-	public void setLastAccess(EmAnalyticsLastAccess lastAccess)
-	{
-		this.lastAccess = lastAccess;
-	}
+	//	/**
+	//	 * @param lastAccess
+	//	 *            the lastAccess to set
+	//	 */
+	//	public void setLastAccess(EmAnalyticsLastAccess lastAccess)
+	//	{
+	//		this.lastAccess = lastAccess;
+	//	}
 
 	public void setLastModificationDate(Date lastModificationDate)
 	{

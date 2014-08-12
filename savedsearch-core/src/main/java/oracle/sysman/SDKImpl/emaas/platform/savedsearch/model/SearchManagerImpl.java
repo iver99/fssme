@@ -14,7 +14,6 @@ import javax.persistence.PersistenceException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -41,7 +40,7 @@ public class SearchManagerImpl extends SearchManager
 	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.deleted=0 ";
 	private static final String FILTER_BY_CATEGORY = "and e.emAnalyticsCategory = :category ";
 	private static final String SEARCH_ENT_PREFIX = "e.";
-	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.accessDate DESC ";
+	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.lastAccess.accessDate DESC ";
 
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
@@ -901,11 +900,11 @@ public class SearchManagerImpl extends SearchManager
 		if (search == null) {
 			return;
 		}
-		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-		if (search.getLastAccess() == null) {
-			search.setLastAccess(new EmAnalyticsLastAccess(search.getId(), currentUser,
-					EmAnalyticsLastAccess.LAST_ACCESS_TYPE_SEARCH));
-		}
+		//		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+		//		if (search.getLastAccess() == null) {
+		//			search.setLastAccess(new EmAnalyticsLastAccess(search.getId(), currentUser,
+		//					EmAnalyticsLastAccess.LAST_ACCESS_TYPE_SEARCH));
+		//		}
 		search.setAccessDate(DateUtil.getCurrentUTCTime());
 	}
 

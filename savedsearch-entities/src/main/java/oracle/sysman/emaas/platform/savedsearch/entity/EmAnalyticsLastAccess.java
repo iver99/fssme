@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -17,11 +19,13 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "EMS_ANALYTICS_LAST_ACCESS")
+@Inheritance
+@DiscriminatorColumn(name = "OBJECT_TYPE")
 public class EmAnalyticsLastAccess implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	public static final int LAST_ACCESS_TYPE_SEARCH = 2;
+	public static final long LAST_ACCESS_TYPE_SEARCH = 2L;
 
 	@EmbeddedId
 	private EmAnalyticsLastAccessPK id;

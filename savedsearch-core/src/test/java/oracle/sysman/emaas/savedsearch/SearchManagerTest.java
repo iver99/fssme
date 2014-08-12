@@ -64,6 +64,33 @@ public class SearchManagerTest extends BaseTest
 		return search;
 	}
 
+	/*
+	 * Use this method to create 1000000 searches for performance test purpose
+	 */
+	//@Test
+	public void testCreateSearchPerformance() throws EMAnalyticsFwkException
+	{
+		FolderManagerImpl fm = FolderManagerImpl.getInstance();
+		Folder folder = null;
+		for (int i = 0; i < 10000; i++) {
+			folder = SearchManagerTest.createTestFolder(fm, "FolderTest " + i + " " + System.currentTimeMillis());
+		}
+
+		CategoryManager cm = CategoryManagerImpl.getInstance();
+		Category cat = null;
+		for (int i = 0; i < 1000; i++) {
+			cat = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest " + i + " " + System.currentTimeMillis());
+		}
+
+		SearchManager sm = SearchManager.getInstance();
+		System.out.println("Start to create 1000 searches");
+		long start = System.currentTimeMillis();
+		for (int i = 1; i < 1000000; i++) {
+			SearchManagerTest.createTestSearch(sm, folder, cat, "Search for performance " + i + " " + System.currentTimeMillis());
+		}
+		System.out.println("Total time to create 10000 searches is " + (System.currentTimeMillis() - start));
+	}
+
 	@Test
 	public void testCRUDOnSearchLastAccess() throws EMAnalyticsFwkException
 	{
@@ -188,6 +215,92 @@ public class SearchManagerTest extends BaseTest
 
 		sm.deleteSearch(search1.getId(), true);
 		sm.deleteSearch(search2.getId(), true);
+		cm.deleteCategory(cat.getId(), true);
+		fm.deleteFolder(folder.getId(), true);
+	}
+
+	@Test
+	public void testGetSearchListByLastAccessDate() throws EMAnalyticsFwkException
+	{
+		FolderManagerImpl fm = FolderManagerImpl.getInstance();
+		Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest" + System.currentTimeMillis());
+
+		CategoryManager cm = CategoryManagerImpl.getInstance();
+		Category cat = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest" + System.currentTimeMillis());
+
+		SearchManager sm = SearchManager.getInstance();
+		Search search1 = SearchManagerTest.createTestSearch(sm, folder, cat, "Search1 Name " + System.currentTimeMillis());
+		Search search2 = SearchManagerTest.createTestSearch(sm, folder, cat, "Search2 Name " + System.currentTimeMillis());
+
+		List<Search> searches = sm.getSearchListByLastAccessDate(2);
+		AssertJUnit.assertNotNull(searches);
+		AssertJUnit.assertEquals(2, searches.size());
+		AssertJUnit.assertEquals(search2.getId(), searches.get(0).getId());
+		AssertJUnit.assertEquals(search1.getId(), searches.get(1).getId());
+
+		search1.setName("search1 name updated");
+		sm.editSearch(search1);
+		searches = sm.getSearchListByLastAccessDate(2);
+		AssertJUnit.assertNotNull(searches);
+		AssertJUnit.assertEquals(2, searches.size());
+		AssertJUnit.assertEquals(search1.getId(), searches.get(0).getId());
+		AssertJUnit.assertEquals(search2.getId(), searches.get(1).getId());
+
+		sm.deleteSearch(search2.getId(), true);
+		sm.deleteSearch(search1.getId(), true);
+		cm.deleteCategory(cat.getId(), true);
+		fm.deleteFolder(folder.getId(), true);
+	}
+
+	/*
+	 * Use this method to see how much time is needed to query a search from 1 million searches.
+	 * Several manual steps are needed before run this method
+	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
+	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
+	 * 2. query your unit test database and change the searchId, searchName and folderId in the method, as
+	 * it's found the JPA cache (or database cache?) have extreme impact on the result
+	 * 3. un-comment the @Test and run with JUnit
+	 */
+	//@Test
+	public void testQueryPerformance() throws EMAnalyticsFwkException
+	{
+		int searchId = 321;
+		String searchName = "Search1 Name";
+		int folderId = 2;
+		FolderManagerImpl fm = FolderManagerImpl.getInstance();
+		Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest for query " + System.currentTimeMillis());
+
+		CategoryManager cm = CategoryManagerImpl.getInstance();
+		Category cat = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest for query " + System.currentTimeMillis());
+
+		SearchManager sm = SearchManager.getInstance();
+		Search search = SearchManagerTest
+				.createTestSearch(sm, folder, cat, "Search Name for query " + System.currentTimeMillis());
+
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		emf.createEntityManager().clear();
+		emf.getCache().evictAll();
+
+		long start = System.currentTimeMillis();
+		//sm.getSearch(search.getId());
+		sm.getSearch(searchId);
+		long end = System.currentTimeMillis();
+		System.out.println("Time spent to query search by ID from 1,000,000 searches: " + (end - start) + "ms");
+
+		start = System.currentTimeMillis();
+		//sm.getSearchByName(search.getName(), folder.getId());
+		sm.getSearchByName(searchName, folderId);
+		end = System.currentTimeMillis();
+		System.out.println("Time spent to query search by name from 1,000,000 searches: " + (end - start) + "ms");
+
+		start = System.currentTimeMillis();
+		//List<Search> searches = sm.getSearchListByFolderId(folder.getId());
+		List<Search> searches = sm.getSearchListByFolderId(folderId);
+		end = System.currentTimeMillis();
+		System.out.println("Time spent to get search list by folder id from 1,000,000 searches: " + (end - start) + "ms");
+		System.out.println("amount of searches " + searches.size());
+
+		sm.deleteSearch(search.getId(), true);
 		cm.deleteCategory(cat.getId(), true);
 		fm.deleteFolder(folder.getId(), true);
 	}
