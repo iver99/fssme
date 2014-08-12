@@ -49,10 +49,34 @@ public class ImportCategorySet
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Category123&lt;/Name&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;DefaultFolderId&gt;1&lt;/
-	 *            DefaultFolderId&gt; &nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- optional, if we don't specify it will insert null 
-	 *            else it will take the one which is as input --&gt;<br>
+	 *            DefaultFolderId&gt; &nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- optional, if we don't specify it will insert null else it
+	 *            will take the one which is as input --&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/CategorySet&gt;</font><br>
+	 *            Input Spec:<br>
+	 *            <table border="1">
+	 *            <tr>
+	 *            <th>Field Name</th>
+	 *            <th>Type</th>
+	 *            <th>Required
+	 *            <th>Default Value</th>
+	 *            <th>Comments</th>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>DefaultFolderId</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            </table>
 	 * @return The category with id and name<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">[<br>
@@ -80,7 +104,7 @@ public class ImportCategorySet
 	 *         <td>could be the following errors:<br>
 	 *         1. If missing some necessary element in XML, it would return 400 error<br>
 	 *         For example, if there is no "name" in described in XML, it would return the error message<br>
-	 *         Error at line 4 , column 22 Invalid content was found starting with element 'defaultFolderId'. One of '{id, name}'
+	 *         Error at line 4 , column 22 Invalid content was found starting with element 'DefaultFolderId'. One of '{id, name}'
 	 *         is expected.<br>
 	 *         2. If the XML format is wrong, it would return the error message "Please specify input with valid format"</td>
 	 *         </tr>
@@ -107,8 +131,8 @@ public class ImportCategorySet
 			InputStream stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
-			CategorySet categories = (CategorySet) JAXBUtil
-					.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(ObjectFactory.class));
+			CategorySet categories = (CategorySet) JAXBUtil.unmarshal(sReader, stream,
+					JAXBUtil.getJAXBContext(ObjectFactory.class));
 			List<ImportCategoryImpl> list = categories.getCategorySet();
 			if (list.size() == 0) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
@@ -148,7 +172,7 @@ public class ImportCategorySet
 				return true;
 			}
 
-			if (obj.getFolderDet()!= null) {
+			if (obj.getFolderDet() != null) {
 				if (obj.getFolderDetails() instanceof FolderImpl) {
 					FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
 					if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {

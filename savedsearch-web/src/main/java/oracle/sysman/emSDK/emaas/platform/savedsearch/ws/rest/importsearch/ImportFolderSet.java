@@ -1,9 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.List;
 
@@ -18,6 +15,8 @@ import javax.xml.bind.JAXBContext;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
@@ -26,8 +25,6 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 /**
  * Import Folders Services
  *
@@ -57,8 +54,39 @@ public class ImportFolderSet
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Folder&gt;<br>
 	 *            &lt;/FolderSet&gt;</font><br>
 	 *            Note:<br>
-	 *            parentId is optional, if we don't specify it will take '1' as default else it will take the one which is as
+	 *            ParentId is optional, if we don't specify it will take '1' as default else it will take the one which is as
 	 *            input<br>
+	 *            Input Spec:<br>
+	 *            <table border="1">
+	 *            <tr>
+	 *            <th>Field Name</th>
+	 *            <th>Type</th>
+	 *            <th>Required
+	 *            <th>Default Value</th>
+	 *            <th>Comments</th>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>ParentId</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>UiHidden</td>
+	 *            <td>BOOLEAN</td>
+	 *            <td>N</td>
+	 *            <td>false</td>
+	 *            <td>Valid value: true, false.</td>
+	 *            </tr>
+	 *            </table>
 	 * @return The folder with id and name<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">[<br>
@@ -110,7 +138,7 @@ public class ImportFolderSet
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);			
+			JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
 			InputStream stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
@@ -156,8 +184,7 @@ public class ImportFolderSet
 		return false;
 
 	}
-	
-	
+
 }
 
 /*FolderSet fSet = new FolderSet();

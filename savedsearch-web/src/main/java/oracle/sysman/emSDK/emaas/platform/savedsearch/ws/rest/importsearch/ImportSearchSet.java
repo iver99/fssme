@@ -16,6 +16,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
@@ -23,8 +24,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 
 /**
  * Import Searches Services
@@ -54,6 +53,7 @@ public class ImportSearchSet
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Param1&lt;/Name&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Type&gt;STRING&lt;/Type&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Value&gt;ALL&lt;/Value&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameters&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Category&gt;<br>
@@ -76,6 +76,7 @@ public class ImportSearchSet
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Param1&lt;/Name&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Type&gt;STRING&lt;/Type&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Value&gt;ALL&lt;/Value&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameters&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;CategoryId&gt;1122&lt;/CategoryId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
@@ -84,6 +85,79 @@ public class ImportSearchSet
 	 *            not existed, importing search would failed --&gt;<br>
 	 *            &nbsp;&nbsp;&lt;/Search&gt;<br>
 	 *            &lt;/SearchSet&gt;</font><br>
+	 *            Input Spec:<br>
+	 *            <table border="1">
+	 *            <tr>
+	 *            <th>Field Name</th>
+	 *            <th>Type</th>
+	 *            <th>Required
+	 *            <th>Default Value</th>
+	 *            <th>Comments</th>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>CategoryId</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>CategoryId and Category Name is alternative, required</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Category Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>FolderId</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>FolderId and Folder Name is alternative, required</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Folder Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Folder UiHidden</td>
+	 *            <td>BOOLEAN</td>
+	 *            <td>N</td>
+	 *            <td>false</td>
+	 *            <td>Valid value: true, false.</td>
+	 *            </TR>
+	 *            <tr>
+	 *            <td>SearchParameter Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>For each SearchParameter, Name and Type are required, Value is optional</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>SearchParameter Type</td>
+	 *            <td>VARCHAR2(16 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>Valid value: STRING, CLOB.</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>SearchParameter Value</td>
+	 *            <td>VARCHAR2(1024 BYTE)/NCLOB</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            </table>
 	 * @return The search with id and name which means the importing successfully<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">[<br>

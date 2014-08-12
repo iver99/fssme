@@ -127,14 +127,14 @@ public class SearchAPI
 	 *            <td>VARCHAR2(64 BYTE)</td>
 	 *            <td>N</td>
 	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
+	 *            <td>For each parameter, name and type are required, value is optional</td>
 	 *            </tr>
 	 *            <tr>
 	 *            <td>parameters type</td>
-	 *            <td>NUMBER(38,0)</td>
+	 *            <td>VARCHAR2(16 BYTE)</td>
 	 *            <td>N</td>
 	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
+	 *            <td>Valid value: STRING, CLOB.</td>
 	 *            </tr>
 	 *            <tr>
 	 *            <td>parameters value</td>
@@ -339,72 +339,8 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
 	 *            }</font><br>
-	 *            Input Spec:<br>
-	 *            <table border="1">
-	 *            <tr>
-	 *            <th>Field Name</th>
-	 *            <th>Type</th>
-	 *            <th>Required
-	 *            <th>Default Value</th>
-	 *            <th>Comments</th>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>name</td>
-	 *            <td>VARCHAR2(64 BYTE)</td>
-	 *            <td>Y</td>
-	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>category id</td>
-	 *            <td>NUMBER(38,0)</td>
-	 *            <td>Y</td>
-	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>folder id</td>
-	 *            <td>NUMBER(38,0)</td>
-	 *            <td>Y</td>
-	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>description</td>
-	 *            <td>VARCHAR2(256 BYTE)</td>
-	 *            <td>N</td>
-	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>queryStr</td>
-	 *            <td>CLOB</td>
-	 *            <td>N</td>
-	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>parameters name</td>
-	 *            <td>VARCHAR2(64 BYTE)</td>
-	 *            <td>N</td>
-	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>parameters type</td>
-	 *            <td>NUMBER(38,0)</td>
-	 *            <td>N</td>
-	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>parameters value</td>
-	 *            <td>VARCHAR2(1024 BYTE)/NCLOB</td>
-	 *            <td>N</td>
-	 *            <td>N/A</td>
-	 *            <td>&nbsp;</td>
-	 *            </tr>
-	 *            </table>
+	 *            input spec:<br>
+	 *            Please see the input spec for <a href="resource_SearchAPI.html#path__search.html">/search, POST</a><br>
 	 * @param searchId
 	 *            The saved-search id to edit
 	 * @param updateCategory
