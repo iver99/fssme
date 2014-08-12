@@ -260,6 +260,8 @@ public class ImportCategoryImpl {
     
     
     public Object getFolderDetails() {
+    	if(folderDet==null)
+    		return null;
     	Object obj =  folderDet.getValue();
     	FolderImpl fld = new FolderImpl();
     	if(obj instanceof Integer)

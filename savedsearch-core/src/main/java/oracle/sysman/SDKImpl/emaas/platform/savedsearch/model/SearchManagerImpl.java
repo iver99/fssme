@@ -500,14 +500,14 @@ public class SearchManagerImpl extends SearchManager
 		}
 	}
 	
-	public List<ImportSearchImpl> saveMultipleSearch(List<ImportSearchImpl> searchList) throws Exception
+	public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList) throws Exception
 	{
-		int iCount = 0;
+		
 		EntityManagerFactory emf = null;
 		EntityManager em = null;
 		boolean bCommit = true;
 		boolean bResult = false;
-		List<ImportSearchImpl> importedList = new ArrayList<ImportSearchImpl>();
+		List<Search> importedList = new ArrayList<Search>();
 		try {
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
@@ -521,8 +521,7 @@ public class SearchManagerImpl extends SearchManager
 						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
 						em.merge(emSearch);
 						tmpImportSrImpl.setId((int)emSearch.getId());
-						importedList.add(tmpImportSrImpl);
-						iCount++;
+						importedList.add(createSearchObject(emSearch, null));						
 					}
 					else {
 						EmAnalyticsSearch searchEntity = null;
@@ -533,7 +532,7 @@ public class SearchManagerImpl extends SearchManager
 										.setParameter("folderId", id).setParameter("searchName", search.getName())
 										.getSingleResult();
 								tmpImportSrImpl.setId((int)searchEntity.getId());
-								importedList.add(tmpImportSrImpl);								
+								importedList.add(createSearchObject(searchEntity, null));								
 							}
 						}
 						catch (NoResultException e) {
@@ -554,9 +553,8 @@ public class SearchManagerImpl extends SearchManager
 									if (tmpfld != null) {
 										search.setFolderId((Integer) obj);
 									}
-									else {
-										tmpImportSrImpl.setId((int)search.getId());
-										importedList.add(tmpImportSrImpl);										
+									else {										
+										importedList.add(search);										
 										continue;
 									}
 								}
@@ -570,9 +568,9 @@ public class SearchManagerImpl extends SearchManager
 								if (categoryObj != null) {
 									search.setCategoryId((Integer) cateObj);
 								}
-								else {									
-									tmpImportSrImpl.setId((int)search.getId());
-									importedList.add(tmpImportSrImpl);			
+								else {								
+									
+									importedList.add(search);			
 									continue;
 								}
 							}
@@ -619,7 +617,7 @@ public class SearchManagerImpl extends SearchManager
 									}
 									if (searchEntity != null) {
 										tmpImportSrImpl.setId((int)searchEntity.getId());
-										importedList.add(tmpImportSrImpl);
+										importedList.add(createSearchObject(searchEntity, null));
 										continue;
 									}
 								}
@@ -644,8 +642,7 @@ public class SearchManagerImpl extends SearchManager
 							EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
 							em.persist(emSearch);
 							tmpImportSrImpl.setId((int)emSearch.getId());
-							importedList.add(tmpImportSrImpl);
-							iCount++;
+							importedList.add(createSearchObject(emSearch, null));							
 						}
 					}
 				}
@@ -817,10 +814,17 @@ public class SearchManagerImpl extends SearchManager
 
 					if (ParameterType.CLOB.equals(param.getType())) {
 						System.out.println("Clob value =" + paramVORow.getParamValueClob());
+						if(paramVORow.getParamValueClob()!=null)
+						{
 						char[] charArr = new char[paramVORow.getParamValueClob().length()];
 						Reader reader = new StringReader(new String(paramVORow.getParamValueClob()));
 						reader.read(charArr);
 						param.setValue(new String(charArr));
+						}
+						else
+						{
+							param.setValue(null);
+						}
 					}
 					else if (ParameterType.STRING.equals(param.getType())) {
 						param.setValue(paramVORow.getParamValueStr());

@@ -17,6 +17,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
@@ -218,7 +219,7 @@ public class ImportSearchSet
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			InputStream stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			InputStream stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			SearchSet searches = (SearchSet) JAXBUtil.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(ObjectFactory.class));
@@ -229,9 +230,9 @@ public class ImportSearchSet
 			if (validateData(list)) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 			}
-			List<ImportSearchImpl> addedList = SearchManagerImpl.getInstance().saveMultipleSearch(list);
+			List<Search> addedList = SearchManagerImpl.getInstance().saveMultipleSearch(list);
 			JSONArray jsonArray = new JSONArray();
-			for (ImportSearchImpl impSearch : addedList) {
+			for (Search impSearch : addedList) {
 				JSONObject jObj = new JSONObject();
 				jObj.put("id", impSearch.getId());
 				jObj.put("name", impSearch.getName());

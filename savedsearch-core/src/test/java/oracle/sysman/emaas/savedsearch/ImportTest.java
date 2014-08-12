@@ -20,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
@@ -93,11 +94,11 @@ public class ImportTest {
 
 			
 
-			List<ImportCategoryImpl>  listobj=  ((CategoryManagerImpl)catImpl).saveMultipleCategories(listCat);
+			List<Category>  listobj=  ((CategoryManagerImpl)catImpl).saveMultipleCategories(listCat);
 			AssertJUnit.assertTrue(listobj.size() == 2);
 
 
-			for(ImportCategoryImpl  obj : listobj)
+			for(Category  obj : listobj)
 			{
 				catImpl.deleteCategory(obj.getId(),true);
 			}
@@ -142,24 +143,40 @@ public class ImportTest {
 			tmpDetails.setValue("Value");
 			param.getSearchParameter().add(tmpDetails);
 			
-				
-
+			
 			ImportSearchImpl search1=new ImportSearchImpl();
 			search.setDescription("testing import purpose");
-			search.setName("Dummy Search");    
+			search.setName("Import Dummy Search");    
 			catId = objFactory.createCategoryId(category.getId());	
 			search1.setCategoryDet(catId);
 			fldId = objFactory.createFolderId(folderId);
 			search1.setFolderDet(fldId);
-			search1.getSearchParameters().getSearchParameter().add(tmpDetails);	
+			SearchParameterDetails tmpDetails2 = new SearchParameterDetails();
+	        tmpDetails2.setName("Param2");
+	        tmpDetails2.setType(ParameterType.CLOB);	        
+	        param.getSearchParameter().add(tmpDetails2);
+			search1.getSearchParameters().getSearchParameter().add(tmpDetails2);	
 
 			List<ImportSearchImpl>  list =   new ArrayList<ImportSearchImpl>();
 			list.add(search);
 			list.add(search1);
 			SearchManagerImpl  obj  =  SearchManagerImpl.getInstance();
-			List<ImportSearchImpl>  listobj= obj.saveMultipleSearch(list);
-			for(ImportSearchImpl  objSearch1 : listobj)
+			List<Search>  listobj= obj.saveMultipleSearch(list);
+			for(Search  objSearch1 : listobj)
 			{
+				if(objSearch1.getName().equals("Dummy Search"))
+				{
+					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getName().equals("Param1"));					
+					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getValue().equals("Value"));
+					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getType().equals("STRING"));
+				}
+				if(search.getName().equals("Import Dummy Search"))
+				{
+					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getName().equals("Param2"));					
+					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getValue()==null);
+					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getType().equals("CLOB"));
+				}
+					
 				obj.deleteSearch(objSearch1.getId(),true);
 			}
 			catImpl.deleteCategory(category.getId(),true);

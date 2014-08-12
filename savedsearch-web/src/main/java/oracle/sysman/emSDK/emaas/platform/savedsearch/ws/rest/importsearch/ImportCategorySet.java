@@ -16,6 +16,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImp
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportCategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
@@ -128,7 +129,7 @@ public class ImportCategorySet
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			InputStream stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			InputStream stream = ImportCategorySet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			CategorySet categories = (CategorySet) JAXBUtil.unmarshal(sReader, stream,
@@ -141,9 +142,9 @@ public class ImportCategorySet
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 			}
 			CategoryManagerImpl mgr = (CategoryManagerImpl) CategoryManagerImpl.getInstance();
-			List<ImportCategoryImpl> addedList = mgr.saveMultipleCategories(list);
+			List<Category> addedList = mgr.saveMultipleCategories(list);
 			JSONArray jsonArray = new JSONArray();
-			for (ImportCategoryImpl categoryImpl : addedList) {
+			for (Category categoryImpl : addedList) {
 				JSONObject jObj = new JSONObject();
 				jObj.put("id", categoryImpl.getId());
 				jObj.put("name", categoryImpl.getName());
