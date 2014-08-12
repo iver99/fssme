@@ -8,7 +8,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 
 /**
  * The class <code>SearchManager</code> provides CRUD and other management operations over the Search entity in EM Analytics.
- * 
+ *
  * @see Search
  * @version $Header: emcore/jsrc/sdkcore/SdkcoreEmanalyticsPublicModel/src/oracle
  *          /sysman/emSDK/core/emanalytics/api/search/SearchManager.java /st_emgc_pt-13.1mstr/2 2014/02/03 02:51:01 saurgarg Exp $
@@ -19,7 +19,7 @@ public abstract class SearchManager
 {
 	/**
 	 * Returns an instance of the manager.
-	 * 
+	 *
 	 * @return instance of the manager
 	 */
 	public static SearchManager getInstance()
@@ -29,7 +29,7 @@ public abstract class SearchManager
 
 	/**
 	 * Instantiates a new search object (empty).
-	 * 
+	 *
 	 * @return new search object
 	 */
 	public abstract Search createNewSearch();
@@ -43,7 +43,7 @@ public abstract class SearchManager
 
 	/**
 	 * Edits an existing search entity in the analytics sub-system.
-	 * 
+	 *
 	 * @param search
 	 *            search to be modified
 	 * @return re-loaded search object with generated dates
@@ -53,7 +53,7 @@ public abstract class SearchManager
 
 	/**
 	 * Returns the search object identified by the given identifier.
-	 * 
+	 *
 	 * @param searchId
 	 *            identifier for the search entity
 	 * @return search
@@ -71,7 +71,7 @@ public abstract class SearchManager
 
 	/**
 	 * Returns the count of (accessible) search entities in a folder.
-	 * 
+	 *
 	 * @param folderId
 	 *            identifier of the folder
 	 * @return count of seacrh entities
@@ -81,7 +81,7 @@ public abstract class SearchManager
 
 	/**
 	 * Returns the list of search entities belonging to a category.
-	 * 
+	 *
 	 * @param categoryId
 	 *            identifier of the category
 	 * @return list of search entities belonging to a category
@@ -91,19 +91,13 @@ public abstract class SearchManager
 
 	/**
 	 * Returns the list of search entities contained (directly) in the specified folder.
-	 * 
+	 *
 	 * @param folderId
 	 *            identifier of the folder
 	 * @return list of search entities (<code>null</code> if none are contained)
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException;
-
-	public List<Search> getSearchListByFolderIdCategoryFilter(long folderId) throws EMAnalyticsFwkException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
 	{
@@ -115,7 +109,7 @@ public abstract class SearchManager
 
 	/**
 	 * Saves a completely specified search entity in the analytics sub-system.
-	 * 
+	 *
 	 * @param search
 	 *            search to be saved
 	 * @return re-loaded search object with generated ids and dates

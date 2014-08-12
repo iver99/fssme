@@ -257,15 +257,15 @@ public class FolderManagerImpl extends FolderManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01")) {
+			if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01")) {
 				throw new EMAnalyticsFwkException("Folder with name " + folder.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[] { folder.getName() });
 			}
-			else if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1")) {
-				throw new EMAnalyticsFwkException("Parent folder with id " + folder.getParentId() + " does not exist: ",
-						EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
-			}
-			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
+			//			else if (dmlce.getCause()!=null && dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1")) {
+			//				throw new EMAnalyticsFwkException("Parent folder with id " + folder.getParentId() + " does not exist: ",
+			//						EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
+			//			}
+			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",

@@ -46,7 +46,7 @@ public class SearchManagerImpl extends SearchManager
 
 	/**
 	 * Get SearchManagerImpl singleton instance.
-	 * 
+	 *
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
@@ -147,30 +147,30 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (EMAnalyticsFwkException eme) {
 
-			_logger.error("Search with name " + search.getName() + " was updated but could not bve retrieved back", eme);
+			_logger.error("Search with name " + search.getName() + " was updated but could not be retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_U01")) {
+			if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_U01")) {
 				throw new EMAnalyticsFwkException("Search name " + search.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, new Object[] { search.getName() });
 			}
-			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK2")) {
-				throw new EMAnalyticsFwkException("Parent folder with id " + search.getFolderId() + " missing: "
-						+ search.getName(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER, null);
-			}
-			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
+			//			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK2")) {
+			//				throw new EMAnalyticsFwkException("Parent folder with id " + search.getFolderId() + " missing: "
+			//						+ search.getName(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER, null);
+			//			}
+			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
-				throw new EMAnalyticsFwkException("Category with id " + search.getCategoryId() + " missing: " + search.getName(),
-						EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY, null);
-			}
+			//			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
+			//				throw new EMAnalyticsFwkException("Category with id " + search.getCategoryId() + " missing: " + search.getName(),
+			//						EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY, null);
+			//			}
 			else {
-				_logger.error("Error while updating the search: " + search.getName(), dmlce);
+				_logger.error("Persistence Error while updating the search: " + search.getName(), dmlce);
 				throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
 						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, dmlce);
 			}
@@ -210,15 +210,16 @@ public class SearchManagerImpl extends SearchManager
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
 			else {
-				_logger.error("Error while getting the search object by ID: " + searchId, e);
-				throw new EMAnalyticsFwkException("search object by ID: " + searchId + " does not exist",
-						EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId }, e);
+				String errMsg = "Error while getting the search object by ID: " + searchId;
+				_logger.error(errMsg, e);
+				throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID,
+						new Object[] { searchId }, e);
 			}
 		}
 		if (search == null) {
-			_logger.error("Search identified by ID: " + searchId + " does not exist");
-			throw new EMAnalyticsFwkException("Search identified by ID: " + searchId + " does not exist",
-					EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId });
+			String errMsg = "Search identified by ID: " + searchId + " does not exist";
+			_logger.error(errMsg);
+			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId });
 		}
 		return search;
 	}
@@ -262,34 +263,36 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public int getSearchCountByFolderId(long folderId) throws EMAnalyticsFwkException
 	{
-		EntityManager em = null;
-		int count;
-		try {
-			EntityManagerFactory emf;
-			emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
-			count = ((Number) em.createNamedQuery("Search.getSearchCountByFolder").setParameter("folder", folderId)
-					.getSingleResult()).intValue();
-			return count;
-		}
-		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving the count of searches for the parent folder: " + folderId, e);
-				throw new EMAnalyticsFwkException("Error while retrieving the count of searches for the parent folder: "
-						+ folderId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
-			}
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
+		throw new RuntimeException("getSearchCountByFolderId is not ready to use");
+		//Not used now, uncomment below when necessary
+		//		EntityManager em = null;
+		//		int count;
+		//		try {
+		//			EntityManagerFactory emf;
+		//			emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		//			em = emf.createEntityManager();
+		//			count = ((Number) em.createNamedQuery("Search.getSearchCountByFolder").setParameter("folder", folderId)
+		//					.getSingleResult()).intValue();
+		//			return count;
+		//		}
+		//		catch (Exception e) {
+		//			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
+		//				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
+		//				throw new EMAnalyticsFwkException(
+		//						"Error while connecting to data source, please check the data source details: ",
+		//						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
+		//			}
+		//			else {
+		//				_logger.error("Error while retrieving the count of searches for the parent folder: " + folderId, e);
+		//				throw new EMAnalyticsFwkException("Error while retrieving the count of searches for the parent folder: "
+		//						+ folderId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
+		//			}
+		//		}
+		//		finally {
+		//			if (em != null) {
+		//				em.close();
+		//			}
+		//		}
 
 	}
 
@@ -373,45 +376,6 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public List<Search> getSearchListByFolderIdCategoryFilter(long folderId) throws EMAnalyticsFwkException
-	{
-		EntityManager em = null;
-		try {
-			List<Search> rtnobj = new ArrayList<Search>();
-			EntityManagerFactory emf;
-			List<EmAnalyticsSearch> searchList = null;
-			StringBuilder query = new StringBuilder(FOLDER_ORDERBY);
-			emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
-			//EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
-			searchList = em.createQuery(query.toString()).setParameter("folderId", folderId).getResultList();
-
-			for (EmAnalyticsSearch searchObj : searchList) {
-				em.refresh(searchObj);
-				rtnobj.add(createSearchObject(searchObj, null));
-			}
-
-			return rtnobj;
-		}
-		catch (EMAnalyticsFwkException e) {
-			throw e;
-		}
-		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving the list of searches for the parent folder: " + folderId, e);
-				throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the parent folder: "
-						+ folderId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
-			}
-		}
-	}
-
-	@Override
 	public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
 	{
 		EntityManagerFactory emf;
@@ -453,8 +417,6 @@ public class SearchManagerImpl extends SearchManager
 	{
 		EntityManagerFactory emf;
 		EntityManager em = null;
-		List<EmAnalyticsSearch> searchList = null;
-		List<Search> rtnobj = new ArrayList<Search>();
 		try {
 			Date tmp = null;
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
@@ -499,10 +461,10 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 	}
-	
+
 	public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList) throws Exception
 	{
-		
+
 		EntityManagerFactory emf = null;
 		EntityManager em = null;
 		boolean bCommit = true;
@@ -520,19 +482,19 @@ public class SearchManagerImpl extends SearchManager
 					if (search.getId() != null && search.getId() > 0) {
 						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
 						em.merge(emSearch);
-						tmpImportSrImpl.setId((int)emSearch.getId());
-						importedList.add(createSearchObject(emSearch, null));						
+						tmpImportSrImpl.setId((int) emSearch.getId());
+						importedList.add(createSearchObject(emSearch, null));
 					}
 					else {
 						EmAnalyticsSearch searchEntity = null;
 						try {
 							if (obj != null && obj instanceof Integer) {
-								long id = ((Integer) obj).longValue();								
+								long id = ((Integer) obj).longValue();
 								searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
 										.setParameter("folderId", id).setParameter("searchName", search.getName())
 										.getSingleResult();
-								tmpImportSrImpl.setId((int)searchEntity.getId());
-								importedList.add(createSearchObject(searchEntity, null));								
+								tmpImportSrImpl.setId((int) searchEntity.getId());
+								importedList.add(createSearchObject(searchEntity, null));
 							}
 						}
 						catch (NoResultException e) {
@@ -553,8 +515,8 @@ public class SearchManagerImpl extends SearchManager
 									if (tmpfld != null) {
 										search.setFolderId((Integer) obj);
 									}
-									else {										
-										importedList.add(search);										
+									else {
+										importedList.add(search);
 										continue;
 									}
 								}
@@ -568,9 +530,9 @@ public class SearchManagerImpl extends SearchManager
 								if (categoryObj != null) {
 									search.setCategoryId((Integer) cateObj);
 								}
-								else {								
-									
-									importedList.add(search);			
+								else {
+
+									importedList.add(search);
 									continue;
 								}
 							}
@@ -607,16 +569,16 @@ public class SearchManagerImpl extends SearchManager
 							if (search != null) {
 								if (search.getFolderId() != null) {
 									try {
-										
+
 										searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
-												.setParameter("folderId", search.getFolderId()).setParameter("searchName", search.getName())
-												.getSingleResult();
+												.setParameter("folderId", search.getFolderId())
+												.setParameter("searchName", search.getName()).getSingleResult();
 									}
 									catch (NoResultException e) {
-												
+
 									}
 									if (searchEntity != null) {
-										tmpImportSrImpl.setId((int)searchEntity.getId());
+										tmpImportSrImpl.setId((int) searchEntity.getId());
 										importedList.add(createSearchObject(searchEntity, null));
 										continue;
 									}
@@ -641,8 +603,8 @@ public class SearchManagerImpl extends SearchManager
 
 							EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
 							em.persist(emSearch);
-							tmpImportSrImpl.setId((int)emSearch.getId());
-							importedList.add(createSearchObject(emSearch, null));							
+							tmpImportSrImpl.setId((int) emSearch.getId());
+							importedList.add(createSearchObject(emSearch, null));
 						}
 					}
 				}
@@ -673,9 +635,7 @@ public class SearchManagerImpl extends SearchManager
 		return importedList;
 	}
 
-
-
-		@Override
+	@Override
 	public Search saveSearch(Search search) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
@@ -696,26 +656,26 @@ public class SearchManagerImpl extends SearchManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_U01")) {
+			if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_U01")) {
 				throw new EMAnalyticsFwkException("Search with this name already exist: " + search.getName(),
 						EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, new Object[] { search.getName() });
 			}
-			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK2")) {
-				throw new EMAnalyticsFwkException("Parent folder with id " + search.getFolderId() + " missing: "
-						+ search.getName(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER, null);
-			}
-			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
+			//			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK2")) {
+			//				throw new EMAnalyticsFwkException("Parent folder with id " + search.getFolderId() + " missing: "
+			//						+ search.getName(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER, null);
+			//			}
+			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_SEARCH_FK1")) {
-				throw new EMAnalyticsFwkException("Category with id " + search.getCategoryId() + " missing: " + search.getName(),
-						EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY, null);
-			}
+			//			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_SEARCH_FK1")) {
+			//				throw new EMAnalyticsFwkException("Category with id " + search.getCategoryId() + " missing: " + search.getName(),
+			//						EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY, null);
+			//			}
 			else {
-				_logger.error("Error while saving the search: " + search.getName(), dmlce);
+				_logger.error("Persistence error while saving the search: " + search.getName(), dmlce);
 				throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
 						EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, dmlce);
 			}
@@ -814,15 +774,13 @@ public class SearchManagerImpl extends SearchManager
 
 					if (ParameterType.CLOB.equals(param.getType())) {
 						System.out.println("Clob value =" + paramVORow.getParamValueClob());
-						if(paramVORow.getParamValueClob()!=null)
-						{
-						char[] charArr = new char[paramVORow.getParamValueClob().length()];
-						Reader reader = new StringReader(new String(paramVORow.getParamValueClob()));
-						reader.read(charArr);
-						param.setValue(new String(charArr));
+						if (paramVORow.getParamValueClob() != null) {
+							char[] charArr = new char[paramVORow.getParamValueClob().length()];
+							Reader reader = new StringReader(new String(paramVORow.getParamValueClob()));
+							reader.read(charArr);
+							param.setValue(new String(charArr));
 						}
-						else
-						{
+						else {
 							param.setValue(null);
 						}
 					}
@@ -890,6 +848,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		return folder;
 	}
+
 	private void OrderBybuilder(StringBuilder query, String[] orderBy)
 	{
 		// incidentally the field names for EmAnalyticsSearch and SearchImpl is
