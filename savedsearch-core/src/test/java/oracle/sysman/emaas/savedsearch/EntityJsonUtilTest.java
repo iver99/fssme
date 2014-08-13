@@ -107,7 +107,7 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetFullCategoryObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject fullCategoryObj = EntityJsonUtil.getFullCategoryJsonObj(uri, category);
 		String output = fullCategoryObj.toString();
@@ -120,20 +120,22 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/folder\\/1\"}";
 		final String VERIFY_STRING6 = "\"defaultFolderId\"";
 		final String VERIFY_STRING7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
+		final String VERIFY_STRING9 = "\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/category\\/100\"}";
 
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
+		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is NOT found as expected");
 		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
 		Assert.assertTrue(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
 	}
 
 	@Test
 	public void testGetFullFolderObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject fullFolderObj = EntityJsonUtil.getFullFolderJsonObj(uri, folder);
 		String output = fullFolderObj.toString();
@@ -165,14 +167,14 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetFullSearchJsonObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject fullSearchObj = EntityJsonUtil.getFullSearchJsonObj(uri, search);
 		String output = fullSearchObj.toString();
 		//		System.out.println(output);
 
 		JSONObject fullSearchObjWithFolderPath = EntityJsonUtil.getFullSearchJsonObj(uri, search, new String[] { "parent Folder",
-				"Root Folder" });
+		"Root Folder" });
 		String output2 = fullSearchObjWithFolderPath.toString();
 		//		System.out.println(output2);
 
@@ -211,10 +213,10 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetSimpleCategoryObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
-		JSONObject fullCategoryObj = EntityJsonUtil.getSimpleCategoryJsonObj(uri, category);
-		String output = fullCategoryObj.toString();
+		JSONObject simpleCategoryObj = EntityJsonUtil.getSimpleCategoryJsonObj(uri, category);
+		String output = simpleCategoryObj.toString();
 		//		System.out.println(output);
 
 		final String VERIFY_STRING1 = "\"id\":100";
@@ -225,9 +227,10 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING6 = "\"defaultFolderId\"";
 		final String VERIFY_STRING7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
 		final String VERIFY_STRING8 = "\"owner\":\"SYSMAN\"";
+		final String VERIFY_STRING9 = "\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/category\\/100\"}";
 
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
+		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
@@ -235,11 +238,12 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
+		Assert.assertTrue(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
 	}
 
 	@Test
 	public void testGetSimpleFolderJsonObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject simpleFolderObj = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder);
 		String output = simpleFolderObj.toString();
@@ -278,7 +282,7 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetSimpleSearchJsonObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject simpleSearchObj = EntityJsonUtil.getSimpleSearchJsonObj(uri, search);
 		String output = simpleSearchObj.toString();
