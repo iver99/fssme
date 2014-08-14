@@ -443,7 +443,7 @@ class EmAnalyticsObjectUtil
 		}
 		existingParams.addAll(newParams.values());
 
-		searchEntity.setAccessDate(DateUtil.getCurrentUTCTime());
+		searchEntity.setAccessDate(utcNow);
 		return searchEntity;
 	}
 

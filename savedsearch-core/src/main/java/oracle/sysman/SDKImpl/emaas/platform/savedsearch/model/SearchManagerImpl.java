@@ -46,7 +46,7 @@ public class SearchManagerImpl extends SearchManager
 
 	/**
 	 * Get SearchManagerImpl singleton instance.
-	 *
+	 * 
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
@@ -646,7 +646,8 @@ public class SearchManagerImpl extends SearchManager
 			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
 			em.getTransaction().begin();
 			em.persist(searchEntity);
-			updateSearchLastAccess(searchEntity);
+			// when a search is created, creation date/modification date/last access date keeps the same
+			updateSearchLastAccess(searchEntity, searchEntity.getLastModificationDate());
 			em.getTransaction().commit();
 			em.refresh(searchEntity);
 			return createSearchObject(searchEntity, null);
@@ -866,17 +867,17 @@ public class SearchManagerImpl extends SearchManager
 
 	}
 
-	private void updateSearchLastAccess(EmAnalyticsSearch search)
+	private void updateSearchLastAccess(EmAnalyticsSearch search, Date lastAccessDate)
 	{
 		if (search == null) {
 			return;
 		}
-		//		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-		//		if (search.getLastAccess() == null) {
-		//			search.setLastAccess(new EmAnalyticsLastAccess(search.getId(), currentUser,
-		//					EmAnalyticsLastAccess.LAST_ACCESS_TYPE_SEARCH));
-		//		}
-		search.setAccessDate(DateUtil.getCurrentUTCTime());
+		if (lastAccessDate == null) {
+			search.setAccessDate(DateUtil.getCurrentUTCTime());
+		}
+		else {
+			search.setAccessDate(lastAccessDate);
+		}
 	}
 
 	/*
