@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class SearchManagerTest extends BaseTest
 {
 	// Important: keep this value the same with sequence step (value for 'INCREMENT BY') for EMS_ANALYTICS_SEARCH_SEQ
-	private static final int SEQ_ALLOCATION_SIZE = 10;
+	private static final int SEQ_ALLOCATION_SIZE = 1;
 
 	public static Category createTestCategory(CategoryManager cm, Folder folder, String name) throws EMAnalyticsFwkException
 	{
