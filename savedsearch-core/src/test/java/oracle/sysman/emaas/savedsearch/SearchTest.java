@@ -61,12 +61,17 @@ public class SearchTest extends BaseTest
 			search.setFolderId(folderId);
 			search.setCategoryId(1);
 
-			searchId = objSearch.saveSearch(search).getId();
+			Search s2 = objSearch.saveSearch(search);
+			AssertJUnit.assertNotNull(s2);
+			searchId = s2.getId();
 			AssertJUnit.assertFalse(searchId == 0);
-
-			Search search1 = objSearch.getSearch(searchId);
-			AssertJUnit.assertEquals("Dummy Search", search1.getName());
-			AssertJUnit.assertEquals("testing purpose", search1.getDescription());
+			AssertJUnit.assertNotNull(s2.getCreatedOn());
+			AssertJUnit.assertNotNull(s2.getLastModifiedOn());
+			AssertJUnit.assertNotNull(s2.getLastAccessDate());
+			AssertJUnit.assertEquals(s2.getCreatedOn(), s2.getLastModifiedOn());
+			AssertJUnit.assertEquals(s2.getCreatedOn(), s2.getLastAccessDate());
+			AssertJUnit.assertEquals("Dummy Search", s2.getName());
+			AssertJUnit.assertEquals("testing purpose", s2.getDescription());
 
 		}
 		catch (Exception e) {
@@ -212,12 +217,18 @@ public class SearchTest extends BaseTest
 			search.setDescription("testcase checking");
 
 			//now update the
-			objSearch.editSearch(search);
+			Search s2 = objSearch.editSearch(search);
 
-			search = objSearch.getSearch(searchId);
+			AssertJUnit.assertNotNull(s2);
+			AssertJUnit.assertEquals("testName", s2.getName());
+			AssertJUnit.assertEquals("testcase checking", s2.getDescription());
 
-			AssertJUnit.assertEquals("testName", search.getName());
-			AssertJUnit.assertEquals("testcase checking", search.getDescription());
+			AssertJUnit.assertNotNull(s2.getCreatedOn());
+			AssertJUnit.assertNotNull(s2.getLastModifiedOn());
+			AssertJUnit.assertNotNull(s2.getLastAccessDate());
+			AssertJUnit.assertEquals(s2.getLastModifiedOn(), s2.getLastModifiedOn());
+			AssertJUnit.assertFalse(s2.getCreatedOn().equals(s2.getLastAccessDate()));
+			AssertJUnit.assertFalse(s2.getCreatedOn().equals(s2.getLastModifiedOn()));
 
 		}
 		catch (Exception e) {
@@ -724,27 +735,6 @@ public class SearchTest extends BaseTest
 			AssertJUnit.assertEquals("Error while saving the search: null", e.getMessage());
 		}
 
-		try {
-			search = searchMgr.createNewSearch();
-			search.setCategoryId(999);
-			search.setFolderId(999);
-			searchMgr.saveSearch(search);
-			AssertJUnit.assertTrue("search without name is saved", false);
-		}
-		catch (Exception e) {
-			AssertJUnit.assertEquals("Error while saving the search: null", e.getMessage());
-		}
-
-		try {
-			search = searchMgr.createNewSearch();
-			search.setCategoryId(999);
-			search.setFolderId(999);
-			searchMgr.saveSearch(search);
-			AssertJUnit.assertTrue("search without name is saved", false);
-		}
-		catch (Exception e) {
-			AssertJUnit.assertEquals("Error while saving the search: null", e.getMessage());
-		}
 	}
 
 	@Test

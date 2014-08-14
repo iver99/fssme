@@ -131,7 +131,9 @@ class EmAnalyticsObjectUtil
 		categoryObj.setName(category.getName());
 		categoryObj.setDescription(category.getDescription());
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+		Date utcNow = DateUtil.getCurrentUTCTime();
 		categoryObj.setOwner(currentUser);
+		categoryObj.setCreationDate(utcNow);
 		categoryObj.setDeleted(0);
 		if (category.getDefaultFolderId() != null) {
 			EmAnalyticsFolder defaultFolderObj = EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em);
@@ -401,7 +403,7 @@ class EmAnalyticsObjectUtil
 		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcNow);
 		searchEntity.setSystemSearch(search != null && search.isSystemSearch() ? new java.math.BigDecimal(1)
-				: new java.math.BigDecimal(0));
+		: new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setMetadataClob(search.getMetadata());
 		searchEntity.setSearchDisplayStr(search.getQueryStr());

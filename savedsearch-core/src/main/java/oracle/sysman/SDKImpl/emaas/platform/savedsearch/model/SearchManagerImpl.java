@@ -46,7 +46,7 @@ public class SearchManagerImpl extends SearchManager
 
 	/**
 	 * Get SearchManagerImpl singleton instance.
-	 * 
+	 *
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
@@ -603,6 +603,7 @@ public class SearchManagerImpl extends SearchManager
 
 							EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
 							em.persist(emSearch);
+							updateSearchLastAccess(emSearch, emSearch.getLastModificationDate());
 							tmpImportSrImpl.setId((int) emSearch.getId());
 							importedList.add(createSearchObject(emSearch, null));
 						}
