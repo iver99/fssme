@@ -74,6 +74,7 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals("CategoryName", category.getName());
 			AssertJUnit.assertEquals("CategoryTest", category.getDescription());
 			// Assert.assertEquals("MyCategory", category.getDisplayName());
+			AssertJUnit.assertNotNull(category.getCreatedOn());
 
 		}
 		catch (Exception e) {

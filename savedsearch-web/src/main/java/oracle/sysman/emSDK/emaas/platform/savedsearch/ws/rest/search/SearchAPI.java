@@ -64,7 +64,6 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"category": {"id":999},//required <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"folder": {"id":999},//required <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"description": "Search for Demo", //optional<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;"owner": "SYSMAN",//optional <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional <br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
@@ -79,6 +78,72 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
 	 *            } </font><br>
+	 *            Input Spec:<br>
+	 *            <table border="1">
+	 *            <tr>
+	 *            <th>Field Name</th>
+	 *            <th>Type</th>
+	 *            <th>Required
+	 *            <th>Default Value</th>
+	 *            <th>Comments</th>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>category id</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>folder id</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>description</td>
+	 *            <td>VARCHAR2(256 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>queryStr</td>
+	 *            <td>CLOB</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>parameters name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>For each parameter, name and type are required, value is optional</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>parameters type</td>
+	 *            <td>VARCHAR2(16 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>Valid value: STRING, CLOB.</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>parameters value</td>
+	 *            <td>VARCHAR2(1024 BYTE)/NCLOB</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            </table>
 	 * @return Return Complete details of search with search Id generated automatically.<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan"> {<br>
@@ -260,8 +325,6 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
 	 *            "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/999"<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; },<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp; "owner": "SYSMAN",<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "SYSMAN",<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "queryStr": "*1",<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "parameters": [<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
@@ -276,6 +339,8 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
 	 *            }</font><br>
+	 *            input spec:<br>
+	 *            Please see the input spec for <a href="resource_SearchAPI.html#path__search.html">/search, POST</a><br>
 	 * @param searchId
 	 *            The saved-search id to edit
 	 * @param updateCategory

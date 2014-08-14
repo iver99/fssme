@@ -675,7 +675,7 @@ public class SearchesCRUD {
 			System.out.println("Status code is: " + res1.getStatusCode());
 			System.out.println("											");
 			// System.out.println(res1.asString());
-			Assert.assertTrue(res1.getStatusCode() == 201);
+			Assert.assertTrue(res1.getStatusCode() == 201,"status code: "+res1.getStatusCode());
 			System.out.println("SearchSet1 Id is :" + jp1.get("id"));
 			try {
 				Thread.sleep(2000);

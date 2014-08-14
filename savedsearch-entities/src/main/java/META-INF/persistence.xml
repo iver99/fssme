@@ -15,6 +15,7 @@
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class>
 
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />
@@ -24,7 +25,7 @@
 			<property name="eclipselink.jdbc.native-sql" value="true" />
 			<property name="eclipselink.logging.logger"
 				value="org.eclipse.persistence.logging.DefaultSessionLog" />
-			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.logging.level" value="INFO" />
 			<property name="eclipselink.jdbc.cache-statements.size"
 				value="65535" />
 			<property name="eclipselink.orm.validate.schema" value="true" />
@@ -53,6 +54,9 @@
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class>
 
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />

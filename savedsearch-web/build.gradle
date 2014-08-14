@@ -95,6 +95,14 @@ task ftpRestDoc << {
 		}
 	}
 
+sourceSets {
+                            test{
+                                java {
+                                          srcDirs = ['src/test/java']
+                                }
+                                resources.srcDirs = ['src/test/java']
+                            }
+ }
 dependencies {
 	providedCompile project(':savedsearch-entities')
 	providedCompile project(':savedsearch-core')  

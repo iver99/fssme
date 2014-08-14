@@ -89,7 +89,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getFullCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, null, false);
 	}
@@ -134,7 +134,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray) throws JSONException,
-			EMAnalyticsFwkJsonException
+	EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
 				NAME_SEARCH_UIHIDDEN }, folderPathArray, false);
@@ -150,7 +150,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-			EMAnalyticsFwkJsonException
+	EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
@@ -181,7 +181,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder, boolean includeType) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getFolderJsonObj(baseUri, folder, new String[] { NAME_OWNER, NAME_LASTMODIFIEDBY,
 				NAME_FOLDER_PARENTFOLDER, NAME_FOLDER_UIHIDDEN }, true, includeType);
@@ -212,7 +212,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search, boolean includeType) throws JSONException,
-			EMAnalyticsFwkJsonException
+	EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search, null, includeType);
 	}
@@ -254,7 +254,7 @@ public class EntityJsonUtil
 
 			if (categoryObj.has(NAME_ID)) {
 				int folderId = categoryObj.getInt(NAME_ID);
-				categoryObj.put(NAME_HREF, baseUri + PATH_FOLDER + folderId);
+				categoryObj.put(NAME_HREF, baseUri + PATH_CATEGORY + folderId);
 			}
 
 		}

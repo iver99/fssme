@@ -15,6 +15,8 @@ import javax.xml.bind.JAXBContext;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
@@ -46,14 +48,45 @@ public class ImportFolderSet
 	 *            <font color="DarkCyan">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;<br>
 	 *            &lt;FolderSet&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Folder&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Folder2&lt;/name&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;parentId&gt;1&lt;/parentId&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;uiHidden&gt;false&lt;/uiHidden&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Folder2&lt;/Name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ParentId&gt;1&lt;/ParentId&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;UiHidden&gt;false&lt;/UiHidden&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Folder&gt;<br>
 	 *            &lt;/FolderSet&gt;</font><br>
 	 *            Note:<br>
-	 *            parentId is optional, if we don't specify it will take '1' as default else it will take the one which is as
+	 *            ParentId is optional, if we don't specify it will take '1' as default else it will take the one which is as
 	 *            input<br>
+	 *            Input Spec:<br>
+	 *            <table border="1">
+	 *            <tr>
+	 *            <th>Field Name</th>
+	 *            <th>Type</th>
+	 *            <th>Required
+	 *            <th>Default Value</th>
+	 *            <th>Comments</th>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>ParentId</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>UiHidden</td>
+	 *            <td>BOOLEAN</td>
+	 *            <td>N</td>
+	 *            <td>false</td>
+	 *            <td>Valid value: true, false.</td>
+	 *            </tr>
+	 *            </table>
 	 * @return The folder with id and name<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">[<br>
@@ -105,12 +138,12 @@ public class ImportFolderSet
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			JAXBContext jaxbContext = JAXBUtil.getJAXBContext(FolderSet.class);
+			JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
 			InputStream stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			FolderSet folders = (FolderSet) JAXBUtil.unmarshal(sReader, stream, jaxbContext);
-			List<FolderImpl> list = folders.getFolderSet();
+			List<FolderDetails> list = folders.getFolderSet();
 			if (list.size() == 0) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 			}
@@ -141,9 +174,9 @@ public class ImportFolderSet
 		return res;
 	}
 
-	private boolean validateData(List<FolderImpl> list)
+	private boolean validateData(List<FolderDetails> list)
 	{
-		for (FolderImpl obj : list) {
+		for (FolderDetails obj : list) {
 			if (!(obj.getName() != null && obj.getName().trim().length() > 0)) {
 				return true;
 			}
@@ -151,6 +184,7 @@ public class ImportFolderSet
 		return false;
 
 	}
+
 }
 
 /*FolderSet fSet = new FolderSet();

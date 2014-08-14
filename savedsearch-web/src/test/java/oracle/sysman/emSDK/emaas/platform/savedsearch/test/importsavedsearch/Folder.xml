@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FolderSet>
+    <Folder>      
+      <UiHidden>false</UiHidden> 
+      <Name>MyFolder</Name>
+      <ParentId>1</ParentId>
+  </Folder>
+  <Folder>      
+      <UiHidden>false</UiHidden> 
+      <Name>MyFolder1</Name>
+      <ParentId>1</ParentId>
+  </Folder>   
+</FolderSet>

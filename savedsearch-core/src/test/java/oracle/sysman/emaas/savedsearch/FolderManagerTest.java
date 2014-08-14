@@ -58,6 +58,9 @@ public class FolderManagerTest extends BaseTest
 			AssertJUnit.assertTrue("TestFolderDescription".equals(folder.getDescription()));
 			AssertJUnit.assertTrue(folder.isUiHidden() == false);
 			AssertJUnit.assertTrue(folder.isSystemFolder() == false);
+			AssertJUnit.assertNotNull(folder.getCreatedOn());
+			AssertJUnit.assertNotNull(folder.getLastModifiedOn());
+			AssertJUnit.assertEquals(folder.getCreatedOn(), folder.getLastModifiedOn());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -272,6 +275,10 @@ public class FolderManagerTest extends BaseTest
 
 			AssertJUnit.assertEquals("My folder", folder.getName());
 			AssertJUnit.assertEquals("Database search", folder.getDescription());
+
+			AssertJUnit.assertNotNull(folder.getCreatedOn());
+			AssertJUnit.assertNotNull(folder.getLastModifiedOn());
+			AssertJUnit.assertFalse(folder.getCreatedOn().equals(folder.getLastModifiedOn()));
 
 		}
 		catch (Exception e) {

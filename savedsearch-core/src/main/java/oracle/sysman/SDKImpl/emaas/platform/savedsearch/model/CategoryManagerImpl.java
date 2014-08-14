@@ -92,7 +92,7 @@ public class CategoryManagerImpl extends CategoryManager
 				throw new EMAnalyticsFwkException("Category object by Id: " + categoryId + " " + "does not exist",
 						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, null);
 			}
-			boolean bResult = EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
+			//boolean bResult = EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
 			categoryObj.setDeleted(categoryId);
 			em.getTransaction().begin();
 			if (permanently) {
@@ -104,7 +104,7 @@ public class CategoryManagerImpl extends CategoryManager
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Category object by Id: " + categoryId + " " + "does not exist");
+			_logger.error(eme.getMessage());
 			throw eme;
 		}
 		catch (Exception e) {
@@ -114,7 +114,7 @@ public class CategoryManagerImpl extends CategoryManager
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (e.getCause() != null && e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
+			else if (e.getCause() != null && e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) { // handles the scenario trying to delete category associated with search
 				_logger.error("Error while deleting the category" + e.getMessage(), e);
 				throw new EMAnalyticsFwkException("Error while deleting the category as it has associated searches",
 						EMAnalyticsFwkException.ERR_DELETE_CATEGORY, null);
@@ -194,10 +194,10 @@ public class CategoryManagerImpl extends CategoryManager
 			EntityManager em = emf.createEntityManager();
 
 			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory").getResultList();
+			if (categories == null) {
+				categories = new ArrayList<Category>();
+			}
 			for (EmAnalyticsCategory categoriesObj : emcategories) {
-				if (categories == null) {
-					categories = new ArrayList<Category>();
-				}
 				Category category = createCategoryObject(categoriesObj, null);
 				categories.add(category);
 			}
@@ -336,40 +336,43 @@ public class CategoryManagerImpl extends CategoryManager
 
 	}
 
-	public List<ImportCategoryImpl> saveMultipleCategories(List<ImportCategoryImpl> categories)
+	public List<Category> saveMultipleCategories(List<ImportCategoryImpl> categories)
 	{
-		int iCount = 0;
+		
 		boolean bCommit = true;
 		boolean bResult = false;
 		EntityManagerFactory emf = null;
 		EntityManager em = null;
-		List<ImportCategoryImpl> importedList = new ArrayList<ImportCategoryImpl>();
+		Category category=null;
+		List<Category> importedList = new ArrayList<Category>();
 		try {
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
 
 			em.getTransaction().begin();
-			for (Category category : categories) {
+			for (ImportCategoryImpl categorytmp : categories) {
 				try {
+					category =categorytmp.getCategoryDetails();
 					if (category.getId() != null && category.getId() > 0) {
 						EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
 						em.merge(emCategory);
-						importedList.add((ImportCategoryImpl) createCategoryObject(emCategory, category));
-						iCount++;
+						categorytmp.setId((int)emCategory.getCategoryId());
+						importedList.add(createCategoryObject(emCategory, null));						
 					}
 					else {
 						EmAnalyticsCategory categoryObj = null;
 						try {
 							categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
 									.setParameter("categoryName", category.getName()).getSingleResult();
-							importedList.add((ImportCategoryImpl) createCategoryObject(categoryObj, category));
+							categorytmp.setId((int)categoryObj.getCategoryId());
+							importedList.add(createCategoryObject(categoryObj, null));
 						}
 						catch (NoResultException e) {
 							categoryObj = null;
 						}
 						if (categoryObj == null) {
-							if (category instanceof ImportCategoryImpl) {
-								Object obj = ((ImportCategoryImpl) category).getFolder();
+							if (categorytmp instanceof ImportCategoryImpl) {
+								Object obj = categorytmp.getFolderDetails();
 								if (obj != null) {
 
 									if (obj instanceof Folder) {
@@ -396,7 +399,7 @@ public class CategoryManagerImpl extends CategoryManager
 											category.setDefaultFolderId((Integer) obj);
 										}
 										else {
-											importedList.add((ImportCategoryImpl) category);
+											importedList.add(category);
 											continue;
 										}
 									}
@@ -404,16 +407,15 @@ public class CategoryManagerImpl extends CategoryManager
 							}
 							EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
 							em.persist(emCategory);
-							importedList.add((ImportCategoryImpl) createCategoryObject(emCategory, category));
-							iCount++;
+							categorytmp.setId((int)emCategory.getCategoryId());
+							importedList.add(createCategoryObject(emCategory, null));
 						}
 					}
 				}
 				catch (PersistenceException eme) {
 					_logger.error("Error while importing the category: " + category.getName(), eme);
 					importedList.clear();
-					bCommit = false;
-					iCount = 0;
+					bCommit = false;					
 					break;
 				}
 			}

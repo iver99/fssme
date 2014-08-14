@@ -27,7 +27,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "EMS_ANALYTICS_FOLDERS")
 @NamedQueries({
-		@NamedQuery(name = "Folder.getFolderById", query = "Select o from EmAnalyticsFolder o where  o.folderId= :id AND O.deleted =0"),
 		@NamedQuery(name = "Folder.getSubFolder", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= "
 				+ ":parentFolder" + " AND o.deleted=0"),
 		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.deleted=0"),
@@ -94,12 +93,12 @@ public class EmAnalyticsFolder implements Serializable
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
-	@OneToMany(mappedBy = "emAnalyticsFolder", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "emAnalyticsFolder", fetch = FetchType.LAZY)
 	private Set<EmAnalyticsFolder> emAnalyticsFolders;
 
 	//bi-directional many-to-one association to EmAnalyticsSearch
-	@OneToMany(mappedBy = "emAnalyticsFolder", fetch = FetchType.EAGER)
-	private Set<EmAnalyticsSearch> emAnalyticsSearches;
+	//	@OneToMany(mappedBy = "emAnalyticsFolder", fetch = FetchType.EAGER)
+	//	private Set<EmAnalyticsSearch> emAnalyticsSearches;
 
 	public EmAnalyticsFolder()
 	{
@@ -145,10 +144,10 @@ public class EmAnalyticsFolder implements Serializable
 		return emAnalyticsFolders;
 	}
 
-	public Set<EmAnalyticsSearch> getEmAnalyticsSearches()
-	{
-		return emAnalyticsSearches;
-	}
+	//	public Set<EmAnalyticsSearch> getEmAnalyticsSearches()
+	//	{
+	//		return emAnalyticsSearches;
+	//	}
 
 	public String getEmPluginId()
 	{
@@ -240,10 +239,10 @@ public class EmAnalyticsFolder implements Serializable
 		this.emAnalyticsFolders = emAnalyticsFolders;
 	}
 
-	public void setEmAnalyticsSearches(Set<EmAnalyticsSearch> emAnalyticsSearches)
-	{
-		this.emAnalyticsSearches = emAnalyticsSearches;
-	}
+	//	public void setEmAnalyticsSearches(Set<EmAnalyticsSearch> emAnalyticsSearches)
+	//	{
+	//		this.emAnalyticsSearches = emAnalyticsSearches;
+	//	}
 
 	public void setEmPluginId(String emPluginId)
 	{

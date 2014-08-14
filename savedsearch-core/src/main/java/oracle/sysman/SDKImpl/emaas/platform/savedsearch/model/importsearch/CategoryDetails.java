@@ -1,54 +1,48 @@
-package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
+package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlType;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.CategoryDetails;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ParameterDetails;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 
 
 /**
- * <p>Java class for importCategoryImpl complex type.
+ * <p>Java class for categoryDetails complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="importCategoryImpl">
+ * &lt;complexType name="categoryDetails">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;all>
- *         &lt;element name="Id" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
- *         &lt;element name="Name">
+ *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="name">
  *           &lt;simpleType>
  *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *               &lt;minLength value="1"/>
  *             &lt;/restriction>
  *           &lt;/simpleType>
  *         &lt;/element>
- *         &lt;element name="Description" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="Parameters" minOccurs="0">
+ *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="defaultFolderId" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="parameters" minOccurs="0">
  *           &lt;complexType>
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="Parameter" type="{}ParameterDetails" maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;element name="parameter" type="{}parameter" maxOccurs="unbounded" minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
  *           &lt;/complexType>
  *         &lt;/element>
- *         &lt;element ref="{}folderDet"/>
  *       &lt;/all>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -58,21 +52,21 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "importCategoryImpl", propOrder = {
+@XmlType(name = "categoryDetails", propOrder = {
 
 })
-public class ImportCategoryImpl {
+public class CategoryDetails {
 
-    @XmlElement(name = "Id")
+	@XmlElement(name="Id")
     protected Integer id;
-    @XmlElement(name = "Name", required = true)
+    @XmlElement(required = true ,name="Name")
     protected String name;
-    @XmlElement(name = "Description")
+    @XmlElement(name="Description")
     protected String description;
-    @XmlElement(name = "Parameters")
-    protected ImportCategoryImpl.Parameters parameters;
-    @XmlElementRef(name = "folderDet", type = JAXBElement.class)
-    protected JAXBElement<?> folderDet;
+    @XmlElement(name="DefaultFolderId")
+    protected Integer defaultFolderId;
+    @XmlElement(name="Parameters")
+    protected CategoryDetails.Parameters parameters;
 
     /**
      * Gets the value of the id property.
@@ -147,14 +141,38 @@ public class ImportCategoryImpl {
     }
 
     /**
+     * Gets the value of the defaultFolderId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getDefaultFolderId() {
+        return defaultFolderId;
+    }
+
+    /**
+     * Sets the value of the defaultFolderId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setDefaultFolderId(Integer value) {
+        this.defaultFolderId = value;
+    }
+
+    /**
      * Gets the value of the parameters property.
      * 
      * @return
      *     possible object is
-     *     {@link ImportCategoryImpl.Parameters }
+     *     {@link CategoryDetails.Parameters }
      *     
      */
-    public ImportCategoryImpl.Parameters getParameters() {
+    public CategoryDetails.Parameters getParameters() {
         return parameters;
     }
 
@@ -163,39 +181,11 @@ public class ImportCategoryImpl {
      * 
      * @param value
      *     allowed object is
-     *     {@link ImportCategoryImpl.Parameters }
+     *     {@link CategoryDetails.Parameters }
      *     
      */
-    public void setParameters(ImportCategoryImpl.Parameters value) {
+    public void setParameters(CategoryDetails.Parameters value) {
         this.parameters = value;
-    }
-
-    /**
-     * Gets the value of the folderDet property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link JAXBElement }{@code <}{@link Object }{@code >}
-     *     {@link JAXBElement }{@code <}{@link Integer }{@code >}
-     *     {@link JAXBElement }{@code <}{@link FolderDetails }{@code >}
-     *     
-     */
-    public JAXBElement<?> getFolderDet() {
-        return folderDet;
-    }
-
-    /**
-     * Sets the value of the folderDet property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link JAXBElement }{@code <}{@link Object }{@code >}
-     *     {@link JAXBElement }{@code <}{@link Integer }{@code >}
-     *     {@link JAXBElement }{@code <}{@link FolderDetails }{@code >}
-     *     
-     */
-    public void setFolderDet(JAXBElement<?> value) {
-        this.folderDet = value;
     }
 
 
@@ -209,7 +199,7 @@ public class ImportCategoryImpl {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="Parameter" type="{}ParameterDetails" maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;element name="parameter" type="{}parameter" maxOccurs="unbounded" minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
@@ -224,8 +214,7 @@ public class ImportCategoryImpl {
     })
     public static class Parameters {
 
-        @XmlElement(name = "Parameter")
-        protected List<ParameterDetails> parameter;
+        protected List<Parameter> parameter;
 
         /**
          * Gets the value of the parameter property.
@@ -245,60 +234,17 @@ public class ImportCategoryImpl {
          * 
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link ParameterDetails }
+         * {@link Parameter }
          * 
          * 
          */
-        public List<ParameterDetails> getParameter() {
+        public List<Parameter> getParameter() {
             if (parameter == null) {
-                parameter = new ArrayList<ParameterDetails>();
+                parameter = new ArrayList<Parameter>();
             }
             return this.parameter;
         }
 
     }
-    
-    
-    public Object getFolderDetails() {
-    	if(folderDet==null)
-    		return null;
-    	Object obj =  folderDet.getValue();
-    	FolderImpl fld = new FolderImpl();
-    	if(obj instanceof Integer)
-            return obj;
-    	else
-    	{
-    		FolderDetails fldDetails = (FolderDetails)obj;    		 
-    		fld.setName(fldDetails.getName());
-    		fld.setDescription(fldDetails.getDescription());
-    		fld.setParentId(fldDetails.getParentId()==null ? 1 : fldDetails.getParentId());
-    		fld.setUiHidden(fldDetails.isUiHidden());
-    		return fld;
-    	}
-    }
-    
-    public Category getCategoryDetails() {
-    	
-    	   CategoryImpl objCatImp  =null;   	
-    	   objCatImp = new CategoryImpl();
-    	   objCatImp.setName(getName());    	   
-    	   objCatImp.setDescription(getDescription());
-    	   List<Parameter> paraList = new ArrayList<Parameter>();
-    	   if(getParameters()!=null)
-    	   {
-    		   for(ParameterDetails objtmp :getParameters().getParameter())
-    		   {
-	    	       Parameter tmp = new Parameter();
-	    	       tmp.setName(objtmp.getName());
-	    	       tmp.setValue(objtmp.getValue());
-	    	       paraList.add(tmp);
-    		   }
-    		   objCatImp.setParameters(paraList);
-    	   }
-    	
-    	return objCatImp;
-    }
-
-    
 
 }
