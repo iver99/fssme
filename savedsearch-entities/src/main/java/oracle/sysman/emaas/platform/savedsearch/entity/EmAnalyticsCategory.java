@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -81,7 +80,7 @@ public class EmAnalyticsCategory implements Serializable
 
 	//bi-directional many-to-one association to EmAnalyticsCategoryParam
 
-	@OneToMany(mappedBy = "emAnalyticsCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "emAnalyticsCategory", cascade = CascadeType.ALL)
 	@PrivateOwned
 	private Set<EmAnalyticsCategoryParam> emAnalyticsCategoryParams;
 

@@ -22,7 +22,7 @@ Rem    SQL_SOURCE_FILE: emcore/source/oracle/sysman/emdrep/sql/core/13.1.0.0/ema
 Rem    SQL_SHIPPED_FILE: 
 Rem    SQL_PHASE: 
 Rem    SQL_STARTUP_MODE: NORMAL 
-Rem    SQL_IGNORABLE_ERRORS: NONE 
+Rem    SQL_IGNORABLE_ERRORS: NONE 	
 Rem    SQL_CALLING_FILE: 
 Rem    END SQL_FILE_METADATA
 

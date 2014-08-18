@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,7 +31,7 @@ public class SearchSet
     
     private List<ImportSearchImpl> search = null;
  
-    
+    @XmlElement(name="Search")
     public List<ImportSearchImpl> getSearchSet() {
     	if(search==null)
     		search = new ArrayList<ImportSearchImpl>();

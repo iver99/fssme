@@ -23,7 +23,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -38,9 +37,6 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("")
 public class SavedSearchAPI
 {
-	private final String search = "search";
-	private final String folder = "folder";
-	private static final String FOLDER_PATH = "flattenedFolderPath";
 	private static final Logger _logger = Logger.getLogger(SearchManagerImpl.class);
 	@Context
 	UriInfo uri;
@@ -244,11 +240,6 @@ public class SavedSearchAPI
 			catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			catch (EMAnalyticsWSException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-			}
 			catch (EMAnalyticsFwkJsonException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -327,7 +318,7 @@ public class SavedSearchAPI
 	}
 
 	private String getFolderDetails(long id) throws EMAnalyticsFwkException, JSONException, UnsupportedEncodingException,
-	EMAnalyticsWSException, EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 
 		String message = new String();
@@ -347,7 +338,7 @@ public class SavedSearchAPI
 		// Get Searches too !!
 		List<Search> searchList;
 
-		searchList = sman.getSearchListByFolderIdCategoryFilter(id);
+		searchList = sman.getSearchListByFolderId(id);
 
 		for (Search searchObj : searchList) {
 			jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchObj, null, true);

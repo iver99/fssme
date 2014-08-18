@@ -16,6 +16,8 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
@@ -46,42 +48,117 @@ public class ImportSearchSet
 	 *            Input Sample - Importing the search with category name & folder name objects:<br>
 	 *            <font color="DarkCyan">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;<br>
 	 *            &lt;SearchSet&gt;<br>
-	 *            &nbsp;&nbsp;&lt;search&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Search1234&lt;/name&gt;<br>
+	 *            &nbsp;&nbsp;&lt;Search&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Search1234&lt;/Name&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameters&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameter&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Param1&lt;/name&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type&gt;STRING&lt;/type&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Param1&lt;/Name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Type&gt;STRING&lt;/Type&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Value&gt;ALL&lt;/Value&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameters&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Category&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;cat_name&lt;/name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;cat_name&lt;/Name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
 	 *            category name is not existed, it would create a new category with the given name --&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Folder&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;fol_name&lt;/name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;fol_name&lt;/Name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
 	 *            folder name is not existed, it would create a new folder with the given name --&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;uiHidden&gt;false&lt;/uiHidden&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;UiHidden&gt;false&lt;/UiHidden&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Folder&gt;<br>
-	 *            &nbsp;&nbsp;&lt;/search&gt;<br>
+	 *            &nbsp;&nbsp;&lt;/Search&gt;<br>
 	 *            &lt;/SearchSet&gt;</font> <br>
 	 *            Input Sample - Importing the search with categoryId & folderId objects:<br>
 	 *            <font color="DarkCyan">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;<br>
 	 *            &lt;SearchSet&gt;<br>
-	 *            &nbsp;&nbsp;&lt;search&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Search1&lt;/name&gt;<br>
+	 *            &nbsp;&nbsp;&lt;Search&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Search1&lt;/Name&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameters&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameter&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Param1&lt;/name&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type&gt;STRING&lt;/type&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Param1&lt;/Name&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Type&gt;STRING&lt;/Type&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Value&gt;ALL&lt;/Value&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameters&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;categoryId&gt;1122&lt;/categoryId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;CategoryId&gt;1122&lt;/CategoryId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
 	 *            categoryId is not existed, importing search would failed --&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;folderId&gt;1644&lt;/folderId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the folderId is
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;FolderId&gt;1644&lt;/FolderId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the folderId is
 	 *            not existed, importing search would failed --&gt;<br>
-	 *            &nbsp;&nbsp;&lt;/search&gt;<br>
+	 *            &nbsp;&nbsp;&lt;/Search&gt;<br>
 	 *            &lt;/SearchSet&gt;</font><br>
+	 *            Input Spec:<br>
+	 *            <table border="1">
+	 *            <tr>
+	 *            <th>Field Name</th>
+	 *            <th>Type</th>
+	 *            <th>Required
+	 *            <th>Default Value</th>
+	 *            <th>Comments</th>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>CategoryId</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>CategoryId and Category Name is alternative, required</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Category Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>FolderId</td>
+	 *            <td>NUMBER(38,0)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>FolderId and Folder Name is alternative, required</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Folder Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Folder UiHidden</td>
+	 *            <td>BOOLEAN</td>
+	 *            <td>N</td>
+	 *            <td>false</td>
+	 *            <td>Valid value: true, false.</td>
+	 *            </TR>
+	 *            <tr>
+	 *            <td>SearchParameter Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>For each SearchParameter, Name and Type are required, Value is optional</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>SearchParameter Type</td>
+	 *            <td>VARCHAR2(16 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>Valid value: STRING, CLOB.</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>SearchParameter Value</td>
+	 *            <td>VARCHAR2(1024 BYTE)/NCLOB</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            </table>
 	 * @return The search with id and name which means the importing successfully<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan">[<br>
@@ -118,7 +195,7 @@ public class ImportSearchSet
 	 *         1. If missing some necessary element in XML, it would return 400 error<br>
 	 *         For example, if there is no "category" in described in XML, it would return the error message<br>
 	 *         Error at line 12 , column 14 Invalid content was found starting with element 'Folder'. One of '{Category,
-	 *         categoryId}' is expected.<br>
+	 *         CategoryId}' is expected.<br>
 	 *         2. If the XML format is wrong, it would return the error message "Please specify input with valid format"</td>
 	 *         </tr>
 	 *         <tr>
@@ -142,10 +219,10 @@ public class ImportSearchSet
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			InputStream stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			InputStream stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
-			SearchSet searches = (SearchSet) JAXBUtil.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(SearchSet.class));
+			SearchSet searches = (SearchSet) JAXBUtil.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(ObjectFactory.class));
 			List<ImportSearchImpl> list = searches.getSearchSet();
 			if (list.size() == 0) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
@@ -153,9 +230,9 @@ public class ImportSearchSet
 			if (validateData(list)) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 			}
-			List<ImportSearchImpl> addedList = SearchManagerImpl.getInstance().saveMultipleSearch(list);
+			List<Search> addedList = SearchManagerImpl.getInstance().saveMultipleSearch(list);
 			JSONArray jsonArray = new JSONArray();
-			for (ImportSearchImpl impSearch : addedList) {
+			for (Search impSearch : addedList) {
 				JSONObject jObj = new JSONObject();
 				jObj.put("id", impSearch.getId());
 				jObj.put("name", impSearch.getName());
@@ -186,7 +263,7 @@ public class ImportSearchSet
 			if (obj.getCategoryDetails() != null) {
 				if (obj.getCategoryDetails() instanceof CategoryImpl) {
 					CategoryImpl objCat = (CategoryImpl) obj.getCategoryDetails();
-					if (!(obj.getName() != null && objCat.getName().trim().length() > 0)) {
+					if (!(objCat.getName() != null && objCat.getName().trim().length() > 0)) {
 						return true;
 					}
 				}
@@ -194,7 +271,7 @@ public class ImportSearchSet
 			if (obj.getFolderDetails() != null) {
 				if (obj.getFolderDetails() instanceof FolderImpl) {
 					FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
-					if (!(obj.getName() != null && objFolder.getName().trim().length() > 0)) {
+					if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
 						return true;
 					}
 				}
