@@ -102,11 +102,29 @@ bash "deploy_ear" do
     echo "Application is already deployed" >> #{node["log_dir"]}/savedSearchDatasource.log
     exit 0
     else
-    export JAVA_HOME=#{node["jdk_dir"]}/jdk1.7.0_51
+        export JAVA_HOME=#{node["jdk_dir"]}/jdk1.7.0_51
+        applicationName=#{node["myApplicationName"]}
+        if [ "$applicationName" == "" ]; then
+            applicationName=#{node["SAAS_servicename"]}
+        fi
+        set +e
+        echo "#{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password xxxx -listapps | grep $applicationName" >> #{node["log_dir"]}/savedSearchDatasource.log
 
-    echo "#{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}"#{node["SAAS_version"]}.ea#{node["SAAS_version"]}.earr >> #{node["log_dir"]}/savedSearchDatasource.log
+        listApp=`#{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -listapps | grep $applicationName`
+        if  [ -z "$listApp" ]; then
+            echo "Performing deployment since the $applicationName is not in the application list" >> #{node["log_dir"]}/savedSearchDatasource.log
 
-    #{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}#{node["SAAS_version"]}.ear >> #{node["log_dir"]}/savedSearchDatasource.log
+            echo "#{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}"#{node["SAAS_version"]}.ea#{node["SAAS_version"]}.earr >> #{node["log_dir"]}/savedSearchDatasource.log
+
+            #{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}#{node["SAAS_version"]}.ear >> #{node["log_dir"]}/savedSearchDatasource.log
+        else
+            echo "Starting the Application since $applicationName is already on the application list" >> #{node["log_dir"]}/savedSearchDatasource.log
+
+            echo "#{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password xxxx -start -name $applicationName" >> #{node["log_dir"]}/savedSearchDatasource.log
+
+            #{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -start -name $applicationName 
+        fi
+        exit $?
     fi
   EOH
 end
