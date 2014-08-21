@@ -113,6 +113,8 @@ public class FolderCRUD
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("Verfify whether the timestamp of create&modify is same or not");
+			Assert.assertEquals(res1.jsonPath().get("createdOn"), res1.jsonPath().get("lastModifiedOn"));
 			System.out.println("											");
 
 			System.out.println("This test is to check for the duplicate entry with re-post");
@@ -360,6 +362,9 @@ public class FolderCRUD
 					Assert.assertEquals(c, "Custom_Folder_Edit");
 					System.out.println("Asserted & FolderName After Edit is:" + c);
 					System.out.println("											");
+					String str_createdOn = jp1.get("createdOn");
+					String str_modifiedOn = jp1.get("lastModifiedOn");
+					Assert.assertNotEquals(str_createdOn, str_modifiedOn);
 					System.out.println("==PUT operation is completed");
 
 					System.out.println("------------------------------------------");
