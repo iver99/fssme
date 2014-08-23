@@ -249,9 +249,7 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.notice("Post-stopping 'Service Registry' application service");
-		RegistrationManager.getInstance().getRegistrationClient().shutdown();
-		logger.debug("Post-stopped 'Service Regsitry'");
+
 	}
 
 	@Override
@@ -262,6 +260,9 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
+		logger.notice("Post-stopping 'Service Registry' application service");
+		RegistrationManager.getInstance().getRegistrationClient().shutdown();
+		logger.debug("Post-stopped 'Service Regsitry'");
 	}
 
 }
