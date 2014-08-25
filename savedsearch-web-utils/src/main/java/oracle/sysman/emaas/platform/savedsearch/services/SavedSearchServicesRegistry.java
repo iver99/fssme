@@ -157,6 +157,17 @@ public class SavedSearchServicesRegistry implements ApplicationService
 			serviceConfigMap.put("virtualEndpoints", virtualEndpoints);
 			return this;
 		}
+
+                /**
+                 * @param authToken
+                 *            The authorization token to be used for interapp communication
+                 * @return ServiceConfigBuilder
+                 */
+                public ServiceConfigBuilder authToken(String authToken)
+                {
+                        serviceConfigMap.put("authToken", authToken);
+                        return this;
+                }
 	}
 
 	enum UrlType
@@ -224,6 +235,9 @@ public class SavedSearchServicesRegistry implements ApplicationService
 				.serviceUrls(smProps.getProperty("serviceUrls")).controlledDatatypes("LogFile, Target Delta")
 				.supportedTargetTypes("LogFile, Target Delta");
 
+                if (smProps.getProperty("authToken")!=null) {
+                    builder.authToken(smProps.getProperty("authToken"));
+                }
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
@@ -241,6 +255,9 @@ public class SavedSearchServicesRegistry implements ApplicationService
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
 		//initialize the lookup manager here itself for serviceUrls 
+                if (smProps.getProperty("authToken")!=null) {
+                    LookupManager.getInstance().withAuthorization(smProps.getProperty("authToken"));
+                }
 		LookupManager.getInstance().initComponent(Arrays.asList(smProps.getProperty("serviceUrls")));
 	}
 

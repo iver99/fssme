@@ -158,6 +158,17 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 			serviceConfigMap.put("virtualEndpoints", virtualEndpoints);
 			return this;
 		}
+
+                /**
+                 * @param authToken
+                 *            The authorization token to be used for interapp communication
+                 * @return ServiceConfigBuilder
+                 */
+                public ServiceConfigBuilder authToken(String authToken)
+                {
+                        serviceConfigMap.put("authToken", authToken);
+                        return this;
+                }
 	}
 
 	enum UrlType
@@ -228,6 +239,9 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
 				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
+                if (serviceProps.getProperty("authToken")!=null) {
+                    builder.authToken(serviceProps.getProperty("authToken"));
+                }
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
@@ -243,6 +257,9 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
 		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
+                if (smProps.getProperty("authToken")!=null) {
+                    LookupManager.getInstance().withAuthorization(serviceProps.getProperty("authToken"));
+                }
 		LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 	}
 
