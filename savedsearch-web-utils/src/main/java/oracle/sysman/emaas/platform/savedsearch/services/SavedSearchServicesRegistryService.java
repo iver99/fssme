@@ -257,7 +257,7 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
 		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
-                if (smProps.getProperty("authToken")!=null) {
+                if (serviceProps.getProperty("authToken")!=null) {
                     LookupManager.getInstance().withAuthorization(serviceProps.getProperty("authToken"));
                 }
 		LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
