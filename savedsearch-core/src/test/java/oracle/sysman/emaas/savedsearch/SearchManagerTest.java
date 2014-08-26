@@ -2,6 +2,7 @@ package oracle.sysman.emaas.savedsearch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -10,7 +11,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerTestMockup;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -253,6 +253,153 @@ public class SearchManagerTest extends BaseTest
 	}
 
 	/*
+	 * Use this method to see how much time is needed to query searches with given folder ID from 1 million searches with multi-threads
+	 * simultaneously.
+	 * Several manual steps are needed before run this method
+	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
+	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
+	 * 2. query your unit test database and change the folderId in the method
+	 * 3. un-comment the @Test and run with JUnit
+	 */
+	//	@Test
+	public void testQueryPerformanceMultiThreadsSearchByFolderId() throws EMAnalyticsFwkException, InterruptedException
+	{
+		final int folderId = 101790;
+
+		// Uncomment below code to clearing Entity Manager before the test
+		/*		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+				emf.createEntityManager().clear();
+				*/
+		SearchManagerTestMockup.executeRepeatedly(100, 10, new Runnable() {
+			@Override
+			public void run()
+			{
+				try {
+					final SearchManager sm = SearchManager.getInstance();
+					List<Search> searches = sm.getSearchListByFolderId(folderId);
+				}
+				catch (EMAnalyticsFwkException e) {
+					e.printStackTrace();
+					AssertJUnit.fail(e.getLocalizedMessage());
+				}
+			}
+
+		}, null, null);
+
+		final SearchManager sm = SearchManager.getInstance();
+		List<Search> searches = sm.getSearchListByFolderId(folderId);
+		System.out.println(searches.size() + " searches returned");
+	}
+
+	/*
+	 * Use this method to see how much time is needed to query a search from 1 million searches multi-threads
+	 * simultaneously.
+	 * 
+	 * Several manual steps are needed before run this method
+	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
+	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
+	 * 2. query your unit test database and change the searchId(or availableSearchIDs) in the method
+	 * 3. un-comment the @Test and run with JUnit
+	 */
+	//	@Test
+	public void testQueryPerformanceMultiThreadsSearchById() throws EMAnalyticsFwkException, InterruptedException
+	{
+		final int searchId = 990007;
+
+		// Uncomment below code to clearing Entity Manager before the test
+		/*		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+				emf.createEntityManager().clear();
+				*/
+		final SearchManager sm = SearchManager.getInstance();
+		final int[] availableSearchIDs = { 10139, 10141, 10164, 10560, 10571, 10872, 10876, 10525, 11117, 11129 };
+
+		SearchManagerTestMockup.executeRepeatedly(100, 10, new Runnable() {
+			@Override
+			public void run()
+			{
+				Random r = new Random();
+				int randomSearchIndex = r.nextInt(availableSearchIDs.length);
+				try {
+					Search search = sm.getSearch(availableSearchIDs[randomSearchIndex]);
+					AssertJUnit.assertNotNull(search);
+				}
+				catch (EMAnalyticsFwkException e) {
+					e.printStackTrace();
+					AssertJUnit.fail(e.getLocalizedMessage());
+				}
+			}
+
+		}, null, null);
+	}
+
+	/*
+	 * Use this method to see how much time is needed to query a search by name from 1 million searches multi-threads
+	 * simultaneously.
+	 * 
+	 * Several manual steps are needed before run this method
+	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
+	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
+	 * 2. query your unit test database and change the searchName/folderId in the method
+	 * 3. un-comment the @Test and run with JUnit
+	 */
+	//	@Test
+	public void testQueryPerformanceMultiThreadsSearchByName() throws EMAnalyticsFwkException, InterruptedException
+	{
+		final String searchName = "Search for performance 94 1407381675833";
+		final int folderId = 1740;
+
+		// Uncomment below code to clearing Entity Manager before the test
+		/*final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		emf.createEntityManager().clear();*/
+
+		final SearchManager sm = SearchManager.getInstance();
+
+		SearchManagerTestMockup.executeRepeatedly(100, 10, new Runnable() {
+			@Override
+			public void run()
+			{
+				try {
+					/*Search search = */sm.getSearchByName(searchName, folderId);
+					//					AssertJUnit.assertNotNull(search);
+				}
+				catch (EMAnalyticsFwkException e) {
+					e.printStackTrace();
+					AssertJUnit.fail(e.getLocalizedMessage());
+
+				}
+			}
+
+		}, null, null);
+	}
+
+	/*
+	 * Use this method to see how much time is needed to query a search from 1 million searches.
+	 * Several manual steps are needed before run this method
+	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
+	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
+	 * 2. query your unit test database and change the searchId, searchName and folderId in the method
+	 * 3. un-comment the @Test and run with JUnit
+	 */
+	//	@Test
+	public void testQueryPerformanceSingleSearchById() throws EMAnalyticsFwkException
+	{
+		int searchId = 990007;
+		SearchManager sm = SearchManager.getInstance();
+		//		Search search = SearchManagerTest
+		//				.createTestSearch(sm, folder, cat, "Search Name for query " + System.currentTimeMillis());
+
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		emf.createEntityManager().clear();
+		//		emf.getCache().evictAll();
+
+		long start = System.currentTimeMillis();
+		//sm.getSearch(search.getId());
+		sm.getSearch(searchId);
+		long end = System.currentTimeMillis();
+		System.out.println("Time spent to query search by ID from 1,000,000 searches: " + (end - start) + "ms");
+	}
+
+	/*
 	 * Use this method to see how much time is needed to query a search from 1 million searches.
 	 * Several manual steps are needed before run this method
 	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
@@ -262,47 +409,49 @@ public class SearchManagerTest extends BaseTest
 	 * 3. un-comment the @Test and run with JUnit
 	 */
 	//@Test
-	public void testQueryPerformance() throws EMAnalyticsFwkException
+	public void testQueryPerformanceSingleSearchByName() throws EMAnalyticsFwkException
 	{
-		int searchId = 321;
-		String searchName = "Search1 Name";
-		int folderId = 2;
-		FolderManagerImpl fm = FolderManagerImpl.getInstance();
-		Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest for query " + System.currentTimeMillis());
+		String searchName = "Search for performance 978615 1407383176408";
+		int folderId = 1740;
 
-		CategoryManager cm = CategoryManagerImpl.getInstance();
-		Category cat = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest for query " + System.currentTimeMillis());
-
+		//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		//		emf.createEntityManager().clear();
+		//		emf.getCache().evictAll();
 		SearchManager sm = SearchManager.getInstance();
-		Search search = SearchManagerTest
-				.createTestSearch(sm, folder, cat, "Search Name for query " + System.currentTimeMillis());
+
+		long start = System.currentTimeMillis();
+		//sm.getSearchByName(search.getName(), folder.getId());
+		sm.getSearchByName(searchName, folderId);
+		long end = System.currentTimeMillis();
+		System.out.println("Time spent to query search by name from 1,000,000 searches: " + (end - start) + "ms");
+	}
+
+	/*
+	 * Use this method to see how much time is needed to query a search from 1 million searches.
+	 * Several manual steps are needed before run this method
+	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
+	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
+	 * 2. query your unit test database and change the searchId, searchName and folderId in the method, as
+	 * it's found the JPA cache (or database cache?) have extreme impact on the result
+	 * 3. un-comment the @Test and run with JUnit
+	 */
+	//@Test
+	public void testQueryPerformanceSingleSearchListByFolderId() throws EMAnalyticsFwkException
+	{
+		int folderId = 1740;
 
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		emf.createEntityManager().clear();
-		emf.getCache().evictAll();
+		//		emf.getCache().evictAll();
+
+		SearchManager sm = SearchManager.getInstance();
 
 		long start = System.currentTimeMillis();
-		//sm.getSearch(search.getId());
-		sm.getSearch(searchId);
-		long end = System.currentTimeMillis();
-		System.out.println("Time spent to query search by ID from 1,000,000 searches: " + (end - start) + "ms");
-
-		start = System.currentTimeMillis();
-		//sm.getSearchByName(search.getName(), folder.getId());
-		sm.getSearchByName(searchName, folderId);
-		end = System.currentTimeMillis();
-		System.out.println("Time spent to query search by name from 1,000,000 searches: " + (end - start) + "ms");
-
-		start = System.currentTimeMillis();
 		//List<Search> searches = sm.getSearchListByFolderId(folder.getId());
 		List<Search> searches = sm.getSearchListByFolderId(folderId);
-		end = System.currentTimeMillis();
+		long end = System.currentTimeMillis();
 		System.out.println("Time spent to get search list by folder id from 1,000,000 searches: " + (end - start) + "ms");
 		System.out.println("amount of searches " + searches.size());
-
-		sm.deleteSearch(search.getId(), true);
-		cm.deleteCategory(cat.getId(), true);
-		fm.deleteFolder(folder.getId(), true);
 	}
 
 	@Test
