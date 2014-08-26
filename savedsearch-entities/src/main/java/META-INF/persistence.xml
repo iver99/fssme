@@ -16,7 +16,8 @@
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class>
-
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVer</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVerPK</class>
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />
 			<property name="eclipselink.jdbc.batch-writing" value="Oracle-JDBC" />
@@ -57,7 +58,8 @@
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class>
-
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVer</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVerPK</class>
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />
 			<property name="eclipselink.jdbc.batch-writing" value="Oracle-JDBC" />
