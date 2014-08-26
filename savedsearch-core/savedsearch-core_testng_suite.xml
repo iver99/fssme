@@ -12,6 +12,7 @@
 			<class name="oracle.sysman.emaas.savedsearch.SearchTest" />
 			<class name="oracle.sysman.emaas.savedsearch.CategoryManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.SearchManagerTest" />
+			<class name="oracle.sysman.emaas.savedsearch.VersionManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.Cleanup" />
 		</classes>
 	</test> <!-- Test -->

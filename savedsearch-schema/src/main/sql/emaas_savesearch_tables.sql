@@ -16,6 +16,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
+Rem    miayu       08/22/14 - Introduce schema version
 Rem    saurgarg    01/27/14 - adding category params table and other changes
 Rem    kuabhina    12/13/13 - Created
 Rem
@@ -250,3 +251,22 @@ CREATE TABLE EMS_ANALYTICS_LAST_ACCESS
     ACCESS_DATE TIMESTAMP,
     CONSTRAINT EMS_ANALYTICS_LAST_ACCESS_PK PRIMARY KEY (OBJECT_ID,ACCESSED_BY,OBJECT_TYPE) USING INDEX
   );
+
+Rem This table stores the version of SSF schema
+Rem SSF schema version should match SSF code version
+Rem
+Rem KEYS
+Rem
+Rem The primary key is (MAJOR,MINOR)
+Rem
+Rem COLUMNS
+Rem
+Rem MAJOR - Major version of SSF schema
+Rem MINOR - Minor version of SSF schema
+CREATE TABLE EMS_ANALYTICS_SCHEMA_VER_SSF 
+(
+  MAJOR NUMBER(38,0) NOT NULL, 
+  MINOR NUMBER(38,0) NOT NULL,
+  CONSTRAINT EMS_ANALYTICS_SCHEMA_VER_PK PRIMARY KEY (MAJOR, MINOR) USING INDEX 
+);
+
