@@ -161,6 +161,16 @@ values (2021,212,'Top Targets with Oracle Management Agent Errors','"Log Rule" =
 -- APPLICATIONS
 
 
+-- SEARCH PARAMATERS 
+-- For now, we just make all searches have same params. We will revisit this in future
+Insert into EMS_ANALYTICS_SEARCH_PARAMS(SEARCH_ID,NAME,PARAM_TYPE,PARAM_VALUE_STR)
+select SEARCH_ID,'INVISIBLE_TO_DASHBOARD',1,'FALSE') from EMS_ANALYTICS_SEARCH where search_id>=2000 and search_id<=2999;
+
+Insert into EMS_ANALYTICS_SEARCH_PARAMS(SEARCH_ID,NAME,PARAM_TYPE,PARAM_VALUE_STR)
+select SEARCH_ID,'HISTOGRAM_GROUPBY',1,null) from EMS_ANALYTICS_SEARCH where search_id>=2000 and search_id<=2999;
+
+Insert into EMS_ANALYTICS_SEARCH_PARAMS(SEARCH_ID,NAME,PARAM_TYPE,PARAM_VALUE_STR)
+select SEARCH_ID,'time_range',1,'ALL_TIME') from EMS_ANALYTICS_SEARCH where search_id>=2000 and search_id<=2999;
 
 
 
