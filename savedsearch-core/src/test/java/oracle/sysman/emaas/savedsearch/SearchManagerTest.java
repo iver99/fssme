@@ -37,7 +37,9 @@ public class SearchManagerTest extends BaseTest
 		cat.setName(name);
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		cat.setOwner(currentUser);
-		cat.setDefaultFolderId(folder.getParentId());
+		if (folder != null) {
+			cat.setDefaultFolderId(folder.getParentId());
+		}
 		cat = cm.saveCategory(cat);
 		return cat;
 	}
@@ -71,24 +73,21 @@ public class SearchManagerTest extends BaseTest
 	public void testCreateSearchPerformance() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
-		Folder folder = null;
-		for (int i = 0; i < 10000; i++) {
-			folder = SearchManagerTest.createTestFolder(fm, "FolderTest " + i + " " + System.currentTimeMillis());
-		}
-
 		CategoryManager cm = CategoryManagerImpl.getInstance();
-		Category cat = null;
-		for (int i = 0; i < 1000; i++) {
-			cat = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest " + i + " " + System.currentTimeMillis());
-		}
-
 		SearchManager sm = SearchManager.getInstance();
-		System.out.println("Start to create 1000 searches");
 		long start = System.currentTimeMillis();
-		for (int i = 1; i < 1000000; i++) {
-			SearchManagerTest.createTestSearch(sm, folder, cat, "Search for performance " + i + " " + System.currentTimeMillis());
+		System.out.println("Start to create 1000 categories, 10,000 folders and 1,000,000 searches");
+		for (int i = 0; i < 1; i++) {
+			Category cat = SearchManagerTest.createTestCategory(cm, null, "CategoryTest " + i);
+			for (int j = 0; j < 10; j++) {
+				Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest " + i + "-" + j);
+				for (int k = 0; k < 100; k++) {
+					SearchManagerTest.createTestSearch(sm, folder, cat, "Search for performance " + i + "-" + j + "-" + k);
+				}
+			}
 		}
-		System.out.println("Total time to create 10000 searches is " + (System.currentTimeMillis() - start));
+		System.out.println("Total time to create 1000 categories, 10,000 folders and 1,000,000 searches is "
+				+ (System.currentTimeMillis() - start) + " seconds");
 	}
 
 	@Test
@@ -269,7 +268,7 @@ public class SearchManagerTest extends BaseTest
 		// Uncomment below code to clearing Entity Manager before the test
 		/*		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 				emf.createEntityManager().clear();
-				*/
+		 */
 		SearchManagerTestMockup.executeRepeatedly(100, 10, new Runnable() {
 			@Override
 			public void run()
@@ -294,7 +293,7 @@ public class SearchManagerTest extends BaseTest
 	/*
 	 * Use this method to see how much time is needed to query a search from 1 million searches multi-threads
 	 * simultaneously.
-	 * 
+	 *
 	 * Several manual steps are needed before run this method
 	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
 	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
@@ -309,7 +308,7 @@ public class SearchManagerTest extends BaseTest
 		// Uncomment below code to clearing Entity Manager before the test
 		/*		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 				emf.createEntityManager().clear();
-				*/
+		 */
 		final SearchManager sm = SearchManager.getInstance();
 		final int[] availableSearchIDs = { 10139, 10141, 10164, 10560, 10571, 10872, 10876, 10525, 11117, 11129 };
 
@@ -335,7 +334,7 @@ public class SearchManagerTest extends BaseTest
 	/*
 	 * Use this method to see how much time is needed to query a search by name from 1 million searches multi-threads
 	 * simultaneously.
-	 * 
+	 *
 	 * Several manual steps are needed before run this method
 	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
 	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
