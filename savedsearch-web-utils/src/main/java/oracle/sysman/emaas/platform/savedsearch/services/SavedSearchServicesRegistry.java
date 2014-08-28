@@ -235,16 +235,6 @@ public class SavedSearchServicesRegistry implements ApplicationService
 				.serviceUrls(smProps.getProperty("serviceUrls")).controlledDatatypes("LogFile, Target Delta")
 				.supportedTargetTypes("LogFile, Target Delta");
 
-try {
-javax.xml.parsers.DocumentBuilderFactory bf = javax.xml.parsers.DocumentBuilderFactory.newInstance();
-System.out.println("DEBUGGING documentBuilderFactory class:"+bf.getClass().getName());
-java.net.URL classPath= bf.getClass().getResource("/"+bf.getClass().getName().replace("\\.","/")+".class");
-System.out.println("DEBUGGING lookup:"+classPath.toString());
-} catch (Throwable thr) {
-System.out.println("DEBUGGING throwable");
-thr.printStackTrace(System.out);
-}
-
                 if (smProps.getProperty("authToken")!=null) {
                     builder.authToken(smProps.getProperty("authToken"));
                 }

@@ -238,16 +238,6 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 				.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
 				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
 				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
-try {
-javax.xml.parsers.DocumentBuilderFactory bf = javax.xml.parsers.DocumentBuilderFactory.newInstance();
-System.out.println("DEBUGGING documentBuilderFactory class:"+bf.getClass().getName());
-java.net.URL classPath= bf.getClass().getResource("/"+bf.getClass().getName().replace("\\.","/")+".class");
-System.out.println("DEBUGGING lookup:"+classPath.toString());
-} catch (Throwable thr) {
-System.out.println("DEBUGGING throwable");
-thr.printStackTrace(System.out);
-}
-
                 if (serviceProps.getProperty("authToken")!=null) {
                     builder.authToken(serviceProps.getProperty("authToken"));
                 }
