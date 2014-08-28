@@ -16,9 +16,13 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-Rem    kuabhina    12/13/13 - Created
+Rem    miayu       08/22/14 - Introduce schema version
 Rem    miayu       06/06/14 - Reserve some permanent category/folder ID(s) for internal integrator
+Rem    kuabhina    12/13/13 - Created
 Rem
+
+Rem SEED DATA FOR Schema Version
+Insert into EMS_ANALYTICS_SCHEMA_VER_SSF(MAJOR,MINOR) values(0,5);
 
 Rem SEED DATA FOR FOLDER
 Insert into EMS_ANALYTICS_FOLDERS (FOLDER_ID,NAME,PARENT_ID,DESCRIPTION,CREATION_DATE,OWNER,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN) 
