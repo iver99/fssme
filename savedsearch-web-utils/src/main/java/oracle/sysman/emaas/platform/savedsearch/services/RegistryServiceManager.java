@@ -11,16 +11,22 @@ import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractServicesManager;
+import oracle.sysman.emaas.platform.savedsearch.property.PropertyReader;
+import oracle.sysman.emaas.platform.savedsearch.services.RegistryServiceManager.ServiceConfigBuilder;
+import oracle.sysman.emaas.platform.savedsearch.services.RegistryServiceManager.UrlType;
+import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
+import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
+
+import org.apache.log4j.Logger;
+
 import weblogic.application.ApplicationLifecycleEvent;
-import weblogic.logging.NonCatalogLogger;
 
-public class SavedSearchServicesRegistry implements ApplicationService
+public class RegistryServiceManager implements ApplicationServiceManager
 {
-
 	interface Builder
 	{
 		Properties build();
@@ -164,7 +170,11 @@ public class SavedSearchServicesRegistry implements ApplicationService
 		HTTP, HTTPS
 	}
 
-	private final NonCatalogLogger logger = new NonCatalogLogger(AbstractServicesManager.APPLICATION_LOGGER_SUBSYSTEM
+	private static final String NAV_BASE = "/savedsearch/v1";
+	private static final String NAV_SEARCH = "/savedsearch/v1/search";
+	private static final String NAV_FOLDER = "/savedsearch/v1/folder";
+	private static final String NAV_CATEGORY = "/savedsearch/v1/category";
+	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceregistry");
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
@@ -210,46 +220,41 @@ public class SavedSearchServicesRegistry implements ApplicationService
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.notice("Post-starting 'Service Registry' application service");
-		String applicationUrl = SavedSearchServicesRegistry.getApplicationUrl(UrlType.HTTP);
+		logger.info("Post-starting 'Service Registry' application service");
+		String applicationUrl = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
 		logger.debug("Application URL to register with 'Service Registry': " + applicationUrl);
 
 		logger.info("Building 'Service Registry' configuration");
-		Properties smProps = PropertyReader.loadProperty("serviceregistry-client.properties");
+		Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
+
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
-		builder.serviceName(smProps.getProperty("serviceName")).version(smProps.getProperty("version"))
-				.virtualEndpoints(applicationUrl + smProps.getProperty("virtualEndpoints"))
-				.canonicalEndpoints(applicationUrl + smProps.getProperty("canonicalEndpoints"))
-				.registryUrls(smProps.getProperty("registryUrls")).loadScore(0.9).leaseRenewalInterval(3000, TimeUnit.SECONDS)
-				.serviceUrls(smProps.getProperty("serviceUrls")).controlledDatatypes("LogFile, Target Delta")
-				.supportedTargetTypes("LogFile, Target Delta");
+		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
+		.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
+		.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
-		Properties urlProps = PropertyReader.loadProperty("serviceregistry-url.properties");
 		InfoManager
-				.getInstance()
-				.getInfo()
-				.setLinks(
-						Arrays.asList(
-								new Link().withRel("navigation").withHref(applicationUrl + urlProps.getProperty("navigation")),
-								new Link().withRel("search").withHref(applicationUrl + urlProps.getProperty("search")),
-								new Link().withRel("folder").withHref(applicationUrl + urlProps.getProperty("folder")),
-								new Link().withRel("category").withHref(applicationUrl + urlProps.getProperty("category"))));
+		.getInstance()
+		.getInfo()
+		.setLinks(
+				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
+						new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
+						.withHref(applicationUrl + NAV_FOLDER),
+						new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
-		//initialize the lookup manager here itself for serviceUrls 
-		LookupManager.getInstance().initComponent(Arrays.asList(smProps.getProperty("serviceUrls")));
+		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
+		LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 	}
 
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.notice("Post-stopping 'Service Registry' application service");
-		RegistrationManager.getInstance().getRegistrationClient().shutdown();
-		logger.debug("Post-stopped 'Service Regsitry'");
+
 	}
 
 	@Override
@@ -260,6 +265,9 @@ public class SavedSearchServicesRegistry implements ApplicationService
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
+		logger.info("Post-stopping 'Service Registry' application service");
+		RegistrationManager.getInstance().getRegistrationClient().shutdown();
+		logger.debug("Post-stopped 'Service Regsitry'");
 	}
 
 }

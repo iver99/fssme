@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.savedsearch.services;
 
+import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -19,7 +21,7 @@ import weblogic.application.ApplicationLifecycleEvent;
  * @author sdhamdhe Initializes the loggers - by default we log entries to
  *         /var/opt/ORCLemaas/logs/savedsearchService/savedSearchService.log
  */
-public class LoggingService implements ApplicationService
+public class LoggingServiceManager implements ApplicationServiceManager
 {
 
 	/* (non-Javadoc)
@@ -38,7 +40,7 @@ public class LoggingService implements ApplicationService
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
-		new DOMConfigurator().doConfigure(LoggingService.class.getResourceAsStream("/log4j.xml"),
+		new DOMConfigurator().doConfigure(LoggingServiceManager.class.getResourceAsStream("/log4j_ssf.xml"),
 				LogManager.getLoggerRepository());
 	}
 
@@ -48,7 +50,7 @@ public class LoggingService implements ApplicationService
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		// no impl 
+		// no impl
 	}
 
 	/* (non-Javadoc)
