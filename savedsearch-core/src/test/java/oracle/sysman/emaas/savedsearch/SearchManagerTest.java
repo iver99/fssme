@@ -75,19 +75,29 @@ public class SearchManagerTest extends BaseTest
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
 		CategoryManager cm = CategoryManagerImpl.getInstance();
 		SearchManager sm = SearchManager.getInstance();
+		//Steps to generate data for load testing
+		//1. uncomment @Test of this test
+		//2. change below count to desired ones
+		//3. change TestNg.properties to connect to target DB
+		//4. run this test to generate data
+		//Note: please do NOT push your change to generate data
+		final int categoryCount = 1000; //change this to your desired count
+		final int folderCount = 10000;//change this to your desired count
+		final int searchCount = 1000000;//change this to your desired count
 		long start = System.currentTimeMillis();
-		System.out.println("Start to create 1000 categories, 10,000 folders and 1,000,000 searches");
-		for (int i = 0; i < 1; i++) {
+		System.out.println("Start to create " + categoryCount + " categories, " + folderCount + " folders and " + searchCount
+				+ " searches");
+		for (int i = 0; i < categoryCount; i++) {
 			Category cat = SearchManagerTest.createTestCategory(cm, null, "CategoryTest " + i);
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < folderCount / categoryCount; j++) {
 				Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest " + i + "-" + j);
-				for (int k = 0; k < 100; k++) {
+				for (int k = 0; k < searchCount / folderCount; k++) {
 					SearchManagerTest.createTestSearch(sm, folder, cat, "Search for performance " + i + "-" + j + "-" + k);
 				}
 			}
 		}
-		System.out.println("Total time to create 1000 categories, 10,000 folders and 1,000,000 searches is "
-				+ (System.currentTimeMillis() - start) + " seconds");
+		System.out.println("Total time to create " + categoryCount + " categories, " + folderCount + " folders and "
+				+ searchCount + " searches is " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
 	@Test
