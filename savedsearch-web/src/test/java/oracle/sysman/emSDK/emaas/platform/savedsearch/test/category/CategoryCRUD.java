@@ -43,13 +43,13 @@ public class CategoryCRUD
 	public void category_badURLs()
 	{
 		try {
+			System.out.println("------------------------------------------");
 			System.out.println("Negative Case1 for CATEGORY");
 			System.out.println("											");
 			System.out.println("GET operation is in-progress with bad URL");
 			System.out.println("											");
 
-			Response res = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/category/0");
+			Response res = RestAssured.given().log().everything().when().get("/category/0");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -61,7 +61,7 @@ public class CategoryCRUD
 			System.out.println("											");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -72,12 +72,11 @@ public class CategoryCRUD
 	public void getCategory_detailsbyId()
 	{
 		try {
-
+			System.out.println("------------------------------------------");
 			System.out.println("GET operation is in-progress to read category details");
 			System.out.println("											");
 
-			Response res = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/category/1");
+			Response res = RestAssured.given().log().everything().when().get("/category/1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -97,7 +96,7 @@ public class CategoryCRUD
 			System.out.println("											");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -108,12 +107,11 @@ public class CategoryCRUD
 	public void getCategory_detailsbyName()
 	{
 		try {
-
+			System.out.println("------------------------------------------");
 			System.out.println("GET operation is in-progress to read category details");
 			System.out.println("											");
 
-			Response res = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/category?name=Log Analytics");
+			Response res = RestAssured.given().log().everything().when().get("/category?name=Log Analytics");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is : " + res.getStatusCode());
@@ -134,7 +132,7 @@ public class CategoryCRUD
 			System.out.println("											");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -145,24 +143,25 @@ public class CategoryCRUD
 	public void listAllCategories()
 	{
 		try {
+			System.out.println("------------------------------------------");
 			System.out.println("Using GET method to retrieve the list of categories");
 			System.out.println("											");
-			Response res1 = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/categories/");
+			Response res1 = RestAssured.given().log().everything().when().get("/categories/");
 			JsonPath jp1 = res1.jsonPath();
-			// System.out.println(res1.asString());
+
 			System.out.println("Categories existed :" + jp1.get("name"));
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 200);
-			System.out.println(jp1.getList("name").size());
+			System.out.println("There are " + jp1.getList("name").size() + " categories");
 			Assert.assertTrue(jp1.getList("name").size() > 0);
 			Assert.assertNotNull(jp1.getList("href").get(0));
 			Assert.assertTrue(String.valueOf(jp1.getList("href").get(0)).contains("/savedsearch/v1/category/"));
 			System.out.println("											");
 			System.out.println("------------------------------------------");
+			System.out.println("											");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -173,16 +172,17 @@ public class CategoryCRUD
 	public void searchesbyCategory_3queryParams()
 	{
 		try {
-
+			System.out.println("------------------------------------------");
 			System.out
 					.println("This test is to validate the response & status with categoryName, categoryId & folderId combinations");
-			Response res1 = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
+			Response res1 = RestAssured.given().log().everything().when()
 					.get("/searches?categoryId=3&categoryname=Log Analytics&folderId=2");
 
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
+			System.out.println("											");
 
 		}
 		catch (Exception e) {
@@ -200,8 +200,7 @@ public class CategoryCRUD
 			System.out
 					.println("Case1:This test is to validate the response and status when the searches by category with bad url");
 			System.out.println("											");
-			Response res = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/searches?categoryId");
+			Response res = RestAssured.given().log().everything().when().get("/searches?categoryId");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
@@ -210,8 +209,7 @@ public class CategoryCRUD
 			System.out.println("											");
 			System.out.println("Case2:This test is to validate the response and status when id is missing");
 			System.out.println("											");
-			Response res1 = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/searches?categoryId=");
+			Response res1 = RestAssured.given().log().everything().when().get("/searches?categoryId=");
 
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 400);
@@ -220,8 +218,7 @@ public class CategoryCRUD
 			System.out.println("											");
 			System.out.println("Case3:This test is to validate the response and status when name is missing");
 			System.out.println("											");
-			Response res2 = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/searches?categoryName=");
+			Response res2 = RestAssured.given().log().everything().when().get("/searches?categoryName=");
 
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 400);
@@ -245,8 +242,7 @@ public class CategoryCRUD
 		try {
 			System.out
 					.println("This test is to validate the response when the search by category with category ID which is not exist");
-			Response res = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/searches?categoryId=4567890");
+			Response res = RestAssured.given().log().everything().when().get("/searches?categoryId=4567890");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
@@ -270,8 +266,7 @@ public class CategoryCRUD
 		try {
 			System.out
 					.println("This test is to validate the response when the searches by category with category name which is not exist");
-			Response res = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/searches?categoryName=MyAnalytics");
+			Response res = RestAssured.given().log().everything().when().get("/searches?categoryName=MyAnalytics");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
@@ -295,7 +290,7 @@ public class CategoryCRUD
 		try {
 			System.out
 					.println("This test is to validate the response when the search by category whose category name & id are not exist");
-			Response res = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
+			Response res = RestAssured.given().log().everything().when()
 					.get("/searches?categoryName=invalidCategory&categoryId=200000");
 
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -319,8 +314,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out.println("This test is to validate the response when the search by category(query case check)");
-			Response res = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/searches?categoryname=Log Analytics");
+			Response res = RestAssured.given().log().everything().when().get("/searches?categoryname=Log Analytics");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
@@ -343,9 +337,9 @@ public class CategoryCRUD
 	public void searchesbyCategory_querycaseCheck()
 	{
 		try {
+			System.out.println("------------------------------------------");
 			System.out.println("This test is to validate the response when the search by category");
-			Response res = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/searches?categoryName=it analytics");
+			Response res = RestAssured.given().log().everything().when().get("/searches?categoryName=it analytics");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
@@ -353,10 +347,11 @@ public class CategoryCRUD
 			Assert.assertEquals(res.asString(), "Category object by Name: it analytics does not exist");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
+			System.out.println("											");
 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -367,13 +362,14 @@ public class CategoryCRUD
 	public void searchesbyCategoryId()
 	{
 		try {
+			System.out.println("------------------------------------------");
 			System.out.println("Searches by category id is in-progress using GET method");
 			System.out.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;
 			String jsonString1 = "{\"name\":\"Search_A\",\"category\":{\"id\":3},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
-					.log().everything().body(jsonString1).when().post("/search");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+					.post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
 			System.out.println("Search Id  :" + jp1.get("id"));
@@ -384,8 +380,7 @@ public class CategoryCRUD
 			System.out.println("											");
 			System.out.println("==POST operation is completed for creation searches using the specified category");
 			System.out.println("											");
-			Response res2 = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/searches?categoryId=3");
+			Response res2 = RestAssured.given().log().everything().when().get("/searches?categoryId=3");
 			JsonPath jp2 = res2.jsonPath();
 			List<String> a = new ArrayList<String>();
 			a = jp2.get("name");
@@ -405,8 +400,8 @@ public class CategoryCRUD
 
 			System.out.println("==Searches by category id is done");
 			System.out.println("Cleaning up the searches that are created in this scenario");
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
-					.log().everything().when().delete("/search/" + jp1.get("id"));
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/search/" + jp1.get("id"));
 			System.out.println(res3.asString());
 			System.out.println("Status code is: " + res3.getStatusCode());
 			Assert.assertTrue(res3.getStatusCode() == 204);
@@ -415,7 +410,7 @@ public class CategoryCRUD
 			System.out.println("											");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -426,20 +421,21 @@ public class CategoryCRUD
 	public void searchesbyCategoryName()
 	{
 		try {
+			System.out.println("------------------------------------------");
 			System.out
 					.println("This test is to perform the operation that lists all the searches by the specified category name");
 			System.out.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;
 			String jsonString1 = "{\"name\":\"Search_B\",\"category\":{\"id\":3},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
-					.log().everything().body(jsonString1).when().post("/search");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+					.post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
 			System.out.println("Search Id  :" + jp1.get("id"));
 			System.out.println("Search Name :" + jp1.get("name"));
 			System.out.println("Status code is: " + res1.getStatusCode());
-			// System.out.println(res1.asString());
+
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			System.out.println("											");
 			System.out.println("==POST operation is completed for creation searches using the specified category");
@@ -447,8 +443,7 @@ public class CategoryCRUD
 
 			System.out.println("Searches by category name is in-progress using GET method");
 			System.out.println("											");
-			Response res2 = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
-					.get("/searches?categoryName=IT Analytics");
+			Response res2 = RestAssured.given().log().everything().when().get("/searches?categoryName=IT Analytics");
 			JsonPath jp2 = res2.jsonPath();
 			List<String> a = new ArrayList<String>();
 			a = jp2.get("name");
@@ -462,15 +457,15 @@ public class CategoryCRUD
 			}
 
 			System.out.println("Status code is: " + res2.getStatusCode());
-			// System.out.println(res3.asString());
+
 			Assert.assertTrue(res2.getStatusCode() == 200);
 			System.out.println("											");
 			System.out.println("Searches in the category:IT Analytics are: " + jp2.get("name"));
 
 			System.out.println("==Searches by category name is done");
 			System.out.println("Cleaning up the searches that are created in this scenario");
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
-					.log().everything().when().delete("/search/" + jp1.get("id"));
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/search/" + jp1.get("id"));
 			System.out.println(res3.asString());
 			System.out.println("Status code is: " + res3.getStatusCode());
 			Assert.assertTrue(res3.getStatusCode() == 204);
@@ -479,7 +474,7 @@ public class CategoryCRUD
 			System.out.println("											");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -490,9 +485,10 @@ public class CategoryCRUD
 	public void searchesbyCategoryParams()
 	{
 		try {
+			System.out.println("------------------------------------------");
 
 			System.out.println("This test is to validate the response & status with more query params");
-			Response res1 = RestAssured.given().headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME).log().everything().when()
+			Response res1 = RestAssured.given().log().everything().when()
 					.get("/searches?categoryId&categoryname=Log Analytics&folderId=2");
 
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -501,10 +497,11 @@ public class CategoryCRUD
 			Assert.assertEquals(res1.asString(), "Please give the value for categoryId");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
+			System.out.println("											");
 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 }

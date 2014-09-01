@@ -264,7 +264,7 @@ class EmAnalyticsObjectUtil
 		if (folder.getParentId() != null) {
 			EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
 			if (parentFolderObj == null) {
-				throw new EMAnalyticsFwkException("Parent folder with id " + folder.getParentId() + " does not exist",
+				throw new EMAnalyticsFwkException("Parent folder with Id " + folder.getParentId() + " does not exist",
 						EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
 			}
 			folderObj.setEmAnalyticsFolder(parentFolderObj);
@@ -291,7 +291,7 @@ class EmAnalyticsObjectUtil
 			if (folder.getParentId() != null) {
 				EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
 				if (parentFolderObj == null) {
-					throw new EMAnalyticsFwkException("Parent folder with id " + folder.getParentId() + " does not exist",
+					throw new EMAnalyticsFwkException("Parent folder with Id " + folder.getParentId() + " does not exist",
 							EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
 				}
 				folderObj.setEmAnalyticsFolder(parentFolderObj);
@@ -403,7 +403,7 @@ class EmAnalyticsObjectUtil
 		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcNow);
 		searchEntity.setSystemSearch(search != null && search.isSystemSearch() ? new java.math.BigDecimal(1)
-		: new java.math.BigDecimal(0));
+				: new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setMetadataClob(search.getMetadata());
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
