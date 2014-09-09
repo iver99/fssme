@@ -13,6 +13,7 @@ apply plugin: 'java'
 
 allprojects {  
 	apply plugin: 'artifactory'  
+        apply plugin: 'DevInfraPlugin'
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
@@ -104,6 +105,7 @@ buildscript {
 
 	dependencies {  
 		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.1.0'  
+                classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
 	}  
 }
 
