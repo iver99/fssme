@@ -158,7 +158,7 @@ public class CategoryManagerImpl extends CategoryManager
 						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
 			}
 			else if (dmlce.getCause().getMessage().contains("ANALYTICS_CATEGORY_FK1")) {
-				throw new EMAnalyticsFwkException("Parent folder with id " + category.getDefaultFolderId() + " missing: "
+				throw new EMAnalyticsFwkException("Default folder with Id " + category.getDefaultFolderId() + " missing: "
 						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
 			}
 			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
@@ -338,12 +338,12 @@ public class CategoryManagerImpl extends CategoryManager
 
 	public List<Category> saveMultipleCategories(List<ImportCategoryImpl> categories)
 	{
-		
+
 		boolean bCommit = true;
 		boolean bResult = false;
 		EntityManagerFactory emf = null;
 		EntityManager em = null;
-		Category category=null;
+		Category category = null;
 		List<Category> importedList = new ArrayList<Category>();
 		try {
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
@@ -352,19 +352,19 @@ public class CategoryManagerImpl extends CategoryManager
 			em.getTransaction().begin();
 			for (ImportCategoryImpl categorytmp : categories) {
 				try {
-					category =categorytmp.getCategoryDetails();
+					category = categorytmp.getCategoryDetails();
 					if (category.getId() != null && category.getId() > 0) {
 						EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
 						em.merge(emCategory);
-						categorytmp.setId((int)emCategory.getCategoryId());
-						importedList.add(createCategoryObject(emCategory, null));						
+						categorytmp.setId((int) emCategory.getCategoryId());
+						importedList.add(createCategoryObject(emCategory, null));
 					}
 					else {
 						EmAnalyticsCategory categoryObj = null;
 						try {
 							categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
 									.setParameter("categoryName", category.getName()).getSingleResult();
-							categorytmp.setId((int)categoryObj.getCategoryId());
+							categorytmp.setId((int) categoryObj.getCategoryId());
 							importedList.add(createCategoryObject(categoryObj, null));
 						}
 						catch (NoResultException e) {
@@ -407,7 +407,7 @@ public class CategoryManagerImpl extends CategoryManager
 							}
 							EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
 							em.persist(emCategory);
-							categorytmp.setId((int)emCategory.getCategoryId());
+							categorytmp.setId((int) emCategory.getCategoryId());
 							importedList.add(createCategoryObject(emCategory, null));
 						}
 					}
@@ -415,7 +415,7 @@ public class CategoryManagerImpl extends CategoryManager
 				catch (PersistenceException eme) {
 					_logger.error("Error while importing the category: " + category.getName(), eme);
 					importedList.clear();
-					bCommit = false;					
+					bCommit = false;
 					break;
 				}
 			}

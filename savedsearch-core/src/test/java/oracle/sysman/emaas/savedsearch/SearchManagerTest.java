@@ -37,7 +37,9 @@ public class SearchManagerTest extends BaseTest
 		cat.setName(name);
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		cat.setOwner(currentUser);
-		cat.setDefaultFolderId(folder.getParentId());
+		if (folder != null) {
+			cat.setDefaultFolderId(folder.getParentId());
+		}
 		cat = cm.saveCategory(cat);
 		return cat;
 	}
@@ -71,24 +73,31 @@ public class SearchManagerTest extends BaseTest
 	public void testCreateSearchPerformance() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
-		Folder folder = null;
-		for (int i = 0; i < 10000; i++) {
-			folder = SearchManagerTest.createTestFolder(fm, "FolderTest " + i + " " + System.currentTimeMillis());
-		}
-
 		CategoryManager cm = CategoryManagerImpl.getInstance();
-		Category cat = null;
-		for (int i = 0; i < 1000; i++) {
-			cat = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest " + i + " " + System.currentTimeMillis());
-		}
-
 		SearchManager sm = SearchManager.getInstance();
-		System.out.println("Start to create 1000 searches");
+		//Steps to generate data for load testing
+		//1. uncomment @Test of this test
+		//2. change below count to desired ones
+		//3. change TestNg.properties to connect to target DB
+		//4. run this test to generate data
+		//Note: please do NOT push your change to generate data
+		final int categoryCount = 1000; //change this to your desired count
+		final int folderCount = 10000;//change this to your desired count
+		final int searchCount = 1000000;//change this to your desired count
 		long start = System.currentTimeMillis();
-		for (int i = 1; i < 1000000; i++) {
-			SearchManagerTest.createTestSearch(sm, folder, cat, "Search for performance " + i + " " + System.currentTimeMillis());
+		System.out.println("Start to create " + categoryCount + " categories, " + folderCount + " folders and " + searchCount
+				+ " searches");
+		for (int i = 0; i < categoryCount; i++) {
+			Category cat = SearchManagerTest.createTestCategory(cm, null, "CategoryTest " + i);
+			for (int j = 0; j < folderCount / categoryCount; j++) {
+				Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest " + i + "-" + j);
+				for (int k = 0; k < searchCount / folderCount; k++) {
+					SearchManagerTest.createTestSearch(sm, folder, cat, "Search for performance " + i + "-" + j + "-" + k);
+				}
+			}
 		}
-		System.out.println("Total time to create 10000 searches is " + (System.currentTimeMillis() - start));
+		System.out.println("Total time to create " + categoryCount + " categories, " + folderCount + " folders and "
+				+ searchCount + " searches is " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
 	@Test
@@ -269,7 +278,7 @@ public class SearchManagerTest extends BaseTest
 		// Uncomment below code to clearing Entity Manager before the test
 		/*		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 				emf.createEntityManager().clear();
-				*/
+		 */
 		SearchManagerTestMockup.executeRepeatedly(100, 10, new Runnable() {
 			@Override
 			public void run()
@@ -294,7 +303,7 @@ public class SearchManagerTest extends BaseTest
 	/*
 	 * Use this method to see how much time is needed to query a search from 1 million searches multi-threads
 	 * simultaneously.
-	 * 
+	 *
 	 * Several manual steps are needed before run this method
 	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
 	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
@@ -309,7 +318,7 @@ public class SearchManagerTest extends BaseTest
 		// Uncomment below code to clearing Entity Manager before the test
 		/*		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 				emf.createEntityManager().clear();
-				*/
+		 */
 		final SearchManager sm = SearchManager.getInstance();
 		final int[] availableSearchIDs = { 10139, 10141, 10164, 10560, 10571, 10872, 10876, 10525, 11117, 11129 };
 
@@ -335,7 +344,7 @@ public class SearchManagerTest extends BaseTest
 	/*
 	 * Use this method to see how much time is needed to query a search by name from 1 million searches multi-threads
 	 * simultaneously.
-	 * 
+	 *
 	 * Several manual steps are needed before run this method
 	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
 	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
