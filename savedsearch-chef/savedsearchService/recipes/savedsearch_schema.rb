@@ -99,6 +99,37 @@ do
 eof_sql
 done
 
+else
+	#Schema exists - we need to run upgrade scripts - it is expected that upgrade SQLs are made re-entrant
+	echo "--------------------------- Schema exists attempting an upgrade --------------" >> #{node["log_dir"]}/savedSearchDatasource.log
+	
+	export ORACLE_HOME=#{node["dbhome"]}
+
+	cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}
+
+	#Download the sql files
+	tar xzf #{node["sql_bundle"]}#{node["SAAS_version"]}.tgz
+
+	echo "Apps Dir: #{node["apps_dir"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
+	echo "Service Name: #{node["SAAS_servicename"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
+	echo "Version: #{node["SAAS_version"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
+	echo "SQL Dir: #{node["sql_dir"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
+	cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}/upgrade
+	
+	echo "Running upgrade script now" >> #{node["log_dir"]}/savedSearchDatasource.log
+	echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
+	echo "CWD:" >> #{node["log_dir"]}/savedSearchDatasource.log
+	pwd >> #{node["log_dir"]}/savedSearchDatasource.log
+	for file in upgrade.sql
+		echo "Running file " $file " from upgrade.sql" >> #{node["log_dir"]}/savedSearchDatasource.log
+		do
+			#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} << eof_sql > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
+			@$file
+			eof_sql
+			done
+
+	# Done with upgrade block
+
 fi
 EOH
 }
