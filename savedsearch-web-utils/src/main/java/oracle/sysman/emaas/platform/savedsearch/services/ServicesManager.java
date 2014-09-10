@@ -8,7 +8,7 @@ public class ServicesManager extends AbstractServicesManager
 	public ServicesManager()
 	{
 
-		super(new SavedSearchServicesVersionValidationService(), new SavedSearchServicesRegistryService());
+		super(new SavedSearchServicesRegistryService());
 
 	}
 
