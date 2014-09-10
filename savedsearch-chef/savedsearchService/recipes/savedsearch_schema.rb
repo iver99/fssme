@@ -121,7 +121,6 @@ else
 	echo "CWD:" >> #{node["log_dir"]}/savedSearchDatasource.log
 	pwd >> #{node["log_dir"]}/savedSearchDatasource.log
 	for file in upgrade.sql
-		echo "Running file " $file " from upgrade.sql" >> #{node["log_dir"]}/savedSearchDatasource.log
 		do
 			#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} << eof_sql > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
 			@$file
