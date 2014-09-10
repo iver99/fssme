@@ -1,0 +1,186 @@
+/** 
+* Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved. 
+* 
+* DESCRIPTION
+* The build script for publish zgip generated files in GAV format
+*     by using 'maven-publish' and 'artifactory-publish' plugins
+*     in order to generate pom files
+*
+*
+*  MODIFIED    			(MM/DD/YY)
+*  Alla Shamis    		08/27/14 - Creation
+*/
+
+ 
+import groovy.io.FileType
+apply plugin: 'groovy'
+
+
+ apply plugin: 'artifactory-publish'
+ apply plugin: 'maven-publish'
+ apply plugin: 'gavsetting'
+
+//will pass as parameter the name if zip that will be published  (-PzipName=[xxx])
+def zipNameCur = hasProperty('zipName') ? zipName : rootProject.name
+
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            url = "${artifactory_contextUrl}/emaas-virtual"
+        }
+
+        /*
+         * TODO - work out the actual dependencies needed and replace the jcenter
+         * cache with the emaas virtual repository
+         */
+        maven {
+            url = "${artifactory_contextUrl}" + '/jcenter-cache/'
+        }
+    }
+  dependencies {
+        classpath group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '2.1.0'
+        classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
+    }
+}
+
+
+artifactoryPublish.skip = false
+group = project.group + zipNameCur
+
+
+//--------------------------------------
+
+
+//Defining what to publish:
+
+ext.filesToPublish_softwares = []
+ext.dir_s= new File("softwares/dist")
+if (dir_s.exists()) {
+	ext.dir_s.eachFile( groovy.io.FileType.FILES ) { file ->
+	ext.filesToPublish_softwares << file
+	}
+}
+
+ext.filesToPublish_cookbooks = []
+ext.dir_c= new File("cookbooks/dist")
+if (dir_c.exists()) {
+	ext.dir_c.eachFile( groovy.io.FileType.FILES ) { file ->
+		ext.filesToPublish_cookbooks << file
+	}
+}
+
+
+def git_value = { ->
+   def stdout = new ByteArrayOutputStream()
+   exec {
+      commandLine 'git', 'log', '--pretty="%H"', '-n', '1'
+      standardOutput = stdout
+   }
+   //return stdout.toString().trim()
+   return stdout.toString()
+	
+  
+}
+
+
+String shaStr = "${git_value}"
+
+def top = { it.size() > 3 ? it[0..-3] : ''}
+def tail = { it.size() > 1 ? it[1..-1] : ''}
+def git_sha=tail(top(shaStr))
+//println "SHA ${tail(top(shaStr))}"
+//println "Will print: ${git_sha}"
+
+
+publishing {
+   publications {
+      for ( f in filesToPublish_softwares ) {
+         def fbase=f.getName().split("\\.")[0]
+         "$fbase"(MavenPublication) {
+            artifact f
+            artifactId fbase
+			groupId = group + '.softwares'
+			pom.withXml {
+				asNode().appendNode('description',
+                                    "${git_sha}")
+			}
+         }
+      }
+	 
+	  
+	
+	  for ( f in filesToPublish_cookbooks ) {
+         def fbase=f.getName().split("\\.")[0]
+         "$fbase"(MavenPublication) {
+            artifact f
+            artifactId fbase
+			groupId = group + '.cookbooks'
+			pom.withXml {
+			  asNode().appendNode('description',
+                                    "${git_sha}")
+			}
+         }
+      }
+   }
+   
+}
+
+
+
+	artifactory {
+        contextUrl =  "http://artifactory.oraclecorp.com/artifactory"
+		publish {
+			repository {
+				repoKey = 'emaas-test-sandbox-local'   //can be redefined in Hudson configuration
+				username = "${artifactory_user}"
+				password = "${artifactory_password}"
+				maven = true
+				publishPom=true
+			}
+			defaults {
+				for ( f in filesToPublish_softwares ) {
+					def fbase=f.getName().split("\\.")[0]
+					publications( fbase )
+				}
+				for ( f in filesToPublish_cookbooks ) {
+					def fbase=f.getName().split("\\.")[0]
+					publications( fbase )
+				}
+				
+      			publishBuildInfo = true   //Publish build-info to Artifactory (true by default)
+				publishArtifacts = true   //Publish artifacts to Artifactory (true by default)
+			}
+        }
+        resolve {
+                repository {
+					repoKey = 'repo'
+					username = "${artifactory_user}"
+					password = "${artifactory_password}"
+					maven = true
+			}
+        }
+		// Redefine basic properties of the build info object
+		clientConfig.setIncludeEnvVars(true)
+	//	clientConfig.info.addEnvironmentProperty('test.adding.dynVar',new java.util.Date().toString())
+		clientConfig.info.setBuildName('emdi_build')
+		clientConfig.info.setBuildNumber('' + new java.util.Random(System.currentTimeMillis()).nextInt(20000))
+	} 
+
+
+
+allprojects {
+		
+	artifactoryPublish.skip = false
+
+	
+	task HelloTask << {
+		println "hello"
+		println "this is sub-proj definition: ${project.name}"
+		println "The group is ${group}"
+		println "The version is  ${version}"
+		println "project.group: ${project.group}"
+	}
+
+ }
+ 
