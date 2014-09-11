@@ -1,8 +1,8 @@
-package oracle.sysman.emaas.platform.savedsearch.services;
+package oracle.sysman.emaas.platform.savedsearch.wls.lifecycle;
 
 import weblogic.application.ApplicationLifecycleEvent;
 
-public interface ApplicationService
+public interface ApplicationServiceManager
 {
 	public String getName();
 

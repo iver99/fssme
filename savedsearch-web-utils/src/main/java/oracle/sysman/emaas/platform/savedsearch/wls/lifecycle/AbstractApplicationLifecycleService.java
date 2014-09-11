@@ -3,23 +3,22 @@ package oracle.sysman.emaas.platform.savedsearch.wls.lifecycle;
 import java.util.ArrayList;
 import java.util.List;
 
-import oracle.sysman.emaas.platform.savedsearch.services.ApplicationService;
 import weblogic.application.ApplicationException;
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.application.ApplicationLifecycleListener;
 import weblogic.i18n.logging.NonCatalogLogger;
 
-public class AbstractServicesManager extends ApplicationLifecycleListener
+public class AbstractApplicationLifecycleService extends ApplicationLifecycleListener
 {
 	public static final String APPLICATION_LOGGER_SUBSYSTEM = "oracle.sysman.emaas.platform.savedsearch";
 
 	private final NonCatalogLogger logger = new NonCatalogLogger(APPLICATION_LOGGER_SUBSYSTEM + ".services");
 
-	private List<ApplicationService> registeredServices = new ArrayList<ApplicationService>();
+	private List<ApplicationServiceManager> registeredServices = new ArrayList<ApplicationServiceManager>();
 
-	public AbstractServicesManager(ApplicationService... services)
+	public AbstractApplicationLifecycleService(ApplicationServiceManager... services)
 	{
-		for (ApplicationService service : services) {
+		for (ApplicationServiceManager service : services) {
 			registeredServices.add(service);
 		}
 	}
@@ -30,7 +29,7 @@ public class AbstractServicesManager extends ApplicationLifecycleListener
 		logger.notice("Post-starting registered application services");
 		try {
 			logger.info("Post-starting 'Service Registry'");
-			for (ApplicationService service : registeredServices) {
+			for (ApplicationServiceManager service : registeredServices) {
 				service.postStart(evt);
 			}
 			logger.debug("Post-started 'Service Registry'");
@@ -50,7 +49,7 @@ public class AbstractServicesManager extends ApplicationLifecycleListener
 		logger.notice("Post-stopping registered application services");
 		try {
 			logger.info("Post-stopping 'Service Registry'");
-			for (ApplicationService service : registeredServices) {
+			for (ApplicationServiceManager service : registeredServices) {
 				service.postStop(evt);
 			}
 			logger.debug("Post-stopped 'Service Regsitry'");
@@ -70,7 +69,7 @@ public class AbstractServicesManager extends ApplicationLifecycleListener
 		logger.debug("Pre-starting registered application services");
 		try {
 			logger.info("Pre-starting 'Service Registry'");
-			for (ApplicationService service : registeredServices) {
+			for (ApplicationServiceManager service : registeredServices) {
 				service.preStart(evt);
 			}
 			logger.debug("Pre-started 'Service Registry'");
@@ -90,7 +89,7 @@ public class AbstractServicesManager extends ApplicationLifecycleListener
 		logger.debug("Pre-stopping registered application services");
 		try {
 			logger.info("Pre-stopping 'Service Registry'");
-			for (ApplicationService service : registeredServices) {
+			for (ApplicationServiceManager service : registeredServices) {
 				service.preStop(evt);
 			}
 			logger.debug("Pre-stopped 'Service Registry'");

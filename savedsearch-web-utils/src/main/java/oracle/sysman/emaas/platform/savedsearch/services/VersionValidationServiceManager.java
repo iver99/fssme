@@ -12,9 +12,12 @@ package oracle.sysman.emaas.platform.savedsearch.services;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SchemaVersion;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.VersionManager;
-import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractServicesManager;
+import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
+import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
+
+import org.apache.log4j.Logger;
+
 import weblogic.application.ApplicationLifecycleEvent;
-import weblogic.i18n.logging.NonCatalogLogger;
 
 /**
  * Code version should match schema version, this is used to validate this during SSF service startup If validation fails, SSF
@@ -22,9 +25,9 @@ import weblogic.i18n.logging.NonCatalogLogger;
  *
  * @author miao
  */
-public class SavedSearchServicesVersionValidationService implements ApplicationService
+public class VersionValidationServiceManager implements ApplicationServiceManager
 {
-	private final NonCatalogLogger logger = new NonCatalogLogger(AbstractServicesManager.APPLICATION_LOGGER_SUBSYSTEM
+	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceversionvalidation");
 	public static final String SERVICE_NAME_VERSION_VALIDATION = "Version Validation Service";
 	public static final int SSF_CODE_VERSION_MAJOR = 0;
@@ -54,8 +57,7 @@ public class SavedSearchServicesVersionValidationService implements ApplicationS
 		SchemaVersion schemaVer = VersionManager.getInstance().getSchemaVersion();
 		try {
 			if (SSF_CODE_VERSION_MAJOR == schemaVer.getMajorVersion() && SSF_CODE_VERSION_MINOR == schemaVer.getMinorVersion()) {
-				logger.notice("code version matched schema version:(" + SSF_CODE_VERSION_MAJOR + "." + SSF_CODE_VERSION_MINOR
-						+ ")");
+				logger.info("code version matched schema version:(" + SSF_CODE_VERSION_MAJOR + "." + SSF_CODE_VERSION_MINOR + ")");
 			}
 			else {
 				String errMsg = "Failed to startup. Code version(" + SSF_CODE_VERSION_MAJOR + "." + SSF_CODE_VERSION_MINOR

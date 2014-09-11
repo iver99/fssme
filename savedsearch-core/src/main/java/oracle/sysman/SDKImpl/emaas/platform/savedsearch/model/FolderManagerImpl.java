@@ -64,12 +64,12 @@ public class FolderManagerImpl extends FolderManager
 				folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			}
 			if (folderObj == null) {
-				_logger.error("folder with id " + folderId + " does not Exist");
-				throw new EMAnalyticsFwkException("folder with id " + folderId + " does not Exist",
+				_logger.error("Folder with id " + folderId + " does not exist");
+				throw new EMAnalyticsFwkException("Folder with Id " + folderId + " does not exist",
 						EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID, null);
 			}
 			if (folderObj.getSystemFolder() != null && folderObj.getSystemFolder().intValue() == 1) {
-				throw new EMAnalyticsFwkException("Folder with id " + folderId + " is system folder and NOT allowed to delete",
+				throw new EMAnalyticsFwkException("Folder with Id " + folderId + " is system folder and NOT allowed to delete",
 						EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 			}
 
@@ -86,7 +86,7 @@ public class FolderManagerImpl extends FolderManager
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Folder with id: " + folderId + "is a system folder", eme);
+			_logger.error("Folder with Id: " + folderId + "is a system folder", eme);
 			throw eme;
 		}
 		catch (Exception e) {
@@ -97,15 +97,15 @@ public class FolderManagerImpl extends FolderManager
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null, e);
 			}
 			else if (e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK2")) {
-				throw new EMAnalyticsFwkException("folder with id " + folderId + " has search child",
+				throw new EMAnalyticsFwkException("folder with Id " + folderId + " has search child",
 						EMAnalyticsFwkException.ERR_DELETE_FOLDER, null, e);
 			}
 			else if (e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
-				throw new EMAnalyticsFwkException("folder with id " + folderId + " has category child",
+				throw new EMAnalyticsFwkException("folder with Id " + folderId + " has category child",
 						EMAnalyticsFwkException.ERR_DELETE_FOLDER, null, e);
 			}
 			else {
-				_logger.error("Error while deleting the folder with id:" + folderId, e);
+				_logger.error("Error while deleting the folder with Id:" + folderId, e);
 
 				throw new EMAnalyticsFwkException("Error occurred while deleting the folder",
 						EMAnalyticsFwkException.ERR_DELETE_FOLDER, null, e);
@@ -129,7 +129,7 @@ public class FolderManagerImpl extends FolderManager
 			em = emf.createEntityManager();
 			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			if (folderObj == null) {
-				_logger.error("folder with id" + folderId + "does not exist");
+				_logger.error("Folder with Id" + folderId + "does not exist");
 				throw new EMAnalyticsFwkException("Folder with the Id " + folderId + " " + "does not exist",
 						EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID, null);
 			}
@@ -137,7 +137,7 @@ public class FolderManagerImpl extends FolderManager
 			folder = createFolderObject(folderObj, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("folder with id" + folderId + "does not exist", eme);
+			_logger.error("Folder with Id" + folderId + "does not exist", eme);
 			throw eme;
 		}
 		catch (Exception e) {
@@ -148,7 +148,7 @@ public class FolderManagerImpl extends FolderManager
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null, e);
 			}
 			else {
-				_logger.error("Error while getting the folder with id:" + folderId, e);
+				_logger.error("Error while getting the folder with Id:" + folderId, e);
 				throw new EMAnalyticsFwkException("Folder with the Id " + folderId + " " + "does not exist",
 						EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID, null, e);
 			}
@@ -175,7 +175,7 @@ public class FolderManagerImpl extends FolderManager
 			//folder= createFolderObject(folderObj,null);
 		}
 		catch (Exception e) {
-			_logger.error("Error while getting the path for folder with id:" + folderId, e);
+			_logger.error("Error while getting the path for folder with Id:" + folderId, e);
 			throw new EMAnalyticsFwkException("Error occurred while getting path for the folder",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null, e);
 		}
@@ -294,7 +294,7 @@ public class FolderManagerImpl extends FolderManager
 		EmAnalyticsFolder folderObj = null;
 		EntityManagerFactory emf = null;
 		EntityManager em = null;
-		Folder folder=null;
+		Folder folder = null;
 		List<FolderImpl> importedList = new ArrayList<FolderImpl>();
 		try {
 			emf = PersistenceManager.getInstance().getEntityManagerFactory();
@@ -407,7 +407,7 @@ public class FolderManagerImpl extends FolderManager
 						EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[] { folder.getName() });
 			}
 			else if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1")) {
-				throw new EMAnalyticsFwkException("Parent folder with id " + folder.getParentId() + " does not exist: ",
+				throw new EMAnalyticsFwkException("Parent folder with Id " + folder.getParentId() + " does not exist: ",
 						EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
 			}
 			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
@@ -442,7 +442,7 @@ public class FolderManagerImpl extends FolderManager
 			em = emf.createEntityManager();
 			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, em);
 			if (folderObj != null && folderObj.getSystemFolder() != null && folderObj.getSystemFolder().intValue() == 1) {
-				throw new EMAnalyticsFwkException("Folder with id " + folderObj.getFolderId()
+				throw new EMAnalyticsFwkException("Folder with Id " + folderObj.getFolderId()
 						+ " is system folder and NOT allowed to edit", EMAnalyticsFwkException.ERR_UPDATE_FOLDER, null);
 			}
 			em.getTransaction().begin();
@@ -460,7 +460,7 @@ public class FolderManagerImpl extends FolderManager
 						EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[] { folder.getName() });
 			}
 			else if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1")) {
-				throw new EMAnalyticsFwkException("Parent folder with id " + folder.getParentId() + " missing: "
+				throw new EMAnalyticsFwkException("Parent folder with Id " + folder.getParentId() + " missing: "
 						+ folder.getName(), EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
 			}
 			if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {

@@ -16,11 +16,16 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.savedsearch.property.PropertyReader;
-import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractServicesManager;
-import weblogic.application.ApplicationLifecycleEvent;
-import weblogic.logging.NonCatalogLogger;
+import oracle.sysman.emaas.platform.savedsearch.services.RegistryServiceManager.ServiceConfigBuilder;
+import oracle.sysman.emaas.platform.savedsearch.services.RegistryServiceManager.UrlType;
+import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
+import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 
-public class SavedSearchServicesRegistryService implements ApplicationService
+import org.apache.log4j.Logger;
+
+import weblogic.application.ApplicationLifecycleEvent;
+
+public class RegistryServiceManager implements ApplicationServiceManager
 {
 	interface Builder
 	{
@@ -180,7 +185,7 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 	private static final String NAV_SEARCH = "/savedsearch/v1/search";
 	private static final String NAV_FOLDER = "/savedsearch/v1/folder";
 	private static final String NAV_CATEGORY = "/savedsearch/v1/category";
-	private final NonCatalogLogger logger = new NonCatalogLogger(AbstractServicesManager.APPLICATION_LOGGER_SUBSYSTEM
+	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceregistry");
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
@@ -226,8 +231,8 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.notice("Post-starting 'Service Registry' application service");
-		String applicationUrl = SavedSearchServicesRegistryService.getApplicationUrl(UrlType.HTTP);
+		logger.info("Post-starting 'Service Registry' application service");
+		String applicationUrl = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
 		logger.debug("Application URL to register with 'Service Registry': " + applicationUrl);
 
 		logger.info("Building 'Service Registry' configuration");
@@ -235,9 +240,10 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
 		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-				.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
-				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+		.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
+		.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+
                 if (serviceProps.getProperty("authToken")!=null) {
                     builder.authToken(serviceProps.getProperty("authToken"));
                 }
@@ -245,13 +251,13 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 		RegistrationManager.getInstance().initComponent(builder.build());
 
 		InfoManager
-				.getInstance()
-				.getInfo()
-				.setLinks(
-						Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
-								new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
-										.withHref(applicationUrl + NAV_FOLDER),
-								new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
+		.getInstance()
+		.getInfo()
+		.setLinks(
+				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
+						new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
+						.withHref(applicationUrl + NAV_FOLDER),
+						new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
@@ -276,7 +282,7 @@ public class SavedSearchServicesRegistryService implements ApplicationService
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.notice("Post-stopping 'Service Registry' application service");
+		logger.info("Post-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
 		logger.debug("Post-stopped 'Service Regsitry'");
 	}

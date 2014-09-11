@@ -6,6 +6,6 @@
         <wls:param-value>UTF-8</wls:param-value>
     </wls:application-param>
     <wls:listener>
-        <wls:listener-class>oracle.sysman.emaas.platform.savedsearch.services.ServicesManager</wls:listener-class>
+        <wls:listener-class>oracle.sysman.emaas.platform.savedsearch.services.ApplicationLifecycleService</wls:listener-class>
     </wls:listener>
 </wls:weblogic-application>
