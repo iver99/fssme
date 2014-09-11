@@ -7,8 +7,8 @@ public class ApplicationLifecycleService extends AbstractApplicationLifecycleSer
 
 	public ApplicationLifecycleService()
 	{
-
-		super(new LoggingServiceManager(), new VersionValidationServiceManager(), new RegistryServiceManager());
+		//SND 9/11: removed  VersionValidationServiceManager() - was causing class loading issue when redeploying app
+		super(new LoggingServiceManager(), new RegistryServiceManager());
 
 	}
 
