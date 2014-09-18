@@ -1,1 +1,1 @@
-./upgrade_055_06_dml.sql
+@./upgrade_055_06_dml.sql
