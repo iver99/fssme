@@ -6,6 +6,7 @@
 *     by using 'maven-publish' and 'artifactory-publish' plugins
 *     in order to generate pom files
 *
+* Each artifact is publishing  separately and has it's own pom
 *
 *  MODIFIED    			(MM/DD/YY)
 *  Alla Shamis    		08/27/14 - Creation
@@ -15,12 +16,11 @@
 import groovy.io.FileType
 apply plugin: 'groovy'
 
+apply plugin: 'artifactory-publish'
+apply plugin: 'maven-publish'
+apply plugin: 'gavsetting'
 
- apply plugin: 'artifactory-publish'
- apply plugin: 'maven-publish'
- apply plugin: 'gavsetting'
-
-//will pass as parameter the name if zip that will be published  (-PzipName=[xxx])
+//the project name should the input parameter, if the script is running from Hudson (-PzipName=[xxx])
 def zipNameCur = hasProperty('zipName') ? zipName : rootProject.name
 
 buildscript {
@@ -86,13 +86,13 @@ def git_value = { ->
 
 String shaStr = "${git_value}"
 
+//removing unnecessary symbols
 def top = { it.size() > 3 ? it[0..-3] : ''}
 def tail = { it.size() > 1 ? it[1..-1] : ''}
 def git_sha=tail(top(shaStr))
-//println "SHA ${tail(top(shaStr))}"
-//println "Will print: ${git_sha}"
 
 
+//publishing each generated file:
 publishing {
    publications {
       for ( f in filesToPublish_softwares ) {
@@ -108,16 +108,14 @@ publishing {
          }
       }
 	 
-	  
-	
 	  for ( f in filesToPublish_cookbooks ) {
          def fbase=f.getName().split("\\.")[0]
          "$fbase"(MavenPublication) {
-            artifact f
+			artifact f
             artifactId fbase
 			groupId = group + '.cookbooks'
 			pom.withXml {
-			  asNode().appendNode('description',
+				asNode().appendNode('description',
                                     "${git_sha}")
 			}
          }
@@ -127,60 +125,39 @@ publishing {
 }
 
 
-
-	artifactory {
-        contextUrl =  "http://artifactory.oraclecorp.com/artifactory"
-		publish {
-			repository {
-				repoKey = 'emaas-test-sandbox-local'   //can be redefined in Hudson configuration
+artifactory {
+    contextUrl =  "http://artifactory.oraclecorp.com/artifactory"
+	publish {
+		repository {
+			repoKey = 'emaas-test-sandbox-local'   //can be redefined in Hudson configuration
+			username = "${artifactory_user}"
+			password = "${artifactory_password}"
+			maven = true
+			publishPom=true
+		}
+		defaults {
+			for ( f in filesToPublish_softwares ) {
+				def fbase=f.getName().split("\\.")[0]
+				publications( fbase )
+			}
+			for ( f in filesToPublish_cookbooks ) {
+				def fbase=f.getName().split("\\.")[0]
+				publications( fbase )
+			}
+			
+  			publishBuildInfo = true   //Publish build-info to Artifactory (true by default)
+			publishArtifacts = true   //Publish artifacts to Artifactory (true by default)
+		}
+    }
+    resolve {
+            repository {
+				repoKey = 'repo'
 				username = "${artifactory_user}"
 				password = "${artifactory_password}"
 				maven = true
-				publishPom=true
-			}
-			defaults {
-				for ( f in filesToPublish_softwares ) {
-					def fbase=f.getName().split("\\.")[0]
-					publications( fbase )
-				}
-				for ( f in filesToPublish_cookbooks ) {
-					def fbase=f.getName().split("\\.")[0]
-					publications( fbase )
-				}
-				
-      			publishBuildInfo = true   //Publish build-info to Artifactory (true by default)
-				publishArtifacts = true   //Publish artifacts to Artifactory (true by default)
-			}
-        }
-        resolve {
-                repository {
-					repoKey = 'repo'
-					username = "${artifactory_user}"
-					password = "${artifactory_password}"
-					maven = true
-			}
-        }
-		// Redefine basic properties of the build info object
-		clientConfig.setIncludeEnvVars(true)
-	//	clientConfig.info.addEnvironmentProperty('test.adding.dynVar',new java.util.Date().toString())
-		clientConfig.info.setBuildName('emdi_build')
-		clientConfig.info.setBuildNumber('' + new java.util.Random(System.currentTimeMillis()).nextInt(20000))
-	} 
-
-
-
-allprojects {
-		
-	artifactoryPublish.skip = false
-
+		}
+    }
 	
-	task HelloTask << {
-		println "hello"
-		println "this is sub-proj definition: ${project.name}"
-		println "The group is ${group}"
-		println "The version is  ${version}"
-		println "project.group: ${project.group}"
-	}
+} 
 
- }
- 
+
