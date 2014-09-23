@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/registry-client-0.4.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/registry-lookup-client-0.3.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/wlfullclient.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-client-0.4.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-lookup-client-0.3.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/wlfullclient-2.6.jar"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.utility"/>
