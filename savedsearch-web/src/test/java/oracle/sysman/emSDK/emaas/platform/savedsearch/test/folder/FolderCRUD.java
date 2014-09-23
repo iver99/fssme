@@ -229,6 +229,65 @@ public class FolderCRUD
 
 	@Test
 	/**
+	 * create a folder using post method in a specified parentId "0"
+	 */
+	public void folder_create_specifiedParentId_IdIsZero()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new folder in a specified directory");
+			int position = -1;
+			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":0}}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					.post("/folder");
+			JsonPath jp1 = res1.jsonPath();
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("											");
+			System.out.println("Verifying whether the folder created or not in a specified directory with GET method");
+			System.out.println("											");
+			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			JsonPath jp = res.jsonPath();
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			System.out.println("											");
+			System.out.println("FolderName :" + jp.get("name"));
+			List<String> a = new ArrayList<String>();
+			a = jp.get("name");
+
+			for (int i = 0; i < a.size(); i++) {
+				if (a.get(i).equals("TestFolder")) {
+					position = i;
+
+					String myvalue = a.get(position);
+					System.out.println("==My New Folder is:" + myvalue);
+					Assert.assertEquals(a.get(position), "TestFolder");
+					System.out.println("==GET and assertion operations are successfully completed");
+				}
+			}
+			if (position == -1) {
+				System.out.println("==folder does not exist that you are looking for");
+			}
+			System.out.println("cleaning up the folder that is created above using DELETE method");
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/folder/" + jp1.get("id"));
+			System.out.println(res2.asString());
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 204);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	/**
 	 * create a folder using post method
 	 */
 	public void folder_createwithEmptyName()
@@ -307,6 +366,23 @@ public class FolderCRUD
 					Assert.assertNotEquals(str_createdOn, str_modifiedOn);
 					System.out.println("==PUT operation is completed");
 
+					System.out.println("PUT operation to edit the selected folder is in-proress");
+					String jsonString1 = "{ \"description\":\"Folder for EMAAS searches_Edit\"}";
+					Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+							.put("/folder/" + myfolderID);
+					System.out.println("											");
+					System.out.println("Status code is: " + res2.getStatusCode());
+					System.out.println("											");
+					System.out.println(res2.asString());
+					String str_desc;
+					JsonPath jp2 = res2.jsonPath();
+					str_desc = jp2.get("description");
+					Assert.assertEquals(str_desc, "Folder for EMAAS searches_Edit");
+
+					System.out.println("											");
+
+					System.out.println("==PUT operation is completed");
+
 					System.out.println("											");
 					System.out.println("------------------------------------------");
 					System.out.println("											");
@@ -316,6 +392,255 @@ public class FolderCRUD
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
 		}
+	}
+
+	/**
+	 * Edit the folder parentId
+	 */
+	@Test
+	public void folder_edit_specifiedParentId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new folder");
+			int position = -1;
+			String jsonString = "{ \"name\":\"TestFolder_ParentId\", \"description\":\"Folder for EMAAS searches\"}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					.post("/folder");
+			JsonPath jp1 = res1.jsonPath();
+			System.out.println(res1.asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+
+			System.out.println("GET operation to select the folder to be edited is in progress");
+			System.out.println("											");
+			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			JsonPath jp = res.jsonPath();
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			System.out.println("											");
+			System.out.println("FolderName :" + jp.get("name"));
+			System.out.println("Folder IDs  :" + jp.get("id"));
+			List<String> a = new ArrayList<String>();
+			a = jp.get("name");
+			List<Integer> b = new ArrayList<Integer>();
+			b = jp.get("id");
+
+			for (int i = 0; i < a.size(); i++) {
+				if (a.get(i).equals("TestFolder_ParentId")) {
+					position = i;
+
+					int myfolderID = b.get(position);
+					System.out.println("==GET operation to select the folder that is to be EDITED is completed");
+					System.out.println("											");
+
+					System.out.println("PUT operation to edit the selected folder is in-progress");
+					String jsonString_parentId = "{\"parentFolder\":{\"id\":3}}";
+
+					Response res_parentId = RestAssured.given().contentType(ContentType.JSON).log().everything()
+							.body(jsonString_parentId).when().put("/folder/" + myfolderID);
+					JsonPath jp_parentId = res_parentId.jsonPath();
+					System.out.println("											");
+					System.out.println("Status code is: " + res_parentId.getStatusCode());
+					System.out.println("											");
+					System.out.println(res1.asString());
+					System.out.println(jp_parentId.get("parentFolder"));
+					Assert.assertTrue(res_parentId.getStatusCode() == 200);
+
+				}
+			}
+
+			System.out.println("==Get operation to verify if the folderId has been changed");
+			res = RestAssured.given().log().everything().when().get("/entities?folderId=3");
+			jp = res.jsonPath();
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			System.out.println("											");
+			System.out.println("FolderName :" + jp.get("name"));
+			System.out.println("Folder IDs  :" + jp.get("id"));
+			List<String> a1 = new ArrayList<String>();
+			a1 = jp.get("name");
+			List<Integer> b1 = new ArrayList<Integer>();
+			b1 = jp.get("id");
+
+			boolean existflag = false;
+
+			for (int j = 0; j < a1.size(); j++) {
+				if (a1.get(j).equals("TestFolder_ParentId")) {
+					System.out.println(b1.get(j));
+					existflag = true;
+					break;
+				}
+			}
+
+			Assert.assertTrue(existflag);
+
+			System.out.println("cleaning up the folder that is created above using DELETE method");
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/folder/" + jp1.get("id"));
+			System.out.println(res2.asString());
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 204);
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
+	}
+
+	/**
+	 * Edit the folder parentId, the parentId is 0
+	 */
+	@Test
+	public void folder_edit_specifiedParentId_IdIsZero()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new folder");
+			int position = -1;
+			String jsonString = "{ \"name\":\"TestFolder_ParentId_Zero\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":3}}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					.post("/folder");
+			JsonPath jp1 = res1.jsonPath();
+			System.out.println(res1.asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+
+			System.out.println("GET operation to select the folder to be edited is in progress");
+			System.out.println("											");
+			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=3");
+			JsonPath jp = res.jsonPath();
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			System.out.println("											");
+			System.out.println("FolderName :" + jp.get("name"));
+			System.out.println("Folder IDs  :" + jp.get("id"));
+			List<String> a = new ArrayList<String>();
+			a = jp.get("name");
+			List<Integer> b = new ArrayList<Integer>();
+			b = jp.get("id");
+
+			for (int i = 0; i < a.size(); i++) {
+				if (a.get(i).equals("TestFolder_ParentId_Zero")) {
+					position = i;
+
+					int myfolderID = b.get(position);
+					System.out.println("==GET operation to select the folder that is to be EDITED is completed");
+					System.out.println("											");
+
+					System.out.println("PUT operation to edit the selected folder is in-progress");
+					String jsonString_parentId = "{\"parentFolder\":{\"id\":0}}";
+
+					Response res_parentId = RestAssured.given().contentType(ContentType.JSON).log().everything()
+							.body(jsonString_parentId).when().put("/folder/" + myfolderID);
+					JsonPath jp_parentId = res_parentId.jsonPath();
+					System.out.println("											");
+					System.out.println("Status code is: " + res_parentId.getStatusCode());
+					System.out.println("											");
+					System.out.println(res1.asString());
+					System.out.println(jp_parentId.get("parentFolder"));
+					Assert.assertTrue(res_parentId.getStatusCode() == 200);
+
+				}
+			}
+
+			System.out.println("==Get operation to verify if the folderId has been changed");
+			res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			jp = res.jsonPath();
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			System.out.println("											");
+			System.out.println("FolderName :" + jp.get("name"));
+			System.out.println("Folder IDs  :" + jp.get("id"));
+			List<String> a1 = new ArrayList<String>();
+			a1 = jp.get("name");
+			List<Integer> b1 = new ArrayList<Integer>();
+			b1 = jp.get("id");
+
+			boolean existflag = false;
+
+			for (int j = 0; j < a1.size(); j++) {
+				if (a1.get(j).equals("TestFolder_ParentId_Zero")) {
+					System.out.println(b1.get(j));
+					existflag = true;
+					break;
+				}
+			}
+
+			Assert.assertTrue(existflag);
+
+			System.out.println("cleaning up the folder that is created above using DELETE method");
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/folder/" + jp1.get("id"));
+			System.out.println(res2.asString());
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 204);
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
+	}
+
+	/**
+	 * Edit the folder with empty folder name
+	 */
+	@Test
+	public void folder_editwithEmptyName()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("This test is to edit a folder with PUT method");
+			System.out.println("											");
+			System.out.println("Prepare data...");
+			String jsonString = "{ \"name\":\"Custom_Folder_EditEmptyName\",\"description\":\"Folder for EMAAS searches\",}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					.post("/folder");
+			JsonPath jp1 = res1.jsonPath();
+			System.out.println(res1.asString());
+			System.out.println(jp1.get("id"));
+			Assert.assertTrue(res1.getStatusCode() == 201);
+
+			String jsonString1 = "{ \"name\":\" \" }";
+
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+					.put("/folder/" + jp1.get("id"));
+			System.out.println("											");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			System.out.println("											");
+			System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.asString(), "The name key for folder can not be empty in the input JSON Object");
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			System.out.println("cleaning up the folder that is created above using DELETE method");
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/folder/" + jp1.get("id"));
+			System.out.println(res3.asString());
+			System.out.println("Status code is: " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 204);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
 	}
 
 	@Test
@@ -518,6 +843,31 @@ public class FolderCRUD
 		}
 	}
 
+	/**
+	 * searches by folder with folder Id which is negative number
+	 */
+	@Test
+	public void searchesbyFolder_id_negativeNumber()
+	{
+		try {
+			System.out
+			.println("This test is to validate the response when the search by folder with folder ID which is negative number");
+			Response res = RestAssured.given().log().everything().when().get("/searches?folderId=-1");
+
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			Assert.assertEquals(res.asString(), "Id/count should be a positive number and not an alphanumeric");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
+	}
+
 	@Test
 	/**
 	 * create a folder and searches in it using post method to verify the functionality of find searches by folderId
@@ -572,6 +922,21 @@ public class FolderCRUD
 			System.out.println("Search Name :" + jp2.get("name"));
 			System.out.println("Search ID  :" + jp2.get("id"));
 			System.out.println("											");
+
+			System.out.println("------------------------------------------");
+			System.out.println("GET method is in-progress to list all the searches in the folderId: " + jp1.get("id"));
+			Response res10 = RestAssured.given().log().everything().when().get("/searches?folderId=" + jp1.get("id"));
+			JsonPath jp10 = res10.jsonPath();
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res10.getStatusCode());
+			System.out.println(res10.asString());
+			System.out.println(jp10.get("name"));
+			Assert.assertTrue(res10.getStatusCode() == 200);
+			Assert.assertTrue(jp10.get("name[0]").equals("Search_s1"));
+			System.out.println("Searches in folder id: " + jp1.get("id") + " are -> " + jp10.get("name"));
+			System.out.println("											");
+
 			String jsonString3 = "{\"name\":\"Search_s2\",\"category\":{\"id\":2},\"folder\":{\"id\":"
 					+ jp1.get("id")
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample2\",\"type\":STRING,\"value\":\"my_value\"}]}";
@@ -598,6 +963,7 @@ public class FolderCRUD
 			Assert.assertTrue(res4.getStatusCode() == 200);
 			System.out.println("Searches in folder id: " + jp1.get("id") + " are -> " + jp4.get("name"));
 			System.out.println("											");
+
 			System.out.println("------------------------------------------");
 			System.out.println("Delete the folder while it has searches in it using DELETE method");
 			System.out.println("											");

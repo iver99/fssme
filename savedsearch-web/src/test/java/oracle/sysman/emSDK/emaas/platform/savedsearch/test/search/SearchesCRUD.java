@@ -249,7 +249,7 @@ public class SearchesCRUD
 			// JsonPath jp = res.jsonPath();
 			// System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(), "Id/count should be a positive number and not an alphanumeric.");
+			Assert.assertEquals(res.asString(), "Id/count should be a positive number and not an alphanumeric");
 			Assert.assertTrue(res.getStatusCode() == 400);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -275,7 +275,7 @@ public class SearchesCRUD
 			// JsonPath jp = res.jsonPath();
 			// System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(), "Id/count should be a positive number and not an alphanumeric.");
+			Assert.assertEquals(res.asString(), "Id/count should be a positive number and not an alphanumeric");
 			Assert.assertTrue(res.getStatusCode() == 400);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -390,6 +390,35 @@ public class SearchesCRUD
 			 * System.out.println(res3.asString());
 			 * Assert.assertTrue(res3.getStatusCode() == 204);
 			 */
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	/**
+	 * create search with empty parameter name
+	 */
+	@Test
+	public void search_create_emptyparamName()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("This test is to create a search with POST method using empty paramName");
+			System.out.println("											");
+
+			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":3000},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\" \",\"type\":\"STRING\",\"value\":\"my_value\"}]}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					.post("/search");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			System.out.println("											");
+			System.out.println(res1.asString() + ", hence POST operation to create a search is not success");
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertEquals(res1.asString(), "The name key for search param can not be empty in the input JSON Object");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
@@ -571,6 +600,118 @@ public class SearchesCRUD
 					System.out.println("											");
 				}
 			}
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	/**
+	 * Edit search with empty name
+	 */
+	@Test
+	public void search_edit_emptyName()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new search ");
+			String jsonString = "{\"name\":\"Search for test empty name\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					.post("/search");
+			JsonPath jp = res1.jsonPath();
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+
+			System.out.println("PUT method is in-progress to edit the search with empty name");
+
+			String jsonString_edit = "{\"name\":\" \",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString_edit).when()
+					.put("/search/" + jp.get("id"));
+			System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.asString(), "The name key for search can not be empty in the input JSON Object");
+
+			System.out.println("DELETE method is in-progress to clear data");
+			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/search/" + jp.get("id"));
+			// JsonPath jp7 = res7.jsonPath();
+			System.out.println(res7.asString());
+			Assert.assertTrue(res7.getStatusCode() == 204);
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
+	}
+
+	/**
+	 * Edit search with invalid param Name or Type
+	 */
+	@Test
+	public void search_edit_invalidParam()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new search ");
+			String jsonString = "{\"name\":\"Search for test param\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					.post("/search");
+			JsonPath jp = res1.jsonPath();
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+
+			System.out.println("PUT method is in-progress to edit the search with empty param name");
+			String jsonString_edit = "{\"parameters\":[{\"name\":\" \",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString_edit).when()
+					.put("/search/" + jp.get("id"));
+			System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.asString(), "The name key for search param can not be empty in the input JSON Object");
+
+			System.out.println("PUT method is in-progress to edit the search with param name missing");
+			String jsonString_edit1 = "{\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString_edit1).when()
+					.put("/search/" + jp.get("id"));
+			System.out.println(res3.asString());
+			Assert.assertTrue(res3.getStatusCode() == 400);
+			Assert.assertEquals(res3.asString(), "The name key for search param is missing in the input JSON Object");
+
+			System.out.println("PUT method is in-progress to edit the search with param type missing");
+			String jsonString_edit2 = "{\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
+			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString_edit2).when()
+					.put("/search/" + jp.get("id"));
+			System.out.println(res4.asString());
+			Assert.assertTrue(res4.getStatusCode() == 400);
+			Assert.assertEquals(res4.asString(), "The type key for search param is missing in the input JSON Object");
+
+			System.out.println("PUT method is in-progress to edit the search with wrong param type");
+			String jsonString_edit3 = "{\"parameters\":[{\"name\":\"sample\",\"type\":text	,\"value\":\"my_value\"}]}";
+			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString_edit3).when()
+					.put("/search/" + jp.get("id"));
+			System.out.println(res5.asString());
+			Assert.assertTrue(res5.getStatusCode() == 400);
+			Assert.assertEquals(res5.asString(), "Invalid param type, please specify either STRING or CLOB");
+
+			System.out.println("DELETE method is in-progress to clear data");
+			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/search/" + jp.get("id"));
+			// JsonPath jp7 = res7.jsonPath();
+			System.out.println(res7.asString());
+			Assert.assertTrue(res7.getStatusCode() == 204);
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -780,6 +921,7 @@ public class SearchesCRUD
 			catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
 			}
+
 			String jsonString2 = "{\"name\":\"SearchSet2\",\"category\":{\"id\":3},\"folder\":{\"id\":3},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString2).when()
 					.post("/search");
@@ -787,7 +929,7 @@ public class SearchesCRUD
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
 			System.out.println("											");
-			// System.out.println(res2.asString());
+			String str_lastAccessTime = jp2.get("lastAccessDate");
 			Assert.assertTrue(res2.getStatusCode() == 201);
 			System.out.println("SearchSet2 Id is :" + jp2.get("id"));
 			try {
@@ -814,22 +956,59 @@ public class SearchesCRUD
 			catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
 			}
+
 			System.out.println("Now set the last access time to the search whose id: " + jp3.get("id[1]") + " with PUT method");
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
 					.put("/search/" + jp3.get("id[1]") + "?updateLastAccessTime=true");
 			// JsonPath jp4 = res4.jsonPath();
+			String str_updateTime = res4.asString();
 			System.out.println(res4.asString());
 			System.out.println("											");
 			System.out.println("Status code is: " + res4.getStatusCode());
 			Assert.assertTrue(res4.getStatusCode() == 200);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
+
+			System.out.println("Now verify if the lastAccesDate is set");
+			Response res4_1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.get("/search/" + jp3.get("id[1]"));
+			JsonPath jp4_1 = res4_1.jsonPath();
+			Assert.assertTrue(res4_1.getStatusCode() == 200);
+			Assert.assertEquals(jp4_1.get("lastAccessDate"), str_updateTime);
+
 			try {
 				Thread.sleep(2000);
 			}
 			catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
 			}
+
+			System.out.println("Now set the last access time to the search whose id: " + jp3.get("id[0]") + " with PUT method");
+			Response res4_3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.put("/search/" + jp3.get("id[0]") + "?updateLastAccessTime=false");
+			// JsonPath jp4 = res4.jsonPath();
+
+			System.out.println(res4_3.asString());
+			System.out.println("											");
+			System.out.println("Status code is: " + res4_3.getStatusCode());
+			Assert.assertTrue(res4_3.getStatusCode() == 200);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+
+			System.out.println("Now verify if the lastAccesDate is set");
+			Response res4_4 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.get("/search/" + jp3.get("id[0]"));
+			JsonPath jp4_2 = res4_4.jsonPath();
+			Assert.assertTrue(res4_4.getStatusCode() == 200);
+			Assert.assertEquals(jp4_2.get("lastAccessDate"), str_lastAccessTime);
+
+			try {
+				Thread.sleep(2000);
+			}
+			catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+
 			System.out.println("This test is to return the top two last accessed searches again with GET method");
 			System.out.println("											");
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
@@ -841,12 +1020,12 @@ public class SearchesCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("Cleaning up the searches that are created in this scenario");
 			Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.delete("/search/" + jp5.get("id[0]"));
+					.delete("/search/" + jp1.get("id"));
 			// JsonPath jp6 = res6.jsonPath();
 			System.out.println(res6.asString());
 			Assert.assertTrue(res6.getStatusCode() == 204);
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.delete("/search/" + jp5.get("id[1]"));
+					.delete("/search/" + jp2.get("id"));
 			// JsonPath jp7 = res7.jsonPath();
 			System.out.println(res7.asString());
 			Assert.assertTrue(res7.getStatusCode() == 204);
@@ -857,6 +1036,87 @@ public class SearchesCRUD
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
 		}
+	}
+
+	/**
+	 * set last access time to a search using PUT method, but the query parameter is not complete
+	 */
+	@Test
+	public void setlastaccesstime_Tosearch_badParameter()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("This test is to create a search with POST method");
+			System.out.println("											");
+
+			String jsonString1 = "{\"name\":\"SearchSetLastAccess\",\"category\":{\"id\":3},\"folder\":{\"id\":3},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+					.post("/search");
+			JsonPath jp1 = res1.jsonPath();
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			System.out.println("											");
+
+			Assert.assertTrue(res1.getStatusCode() == 201, "status code: " + res1.getStatusCode());
+			System.out.println("SearchSet1 Id is :" + jp1.get("id"));
+			try {
+				Thread.sleep(2000);
+			}
+			catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+
+			System.out.println("Now set the last access time to the search whose id: " + jp1.get("id")
+					+ " with PUT method, but no value for parameter");
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.put("/search/" + jp1.get("id") + "?updateLastAccessTime");
+
+			System.out.println(res2.asString());
+			System.out.println("											");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.asString(), "please give the value for updateLastAccessTime");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			try {
+				Thread.sleep(2000);
+			}
+			catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+
+			System.out.println("Now set the last access time to the search whose id: " + jp1.get("id")
+					+ " with PUT method, but no value for parameter");
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.put("/search/" + jp1.get("id"));
+
+			System.out.println(res3.asString());
+			System.out.println("											");
+			System.out.println("Status code is: " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 400);
+			Assert.assertEquals(res3.asString(), "Please specify updateLastAccessTime true or false");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			try {
+				Thread.sleep(2000);
+			}
+			catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+
+			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/search/" + jp1.get("id"));
+			// JsonPath jp7 = res7.jsonPath();
+			System.out.println(res7.asString());
+			Assert.assertTrue(res7.getStatusCode() == 204);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
 	}
 
 	@Test

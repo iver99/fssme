@@ -858,7 +858,7 @@ public class SearchAPI
 					searchParam.setType(ParameterType.valueOf(type));
 				}
 				else {
-					throw new EMAnalyticsWSException(" Invalid param type, please specify either STRING or CLOB.",
+					throw new EMAnalyticsWSException("Invalid param type, please specify either STRING or CLOB",
 							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_INVALID);
 				}
 				searchParam.setValue(jsonParam.optString("value"));
