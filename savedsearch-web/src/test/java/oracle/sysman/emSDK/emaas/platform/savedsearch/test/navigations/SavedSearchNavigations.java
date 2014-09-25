@@ -80,6 +80,28 @@ public class SavedSearchNavigations
 
 	@Test
 	/**
+	 * get entities with non existed Folder Id
+	 */
+	public void getEntities_nonexistFolderId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("This test is to verify get entities with non-existed folder Id");
+
+			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=3333333333333");
+			Assert.assertEquals(res.asString(), "Folder with the Id 3333333333333 does not exist");
+			Assert.assertEquals(res.getStatusCode(), 404);
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	/**
 	 * Check for root search folder
 	 */
 	public void getMainFolder()
