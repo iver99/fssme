@@ -423,10 +423,10 @@ public class FolderAPI
 		Folder objFld = FolderManager.getInstance().createNewFolder();
 		try {
 			String name = folderObj.getString("name");
-			if (name == null) {
-				throw new EMAnalyticsWSException("The name key for folder can not be null in the input JSON Object",
-						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
-			}
+			//			if (name == null) {
+			//				throw new EMAnalyticsWSException("The name key for folder can not be null in the input JSON Object",
+			//						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
+			//			}
 			if (name != null && name.trim().equals("")) {
 				throw new EMAnalyticsWSException("The name key for folder can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
@@ -462,10 +462,10 @@ public class FolderAPI
 
 		if (folderObj.has("name")) {
 			String name = folderObj.optString("name");
-			if (name == null) {
-				throw new EMAnalyticsWSException("The name key for folder can not be null in the input JSON Object",
-						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
-			}
+			//			if (name == null) {
+			//				throw new EMAnalyticsWSException("The name key for folder can not be null in the input JSON Object",
+			//						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
+			//			}
 			if (name != null && name.trim().equals("")) {
 				throw new EMAnalyticsWSException("The name key for folder can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);

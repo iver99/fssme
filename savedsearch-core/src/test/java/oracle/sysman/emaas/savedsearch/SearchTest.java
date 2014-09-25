@@ -233,6 +233,7 @@ public class SearchTest extends BaseTest
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 
 		Search search9999 = null;
@@ -411,6 +412,7 @@ public class SearchTest extends BaseTest
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 		finally {
 			//delete the new search
@@ -436,7 +438,7 @@ public class SearchTest extends BaseTest
 			AssertJUnit.assertNotNull(list);
 			AssertJUnit.assertSame(2, list.size());
 			//NOTE: assume that OOB searches are less than 100. If real OOB search count is greater than 100, we need to update below expected number
-			final int MORE_THAN_MAX_COUNT = 100;
+			final int MORE_THAN_MAX_COUNT = 10000;
 			List<Search> list2 = searchMgr.getSearchListByLastAccessDate(MORE_THAN_MAX_COUNT);
 			AssertJUnit.assertNotNull(list2);
 			AssertJUnit.assertNotSame(MORE_THAN_MAX_COUNT, list2.size());

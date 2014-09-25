@@ -303,17 +303,17 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("ANALYICS_CATEGORY_U01")) {
+			if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYICS_CATEGORY_U01")) {
 				throw new EMAnalyticsFwkException("Category name " + category.getName() + " already exist",
 						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
 			}
-			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
+			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
 				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
 				throw new EMAnalyticsFwkException(
 						"Error while connecting to data source, please check the data source details: ",
 						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 			}
-			else if (dmlce.getCause().getMessage().contains("ANALYTICS_CATEGORY_FK1")) {
+			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_CATEGORY_FK1")) {
 				throw new EMAnalyticsFwkException("Default folder with id " + category.getDefaultFolderId() + " missing: "
 						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
 			}

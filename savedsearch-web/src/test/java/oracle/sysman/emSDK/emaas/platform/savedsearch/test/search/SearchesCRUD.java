@@ -199,9 +199,36 @@ public class SearchesCRUD
 			Assert.assertEquals(res.asString(),
 					"Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount");
 			Assert.assertTrue(res.getStatusCode() == 400);
+
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when().get("/searches");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertEquals(res1.asString(),
+					"Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount");
+			Assert.assertTrue(res1.getStatusCode() == 400);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	/**
+	 * Test to return all searches with categoryId
+	 */
+	public void returnAllSearches_CategoryId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("This test is to return all the searches with given CategoryId with GET method");
+			System.out.println("											");
+			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.get("/searches?categoryId=-1");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertEquals(res.asString(), "Id/count should be a positive number and not an alphanumeric");
+			Assert.assertTrue(res.getStatusCode() == 400);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -328,7 +355,7 @@ public class SearchesCRUD
 			System.out.println("This test is to create a search with POST method");
 			System.out.println("											");
 			int position = -1;
-			String jsonString = "{\"name\":\"Custom_Search\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\"Custom_Search\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\",\"attributes\":\"test\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
 					.post("/search");
 			JsonPath jp1 = res1.jsonPath();
@@ -578,7 +605,7 @@ public class SearchesCRUD
 					System.out.println("											");
 					System.out.println("PUT operation is in-progress to edit search");
 					System.out.println("											");
-					String jsonString = "{ \"name\":\"Custom_Search_Edit\", \"queryStr\": \"target.name=mydb.mydomain message like ERR1*\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					String jsonString = "{ \"name\":\"Custom_Search_Edit\",\"category\":{\"id\":1}, \"folder\":{\"id\":2},\"queryStr\": \"target.name=mydb.mydomain message like ERR1*\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
 					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
 							.put("/search/" + searchID);
@@ -604,6 +631,134 @@ public class SearchesCRUD
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
 		}
+	}
+
+	@Test
+	/**
+	 * Edit search's category Id
+	 */
+	public void search_edit_categoryId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new search ");
+			String jsonString = "{\"name\":\"Search for test edit category\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					.post("/search");
+			JsonPath jp = res1.jsonPath();
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+
+			System.out.println("PUT operation is in-progress to edit search");
+			System.out.println("											");
+			System.out.println("Verify when the category key for search is missing");
+			System.out.println("											");
+
+			String jsonString1 = "{ \"category\":{}}";
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString1).when().put("/search/" + jp.get("id"));
+			System.out.println("											");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			System.out.println("											");
+			System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.asString(), "The category key for search is missing in the input JSON Object");
+
+			System.out.println("Verify when not give category during editing the search");
+			System.out.println("											");
+			String jsonString2 = "{\"name\":\"Search for test edit category_edit\"}";
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString2).when().put("/search/" + jp.get("id"));
+			JsonPath jp3 = res3.jsonPath();
+			System.out.println("											");
+			System.out.println("Status code is: " + res3.getStatusCode());
+			System.out.println("											");
+			System.out.println(jp3.getJsonObject("category").toString());
+			System.out.println(res3.asString());
+			Assert.assertTrue(res3.getStatusCode() == 200);
+			Assert.assertEquals(jp3.getJsonObject("category").toString(), "{id=1, href=" + serveruri
+					+ "/savedsearch/v1/category/1}");
+			Assert.assertEquals(jp3.get("name"), "Search for test edit category_edit");
+
+			System.out.println("Verify editing the search's category");
+			System.out.println("											");
+			String jsonString3 = "{ \"category\":{\"id\":2}}";
+			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString3).when().put("/search/" + jp.get("id"));
+			JsonPath jp4 = res4.jsonPath();
+			System.out.println("											");
+			System.out.println("Status code is: " + res4.getStatusCode());
+			System.out.println("											");
+			System.out.println(jp4.getJsonObject("category").toString());
+			System.out.println(res4.asString());
+			Assert.assertTrue(res4.getStatusCode() == 200);
+			Assert.assertEquals(jp4.getJsonObject("category").toString(), "{id=2, href=" + serveruri
+					+ "/savedsearch/v1/category/2}");
+			Assert.assertEquals(jp4.get("name"), "Search for test edit category_edit");
+
+			System.out.println("DELETE method is in-progress to clear data");
+			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/search/" + jp.get("id"));
+			// JsonPath jp7 = res7.jsonPath();
+			System.out.println(res7.asString());
+			Assert.assertTrue(res7.getStatusCode() == 204);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
+	}
+
+	@Test
+	/**
+	 * Edit search with missing FolderId
+	 */
+	public void search_edit_emptyFolderId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new search ");
+			String jsonString = "{\"name\":\"Search for test missing folderId\",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					.post("/search");
+			JsonPath jp = res1.jsonPath();
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+
+			System.out.println("PUT method is in-progress to edit the search with empty name");
+
+			String jsonString_edit = "{\"name\":\"Search for test missing folderId\",\"category\":{\"id\":1},\"folder\":{},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString_edit).when()
+					.put("/search/" + jp.get("id"));
+			System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.asString(), "The folder key for search is missing in the input JSON Object");
+
+			System.out.println("DELETE method is in-progress to clear data");
+			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.delete("/search/" + jp.get("id"));
+
+			System.out.println(res7.asString());
+			Assert.assertTrue(res7.getStatusCode() == 204);
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
 	}
 
 	/**

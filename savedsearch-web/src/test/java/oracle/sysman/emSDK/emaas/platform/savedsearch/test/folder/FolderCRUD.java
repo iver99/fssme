@@ -722,6 +722,15 @@ public class FolderCRUD
 			Assert.assertTrue(res.getStatusCode() == 400);
 			System.out.println(res.asString());
 			Assert.assertEquals(res.asString(), "please give folderId");
+
+			Response res1 = RestAssured.given().log().everything().when().get("/entities?folderId=");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			System.out.println(res1.asString());
+			Assert.assertEquals(res1.asString(), "please give folderId");
+
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
@@ -851,7 +860,7 @@ public class FolderCRUD
 	{
 		try {
 			System.out
-			.println("This test is to validate the response when the search by folder with folder ID which is negative number");
+					.println("This test is to validate the response when the search by folder with folder ID which is negative number");
 			Response res = RestAssured.given().log().everything().when().get("/searches?folderId=-1");
 
 			System.out.println("Status code is: " + res.getStatusCode());
