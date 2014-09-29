@@ -16,14 +16,6 @@ import com.jayway.restassured.response.Response;
 
 public class FolderCRUD
 {
-	/**
-	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
-	 * executing test cases
-	 */
-
-	static String HOSTNAME;
-	static String portno;
-	static String serveruri;
 
 	@BeforeClass
 	public static void setUp()
@@ -34,6 +26,17 @@ public class FolderCRUD
 		serveruri = ct.getServeruri();
 
 	}
+
+	/**
+	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
+	 * executing test cases
+	 */
+
+	static String HOSTNAME;
+
+	static String portno;
+
+	static String serveruri;
 
 	@Test
 	/**
@@ -645,6 +648,35 @@ public class FolderCRUD
 
 	@Test
 	/**
+	 * Folder: Invalid folderId:
+	 */
+	public void folder_InvalidFolderId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("Negative Case3 for FOLDER");
+			System.out.println("											");
+			System.out.println("GET operation is in-progress with empty folder id");
+			System.out.println("											");
+
+			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=0");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			Assert.assertEquals(res.asString(), "Invalid folderId: 0");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	/**
 	 * Folder Negative Case5:
 	 */
 	public void folder_invalidParentId()
@@ -721,7 +753,7 @@ public class FolderCRUD
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
 			System.out.println(res.asString());
-			Assert.assertEquals(res.asString(), "please give folderId");
+			Assert.assertEquals(res.asString(), "Empty folderId");
 
 			Response res1 = RestAssured.given().log().everything().when().get("/entities?folderId=");
 
@@ -729,8 +761,15 @@ public class FolderCRUD
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 400);
 			System.out.println(res1.asString());
-			Assert.assertEquals(res1.asString(), "please give folderId");
+			Assert.assertEquals(res1.asString(), "Empty folderId");
 
+			Response res2 = RestAssured.given().log().everything().when().get("/entities");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			System.out.println(res2.asString());
+			Assert.assertEquals(res2.asString(), "Please give folderId");
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
@@ -860,7 +899,7 @@ public class FolderCRUD
 	{
 		try {
 			System.out
-					.println("This test is to validate the response when the search by folder with folder ID which is negative number");
+			.println("This test is to validate the response when the search by folder with folder ID which is negative number");
 			Response res = RestAssured.given().log().everything().when().get("/searches?folderId=-1");
 
 			System.out.println("Status code is: " + res.getStatusCode());
