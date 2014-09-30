@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.savedsearch.services;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SchemaVersion;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.VersionManager;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
@@ -64,6 +65,7 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 						+ ") doesn't match schema version:(" + schemaVer.getMajorVersion() + "." + schemaVer.getMinorVersion()
 						+ ")";
 				logger.error(errMsg);
+				PersistenceManager.getInstance().closeEntityManagerFactory();
 				throw new RuntimeException(errMsg);
 			}
 		}

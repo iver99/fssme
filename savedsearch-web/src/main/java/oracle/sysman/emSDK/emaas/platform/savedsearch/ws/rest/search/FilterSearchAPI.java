@@ -162,7 +162,7 @@ public class FilterSearchAPI
 	 *         2.please give the value for categoryName<br>
 	 *         3.please give folderId<br>
 	 *         4.Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount<br>
-	 *         5.Id/count should be a positive number and not an alphanumeric.<br>
+	 *         5.Id/count should be a positive number and not an alphanumeric<br>
 	 *         </tr>
 	 *         <tr>
 	 *         <td>500</td>
@@ -245,7 +245,7 @@ public class FilterSearchAPI
 				}
 			}
 			catch (NumberFormatException e) {
-				return Response.status(400).entity("Id/count should be a positive number and not an alphanumeric.").build();
+				return Response.status(400).entity("Id/count should be a positive number and not an alphanumeric").build();
 			}
 		}
 		else {

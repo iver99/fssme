@@ -7,9 +7,7 @@ public class ApplicationLifecycleService extends AbstractApplicationLifecycleSer
 
 	public ApplicationLifecycleService()
 	{
-
 		super(new LoggingServiceManager(), new VersionValidationServiceManager(), new RegistryServiceManager());
-
 	}
 
 }

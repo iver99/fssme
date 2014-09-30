@@ -10,6 +10,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -240,9 +241,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
 		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-		.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
-		.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+				.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
+				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
                 if (serviceProps.getProperty("authToken")!=null) {
                     builder.authToken(serviceProps.getProperty("authToken"));
@@ -251,13 +252,13 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		RegistrationManager.getInstance().initComponent(builder.build());
 
 		InfoManager
-		.getInstance()
-		.getInfo()
-		.setLinks(
-				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
-						new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
-						.withHref(applicationUrl + NAV_FOLDER),
-						new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
+				.getInstance()
+				.getInfo()
+				.setLinks(
+						Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
+								new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
+										.withHref(applicationUrl + NAV_FOLDER),
+								new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
@@ -282,9 +283,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Post-stopping 'Service Registry' application service");
-		RegistrationManager.getInstance().getRegistrationClient().shutdown();
-		logger.debug("Post-stopped 'Service Regsitry'");
-	}
+		logger.info("Pre-stopping service, attempting to close entityimanager factory");
+		PersistenceManager.getInstance().closeEntityManagerFactory();
+		logger.info("Pre-stopping service, entityimanager factory closed");
 
+		logger.info("Pre-stopping 'Service Registry' application service");
+		RegistrationManager.getInstance().getRegistrationClient().shutdown();
+		logger.debug("Pre-stopped 'Service Regsitry'");
+	}
 }
