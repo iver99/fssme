@@ -245,11 +245,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
 				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
-                if (serviceProps.getProperty("authToken")!=null) {
-                    builder.authToken(serviceProps.getProperty("authToken"));
-                }
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
+                if (RegistrationManager.getInstance().getAuthorizationToken()!=null) {
+                    builder.authToken(new String(RegistrationManager.getInstance().getAuthorizationToken()));
+                }
 
 		InfoManager
 				.getInstance()
@@ -263,9 +263,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
 		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
-                if (serviceProps.getProperty("authToken")!=null) {
-                    LookupManager.getInstance().withAuthorization(serviceProps.getProperty("authToken"));
-                }
 		LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 	}
 

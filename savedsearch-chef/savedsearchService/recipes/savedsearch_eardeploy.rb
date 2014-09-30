@@ -87,7 +87,6 @@ bash "create_servicemanger_properties_file"  do
     echo "serviceName=SavedSearch" >> servicemanager.properties
     echo "registryUrls=#{node["serviceUrls"]}" >> servicemanager.properties
     echo "serviceUrls=#{node["serviceUrls"]}" >> servicemanager.properties
-    echo "authToken=#{node["authToken"]}" >> servicemanager.properties
     EOH
 end
 
