@@ -165,16 +165,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			return this;
 		}
 
-                /**
-                 * @param authToken
-                 *            The authorization token to be used for interapp communication
-                 * @return ServiceConfigBuilder
-                 */
-                public ServiceConfigBuilder authToken(String authToken)
-                {
-                        serviceConfigMap.put("authToken", authToken);
-                        return this;
-                }
 	}
 
 	enum UrlType
@@ -247,9 +237,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
-                if (RegistrationManager.getInstance().getAuthorizationToken()!=null) {
-                    builder.authToken(new String(RegistrationManager.getInstance().getAuthorizationToken()));
-                }
 
 		InfoManager
 				.getInstance()
