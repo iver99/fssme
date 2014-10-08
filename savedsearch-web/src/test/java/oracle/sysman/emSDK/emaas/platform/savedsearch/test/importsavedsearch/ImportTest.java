@@ -93,6 +93,40 @@ public class ImportTest
 
 	@Test
 	/**
+	 * import categories with invalid format
+	 */
+	public void importCategories_invalidformat()
+	{
+		try {
+			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().body("").when()
+					.post("/importcategories");
+			Assert.assertEquals(res.getStatusCode(), 400);
+			Assert.assertEquals(res.asString(), "Please specify input with valid format");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	/**
+	 * import folders with invalid format
+	 */
+	public void importFolder_invalidformat()
+	{
+		try {
+			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().body("").when()
+					.post("/importfolders");
+			Assert.assertEquals(res.getStatusCode(), 400);
+			Assert.assertEquals(res.asString(), "Please specify input with valid format");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	/**
 	 * Import folders
 	 */
 	public void importFolders() throws Exception
@@ -138,6 +172,23 @@ public class ImportTest
 			System.out.println("deleted folders and  searches");
 		}
 
+	}
+
+	@Test
+	/**
+	 * import searches with invalid format
+	 */
+	public void importSearches_invalidformat()
+	{
+		try {
+			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().body("").when()
+					.post("/importsearches");
+			Assert.assertEquals(res.getStatusCode(), 400);
+			Assert.assertEquals(res.asString(), "Please specify input with valid format");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
 	}
 
 	private boolean deleteFolder(int myfolderID)

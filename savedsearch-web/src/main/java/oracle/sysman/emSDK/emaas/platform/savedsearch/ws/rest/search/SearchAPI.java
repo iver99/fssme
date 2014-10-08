@@ -655,10 +655,10 @@ public class SearchAPI
 		try {
 			String name = json.getString("name");
 
-			if (name.trim() == null) {
-				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
-						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-			}
+			//			if (name.trim() == null) {
+			//				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
+			//						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+			//			}
 			if (name != null && name.trim().equals("")) {
 				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
@@ -710,11 +710,11 @@ public class SearchAPI
 				}
 				try {
 					String name = jsonParam.getString("name");
-					if (name.trim() == null) {
-						throw new EMAnalyticsWSException(
-								"The name key for search param can not be null in the input JSON Object",
-								EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
-					}
+					//					if (name.trim() == null) {
+					//						throw new EMAnalyticsWSException(
+					//								"The name key for search param can not be null in the input JSON Object",
+					//								EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
+					//					}
 					if (name != null && name.trim().equals("")) {
 						throw new EMAnalyticsWSException(
 								"The name key for search param can not be empty in the input JSON Object",
@@ -767,10 +767,10 @@ public class SearchAPI
 		if (json.has("name")) {
 			String name = json.optString("name");
 
-			if (name.trim() == null) {
-				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
-						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-			}
+			//			if (name.trim() == null) {
+			//				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
+			//						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+			//			}
 			if (name != null && name.trim().equals("")) {
 				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
@@ -831,11 +831,11 @@ public class SearchAPI
 
 				try {
 					String name = jsonParam.getString("name");
-					if (name.trim() == null) {
-						throw new EMAnalyticsWSException(
-								"The name key for search param can not be null in the input JSON Object",
-								EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-					}
+					//					if (name.trim() == null) {
+					//						throw new EMAnalyticsWSException(
+					//								"The name key for search param can not be null in the input JSON Object",
+					//								EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+					//					}
 					if (name != null && name.trim().equals("")) {
 						throw new EMAnalyticsWSException(
 								"The name key for search param can not be empty in the input JSON Object",

@@ -12,25 +12,25 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/javax.persistence-2.0.0.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-1.2.17.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/javax.persistence-2.0.0.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/testng-6.8.8.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/ojdbc6-12.1.2-0-0.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/json-path-1.8.1.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-core-asl-1.9.1.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-jaxrs-1.9.2.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-mapper-asl-1.9.12.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-xc-1.9.2.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jettison-1.1.jar"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.utility"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/Oracle WebLogic Server 12c (12.1.2) JRE">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/testng-6.8.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/ojdbc6-12.1.2-0-0.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/json-path-2.3.1.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jackson-core-asl-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jackson-jaxrs-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jackson-mapper-asl-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jackson-xc-1.9.2.jar"/>
-	<classpathentry kind="lib" path="/net/slc04wjk/scratch/download/ssf_jars/jettison-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

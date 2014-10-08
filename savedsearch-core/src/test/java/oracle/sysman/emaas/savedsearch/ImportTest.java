@@ -66,7 +66,7 @@ public class ImportTest
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 
 	}
@@ -103,7 +103,7 @@ public class ImportTest
 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 	}
 

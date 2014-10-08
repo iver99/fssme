@@ -192,8 +192,10 @@ public class SavedSearchAPI
 	 *         <td>400</td>
 	 *         <td>Bad Request</td>
 	 *         <td>could be the following errors:<br>
-	 *         1.please give folderId<br>
-	 *         2.Folder Id should be a numeric and not alphanumeric</td>
+	 *         1.Please give folderId<br>
+	 *         2.Empty folderId<br>
+	 *         3.Invalid Folder Id: xx<br>
+	 *         4.Folder Id should be a numeric and not alphanumeric</td>
 	 *         </tr>
 	 *         <tr>
 	 *         <td>500</td>
@@ -209,22 +211,27 @@ public class SavedSearchAPI
 	{
 		String message = null;
 		Long folderId = 0L;
+		/**
+		 * /entities will make id null
+		 */
 		if (id == null) {
-			return Response.status(400).entity("please give folderId").build();
+			return Response.status(400).entity("Please give folderId").build();
 		}
-		else if (id != null && id.equals("")) {
-			return Response.status(400).entity("please give folderId").build();
+		else if ("".equals(id.trim())) {
+			return Response.status(400).entity("Empty folderId").build();
 		}
-		try {
+		else {
+			try {
 
-			if (id != null && !id.equals("")) {
-				folderId = Long.parseLong(id);
+				if (!"".equals(id.trim())) {
+					folderId = Long.parseLong(id);
+				}
+			}
+			catch (NumberFormatException e) {
+				return Response.status(400).entity("Folder Id should be a numeric and not alphanumeric").build();
 			}
 		}
-		catch (NumberFormatException e) {
-			return Response.status(400).entity("Folder Id should be a numeric and not alphanumeric").build();
-		}
-		if (folderId != 0L) {
+		if (folderId > 0L) {
 			try {
 				return Response.status(200).entity(getFolderDetails(folderId)).build();
 			}
@@ -245,9 +252,12 @@ public class SavedSearchAPI
 				e.printStackTrace();
 				return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 			}
-
+			return Response.status(200).entity(message).build();
 		}
-		return Response.status(200).entity(message).build();
+		else {
+			return Response.status(400).entity("Invalid folderId: " + folderId).build();
+		}
+
 	}
 
 	/**

@@ -171,6 +171,33 @@ public class CategoryCRUD
 
 	@Test
 	/**
+	 * Verify give wrong category name while read category details
+	 */
+	public void getCategory_wrongName()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("GET operation is in-progress to read category details with wrong category name");
+			System.out.println("											");
+
+			Response res = RestAssured.given().log().everything().when().get("/category?name=abc");
+			System.out.println("											");
+			System.out.println("Status code is : " + res.getStatusCode());
+
+			Assert.assertTrue(res.getStatusCode() == 404);
+			Assert.assertEquals(res.asString(), "Category object by Name: abc does not exist");
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	/**
 	 * Check status and response for get all categories
 	 */
 	public void listAllCategories()
