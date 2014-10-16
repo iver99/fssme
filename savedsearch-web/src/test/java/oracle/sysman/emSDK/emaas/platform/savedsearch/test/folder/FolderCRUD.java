@@ -24,7 +24,7 @@ public class FolderCRUD
 		HOSTNAME = ct.getHOSTNAME();
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
-
+		authToken =ct.getAuthToken();
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class FolderCRUD
 	static String portno;
 
 	static String serveruri;
-
+	static String authToken;
 	@Test
 	/**
 	 * Folder Negative Case6:
@@ -50,7 +50,7 @@ public class FolderCRUD
 			System.out.println("GET method is in-progress to validate the folder non-availability");
 
 			System.out.println("											");
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=99999999999");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=99999999999");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -79,7 +79,7 @@ public class FolderCRUD
 			System.out.println("											");
 			System.out.println("Using GET operation to get the details of the specified folderId");
 			System.out.println("											");
-			Response res = RestAssured.given().log().everything().when().get("/folder/333");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/folder/333");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -112,7 +112,7 @@ public class FolderCRUD
 			System.out.println("POST method is in-progress to create a new folder");
 			int position = -1;
 			String jsonString = "{ \"name\":\"Custom_Folder\",\"description\":\"Folder for EMAAS searches\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.post("/folder");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -127,7 +127,7 @@ public class FolderCRUD
 			System.out.println("											");
 
 			String jsonString2 = "{ \"name\":\"Custom_Folder\" }";
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString2).when()
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString2).when()
 					.post("/folder");
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -139,7 +139,7 @@ public class FolderCRUD
 
 			System.out.println("Verifying weather the folder created in a specified location or not with GET method");
 			System.out.println("											");
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -182,7 +182,7 @@ public class FolderCRUD
 			System.out.println("POST method is in-progress to create a new folder in a specified directory");
 			int position = -1;
 			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":3}}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
@@ -193,7 +193,7 @@ public class FolderCRUD
 			System.out.println("											");
 			System.out.println("Verifying whether the folder created or not in a specified directory with GET method");
 			System.out.println("											");
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=3");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=3");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -216,7 +216,7 @@ public class FolderCRUD
 				System.out.println("==folder does not exist that you are looking for");
 			}
 			System.out.println("cleaning up the folder that is created above using DELETE method");
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 					.delete("/folder/" + jp1.get("id"));
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -241,7 +241,7 @@ public class FolderCRUD
 			System.out.println("POST method is in-progress to create a new folder in a specified directory");
 			int position = -1;
 			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":0}}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
@@ -252,7 +252,7 @@ public class FolderCRUD
 			System.out.println("											");
 			System.out.println("Verifying whether the folder created or not in a specified directory with GET method");
 			System.out.println("											");
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -275,7 +275,7 @@ public class FolderCRUD
 				System.out.println("==folder does not exist that you are looking for");
 			}
 			System.out.println("cleaning up the folder that is created above using DELETE method");
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 					.delete("/folder/" + jp1.get("id"));
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -299,7 +299,7 @@ public class FolderCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("POST method is in-progress to create a new folder with blank name");
 			String jsonString = "{ \"name\":\" \",\"description\":\"Folder for EMAAS searches\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.post("/folder");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -329,7 +329,7 @@ public class FolderCRUD
 			System.out.println("GET operation to select the folder to be edited is in progress");
 			System.out.println("											");
 			int position = -1;
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -352,7 +352,7 @@ public class FolderCRUD
 					System.out.println("PUT operation to edit the selected folder is in-progress");
 					String jsonString = "{ \"name\":\"Custom_Folder_Edit\" }";
 
-					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 							.put("/folder/" + myfolderID);
 					System.out.println("											");
 					System.out.println("Status code is: " + res1.getStatusCode());
@@ -371,7 +371,7 @@ public class FolderCRUD
 
 					System.out.println("PUT operation to edit the selected folder is in-proress");
 					String jsonString1 = "{ \"description\":\"Folder for EMAAS searches_Edit\"}";
-					Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+					Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString1).when()
 							.put("/folder/" + myfolderID);
 					System.out.println("											");
 					System.out.println("Status code is: " + res2.getStatusCode());
@@ -408,7 +408,7 @@ public class FolderCRUD
 			System.out.println("POST method is in-progress to create a new folder");
 			int position = -1;
 			String jsonString = "{ \"name\":\"TestFolder_ParentId\", \"description\":\"Folder for EMAAS searches\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
@@ -419,7 +419,7 @@ public class FolderCRUD
 
 			System.out.println("GET operation to select the folder to be edited is in progress");
 			System.out.println("											");
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -442,7 +442,7 @@ public class FolderCRUD
 					System.out.println("PUT operation to edit the selected folder is in-progress");
 					String jsonString_parentId = "{\"parentFolder\":{\"id\":3}}";
 
-					Response res_parentId = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					Response res_parentId = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 							.body(jsonString_parentId).when().put("/folder/" + myfolderID);
 					JsonPath jp_parentId = res_parentId.jsonPath();
 					System.out.println("											");
@@ -456,7 +456,7 @@ public class FolderCRUD
 			}
 
 			System.out.println("==Get operation to verify if the folderId has been changed");
-			res = RestAssured.given().log().everything().when().get("/entities?folderId=3");
+			res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=3");
 			jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -481,7 +481,7 @@ public class FolderCRUD
 			Assert.assertTrue(existflag);
 
 			System.out.println("cleaning up the folder that is created above using DELETE method");
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 					.delete("/folder/" + jp1.get("id"));
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -509,7 +509,7 @@ public class FolderCRUD
 			System.out.println("POST method is in-progress to create a new folder");
 			int position = -1;
 			String jsonString = "{ \"name\":\"TestFolder_ParentId_Zero\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":3}}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
@@ -520,7 +520,7 @@ public class FolderCRUD
 
 			System.out.println("GET operation to select the folder to be edited is in progress");
 			System.out.println("											");
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=3");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=3");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -543,7 +543,7 @@ public class FolderCRUD
 					System.out.println("PUT operation to edit the selected folder is in-progress");
 					String jsonString_parentId = "{\"parentFolder\":{\"id\":0}}";
 
-					Response res_parentId = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					Response res_parentId = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 							.body(jsonString_parentId).when().put("/folder/" + myfolderID);
 					JsonPath jp_parentId = res_parentId.jsonPath();
 					System.out.println("											");
@@ -557,7 +557,7 @@ public class FolderCRUD
 			}
 
 			System.out.println("==Get operation to verify if the folderId has been changed");
-			res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=1");
 			jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -582,7 +582,7 @@ public class FolderCRUD
 			Assert.assertTrue(existflag);
 
 			System.out.println("cleaning up the folder that is created above using DELETE method");
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 					.delete("/folder/" + jp1.get("id"));
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -611,7 +611,7 @@ public class FolderCRUD
 			System.out.println("											");
 			System.out.println("Prepare data...");
 			String jsonString = "{ \"name\":\"Custom_Folder_EditEmptyName\",\"description\":\"Folder for EMAAS searches\",}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
@@ -620,7 +620,7 @@ public class FolderCRUD
 
 			String jsonString1 = "{ \"name\":\" \" }";
 
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString1).when()
 					.put("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -634,7 +634,7 @@ public class FolderCRUD
 			System.out.println("											");
 
 			System.out.println("cleaning up the folder that is created above using DELETE method");
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 					.delete("/folder/" + jp1.get("id"));
 			System.out.println(res3.asString());
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -659,7 +659,7 @@ public class FolderCRUD
 			System.out.println("GET operation is in-progress with empty folder id");
 			System.out.println("											");
 
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=0");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=0");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -687,7 +687,7 @@ public class FolderCRUD
 			System.out.println("POST method is in-progress to create a new folder with invalidParentId");
 
 			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":333333}}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.post("/folder");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -718,7 +718,7 @@ public class FolderCRUD
 			System.out.println("GET operation is in-progress with Invalid Type");
 			System.out.println("											");
 
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=me");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=me");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -747,7 +747,7 @@ public class FolderCRUD
 			System.out.println("GET operation on URL which is lagging with some info");
 			System.out.println("											");
 
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -755,7 +755,7 @@ public class FolderCRUD
 			System.out.println(res.asString());
 			Assert.assertEquals(res.asString(), "Empty folderId");
 
-			Response res1 = RestAssured.given().log().everything().when().get("/entities?folderId=");
+			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -763,7 +763,7 @@ public class FolderCRUD
 			System.out.println(res1.asString());
 			Assert.assertEquals(res1.asString(), "Empty folderId");
 
-			Response res2 = RestAssured.given().log().everything().when().get("/entities");
+			Response res2 = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -792,7 +792,7 @@ public class FolderCRUD
 			System.out.println("POST operation is in-progress & missing with required field: Name");
 			System.out.println("											");
 			String jsonString = "{\"parent\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\"}";
-			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.post("/folder");
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -823,7 +823,7 @@ public class FolderCRUD
 			System.out.println("GET operation to select the folder is in progress");
 			System.out.println("											");
 			int position = -1;
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -846,7 +846,7 @@ public class FolderCRUD
 					System.out.println("											");
 					System.out.println("DELETE operation to delete the selected folder is in-progress");
 					System.out.println("											");
-					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 							.delete("/folder/" + myfolderID);
 					System.out.println("											");
 					System.out.println("Status code is: " + res1.getStatusCode());
@@ -876,7 +876,7 @@ public class FolderCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to delete a non-exist folder with DELETE method");
 			System.out.println("											");
-			Response res = RestAssured.given().log().everything().when().delete("/folder/3333333333");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().delete("/folder/3333333333");
 			System.out.println(res.asString());
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -900,7 +900,7 @@ public class FolderCRUD
 		try {
 			System.out
 			.println("This test is to validate the response when the search by folder with folder ID which is negative number");
-			Response res = RestAssured.given().log().everything().when().get("/searches?folderId=-1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/searches?folderId=-1");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
@@ -927,7 +927,7 @@ public class FolderCRUD
 			System.out.println("POST method is in-progress to create a new folder and then to create searches in it");
 
 			String jsonString1 = "{ \"name\":\"Folder_searches\",\"description\":\"Folder for EMAAS searches\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString1).when()
 					.post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
@@ -940,7 +940,7 @@ public class FolderCRUD
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			System.out.println("------------------------------------------");
 			System.out.println("Asserting the details of the folder");
-			Response res = RestAssured.given().log().everything().when().get("/folder/" + jp1.get("id"));
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/folder/" + jp1.get("id"));
 			JsonPath jp0 = res.jsonPath();
 			Assert.assertEquals(jp0.get("name"), "Folder_searches");
 			Assert.assertEquals(jp0.get("id"), jp1.get("id"));
@@ -958,7 +958,7 @@ public class FolderCRUD
 			String jsonString2 = "{\"name\":\"Search_s1\",\"category\":{\"id\":1},\"folder\":{\"id\":"
 					+ jp1.get("id")
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString2).when()
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString2).when()
 					.post("/search");
 			JsonPath jp2 = res2.jsonPath();
 
@@ -973,7 +973,7 @@ public class FolderCRUD
 
 			System.out.println("------------------------------------------");
 			System.out.println("GET method is in-progress to list all the searches in the folderId: " + jp1.get("id"));
-			Response res10 = RestAssured.given().log().everything().when().get("/searches?folderId=" + jp1.get("id"));
+			Response res10 = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/searches?folderId=" + jp1.get("id"));
 			JsonPath jp10 = res10.jsonPath();
 
 			System.out.println("											");
@@ -988,7 +988,7 @@ public class FolderCRUD
 			String jsonString3 = "{\"name\":\"Search_s2\",\"category\":{\"id\":2},\"folder\":{\"id\":"
 					+ jp1.get("id")
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample2\",\"type\":STRING,\"value\":\"my_value\"}]}";
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString3).when()
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString3).when()
 					.post("/search");
 			JsonPath jp3 = res3.jsonPath();
 
@@ -1002,7 +1002,7 @@ public class FolderCRUD
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("GET method is in-progress to list all the searches in the folderId: " + jp1.get("id"));
-			Response res4 = RestAssured.given().log().everything().when().get("/entities?folderId=" + jp1.get("id"));
+			Response res4 = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=" + jp1.get("id"));
 			JsonPath jp4 = res4.jsonPath();
 
 			System.out.println("											");
@@ -1015,7 +1015,7 @@ public class FolderCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("Delete the folder while it has searches in it using DELETE method");
 			System.out.println("											");
-			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 					.delete("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res5.getStatusCode());
@@ -1027,13 +1027,13 @@ public class FolderCRUD
 			System.out.println("Delete the searches from folderId: " + jp1.get("id"));
 
 			if (jp4.get("name[0]") == "Search_s2") {
-				Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+				Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 						.delete("/search/" + jp3.get("id"));
 				System.out.println("											");
 				System.out.println("Status code is: " + res6.getStatusCode());
 				Assert.assertTrue(res6.getStatusCode() == 204);
 				System.out.println("											");
-				Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+				Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 						.delete("/search/" + jp2.get("id"));
 				System.out.println("											");
 				System.out.println("Status code is: " + res7.getStatusCode());
@@ -1041,12 +1041,12 @@ public class FolderCRUD
 			}
 			else {
 
-				Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+				Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 						.delete("/search/" + jp2.get("id"));
 				System.out.println("											");
 				System.out.println("Status code is: " + res7.getStatusCode());
 				Assert.assertTrue(res7.getStatusCode() == 204);
-				Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+				Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 						.delete("/search/" + jp3.get("id"));
 				System.out.println("											");
 				System.out.println("Status code is: " + res6.getStatusCode());
@@ -1055,7 +1055,7 @@ public class FolderCRUD
 				System.out.println("------------------------------------------");
 			}
 			System.out.println("Delete the folder whose Id is: " + jp1.get("id"));
-			Response res8 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res8 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 					.delete("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res8.getStatusCode());
@@ -1064,7 +1064,7 @@ public class FolderCRUD
 			// System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("Delete the folder again whose Id is: " + jp1.get("id"));
-			Response res9 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res9 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).when()
 					.delete("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res9.getStatusCode());
@@ -1093,7 +1093,7 @@ public class FolderCRUD
 			System.out.println("GET operation to select the folder is in progress");
 			System.out.println("											");
 
-			Response res = RestAssured.given().log().everything().when().delete("/folder/1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().delete("/folder/1");
 			// JsonPath jp = res.jsonPath();
 			System.out.println(res.asString());
 			System.out.println("											");
@@ -1125,7 +1125,7 @@ public class FolderCRUD
 
 			String jsonString = "{ \"name\":\"System_Folder_Edit\" }";
 
-			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
+			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken).body(jsonString).when()
 					.put("/folder/1");
 			// JsonPath jp = res.jsonPath();
 			System.out.println(res.asString());

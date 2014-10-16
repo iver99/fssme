@@ -24,6 +24,7 @@ public class SavedSearchNavigations
 	static String HOSTNAME;
 	static String portno;
 	static String serveruri;
+	static String authToken;
 
 	@BeforeClass
 	public static void setUp()
@@ -32,6 +33,7 @@ public class SavedSearchNavigations
 		HOSTNAME = ct.getHOSTNAME();
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
+		authToken=ct.getAuthToken();
 	}
 
 	@Test
@@ -44,7 +46,7 @@ public class SavedSearchNavigations
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to get all the folders available with details");
 			int position = -1;
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=1");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type        :" + jp.get("type[0]"));
@@ -88,7 +90,7 @@ public class SavedSearchNavigations
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to verify get entities with non-existed folder Id");
 
-			Response res = RestAssured.given().log().everything().when().get("/entities?folderId=3333333333333");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=3333333333333");
 			Assert.assertEquals(res.asString(), "Folder with the Id 3333333333333 does not exist");
 			Assert.assertEquals(res.getStatusCode(), 404);
 			System.out.println("------------------------------------------");
@@ -110,7 +112,7 @@ public class SavedSearchNavigations
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to get the root folder details");
 			int position = -1;
-			Response res = RestAssured.given().log().everything().when().get("/");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type       :" + jp.get("type"));
@@ -153,7 +155,7 @@ public class SavedSearchNavigations
 		try {
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to get the details of the top root folder");
-			Response res = RestAssured.given().log().everything().when().get("/folder/1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/folder/1");
 			System.out.println(res.toString());
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
