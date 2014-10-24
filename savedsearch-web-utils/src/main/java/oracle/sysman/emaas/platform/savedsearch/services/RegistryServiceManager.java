@@ -224,14 +224,16 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	{
 		logger.info("Post-starting 'Service Registry' application service");
 		String applicationUrl = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
+		String applicationUrlSSL = RegistryServiceManager.getApplicationUrl(UrlType.HTTPS);
 		logger.debug("Application URL to register with 'Service Registry': " + applicationUrl);
+		logger.debug("Application SSL URL to register with 'Service Registry': " + applicationUrlSSL);
 
 		logger.info("Building 'Service Registry' configuration");
 		Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
 
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
 		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-				.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
+				.virtualEndpoints(applicationUrlSSL + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
 				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
 				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
@@ -246,6 +248,15 @@ public class RegistryServiceManager implements ApplicationServiceManager
 								new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
 										.withHref(applicationUrl + NAV_FOLDER),
 								new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
+		
+		InfoManager
+		.getInstance()
+		.getInfo()
+		.setLinks(
+				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrlSSL + NAV_BASE),
+						new Link().withRel("search").withHref(applicationUrlSSL + NAV_SEARCH), new Link().withRel("folder")
+								.withHref(applicationUrlSSL + NAV_FOLDER),
+						new Link().withRel("category").withHref(applicationUrlSSL + NAV_CATEGORY)));
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
