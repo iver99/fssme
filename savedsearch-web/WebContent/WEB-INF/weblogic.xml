@@ -5,6 +5,5 @@
     <wls:security-role-assignment>
 	    <wls:role-name>valid-users</wls:role-name>
 	    <wls:principal-name>user</wls:principal-name>
-	    <wls:principal-name>CloudInfra.OCLOUD9_EMAAS_INTER_SVC_APPID</wls:principal-name>
     </wls:security-role-assignment>
 </wls:weblogic-web-app>
