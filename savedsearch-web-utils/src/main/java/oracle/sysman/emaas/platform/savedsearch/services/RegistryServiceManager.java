@@ -172,12 +172,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	}
 
 	private static final String NAV_BASE = "/savedsearch/v1";
+
 	private static final String NAV_SEARCH = "/savedsearch/v1/search";
 	private static final String NAV_FOLDER = "/savedsearch/v1/folder";
 	private static final String NAV_CATEGORY = "/savedsearch/v1/category";
-	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
-			+ ".serviceregistry");
-
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
 	static {
@@ -212,6 +210,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
+	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
+			+ ".serviceregistry");
+
 	@Override
 	public String getName()
 	{
@@ -230,26 +231,30 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
 		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-				.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
-				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+		.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
+		.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
 		InfoManager
-				.getInstance()
-				.getInfo()
-				.setLinks(
-						Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
-								new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
-										.withHref(applicationUrl + NAV_FOLDER),
-								new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
+		.getInstance()
+		.getInfo()
+		.setLinks(
+				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
+						new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
+						.withHref(applicationUrl + NAV_FOLDER),
+						new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
 		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 		LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
+
+		logger.info("Post-starting service, attempting to create entityimanager factory");
+		PersistenceManager.getInstance().createEntityManagerFactory();
+		logger.info("Post-starting service, entityimanager factory created");
 	}
 
 	@Override
