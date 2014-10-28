@@ -262,6 +262,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		RegistrationManager.getInstance().getRegistrationClient().register();
 		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 		LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
+
+		logger.info("Post-starting service, attempting to create entityimanager factory");
+		PersistenceManager.getInstance().createEntityManagerFactory();
+		logger.info("Post-starting service, entityimanager factory created");
 	}
 
 	@Override

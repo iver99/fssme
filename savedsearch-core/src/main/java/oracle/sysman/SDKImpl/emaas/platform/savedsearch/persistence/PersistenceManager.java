@@ -10,6 +10,10 @@ import javax.persistence.Persistence;
 public class PersistenceManager
 {
 	/**
+	 * An internal property to know whether test env is in use true: test env is in use null or non-true: test env is NOT in use
+	 */
+	public static final String TESTENV_PROP = "SSF.INTERNAL.TESTENV";
+	/**
 	 * For the whole JVM life cycle, IS_TEST_ENV can only be set once
 	 */
 	private static Boolean IS_TEST_ENV = null;
@@ -33,31 +37,11 @@ public class PersistenceManager
 		return singleton;
 	}
 
-	public static void setTestEnv(boolean value)
-	{
-		synchronized (lock) {
-			if (IS_TEST_ENV == null) {
-				IS_TEST_ENV = true;
-			}
-		}
-	}
-
 	private EntityManagerFactory emf;
 
 	private PersistenceManager()
 	{
-		if (IS_TEST_ENV == null) {
-			IS_TEST_ENV = false;
-		}
-
-		if (IS_TEST_ENV) {
-			Properties props = loadProperties(CONNECTION_PROPS_FILE);
-			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
-		}
-		else {
-			createEntityManagerFactory(PERSISTENCE_UNIT, null);
-		}
-
+		createEntityManagerFactory();
 	}
 
 	public synchronized void closeEntityManagerFactory()
@@ -68,8 +52,31 @@ public class PersistenceManager
 		}
 	}
 
+	/**
+	 * If EntityManagerFactory is closed by closeEntityManagerFactory(), you have to create it explicitly by this method,
+	 * otherwise getEntityManager
+	 */
+	public synchronized void createEntityManagerFactory()
+	{
+		if (IS_TEST_ENV == null) {
+			String testEnvVal = System.getProperty(TESTENV_PROP, "false");
+			IS_TEST_ENV = "true".equalsIgnoreCase(testEnvVal);
+		}
+
+		if (IS_TEST_ENV) {
+			Properties props = loadProperties(CONNECTION_PROPS_FILE);
+			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
+		}
+		else {
+			createEntityManagerFactory(PERSISTENCE_UNIT, null);
+		}
+	}
+
 	public EntityManagerFactory getEntityManagerFactory()
 	{
+		if (emf == null || !emf.isOpen()) {
+			throw new RuntimeException("Failed to get EntityManagerFactory, which is closed!");
+		}
 		return emf;
 	}
 
@@ -90,9 +97,11 @@ public class PersistenceManager
 
 	}
 
-	protected synchronized void createEntityManagerFactory(String puName, Properties props)
+	protected void createEntityManagerFactory(String puName, Properties props)
 	{
-		emf = Persistence.createEntityManagerFactory(puName, props);
+		if (emf == null || !emf.isOpen()) {
+			emf = Persistence.createEntityManagerFactory(puName, props);
+		}
 	}
 
 }
