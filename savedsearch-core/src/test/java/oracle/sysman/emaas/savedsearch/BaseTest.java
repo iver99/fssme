@@ -14,7 +14,7 @@ public abstract class BaseTest
 {
 	protected static PersistenceManager pm;
 	static {
-		PersistenceManager.setTestEnv(true);
+		System.setProperty(PersistenceManager.TESTENV_PROP, "true");
 		DateUtil.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 }
