@@ -8,7 +8,12 @@ public class UpdateSavedSearch {
 	private String m_strEndPoint;
 	private String m_strFilePath;
 	private String m_strOutputPath;
-
+	private final String HELP="-help";
+	private final String URL="-url";
+	private final String INPUT_FILE_PATH="-inputfilepath";
+	private final String OUTPUT_FILE_PATH="-outputfilepath";
+	
+	
 	public static void main(String args[]) {
 		UpdateSavedSearch obj = new UpdateSavedSearch();
 		ImportSearchObject objUpdate = new ImportSearchObject();
@@ -44,19 +49,19 @@ public class UpdateSavedSearch {
 	}
 
 	private void printHelp() {
-		System.out.println("SavedSearch -url -inputfilepath  -outfilepath");
+		System.out.println("UpdateSavedSearch -url -inputfilepath  -outfilepath");
 	}
 
 	private void configureFromArgs(String[] args) {
 		for (int index = 0; index < args.length; index = index + 2) {
 
-			if (args[index].equalsIgnoreCase("-help")) {
+			if (args[index].equalsIgnoreCase(HELP)) {
 				m_intCommandNo = 0;
-			} else if (args[index].equalsIgnoreCase("-url")) {
+			} else if (args[index].equalsIgnoreCase(URL)) {
 				m_strEndPoint = args[index + 1];
-			} else if (args[index].equalsIgnoreCase("-inputfilepath")) {
+			} else if (args[index].equalsIgnoreCase(INPUT_FILE_PATH)) {
 				m_strFilePath = args[index + 1];
-			} else if (args[index].equalsIgnoreCase("-outputfilepath")) {
+			} else if (args[index].equalsIgnoreCase(OUTPUT_FILE_PATH)) {
 				m_strOutputPath = args[index + 1];
 			}
 		}
@@ -149,7 +154,8 @@ public class UpdateSavedSearch {
 							+ outputfile);
 			return;
 		}
-
+		
+		System.out.println("The update process completed successfully.");
 	}
 
 }

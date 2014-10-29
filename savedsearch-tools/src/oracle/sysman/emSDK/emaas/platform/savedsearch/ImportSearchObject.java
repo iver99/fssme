@@ -11,7 +11,15 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 
 public class ImportSearchObject {
-
+	
+	private static final String BASE_PATH_STR="/savedsearch/v1";
+	private static final String IMPORT_SEARCH_STR="/importsearches";
+	private static final String DOMAIN_NAME="X-USER-IDENTITY-DOMAIN-NAME";
+	private static final String WWW_STR="www";
+	private static final String ID="id";
+	private static final String NAME="name";
+	private static final String GET_FOLDER="/entities?folderId=1";
+	
 	public String importSearches(String endpoint, String sData)
 			throws Exception {
 
@@ -19,22 +27,22 @@ public class ImportSearchObject {
 		String jsonString1 = sData;
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = endpoint;
-		RestAssured.basePath = "/savedsearch/v1";
+		RestAssured.basePath = BASE_PATH_STR;
 		RestAssured.config = RestAssured.config().logConfig(
 				LogConfig.logConfig().enablePrettyPrinting(false));
 		URL netUrl = new URL(endpoint);
 		String host = netUrl.getHost();
-		if (host.startsWith("www")) {
-			host = host.substring("www".length() + 1);
+		if (host.toLowerCase().startsWith(WWW_STR)) {
+			host = host.substring(WWW_STR.length() + 1);
 		}
 		Response res1 = RestAssured.given().contentType(ContentType.XML)
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", host).body(jsonString1)
-				.when().post("/importsearches");
+				.headers(DOMAIN_NAME, host).body(jsonString1)
+				.when().post(IMPORT_SEARCH_STR);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			output = output + jsonObj.getInt("id") + "  "
-					+ jsonObj.getString("name")
+			output = output + jsonObj.getInt(ID) + "  "
+					+ jsonObj.getString(NAME)
 					+ System.getProperty("line.separator");
 		}
 		return output;
@@ -44,9 +52,9 @@ public class ImportSearchObject {
 		try {
 			RestAssured.useRelaxedHTTPSValidation();
 			RestAssured.baseURI = endpoint;
-			RestAssured.basePath = "/savedsearch/v1";
+			RestAssured.basePath = BASE_PATH_STR;
 			Response res = RestAssured.given().when()
-					.get("/entities?folderId=1");
+					.get(GET_FOLDER);
 
 			if (res.getStatusCode() == 200)
 				return true;
