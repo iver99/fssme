@@ -20,6 +20,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJs
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -51,7 +53,7 @@ public class JSONUtilTest extends BaseTest
 			final String VERIFY_STRING2 = "\"queryStr\":\"*\"";
 			final String VERIFY_STRING3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
 			final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-			//			System.out.println(output);
+			//System.out.println(output);
 			Assert.assertNotNull(output);
 			Assert.assertFalse(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is found unexpected");
 			Assert.assertFalse(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is found unexpected");
@@ -65,8 +67,35 @@ public class JSONUtilTest extends BaseTest
 			Assert.assertTrue(output2.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
 			Assert.assertTrue(output2.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
 			Assert.assertTrue(output2.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
+
+			String output3 = JSONUtil.ObjectToJSONString(search);
+			Assert.assertNotNull(output3);
+			Assert.assertTrue(output3.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
+			Assert.assertTrue(output3.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
+			Assert.assertTrue(output3.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
+			Assert.assertTrue(output3.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
+
+			JSONObject json_output = JSONUtil.ObjectToJSONObject(search, new String[] { "id", "queryStr", "parameters" });
+			String output4 = json_output.toString();
+			Assert.assertNotNull(json_output);
+			Assert.assertFalse(output4.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
+			Assert.assertFalse(output4.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
+			Assert.assertFalse(output4.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
+			Assert.assertTrue(output4.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
+
+			JSONObject json_output2 = JSONUtil.ObjectToJSONObject(search);
+			String output5 = json_output2.toString();
+			Assert.assertNotNull(json_output2);
+			Assert.assertTrue(output5.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
+			Assert.assertTrue(output5.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
+			Assert.assertTrue(output5.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
+			Assert.assertTrue(output5.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
+
 		}
 		catch (EMAnalyticsFwkJsonException e) {
+			Assert.assertTrue(false, "failed to convert due to: " + e.getMessage());
+		}
+		catch (JSONException e) {
 			Assert.assertTrue(false, "failed to convert due to: " + e.getMessage());
 		}
 	}
