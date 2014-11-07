@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Support across domain access CORS: Cross-Origin Resource Sharing Reference: http://enable-cors.org/ http://www.w3.org/TR/cors/
  * http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
- * 
+ *
  * @author miayu
  */
 public class SavedSearchCORSFilter implements Filter
@@ -25,12 +25,12 @@ public class SavedSearchCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
-		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); //add more methods as necessary
-		hRes.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
+		hRes.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 		chain.doFilter(request, response);
 	}
 
