@@ -4,6 +4,7 @@
 	<test name="SavedSearchNavigations">
 		<packages>
 			<package name="oracle.sysman.emSDK.emaas.platform.savedsearch.test.*" />
+			<package name="oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*" />
 		</packages>
 	</test>
 </suite> 

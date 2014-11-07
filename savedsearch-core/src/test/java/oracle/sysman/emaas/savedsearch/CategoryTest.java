@@ -250,8 +250,7 @@ public class CategoryTest extends BaseTest
 
 		}
 		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME));
+			AssertJUnit.assertEquals(emanfe.getErrorCode(), EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME);
 		}
 	}
 }

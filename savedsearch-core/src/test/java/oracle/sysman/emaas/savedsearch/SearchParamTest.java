@@ -97,6 +97,7 @@ public class SearchParamTest extends BaseTest
 			sp2.setValue("ParamClobValue");
 			sp2.setAttributes("Image");
 			sp2.setType(ParameterType.CLOB);
+
 			ArrayList<SearchParameter> parameters = new ArrayList<SearchParameter>();
 			parameters.add(sp1);
 			parameters.add(sp2);
@@ -132,7 +133,7 @@ public class SearchParamTest extends BaseTest
 
 			SearchParameter sp2 = new SearchParameter();
 			sp2.setName("ParamClob");
-			sp2.setValue("ParamClobTextValue");
+			//sp2.setValue("ParamClobTextValue");
 			sp2.setAttributes("Text");
 			sp2.setType(ParameterType.CLOB);
 
