@@ -16,6 +16,7 @@
 			<class name="oracle.sysman.emaas.savedsearch.VersionManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.ExceptionTest" />
 			<class name="oracle.sysman.emaas.savedsearch.CategoryDetailsTest" />
+			<class name="oracle.sysman.emaas.savedsearch.ImportTest" />
 			<class name="oracle.sysman.emaas.savedsearch.Cleanup" />
 		</classes>
 	</test> <!-- Test -->
