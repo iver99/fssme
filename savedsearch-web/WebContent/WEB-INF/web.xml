@@ -28,6 +28,7 @@
   <web-resource-collection>
     <web-resource-name>secure-pages</web-resource-name>
     <url-pattern>/v1/*</url-pattern>
+    <http-method-omission>OPTIONS</http-method-omission>
   </web-resource-collection>
   <auth-constraint>
     <role-name>valid-users</role-name>
