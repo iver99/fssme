@@ -30,7 +30,8 @@ public class SavedSearchCORSFilter implements Filter
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
 		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
-		hRes.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		hRes.addHeader("Access-Control-Allow-Headers",
+				"Origin, X-Requested-With, Content-Type, Accept, X-USER-IDENTITY-DOMAIN-NAME, Authorization, x-sso-client");
 		chain.doFilter(request, response);
 	}
 
