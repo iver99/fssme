@@ -137,7 +137,7 @@ project(':savedsearch-web'){
                   locale = 'en_US'
                   encoding = 'UTF-8'
                 }
-        source = [sourceSets.main.allJava,fileTree(dir:'../savedsearch-web/src/test'),fileTree(dir:'../savedsearch-core/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../savedsearch-entities/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../savedsearch-web-utils/src',exclude:['**/*.MF','**/*.properties'])]
+        source = [sourceSets.main.allJava,fileTree(dir:'../savedsearch-web/src/test'),fileTree(dir:'../savedsearch-core/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../savedsearch-entities/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../savedsearch-web-utils/src',exclude:['**/*.MF','**/*.properties']),fileTree(dir:'../savedsearch-updateutil/src',exclude:['**/*.MF','**/*.properties'])]
 	}
 
 	task ftp<<{

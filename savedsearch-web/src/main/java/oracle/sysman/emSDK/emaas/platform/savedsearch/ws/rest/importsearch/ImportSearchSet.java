@@ -17,6 +17,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ExportSearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
@@ -36,6 +37,8 @@ public class ImportSearchSet
 {
 	private static final Logger _logger = Logger.getLogger(ImportSearchSet.class);
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
+	
+	
 
 	/**
 	 * Import the searches with defined XML file<br>
@@ -239,6 +242,8 @@ public class ImportSearchSet
 				jsonArray.put(jObj);
 			}
 			res = Response.status(Status.OK).entity(jsonArray).build();
+			
+			
 		}
 		catch (ImportException e) {
 			_logger.error("Failed to import searches (1)", e);

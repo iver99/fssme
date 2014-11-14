@@ -487,6 +487,8 @@ public class SearchManagerImpl extends SearchManager
 								if (tmpfld != null) {
 									search.setFolderId((Integer) obj);
 								}
+								else 
+									continue;
 								
 							}
 						}
@@ -523,6 +525,7 @@ public class SearchManagerImpl extends SearchManager
 						
 						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
 						em.merge(emSearch);
+						em.flush();
 						tmpImportSrImpl.setId((int) emSearch.getId());
 						importedList.add(createSearchObject(emSearch, null));
 					}

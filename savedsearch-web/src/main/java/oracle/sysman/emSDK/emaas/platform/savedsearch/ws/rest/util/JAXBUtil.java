@@ -52,20 +52,21 @@ public class JAXBUtil
 	{
 		String xml =null;
 		try {
-			StreamSource xsdSource =null;			
+			StreamSource xsdSource =null;	
+			if(schemaFile!=null){
 			SchemaFactory sf= SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			xsdSource = new StreamSource(schemaFile);
-			Schema schema = sf.newSchema(xsdSource);			          
+			Schema schema = sf.newSchema(xsdSource);	
+			}
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			jaxbMarshaller.setEventHandler(new ValidationEventHandler() {
+			/*jaxbMarshaller.setEventHandler(new ValidationEventHandler() {
 				@Override
 				public boolean handleEvent(ValidationEvent validationevent) {
 					return true;
 				}
 			});
-			//jaxbMarshaller.setSchema(schema);
-			
+			jaxbMarshaller.setSchema(schema);	*/		
 			 StringWriter output = new StringWriter();
 			 jaxbMarshaller.marshal(obj, output);
 	         xml = output.toString();

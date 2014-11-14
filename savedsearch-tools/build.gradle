@@ -1,0 +1,42 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+
+archiveName='UpdateSavedSearch.jar'
+
+dependencies {
+	
+	compile(group: 'org.hamcrest', name:'hamcrest-core', version: '1.3')
+	compile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
+	compile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
+	compile(group: 'org.codehaus.jettison', name: 'jettison', version: '1.1')
+	compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1')
+	compile(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1')
+	compile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3')
+	compile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1')
+	compile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1')
+	compile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1')
+	compile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0')
+	compile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1')
+
+	
+}
+
+
+version = '0.1'
+jar {
+            manifest {
+            attributes("Manifest-Version"       : "1.0",                
+                "Main-Class"             : "oracle.sysman.emSDK.emaas.platform.savedsearch.UpdateSavedSearch",
+                "Class-Path"             :  "."
+            )
+            }   
+     
+     from {
+      
+        configurations.runtime.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+     
+}

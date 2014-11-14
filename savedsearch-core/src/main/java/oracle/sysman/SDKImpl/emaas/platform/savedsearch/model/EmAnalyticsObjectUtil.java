@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -407,6 +408,8 @@ class EmAnalyticsObjectUtil
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setMetadataClob(search.getMetadata());
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
+		
+		
 		searchEntity.setUiHidden(new java.math.BigDecimal(search != null && search.isUiHidden() ? 1 : 0));
 		searchEntity.setDeleted(0);
 		List<SearchParameter> params = search.getParameters();
@@ -438,12 +441,16 @@ class EmAnalyticsObjectUtil
 		Iterator<EmAnalyticsSearchParam> it = existingParams.iterator();
 		while (it.hasNext()) {
 			EmAnalyticsSearchParam searchParam = it.next();
-			if (!newParams.containsKey(searchParam.getId()) || newParams.containsKey(searchParam.getId())
-					&& !newParams.containsValue(searchParam)) {
-				it.remove();
-			}
+			if (!newParams.containsKey(searchParam.getId()) || 
+					newParams.containsKey(searchParam.getId())
+										) {
+									it.remove();
+								}
+			
 		}
-		existingParams.addAll(newParams.values());
+		
+		
+	     existingParams.addAll(newParams.values());
 
 		searchEntity.setAccessDate(utcNow);
 		return searchEntity;
