@@ -63,4 +63,4 @@ default["SAAS_entityNamingKey"]="tenantid"
 
 default["SAAS_earSelfCheck"]="emaas"
 default["SAAS_earfile"]="emaas-applications-savedsearch-ear-"
-
+default["SAAS_deploymentUuid"]="0"
