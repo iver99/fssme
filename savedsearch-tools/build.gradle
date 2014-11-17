@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 
-archiveName='UpdateSavedSearch.jar'
+jar.archiveName='UpdateSavedSearch.jar'
 
 dependencies {
 	
@@ -18,8 +18,9 @@ dependencies {
 	compile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1')
 	compile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0')
 	compile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1')
-
-	
+	compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.3')
+    compile(group: 'emaas.platform', name: 'registry-client', version: '0.4')
+    compile(group: 'log4j', name: 'log4j', version: '1.2.17')	
 }
 
 
@@ -32,11 +33,17 @@ jar {
             )
             }   
      
-     from {
-      
+ 
+       
+       
+       from 
+       {
         configurations.runtime.collect {
             it.isDirectory() ? it : zipTree(it)
         }
-    }
-     
+        }
+    
+     from('src/main/java')  {
+        include 'log4j_ssf.properties'
+     }
 }

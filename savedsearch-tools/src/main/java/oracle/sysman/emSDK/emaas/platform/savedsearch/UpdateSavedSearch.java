@@ -2,6 +2,14 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
+import oracle.sysman.emSDK.emaas.platform.savedsearch.FileUtils;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.logging.UpdateSavedSearchLog;
+import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.model.restfulClient.discover.IServiceDefinition;
+import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.model.restfulClient.discover.SavedSearchServiceDefFactory;
+import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.model.restfulClient.discover.ServiceDiscoverer;
+
 public class UpdateSavedSearch {
 
 	private int m_intCommandNo;
@@ -22,9 +30,13 @@ public class UpdateSavedSearch {
 	private static final int OPT_UPDATE_SEARCH=2;
 	private static final int OPT_GET_SEARCH=3;
 	private static final int OPT_INVALID=0;
+	private static Logger _logger = UpdateSavedSearchLog.getLogger(UpdateSavedSearch.class);
 	
 	
 	public static void main(String args[]) {
+		
+		
+		
 		UpdateSavedSearch obj = new UpdateSavedSearch();
 		ImportSearchObject objUpdate = new ImportSearchObject();
 		obj.configureFromArgs(args);
@@ -62,10 +74,13 @@ public class UpdateSavedSearch {
 				System.out
 						.println("an error occurred while writing data to file : "
 								+ obj.getOutputPath() );
+				_logger.error("an error occurred while writing data to file : "
+						+ obj.getOutputPath() );
 				return;
 			}catch (Exception e) {
 				System.out
 				.println("an error occurred exporting searches  ");
+				_logger.error("an error occurred exporting searches  ");
 		return;
 	}
 			
@@ -154,6 +169,7 @@ public class UpdateSavedSearch {
 		}
 		catch (IllegalArgumentException e) {
 			System.out.println("Error: " + e.getMessage());
+			_logger .error("Error: " + e.getMessage());
 			m_intCommandNo=OPT_INVALID;			
 		}
 		
@@ -269,11 +285,13 @@ public class UpdateSavedSearch {
 			data = FileUtils.readFile(inputfile);
 
 		} catch (IOException e) {
+			_logger .error("An error occurred while reading the input file : " + e.getMessage());
 			System.out
 					.println("An error occurred while reading the input file : "
 							+ inputfile);
 			return;
 		} catch (Exception ex) {
+			_logger .error("An error occurred while updating searches" + ex.getMessage());
 			System.out.println("An error occurred while updating searches");
 			return;
 		}
@@ -286,6 +304,7 @@ public class UpdateSavedSearch {
 
 		} catch (Exception e1) {
 
+			_logger .error("An error occurred while creating or updating search object" +e1.getMessage());
 			System.out
 					.println("An error occurred while creating or updating search object");
 		}
@@ -297,6 +316,8 @@ public class UpdateSavedSearch {
 			System.out
 					.println("an error occurred while writing data to file : "
 							+ outputfile);
+			_logger .error("an error occurred while writing data to file : "
+					+ outputfile);
 			return;
 		}
 		

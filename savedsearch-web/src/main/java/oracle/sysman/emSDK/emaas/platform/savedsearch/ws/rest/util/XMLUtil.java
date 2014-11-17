@@ -101,6 +101,12 @@ public class XMLUtil {
 				Node element = nodes.item(i);
 				for (int j = 0; j < elementName.length; j++) {
 					if (elementName[j].equalsIgnoreCase(element.getNodeName())) {
+						Node prev = element.getPreviousSibling();
+						 if (prev != null && 
+						     prev.getNodeType() == Node.TEXT_NODE &&
+						     prev.getNodeValue().trim().length() == 0) {
+							 search.removeChild(prev);
+						 }
 						search.removeChild(element);
 					}
 

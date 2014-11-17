@@ -48,7 +48,7 @@ public class JAXBUtil
 			}
 	
 	
-	public static String marshal(JAXBContext jaxbContext , InputStream schemaFile,Object obj)
+	public static String marshal(JAXBContext jaxbContext , InputStream schemaFile,Object obj) throws Exception
 	{
 		String xml =null;
 		try {
@@ -71,8 +71,8 @@ public class JAXBUtil
 			 jaxbMarshaller.marshal(obj, output);
 	         xml = output.toString();
 		} catch (JAXBException | SAXException e) {
-			e.printStackTrace();
-			xml="";
+			e.printStackTrace();			
+			throw e;
 		}
 		return xml;
 	}

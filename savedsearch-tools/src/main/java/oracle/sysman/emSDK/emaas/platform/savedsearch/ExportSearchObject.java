@@ -2,6 +2,8 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch;
 
 import java.net.URL;
 
+import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.exception.UpdateSearchException;
+
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.LogConfig;
 import com.jayway.restassured.response.Response;
@@ -25,8 +27,14 @@ public class ExportSearchObject {
 				get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId +
 						UpdateUtilConstants.SEARCHES );
 		
-		
-		output= res1.getBody().asString();
+		if(res1.getStatusCode() ==200)
+		{
+			output= res1.getBody().asString();
+		}
+		else
+		{
+			throw new UpdateSearchException( res1.getBody().asString());
+		}
 		return output;
 	}
 	

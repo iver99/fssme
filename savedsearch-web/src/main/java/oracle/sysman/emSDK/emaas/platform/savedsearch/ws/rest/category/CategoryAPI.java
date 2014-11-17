@@ -522,7 +522,7 @@ public class CategoryAPI
 		}
 		catch (Exception e) {
 			_logger.error("Failed to retrive searches ", e);
-			msg = "An internal error has occurred  while retriving  searches ";			
+			msg = "An internal error has occurred  while retriving  searches " +e.toString();			
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 			e.printStackTrace();
 			return res;

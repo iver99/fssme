@@ -1,7 +1,9 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch;
 
 import java.net.URL;
+
 import oracle.sysman.emSDK.emaas.platform.savedsearch.UpdateUtilConstants;
+import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.exception.UpdateSearchException;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -18,7 +20,7 @@ public class ImportSearchObject {
 	public String importSearches(String endpoint, String sData)
 			throws Exception {
 
-		String output = "";
+		String output= "";
 		String jsonString1 = sData;
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = endpoint;		
@@ -32,12 +34,20 @@ public class ImportSearchObject {
 		Response res1 = RestAssured.given().contentType(ContentType.XML)
 				.headers(UpdateUtilConstants.DOMAIN_NAME, host).body(jsonString1)
 				.when().post(UpdateUtilConstants.IMPORT_SEARCH_STR);
-		JSONArray arrfld = new JSONArray(res1.getBody().asString());
-		for (int index = 0; index < arrfld.length(); index++) {
-			JSONObject jsonObj = arrfld.getJSONObject(index);
-			output = output + jsonObj.getInt(UpdateUtilConstants.ID) + "  "
-					+ jsonObj.getString(UpdateUtilConstants.NAME)
-					+ System.getProperty("line.separator");
+		output = res1.getBody().asString();
+		if (res1.getStatusCode() == 200)
+		{
+			JSONArray arrfld = new JSONArray(output);
+			for (int index = 0; index < arrfld.length(); index++) {
+				JSONObject jsonObj = arrfld.getJSONObject(index);
+				output = output + jsonObj.getInt(UpdateUtilConstants.ID) + "  "
+						+ jsonObj.getString(UpdateUtilConstants.NAME)
+						+ System.getProperty("line.separator");
+				}
+		}	
+		else
+		{
+			throw new UpdateSearchException(res1.getBody().asString());
 		}
 		return output;
 	}
