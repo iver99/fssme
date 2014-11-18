@@ -403,7 +403,7 @@ class EmAnalyticsObjectUtil
 		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcNow);
 		searchEntity.setSystemSearch(search != null && search.isSystemSearch() ? new java.math.BigDecimal(1)
-				: new java.math.BigDecimal(0));
+		: new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setMetadataClob(search.getMetadata());
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
@@ -543,6 +543,7 @@ class EmAnalyticsObjectUtil
 		return searchObj;
 	}
 
+	/* DEAD CODE
 	public static boolean isFolderExist(Folder folder)
 	{
 		EntityManager em = null;
@@ -580,5 +581,6 @@ class EmAnalyticsObjectUtil
 		}
 		return bResult;
 	}
+	 */
 
 }
