@@ -38,6 +38,7 @@ public class ImportSearchObject {
 		if (res1.getStatusCode() == 200)
 		{
 			JSONArray arrfld = new JSONArray(output);
+			output="";
 			for (int index = 0; index < arrfld.length(); index++) {
 				JSONObject jsonObj = arrfld.getJSONObject(index);
 				output = output + jsonObj.getInt(UpdateUtilConstants.ID) + "  "

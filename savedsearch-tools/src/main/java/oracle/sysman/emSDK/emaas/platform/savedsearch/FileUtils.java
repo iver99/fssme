@@ -6,12 +6,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class FileUtils {
 
 	public static void createOutputfile(String outputfile, String Data)
-			throws IOException {
-
+			throws IOException 
+	{
 		File file = new File(outputfile);
 		// if file doesnt exists, then create it
 		if (!file.exists()) {
@@ -23,7 +25,39 @@ public class FileUtils {
 		bw.close();
 	}
 
-	public static String readFile(String filePath) throws IOException {
+	
+	public static String readFile(InputStream is) throws IOException	
+	{
+		 StringBuilder stringBuilder = new StringBuilder();			
+		 InputStreamReader isReader = new InputStreamReader(is);
+		  BufferedReader bufferedReader = new BufferedReader(isReader);          
+          try {
+              String line;
+              while ((line = bufferedReader.readLine()) != null) {
+                  stringBuilder.append(line).append("\n");
+              }
+              System.out.print(stringBuilder.toString());
+          } catch (IOException ex) {
+              
+          }finally
+          {
+        	 
+        	      try {
+        	        if (bufferedReader != null) bufferedReader.close();
+        	        if (is != null) is.close();
+        	      }
+        	      catch (IOException e) {
+        	        e.printStackTrace();
+        	      }
+        	      
+          }
+          return stringBuilder.toString();
+
+	}
+
+	
+	public static String readFile(String filePath) throws IOException	
+	{
 		StringBuffer fileData = new StringBuffer();
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
 		char[] buf = new char[1024];

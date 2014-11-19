@@ -15,7 +15,7 @@ public class ExportSearchObject {
 	{
 		String output = "";		
 		RestAssured.useRelaxedHTTPSValidation();
-		RestAssured.baseURI =  endpoint;		
+		RestAssured.baseURI = endpoint;		
 		RestAssured.config = RestAssured.config().logConfig(
 				LogConfig.logConfig().enablePrettyPrinting(false));
 		URL netUrl = new URL(endpoint);
@@ -37,8 +37,4 @@ public class ExportSearchObject {
 		}
 		return output;
 	}
-	
-	
-	
-	
 }

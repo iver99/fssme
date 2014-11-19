@@ -1,14 +1,15 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.FileUtils;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.logging.UpdateSavedSearchLog;
-import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.model.restfulClient.discover.IServiceDefinition;
-import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.model.restfulClient.discover.SavedSearchServiceDefFactory;
-import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.model.restfulClient.discover.ServiceDiscoverer;
+import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.model.restfulClient.discover.ServiceDiscoveryUtil;
+
+
 
 public class UpdateSavedSearch {
 
@@ -18,131 +19,124 @@ public class UpdateSavedSearch {
 	private String m_strFilePath;
 	private String m_strOutputPath;
 	private Long m_lngCategoryId;	
-	private static final String HELP="-help";
-	private static final String URL="-ssfurl";
-	private static final String SM_URL="-servicemanagerurl";
-	private static final String INPUT_FILE_PATH="-inputfilepath";
-	private static final String OUTPUT_FILE_PATH="-outputfilepath";
-	private static final String CATEGORY_ID="-categoryId";
-	private static final String EXPORT="-export";
-	private static final String IMPORT="-import";
-	private static final int OPT_DISPLAY_HELP=1;
-	private static final int OPT_UPDATE_SEARCH=2;
-	private static final int OPT_GET_SEARCH=3;
-	private static final int OPT_INVALID=0;
+	
 	private static Logger _logger = UpdateSavedSearchLog.getLogger(UpdateSavedSearch.class);
 	
-	
-	public static void main(String args[]) {
-		
-		
-		
-		UpdateSavedSearch obj = new UpdateSavedSearch();
-		ImportSearchObject objUpdate = new ImportSearchObject();
-		obj.configureFromArgs(args);
-		
-		if(obj.getOption() == 0 )
-			System.out.println("Please specify valid command");
-		
-		if (obj.getOption() == OPT_DISPLAY_HELP) {
-			obj.printHelp();
-		}
+    
 
-		if (obj.getOption() == OPT_UPDATE_SEARCH) {
-			if (!UpdateSearchUtil.isEndpointReachable(obj.getEndPoint())) {
-				System.out.println("The endpoint was not reachable.");
-				return;
-			}
-			obj.importSearches(obj.getEndPoint(), obj.getFilePath(),
-					obj.getOutputPath());
-		}
-		if (obj.getOption() == OPT_GET_SEARCH) {
-			if (!UpdateSearchUtil.isEndpointReachable(obj.getEndPoint())) {
-				System.out.println("The endpoint was not reachable.");
-				return;
-			}
-			
-			try {
-				ExportSearchObject objExport = new ExportSearchObject();
-				String data = objExport.exportSearch(obj.getCategoryId(),obj.getEndPoint());
-				if(FileUtils.fileExist(obj.getOutputPath()))
-					FileUtils.deleteFile(obj.getOutputPath());
-				FileUtils.createOutputfile(obj.getOutputPath() , data);
-				System.out.println("The process completed successfully.");
-
-			} catch (IOException e) {
-				System.out
-						.println("an error occurred while writing data to file : "
-								+ obj.getOutputPath() );
-				_logger.error("an error occurred while writing data to file : "
-						+ obj.getOutputPath() );
-				return;
-			}catch (Exception e) {
-				System.out
-				.println("an error occurred exporting searches  ");
-				_logger.error("an error occurred exporting searches  ");
-		return;
-	}
-			
-		}
-	}
-
-	public int getOption() {
+	public int getOption()
+	{
 		return m_intCommandNo;
 	}
 
-	public void setOption(int iOption) {
+	public void setOption(int iOption) 
+	{
 		this.m_intCommandNo = iOption;
 	}
 
-	private void printHelp() {
-		System.out.println("UpdateSavedSearch -url -inputfilepath  -outfilepath");
+	private void printHelp() throws Exception
+	{			
+		FileUtils.readFile(ClassLoader
+		.getSystemResourceAsStream(UpdateUtilConstants.HELP_FILE));
 	}
 
-	private void configureFromArgs(String[] args) {
+	public String getEndPoint()
+	{
+		return m_strEndPoint;
+	}
+
+	public void setEndPoint(String url)
+	{
+		this.m_strEndPoint = url;
+	}
+
+	public String getFilePath()
+	{
+		return m_strFilePath;
+	}
+
+	public void setFilePath(String path) 
+	{
+		this.m_strFilePath = path;
+	}
+
+	public String getOutputPath()
+	{
+		return m_strOutputPath;
+	}
+
+	public void setOutputPath(String path)
+	{
+		this.m_strOutputPath = path;
+	}
+	
+	public Long getCategoryId() 
+	{
+		return m_lngCategoryId;
+	}
+
+	public void setCategoryId(Long categoryId)
+	{
+		this.m_lngCategoryId = categoryId;
+	}
+
+	public String getSMUrl() 
+	{
+		return m_strSmUrl;
+	}
+
+	public void setSMUrl(String url) 
+	{
+		this.m_strSmUrl = url;
+	}
+
+	
+	private void configureFromArgs(String[] args) 
+	{
 		boolean foundHelp=false , foundEndPoint=false, 
 		foundCategory=false, foundInputPath=false, foundSmUrl=false,
-		foundOutputPath=false, foundExport=false,foundImport=false , foundUrl =false;
-		
-				
-		
+		foundOutputPath=false, foundExport=false,foundImport=false ;
 		try
 		{			
      		for (int index = 0; index < args.length; index = index + 2) {
 
-			if (args[index].equalsIgnoreCase(HELP)) {
+			if (args[index].equalsIgnoreCase(UpdateUtilConstants.HELP)) {
 				foundHelp = true;
-			}else if (args[index].equalsIgnoreCase(EXPORT)) {
+			}else if (args[index].equalsIgnoreCase(UpdateUtilConstants.EXPORT)) {
+				index =index-1;
 				foundExport=true;
-			}else if (args[index].equalsIgnoreCase(IMPORT)) {
+			}else if (args[index].equalsIgnoreCase(UpdateUtilConstants.IMPORT)) {
+				index =index-1;
 				foundImport=true;
 			}
-     		else if (args[index].equalsIgnoreCase(SM_URL)) {
+     		else if (args[index].equalsIgnoreCase(UpdateUtilConstants.SM_URL)) {
      			if (index + 1 >= args.length) {
 					throw new IllegalArgumentException("Service manager url is required"); 
 				}
      			m_strSmUrl=args[index + 1];
-     			if(m_strSmUrl.length()==0)
+     			if(m_strSmUrl.trim().length()==0)
 					throw new IllegalArgumentException("Please specify valid service manager url");
 				foundSmUrl=true;
 			}
-			else if (args[index].equalsIgnoreCase(URL)) {
+			else if (args[index].equalsIgnoreCase(UpdateUtilConstants.URL)) {
 				if (index + 1 >= args.length) {
 					throw new IllegalArgumentException("End point is required"); 
 				}
 				m_strEndPoint = args[index + 1];
-				if(m_strEndPoint.length()==0)
+				if(m_strEndPoint.trim().length()==0)
 					throw new IllegalArgumentException("Please specify valid end point");
+				if(!(m_strEndPoint.endsWith("/")) )
+					m_strEndPoint = m_strEndPoint + "/";
 				foundEndPoint =true;
-			} else if (args[index].equalsIgnoreCase(INPUT_FILE_PATH)) {				
+			} else if (args[index].equalsIgnoreCase(UpdateUtilConstants.INPUT_FILE_PATH)) {				
 				if (index + 1 >= args.length) {
-					throw new IllegalArgumentException("Input path is required"); 
+					throw new IllegalArgumentException("Input file path is required"); 
 				}
 				m_strFilePath = args[index + 1];
 				if(m_strFilePath.length()==0)
 					throw new IllegalArgumentException("Please specify valid input path");
 				foundInputPath=true;
-			} else if(args[index].equalsIgnoreCase(CATEGORY_ID)) {				
+			} else if(args[index].equalsIgnoreCase(UpdateUtilConstants.CATEGORY_ID)) {				
 				if (index + 1 >= args.length) {
 					throw new IllegalArgumentException("Category Id is required"); 
 				}
@@ -155,9 +149,9 @@ public class UpdateSavedSearch {
 					throw new IllegalArgumentException("Please specify valid Category Id"); 
 				}				
 				
-			} else if (args[index].equalsIgnoreCase(OUTPUT_FILE_PATH)) {
+			} else if (args[index].equalsIgnoreCase(UpdateUtilConstants.OUTPUT_FILE_PATH)) {
 				if (index + 1 >= args.length) {
-					throw new IllegalArgumentException("Output path is required"); 
+					throw new IllegalArgumentException("Output file path is required"); 
 				}
 				m_strOutputPath = args[index + 1];
 				if(m_strOutputPath.length()==0)
@@ -170,12 +164,12 @@ public class UpdateSavedSearch {
 		catch (IllegalArgumentException e) {
 			System.out.println("Error: " + e.getMessage());
 			_logger .error("Error: " + e.getMessage());
-			m_intCommandNo=OPT_INVALID;			
+			m_intCommandNo=UpdateUtilConstants.OPT_INVALID;			
 		}
 		
 		if(foundEndPoint && foundSmUrl)
 		{
-			 m_intCommandNo =OPT_INVALID;
+			 m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 			 System.out.println("Please specify valid command");
 		}
 		
@@ -183,145 +177,71 @@ public class UpdateSavedSearch {
 		{
 			 if (foundHelp || foundCategory || foundExport)
 			 {
-				 m_intCommandNo =OPT_INVALID;
+				 m_intCommandNo =UpdateUtilConstants.OPT_INVALID;
 				 System.out.println("Please specify valid command");
 			 }
 			 else
-			 m_intCommandNo = OPT_UPDATE_SEARCH;
+			 {
+				 m_intCommandNo = UpdateUtilConstants.OPT_UPDATE_SEARCH;
+			 }
 		}
 			
 		if( (foundCategory && foundOutputPath && foundExport))
 		{
 			if((foundHelp || foundInputPath || foundImport))
 			{
-				m_intCommandNo =OPT_INVALID;
+				m_intCommandNo =UpdateUtilConstants.OPT_INVALID;
 				System.out.println("Please specify valid command");
 			}
 			else
-			m_intCommandNo = OPT_GET_SEARCH;
+			m_intCommandNo = UpdateUtilConstants.OPT_GET_SEARCH;
 		}
 		
 		
 		if(foundHelp)
 		{
-			if( ((foundCategory || foundOutputPath || foundEndPoint || foundInputPath )))
+			if( ((foundCategory || foundOutputPath || foundEndPoint || foundInputPath  || foundSmUrl )))
 			{
-				m_intCommandNo =OPT_INVALID;
+				m_intCommandNo =UpdateUtilConstants.OPT_INVALID;
 				System.out.println("Please specify valid command");
 			}else
 			{
-				m_intCommandNo = OPT_DISPLAY_HELP;			
+				m_intCommandNo = UpdateUtilConstants.OPT_DISPLAY_HELP;			
 			}
 		}
 		
 	}
 
-	public String getEndPoint() {
-		return m_strEndPoint;
+	public static void main(String args[]) throws Exception 
+	{
+		
+		UpdateSavedSearch obj = new UpdateSavedSearch();		
+		obj.configureFromArgs(args);
+		
+		if(obj.getSMUrl()!=null && obj.getSMUrl().length()!=0)
+		{
+			
+			String tmp = ServiceDiscoveryUtil.getSsfUrlBySmUrl(obj.getSMUrl());
+			obj.setEndPoint(tmp);	        
+		}
+				
+		if(obj.getOption() == 0 )
+			System.out.println("Please specify valid command");
+		
+		if (obj.getOption() == UpdateUtilConstants.OPT_DISPLAY_HELP)
+		{
+			obj.printHelp();
+		}
+		if (obj.getOption() == UpdateUtilConstants.OPT_UPDATE_SEARCH) 
+		{			
+			UpdateSearchUtil.importSearches(obj.getEndPoint(), obj.getFilePath(),obj.getOutputPath());
+		}
+		if (obj.getOption() == UpdateUtilConstants.OPT_GET_SEARCH)
+		{	
+			
+			UpdateSearchUtil.exportSearches(obj.getCategoryId(), obj.getEndPoint(), obj.getOutputPath());
+		}
 	}
-
-	public void setEndPoint(String url) {
-		this.m_strEndPoint = url;
-	}
-
-	public String getFilePath() {
-		return m_strFilePath;
-	}
-
-	public void setFilePath(String path) {
-		this.m_strFilePath = path;
-	}
-
-	public String getOutputPath() {
-		return m_strOutputPath;
-	}
-
-	public void setOutputPath(String path) {
-		this.m_strOutputPath = path;
-	}
-	
-	
-	
-	public Long getCategoryId() {
-		return m_lngCategoryId;
-	}
-
-	public void setCategoryId(Long categoryId) {
-		this.m_lngCategoryId = categoryId;
-	}
-
-
-	private boolean validateInput() {
 
 		
-		if (m_strEndPoint != null && m_strFilePath != null
-				&& m_strOutputPath != null) {
-			if (m_strEndPoint.equalsIgnoreCase("")) {
-				System.out.println("Please enter valid endpoint.");
-				return true;
-			}
-
-			if (m_strFilePath.equalsIgnoreCase("")) {
-				System.out.println("Please enter valid file name.");
-				return true;
-			}
-
-			if (m_strOutputPath.equalsIgnoreCase("")) {
-				System.out.println("Please enter valid output file name.");
-				return true;
-			}
-			m_intCommandNo = 1;
-		}
-
-		return false;
-	}
-
-	private void importSearches(String endpoint, String inputfile,
-			String outputfile) {
-
-		String data = "";
-		String outputData = "";
-		try {
-			data = FileUtils.readFile(inputfile);
-
-		} catch (IOException e) {
-			_logger .error("An error occurred while reading the input file : " + e.getMessage());
-			System.out
-					.println("An error occurred while reading the input file : "
-							+ inputfile);
-			return;
-		} catch (Exception ex) {
-			_logger .error("An error occurred while updating searches" + ex.getMessage());
-			System.out.println("An error occurred while updating searches");
-			return;
-		}
-
-		ImportSearchObject objUpdate = new ImportSearchObject();
-
-		try {
-
-			outputData = objUpdate.importSearches(endpoint, data);
-
-		} catch (Exception e1) {
-
-			_logger .error("An error occurred while creating or updating search object" +e1.getMessage());
-			System.out
-					.println("An error occurred while creating or updating search object");
-		}
-
-		try {
-			FileUtils.createOutputfile(outputfile, outputData);
-
-		} catch (IOException e) {
-			System.out
-					.println("an error occurred while writing data to file : "
-							+ outputfile);
-			_logger .error("an error occurred while writing data to file : "
-					+ outputfile);
-			return;
-		}
-		
-		System.out.println("The update process completed successfully.");
-	}
-
 }
