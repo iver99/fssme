@@ -1,5 +1,4 @@
-The Export option provides way to read the existing searches and  write it to the file in xml format for a given catgegory.
-
+How to export searches in XML format?
 
 Usage :
 
@@ -7,18 +6,16 @@ Usage :
 
 
 Arguments :
--export : To retrive the searches 
+-export : To retrieve the searches 
 -outputfilepath :  searches are written to  output file.
 -ssf_url : SSF Url    
 -servicemanagerurl: Service manager url    
--categoryId   : Category Id 
+-categoryId   : Category Id  (Export searches for given category)
 
 Note:Please  provide either ssf url  or servicemanagerurl  but not both.
 
 
-
-
-The Import option provide a way to update existing searches and add new searches.
+How to import searches from XML file?
 
 Usage :
 
@@ -28,7 +25,7 @@ Usage :
 
 
 Arguments :
--import : Update existing serach  or Add new serach.
+-import : Update existing searches  or Add new searches.
 -outputfilepath :  result of import command written to output file.
 -ssf_url : SSF Url    
 -servicemanagerurl: Service manager url    
