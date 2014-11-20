@@ -253,7 +253,7 @@ public class ImportSearchSet
 		}
 		catch (Exception e) {
 			_logger.error("Failed to import searches (2)", e);
-			msg = "An internal error has occurred";
+			msg = "An internal error has occurred" + e.getMessage();
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 		}
 		return res;

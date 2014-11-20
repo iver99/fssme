@@ -525,8 +525,8 @@ public class SearchManagerImpl extends SearchManager
 						
 						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
 						em.merge(emSearch);
-						em.flush();
 						tmpImportSrImpl.setId((int) emSearch.getId());
+						//em.refresh(emSearch);
 						importedList.add(createSearchObject(emSearch, null));
 					}
 					else {

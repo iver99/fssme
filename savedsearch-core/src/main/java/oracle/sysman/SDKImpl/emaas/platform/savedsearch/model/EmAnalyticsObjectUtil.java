@@ -441,8 +441,7 @@ class EmAnalyticsObjectUtil
 		Iterator<EmAnalyticsSearchParam> it = existingParams.iterator();
 		while (it.hasNext()) {
 			EmAnalyticsSearchParam searchParam = it.next();
-			if (!newParams.containsKey(searchParam.getId()) || 
-					newParams.containsKey(searchParam.getId())
+			if (newParams.containsKey(searchParam.getId())
 										) {
 									it.remove();
 								}
