@@ -24,8 +24,8 @@ public class ExportSearchObject {
 			host = host.substring(UpdateUtilConstants.WWW_STR.length() + 1);
 		}
 		Response res1 = RestAssured.given().when().
-				get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId +
-						UpdateUtilConstants.SEARCHES );
+				get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId 
+						+ UpdateUtilConstants.SEARCHES 	 );
 		
 		if(res1.getStatusCode() ==200)
 		{

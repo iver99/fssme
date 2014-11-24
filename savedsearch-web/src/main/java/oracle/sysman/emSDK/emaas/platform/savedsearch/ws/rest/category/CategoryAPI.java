@@ -1,11 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.category;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,24 +11,18 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBContext;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ExportSearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportSearchSet;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.XMLUtil;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -488,81 +478,57 @@ public class CategoryAPI
 	}
 	 */
 	
-	@GET
-	@Path("{id: [0-9]*}/searches")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearchesByCategory(@PathParam("id") int categoryId)
-	{
-		
+	
+	
+	   @GET
+       @Path("{id: [0-9]*}/searches")
+       @Produces(MediaType.APPLICATION_JSON)
+       public Response getSearchesByCategory(@PathParam("id") int categoryId)
+	   {
+		SearchManager searchMan = SearchManager.getInstance();
+		CategoryManager catMan = CategoryManager.getInstance();
+		Search search;
 		int statusCode = 200;
-		Response res = null;
-		String msg="";
-		String data ="";
-		if (categoryId <=0) {
-			return res = Response.status(Status.BAD_REQUEST).entity("Please specify valid category id").build();
+		String message = "";
+		JSONArray jsonArray = new JSONArray();
+		List<Search> searchList = new ArrayList<Search>();
+
+		try {
+			// just for checking whether category with given Id exist or not
+			catMan.getCategory(categoryId);
+			searchList = searchMan.getSearchListByCategoryId(categoryId);
 		}
-		res = Response.ok().build();
-		try
-		{
-			SearchManager mgr = SearchManager.getInstance();
-			List<Search> searchList = mgr.getSearchListByCategoryId(categoryId);
-			ExportSearchSet exList = new ExportSearchSet();
-			Iterator<Search> iterator = searchList.iterator();
-			ArrayList<SearchImpl> tmp = new ArrayList<SearchImpl>();	
-			while (iterator.hasNext()) {
-				 Search tmpSearch=iterator.next();
-				 tmp.add((SearchImpl)tmpSearch);				 
-			}		
-			exList.setSearchSet(tmp);
-			JAXBContext context = JAXBContext.newInstance(ExportSearchSet.class);
-			InputStream stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(resourcePath);
-			data= JAXBUtil.marshal(context, stream, exList);
-			data=processData(data);
-			res = Response.status(statusCode).entity(data).build();
+		catch (EMAnalyticsFwkException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+			return Response.status(statusCode).entity(message).build();
 		}
-		catch (Exception e) {
-			_logger.error("Failed to retrive searches ", e);
-			msg = "An internal error has occurred  while retriving  searches " +e.toString();			
-			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
-			e.printStackTrace();
-			return res;
+
+		try {
+			for (int i = 0; i < searchList.size(); i++) {
+				search = searchList.get(i);
+				try {					
+					JSONObject jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri() ,search,null,false);
+					jsonArray.put(jsonObj);
+				}
+				catch (JSONException e) {
+					message = e.getMessage();
+					statusCode = 500;
+					return Response.status(statusCode).entity(message).build();
+				}
+			}
+			message = jsonArray.toString();
 		}
-		return res;
+		catch (EMAnalyticsFwkJsonException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+			return Response.status(statusCode).entity(message).build();
+		}
+		return Response.status(statusCode).entity(message).build();
+
 	}
 
-	private String processData(String data) throws Exception
-	{
-		String tmpData = "";		
-		tmpData= XMLUtil.changeTagName(data,getRenameElementList());		
-	 	tmpData = XMLUtil.removeElement(tmpData,"Search" ,getRemovedElements());		
-		return tmpData;
-	}
 	
 	
-	private Map <String,String> getRenameElementList()
-	{
-		Map <String,String> map = new HashMap<String,String>();		
-		map.put("search" ,"Search");
-		map.put("id" ,"Id");
-		map.put("folderId" ,"FolderId");
-		map.put("categoryId" ,"CategoryId");
-		map.put("description" ,"Description");
-		map.put("locked" ,"Locked");
-		map.put("uiHidden" ,"UiHidden");
-		map.put("name" ,"Name");
-		map.put("type" ,"Type");
-		map.put("value" ,"Value");
-		map.put("metadata" ,"Metadata");
-		map.put("queryStr" ,"QueryStr");	
-		return map;
-	}
-	
-	private String[] getRemovedElements()
-	{
-		String elementName [] = {"guid" ,"owner", "createdOn",  "lastModifiedOn", "lastAccessDate", "lastModifiedBy", "systemSearch"};
-		return elementName;
-	}
-	
-
 	
 }

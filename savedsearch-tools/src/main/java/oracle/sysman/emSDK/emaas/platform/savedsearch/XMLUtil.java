@@ -1,4 +1,4 @@
-package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
+package oracle.sysman.emSDK.emaas.platform.savedsearch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;

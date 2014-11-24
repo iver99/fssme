@@ -8,7 +8,6 @@ import javax.ws.rs.core.Application;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.navigation.SavedSearchAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.category.CategoryAPI;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exportsearch.ExportSearches;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.folder.FolderAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportCategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportFolderSet;
@@ -30,8 +29,7 @@ public class SavedSearchApplication extends Application
 		s.add(FilterSearchAPI.class);
 		s.add(ImportFolderSet.class);
 		s.add(ImportCategorySet.class);
-		s.add(ImportSearchSet.class);
-		s.add(ExportSearches.class);
+		s.add(ImportSearchSet.class);		
 		return s;
 	}
 

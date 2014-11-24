@@ -1,13 +1,19 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch;
 
 import java.io.IOException;
+import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.logging.UpdateSavedSearchLog;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.type.TypeFactory;
 public class UpdateSearchUtil {
 
 	private static Logger _logger = UpdateSavedSearchLog.getLogger(UpdateSearchUtil.class);
@@ -81,6 +87,12 @@ public class UpdateSearchUtil {
 		try {
 			ExportSearchObject objExport = new ExportSearchObject();
 			String data = objExport.exportSearch(categoryId,endpoint);
+			List<SearchEntity> list= JSONToSearchList(data);
+			ExportSearchSet exportList  = new ExportSearchSet();
+	        exportList.setSearchSet(list);
+	        if (list!=null && list.size()>0){
+	        	data =XMLUtil.ObjectToXML(exportList);	        	
+	        }			 
 			if(FileUtils.fileExist(outputfile))
 				FileUtils.deleteFile(outputfile);
 			FileUtils.createOutputfile(outputfile , data);
@@ -99,6 +111,17 @@ public class UpdateSearchUtil {
 				return;
 		}
 }
-
+		
+    public static List<SearchEntity> JSONToSearchList(String jsonStr) throws JsonParseException, JsonMappingException, IOException
+    {
+        ObjectMapper mapper = new ObjectMapper().configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        List<SearchEntity> list = mapper.readValue(jsonStr, TypeFactory.defaultInstance().constructCollectionType(List.class, SearchEntity.class));        
+        return list;
+    }
+    
+    
+    
+    
+	
 
 }

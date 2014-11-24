@@ -11,7 +11,7 @@ public class UpdateUtilConstants {
 	public static final String ID="id";
 	public static final String NAME="name";
 	public static final String GET_FOLDER="/entities?folderId=1";
-	public static final String GET_SEARCH_BY_CAREGORY_STR="category/";
+	public static final String GET_SEARCH_BY_CAREGORY_STR="/category/";
 	public static final String SEARCHES="/searches";
 	public static final String HELP="-help";
 	public static final String URL="-ssfurl";

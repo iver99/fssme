@@ -1,13 +1,9 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import org.apache.log4j.Logger;
-
 import oracle.sysman.emSDK.emaas.platform.savedsearch.logging.UpdateSavedSearchLog;
 import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.model.restfulClient.discover.ServiceDiscoveryUtil;
+
+import org.apache.log4j.Logger;
 
 
 
@@ -120,11 +116,11 @@ public class UpdateSavedSearch {
 			}
 			else if (args[index].equalsIgnoreCase(UpdateUtilConstants.URL)) {
 				if (index + 1 >= args.length) {
-					throw new IllegalArgumentException("End point is required"); 
+					throw new IllegalArgumentException("SSF URL is required"); 
 				}
 				m_strEndPoint = args[index + 1];
 				if(m_strEndPoint.trim().length()==0)
-					throw new IllegalArgumentException("Please specify valid end point");
+					throw new IllegalArgumentException("Please specify valid SSF URL");
 				if(!(m_strEndPoint.endsWith("/")) )
 					m_strEndPoint = m_strEndPoint + "/";
 				foundEndPoint =true;
@@ -170,7 +166,7 @@ public class UpdateSavedSearch {
 		if(foundEndPoint && foundSmUrl)
 		{
 			 m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
-			 System.out.println("Please specify valid command");
+			 System.out.println("Please specify valid command - specify either service manager URL or SSF URL");
 		}
 		
 		if( (foundInputPath && foundOutputPath && foundImport ))
@@ -238,7 +234,6 @@ public class UpdateSavedSearch {
 		}
 		if (obj.getOption() == UpdateUtilConstants.OPT_GET_SEARCH)
 		{	
-			
 			UpdateSearchUtil.exportSearches(obj.getCategoryId(), obj.getEndPoint(), obj.getOutputPath());
 		}
 	}
