@@ -6,6 +6,7 @@
 		    <class name="oracle.sysman.emaas.savedsearch.UtilTest" />
 		    <class name="oracle.sysman.emaas.savedsearch.JSONUtilTest" />
 		    <class name="oracle.sysman.emaas.savedsearch.EntityJsonUtilTest" />
+			<class name="oracle.sysman.emaas.savedsearch.PersistenceManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.CategoryTest" />
 			<class name="oracle.sysman.emaas.savedsearch.FolderManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.SearchParamTest" />
@@ -13,6 +14,9 @@
 			<class name="oracle.sysman.emaas.savedsearch.CategoryManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.SearchManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.VersionManagerTest" />
+			<class name="oracle.sysman.emaas.savedsearch.ExceptionTest" />
+			<class name="oracle.sysman.emaas.savedsearch.CategoryDetailsTest" />
+			<class name="oracle.sysman.emaas.savedsearch.ImportTest" />
 			<class name="oracle.sysman.emaas.savedsearch.Cleanup" />
 		</classes>
 	</test> <!-- Test -->

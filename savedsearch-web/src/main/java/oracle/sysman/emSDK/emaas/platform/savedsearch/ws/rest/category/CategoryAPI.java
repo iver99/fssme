@@ -28,7 +28,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Category Services
- *
+ * 
  * @since 0.1
  */
 @Path("category")
@@ -185,7 +185,7 @@ public class CategoryAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category/&lt;id&gt;</font><br>
 	 * The string "/category/&lt;id&gt;" in the URL signifies read operation on category with given category Id.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param categoryId
 	 *            The category Id which user want to read the details
@@ -273,7 +273,7 @@ public class CategoryAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category?name=&lt;name&gt;</font><br>
 	 * The string "/category?name=&lt;name&gt;" in the URL signifies read operation on category with given category name.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param name
 	 *            The name of category which users wants to get the details
@@ -477,14 +477,106 @@ public class CategoryAPI
 
 	}
 	 */
-	
-	
-	
-	   @GET
-       @Path("{id: [0-9]*}/searches")
-       @Produces(MediaType.APPLICATION_JSON)
-       public Response getSearchesByCategory(@PathParam("id") int categoryId)
-	   {
+
+	/**
+	 * List all the searches with given category Id <br>
+	 * <br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category/lt;categoryid&gt;/searches
+	 * </font><br>
+	 * The string "savedsearch/v1/category/lt;categoryid&gt;/searches" in the URL signifies read operation on search with given
+	 * category Id.<br>
+	 * <br>
+	 * Each search object include following elements id,name,description,
+	 * category,folder,owner,guid,createdOn,lastModifiedOn,lastModifiedBy
+	 * ,lastAccessDate,systemSearch,parameters,queryStr,locked,uiHidden
+	 * 
+	 * @since 0.1
+	 * @param uri
+	 * @param catId
+	 *            The category Id which user wants to get the details
+	 * @return Lists all the searches <br>
+	 *         If category Id is given as the parameter, it will list all the searches present in the category whose id is the
+	 *         given category Id<br>
+	 * <br>
+	 *         Response Sample:<br>
+	 *         <font color="DarkCyan">[<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 10003,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "sample for creation1",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "guid": "[B@7b9a67de",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "sample for creation",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp "owner": "SYSMAN",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "category": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 1,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/category/1"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "folder": {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 2,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href":
+	 *         "http://slc04pxi.us.oracle.com:7001/savedsearch/v1/folder/2"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "createdOn": "2014-07-04T02:20:07.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedOn": "2014-07-04T02:20:07.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastAccessDate": "2014-07-04T02:20:07.000Z",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "systemSearch": "false",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastModifiedBy": "ORACLE",
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "locked": "false",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uiHidden": "false",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"queryStr": "*",//optional <br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;"parameters":[<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name":"time",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type":"STRING",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":"ALL"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name":"additionalInfo",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type":"CLOB",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":"this is a demo"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+	 *         ` }<br>
+	 *         ]</font><br>
+	 * <br>
+	 *         Response Code:<br>
+	 *         <table border="1">
+	 *         <tr>
+	 *         <th>Status code</th>
+	 *         <th>Status</th>
+	 *         <th>Description</th>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>200</td>
+	 *         <td>OK</td>
+	 *         <td>List searches successfully</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>404</td>
+	 *         <td>Not Found</td>
+	 *         <td>could be the following errors:<br>
+	 *         Category object by ID: &lt;category Id&gt; does not exist<br>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>400</td>
+	 *         <td>Bad Request</td>
+	 *         <td>could be the following errors:<br>
+	 *         1.please give the value for categoryId<br>
+	 *         2.Id/count should be a positive number and not an alphanumeric<br>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>500</td>
+	 *         <td>Internal Server Error</td>
+	 *         <td>&nbsp;</td>
+	 *         </tr>
+	 *         </table>
+	 */
+
+	@GET
+	@Path("{id: [0-9]*}/searches")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSearchesByCategory(@PathParam("id") int categoryId)
+	{
 		SearchManager searchMan = SearchManager.getInstance();
 		CategoryManager catMan = CategoryManager.getInstance();
 		Search search;
@@ -507,8 +599,8 @@ public class CategoryAPI
 		try {
 			for (int i = 0; i < searchList.size(); i++) {
 				search = searchList.get(i);
-				try {					
-					JSONObject jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri() ,search,null,false);
+				try {
+					JSONObject jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), search, null, false);
 					jsonArray.put(jsonObj);
 				}
 				catch (JSONException e) {
@@ -528,7 +620,4 @@ public class CategoryAPI
 
 	}
 
-	
-	
-	
 }

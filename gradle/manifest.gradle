@@ -1,0 +1,224 @@
+/** 
+* Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved. 
+* 
+* DESCRIPTION
+* Generate pom per git repo, by using contents of  deploy-list*.xml and cookbook-list*.xml
+* 
+* Tasks:
+* createPom - generates a pom file base on input from deploy-list*.xml and cookbook-list*.xml
+* createCompManifest- overwrites current pom file with resolving dynamic dependencies
+*
+* Input: 
+*	 from where to resolve artifacts  - default: emaas-sandbox-local
+*    where to publish the generated pom - default: emaas-sandbox-local
+* 
+*
+*
+*  MODIFIED    			(MM/DD/YY)
+*  Alla Shamis    		10/06/14 - Creation
+*/
+
+import groovy.io.FileType
+
+apply plugin: 'groovy'
+
+apply plugin: 'maven'  
+apply plugin: 'artifactory'
+
+apply plugin: 'gavsetting'
+
+
+//Input repo name from where artifacts will be resolved and which one the pom will be published
+//  (-PrepoResolve=[xxx] -PrepoPublish=[yyy])
+def artifactory_repo_default = 'emaas-sandbox-local'
+def artifactory_repo_resolve = hasProperty('repoResolve') ? repoResolve : artifactory_repo_default
+def artifactory_repo_publish = hasProperty('repoPublish') ? repoPublish : artifactory_repo_default
+
+
+//the project name should the input parameter, if the script is running from Hudson (-PgitRepo=[xxx])
+def gitName = hasProperty('gitRepo') ? gitRepo : rootProject.name
+ 
+
+def curLocation =  "${project.rootDir}"
+def pomFileLocation = curLocation + '/manifestBuild/component-' + version + '.pom'
+group = project.group + 'manifest.' + gitName
+
+
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            url = "${artifactory_contextUrl}/emaas-virtual"
+        }
+
+        /*
+         * TODO - work out the actual dependencies needed and replace the jcenter
+         * cache with the emaas virtual repository
+         */
+		maven {
+			url = "${artifactory_contextUrl}"  + '/emaas-virtual'
+		}
+        maven {
+		
+            url = "${artifactory_contextUrl}" + '/jcenter-cache/'
+        }
+    }
+  dependencies {
+        classpath group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '2.1.0'
+        classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
+    }
+}
+
+//for avoiding the publish the default jar file, that not needed for this build:
+// artifactoryPublish.skip = true 
+// jar.enabled = false 
+
+
+//populate the list of dependency from ... xml list:
+//base on  deploy-list*.xml and 
+
+//dependencies arrays 
+project.ext.swList = []
+project.ext.cookbooksList = []
+
+
+
+//Populating the dependencies array base on deploy-list*.xml
+def getSoftwareList () {
+
+	def fromHere = "."
+	def xmlSchemaFiles = new FileNameFinder().getFileNames(fromHere, '**/deploy-list*.xml')
+	
+	//println "xmlSchemaFiles ${xmlSchemaFiles}"
+	xmlSchemaFiles.each { xmlSchema ->
+	//	println "This is current xml File: ${xmlSchema}"
+        if (xmlSchema.contains("-template.xml")) {
+			return
+        }
+		def deployList=new XmlSlurper().parse(new File(xmlSchema))
+                String softwareName = ""
+				swList = swList + deployList.'@name'
+	} 
+}
+
+
+
+
+//Populating the dependencies array base on cookbook-list*.xml
+def getCookbookList () {
+    def fromHere = "."
+    def xmlSchemaFiles = new FileNameFinder().getFileNames(fromHere, '**/cookbook-list*.xml')
+    //println "cookbook files ${xmlSchemaFiles}"
+	xmlSchemaFiles.each { xmlSchema ->
+      //  println "This is current xml File: ${xmlSchema}"
+            if (xmlSchema.contains("-template.xml")) {
+                return
+            }
+           
+            def deployList=new XmlSlurper().parse(new File(xmlSchema))
+            deployList.children().each {
+                        String curName = ""
+                        String curDir = ""
+                        it.attributes().each {k,v ->
+                                if (k == "name") {
+                                        curName = v
+                                } else if (k == "dir") {
+                                        curDir = v
+                                }
+                        }
+                        if (curName == "") {
+                            return
+                        }
+					 cookbooksList = cookbooksList + curName
+                }
+        }
+}
+
+
+def groupNameSW = 'com.oracle.emaas.' + gitName + '.softwares'
+def groupNameCB = 'com.oracle.emaas.' + gitName + '.cookbooks'
+
+
+getCookbookList ()
+getSoftwareList ()
+
+
+cookbooksList.each{ def depNameCB ->
+	dependencies.compile(group: groupNameCB, name: depNameCB, version: '0.5+', ext: 'gz')
+}
+
+swList.each{ def depNameSW ->
+	dependencies.compile(group: groupNameSW, name: depNameSW, version: '0.5+', ext: 'gz')
+}
+
+
+//Generate Pom file base on 'compile' and 'testCompile' configurations
+task createPom{
+    pom {
+        project {
+            inceptionYear '2014'
+            licenses {
+                license {
+                    name 'To be added, Version 2.0'
+                    url 'http://www.my.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("${pomFileLocation}")
+}
+
+artifactory {
+    contextUrl =  "http://artifactory.oraclecorp.com/artifactory"
+	publish {
+		repository {
+			repoKey = "${artifactory_repo_publish}"
+			username = "${artifactory_user}"
+			password = "${artifactory_password}"
+			maven = true
+			publishPom=false  
+		}
+	}
+	resolve {
+			repository {
+				repoKey = "${artifactory_repo_resolve}"
+				username = "${artifactory_user}"
+				password = "${artifactory_password}"
+				maven = true
+		}
+    }
+}
+
+
+// Reads and Overwrites POM file resolving dynamic dependencies
+task createCompManifest(dependsOn: createPom) << {
+    // Get generated pom file
+    Node xml = new XmlParser().parse(pomFileLocation)
+
+    // Generate map of resolved versions - defined in 'compile' and 'testCompile'
+    Map resolvedVersionMap = new HashMap()
+    Set<ResolvedArtifact> resolvedArtifacts = configurations.compile.getResolvedConfiguration().getResolvedArtifacts()
+    resolvedArtifacts.addAll(configurations.testCompile.getResolvedConfiguration().getResolvedArtifacts())
+    resolvedArtifacts.each {
+        resolvedVersionMap.put(it.getName(), it.getModuleVersion().getId().getVersion())
+    }
+
+    // Update dependencies in the pom file with resolved versions
+    xml.dependencies.first().each {
+        Node artifactId = it.get("artifactId").first()
+        def artifactName = artifactId.value().first()
+        def artifactVersion = resolvedVersionMap.get(artifactName)
+
+        Node version = it.get("version").first()
+        version.value = artifactVersion
+    }
+
+    // Overwrite existing pom file
+    new XmlNodePrinter(new PrintWriter(new FileWriter(pomFileLocation))).print(xml)
+}
+
+
+artifacts {
+		archives file("${pomFileLocation}")
+}			
+
