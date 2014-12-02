@@ -83,27 +83,6 @@ public class FolderEntity extends Entity
 		category = cat;
 	}
 
-	public void setChildFolders(List<FolderEntity> childFolders)
-	{
-		if (childFolders != null) {
-			m_childFolders.clear();
-			for (FolderEntity folder : childFolders) {
-				if (isFolderOnly) {
-					if (folder.isFolder()) {
-						m_childFolders.add(folder);
-						folder.parent = this;
-					}
-				}
-				else {
-					if (folder.isFolder() || "1".equals(folder.getCategory().getId())) {
-						m_childFolders.add(folder);
-						folder.parent = this;
-					}
-				}
-			}
-		}
-	}
-
 	public void setCreatdOn(String createdOn)
 	{
 		this.createdOn = createdOn;
@@ -114,17 +93,6 @@ public class FolderEntity extends Entity
 		this.description = description;
 	}
 
-	/*
-	public void setChildSearch(List<SearchEntity> childSearch)
-	{
-	    this.childSearch = childSearch;
-	}
-
-	public List<SearchEntity> getChildSearch()
-	{
-	    return childSearch;
-	}
-	*/
 	public void setIsFolder(boolean isFolder)
 	{
 		if (isFolder) {

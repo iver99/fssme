@@ -20,11 +20,7 @@ public class UpdateSavedSearch
 			obj.setEndPoint(tmp);
 		}
 
-		if (obj.getOption() == 0) {
-			System.out.println("Please specify valid command");
-		}
-
-		if (obj.getOption() == UpdateUtilConstants.OPT_DISPLAY_HELP) {
+		if (obj.getOption() == UpdateUtilConstants.OPT_DISPLAY_HELP || obj.getOption() == UpdateUtilConstants.OPT_INVALID) {
 			obj.printHelp();
 		}
 		if (obj.getOption() == UpdateUtilConstants.OPT_UPDATE_SEARCH) {
@@ -108,10 +104,12 @@ public class UpdateSavedSearch
 	private void configureFromArgs(String[] args)
 	{
 		boolean foundHelp = false, foundEndPoint = false, foundCategory = false, foundInputPath = false, foundSmUrl = false, foundOutputPath = false, foundExport = false, foundImport = false;
+		boolean isInvalidArg = false;
 		try {
 			for (int index = 0; index < args.length; index = index + 2) {
 
 				if (args[index].equalsIgnoreCase(UpdateUtilConstants.HELP)) {
+					index = index - 1;
 					foundHelp = true;
 				}
 				else if (args[index].equalsIgnoreCase(UpdateUtilConstants.EXPORT)) {
@@ -178,6 +176,9 @@ public class UpdateSavedSearch
 					}
 					foundOutputPath = true;
 				}
+				else {
+					throw new IllegalArgumentException("Please specify valid command ");
+				}
 			}
 
 		}
@@ -193,32 +194,80 @@ public class UpdateSavedSearch
 		}
 
 		if (foundInputPath && foundOutputPath && foundImport) {
-			if (foundHelp || foundCategory || foundExport) {
+			String temp = "";
+			m_intCommandNo = UpdateUtilConstants.OPT_UPDATE_SEARCH;
+			if (foundHelp) {
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
-				System.out.println("Please specify valid command");
+				temp = temp + UpdateUtilConstants.HELP + "  ";
 			}
-			else {
-				m_intCommandNo = UpdateUtilConstants.OPT_UPDATE_SEARCH;
+			if (foundCategory) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.CATEGORY_ID + "  ";
 			}
+			if (foundExport) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.EXPORT + "  ";
+			}
+			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
+				System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.IMPORT);
+			}
+
 		}
 
 		if (foundCategory && foundOutputPath && foundExport) {
-			if (foundHelp || foundInputPath || foundImport) {
+			String temp = "";
+			m_intCommandNo = UpdateUtilConstants.OPT_GET_SEARCH;
+			if (foundHelp) {
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
-				System.out.println("Please specify valid command");
+				temp = temp + UpdateUtilConstants.HELP + "  ";
 			}
-			else {
-				m_intCommandNo = UpdateUtilConstants.OPT_GET_SEARCH;
+			if (foundInputPath) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.INPUT_FILE_PATH + "  ";
+			}
+			if (foundImport) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.IMPORT + "  ";
+			}
+			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
+				System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.EXPORT);
 			}
 		}
 
 		if (foundHelp) {
-			if (foundCategory || foundOutputPath || foundEndPoint || foundInputPath || foundSmUrl) {
+			m_intCommandNo = UpdateUtilConstants.OPT_DISPLAY_HELP;
+			String temp = "";
+			if (foundCategory) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.CATEGORY_ID + "  ";
+			}
+
+			if (foundOutputPath) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.OUTPUT_FILE_PATH + "  ";
+			}
+			if (foundEndPoint) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.URL + "  ";
+			}
+			if (foundInputPath) {
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 				System.out.println("Please specify valid command");
 			}
-			else {
-				m_intCommandNo = UpdateUtilConstants.OPT_DISPLAY_HELP;
+			if (foundSmUrl) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.INPUT_FILE_PATH + "  ";
+			}
+			if (foundExport) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.EXPORT + "  ";
+			}
+			if (foundImport) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.IMPORT + "  ";
+			}
+			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
+				System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.HELP);
 			}
 		}
 
