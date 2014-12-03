@@ -481,9 +481,9 @@ public class CategoryAPI
 	/**
 	 * List all the searches with given category Id <br>
 	 * <br>
-	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category/lt;categoryid&gt;/searches
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category/&lt;categoryid&gt;/searches
 	 * </font><br>
-	 * The string "savedsearch/v1/category/lt;categoryid&gt;/searches" in the URL signifies read operation on search with given
+	 * The string "savedsearch/v1/category/&lt;categoryid&gt;/searches" in the URL signifies read operation on search with given
 	 * category Id.<br>
 	 * <br>
 	 * Each search object include following elements id,name,description,

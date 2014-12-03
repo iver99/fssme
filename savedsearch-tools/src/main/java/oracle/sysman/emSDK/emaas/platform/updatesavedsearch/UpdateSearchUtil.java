@@ -45,13 +45,13 @@ public class UpdateSearchUtil
 			System.out.println("The process completed successfully.");
 		}
 		catch (IOException e) {
-			System.out.println("an error occurred while writing data to file : " + outputfile);
-			_logger.error("an error occurred while writing data to file : " + outputfile);
+			System.out.println("Error : an error occurred while writing data to file : " + outputfile);
+			_logger.error("Error : an error occurred while writing data to file : " + outputfile);
 			return;
 		}
 		catch (Exception e) {
-			System.out.println("an error occurred exporting searches  ");
-			_logger.error("an error occurred exporting searches  ");
+			System.out.println("Error : an error occurred exporting searches  ");
+			_logger.error("Error : an error occurred exporting searches  " + e.getMessage());
 			return;
 		}
 	}
@@ -70,13 +70,13 @@ public class UpdateSearchUtil
 			data = FileUtils.readFile(inputfile);
 		}
 		catch (IOException e) {
-			_logger.error("An error occurred while reading the input file : " + e.getMessage());
-			System.out.println("An error occurred while reading the input file : " + inputfile);
+			_logger.error("Error : An error occurred while reading the input file : " + e.getMessage());
+			System.out.println("Error : An error occurred while reading the input file : " + inputfile);
 			return;
 		}
 		catch (Exception ex) {
-			_logger.error("An error occurred while updating searches" + ex.getMessage());
-			System.out.println("An error occurred while updating searches");
+			_logger.error("Error : An error occurred while updating searches" + ex.getMessage());
+			System.out.println("Error : An error occurred while updating searches");
 			return;
 		}
 		ImportSearchObject objUpdate = new ImportSearchObject();
@@ -84,8 +84,8 @@ public class UpdateSearchUtil
 			outputData = objUpdate.importSearches(endpoint, data);
 		}
 		catch (Exception e1) {
-			_logger.error("An error occurred while creating or updating search object" + e1.getMessage());
-			System.out.println("An error occurred while creating or updating search object");
+			_logger.error("Error : An error occurred while creating or updating search object" + e1.getMessage());
+			System.out.println("Error : An error occurred while creating or updating search object");
 			return;
 		}
 		try {

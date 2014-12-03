@@ -177,7 +177,8 @@ public class UpdateSavedSearch
 					foundOutputPath = true;
 				}
 				else {
-					throw new IllegalArgumentException("Please specify valid command ");
+					System.out.println("Error :Please specify valid command ");
+					System.exit(0);
 				}
 			}
 
@@ -191,6 +192,26 @@ public class UpdateSavedSearch
 		if (foundEndPoint && foundSmUrl) {
 			m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 			System.out.println("Please specify valid command - specify either service manager URL or SSF URL");
+			System.exit(0);
+		}
+
+		if (foundImport && foundExport) {
+			m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+			System.out.println("Error : argument " + UpdateUtilConstants.IMPORT + "  not allowed with argument "
+					+ UpdateUtilConstants.EXPORT);
+			System.exit(0);
+		}
+
+		if (foundImport && (!foundInputPath || !foundOutputPath)) {
+			System.out.println("Error: you must specify both " + UpdateUtilConstants.INPUT_FILE_PATH + " and  "
+					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " options.");
+			System.exit(0);
+		}
+
+		if (foundExport && (!foundCategory || !foundOutputPath)) {
+			System.out.println("Error: you must specify both " + UpdateUtilConstants.CATEGORY_ID + " and  "
+					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " options.");
+			System.exit(0);
 		}
 
 		if (foundInputPath && foundOutputPath && foundImport) {
