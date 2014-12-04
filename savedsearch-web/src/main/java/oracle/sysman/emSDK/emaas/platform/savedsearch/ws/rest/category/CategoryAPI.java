@@ -573,9 +573,9 @@ public class CategoryAPI
 	 */
 
 	@GET
-	@Path("{id: [0-9]*}/searches")
+	@Path("{id}/searches")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearchesByCategory(@PathParam("id") int categoryId)
+	public Response getSearchesByCategory(@PathParam("id") String categoryId)
 	{
 		SearchManager searchMan = SearchManager.getInstance();
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -584,11 +584,34 @@ public class CategoryAPI
 		String message = "";
 		JSONArray jsonArray = new JSONArray();
 		List<Search> searchList = new ArrayList<Search>();
+		long tmpCatId = -1;
+
+		if (categoryId == null) {
+			return Response.status(400).entity("Please specify vaild category Id").build();
+		}
+		else if ("".equals(categoryId.trim())) {
+			return Response.status(400).entity("Category Id is empty Please specify valid Category Id").build();
+		}
+		else {
+			try {
+
+				if (!"".equals(categoryId.trim())) {
+					tmpCatId = Long.parseLong(categoryId);
+				}
+			}
+			catch (NumberFormatException e) {
+				return Response.status(400).entity("Category Id should be a numeric and not alphanumeric").build();
+			}
+		}
+
+		if (tmpCatId <= 0) {
+			return Response.status(400).entity("Invalid categoryId: " + categoryId).build();
+		}
 
 		try {
 			// just for checking whether category with given Id exist or not
-			catMan.getCategory(categoryId);
-			searchList = searchMan.getSearchListByCategoryId(categoryId);
+			catMan.getCategory(tmpCatId);
+			searchList = searchMan.getSearchListByCategoryId(tmpCatId);
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();

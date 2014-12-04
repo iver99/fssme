@@ -42,15 +42,17 @@ public class UpdateSearchUtil
 				FileUtils.deleteFile(outputfile);
 			}
 			FileUtils.createOutputfile(outputfile, data);
-			System.out.println("The process completed successfully.");
+			System.out.println("The export process completed.");
 		}
 		catch (IOException e) {
-			System.out.println("Error : an error occurred while writing data to file : " + outputfile);
+			System.out.println("Error : an error occurred while writing data to file : " + outputfile
+					+ " Please refer to the log file for more details.");
 			_logger.error("Error : an error occurred while writing data to file : " + outputfile);
 			return;
 		}
 		catch (Exception e) {
-			System.out.println("Error : an error occurred exporting searches  ");
+			System.out.println("Error : an error occurred exporting searches  "
+					+ " Please refer to the log file for more details.");
 			_logger.error("Error : an error occurred exporting searches  " + e.getMessage());
 			return;
 		}
@@ -71,12 +73,13 @@ public class UpdateSearchUtil
 		}
 		catch (IOException e) {
 			_logger.error("Error : An error occurred while reading the input file : " + e.getMessage());
-			System.out.println("Error : An error occurred while reading the input file : " + inputfile);
+			System.out.println("Error : An error occurred while reading the input file : " + inputfile
+					+ " Please refer to the log file for more details.");
 			return;
 		}
 		catch (Exception ex) {
 			_logger.error("Error : An error occurred while updating searches" + ex.getMessage());
-			System.out.println("Error : An error occurred while updating searches");
+			System.out.println("Error : An error occurred while updating searche Please refer to the log file for more details.");
 			return;
 		}
 		ImportSearchObject objUpdate = new ImportSearchObject();
@@ -85,18 +88,21 @@ public class UpdateSearchUtil
 		}
 		catch (Exception e1) {
 			_logger.error("Error : An error occurred while creating or updating search object" + e1.getMessage());
-			System.out.println("Error : An error occurred while creating or updating search object");
+			System.out.println("Error : An error occurred while creating or updating search object "
+					+ " Please refer to the log file for more details.");
 			return;
 		}
 		try {
 			FileUtils.createOutputfile(outputfile, outputData);
 		}
 		catch (IOException e) {
-			System.out.println("an error occurred while writing data to file : " + outputfile);
-			_logger.error("an error occurred while writing data to file : " + outputfile);
+			System.out.println("an error occurred while writing data to file : " + outputfile
+					+ " Please refer to the log file for more details.");
+			_logger.error("an error occurred while writing data to file : " + outputfile
+					+ " Please refer to the log file for more details.");
 			return;
 		}
-		System.out.println("The update process completed successfully.");
+		System.out.println("The import process completed.");
 	}
 
 	public static boolean isEndpointReachable(String endpoint)
@@ -111,7 +117,8 @@ public class UpdateSearchUtil
 		}
 		catch (Exception e) {
 			System.out.println("Error (isEndpointReachable):" + e.getLocalizedMessage());
-			_logger.error("Error (isEndpointReachable):" + e.getLocalizedMessage());
+			_logger.error("Error (isEndpointReachable):" + e.getLocalizedMessage()
+					+ " Please refer to the log file for more details.");
 		}
 		return false;
 	}
