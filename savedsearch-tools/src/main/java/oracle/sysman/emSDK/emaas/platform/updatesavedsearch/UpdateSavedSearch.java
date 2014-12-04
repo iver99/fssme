@@ -14,19 +14,15 @@ public class UpdateSavedSearch
 		UpdateSavedSearch obj = new UpdateSavedSearch();
 		obj.configureFromArgs(args);
 
-		if (obj.getSMUrl() != null && obj.getSMUrl().length() != 0) {
-
-			String tmp = ServiceDiscoveryUtil.getSsfUrlBySmUrl(obj.getSMUrl());
-			obj.setEndPoint(tmp);
-		}
-
 		if (obj.getOption() == UpdateUtilConstants.OPT_DISPLAY_HELP || obj.getOption() == UpdateUtilConstants.OPT_INVALID) {
 			obj.printHelp();
 		}
 		if (obj.getOption() == UpdateUtilConstants.OPT_UPDATE_SEARCH) {
+
 			UpdateSearchUtil.importSearches(obj.getEndPoint(), obj.getFilePath(), obj.getOutputPath());
 		}
 		if (obj.getOption() == UpdateUtilConstants.OPT_GET_SEARCH) {
+
 			UpdateSearchUtil.exportSearches(obj.getCategoryId(), obj.getEndPoint(), obj.getOutputPath());
 		}
 	}
@@ -36,6 +32,7 @@ public class UpdateSavedSearch
 	private String m_strSmUrl;
 	private String m_strFilePath;
 	private String m_strOutputPath;
+	private String m_strSsfVersion;
 
 	private Long m_lngCategoryId;
 
@@ -71,6 +68,11 @@ public class UpdateSavedSearch
 		return m_strSmUrl;
 	}
 
+	public String getSsfVersion()
+	{
+		return m_strSsfVersion;
+	}
+
 	public void setCategoryId(Long categoryId)
 	{
 		m_lngCategoryId = categoryId;
@@ -101,10 +103,15 @@ public class UpdateSavedSearch
 		m_strSmUrl = url;
 	}
 
+	public void setSsfVersion(String sVersion)
+	{
+		m_strSsfVersion = sVersion;
+	}
+
 	private void configureFromArgs(String[] args)
 	{
 		boolean foundHelp = false, foundEndPoint = false, foundCategory = false, foundInputPath = false, foundSmUrl = false, foundOutputPath = false, foundExport = false, foundImport = false;
-		boolean isInvalidArg = false;
+		boolean isInvalidArg = false, foundSearchVersion = false;
 		try {
 			for (int index = 0; index < args.length; index = index + 2) {
 
@@ -176,6 +183,16 @@ public class UpdateSavedSearch
 					}
 					foundOutputPath = true;
 				}
+				else if (args[index].equalsIgnoreCase(UpdateUtilConstants.SSS_VERSION_STR)) {
+					if (index + 1 >= args.length) {
+						throw new IllegalArgumentException("SSF version is required");
+					}
+					m_strSsfVersion = args[index + 1];
+					if (m_strSsfVersion.length() == 0) {
+						throw new IllegalArgumentException("Please specify valid SSF version");
+					}
+					foundSearchVersion = true;
+				}
 				else {
 					System.out.println("Error :Please specify valid command ");
 					System.exit(0);
@@ -189,9 +206,10 @@ public class UpdateSavedSearch
 			m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 		}
 
-		if (foundEndPoint && foundSmUrl) {
+		if (foundEndPoint && foundSmUrl || foundEndPoint && foundSearchVersion || foundSmUrl && !foundSearchVersion
+				|| !foundSmUrl && foundSearchVersion || !foundEndPoint && !foundSmUrl) {
 			m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
-			System.out.println("Please specify valid command - specify either service manager URL or SSF URL");
+			System.out.println("Please specify valid command - specify either service manager URL and version  or SSF URL");
 			System.exit(0);
 		}
 
@@ -289,6 +307,19 @@ public class UpdateSavedSearch
 			}
 			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
 				System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.HELP);
+			}
+		}
+
+		if (foundSmUrl && foundSearchVersion) {
+			try {
+				if (m_intCommandNo != UpdateUtilConstants.OPT_INVALID) {
+					m_strEndPoint = ServiceDiscoveryUtil.getSsfUrlBySmUrl(m_strSmUrl, m_strSsfVersion);
+					_logger.info("URL:" + m_strEndPoint);
+				}
+			}
+			catch (Exception e) {
+				System.out.println("Error : An error occurred while discovering SSF Url");
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 			}
 		}
 

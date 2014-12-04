@@ -2,7 +2,7 @@
 
 How to export searches in XML format?
 Usage :
-
+		
     java -jar  UpdateSavedSearch.jar [-export -outputfilepath <file_name_path > -ssfurl <ssf_url> -categoryId <category_id> ]
 
 Arguments :
@@ -10,9 +10,10 @@ Arguments :
 -outputfilepath :  searches are written to  output file.
 -ssf_url : SSF Url    
 -servicemanagerurl: Service manager url    
+-serviceversion : Service version
 -categoryId   : Category Id  (Export searches for given category)
 
-Note:Please  provide either ssf url  or servicemanagerurl  but not both.
+Note:Please  provide either ssf url  or servicemanager url and service version
 
 
 How to import searches from XML file?
@@ -25,8 +26,9 @@ Arguments :
 -import : Update existing searches  or Add new searches.
 -outputfilepath :  result of import command written to output file.
 -ssf_url : SSF Url    
--servicemanagerurl: Service manager url    
+-servicemanagerurl: Service manager url   
+-serviceversion : Service version 
 -inputfilepath : input file containing searches in xml format.
 
 
-Note:Please  provide either ssf url  or servicemanagerurl  but not both.
+Note:Please  provide either ssf url  or servicemanager url and service version

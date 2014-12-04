@@ -7,12 +7,12 @@ import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.UpdateUtilConstants;
 public class ServiceDiscoveryUtil
 {
 
-	public static String getSsfUrlBySmUrl(String url) throws Exception
+	public static String getSsfUrlBySmUrl(String url, String version) throws Exception
 	{
 		Properties props = new Properties();
 		props.setProperty(UpdateUtilConstants.SERVICE_URLS, url);
 		props.setProperty(UpdateUtilConstants.SERVICE_NAME, UpdateUtilConstants.SAVEDSEARCH);
-		props.setProperty(UpdateUtilConstants.SERVICE_VERSION, UpdateUtilConstants.VERSION);
+		props.setProperty(UpdateUtilConstants.SERVICE_VERSION, version);
 		if (props.getProperty(UpdateUtilConstants.CACHE_THRESHOLD) == null) {
 			props.setProperty(UpdateUtilConstants.CACHE_THRESHOLD, UpdateUtilConstants.CACHE_THRESHOLD_VALUE);
 		}

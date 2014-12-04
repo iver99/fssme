@@ -19,6 +19,7 @@ public class UpdateUtilConstants
 	public static final String CATEGORY_ID = "-categoryId";
 	public static final String EXPORT = "-export";
 	public static final String IMPORT = "-import";
+	public static final String SSS_VERSION_STR = "-serviceversion";
 	public static final int OPT_DISPLAY_HELP = 1;
 	public static final int OPT_UPDATE_SEARCH = 2;
 	public static final int OPT_GET_SEARCH = 3;
