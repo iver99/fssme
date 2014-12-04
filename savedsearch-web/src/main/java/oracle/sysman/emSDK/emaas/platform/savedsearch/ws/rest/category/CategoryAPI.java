@@ -486,9 +486,9 @@ public class CategoryAPI
 	 * The string "savedsearch/v1/category/&lt;categoryid&gt;/searches" in the URL signifies read operation on search with given
 	 * category Id.<br>
 	 * <br>
-	 * Each search object include following elements id,name,description,
-	 * category,folder,owner,guid,createdOn,lastModifiedOn,lastModifiedBy
-	 * ,lastAccessDate,systemSearch,parameters,queryStr,locked,uiHidden
+	 * Each search object include following elements :<br>
+	 * id,name,description,category,folder,owner,guid,createdOn,lastModifiedOn,lastModifiedBy,
+	 * lastAccessDate,systemSearch,parameters,queryStr,locked,uiHidden
 	 * 
 	 * @since 0.1
 	 * @param uri
