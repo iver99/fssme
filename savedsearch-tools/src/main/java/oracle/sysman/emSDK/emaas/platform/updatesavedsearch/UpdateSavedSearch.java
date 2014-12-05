@@ -15,7 +15,7 @@ public class UpdateSavedSearch
 		obj.configureFromArgs(args);
 
 		if (obj.getOption() == UpdateUtilConstants.OPT_DISPLAY_HELP || obj.getOption() == UpdateUtilConstants.OPT_INVALID) {
-			obj.printHelp();
+			UpdateSavedSearch.printHelp();
 		}
 		if (obj.getOption() == UpdateUtilConstants.OPT_UPDATE_SEARCH) {
 
@@ -27,11 +27,17 @@ public class UpdateSavedSearch
 		}
 	}
 
+	private static void printHelp() throws Exception
+	{
+		FileUtils.readFile(ClassLoader.getSystemResourceAsStream(UpdateUtilConstants.HELP_FILE));
+	}
+
 	private int m_intCommandNo;
 	private String m_strEndPoint;
 	private String m_strSmUrl;
 	private String m_strFilePath;
 	private String m_strOutputPath;
+
 	private String m_strSsfVersion;
 
 	private Long m_lngCategoryId;
@@ -111,7 +117,7 @@ public class UpdateSavedSearch
 	private void configureFromArgs(String[] args)
 	{
 		boolean foundHelp = false, foundEndPoint = false, foundCategory = false, foundInputPath = false, foundSmUrl = false, foundOutputPath = false, foundExport = false, foundImport = false;
-		boolean isInvalidArg = false, foundSearchVersion = false;
+		boolean foundSearchVersion = false;
 		try {
 			for (int index = 0; index < args.length; index = index + 2) {
 
@@ -206,13 +212,6 @@ public class UpdateSavedSearch
 			m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 		}
 
-		if (foundEndPoint && foundSmUrl || foundEndPoint && foundSearchVersion || foundSmUrl && !foundSearchVersion
-				|| !foundSmUrl && foundSearchVersion || !foundEndPoint && !foundSmUrl) {
-			m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
-			System.out.println("Please specify valid command - specify either service manager URL and version  or SSF URL");
-			System.exit(0);
-		}
-
 		if (foundImport && foundExport) {
 			m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 			System.out.println("Error : argument " + UpdateUtilConstants.IMPORT + "  not allowed with argument "
@@ -220,19 +219,19 @@ public class UpdateSavedSearch
 			System.exit(0);
 		}
 
-		if (foundImport && (!foundInputPath || !foundOutputPath)) {
+		if (!foundHelp && foundImport && (!foundInputPath || !foundOutputPath)) {
 			System.out.println("Error: you must specify both " + UpdateUtilConstants.INPUT_FILE_PATH + " and  "
 					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " options.");
 			System.exit(0);
 		}
 
-		if (foundExport && (!foundCategory || !foundOutputPath)) {
+		if (!foundHelp && foundExport && (!foundCategory || !foundOutputPath)) {
 			System.out.println("Error: you must specify both " + UpdateUtilConstants.CATEGORY_ID + " and  "
 					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " options.");
 			System.exit(0);
 		}
 
-		if (foundInputPath && foundOutputPath && foundImport) {
+		if (!foundHelp && foundInputPath && foundOutputPath && foundImport) {
 			String temp = "";
 			m_intCommandNo = UpdateUtilConstants.OPT_UPDATE_SEARCH;
 			if (foundHelp) {
@@ -247,13 +246,20 @@ public class UpdateSavedSearch
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 				temp = temp + UpdateUtilConstants.EXPORT + "  ";
 			}
+			if (foundEndPoint && foundSmUrl || foundEndPoint && foundSearchVersion || foundSmUrl && !foundSearchVersion
+					|| !foundSmUrl && foundSearchVersion || !foundEndPoint && !foundSmUrl) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				System.out.println("Please specify valid command - specify either service manager URL and version  or SSF URL");
+			}
 			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
-				System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.IMPORT);
+				if (temp.length() != 0) {
+					System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.IMPORT);
+				}
 			}
 
 		}
 
-		if (foundCategory && foundOutputPath && foundExport) {
+		if (!foundHelp && foundCategory && foundOutputPath && foundExport) {
 			String temp = "";
 			m_intCommandNo = UpdateUtilConstants.OPT_GET_SEARCH;
 			if (foundHelp) {
@@ -268,8 +274,15 @@ public class UpdateSavedSearch
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 				temp = temp + UpdateUtilConstants.IMPORT + "  ";
 			}
+			if (foundEndPoint && foundSmUrl || foundEndPoint && foundSearchVersion || foundSmUrl && !foundSearchVersion
+					|| !foundSmUrl && foundSearchVersion || !foundEndPoint && !foundSmUrl) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				System.out.println("Please specify valid command - specify either service manager URL and version  or SSF URL");
+			}
 			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
-				System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.EXPORT);
+				if (temp.length() != 0) {
+					System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.EXPORT);
+				}
 			}
 		}
 
@@ -305,6 +318,14 @@ public class UpdateSavedSearch
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 				temp = temp + UpdateUtilConstants.IMPORT + "  ";
 			}
+			if (foundSmUrl) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.SM_URL + "  ";
+			}
+			if (foundSearchVersion) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.SSS_VERSION_STR + "  ";
+			}
 			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
 				System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.HELP);
 			}
@@ -323,11 +344,6 @@ public class UpdateSavedSearch
 			}
 		}
 
-	}
-
-	private void printHelp() throws Exception
-	{
-		FileUtils.readFile(ClassLoader.getSystemResourceAsStream(UpdateUtilConstants.HELP_FILE));
 	}
 
 }
