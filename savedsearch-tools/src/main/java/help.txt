@@ -14,7 +14,7 @@ Usage :
 Arguments :
 -export : To retrieve the searches 
 -outputfilepath :  searches are written to  output file.
--ssf_url : SSF Url    
+-ssfurl : SSF Url    
 -servicemanagerurl: Service manager url    
 -serviceversion : Service version
 -categoryId   : Category Id  (Export searches for given category)
@@ -36,7 +36,7 @@ or
 Arguments :
 -import : Update existing searches  or Add new searches.
 -outputfilepath :  result of import command written to output file.
--ssf_url : SSF Url    
+-ssfurl : SSF Url    
 -servicemanagerurl: Service manager url   
 -serviceversion : Service version 
 -inputfilepath : input file containing searches in xml format.
