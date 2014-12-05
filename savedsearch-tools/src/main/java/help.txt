@@ -4,6 +4,12 @@ How to export searches in XML format?
 Usage :
 		
     java -jar  UpdateSavedSearch.jar [-export -outputfilepath <file_name_path > -ssfurl <ssf_url> -categoryId <category_id> ]
+    
+    or
+
+	java -jar UpdateSavedSearch.jar [-export -outputfilepath <file_name_path> -servicemanagerurl 
+									 <service_manager_url> -serviceversion <service_version> 
+									 -categoryId <category_id>]
 
 Arguments :
 -export : To retrieve the searches 
@@ -21,6 +27,11 @@ Usage :
 
     java -jar  UpdateSavedSearch.jar [-import  -inputfilepath <input_file_path> 
     								  -outputfilepath <output_file_path > -ssfurl <ssf_url>  ]
+
+or
+	
+	java -jar UpdateSavedSearch.jar [-import -inputfilepath <input_file_path> -outputfilepath <file_name_path> 
+									 -servicemanagerurl <service_manager_url> -serviceversion <service_version>]    								  
 
 Arguments :
 -import : Update existing searches  or Add new searches.
