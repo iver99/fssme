@@ -215,6 +215,52 @@ public class CategoryCRUD
 	}
 
 	@Test
+	public void getSearchDetailsById_ErrorId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("Negative Case 1 to verify the cateogy Id is given alphabet");
+			System.out.println("											");
+
+			Response res = RestAssured.given().log().everything().when().get("/category/abc/searches");
+			Assert.assertTrue(res.getStatusCode() == 400);
+			String output = res.getBody().asString();
+			Assert.assertEquals(output, "Id/count should be a positive number and not an alphanumeric");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			System.out.println("------------------------------------------");
+			System.out.println("Negative Case 2 to verify the cateogy Id is given negative number");
+			System.out.println("											");
+
+			Response res1 = RestAssured.given().log().everything().when().get("/category/-1/searches");
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			String output1 = res1.getBody().asString();
+			Assert.assertEquals(output1, "Id/count should be a positive number and not an alphanumeric");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			System.out.println("------------------------------------------");
+			System.out.println("Negative Case to verify the cateogy Id is given non-existed ID");
+			System.out.println("											");
+
+			Response res2 = RestAssured.given().log().everything().when().get("/category/4567890/searches");
+			Assert.assertTrue(res2.getStatusCode() == 404);
+			String output2 = res2.getBody().asString();
+			Assert.assertEquals(output2, "Category object by ID: 4567890 does not exist");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
 	/**
 	 * Check status and response for get all categories
 	 */
@@ -252,7 +298,7 @@ public class CategoryCRUD
 		try {
 			System.out.println("------------------------------------------");
 			System.out
-					.println("This test is to validate the response & status with categoryName, categoryId & folderId combinations");
+			.println("This test is to validate the response & status with categoryName, categoryId & folderId combinations");
 			Response res1 = RestAssured.given().log().everything().when()
 					.get("/searches?categoryId=3&categoryname=Log Analytics&folderId=2");
 
@@ -276,7 +322,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("Case1:This test is to validate the response and status when the searches by category with bad url");
+			.println("Case1:This test is to validate the response and status when the searches by category with bad url");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().when().get("/searches?categoryId");
 
@@ -318,7 +364,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("This test is to validate the response when the search by category with category ID which is negative number");
+			.println("This test is to validate the response when the search by category with category ID which is negative number");
 			Response res = RestAssured.given().log().everything().when().get("/searches?categoryId=-1");
 
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -343,7 +389,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("This test is to validate the response when the search by category with category ID which is not exist");
+			.println("This test is to validate the response when the search by category with category ID which is not exist");
 			Response res = RestAssured.given().log().everything().when().get("/searches?categoryId=4567890");
 
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -367,7 +413,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("This test is to validate the response when the searches by category with category name which is not exist");
+			.println("This test is to validate the response when the searches by category with category name which is not exist");
 			Response res = RestAssured.given().log().everything().when().get("/searches?categoryName=MyAnalytics");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -391,7 +437,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("This test is to validate the response when the search by category whose category name & id are not exist");
+			.println("This test is to validate the response when the search by category whose category name & id are not exist");
 			Response res = RestAssured.given().log().everything().when()
 					.get("/searches?categoryName=invalidCategory&categoryId=200000");
 
@@ -525,7 +571,7 @@ public class CategoryCRUD
 		try {
 			System.out.println("------------------------------------------");
 			System.out
-					.println("This test is to perform the operation that lists all the searches by the specified category name");
+			.println("This test is to perform the operation that lists all the searches by the specified category name");
 			System.out.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;

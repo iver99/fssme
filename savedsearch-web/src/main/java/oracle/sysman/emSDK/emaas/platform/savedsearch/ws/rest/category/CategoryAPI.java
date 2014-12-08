@@ -28,7 +28,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Category Services
- * 
+ *
  * @since 0.1
  */
 @Path("category")
@@ -185,7 +185,7 @@ public class CategoryAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category/&lt;id&gt;</font><br>
 	 * The string "/category/&lt;id&gt;" in the URL signifies read operation on category with given category Id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param categoryId
 	 *            The category Id which user want to read the details
@@ -273,7 +273,7 @@ public class CategoryAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category?name=&lt;name&gt;</font><br>
 	 * The string "/category?name=&lt;name&gt;" in the URL signifies read operation on category with given category name.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param name
 	 *            The name of category which users wants to get the details
@@ -489,7 +489,7 @@ public class CategoryAPI
 	 * Each search object include following elements :<br>
 	 * id,name,description,category,folder,owner,guid,createdOn,lastModifiedOn,lastModifiedBy,
 	 * lastAccessDate,systemSearch,parameters,queryStr,locked,uiHidden
-	 * 
+	 *
 	 * @since 0.1
 	 * @param uri
 	 * @param catId
@@ -600,12 +600,12 @@ public class CategoryAPI
 				}
 			}
 			catch (NumberFormatException e) {
-				return Response.status(400).entity("Category Id should be a numeric and not alphanumeric").build();
+				return Response.status(400).entity("Id/count should be a positive number and not an alphanumeric").build();
 			}
 		}
 
 		if (tmpCatId <= 0) {
-			return Response.status(400).entity("Invalid categoryId: " + categoryId).build();
+			return Response.status(400).entity("Id/count should be a positive number and not an alphanumeric").build();
 		}
 
 		try {
