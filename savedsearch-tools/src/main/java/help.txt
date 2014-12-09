@@ -1,0 +1,39 @@
+
+
+How to export searches in XML format?
+Usage :
+		
+    java -jar UpdateSavedSearch.jar [-export -outputfilepath <file_name_path > -ssfurl <ssf_url> -categoryId <category_id> ]    
+    or
+    java -jar UpdateSavedSearch.jar [-export -outputfilepath <file_name_path>  -servicemanagerurl <service_manager_url> 
+                                     -serviceversion <service_version>   -categoryId <category_id>]
+
+Arguments :
+-export : To retrieve the searches 
+-outputfilepath :  searches are written to  output file.
+-ssfurl : SSF Url    
+-servicemanagerurl: Service manager url    
+-serviceversion : Service version
+-categoryId   : Category Id  (Export searches for given category)
+
+Note:Please  provide either ssf url  or servicemanager url and service version
+
+
+How to import searches from XML file?
+Usage :
+
+    java -jar UpdateSavedSearch.jar [-import  -inputfilepath <input_file_path> -outputfilepath <output_file_path > -ssfurl <ssf_url>  ]
+    or
+    java -jar UpdateSavedSearch.jar [-import -inputfilepath <input_file_path> -outputfilepath <file_name_path>
+                                     -servicemanagerurl <service_manager_url> -serviceversion <service_version>]    								  
+
+Arguments :
+-import : Update existing searches  or Add new searches.
+-outputfilepath :  result of import command written to output file.
+-ssfurl : SSF Url    
+-servicemanagerurl: Service manager url   
+-serviceversion : Service version 
+-inputfilepath : input file containing searches in xml format.
+
+
+Note:Please  provide either ssf url  or servicemanager url and service version

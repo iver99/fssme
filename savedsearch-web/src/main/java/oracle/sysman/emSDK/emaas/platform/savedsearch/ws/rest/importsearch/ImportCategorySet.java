@@ -27,7 +27,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Import Category Services
- *
+ * 
  * @since 0.1
  */
 @Path("importcategories")
@@ -40,7 +40,7 @@ public class ImportCategorySet
 	 * Import the category with defined XML file<br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importcategories</font><br>
 	 * The string "importcategories" in the URL signifies import operation on category.<br>
-	 *
+	 * 
 	 * @since 0.1
 	 * @param xml
 	 *            "xml" is the XML definition used to import category<br>
@@ -130,6 +130,7 @@ public class ImportCategorySet
 		String msg = "";
 		try {
 			InputStream stream = ImportCategorySet.class.getClassLoader().getResourceAsStream(resourcePath);
+			stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			CategorySet categories = (CategorySet) JAXBUtil.unmarshal(sReader, stream,

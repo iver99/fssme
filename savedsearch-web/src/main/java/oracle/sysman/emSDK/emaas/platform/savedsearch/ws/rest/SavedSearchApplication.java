@@ -29,7 +29,7 @@ public class SavedSearchApplication extends Application
 		s.add(FilterSearchAPI.class);
 		s.add(ImportFolderSet.class);
 		s.add(ImportCategorySet.class);
-		s.add(ImportSearchSet.class);
+		s.add(ImportSearchSet.class);		
 		return s;
 	}
 

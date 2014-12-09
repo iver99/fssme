@@ -27,7 +27,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Import Folders Services
- *
+ * 
  * @since 0.1
  */
 @Path("importfolders")
@@ -40,7 +40,7 @@ public class ImportFolderSet
 	 * Import the folders with defined XML file<br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importfolders</font><br>
 	 * The string "importfolders" in the URL signifies import operation on folder.<br>
-	 *
+	 * 
 	 * @since 0.1
 	 * @param xml
 	 *            "xml" is the XML definition used to import folder<br>

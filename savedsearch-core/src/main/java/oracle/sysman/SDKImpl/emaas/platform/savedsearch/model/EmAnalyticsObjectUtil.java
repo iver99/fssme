@@ -403,10 +403,11 @@ class EmAnalyticsObjectUtil
 		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcNow);
 		searchEntity.setSystemSearch(search != null && search.isSystemSearch() ? new java.math.BigDecimal(1)
-		: new java.math.BigDecimal(0));
+				: new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setMetadataClob(search.getMetadata());
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
+
 		searchEntity.setUiHidden(new java.math.BigDecimal(search != null && search.isUiHidden() ? 1 : 0));
 		searchEntity.setDeleted(0);
 		List<SearchParameter> params = search.getParameters();

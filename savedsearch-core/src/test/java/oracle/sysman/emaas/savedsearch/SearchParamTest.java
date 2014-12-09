@@ -45,6 +45,7 @@ public class SearchParamTest extends BaseTest
 			tmpSearch = SearchManagerImpl.getInstance().editSearch(tmpSearch);
 			tmpSearch = SearchManagerImpl.getInstance().getSearch(searchObj.getId());
 			paraList = tmpSearch.getParameters();
+			System.out.println("paraList.size() " + paraList.size());
 			AssertJUnit.assertTrue(paraList.size() == 1);
 		}
 		catch (Exception e) {

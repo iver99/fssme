@@ -46,7 +46,7 @@ public class SearchManagerImpl extends SearchManager
 
 	/**
 	 * Get SearchManagerImpl singleton instance.
-	 *
+	 * 
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
@@ -480,7 +480,59 @@ public class SearchManagerImpl extends SearchManager
 				Object cateObj = tmpImportSrImpl.getCategoryDetails();
 				try {
 					if (search.getId() != null && search.getId() > 0) {
-						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
+
+						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getSearchById(search.getId(), em);
+						if (emSearch != null && emSearch.getSystemSearch() != null && emSearch.getSystemSearch().intValue() == 1) {
+							importedList.add(createSearchObject(emSearch, null));
+							continue;
+						}
+
+						if (obj != null) {
+							if (obj instanceof Integer) {
+								EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(), em);
+								if (tmpfld != null) {
+									search.setFolderId((Integer) obj);
+								}
+								else {
+									continue;
+								}
+
+							}
+						}
+
+						if (obj != null && obj instanceof FolderImpl) {
+							Folder fld = (Folder) obj;
+							if (fld.getParentId() == null || fld.getParentId() == 0) {
+								fld.setParentId(1);
+							}
+							EmAnalyticsFolder objFolder = EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(fld);
+
+							if (objFolder != null) {
+								search.setFolderId((int) objFolder.getFolderId());
+							}
+
+						}
+
+						if (obj instanceof FolderImpl) {
+							if (search.getFolderId() == null) {
+								EmAnalyticsFolder folderObj = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
+								em.persist(folderObj);
+								search.setFolderId((int) folderObj.getFolderId());
+							}
+						}
+
+						if (cateObj instanceof Integer) {
+							EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getSearchById(search.getId(), em);
+
+							if (searchEntity.getEmAnalyticsCategory().getCategoryId() == ((Integer) cateObj).longValue()) {
+								search.setCategoryId((Integer) cateObj);
+							}
+							else {
+								continue;
+							}
+						}
+
+						emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
 						em.merge(emSearch);
 						tmpImportSrImpl.setId((int) emSearch.getId());
 						importedList.add(createSearchObject(emSearch, null));

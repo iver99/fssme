@@ -10,9 +10,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-
 
 public class XMLUtil {
 
@@ -50,5 +50,9 @@ public class XMLUtil {
 		}
 		 return os.toString() ; 
 	}
+	
+	
+	
+	
 
 }
