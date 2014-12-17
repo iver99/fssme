@@ -85,8 +85,9 @@ bash "create_servicemanger_properties_file"  do
     cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/init
     echo "version=#{node["SAAS_version"]}" > servicemanager.properties
     echo "serviceName=SavedSearch" >> servicemanager.properties
-    echo "registryUrls=#{node["serviceUrls"]}" >> servicemanager.properties
-    echo "serviceUrls=#{node["serviceUrls"]}" >> servicemanager.properties
+    echo "registryUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
+    echo "serviceUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
+    echo "characteristics=SAAS_deploymentUuid:#{node["SAAS_deploymentUuid"]}" >> servicemanager.properties
     EOH
 end
 

@@ -116,6 +116,7 @@ public class CategoryTest extends BaseTest
 			// now set the some value
 			category.setName("testName");
 			category.setDescription("testcase checking");
+			category.setDefaultFolderId(1);
 
 			// set the parameter for the category
 			Parameter sp1 = new Parameter();
@@ -140,6 +141,27 @@ public class CategoryTest extends BaseTest
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	public void testEditCategory_DuplicateName() throws Exception
+	{
+
+		try {
+			CategoryManager obj = CategoryManagerImpl.getInstance();
+			Category category = obj.getCategory(categoryId);
+
+			AssertJUnit.assertNotNull(category);
+			// now set the some value
+			category.setName("Log Analytics");
+
+			obj.editCategory(category);
+
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME));
 		}
 	}
 
@@ -213,6 +235,22 @@ public class CategoryTest extends BaseTest
 		catch (EMAnalyticsFwkException emanfe) {
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
 					EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER));
+		}
+	}
+
+	@Test
+	public void testSaveCategory_DuplicateName() throws Exception
+	{
+
+		CategoryManager catMan = CategoryManager.getInstance();
+		Category category = catMan.createNewCategory();
+		category.setName("Log Analytics");
+		try {
+			category = catMan.saveCategory(category);
+
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(emanfe.getErrorCode(), EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME);
 		}
 	}
 }

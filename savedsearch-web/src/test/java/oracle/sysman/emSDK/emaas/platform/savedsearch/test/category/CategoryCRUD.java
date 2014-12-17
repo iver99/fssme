@@ -143,6 +143,7 @@ public class CategoryCRUD
 	@Test
 	public void getCategory_noName()
 	{
+
 		try {
 			System.out.println("------------------------------------------");
 			System.out.println("GET operation is in-progress to read category details without category name");

@@ -162,6 +162,21 @@ public class SearchManagerTest extends BaseTest
 	}
 
 	@Test
+	public void testGetSearchByName_noresult()
+	{
+		SearchManager sm = SearchManager.getInstance();
+		String searchName = "Search Name " + System.currentTimeMillis();
+		try {
+			Search queried = sm.getSearchByName(searchName, 1);
+			AssertJUnit.assertNull(queried);
+		}
+		catch (EMAnalyticsFwkException e) {
+			AssertJUnit.fail();
+		}
+
+	}
+
+	@Test
 	public void testGetSearchListByCategoryId() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();

@@ -58,20 +58,20 @@ public class JSONUtil
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public static Object JSONToObject(JSONObject inputJsonObj, Class classname) throws EMAnalyticsFwkJsonException
-	{
-		try {
-			Object obj = null;
-			ObjectMapper mapper = new ObjectMapper();
-			obj = mapper.readValue(inputJsonObj.toString(), classname);
-			return classname.cast(obj);
-		}
-		catch (Exception e) {
-			throw new EMAnalyticsFwkJsonException("error converting JSONObject to Object",
-					EMAnalyticsFwkJsonException.JSON_JSON_TO_OBJECT, e);
-		}
-	}
+	//	@SuppressWarnings("unchecked")
+	//	public static Object JSONToObject(JSONObject inputJsonObj, Class classname) throws EMAnalyticsFwkJsonException
+	//	{
+	//		try {
+	//			Object obj = null;
+	//			ObjectMapper mapper = new ObjectMapper();
+	//			obj = mapper.readValue(inputJsonObj.toString(), classname);
+	//			return classname.cast(obj);
+	//		}
+	//		catch (Exception e) {
+	//			throw new EMAnalyticsFwkJsonException("error converting JSONObject to Object",
+	//					EMAnalyticsFwkJsonException.JSON_JSON_TO_OBJECT, e);
+	//		}
+	//	}
 
 	public static JSONObject ObjectToJSONObject(Object object) throws JSONException, EMAnalyticsFwkJsonException
 	{
@@ -80,7 +80,7 @@ public class JSONUtil
 	}
 
 	public static JSONObject ObjectToJSONObject(Object object, String[] excludedFields) throws JSONException,
-			EMAnalyticsFwkJsonException
+	EMAnalyticsFwkJsonException
 	{
 
 		return new JSONObject(JSONUtil.ObjectToJSONString(object, excludedFields));

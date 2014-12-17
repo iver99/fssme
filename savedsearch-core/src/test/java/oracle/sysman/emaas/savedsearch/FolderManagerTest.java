@@ -6,6 +6,8 @@ import java.util.List;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 
@@ -21,6 +23,8 @@ public class FolderManagerTest extends BaseTest
 	private static int folderId;
 
 	private static int childFolderId;
+
+	private static int categoryId;
 
 	private static final int TA_FOLDER_ID = 300;
 
@@ -90,6 +94,45 @@ public class FolderManagerTest extends BaseTest
 		}
 		catch (EMAnalyticsFwkException emanfe) {
 			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_DELETE_FOLDER, emanfe.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testDeletFolder_withCategory()
+	{
+		try {
+			//create the category with the folder
+
+			CategoryManager catMan = CategoryManager.getInstance();
+			Category category = catMan.createNewCategory();
+			category.setName("TestCategoryWithFolder");
+			category.setDescription("CategoryTest");
+			category.setDefaultFolderId(folderId);
+
+			category = catMan.saveCategory(category);
+			categoryId = category.getId();
+
+			FolderManager foldMan = FolderManager.getInstance();
+			try {
+				foldMan.deleteFolder(folderId, true);
+			}
+			catch (EMAnalyticsFwkException emanfe) {
+				AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+						EMAnalyticsFwkException.ERR_DELETE_FOLDER));
+			}
+		}
+		catch (Exception e) {
+			AssertJUnit.fail();
+		}
+		finally {
+			CategoryManager catMan = CategoryManager.getInstance();
+			try {
+				catMan.deleteCategory(categoryId, true);
+			}
+			catch (EMAnalyticsFwkException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
