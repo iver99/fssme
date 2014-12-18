@@ -28,7 +28,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Import Searches Services
- *
+ * 
  * @since 0.1
  */
 @Path("importsearches")
@@ -41,7 +41,7 @@ public class ImportSearchSet
 	 * Import the searches with defined XML file<br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importsearches</font><br>
 	 * The string "importsearches" in the URL signifies import operation on search.<br>
-	 *
+	 * 
 	 * @since 0.1
 	 * @param xml
 	 *            "xml" is the XML definition used to import search<br>
@@ -239,6 +239,7 @@ public class ImportSearchSet
 				jsonArray.put(jObj);
 			}
 			res = Response.status(Status.OK).entity(jsonArray).build();
+
 		}
 		catch (ImportException e) {
 			_logger.error("Failed to import searches (1)", e);
@@ -248,7 +249,7 @@ public class ImportSearchSet
 		}
 		catch (Exception e) {
 			_logger.error("Failed to import searches (2)", e);
-			msg = "An internal error has occurred";
+			msg = "An internal error has occurred" + e.getMessage();
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 		}
 		return res;

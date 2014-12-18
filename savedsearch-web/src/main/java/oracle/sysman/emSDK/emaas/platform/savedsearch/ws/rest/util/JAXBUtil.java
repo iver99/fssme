@@ -1,13 +1,20 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
@@ -40,146 +47,62 @@ public class JAXBUtil
 		return jaxbcontext;
 	}
 
-	/*DEAD CODE
-	public static String marshal(JAXBContext jaxbContext , InputStream schemaFile,Object obj)
+	public static String marshal(JAXBContext jaxbContext, InputStream schemaFile, Object obj) throws Exception
 	{
-		String xml =null;
+		String xml = null;
 		try {
-			StreamSource xsdSource =null;
-			SchemaFactory sf= SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			xsdSource = new StreamSource(schemaFile);
-			Schema schema = sf.newSchema(xsdSource);
+			StreamSource xsdSource = null;
+			if (schemaFile != null) {
+				SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+				xsdSource = new StreamSource(schemaFile);
+				Schema schema = sf.newSchema(xsdSource);
+			}
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			jaxbMarshaller.setEventHandler(new ValidationEventHandler() {
+			/*jaxbMarshaller.setEventHandler(new ValidationEventHandler() {
 				@Override
 				public boolean handleEvent(ValidationEvent validationevent) {
 					return true;
 				}
 			});
-			//jaxbMarshaller.setSchema(schema);
-
-			 StringWriter output = new StringWriter();
-			 jaxbMarshaller.marshal(obj, output);
-	         xml = output.toString();
-		} catch (JAXBException | SAXException e) {
+			jaxbMarshaller.setSchema(schema);	*/
+			StringWriter output = new StringWriter();
+			jaxbMarshaller.marshal(obj, output);
+			xml = output.toString();
+		}
+		catch (JAXBException | SAXException e) {
 			e.printStackTrace();
-			xml="";
+			throw e;
 		}
 		return xml;
 	}
 
-
-	public static void marshal(Object object, String fileName, JAXBContext jaxbcontext)
-			throws JAXBException, FileNotFoundException, ImportException
-			{
+	public static void marshal(Object object, String fileName, JAXBContext jaxbcontext) throws JAXBException,
+			FileNotFoundException, ImportException
+	{
 		Marshaller m = jaxbcontext.createMarshaller();
 
 		FileOutputStream fo = null;
 
-		try
-		{
+		try {
 			fo = new FileOutputStream(fileName);
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			m.marshal(object, fo);
 		}
-		finally
-		{
-			if (fo != null)
-			{
-				try
-				{
+		finally {
+			if (fo != null) {
+				try {
 					fo.close();
 				}
-				catch (IOException e)
-				{
+				catch (IOException e) {
 					throw new ImportException("failed to close file=<" + fileName + ">!", e);
 				}
 			}
 		}
-			}
+	}
 
-	public static Object unmarshal(String fileName, JAXBContext jaxbcontext)
-			throws JAXBException, FileNotFoundException, ImportException
-			{
-		Unmarshaller u = jaxbcontext.createUnmarshaller();
-
-		FileInputStream fi = null;
-
-		Object object = null;
-
-		try
-		{
-			fi = new FileInputStream(fileName);
-			object = u.unmarshal(fi);
-		}
-		finally
-		{
-			if (fi != null)
-			{
-				try
-				{
-					fi.close();
-				}
-				catch (IOException e)
-				{
-					throw new ImportException("failed to close file=<" + fileName + ">!", e);
-				}
-			}
-		}
-
-		return object;
-			}
-
-	public static Object unmarshal(String fileName, File schemaFile, JAXBContext jaxbcontext)
-			throws JAXBException, FileNotFoundException, SAXException, ImportException
-			{
-		Unmarshaller u = jaxbcontext.createUnmarshaller();
-
-		SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		Schema schema = sf.newSchema(schemaFile);
-
-		u.setSchema(schema);
-
-		FileInputStream fi = null;
-
-		Object object = null;
-
-		try
-		{
-			fi = new FileInputStream(fileName);
-			object = u.unmarshal(fi);
-		}
-		finally
-		{
-			if (fi != null)
-			{
-				try
-				{
-					fi.close();
-				}
-				catch (IOException e)
-				{
-					throw new ImportException("failed to close file=<" + fileName + ">!", e);
-				}
-			}
-		}
-
-		return object;
-			}
-
-	public static Object unmarshal(Reader reader, JAXBContext jaxbcontext)
-			throws JAXBException
-			{
-		Unmarshaller u = jaxbcontext.createUnmarshaller();
-		Object object = u.unmarshal(reader);
-
-		return object;
-			}
-
-	public static Object unmarshal(Reader reader, File schemaFile, JAXBContext jaxbcontext)
-			throws JAXBException, SAXException
-			{
+	public static Object unmarshal(Reader reader, File schemaFile, JAXBContext jaxbcontext) throws JAXBException, SAXException
+	{
 		Unmarshaller u = jaxbcontext.createUnmarshaller();
 
 		SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -190,8 +113,8 @@ public class JAXBUtil
 		Object object = u.unmarshal(reader);
 
 		return object;
-			}
-	 */
+	}
+
 	public static Object unmarshal(Reader reader, InputStream schemaFile, JAXBContext jaxbcontext) throws ImportException
 	{
 		final ArrayList<String> errorList = new ArrayList<String>();
@@ -296,6 +219,73 @@ public class JAXBUtil
 			}
 			throw new ImportException(errMsg.toString());
 		}
+		return object;
+	}
+
+	public static Object unmarshal(Reader reader, JAXBContext jaxbcontext) throws JAXBException
+	{
+		Unmarshaller u = jaxbcontext.createUnmarshaller();
+		Object object = u.unmarshal(reader);
+
+		return object;
+	}
+
+	public static Object unmarshal(String fileName, File schemaFile, JAXBContext jaxbcontext) throws JAXBException,
+			FileNotFoundException, SAXException, ImportException
+	{
+		Unmarshaller u = jaxbcontext.createUnmarshaller();
+
+		SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		Schema schema = sf.newSchema(schemaFile);
+
+		u.setSchema(schema);
+
+		FileInputStream fi = null;
+
+		Object object = null;
+
+		try {
+			fi = new FileInputStream(fileName);
+			object = u.unmarshal(fi);
+		}
+		finally {
+			if (fi != null) {
+				try {
+					fi.close();
+				}
+				catch (IOException e) {
+					throw new ImportException("failed to close file=<" + fileName + ">!", e);
+				}
+			}
+		}
+
+		return object;
+	}
+
+	public static Object unmarshal(String fileName, JAXBContext jaxbcontext) throws JAXBException, FileNotFoundException,
+			ImportException
+	{
+		Unmarshaller u = jaxbcontext.createUnmarshaller();
+
+		FileInputStream fi = null;
+
+		Object object = null;
+
+		try {
+			fi = new FileInputStream(fileName);
+			object = u.unmarshal(fi);
+		}
+		finally {
+			if (fi != null) {
+				try {
+					fi.close();
+				}
+				catch (IOException e) {
+					throw new ImportException("failed to close file=<" + fileName + ">!", e);
+				}
+			}
+		}
+
 		return object;
 	}
 

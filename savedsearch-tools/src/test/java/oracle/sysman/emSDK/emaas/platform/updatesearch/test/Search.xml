@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SearchSet>
+ 
+   <Search>
+     <Name>MySearchByUtil</Name> 
+     <SearchParameters>
+       <SearchParameter>
+       			<Name>Param1</Name> 
+                <Type>STRING</Type>
+       </SearchParameter>
+     </SearchParameters>          
+     <Category>
+       <Name>CatSearchUtil</Name>
+     </Category>     
+     <FolderId>1</FolderId>       
+  </Search> 
+  
+  
+  
+  <Search>
+     <FolderId>1</FolderId>      
+     <Name>MySearchUtil1</Name> 
+     <SearchParameters>
+       <SearchParameter>
+   	<Name>Param1</Name> 
+        <Type>STRING</Type>
+       </SearchParameter>
+     </SearchParameters>     
+        <Category>
+       <Name>CatSearchUtil</Name>
+     </Category>     
+  </Search> 
+
+   
+</SearchSet>  

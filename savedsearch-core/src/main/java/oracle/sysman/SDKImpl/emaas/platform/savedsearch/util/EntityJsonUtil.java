@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2014 Oracle
  * All rights reserved.
  *
  * $$File: $$
@@ -139,6 +138,34 @@ public class EntityJsonUtil
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
 				NAME_SEARCH_UIHIDDEN }, folderPathArray, false);
 	}
+	
+	
+	
+	/**
+	 * Return full JSON string for search
+	 *
+	 * @param baseUri
+	 * @param jsonObj
+	 * @param folderPathArray
+	 *            full folder path in array
+	 * @return
+	 * @throws JSONException
+	 * @throws EMAnalyticsFwkJsonException
+	 */
+	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray,boolean bResult) throws JSONException,
+	EMAnalyticsFwkJsonException
+	{
+		JSONObject obj=null;
+		String fields []=new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
+				NAME_SEARCH_UIHIDDEN };
+		if(bResult)
+			obj =  EntityJsonUtil.getSearchJsonObj(baseUri, search, fields, folderPathArray, false);
+		else
+			obj =  EntityJsonUtil.getSearchJsonObj(baseUri, search,null , folderPathArray, false);
+		
+		return obj;
+	}
+
 
 	/**
 	 * Return simple JSON string for category (without default folder and parameters)

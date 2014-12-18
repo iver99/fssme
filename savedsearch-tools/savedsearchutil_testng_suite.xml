@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="UpdateSavedSearch-Util" parallel="tests">
+	<test name="UpdateSavedSearch">
+		<classes>
+		    <class name="oracle.sysman.emSDK.emaas.platform.updatesearch.test.FileUtilTest" />
+		    <class name="oracle.sysman.emSDK.emaas.platform.updatesearch.test.UpdateSearchTest" />
+		    <class name="oracle.sysman.emSDK.emaas.platform.updatesearch.test.updatesearchexception.UpdateSearchExceptionTest" />			
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->

@@ -5,6 +5,7 @@ import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -192,6 +193,74 @@ public class CategoryCRUD
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	public void getSearchDetailsById()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("GET operation is in-progress to read  details");
+			System.out.println("											");
+
+			Response res = RestAssured.given().log().everything().when().get("/category/2/searches");
+			Assert.assertTrue(res.getStatusCode() == 200);
+			String output = res.getBody().asString();
+			JSONArray newJArray = new JSONArray(output);
+			Assert.assertTrue(newJArray.length() > 0);
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void getSearchDetailsById_ErrorId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("Negative Case 1 to verify the cateogy Id is given alphabet");
+			System.out.println("											");
+
+			Response res = RestAssured.given().log().everything().when().get("/category/abc/searches");
+			Assert.assertTrue(res.getStatusCode() == 400);
+			String output = res.getBody().asString();
+			Assert.assertEquals(output, "Id/count should be a positive number and not an alphanumeric");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			System.out.println("------------------------------------------");
+			System.out.println("Negative Case 2 to verify the cateogy Id is given negative number");
+			System.out.println("											");
+
+			Response res1 = RestAssured.given().log().everything().when().get("/category/-1/searches");
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			String output1 = res1.getBody().asString();
+			Assert.assertEquals(output1, "Id/count should be a positive number and not an alphanumeric");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			System.out.println("------------------------------------------");
+			System.out.println("Negative Case to verify the cateogy Id is given non-existed ID");
+			System.out.println("											");
+
+			Response res2 = RestAssured.given().log().everything().when().get("/category/4567890/searches");
+			Assert.assertTrue(res2.getStatusCode() == 404);
+			String output2 = res2.getBody().asString();
+			Assert.assertEquals(output2, "Category object by ID: 4567890 does not exist");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
