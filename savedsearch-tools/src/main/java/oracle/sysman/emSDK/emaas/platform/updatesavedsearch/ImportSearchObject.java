@@ -15,7 +15,7 @@ import com.jayway.restassured.response.Response;
 public class ImportSearchObject
 {
 
-	public String importSearches(String endpoint, String sData) throws Exception
+	public String importSearches(String endpoint, String sData, String authToken) throws Exception
 	{
 
 		String output = "";
@@ -29,7 +29,7 @@ public class ImportSearchObject
 			host = host.substring(UpdateUtilConstants.WWW_STR.length() + 1);
 		}
 		Response res1 = RestAssured.given().contentType(ContentType.XML).headers(UpdateUtilConstants.DOMAIN_NAME, host)
-				.body(jsonString1).when().post(UpdateUtilConstants.IMPORT_SEARCH_STR);
+				.header("Authorization", authToken).body(jsonString1).when().post(UpdateUtilConstants.IMPORT_SEARCH_STR);
 		output = res1.getBody().asString();
 		if (res1.getStatusCode() == 200) {
 			JSONArray arrfld = new JSONArray(output);

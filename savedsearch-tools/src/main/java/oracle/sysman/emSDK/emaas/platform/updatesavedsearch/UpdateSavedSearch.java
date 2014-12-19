@@ -19,11 +19,11 @@ public class UpdateSavedSearch
 		}
 		if (obj.getOption() == UpdateUtilConstants.OPT_UPDATE_SEARCH) {
 
-			UpdateSearchUtil.importSearches(obj.getEndPoint(), obj.getFilePath(), obj.getOutputPath());
+			UpdateSearchUtil.importSearches(obj.getEndPoint(), obj.getFilePath(), obj.getOutputPath(), obj.getauthToken());
 		}
 		if (obj.getOption() == UpdateUtilConstants.OPT_GET_SEARCH) {
 
-			UpdateSearchUtil.exportSearches(obj.getCategoryId(), obj.getEndPoint(), obj.getOutputPath());
+			UpdateSearchUtil.exportSearches(obj.getCategoryId(), obj.getEndPoint(), obj.getOutputPath(), obj.getauthToken());
 		}
 	}
 
@@ -39,10 +39,16 @@ public class UpdateSavedSearch
 	private String m_strOutputPath;
 
 	private String m_strSsfVersion;
+	private String m_authToken;
 
 	private Long m_lngCategoryId;
 
 	private static Logger _logger = UpdateSavedSearchLog.getLogger(UpdateSavedSearch.class);
+
+	public String getauthToken()
+	{
+		return m_authToken;
+	}
 
 	public Long getCategoryId()
 	{
@@ -77,6 +83,11 @@ public class UpdateSavedSearch
 	public String getSsfVersion()
 	{
 		return m_strSsfVersion;
+	}
+
+	public void setauthToken(String value)
+	{
+		m_authToken = value;
 	}
 
 	public void setCategoryId(Long categoryId)
@@ -117,7 +128,7 @@ public class UpdateSavedSearch
 	private void configureFromArgs(String[] args)
 	{
 		boolean foundHelp = false, foundEndPoint = false, foundCategory = false, foundInputPath = false, foundSmUrl = false, foundOutputPath = false, foundExport = false, foundImport = false;
-		boolean foundSearchVersion = false;
+		boolean foundSearchVersion = false, foundToken = false;
 		try {
 			for (int index = 0; index < args.length; index = index + 2) {
 
@@ -189,6 +200,16 @@ public class UpdateSavedSearch
 					}
 					foundOutputPath = true;
 				}
+				else if (args[index].equalsIgnoreCase(UpdateUtilConstants.AUTH_TOKEN)) {
+					if (index + 1 >= args.length) {
+						throw new IllegalArgumentException("Authntication toekn is required");
+					}
+					m_authToken = args[index + 1];
+					if (m_authToken.length() == 0) {
+						throw new IllegalArgumentException("Please specify valid Authntication toekn");
+					}
+					foundToken = true;
+				}
 				else if (args[index].equalsIgnoreCase(UpdateUtilConstants.SSS_VERSION_STR)) {
 					if (index + 1 >= args.length) {
 						throw new IllegalArgumentException("SSF version is required");
@@ -219,19 +240,19 @@ public class UpdateSavedSearch
 			System.exit(0);
 		}
 
-		if (!foundHelp && foundImport && (!foundInputPath || !foundOutputPath)) {
-			System.out.println("Error: you must specify both " + UpdateUtilConstants.INPUT_FILE_PATH + " and  "
-					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " options.");
+		if (!foundHelp && foundImport && (!foundInputPath || !foundOutputPath || !foundToken)) {
+			System.out.println("Error: you must specify " + UpdateUtilConstants.INPUT_FILE_PATH + " "
+					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " and " + UpdateUtilConstants.AUTH_TOKEN + " options.");
 			System.exit(0);
 		}
 
-		if (!foundHelp && foundExport && (!foundCategory || !foundOutputPath)) {
-			System.out.println("Error: you must specify both " + UpdateUtilConstants.CATEGORY_ID + " and  "
-					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " options.");
+		if (!foundHelp && foundExport && (!foundCategory || !foundOutputPath || !foundToken)) {
+			System.out.println("Error: you must specify both " + UpdateUtilConstants.CATEGORY_ID + " "
+					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " and  " + UpdateUtilConstants.AUTH_TOKEN + " options.");
 			System.exit(0);
 		}
 
-		if (!foundHelp && foundInputPath && foundOutputPath && foundImport) {
+		if (!foundHelp && foundInputPath && foundOutputPath && foundImport && foundToken) {
 			String temp = "";
 			m_intCommandNo = UpdateUtilConstants.OPT_UPDATE_SEARCH;
 			if (foundHelp) {
@@ -259,7 +280,7 @@ public class UpdateSavedSearch
 
 		}
 
-		if (!foundHelp && foundCategory && foundOutputPath && foundExport) {
+		if (!foundHelp && foundCategory && foundOutputPath && foundExport && foundToken) {
 			String temp = "";
 			m_intCommandNo = UpdateUtilConstants.OPT_GET_SEARCH;
 			if (foundHelp) {
@@ -325,6 +346,10 @@ public class UpdateSavedSearch
 			if (foundSearchVersion) {
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 				temp = temp + UpdateUtilConstants.SSS_VERSION_STR + "  ";
+			}
+			if (foundToken) {
+				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
+				temp = temp + UpdateUtilConstants.AUTH_TOKEN + "  ";
 			}
 			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
 				System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.HELP);

@@ -114,7 +114,7 @@ public class UpdateSearchTest extends BaseTest
 		InputStream stream = UpdateSearchTest.class.getClassLoader().getResourceAsStream(SEARCH_XML);
 		ImportSearchObject objUpdate = new ImportSearchObject();
 		String inputData = UpdateSearchTest.getStringFromInputStream(stream);
-		String outputData = objUpdate.importSearches(serveruri, inputData);
+		String outputData = objUpdate.importSearches(serveruri, inputData, authToken);
 		List<Long> listID = new ArrayList<Long>();
 
 		String[] tmpList = outputData.split(System.getProperty("line.separator"));
@@ -128,7 +128,7 @@ public class UpdateSearchTest extends BaseTest
 
 		long id = getCategoryDetailsbyName(CAT_NAME);
 		ExportSearchObject expObj = new ExportSearchObject();
-		outputData = expObj.exportSearch(id, serveruri);
+		outputData = expObj.exportSearch(id, serveruri, authToken);
 		JSONArray arrfld = new JSONArray(outputData);
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);

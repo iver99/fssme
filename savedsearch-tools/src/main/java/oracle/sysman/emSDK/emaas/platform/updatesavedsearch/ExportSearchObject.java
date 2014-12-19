@@ -11,7 +11,7 @@ import com.jayway.restassured.response.Response;
 public class ExportSearchObject
 {
 
-	public String exportSearch(long categoryId, String endpoint) throws Exception
+	public String exportSearch(long categoryId, String endpoint, String authToken) throws Exception
 	{
 		String output = "";
 		RestAssured.useRelaxedHTTPSValidation();
@@ -22,7 +22,7 @@ public class ExportSearchObject
 		if (host.toLowerCase().startsWith(UpdateUtilConstants.WWW_STR)) {
 			host = host.substring(UpdateUtilConstants.WWW_STR.length() + 1);
 		}
-		Response res1 = RestAssured.given().when()
+		Response res1 = RestAssured.given().header("Authorization", authToken).when()
 				.get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId + UpdateUtilConstants.SEARCHES);
 
 		if (res1.getStatusCode() == 200) {
@@ -33,4 +33,5 @@ public class ExportSearchObject
 		}
 		return output;
 	}
+
 }

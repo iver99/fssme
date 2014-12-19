@@ -21,17 +21,17 @@ public class UpdateSearchUtil
 
 	private static Logger _logger = UpdateSavedSearchLog.getLogger(UpdateSearchUtil.class);
 
-	public static void exportSearches(long categoryId, String endpoint, String outputfile)
+	public static void exportSearches(long categoryId, String endpoint, String outputfile, String authToken)
 	{
 
-		if (!UpdateSearchUtil.isEndpointReachable(endpoint)) {
+		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken)) {
 			System.out.println("The endpoint was not reachable.");
 			return;
 		}
 
 		try {
 			ExportSearchObject objExport = new ExportSearchObject();
-			String data = objExport.exportSearch(categoryId, endpoint);
+			String data = objExport.exportSearch(categoryId, endpoint, authToken);
 			List<SearchEntity> list = UpdateSearchUtil.JSONToSearchList(data);
 			ExportSearchSet exportList = new ExportSearchSet();
 			exportList.setSearchSet(list);
@@ -58,12 +58,12 @@ public class UpdateSearchUtil
 		}
 	}
 
-	public static void importSearches(String endpoint, String inputfile, String outputfile)
+	public static void importSearches(String endpoint, String inputfile, String outputfile, String authToken)
 	{
 		String data = "";
 		String outputData = "";
 
-		if (!UpdateSearchUtil.isEndpointReachable(endpoint)) {
+		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken)) {
 			System.out.println("The endpoint was not reachable.");
 			return;
 		}
@@ -84,7 +84,7 @@ public class UpdateSearchUtil
 		}
 		ImportSearchObject objUpdate = new ImportSearchObject();
 		try {
-			outputData = objUpdate.importSearches(endpoint, data);
+			outputData = objUpdate.importSearches(endpoint, data, authToken);
 		}
 		catch (Exception e1) {
 			_logger.error("Error : An error occurred while creating or updating search object" + e1.getMessage());
@@ -105,12 +105,12 @@ public class UpdateSearchUtil
 		System.out.println("The import process completed.");
 	}
 
-	public static boolean isEndpointReachable(String endpoint)
+	public static boolean isEndpointReachable(String endpoint, String authToken)
 	{
 		try {
 			RestAssured.useRelaxedHTTPSValidation();
 			RestAssured.baseURI = endpoint;
-			Response res = RestAssured.given().when().get();
+			Response res = RestAssured.given().header("Authorization", authToken).when().get();
 			if (res.getStatusCode() == 200) {
 				return true;
 			}
