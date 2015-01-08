@@ -10,11 +10,13 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.net.URI;
+import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -78,6 +80,25 @@ public class EntityJsonUtil
 	public static final String TYPE_SEARCH = "search";
 	public static final String TYPE_FOLDER = "folder";
 
+	public static final String NAME_WIDGET_GROUP_ID = "WIDGET_GROUP_ID";
+	public static final String NAME_WIDGET_GROUP_NAME = "WIDGET_GROUP_NAME";
+	public static final String NAME_WIDGET_GROUP_DESCRIPTION = "WIDGET_GROUP_DESCRIPTION";
+
+	public static final String NAME_WIDGET_ID = "WIDGET_UNIQUE_ID";
+	public static final String NAME_WIDGET_NAME = "WIDGET_NAME";
+	public static final String NAME_WIDGET_DESCRIPTION = "WIDGET_DESCRIPTION";
+	public static final String NAME_WIDGET_ICON = "WIDGET_ICON";
+	public static final String NAME_WIDGET_HISTOGRAM = "WIDGET_HISTOGRAM";
+	public static final String NAME_WIDGET_OWNER = "WIDGET_OWNER";
+	public static final String NAME_WIDGET_CREATION_TIME = "WIDGET_CREATION_TIME";
+	public static final String NAME_WIDGET_SOURCE = "WIDGET_SOURCE";
+	public static final String NAME_WIDGET_KOC_NAME = "WIDGET_KOC_NAME";
+	public static final String NAME_WIDGET_VIEWMODEL = "WIDGET_VIEWMODEL";
+	public static final String NAME_WIDGET_TEMPLATE = "WIDGET_TEMPLATE";
+	public static final String NAME_WIDGET_PROVIDER_NAME = "PROVIDER_NAME";
+	public static final String NAME_WIDGET_PROVIDER_VERSION = "PROVIDER_VERSION";
+	public static final String NAME_WIDGET_PROVIDER_ASSET_ROOT = "PROVIDER_ASSET_ROOT";
+
 	/**
 	 * Return full JSON string for category
 	 *
@@ -88,7 +109,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getFullCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-			EMAnalyticsFwkJsonException
+	EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, null, false);
 	}
@@ -133,14 +154,12 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
 				NAME_SEARCH_UIHIDDEN }, folderPathArray, false);
 	}
-	
-	
-	
+
 	/**
 	 * Return full JSON string for search
 	 *
@@ -152,20 +171,20 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray,boolean bResult) throws JSONException,
-	EMAnalyticsFwkJsonException
+	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray, boolean bResult)
+			throws JSONException, EMAnalyticsFwkJsonException
 	{
-		JSONObject obj=null;
-		String fields []=new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
-				NAME_SEARCH_UIHIDDEN };
-		if(bResult)
-			obj =  EntityJsonUtil.getSearchJsonObj(baseUri, search, fields, folderPathArray, false);
-		else
-			obj =  EntityJsonUtil.getSearchJsonObj(baseUri, search,null , folderPathArray, false);
-		
+		JSONObject obj = null;
+		String fields[] = new String[] { NAME_GUID, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN };
+		if (bResult) {
+			obj = EntityJsonUtil.getSearchJsonObj(baseUri, search, fields, folderPathArray, false);
+		}
+		else {
+			obj = EntityJsonUtil.getSearchJsonObj(baseUri, search, null, folderPathArray, false);
+		}
+
 		return obj;
 	}
-
 
 	/**
 	 * Return simple JSON string for category (without default folder and parameters)
@@ -177,7 +196,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
@@ -208,7 +227,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder, boolean includeType) throws JSONException,
-			EMAnalyticsFwkJsonException
+	EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getFolderJsonObj(baseUri, folder, new String[] { NAME_OWNER, NAME_LASTMODIFIEDBY,
 				NAME_FOLDER_PARENTFOLDER, NAME_FOLDER_UIHIDDEN }, true, includeType);
@@ -239,7 +258,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search, boolean includeType) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search, null, includeType);
 	}
@@ -261,6 +280,86 @@ public class EntityJsonUtil
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER, NAME_LASTMODIFIEDBY,
 				NAME_SEARCH_QUERYSTR, NAME_PARAMETERS, NAME_LASTACCESSDATE, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN },
 				folderPathArray, includeType);
+	}
+
+	/**
+	 * Return simple JSON string for widget group
+	 *
+	 * @param baseUri
+	 * @param category
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONObject getWidgetGroupJsonObj(URI baseUri, Category category) throws JSONException
+	{
+		JSONObject widgetGroupObj = new JSONObject();
+		widgetGroupObj.put(NAME_WIDGET_GROUP_ID, category.getId());
+		widgetGroupObj.put(NAME_WIDGET_GROUP_NAME, category.getName());
+		widgetGroupObj.put(NAME_WIDGET_GROUP_DESCRIPTION, category.getDescription());
+
+		return widgetGroupObj;
+	}
+
+	/**
+	 * Return simple JSON string for widget
+	 *
+	 * @param baseUri
+	 * @param search
+	 * @param category
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONObject getWidgetJsonObj(URI baseUri, Search search, Category category) throws JSONException
+	{
+		JSONObject widgetObj = new JSONObject();
+
+		widgetObj.put(NAME_WIDGET_ID, search.getId());
+		widgetObj.put(NAME_WIDGET_NAME, search.getName());
+		widgetObj.put(NAME_WIDGET_DESCRIPTION, search.getDescription());
+		widgetObj.put(NAME_WIDGET_OWNER, search.getOwner());
+		String createdOn = null;
+		if (search.getCreatedOn() != null) {
+			createdOn = DateUtil.getDateFormatter().format(search.getCreatedOn());
+		}
+		widgetObj.put(NAME_WIDGET_CREATION_TIME, createdOn);
+		widgetObj.put(NAME_WIDGET_SOURCE, 1);
+		widgetObj.put(NAME_WIDGET_GROUP_NAME, category.getName());
+		List<SearchParameter> paramList = search.getParameters();
+		if (paramList != null && paramList.size() > 0) {
+			for (SearchParameter param : paramList) {
+				if (NAME_WIDGET_ICON.equals(param.getName())) {
+					widgetObj.put(NAME_WIDGET_ICON, param.getValue());
+				}
+				else if (NAME_WIDGET_HISTOGRAM.equals(param.getName())) {
+					widgetObj.put(NAME_WIDGET_HISTOGRAM, param.getValue());
+				}
+				else if (NAME_WIDGET_KOC_NAME.equals(param.getName())) {
+					widgetObj.put(NAME_WIDGET_KOC_NAME, param.getValue());
+				}
+				else if (NAME_WIDGET_VIEWMODEL.equals(param.getName())) {
+					widgetObj.put(NAME_WIDGET_VIEWMODEL, param.getValue());
+				}
+				else if (NAME_WIDGET_TEMPLATE.equals(param.getName())) {
+					widgetObj.put(NAME_WIDGET_TEMPLATE, param.getValue());
+				}
+				else if (NAME_WIDGET_PROVIDER_NAME.equals(param.getName())) {
+					widgetObj.put(NAME_WIDGET_PROVIDER_NAME, param.getValue());
+				}
+				else if (NAME_WIDGET_PROVIDER_VERSION.equals(param.getName())) {
+					widgetObj.put(NAME_WIDGET_PROVIDER_VERSION, param.getValue());
+				}
+				else if (NAME_WIDGET_PROVIDER_ASSET_ROOT.equals(param.getName())) {
+					widgetObj.put(NAME_WIDGET_PROVIDER_ASSET_ROOT, param.getValue());
+				}
+			}
+		}
+		//Check if it is a valid widget, if not then return null
+		if (widgetObj.has(NAME_WIDGET_KOC_NAME) && widgetObj.has(NAME_WIDGET_VIEWMODEL) && widgetObj.has(NAME_WIDGET_TEMPLATE)
+				&& widgetObj.has(NAME_WIDGET_PROVIDER_NAME) && widgetObj.has(NAME_WIDGET_PROVIDER_VERSION)
+				&& widgetObj.has(NAME_WIDGET_PROVIDER_ASSET_ROOT)) {
+			return widgetObj;
+		}
+		return null;
 	}
 
 	private static JSONObject getCategoryJsonObj(URI baseUri, Category category, String[] excludedFields, boolean isSimple)
