@@ -1,4 +1,6 @@
-package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
+package oracle.sysman.emSDK.emaas.platform.savedsearch.test.util;
+
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.XSDErrorUtil;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

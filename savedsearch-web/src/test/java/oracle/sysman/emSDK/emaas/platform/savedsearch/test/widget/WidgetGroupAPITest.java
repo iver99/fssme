@@ -1,4 +1,4 @@
-package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
+package oracle.sysman.emSDK.emaas.platform.savedsearch.test.widget;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 
