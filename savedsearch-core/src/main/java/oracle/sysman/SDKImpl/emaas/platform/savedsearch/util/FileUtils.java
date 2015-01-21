@@ -1,4 +1,4 @@
-package oracle.sysman.emSDK.emaas.platform.updatesavedsearch;
+package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -45,10 +45,10 @@ public class FileUtils
 		try {
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
-				if (line.startsWith("--") || line.startsWith("Rem") || line.trim().length() == 0) {
+				if (line.startsWith("Rem") || line.startsWith("--")) {
 					continue;
 				}
-				stringBuilder.append(line + System.getProperty("line.separator"));
+				stringBuilder.append(line).append(System.getProperty("line.separator"));
 			}
 			System.out.print(stringBuilder.toString());
 		}
@@ -87,5 +87,4 @@ public class FileUtils
 		reader.close();
 		return fileData.toString();
 	}
-
 }

@@ -4,6 +4,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -11,12 +12,47 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.testng.AssertJUnit;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class CategoryManagerTest extends BaseTest
 {
+
+	private static final String TENANT_ID_OPC1 = "TenantOpc1";
+
+	private static void setup(String value)
+	{
+		TenantContext.setContext(value);
+		try {
+			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
+		}
+		catch (Exception e) {
+			AssertJUnit.fail(e.getLocalizedMessage());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+	}
+
+	@BeforeClass
+	public void initTenantDetails()
+	{
+		CategoryManagerTest.setup(TENANT_ID_OPC1);
+		TenantContext.setContext(TENANT_ID_OPC1);
+
+	}
+
+	@AfterClass
+	public void removeTenantDetails()
+	{
+		TenantContext.clearContext();
+	}
+
 	@Test
 	public void testDeleteCategoryWithSearch() throws EMAnalyticsFwkException
 	{

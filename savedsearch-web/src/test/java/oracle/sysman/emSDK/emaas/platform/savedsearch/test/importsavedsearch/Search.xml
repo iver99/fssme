@@ -20,18 +20,7 @@
   
   
   
-  <Search>
-     <FolderId>1</FolderId>      
-     <Name>MySearch1</Name> 
-     <SearchParameters>
-       <SearchParameter>
-   	<Name>Param1</Name> 
-        <Type>STRING</Type>
-       </SearchParameter>
-     </SearchParameters>     
-     <CategoryId>1</CategoryId>     
-  </Search> 
-
+  
  <Search>
      <Folder>
       <Name>SearchFolder1</Name>
@@ -44,12 +33,17 @@
         <Type>STRING</Type>
        </SearchParameter>
      </SearchParameters>     
-     <CategoryId>1</CategoryId>     
+       <Category>
+       <Name>CatSearch</Name>
+     </Category>      
   </Search> 
 
 
 <Search>
-      <FolderId>1</FolderId> 
+       <Folder>
+      <Name>SearchFolder3</Name>
+      <UiHidden>false</UiHidden>
+    </Folder>  
      <Name>MySearch3</Name> 
      <SearchParameters>
        <SearchParameter>

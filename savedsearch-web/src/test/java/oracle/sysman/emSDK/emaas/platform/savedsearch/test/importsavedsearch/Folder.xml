@@ -2,12 +2,10 @@
 <FolderSet>
     <Folder>      
       <UiHidden>false</UiHidden> 
-      <Name>MyFolder</Name>
-      <ParentId>1</ParentId>
+      <Name>MyFolder</Name>      
   </Folder>
   <Folder>      
       <UiHidden>false</UiHidden> 
-      <Name>MyFolder1</Name>
-      <ParentId>1</ParentId>
+      <Name>MyFolder1</Name>      
   </Folder>   
 </FolderSet>

@@ -3,13 +3,16 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.test.navigations;
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
@@ -25,6 +28,45 @@ public class SavedSearchNavigations
 	static String portno;
 	static String serveruri;
 	static String authToken;
+	static int catid = -1;
+	static int folderid = -1;
+	static String catName = "";
+	static String TENANT_ID_OPC1 = "opc1";
+
+	@AfterClass
+	public static void afterTest()
+	{
+		Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+				.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().delete("/folder/" + folderid);
+		System.out.println(res2.asString());
+		System.out.println("Status code is: " + res2.getStatusCode());
+		Assert.assertTrue(res2.getStatusCode() == 204);
+		TenantContext.clearContext();
+	}
+
+	public static void createinitObject() throws Exception
+	{
+
+		String jsonString = "{ \"name\":\"FolderTesting\",\"description\":\"Folder for  searches\"}";
+		Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+				.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).body(jsonString).when().post("/folder");
+		System.out.println(res.asString());
+		folderid = res.jsonPath().get("id");
+
+		/*String jsonString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><CategorySet><Category><Name>MyCategoryTesting</Name><Description>Testing</Description><DefaultFolderId>"
+				+ folderid + "</DefaultFolderId></Category></CategorySet>";
+		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
+				.body(jsonString1).header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().post("/importcategories");
+		Assert.assertEquals(res1.getStatusCode(), 200);
+		JSONArray arrfld = new JSONArray(res1.getBody().asString());
+		for (int index = 0; index < arrfld.length(); index++) {
+			System.out.println("verifying categoryids");
+			JSONObject jsonObj = arrfld.getJSONObject(index);
+			catid = jsonObj.getInt("id");
+			catName = jsonObj.getString("name");
+			System.out.println("verified categoryids");
+		}*/
+	}
 
 	@BeforeClass
 	public static void setUp()
@@ -33,7 +75,25 @@ public class SavedSearchNavigations
 		HOSTNAME = ct.getHOSTNAME();
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
-		authToken=ct.getAuthToken();
+		authToken = ct.getAuthToken();
+		SavedSearchNavigations.setup(TENANT_ID_OPC1);
+		TenantContext.setContext(TENANT_ID_OPC1);
+		try {
+			SavedSearchNavigations.createinitObject();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void setup(String value)
+	{
+		Response res2 = null;
+		res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+				.header("X-USER-IDENTITY-DOMAIN", value).when().post("/admin/tenantonboard");
+		System.out.println(res2.asString());
+		System.out.println("Status code is: " + res2.getStatusCode());
+		Assert.assertTrue(res2.getStatusCode() == 201);
 	}
 
 	@Test
@@ -46,7 +106,8 @@ public class SavedSearchNavigations
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to get all the folders available with details");
 			int position = -1;
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/entities?folderId=" + folderid);
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type        :" + jp.get("type[0]"));
@@ -57,11 +118,11 @@ public class SavedSearchNavigations
 			a = jp.get("name");
 
 			for (int i = 0; i < a.size(); i++) {
-				if (a.get(i).equals("IT Analytics Searches")) {
+				if (a.get(i).equals("FolderTesting")) {
 					position = i;
 					String myvalue = a.get(position);
 					System.out.println("My search container name is:" + myvalue);
-					Assert.assertEquals(a.get(position), "IT Analytics Searches");
+					Assert.assertEquals(a.get(position), "FolderTesting");
 					System.out.println("==GET & Assert operations are succeeded");
 
 				}
@@ -90,7 +151,8 @@ public class SavedSearchNavigations
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to verify get entities with non-existed folder Id");
 
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/entities?folderId=3333333333333");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/entities?folderId=3333333333333");
 			Assert.assertEquals(res.asString(), "Folder with the Id 3333333333333 does not exist");
 			Assert.assertEquals(res.getStatusCode(), 404);
 			System.out.println("------------------------------------------");
@@ -112,7 +174,8 @@ public class SavedSearchNavigations
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to get the root folder details");
 			int position = -1;
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type       :" + jp.get("type"));
@@ -153,9 +216,11 @@ public class SavedSearchNavigations
 	public void rootFolderDetails()
 	{
 		try {
+			int id = getRootId();
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to get the details of the top root folder");
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/folder/1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/folder/" + id);
 			System.out.println(res.toString());
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
@@ -164,7 +229,7 @@ public class SavedSearchNavigations
 			System.out.println("Link 		:" + jp.get("href"));
 			System.out.println("CreatedOn   :" + jp.get("createdOn"));
 			System.out.println("ModifiedOn  :" + jp.get("lastModifiedOn"));
-			Assert.assertEquals(jp.get("id"), 1);
+			Assert.assertEquals(jp.get("id"), id);
 			Assert.assertEquals(jp.get("name"), "All Searches");
 			Assert.assertEquals(jp.get("description"), "Search Console Root Folder");
 			Assert.assertEquals(jp.get("systemFolder"), true);
@@ -175,6 +240,17 @@ public class SavedSearchNavigations
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
 		}
+	}
+
+	private Integer getRootId()
+	{
+
+		Response resroot = RestAssured.given().log().everything().header("Authorization", authToken)
+				.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("");
+		JsonPath jpRoot = resroot.jsonPath();
+
+		List<Integer> id = jpRoot.get("id");
+		return id.get(0);
 	}
 
 }

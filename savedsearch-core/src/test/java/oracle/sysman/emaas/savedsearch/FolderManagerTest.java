@@ -5,11 +5,13 @@ import java.util.List;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
@@ -23,23 +25,116 @@ public class FolderManagerTest extends BaseTest
 	private static int folderId;
 
 	private static int childFolderId;
-
 	private static int categoryId;
+	private static final String TENANT_ID_OPC1 = "TenantOpc1";
+	private static final String TENANT_ID_OPC2 = "TenantOpc2";
+	private static final String TENANT_ID_OPC3 = "TenantOpc3";
 
-	private static final int TA_FOLDER_ID = 300;
+	@Test
+	public static void createreadFolderByTenant() throws Exception
+	{
+
+		long folderId = 0;
+		long folderId1 = 0;
+		try {
+			TenantContext.setContext(TENANT_ID_OPC2);
+			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+			Folder folder = new FolderImpl();
+			folder.setName("FolderTestopc");
+			folder.setDescription("TestFolderDescription");
+			folder.setUiHidden(false);
+			folder = objFolder.saveFolder(folder);
+			folderId = folder.getId();
+			AssertJUnit.assertFalse(folderId == 0);
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		try {
+			TenantContext.setContext(TENANT_ID_OPC3);
+			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+			Folder folder = new FolderImpl();
+			folder.setName("FolderTestopc");
+			folder.setDescription("TestFolderDescription");
+			folder.setUiHidden(false);
+			folder = objFolder.saveFolder(folder);
+			folderId1 = folder.getId();
+			AssertJUnit.assertFalse(folderId1 == 0);
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		Folder folder = null;
+		try {
+			TenantContext.setContext(TENANT_ID_OPC2);
+			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+			folder = objFolder.getFolder(folderId1);
+
+		}
+		catch (Exception e) {
+			AssertJUnit.assertTrue(folder == null);
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		try {
+			TenantContext.setContext(TENANT_ID_OPC3);
+			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+			folder = objFolder.getFolder(folderId);
+
+		}
+		catch (Exception e) {
+			AssertJUnit.assertTrue(folder == null);
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+
+		try {
+			TenantContext.setContext(TENANT_ID_OPC3);
+			objFolder.deleteFolder(folderId1, true);
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		try {
+			TenantContext.setContext(TENANT_ID_OPC2);
+			objFolder.deleteFolder(folderId, true);
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+	}
 
 	@AfterClass
 	public static void DeleteFolder() throws Exception
 	{
 
 		try {
+			TenantContext.setContext(TENANT_ID_OPC1);
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-
 			objFolder.deleteFolder(folderId, true);
-
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			TenantContext.clearContext();
 		}
 	}
 
@@ -47,6 +142,12 @@ public class FolderManagerTest extends BaseTest
 	public static void testSaveFolder() throws Exception
 	{
 		try {
+
+			FolderManagerTest.setup(TENANT_ID_OPC1);
+			FolderManagerTest.setup(TENANT_ID_OPC2);
+			FolderManagerTest.setup(TENANT_ID_OPC3);
+			TenantContext.setContext(TENANT_ID_OPC1);
+
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
 			folder.setName("FolderTest");
@@ -69,6 +170,41 @@ public class FolderManagerTest extends BaseTest
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			TenantContext.clearContext();
+		}
+	}
+
+	/*@Test
+	public void testDeleteSystemFolder() throws Exception
+	{
+		TenantContext.setContext(TENANT_ID_OPC1);
+		FolderManager foldMan = FolderManager.getInstance();
+		try {
+			foldMan.deleteFolder(TA_FOLDER_ID, true);
+			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is deleted unexpectedly", false);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_DELETE_FOLDER, emanfe.getErrorCode());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+	}*/
+
+	private static void setup(String value)
+	{
+		TenantContext.setContext(value);
+		try {
+			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
+		}
+		catch (Exception e) {
+			AssertJUnit.fail(e.getLocalizedMessage());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
 	}
 
 	@Test
@@ -82,18 +218,8 @@ public class FolderManagerTest extends BaseTest
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
 					EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
 		}
-	}
-
-	@Test
-	public void testDeleteSystemFolder() throws Exception
-	{
-		FolderManager foldMan = FolderManager.getInstance();
-		try {
-			foldMan.deleteFolder(TA_FOLDER_ID, true);
-			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is deleted unexpectedly", false);
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_DELETE_FOLDER, emanfe.getErrorCode());
+		finally {
+			TenantContext.clearContext();
 		}
 	}
 
@@ -102,7 +228,7 @@ public class FolderManagerTest extends BaseTest
 	{
 		try {
 			//create the category with the folder
-
+			TenantContext.setContext(TENANT_ID_OPC1);
 			CategoryManager catMan = CategoryManager.getInstance();
 			Category category = catMan.createNewCategory();
 			category.setName("TestCategoryWithFolder");
@@ -125,6 +251,7 @@ public class FolderManagerTest extends BaseTest
 			AssertJUnit.fail();
 		}
 		finally {
+
 			CategoryManager catMan = CategoryManager.getInstance();
 			try {
 				catMan.deleteCategory(categoryId, true);
@@ -133,12 +260,14 @@ public class FolderManagerTest extends BaseTest
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			TenantContext.clearContext();
 		}
 	}
 
 	@Test
 	public void testDuplicate() throws Exception
 	{
+		TenantContext.setContext(TENANT_ID_OPC1);
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 			// create one folder
@@ -171,7 +300,9 @@ public class FolderManagerTest extends BaseTest
 
 		finally {
 			// delete the child folder
+
 			objFolder.deleteFolder(childFolderId, true);
+			TenantContext.clearContext();
 		}
 	}
 
@@ -207,6 +338,7 @@ public class FolderManagerTest extends BaseTest
 	@Test
 	public void testGetInvalidFolderId() throws Exception
 	{
+		TenantContext.setContext(TENANT_ID_OPC1);
 		FolderManager foldMan = FolderManager.getInstance();
 		try {
 			foldMan.getFolder(987656788498L);
@@ -215,23 +347,36 @@ public class FolderManagerTest extends BaseTest
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
 					EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
 		}
+		finally {
+			TenantContext.clearContext();
+		}
 	}
 
 	@Test
 	public void testGetpathforFolderId() throws Exception
 	{
-		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		try {
+			TenantContext.setContext(TENANT_ID_OPC1);
+			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
-		String[] path = objFolder.getPathForFolderId(folderId);
+			String[] path = objFolder.getPathForFolderId(folderId);
 
-		Assert.assertNotNull(path);
-		Assert.assertNotNull(path.length > 0);
+			Assert.assertNotNull(path);
+			Assert.assertNotNull(path.length > 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			TenantContext.clearContext();
+		}
 
 	}
 
 	@Test
 	public void testGetSubFolder() throws Exception
 	{
+		TenantContext.setContext(TENANT_ID_OPC1);
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		List<Folder> folderList = new ArrayList<Folder>();
 		try {
@@ -275,13 +420,41 @@ public class FolderManagerTest extends BaseTest
 			// delete the sub folder we created
 			objFolder.deleteFolder(folderList.get(0).getId(), true);
 			objFolder.deleteFolder(folderList.get(1).getId(), true);
+			TenantContext.clearContext();
 		}
 
 	}
 
+	/*@Test
+	public void testUpdateSystemFolder() throws EMAnalyticsFwkException
+	{
+		TenantContext.setContext(TENANT_ID_OPC1);
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		try {
+
+			Folder folder = objFolder.getFolder(TA_FOLDER_ID);
+			AssertJUnit.assertNotNull(folder);
+			folder.setName("My folder");
+			folder.setDescription("Database search");
+
+			// update the folder
+			objFolder.updateFolder(folder);
+			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is updated unexpectedly", false);
+		}
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_UPDATE_FOLDER, e.getErrorCode());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+	}*/
+
 	@Test
 	public void testInvalidParentFolder() throws Exception
 	{
+		TenantContext.setContext(TENANT_ID_OPC1);
+
 		FolderManager fman = FolderManager.getInstance();
 
 		Folder folder = fman.createNewFolder();
@@ -295,6 +468,9 @@ public class FolderManagerTest extends BaseTest
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
 					EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT));
 		}
+		finally {
+			TenantContext.clearContext();
+		}
 
 	}
 
@@ -304,6 +480,7 @@ public class FolderManagerTest extends BaseTest
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 
+			TenantContext.setContext(TENANT_ID_OPC1);
 			Folder folder = objFolder.getFolder(folderId);
 			AssertJUnit.assertNotNull(folder);
 			folder.setName("My folder");
@@ -327,26 +504,9 @@ public class FolderManagerTest extends BaseTest
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Test
-	public void testUpdateSystemFolder() throws EMAnalyticsFwkException
-	{
-		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-		try {
-
-			Folder folder = objFolder.getFolder(TA_FOLDER_ID);
-			AssertJUnit.assertNotNull(folder);
-			folder.setName("My folder");
-			folder.setDescription("Database search");
-
-			// update the folder
-			objFolder.updateFolder(folder);
-			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is updated unexpectedly", false);
-		}
-		catch (EMAnalyticsFwkException e) {
-			e.printStackTrace();
-			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_UPDATE_FOLDER, e.getErrorCode());
+		finally {
+			TenantContext.clearContext();
 		}
 	}
+
 }

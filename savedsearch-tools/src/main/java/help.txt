@@ -3,11 +3,12 @@
 How to export searches in XML format?
 Usage :
 		
-    java -jar UpdateSavedSearch.jar [-export -outputfilepath <file_name_path > -ssfurl <ssf_url> -categoryId <category_id> -authToken <auth_token>]    
+    java -jar UpdateSavedSearch.jar [-export -outputfilepath <file_name_path > -ssfurl <ssf_url> -categoryId <category_id> 
+                                     -authToken <auth_token> -tenantid <tenant_id>]    
     or
     java -jar UpdateSavedSearch.jar [-export -outputfilepath <file_name_path>  -servicemanagerurl <service_manager_url> 
                                      -serviceversion <service_version>   -categoryId <category_id>
-                                     -authToken <auth_token>]
+                                     -authToken <auth_token> -tenantid <tenant_id>]
 
 Arguments :
 -export : To retrieve the searches 
@@ -17,6 +18,7 @@ Arguments :
 -serviceversion : Service version
 -categoryId   : Category Id  (Export searches for given category)
 -authToken    : Authentication Token
+-tenantid     : Tenant Id
  
 Note:Please  provide either ssf url  or servicemanager url and service version
 
@@ -24,11 +26,12 @@ Note:Please  provide either ssf url  or servicemanager url and service version
 How to import searches from XML file?
 Usage :
 
-    java -jar UpdateSavedSearch.jar [-import  -inputfilepath <input_file_path> -outputfilepath <output_file_path > -ssfurl <ssf_url>  -authToken <auth_token> ]
+    java -jar UpdateSavedSearch.jar [-import  -inputfilepath <input_file_path> -outputfilepath <output_file_path > 
+                                              -ssfurl <ssf_url>  -authToken <auth_token> -tenantid <tenant_id> ]
     or
     java -jar UpdateSavedSearch.jar [-import -inputfilepath <input_file_path> -outputfilepath <file_name_path>
                                      -servicemanagerurl <service_manager_url> -serviceversion <service_version>
-                                     -authToken <auth_token>]    								  
+                                     -authToken <auth_token> -tenantid <tenant_id>]    								  
 
 Arguments :
 -import : Update existing searches  or Add new searches.
@@ -38,5 +41,6 @@ Arguments :
 -serviceversion : Service version 
 -inputfilepath : input file containing searches in xml format.
 -authToken    : Authentication Token
+-tenantid     : Tenant Id
 
 Note:Please  provide either ssf url  or servicemanager url and service version

@@ -4,8 +4,7 @@
      <Name>MyCategory</Name> 
   </Category>  
   <Category>
-     <Name>MyCategory1</Name> 
-     <DefaultFolderId>1</DefaultFolderId>
+     <Name>MyCategory1</Name>
   </Category>
    <Category>
      <Name>MyCategory3</Name> 

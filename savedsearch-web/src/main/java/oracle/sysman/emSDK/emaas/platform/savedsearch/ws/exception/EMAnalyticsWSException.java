@@ -31,6 +31,8 @@ public class EMAnalyticsWSException extends Exception
 	public static final int JSON_OBJECT_TO_JSON_EXCEPTION = 70040;
 	public static final int JSON_JSON_TO_OBJECT = 70041;
 
+	public static final int JSON_TENANT_ID_MISSING = 70042;
+
 	private int errorCode;
 	private int statusCode;
 	private Object[] errorParam;

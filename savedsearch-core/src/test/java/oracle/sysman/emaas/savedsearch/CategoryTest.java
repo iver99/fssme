@@ -3,13 +3,13 @@ package oracle.sysman.emaas.savedsearch;
 import java.util.ArrayList;
 import java.util.List;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
-import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -18,6 +18,10 @@ import org.testng.annotations.Test;
 public class CategoryTest extends BaseTest
 {
 	private static Integer categoryId;
+
+	private static final String TENANT_ID_OPC1 = "TenantOpc1";
+
+	private static final String TENANT_ID_OPC2 = "TenantOpc2";
 
 	@AfterClass
 	public static void testDelete()
@@ -45,6 +49,7 @@ public class CategoryTest extends BaseTest
 	public static void testSaveCategory()
 	{
 		try {
+
 			CategoryManager catMan = CategoryManager.getInstance();
 			Category category = catMan.createNewCategory();
 			category.setName("CategoryName");
@@ -83,11 +88,39 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	@Test
+	private static void setup(String value)
+	{
+		TenantContext.setContext(value);
+		try {
+
+			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
+		}
+		catch (Exception e) {
+			AssertJUnit.fail("Upgrade fail");
+			AssertJUnit.fail(e.getLocalizedMessage());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+	}
+
+	@BeforeClass
+	public void initTenantDetails()
+	{
+		CategoryTest.setup(TENANT_ID_OPC1);
+		CategoryTest.setup(TENANT_ID_OPC2);
+		TenantContext.setContext(TENANT_ID_OPC1);
+
+	}
+
+	/*@Test
 	public void testDefaultFolder() throws Exception
 	{
+		TenantContext.setContext(TENANT_ID_OPC2);
 		CategoryManager catMan = CategoryManager.getInstance();
 		Assert.assertNotNull(catMan.getCategory("Log Analytics").getDefaultFolderId());
+		TenantContext.clearContext();
 	}
 
 	@Test
@@ -165,7 +198,7 @@ public class CategoryTest extends BaseTest
 		}
 	}
 
-	@Test
+	/*@Test
 	public void testGetAllCategories() throws Exception
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -177,20 +210,30 @@ public class CategoryTest extends BaseTest
 		// category data, add our entries only and all that will require new
 		// schema creation at each test launch.
 		AssertJUnit.assertNotNull(new Integer(catMan.getAllCategories().size()));
-	}
+	}*/
 
-	@Test
+	/*@Test
 	public void testGetCategoryById() throws Exception
 	{
+		TenantContext.setContext(TENANT_ID_OPC2);
 		CategoryManager catMan = CategoryManager.getInstance();
 		AssertJUnit.assertNotNull(catMan.getCategory(1));
-	}
+		TenantContext.clearContext();
+	}*/
 
-	@Test
+	/*@Test
 	public void testGetCategoryByName() throws Exception
 	{
+		TenantContext.setContext(TENANT_ID_OPC2);
 		CategoryManager catMan = CategoryManager.getInstance();
 		AssertJUnit.assertNotNull(catMan.getCategory("Log Analytics"));
+		TenantContext.clearContext();
+	}*/
+
+	@AfterClass
+	public void removeTenantDetails()
+	{
+		TenantContext.clearContext();
 	}
 
 	@Test
@@ -241,7 +284,7 @@ public class CategoryTest extends BaseTest
 	@Test
 	public void testSaveCategory_DuplicateName() throws Exception
 	{
-
+		TenantContext.setContext(TENANT_ID_OPC2);
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("Log Analytics");
@@ -252,5 +295,9 @@ public class CategoryTest extends BaseTest
 		catch (EMAnalyticsFwkException emanfe) {
 			AssertJUnit.assertEquals(emanfe.getErrorCode(), EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME);
 		}
+		finally {
+			TenantContext.clearContext();
+		}
 	}
+
 }

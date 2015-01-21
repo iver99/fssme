@@ -21,7 +21,7 @@ public class UpdateSearchUtil
 
 	private static Logger _logger = UpdateSavedSearchLog.getLogger(UpdateSearchUtil.class);
 
-	public static void exportSearches(long categoryId, String endpoint, String outputfile, String authToken)
+	public static void exportSearches(long categoryId, String endpoint, String outputfile, String authToken, String tenantid)
 	{
 
 		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken)) {
@@ -31,7 +31,7 @@ public class UpdateSearchUtil
 
 		try {
 			ExportSearchObject objExport = new ExportSearchObject();
-			String data = objExport.exportSearch(categoryId, endpoint, authToken);
+			String data = objExport.exportSearch(categoryId, endpoint, authToken, tenantid);
 			List<SearchEntity> list = UpdateSearchUtil.JSONToSearchList(data);
 			ExportSearchSet exportList = new ExportSearchSet();
 			exportList.setSearchSet(list);
@@ -58,7 +58,7 @@ public class UpdateSearchUtil
 		}
 	}
 
-	public static void importSearches(String endpoint, String inputfile, String outputfile, String authToken)
+	public static void importSearches(String endpoint, String inputfile, String outputfile, String authToken, String tenantid)
 	{
 		String data = "";
 		String outputData = "";
@@ -84,7 +84,7 @@ public class UpdateSearchUtil
 		}
 		ImportSearchObject objUpdate = new ImportSearchObject();
 		try {
-			outputData = objUpdate.importSearches(endpoint, data, authToken);
+			outputData = objUpdate.importSearches(endpoint, data, authToken, tenantid);
 		}
 		catch (Exception e1) {
 			_logger.error("Error : An error occurred while creating or updating search object" + e1.getMessage());

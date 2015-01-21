@@ -20,6 +20,7 @@ import org.testng.annotations.Test;
  */
 public class CategoryDetailsTest
 {
+
 	@Test
 	public void testCategoryDetails()
 	{

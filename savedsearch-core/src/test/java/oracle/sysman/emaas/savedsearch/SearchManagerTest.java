@@ -11,6 +11,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -20,14 +21,20 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 
 import org.testng.AssertJUnit;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class SearchManagerTest extends BaseTest
 {
+
+	private static final String TENANT_ID_OPC1 = "TenantOpc1";
+
 	// Important: keep this value the same with sequence step (value for 'INCREMENT BY') for EMS_ANALYTICS_SEARCH_SEQ
 	private static final int SEQ_ALLOCATION_SIZE = 1;
 
@@ -64,6 +71,35 @@ public class SearchManagerTest extends BaseTest
 		search.setCategoryId(cat.getId());
 		search = sm.saveSearch(search);
 		return search;
+	}
+
+	private static void setup(String value)
+	{
+		TenantContext.setContext(value);
+		try {
+			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
+		}
+		catch (Exception e) {
+			AssertJUnit.fail(e.getLocalizedMessage());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+	}
+
+	@BeforeClass
+	public void initTenantDetails()
+	{
+		SearchManagerTest.setup(TENANT_ID_OPC1);
+		TenantContext.setContext(TENANT_ID_OPC1);
+
+	}
+
+	@AfterClass
+	public void removeTenantDetails()
+	{
+		TenantContext.clearContext();
 	}
 
 	/*
@@ -529,8 +565,8 @@ public class SearchManagerTest extends BaseTest
 		EntityManager em = null;
 		EmAnalyticsLastAccess eala = null;
 		try {
-			emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsLastAccessPK ealaPK = new EmAnalyticsLastAccessPK();
 			ealaPK.setObjectId(searchId);
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();

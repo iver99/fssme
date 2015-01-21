@@ -2,8 +2,11 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -23,6 +26,7 @@ public class PersistenceManager
 	private static final String TEST_PERSISTENCE_UNIT = "EmaasAnalyticsPublicModelTest";
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
 	private static PersistenceManager singleton;
+	private static final String TENANT_ID_STR = "ssftenant.id";
 	private static Object lock = new Object();
 
 	public static PersistenceManager getInstance()
@@ -72,6 +76,13 @@ public class PersistenceManager
 		}
 	}
 
+	public EntityManager getEntityManager(String value)
+	{
+		Map<String, String> emProperties = new HashMap<String, String>();
+		emProperties.put(TENANT_ID_STR, value);
+		return emf.createEntityManager(emProperties);
+	}
+
 	public EntityManagerFactory getEntityManagerFactory()
 	{
 		if (emf == null || !emf.isOpen()) {
@@ -99,9 +110,11 @@ public class PersistenceManager
 
 	protected void createEntityManagerFactory(String puName, Properties props)
 	{
+
 		if (emf == null || !emf.isOpen()) {
 			emf = Persistence.createEntityManagerFactory(puName, props);
 		}
+
 	}
 
 }

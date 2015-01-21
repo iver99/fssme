@@ -16,6 +16,6 @@ public class VersionManagerTest extends BaseTest
 		Assert.assertNotNull(schVer);
 		Assert.assertEquals(schVer.getName(), SchemaVersion.VERSION_NAME);
 		Assert.assertEquals(schVer.getMajorVersion(), 0);
-		Assert.assertEquals(schVer.getMinorVersion(), 5);
+		Assert.assertEquals(schVer.getMinorVersion(), 6);
 	}
 }

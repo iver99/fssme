@@ -43,30 +43,29 @@ public class VersionManager
 
 	public SchemaVersion getSchemaVersion()
 	{
-		if (schemaVersion == null) {
-			_logger.info("Retrieving schema version... ");
-			EntityManager em = null;
-			try {
-				EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-				em = emf.createEntityManager();
-				List<EmAnalyticsSchemaVer> vers = em.createNamedQuery("EmAnalyticsSchemaVer.findAll").getResultList();
-				if (vers != null && vers.size() == 1) {
-					EmAnalyticsSchemaVer ver = vers.get(0);
-					schemaVersion = new SchemaVersion(ver.getId().getMajor(), ver.getId().getMinor());
-				}
-				else {
-					final String errMsg = "Invalid Schema Version are detected: " + vers;
-					_logger.error(errMsg);
-					throw new RuntimeException(errMsg);
-				}
-			}
-			finally {
-				if (em != null) {
-					em.close();
-				}
-			}
 
+		_logger.info("Retrieving schema version... ");
+		EntityManager em = null;
+		try {
+			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+			em = emf.createEntityManager();
+			List<EmAnalyticsSchemaVer> vers = em.createNamedQuery("EmAnalyticsSchemaVer.findAll").getResultList();
+			if (vers != null && vers.size() == 1) {
+				EmAnalyticsSchemaVer ver = vers.get(0);
+				schemaVersion = new SchemaVersion(ver.getId().getMajor(), ver.getId().getMinor());
+			}
+			else {
+				final String errMsg = "Invalid Schema Version are detected: " + vers;
+				_logger.error(errMsg);
+				throw new RuntimeException(errMsg);
+			}
 		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+
 		return schemaVersion;
 	}
 }

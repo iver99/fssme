@@ -84,6 +84,9 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_DELETE_CATEGORY = 40060;
 	public static final int ERR_UPDATE_CATEGORY = 40070;
 
+	//upgrade data
+	public static final int ERR_UPGRADE_DATA = 50010;
+
 	/**
 	 * Exception codes end
 	 */
@@ -277,6 +280,9 @@ public class EMAnalyticsFwkException extends Exception
 				statusCode = 500;
 				break;
 			case EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS:
+				statusCode = 500;
+				break;
+			case EMAnalyticsFwkException.ERR_UPGRADE_DATA:
 				statusCode = 500;
 				break;
 
