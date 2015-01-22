@@ -18,8 +18,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 
@@ -37,6 +39,10 @@ public class SearchManagerTest extends BaseTest
 		cat.setName(name);
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		cat.setOwner(currentUser);
+		cat.setProviderName("TestProviderName");
+		cat.setProviderVersion("TestProviderVersion");
+		cat.setProviderDiscovery("TestProviderDiscovery");
+		cat.setProviderAssetRoot("TestProviderAssetRoot");
 		if (folder != null) {
 			cat.setDefaultFolderId(folder.getParentId());
 		}
@@ -64,6 +70,53 @@ public class SearchManagerTest extends BaseTest
 		search.setCategoryId(cat.getId());
 		search = sm.saveSearch(search);
 		return search;
+	}
+
+	public static Search createTestWidget(SearchManager sm, Folder folder, Category cat, String name)
+			throws EMAnalyticsFwkException
+	{
+		Search widget = sm.createNewSearch();
+		widget.setDescription("testing purpose");
+		widget.setName(name);
+		widget.setFolderId(folder.getId());
+		widget.setCategoryId(cat.getId());
+		widget.setIsWidget(true);
+
+		List<SearchParameter> widgetParams = new ArrayList<SearchParameter>();
+		SearchParameter wp1 = new SearchParameter();
+		SearchParameter wp2 = new SearchParameter();
+		SearchParameter wp3 = new SearchParameter();
+		SearchParameter wp4 = new SearchParameter();
+		SearchParameter wp5 = new SearchParameter();
+		SearchParameter wp6 = new SearchParameter();
+		wp1.setName("WIDGET_VIEWMODEL");
+		wp1.setType(ParameterType.STRING);
+		wp1.setValue("dependencies/widgets/iFrame/js/widget-iframe");
+		wp2.setName("WIDGET_KOC_NAME");
+		wp2.setType(ParameterType.STRING);
+		wp2.setValue("DF_V1_WIDGET_IFRAME");
+		wp3.setName("WIDGET_TEMPLATE");
+		wp3.setType(ParameterType.STRING);
+		wp3.setValue("dependencies/widgets/iFrame/widget-iframe.html");
+		wp4.setName("PROVIDER_VERSION");
+		wp4.setType(ParameterType.STRING);
+		wp4.setValue("0.1");
+		wp5.setName("PROVIDER_NAME");
+		wp5.setType(ParameterType.STRING);
+		wp5.setValue("DB Analytics");
+		wp6.setName("PROVIDER_ASSET_ROOT");
+		wp6.setType(ParameterType.STRING);
+		wp6.setValue("home");
+		widgetParams.add(wp1);
+		widgetParams.add(wp2);
+		widgetParams.add(wp3);
+		widgetParams.add(wp4);
+		widgetParams.add(wp5);
+		widgetParams.add(wp6);
+
+		widget.setParameters(widgetParams);
+		widget = sm.saveSearch(widget);
+		return widget;
 	}
 
 	/*
@@ -272,6 +325,51 @@ public class SearchManagerTest extends BaseTest
 
 		sm.deleteSearch(search2.getId(), true);
 		sm.deleteSearch(search1.getId(), true);
+		cm.deleteCategory(cat.getId(), true);
+		fm.deleteFolder(folder.getId(), true);
+	}
+
+	@Test
+	public void testGetWidgetListByCategoryId() throws EMAnalyticsFwkException
+	{
+		FolderManagerImpl fm = FolderManagerImpl.getInstance();
+		Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest" + System.currentTimeMillis());
+
+		CategoryManager cm = CategoryManagerImpl.getInstance();
+		Category cat = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest" + System.currentTimeMillis());
+
+		SearchManager sm = SearchManager.getInstance();
+		Search widget1 = SearchManagerTest.createTestWidget(sm, folder, cat, "Widget1 Name " + System.currentTimeMillis());
+		Search widget2 = SearchManagerTest.createTestWidget(sm, folder, cat, "Widget2 Name " + System.currentTimeMillis());
+
+		List<Search> queried = null;
+
+		// soft deletion test
+		try {
+			queried = sm.getWidgetListByCategoryId(cat.getId());
+		}
+		catch (EMAnalyticsFwkException e) {
+			AssertJUnit.fail();
+		}
+
+		AssertJUnit.assertNotNull(queried);
+		AssertJUnit.assertEquals(2, queried.size());
+
+		Search savedWidget1 = null;
+		Search savedWidget2 = null;
+		for (Search widget : queried) {
+			if (widget1.getId().equals(widget.getId())) {
+				savedWidget1 = widget;
+			}
+			else if (widget2.getId().equals(widget.getId())) {
+				savedWidget2 = widget;
+			}
+		}
+		assertSearchEquals(widget1, savedWidget1);
+		assertSearchEquals(widget2, savedWidget2);
+
+		sm.deleteSearch(widget1.getId(), true);
+		sm.deleteSearch(widget2.getId(), true);
 		cm.deleteCategory(cat.getId(), true);
 		fm.deleteFolder(folder.getId(), true);
 	}
@@ -521,6 +619,7 @@ public class SearchManagerTest extends BaseTest
 		AssertJUnit.assertEquals(expected.getCategoryId(), actual.getCategoryId());
 		AssertJUnit.assertEquals(expected.getFolderId(), actual.getFolderId());
 		AssertJUnit.assertEquals(expected.getLastAccessDate(), actual.getLastAccessDate());
+		AssertJUnit.assertEquals(expected.getIsWidget(), actual.getIsWidget());
 	}
 
 	private EmAnalyticsLastAccess getLastAccessForSearch(int searchId)

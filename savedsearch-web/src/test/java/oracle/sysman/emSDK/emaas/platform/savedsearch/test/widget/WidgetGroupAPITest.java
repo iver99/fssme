@@ -7,10 +7,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
-public class WidgetGroupAPITest {
+public class WidgetGroupAPITest
+{
 	/**
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases
@@ -34,16 +34,13 @@ public class WidgetGroupAPITest {
 	/**
 	 * widget group test
 	 */
-	
 
-	
-
-
-  @Test
-  public void getAllWidgetsGroup() {
-	  try {
+	@Test
+	public void getAllWidgetsGroup()
+	{
+		try {
 			System.out.println("------------------------------------------");
-			System.out.println("GET ALL Widgets");
+			System.out.println("GET ALL Widget Groups");
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/widgetgroups");
@@ -60,6 +57,6 @@ public class WidgetGroupAPITest {
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
 		}
-	  
-  }
+
+	}
 }

@@ -41,9 +41,10 @@ public class EntityJsonUtilTest extends BaseTest
 	private static CategoryImpl category = new CategoryImpl();
 	private static URI uri = null;
 	private static String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+	private static final String HOST_PORT = "slc04pxi.us.oracle.com:7001";
 	static {
 		try {
-			uri = new URL("http://slc04pxi.us.oracle.com:7001/savedsearch/v1/").toURI();
+			uri = new URL("http://" + HOST_PORT + "/savedsearch/v1/").toURI();
 		}
 		catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -89,6 +90,10 @@ public class EntityJsonUtilTest extends BaseTest
 		category.setCreatedOn(d);
 		category.setDefaultFolderId(1);
 		category.setOwner(currentUser);
+		category.setProviderName("Provider name for UT");
+		category.setProviderVersion("Provider version for UT");
+		category.setProviderDiscovery("Provider discovery for UT");
+		category.setProviderAssetRoot("Provider asset root for UT");
 		List<Parameter> catParams = new ArrayList<Parameter>();
 		Parameter cp1 = new Parameter();
 		cp1.setName("CATEGORY_PARAM_VIEW_TASKFLOW");
@@ -120,6 +125,7 @@ public class EntityJsonUtilTest extends BaseTest
 		widget.setLastModifiedOn(d);
 		widget.setLastModifiedBy(currentUser);
 		widget.setLastAccessDate(d);
+		widget.setIsWidget(true);
 
 		List<SearchParameter> widgetParams = new ArrayList<SearchParameter>();
 		SearchParameter wp1 = new SearchParameter();
@@ -158,7 +164,7 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetFullCategoryObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject fullCategoryObj = EntityJsonUtil.getFullCategoryJsonObj(uri, category);
 		String output = fullCategoryObj.toString();
@@ -168,10 +174,15 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING2 = "\"name\":\"Category for UT\"";
 		final String VERIFY_STRING3 = "\"description\":\"desc for UT\"";
 		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/folder\\/1\"}";
+		final String VERIFY_STRING5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
+				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
 		final String VERIFY_STRING6 = "\"defaultFolderId\"";
 		final String VERIFY_STRING7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
-		final String VERIFY_STRING9 = "\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/category\\/100\"}";
+		final String VERIFY_STRING9 = "\"href\":\"http:\\/\\/" + HOST_PORT + "\\/savedsearch\\/v1\\/category\\/100\"}";
+		final String VERIFY_STRING10 = "\"providerName\":\"Provider name for UT\"";
+		final String VERIFY_STRING11 = "\"providerVersion\":\"Provider version for UT\"";
+		final String VERIFY_STRING12 = "\"providerDiscovery\":\"Provider discovery for UT\"";
+		final String VERIFY_STRING13 = "\"providerAssetRoot\":\"Provider asset root for UT\"";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
@@ -182,11 +193,15 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
 		Assert.assertTrue(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
 	}
 
 	@Test
 	public void testGetFullFolderObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject fullFolderObj = EntityJsonUtil.getFullFolderJsonObj(uri, folder);
 		String output = fullFolderObj.toString();
@@ -196,7 +211,8 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING2 = "\"name\":\"Folder for UT\"";
 		final String VERIFY_STRING3 = "\"systemFolder\":false";
 		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/folder\\/1\"}";
+		final String VERIFY_STRING5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
+				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
 		final String VERIFY_STRING6 = "\"parentFolderId\"";
 		final String VERIFY_STRING7 = "\"uiHidden\":false";
 		final String VERIFY_STRING8 = "\"systemFolder\":false";
@@ -218,14 +234,14 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetFullSearchJsonObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject fullSearchObj = EntityJsonUtil.getFullSearchJsonObj(uri, search);
 		String output = fullSearchObj.toString();
 		//		System.out.println(output);
 
 		JSONObject fullSearchObjWithFolderPath = EntityJsonUtil.getFullSearchJsonObj(uri, search, new String[] { "parent Folder",
-				"Root Folder" });
+		"Root Folder" });
 		String output2 = fullSearchObjWithFolderPath.toString();
 		//		System.out.println(output2);
 
@@ -233,15 +249,18 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING2 = "\"queryStr\":\"*\"";
 		final String VERIFY_STRING3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
 		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/folder\\/999\"}";
+		final String VERIFY_STRING5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
+				+ "\\/savedsearch\\/v1\\/folder\\/999\"}";
 		final String VERIFY_STRING6 = "\"folderId\"";
-		final String VERIFY_STRING7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/category\\/999\"}";
+		final String VERIFY_STRING7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
+				+ "\\/savedsearch\\/v1\\/category\\/999\"}";
 		final String VERIFY_STRING8 = "\"categoryId\"";
 		final String VERIFY_STRING9 = "\"locked\":false";
 		final String VERIFY_STRING10 = "\"uiHidden\":false";
 		final String VERIFY_STRING11 = "\"flattenedFolderPath\":[\"parent Folder\",\"Root Folder\"]";
 		final String VERIFY_STRING12 = "\"guid\":";
 		final String VERIFY_STRING13 = "\"systemSearch\":true";
+		final String VERIFY_STRING14 = "\"isWidget\":false";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
@@ -260,11 +279,12 @@ public class EntityJsonUtilTest extends BaseTest
 
 		Assert.assertTrue(output2.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
 		Assert.assertFalse(output2.contains(VERIFY_STRING12), VERIFY_STRING12 + " is found unexpected");
+		Assert.assertFalse(output.contains(VERIFY_STRING14), VERIFY_STRING14 + " is found unexpected");
 	}
 
 	@Test
 	public void testGetSimpleCategoryObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject simpleCategoryObj = EntityJsonUtil.getSimpleCategoryJsonObj(uri, category);
 		String output = simpleCategoryObj.toString();
@@ -274,11 +294,16 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING2 = "\"name\":\"Category for UT\"";
 		final String VERIFY_STRING3 = "\"description\":\"desc for UT\"";
 		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/folder\\/1\"}";
+		final String VERIFY_STRING5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
+				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
 		final String VERIFY_STRING6 = "\"defaultFolderId\"";
 		final String VERIFY_STRING7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
 		final String VERIFY_STRING8 = "\"owner\":\"SYSMAN\"";
-		final String VERIFY_STRING9 = "\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/category\\/100\"}";
+		final String VERIFY_STRING9 = "\"href\":\"http:\\/\\/" + HOST_PORT + "\\/savedsearch\\/v1\\/category\\/100\"}";
+		final String VERIFY_STRING10 = "\"providerName\":\"Provider name for UT\"";
+		final String VERIFY_STRING11 = "\"providerVersion\":\"Provider version for UT\"";
+		final String VERIFY_STRING12 = "\"providerDiscovery\":\"Provider discovery for UT\"";
+		final String VERIFY_STRING13 = "\"providerAssetRoot\":\"Provider asset root for UT\"";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
@@ -290,11 +315,15 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is found unexpected");
 		Assert.assertFalse(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
 		Assert.assertTrue(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
 	}
 
 	@Test
 	public void testGetSimpleFolderJsonObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject simpleFolderObj = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder);
 		String output = simpleFolderObj.toString();
@@ -307,7 +336,8 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING2 = "\"name\":\"Folder for UT\"";
 		final String VERIFY_STRING3 = "\"systemFolder\":false";
 		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/folder\\/1\"}";
+		final String VERIFY_STRING5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
+				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
 		final String VERIFY_STRING6 = "\"parentId\"";
 		final String VERIFY_STRING7 = "\"uiHidden\":false";
 		final String VERIFY_STRING8 = "\"type\":\"folder\"";
@@ -333,7 +363,7 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetSimpleSearchJsonObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-			URISyntaxException
+	URISyntaxException
 	{
 		JSONObject simpleSearchObj = EntityJsonUtil.getSimpleSearchJsonObj(uri, search);
 		String output = simpleSearchObj.toString();
@@ -352,9 +382,11 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING2 = "\"queryStr\":\"*\"";
 		final String VERIFY_STRING3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
 		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/folder\\/999\"}";
+		final String VERIFY_STRING5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
+				+ "\\/savedsearch\\/v1\\/folder\\/999\"}";
 		final String VERIFY_STRING6 = "\"folderId\"";
-		final String VERIFY_STRING7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/slc04pxi.us.oracle.com:7001\\/savedsearch\\/v1\\/category\\/999\"}";
+		final String VERIFY_STRING7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
+				+ "\\/savedsearch\\/v1\\/category\\/999\"}";
 		final String VERIFY_STRING8 = "\"categoryId\"";
 		final String VERIFY_STRING9 = "\"locked\":false";
 		final String VERIFY_STRING10 = "\"uiHidden\":false";
@@ -362,6 +394,7 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING12 = "\"guid\":";
 		final String VERIFY_STRING13 = "\"type\":\"search\"";
 		final String VERIFY_STRING14 = "\"systemSearch\":true";
+		final String VERIFY_STRING15 = "\"isWidget\":false";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
@@ -383,6 +416,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output2.contains(VERIFY_STRING13), VERIFY_STRING13 + " is found unexpected");
 
 		Assert.assertTrue(output3.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(VERIFY_STRING15), VERIFY_STRING15 + " is found unexpected");
 	}
 
 	@Test
@@ -394,11 +428,19 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING1 = "\"WIDGET_GROUP_ID\":100";
 		final String VERIFY_STRING2 = "\"WIDGET_GROUP_NAME\":\"Category for UT\"";
 		final String VERIFY_STRING3 = "\"WIDGET_GROUP_DESCRIPTION\":\"desc for UT\"";
+		final String VERIFY_STRING4 = "\"PROVIDER_NAME\":\"Provider name for UT\"";
+		final String VERIFY_STRING5 = "\"PROVIDER_VERSION\":\"Provider version for UT\"";
+		final String VERIFY_STRING6 = "\"PROVIDER_DISCOVERY\":\"Provider discovery for UT\"";
+		final String VERIFY_STRING7 = "\"PROVIDER_ASSET_ROOT\":\"Provider asset root for UT\"";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is NOT found as expected");
 	}
 
 	@Test

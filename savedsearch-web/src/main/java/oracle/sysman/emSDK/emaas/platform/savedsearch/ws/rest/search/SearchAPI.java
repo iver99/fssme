@@ -37,7 +37,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Search Services
- * 
+ *
  * @since 0.1
  */
 @Path("search")
@@ -54,7 +54,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search</font><br>
 	 * The string "search" in the URL signifies create operation on search.<br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            The search details <br>
@@ -253,7 +253,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies delete operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The id of saved-search which user wants to delete
@@ -307,7 +307,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies edit operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            JSON string which contains all key value pairs that the user wants to edit.<br>
@@ -467,7 +467,7 @@ public class SearchAPI
 	 * number&gt;/savedsearch/v1/search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;</font><br>
 	 * The string "search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;" in the URL signifies set last accesst time
 	 * operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The saved-search id to edit
@@ -531,7 +531,7 @@ public class SearchAPI
 	 * The string "search/&lt;id&gt;?flattenedFolderPath=&lt;boolean value&gt;" in the URL signifies get the search operation on
 	 * search with given id. <br>
 	 * If "flattenedFolderPath = true", the flattened folder hierarchy will be added to any search
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchid
 	 *            The id of saved-search which user wants to read
@@ -694,6 +694,7 @@ public class SearchAPI
 		// non-nullable with db defaults !!
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
+		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
 
 		// Parameters
 		if (json.has("parameters")) {
@@ -812,6 +813,7 @@ public class SearchAPI
 
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
+		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
 
 		// Nullable properties !
 		searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));

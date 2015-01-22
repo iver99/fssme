@@ -36,6 +36,10 @@ public class ImportTest extends BaseTest
 			Category category = catImpl.createNewCategory();
 			category.setName("ImportCategory");
 			category.setDescription("CategoryTest");
+			category.setProviderName("ProviderNameImportUT");
+			category.setProviderVersion("ProviderVersionImportUT");
+			category.setProviderDiscovery("ProviderDiscoveryImportUT");
+			category.setProviderAssetRoot("ProviderAssetRootImportUT");
 			//set the parameter for the category
 			Parameter sp1 = new Parameter();
 			sp1.setName("Param1");
@@ -53,6 +57,10 @@ public class ImportTest extends BaseTest
 			Category category1 = catImpl.createNewCategory();
 			category1.setName("ImportCategory1");
 			category1.setDescription("CategoryTest");
+			category1.setProviderName("ProviderNameImportUT1");
+			category1.setProviderVersion("ProviderVersionImportUT1");
+			category1.setProviderDiscovery("ProviderDiscoveryImportUT1");
+			category1.setProviderAssetRoot("ProviderAssetRootImportUT1");
 
 			List<ImportCategoryImpl> listCat = new ArrayList<ImportCategoryImpl>();
 
@@ -134,6 +142,10 @@ public class ImportTest extends BaseTest
 			Category category = catImpl.createNewCategory();
 			category.setName("ImportCategoryName");
 			category.setDescription("CategoryTest");
+			category.setProviderName("ProviderNameTest");
+			category.setProviderVersion("ProviderVersionTest");
+			category.setProviderDiscovery("ProviderDiscoveryTest");
+			category.setProviderAssetRoot("ProviderAssetRootTest");
 			//set the parameter for the category
 			Parameter sp1 = new Parameter();
 			sp1.setName("Param1");
@@ -158,6 +170,7 @@ public class ImportTest extends BaseTest
 			ImportSearchImpl search = new ImportSearchImpl();
 			search.setDescription("testing purpose");
 			search.setName("Dummy Search");
+			search.setIsWidget(false);
 			ObjectFactory objFactory = new ObjectFactory();
 			JAXBElement<Integer> catId = objFactory.createCategoryId(category.getId());
 			System.out.println("The Category ID is " + catId.toString());
@@ -271,6 +284,10 @@ public class ImportTest extends BaseTest
 		impCat.setId(cat.getId());
 		impCat.setName(cat.getName());
 		impCat.setDescription(cat.getDescription());
+		impCat.setProviderName(cat.getProviderName());
+		impCat.setProviderVersion(cat.getProviderVersion());
+		impCat.setProviderDiscovery(cat.getProviderDiscovery());
+		impCat.setProviderAssetRoot(cat.getProviderAssetRoot());
 		//TODO add parameters
 		ImportCategoryImpl.Parameters param = impCat.getParameters();
 		if (param == null) {

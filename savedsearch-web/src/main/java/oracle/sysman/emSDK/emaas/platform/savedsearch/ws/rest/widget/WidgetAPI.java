@@ -98,7 +98,7 @@ public class WidgetAPI
 			catList = catMan.getAllCategories();
 			for (Category category : catList) {
 				List<Search> searchList = new ArrayList<Search>();
-				searchList = searchMan.getSearchListByCategoryId(category.getId().longValue());
+				searchList = searchMan.getWidgetListByCategoryId(category.getId().longValue());
 				for (Search search : searchList) {
 					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), search, category);
 					if (jsonWidget != null) {

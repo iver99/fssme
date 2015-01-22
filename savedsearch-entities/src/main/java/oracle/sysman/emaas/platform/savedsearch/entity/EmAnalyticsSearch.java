@@ -37,7 +37,8 @@ import org.eclipse.persistence.annotations.PrivateOwned;
 	@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0 "),
 	@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 "),
 	@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0"),
-	@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.name = :searchName  AND e.deleted =0") })
+	@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.name = :searchName  AND e.deleted =0"),
+	@NamedQuery(name = "Search.getWidgetListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 AND e.isWidget = 1") })
 @SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
 public class EmAnalyticsSearch implements Serializable
 {
@@ -104,6 +105,9 @@ public class EmAnalyticsSearch implements Serializable
 
 	@Column(name = "DELETED")
 	private long deleted;
+
+	@Column(name = "IS_WIDGET")
+	private long isWidget;
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne
@@ -216,6 +220,11 @@ public class EmAnalyticsSearch implements Serializable
 	public BigDecimal getIsLocked()
 	{
 		return isLocked;
+	}
+
+	public long getIsWidget()
+	{
+		return isWidget;
 	}
 
 	/**
@@ -378,6 +387,11 @@ public class EmAnalyticsSearch implements Serializable
 	//		this.lastAccess = lastAccess;
 	//	}
 
+	public void setIsWidget(long isWidget)
+	{
+		this.isWidget = isWidget;
+	}
+
 	public void setLastModificationDate(Date lastModificationDate)
 	{
 		this.lastModificationDate = lastModificationDate;
@@ -393,11 +407,6 @@ public class EmAnalyticsSearch implements Serializable
 		this.metadataClob = metadataClob;
 	}
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
 	//	public void setObjectId(long objectId)
 	//	{
 	//		this.objectId = objectId;
@@ -407,6 +416,11 @@ public class EmAnalyticsSearch implements Serializable
 	//	{
 	//		this.objectType = objectType;
 	//	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 
 	public void setNameNlsid(String nameNlsid)
 	{

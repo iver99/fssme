@@ -58,6 +58,10 @@ public class EntityJsonUtil
 	public static final String NAME_CATEGORY = "category";
 	public static final String NAME_CATEGORY_DEFAULTFOLDERID = "defaultFolderId";
 	public static final String NAME_CATEGORY_DEFAULTFOLDER = "defaultFolder";
+	public static final String NAME_CATEGORY_PROVIDER_NAME = "providerName";
+	public static final String NAME_CATEGORY_PROVIDER_VERSIONE = "providerVersion";
+	public static final String NAME_CATEGORY_PROVIDER_DISCOVERY = "providerDiscovery";
+	public static final String NAME_CATEGORY_PROVIDER_ASSET_ROOT = "providerAssetRoot";
 	public static final String NAME_FOLDER_ID = "folderId";
 	public static final String NAME_FOLDER_PARENTID = "parentId";
 
@@ -72,6 +76,7 @@ public class EntityJsonUtil
 	public static final String NAME_SEARCH_LOCKED = "locked";
 
 	public static final String NAME_SEARCH_UIHIDDEN = "uiHidden";
+	public static final String NAME_SEARCH_IS_WIDGET = "isWidget";
 	public static final String NAME_SEARCH_FOLDERPATH = "flattenedFolderPath";
 	public static final String PATH_FOLDER = "folder/";
 	public static final String PATH_SEARCH = "search/";
@@ -83,6 +88,10 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_GROUP_ID = "WIDGET_GROUP_ID";
 	public static final String NAME_WIDGET_GROUP_NAME = "WIDGET_GROUP_NAME";
 	public static final String NAME_WIDGET_GROUP_DESCRIPTION = "WIDGET_GROUP_DESCRIPTION";
+	public static final String NAME_WIDGET_GROUP_PROVIDER_NAME = "PROVIDER_NAME";
+	public static final String NAME_WIDGET_GROUP_PROVIDER_VERSION = "PROVIDER_VERSION";
+	public static final String NAME_WIDGET_GROUP_PROVIDER_ASSET_ROOT = "PROVIDER_ASSET_ROOT";
+	public static final String NAME_WIDGET_GROUP_PROVIDER_DISCOVERY = "PROVIDER_DISCOVERY";
 
 	public static final String NAME_WIDGET_ID = "WIDGET_UNIQUE_ID";
 	public static final String NAME_WIDGET_NAME = "WIDGET_NAME";
@@ -157,7 +166,7 @@ public class EntityJsonUtil
 			EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
-				NAME_SEARCH_UIHIDDEN }, folderPathArray, false);
+				NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET }, folderPathArray, false);
 	}
 
 	/**
@@ -175,7 +184,7 @@ public class EntityJsonUtil
 			throws JSONException, EMAnalyticsFwkJsonException
 	{
 		JSONObject obj = null;
-		String fields[] = new String[] { NAME_GUID, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN };
+		String fields[] = new String[] { NAME_GUID, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET };
 		if (bResult) {
 			obj = EntityJsonUtil.getSearchJsonObj(baseUri, search, fields, folderPathArray, false);
 		}
@@ -278,8 +287,8 @@ public class EntityJsonUtil
 			throws JSONException, EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER, NAME_LASTMODIFIEDBY,
-				NAME_SEARCH_QUERYSTR, NAME_PARAMETERS, NAME_LASTACCESSDATE, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN },
-				folderPathArray, includeType);
+				NAME_SEARCH_QUERYSTR, NAME_PARAMETERS, NAME_LASTACCESSDATE, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
+				NAME_SEARCH_IS_WIDGET }, folderPathArray, includeType);
 	}
 
 	/**
@@ -296,6 +305,10 @@ public class EntityJsonUtil
 		widgetGroupObj.put(NAME_WIDGET_GROUP_ID, category.getId());
 		widgetGroupObj.put(NAME_WIDGET_GROUP_NAME, category.getName());
 		widgetGroupObj.put(NAME_WIDGET_GROUP_DESCRIPTION, category.getDescription());
+		widgetGroupObj.put(NAME_WIDGET_GROUP_PROVIDER_NAME, category.getProviderName());
+		widgetGroupObj.put(NAME_WIDGET_GROUP_PROVIDER_VERSION, category.getProviderVersion());
+		widgetGroupObj.put(NAME_WIDGET_GROUP_PROVIDER_DISCOVERY, category.getProviderDiscovery());
+		widgetGroupObj.put(NAME_WIDGET_GROUP_PROVIDER_ASSET_ROOT, category.getProviderAssetRoot());
 
 		return widgetGroupObj;
 	}

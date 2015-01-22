@@ -31,7 +31,8 @@ public class JAXBUtil
 {
 	public static final String VALID_ERR_MESSAGE = "Please specify input with valid format";
 	private static String[] fields = { "id", "name", "description", "parentId", "uiHidden", "value", "type", "folderId",
-			"categoryId", "metadata", "defaultFolderId", "queryStr", "locked", "uiHidden" };
+		"categoryId", "metadata", "defaultFolderId", "queryStr", "locked", "uiHidden", "isWidget", "providerName",
+			"providerVersion", "providerDiscovery", "providerAssetRoot" };
 
 	public static JAXBContext getJAXBContext(Class<?> cls) throws Exception
 	{
@@ -78,7 +79,7 @@ public class JAXBUtil
 	}
 
 	public static void marshal(Object object, String fileName, JAXBContext jaxbcontext) throws JAXBException,
-			FileNotFoundException, ImportException
+	FileNotFoundException, ImportException
 	{
 		Marshaller m = jaxbcontext.createMarshaller();
 
@@ -231,7 +232,7 @@ public class JAXBUtil
 	}
 
 	public static Object unmarshal(String fileName, File schemaFile, JAXBContext jaxbcontext) throws JAXBException,
-			FileNotFoundException, SAXException, ImportException
+	FileNotFoundException, SAXException, ImportException
 	{
 		Unmarshaller u = jaxbcontext.createUnmarshaller();
 
@@ -263,7 +264,7 @@ public class JAXBUtil
 	}
 
 	public static Object unmarshal(String fileName, JAXBContext jaxbcontext) throws JAXBException, FileNotFoundException,
-			ImportException
+	ImportException
 	{
 		Unmarshaller u = jaxbcontext.createUnmarshaller();
 

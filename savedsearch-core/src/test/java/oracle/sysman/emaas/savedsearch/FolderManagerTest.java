@@ -108,6 +108,10 @@ public class FolderManagerTest extends BaseTest
 			category.setName("TestCategoryWithFolder");
 			category.setDescription("CategoryTest");
 			category.setDefaultFolderId(folderId);
+			category.setProviderName("ProviderNameUT");
+			category.setProviderVersion("ProviderVersionUT");
+			category.setProviderDiscovery("ProviderDiscoveryUT");
+			category.setProviderAssetRoot("ProviderAssetRootUT");
 
 			category = catMan.saveCategory(category);
 			categoryId = category.getId();

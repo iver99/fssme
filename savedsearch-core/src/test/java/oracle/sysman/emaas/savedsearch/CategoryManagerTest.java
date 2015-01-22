@@ -33,6 +33,10 @@ public class CategoryManagerTest extends BaseTest
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		cat.setOwner(currentUser);
 		cat.setDefaultFolderId(folder.getParentId());
+		cat.setProviderName("TestProviderName");
+		cat.setProviderVersion("TestProviderVersion");
+		cat.setProviderDiscovery("TestProviderDiscovery");
+		cat.setProviderAssetRoot("TestProviderAssetRoot");
 		cat = objCategory.saveCategory(cat);
 
 		SearchManager objSearch = SearchManager.getInstance();
@@ -43,6 +47,7 @@ public class CategoryManagerTest extends BaseTest
 		search.setName("Dummy Search");
 		search.setFolderId(folder.getId());
 		search.setCategoryId(cat.getId());
+		search.setIsWidget(false);
 		search = objSearch.saveSearch(search);
 
 		// soft deletion test
