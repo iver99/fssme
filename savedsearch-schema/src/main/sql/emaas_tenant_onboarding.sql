@@ -15,7 +15,12 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-     
+
+SET FEEDBACK ON
+
+-- Do *not* use SQL.SQLCODE as it returns 0 (success) on some errors
+WHENEVER SQLERROR EXIT -1
+WHENEVER OSERROR EXIT -1     
 
 	DEFINE  TENANT_ID = '&1'
 
