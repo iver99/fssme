@@ -23,7 +23,7 @@ import weblogic.application.ApplicationLifecycleEvent;
 /**
  * Code version should match schema version, this is used to validate this during SSF service startup If validation fails, SSF
  * service will not startup
- *
+ * 
  * @author miao
  */
 public class VersionValidationServiceManager implements ApplicationServiceManager
@@ -57,7 +57,7 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 		// TODO Auto-generated method stub
 		SchemaVersion schemaVer = VersionManager.getInstance().getSchemaVersion();
 		try {
-			if (SSF_CODE_VERSION_MAJOR == schemaVer.getMajorVersion() && SSF_CODE_VERSION_MINOR == schemaVer.getMinorVersion()) {
+			if (SSF_CODE_VERSION_MAJOR == schemaVer.getMajorVersion() && SSF_CODE_VERSION_MINOR <= schemaVer.getMinorVersion()) {
 				logger.info("code version matched schema version:(" + SSF_CODE_VERSION_MAJOR + "." + SSF_CODE_VERSION_MINOR + ")");
 			}
 			else {

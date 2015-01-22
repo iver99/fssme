@@ -1,17 +1,49 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
+
+
 task runDEVTestSuite(type: Test){
-        useTestNG(){
+        useTestNG(){        
         useDefaultListeners = true
         outputDirectory = file("$buildDir/testngoutput")
         suites file('savedsearch-core_testng_suite.xml')
         }
 }
 
-dependencies {
-	compile project(':savedsearch-entities')        
+
+
+jar {
+	from('../savedsearch-schema/src/main/sql/')
+	{ 
+		include '*.*'
+		
+		
+		 
+	}
+	from('../savedsearch-schema/src/main/sql/upgrade')
+	{ 
+		include '*.*'
+		
+		 
+	}
 	
+	from('../savedsearch-schema/src/main/sql/upgrade')
+	{ 
+		include '*.*'
+		into('/oracle')
+		
+		 
+	}
+	
+	
+}
+
+   
+
+
+dependencies {
+	compile project(':savedsearch-entities')
 	testRuntime(group: 'com.oracle.weblogic', name: 'ojdbc6', version: '12.1.2-0-0')
 	testCompile(group: 'org.testng', name:'testng', version:'6.8.8')
 	compile(group: 'log4j', name: 'log4j', version: '1.2.17')
@@ -25,6 +57,6 @@ dependencies {
         compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.1')
         compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12')
         compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')
+        }
 
-	
-}
+

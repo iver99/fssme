@@ -3,7 +3,9 @@
 @./emaas_savesearch_index.sql
 @./emaas_savesearch_triggers.sql
 @./emaas_savesearch_seed_data.sql
+
 @./emaas_savesearch_seed_data_ta.sql
 @./emaas_savesearch_seed_data_la.sql
 @./emaas_savesearch_seed_data_apm.sql
+
 

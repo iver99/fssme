@@ -3,14 +3,21 @@ package oracle.sysman.emaas.savedsearch;
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -21,7 +28,9 @@ public class SearchParamTest extends BaseTest
 {
 
 	private static Integer folderId;
+	private static Integer categoryId;
 	private static Search searchObj;
+	private static final String TENANT_ID_OPC1 = "TenantOpc1";
 
 	@AfterClass
 	public static void testEndSearchparam() throws Exception
@@ -61,8 +70,11 @@ public class SearchParamTest extends BaseTest
 			SearchManagerImpl objSearch = SearchManagerImpl.getInstance();
 			objSearch.deleteSearch(tmpSearch.getId(), true);
 
+			CategoryManagerImpl.getInstance().deleteCategory(categoryId, true);
 			//now delete the folder
 			FolderManagerImpl.getInstance().deleteFolder(folderId, true);
+			TenantContext.clearContext();
+
 		}
 	}
 
@@ -71,7 +83,8 @@ public class SearchParamTest extends BaseTest
 	{
 
 		try {
-
+			SearchParamTest.setup(TENANT_ID_OPC1);
+			TenantContext.setContext(TENANT_ID_OPC1);
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
 			folder.setName("SearchPramTest23");
@@ -80,11 +93,20 @@ public class SearchParamTest extends BaseTest
 			folder = objFolder.saveFolder(folder);
 			folderId = folder.getId();
 
+			CategoryManager objCategory = CategoryManagerImpl.getInstance();
+			Category cat = new CategoryImpl();
+			cat.setName("CategoryTestOne");
+			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+			cat.setOwner(currentUser);
+			cat.setDefaultFolderId(folder.getParentId());
+			cat = objCategory.saveCategory(cat);
+			categoryId = cat.getId();
+
 			searchObj = new SearchImpl();
 			searchObj.setName("Test Parameter1");
 			searchObj.setDescription("analyze Parameter");
 			searchObj.setFolderId(folderId);
-			searchObj.setCategoryId(1);
+			searchObj.setCategoryId(categoryId);
 			searchObj.setLocked(false);
 			searchObj.setUiHidden(false);
 			SearchParameter sp1 = new SearchParameter();
@@ -116,6 +138,22 @@ public class SearchParamTest extends BaseTest
 			e.printStackTrace();
 			throw new Exception(e);
 		}
+	}
+
+	private static void setup(String value)
+	{
+		TenantContext.setContext(value);
+		try {
+
+			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
+		}
+		catch (Exception e) {
+			AssertJUnit.fail(e.getLocalizedMessage());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
 	}
 
 	@Test

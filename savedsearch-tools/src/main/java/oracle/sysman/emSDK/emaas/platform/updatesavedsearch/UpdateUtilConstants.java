@@ -35,4 +35,5 @@ public class UpdateUtilConstants
 	public static final String RETRIES_COUNT = "1";
 	public static final String HELP_FILE = "help.txt";
 	public static final String AUTH_TOKEN = "-authToken";
+	public static final String TENANT_TOKEN = "-tenantid";
 }

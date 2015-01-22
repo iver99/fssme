@@ -13,6 +13,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceM
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
 import org.apache.log4j.Logger;
@@ -26,7 +27,7 @@ public class FolderManagerImpl extends FolderManager
 
 	/**
 	 * Get FolderManagerImpl singleton instance.
-	 *
+	 * 
 	 * @return Instance of FolderManagerImpl
 	 */
 	public static FolderManagerImpl getInstance()
@@ -49,14 +50,18 @@ public class FolderManagerImpl extends FolderManager
 		return new FolderImpl();
 	}
 
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager#createRootFolder(oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder)
+	 */
+
 	@Override
 	public void deleteFolder(long folderId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		EmAnalyticsFolder folderObj = null;
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			if (permanently) {
 				folderObj = EmAnalyticsObjectUtil.getFolderByIdForDelete(folderId, em);
 			}
@@ -125,8 +130,8 @@ public class FolderManagerImpl extends FolderManager
 		EntityManager em = null;
 		Folder folder = new FolderImpl();
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			if (folderObj == null) {
 				_logger.error("Folder with Id" + folderId + "does not exist");
@@ -153,6 +158,12 @@ public class FolderManagerImpl extends FolderManager
 						EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID, null, e);
 			}
 		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+
+		}
 
 		return folder;
 	}
@@ -164,8 +175,7 @@ public class FolderManagerImpl extends FolderManager
 		String[] path = null;
 		Folder folder = new FolderImpl();
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			if (folderObj == null) {
 				return path;
@@ -183,8 +193,26 @@ public class FolderManagerImpl extends FolderManager
 			if (em != null) {
 				em.close();
 			}
+
 		}
 		return path;
+	}
+
+	public Folder getRootFolder() throws EMAnalyticsFwkException
+	{
+		EmAnalyticsFolder parentFolderObj = null;
+		Folder fld = null;
+		EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		try {
+			parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders").getSingleResult();
+		}
+		catch (NoResultException e) {
+			parentFolderObj = null;
+		}
+		if (parentFolderObj != null) {
+			fld = createFolderObject(parentFolderObj, null);
+		}
+		return fld;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -194,8 +222,7 @@ public class FolderManagerImpl extends FolderManager
 		EntityManager em = null;
 		try {
 			ArrayList<Folder> retList = new ArrayList<Folder>();
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			List<EmAnalyticsFolder> folderList;
 
 			if (folderId <= 0) {
@@ -228,28 +255,27 @@ public class FolderManagerImpl extends FolderManager
 						+ folderId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
 			}
 		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+
+		}
 	}
 
 	@Override
 	public Folder saveFolder(Folder folder) throws EMAnalyticsFwkException
 	{
-		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			EntityManager em = emf.createEntityManager();
-			try {
-				EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
-				em.getTransaction().begin();
-				em.persist(folderObj);
-				em.getTransaction().commit();
-				em.refresh(folderObj);
-				return createFolderObject(folderObj, folder);
-			}
-			finally {
-				if (em != null) {
-					em.close();
-				}
 
-			}
+		EntityManager em = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			em.getTransaction().begin();
+			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
+			em.persist(folderObj);
+			em.getTransaction().commit();
+			em.refresh(folderObj);
+			return createFolderObject(folderObj, folder);
 
 		}
 		catch (EMAnalyticsFwkException eme) {
@@ -284,6 +310,12 @@ public class FolderManagerImpl extends FolderManager
 					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null, e);
 
 		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+
+		}
 
 	}
 
@@ -297,8 +329,8 @@ public class FolderManagerImpl extends FolderManager
 		Folder folder = null;
 		List<FolderImpl> importedList = new ArrayList<FolderImpl>();
 		try {
-			emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			em.getTransaction().begin();
 			for (FolderDetails folderDet : folders) {
 				try {
@@ -354,6 +386,7 @@ public class FolderManagerImpl extends FolderManager
 		}
 		finally {
 			if (em != null) {
+
 				em.close();
 			}
 		}
@@ -365,38 +398,32 @@ public class FolderManagerImpl extends FolderManager
 	{
 		String[] folderNames = folder.getName().split("/");
 		String description = folder.getDescription();
+
+		EntityManager em = null;
+
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			EntityManager em = emf.createEntityManager();
-			try {
-				em.getTransaction().begin();
-				EmAnalyticsFolder folderObj = null;
-				for (int i = 0; i < folderNames.length - 1; i++) {
-					folder.setName(folderNames[i]);
-					folderObj = getFolderByName(folder.getName(), folder.getParentId(), em);
-					if (folderObj == null) {
-						folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
-						em.persist(folderObj);
-					}
-
-					folder.setParentId((int) folderObj.getEmAnalyticsFolder().getFolderId());
-				}
-				folder.setName(folderNames[folderNames.length - 1]);
-				folder.setDescription(description);
-				folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
-				em.persist(folderObj);
-				em.getTransaction().commit();
-				em.refresh(folderObj);
-				return createFolderObject(folderObj, folder);
-			}
-			finally {
-				if (em != null) {
-					em.close();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			em.getTransaction().begin();
+			EmAnalyticsFolder folderObj = null;
+			for (int i = 0; i < folderNames.length - 1; i++) {
+				folder.setName(folderNames[i]);
+				folderObj = getFolderByName(folder.getName(), folder.getParentId(), em);
+				if (folderObj == null) {
+					folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
+					em.persist(folderObj);
 				}
 
+				folder.setParentId((int) folderObj.getEmAnalyticsFolder().getFolderId());
 			}
-
+			folder.setName(folderNames[folderNames.length - 1]);
+			folder.setDescription(description);
+			folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
+			em.persist(folderObj);
+			em.getTransaction().commit();
+			em.refresh(folderObj);
+			return createFolderObject(folderObj, folder);
 		}
+
 		catch (EMAnalyticsFwkException eme) {
 			_logger.error("Folder with name " + folder.getName() + " was saved but could not bve retrieved back", eme);
 			throw eme;
@@ -429,6 +456,13 @@ public class FolderManagerImpl extends FolderManager
 					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null, e);
 
 		}
+		finally {
+			if (em != null) {
+
+				em.close();
+			}
+
+		}
 
 	}
 
@@ -438,8 +472,8 @@ public class FolderManagerImpl extends FolderManager
 
 		EntityManager em = null;
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, em);
 			if (folderObj != null && folderObj.getSystemFolder() != null && folderObj.getSystemFolder().intValue() == 1) {
 				throw new EMAnalyticsFwkException("Folder with Id " + folderObj.getFolderId()
@@ -481,6 +515,11 @@ public class FolderManagerImpl extends FolderManager
 			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null, e);
 
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 
 	}

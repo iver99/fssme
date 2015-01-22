@@ -1,16 +1,28 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
-
-import javax.persistence.*;
-
 import java.math.BigDecimal;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
  * The persistent class for the EMS_ANALYTICS_SEARCH_PARAMS database table.
  */
 
 @Entity
+@Multitenant
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "ssftenant.id", length = 32)
 @Table(name = "EMS_ANALYTICS_SEARCH_PARAMS")
 public class EmAnalyticsSearchParam implements Serializable
 {
@@ -40,84 +52,6 @@ public class EmAnalyticsSearchParam implements Serializable
 
 	public EmAnalyticsSearchParam()
 	{
-	}
-
-	public EmAnalyticsSearchParamPK getId()
-	{
-		return this.id;
-	}
-
-	public void setId(EmAnalyticsSearchParamPK id)
-	{
-		this.id = id;
-	}
-
-	public String getParamAttributes()
-	{
-		return this.paramAttributes;
-	}
-
-	public void setParamAttributes(String paramAttributes)
-	{
-		this.paramAttributes = paramAttributes;
-	}
-
-	public BigDecimal getParamType()
-	{
-		return this.paramType;
-	}
-
-	public void setParamType(BigDecimal paramType)
-	{
-		this.paramType = paramType;
-	}
-
-	public String getParamValueClob()
-	{
-		return this.paramValueClob;
-	}
-
-	public void setParamValueClob(String paramValueClob)
-	{
-		this.paramValueClob = paramValueClob;
-	}
-
-	@Lob
-	@Basic(fetch = FetchType.EAGER)
-	public String getParamValueStr()
-	{
-		return this.paramValueStr;
-	}
-
-	public void setParamValueStr(String paramValueStr)
-	{
-		this.paramValueStr = paramValueStr;
-	}
-
-	public EmAnalyticsSearch getEmAnalyticsSearch()
-	{
-		return this.emAnalyticsSearch;
-	}
-
-	public void setEmAnalyticsSearch(EmAnalyticsSearch emAnalyticsSearch)
-	{
-		this.emAnalyticsSearch = emAnalyticsSearch;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((paramAttributes == null) ? 0 : paramAttributes.hashCode());
-		result = prime * result + ((paramType == null) ? 0 : paramType.hashCode());
-		result = prime * result + ((paramValueClob == null) ? 0 : paramValueClob.hashCode());
-		result = prime * result + ((paramValueStr == null) ? 0 : paramValueStr.hashCode());
-		return result;
 	}
 
 	/* (non-Javadoc)
@@ -177,6 +111,84 @@ public class EmAnalyticsSearchParam implements Serializable
 			return false;
 		}
 		return true;
+	}
+
+	public EmAnalyticsSearch getEmAnalyticsSearch()
+	{
+		return emAnalyticsSearch;
+	}
+
+	public EmAnalyticsSearchParamPK getId()
+	{
+		return id;
+	}
+
+	public String getParamAttributes()
+	{
+		return paramAttributes;
+	}
+
+	public BigDecimal getParamType()
+	{
+		return paramType;
+	}
+
+	public String getParamValueClob()
+	{
+		return paramValueClob;
+	}
+
+	@Lob
+	@Basic(fetch = FetchType.EAGER)
+	public String getParamValueStr()
+	{
+		return paramValueStr;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (id == null ? 0 : id.hashCode());
+		result = prime * result + (paramAttributes == null ? 0 : paramAttributes.hashCode());
+		result = prime * result + (paramType == null ? 0 : paramType.hashCode());
+		result = prime * result + (paramValueClob == null ? 0 : paramValueClob.hashCode());
+		result = prime * result + (paramValueStr == null ? 0 : paramValueStr.hashCode());
+		return result;
+	}
+
+	public void setEmAnalyticsSearch(EmAnalyticsSearch emAnalyticsSearch)
+	{
+		this.emAnalyticsSearch = emAnalyticsSearch;
+	}
+
+	public void setId(EmAnalyticsSearchParamPK id)
+	{
+		this.id = id;
+	}
+
+	public void setParamAttributes(String paramAttributes)
+	{
+		this.paramAttributes = paramAttributes;
+	}
+
+	public void setParamType(BigDecimal paramType)
+	{
+		this.paramType = paramType;
+	}
+
+	public void setParamValueClob(String paramValueClob)
+	{
+		this.paramValueClob = paramValueClob;
+	}
+
+	public void setParamValueStr(String paramValueStr)
+	{
+		this.paramValueStr = paramValueStr;
 	}
 
 }

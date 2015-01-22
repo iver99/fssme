@@ -21,12 +21,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.PrivateOwned;
+import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
  * The persistent class for the EMS_ANALYTICS_CATEGORY database table.
  */
 @Entity
+@Multitenant
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "ssftenant.id", length = 32)
 @Table(name = "EMS_ANALYTICS_CATEGORY")
 @NamedQueries({
 	@NamedQuery(name = "Category.getCategoryById", query = "SELECT e FROM EmAnalyticsCategory e Where e.categoryId = :id  AND e.deleted =0 "),
