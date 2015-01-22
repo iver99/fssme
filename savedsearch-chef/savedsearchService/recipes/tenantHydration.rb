@@ -1,4 +1,4 @@
-# Cookbook Name::dataService 
+# Cookbook Name::savedSearchService 
 # Recipe:: tenantHydration
 #
 # This recipe hydrates the tenant information
@@ -73,7 +73,7 @@ end
 # Executing the Tenant Hydration SQL file
 execute "run_tenant_hydration_sql" do
     cwd tenant_hydration_schema_script_dir
-    command lazy {"#{dbhome}/bin/sqlplus #{node["db_url"]} @#{tenant_hydration_sql_filename} #{node["tenantID"]} >> #{node["log_dir"]}/savedSearchDatasource.log"}
+    command lazy {"#{node["dbhome"]}/bin/sqlplus #{node["db_url"]} @#{tenant_hydration_sql_filename} #{node["tenantID"]} >> #{node["log_dir"]}/savedSearchDatasource.log"}
 end
 
 
