@@ -19,21 +19,22 @@ Rem    WKEICHER    09/30/14 - Update TA OOB Searches
 Rem    miayu       07/02/14 - Created for Target Analytics
 Rem
 
+DEFINE TENANT_ID ="&1"
 
 
 Insert into EMS_ANALYTICS_FOLDERS 
 (FOLDER_ID,NAME,PARENT_ID,DESCRIPTION,CREATION_DATE,OWNER,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,
-TENANT_ID) values (301,'Databases',4,'Databases',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',null,null,null,null,1,null,0,l_tenantid);
+TENANT_ID) values (301,'Databases',4,'Databases',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',null,null,null,null,1,null,0,'&TENANT_ID');
 Insert into EMS_ANALYTICS_FOLDERS 
 (FOLDER_ID,NAME,PARENT_ID,DESCRIPTION,CREATION_DATE,OWNER,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,
-TENANT_ID) values (302,'Middleware',4,'Middleware',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',null,null,null,null,1,null,0,l_tenantid);
+TENANT_ID) values (302,'Middleware',4,'Middleware',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',null,null,null,null,1,null,0,'&TENANT_ID');
 Insert into EMS_ANALYTICS_FOLDERS 
 (FOLDER_ID,NAME,PARENT_ID,DESCRIPTION,CREATION_DATE,OWNER,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,
 TENANT_ID) values (300,'Servers, Storage and Network',4,'Servers, Storage and Network',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',SYS_EXTRACT_UTC
-(SYSTIMESTAMP),'ORACLE',null,null,null,null,1,null,0,l_tenantid);
+(SYSTIMESTAMP),'ORACLE',null,null,null,null,1,null,0,'&TENANT_ID');
 Insert into EMS_ANALYTICS_FOLDERS 
 (FOLDER_ID,NAME,PARENT_ID,DESCRIPTION,CREATION_DATE,OWNER,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,
-TENANT_ID) values (303,'Applications',4,'Applications',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',null,null,null,null,1,null,0,l_tenantid);
+TENANT_ID) values (303,'Applications',4,'Applications',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE',null,null,null,null,1,null,0,'&TENANT_ID');
 
 
 -- search id 3000 - 3999 are reserved for TA searches
@@ -52,7 +53,7 @@ t(weblogic_j2eeserver,oracle_home)"}},"wrappedCriterion":{"jsonConstructor":"Met
 Home","targetType":"oracle_home","mcName":"id","mgName":"LlInvPatches","mgDisplayName":"Patches installed in Oracle Home","isKey":1,"groupKeyColumns":["lang","upi","id"]}},"id":"installed_at
 (weblogic_j2eeserver,oracle_home)_oracle_home_LlInvPatches_id","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":
 {"type":"any","values":{"jsonConstructor":"CriterionExpression","data":{"type":"eq","values":{"jsonConstructor":"CriterionValue","data":
-{"value":"999999"}}}}}}]}},"dataType":"string","displayName":"Patch ID","displayDetails":"installed_at (Oracle Home) > Patches installed in Oracle Home"}}]}',0,l_tenantid);
+{"value":"999999"}}}}}}]}},"dataType":"string","displayName":"Patch ID","displayDetails":"installed_at (Oracle Home) > Patches installed in Oracle Home"}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -64,7 +65,7 @@ values (3001,'WebLogic Servers with non-standard Maximum Heap Size','ORACLE',SYS
 WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null}},{"jsonConstructor":"MetricGroupSearchCriterion","data":
 {"id":"weblogic_j2eeserver_WeblogicResourceconfig_maxheap","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":
 {"type":"lt","values":{"jsonConstructor":"CriterionValue","data":{"value":1024}}}}]}},"dataType":"number","displayName":"Maximum Heap Size (MB)","displayDetails":"Resource 
-Usage","targetType":"weblogic_j2eeserver","mcName":"maxheap","mgName":"WeblogicResourceconfig","mgDisplayName":"Resource Usage","isKey":0,"groupKeyColumns":[]}}]}',0,l_tenantid);
+Usage","targetType":"weblogic_j2eeserver","mcName":"maxheap","mgName":"WeblogicResourceconfig","mgDisplayName":"Resource Usage","isKey":0,"groupKeyColumns":[]}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -76,7 +77,7 @@ values (3002,'WebLogic Servers with non-standard Starting Heap Size','ORACLE',SY
 WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null}},{"jsonConstructor":"MetricGroupSearchCriterion","data":
 {"id":"weblogic_j2eeserver_WeblogicResourceconfig_startheap","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":
 {"type":"lt","values":{"jsonConstructor":"CriterionValue","data":{"value":256}}}}]}},"dataType":"number","displayName":"Starting Heap Size (MB)","displayDetails":"Resource 
-Usage","targetType":"weblogic_j2eeserver","mcName":"startheap","mgName":"WeblogicResourceconfig","mgDisplayName":"Resource Usage","isKey":0,"groupKeyColumns":[]}}]}',0,l_tenantid);
+Usage","targetType":"weblogic_j2eeserver","mcName":"startheap","mgName":"WeblogicResourceconfig","mgDisplayName":"Resource Usage","isKey":0,"groupKeyColumns":[]}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -89,7 +90,7 @@ WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDe
 {"id":"weblogic_j2eeserver_WeblogicServer_administrationport","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":
 {"type":"lt","values":{"jsonConstructor":"CriterionValue","data":{"value":9002}}}},{"jsonConstructor":"CriterionExpression","data":{"type":"gt","values":{"jsonConstructor":"CriterionValue","data":
 {"value":9002}}}}]}},"dataType":"number","displayName":"Administration Port","displayDetails":"Server 
-Information","targetType":"weblogic_j2eeserver","mcName":"administrationport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[]}}]}',0,l_tenantid);
+Information","targetType":"weblogic_j2eeserver","mcName":"administrationport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[]}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -102,7 +103,7 @@ WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDe
 {"id":"weblogic_j2eeserver_WeblogicServer_ssllistenport","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":
 {"type":"lt","values":{"jsonConstructor":"CriterionValue","data":{"value":7000}}}},{"jsonConstructor":"CriterionExpression","data":{"type":"gt","values":{"jsonConstructor":"CriterionValue","data":
 {"value":10000}}}}]}},"dataType":"number","displayName":"SSL Listen Port","displayDetails":"Server 
-Information","targetType":"weblogic_j2eeserver","mcName":"ssllistenport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[]}}]}',0,l_tenantid);
+Information","targetType":"weblogic_j2eeserver","mcName":"ssllistenport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[]}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -115,7 +116,7 @@ WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDe
 {"id":"weblogic_j2eeserver_WeblogicServer_listenport","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":
 {"type":"lt","values":{"jsonConstructor":"CriterionValue","data":{"value":7000}}}},{"jsonConstructor":"CriterionExpression","data":{"type":"gt","values":{"jsonConstructor":"CriterionValue","data":
 {"value":10000}}}}]}},"dataType":"number","displayName":"Listen Port","displayDetails":"Server 
-Information","targetType":"weblogic_j2eeserver","mcName":"listenport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[]}}]}',0,l_tenantid);
+Information","targetType":"weblogic_j2eeserver","mcName":"listenport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[]}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -132,7 +133,7 @@ Server"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":nu
 Home","targetType":"oracle_home","mcName":"id","mgName":"LlInvPatches","mgDisplayName":"Patches installed in Oracle Home","isKey":1,"groupKeyColumns":["lang","upi","id"]}},"id":"installed_at
 (oracle_apache,oracle_home)_oracle_home_LlInvPatches_id","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":
 {"type":"any","values":{"jsonConstructor":"CriterionExpression","data":{"type":"eq","values":{"jsonConstructor":"CriterionValue","data":
-{"value":"999999"}}}}}}]}},"dataType":"string","displayName":"Patch ID","displayDetails":"installed_at (Oracle Home) > Patches installed in Oracle Home"}}]}',0,l_tenantid);
+{"value":"999999"}}}}}}]}},"dataType":"string","displayName":"Patch ID","displayDetails":"installed_at (Oracle Home) > Patches installed in Oracle Home"}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -149,7 +150,7 @@ values (3007,'Databases with a specific patch','ORACLE',SYS_EXTRACT_UTC(SYSTIMES
 Home","targetType":"oracle_home","mcName":"id","mgName":"LlInvPatches","mgDisplayName":"Patches installed in Oracle Home","isKey":1,"groupKeyColumns":["lang","upi","id"]}},"id":"installed_at
 (oracle_database,oracle_home)_oracle_home_LlInvPatches_id","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":
 {"type":"any","values":{"jsonConstructor":"CriterionExpression","data":{"type":"eq","values":{"jsonConstructor":"CriterionValue","data":
-{"value":"999999"}}}}}}]}},"dataType":"string","displayName":"Patch ID","displayDetails":"installed_at (Oracle Home) > Patches installed in Oracle Home"}}]}',0,l_tenantid);
+{"value":"999999"}}}}}}]}},"dataType":"string","displayName":"Patch ID","displayDetails":"installed_at (Oracle Home) > Patches installed in Oracle Home"}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -166,7 +167,7 @@ atafiles","isKey":0,"groupKeyColumns":["fileName","tablespaceName","fileName","t
 {"id":"oracle_database_DbDatafiles_fileSize","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":{"type":"any","values":
 {"jsonConstructor":"CriterionExpression","data":{"type":"gt","values":{"jsonConstructor":"CriterionValue","data":
 {"value":32212254720}}}}}}]}},"dataType":"number","displayName":"Size","displayDetails":"Datafiles","targetType":"oracle_database","mcName":"fileSize","mgName":"DbDatafiles","mgDisplayName":"Datafiles",
-"isKey":0,"groupKeyColumns":["fileName","tablespaceName","fileName","tablespaceName","fileName","tablespaceName"]}}]}',0,l_tenantid);
+"isKey":0,"groupKeyColumns":["fileName","tablespaceName","fileName","tablespaceName","fileName","tablespaceName"]}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -186,7 +187,7 @@ Home","targetType":"oracle_home","mcName":"id","mgName":"LlInvPatches","mgDispla
 (fusion_apps_instance,oracle_home)_oracle_home_LlInvPatches_id","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"or","values":[{"jsonConstructor":"CriterionExpression","data":
 {"type":"all","values":{"jsonConstructor":"CriterionExpression","data":{"type":"not","values":{"jsonConstructor":"CriterionExpression","data":{"type":"eq","values":
 {"jsonConstructor":"CriterionValue","data":{"value":"999999"}}}}}}}}]}},"dataType":"string","displayName":"Patch ID","displayDetails":"installed_at (Oracle Home) > Patches installed in Oracle 
-Home"}}]}',0,l_tenantid);
+Home"}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -207,7 +208,7 @@ Sessions","displayDetails":"Throughput","targetType":"oracle_database","mcName":
 CPU","displayDetails":"Wait Bottlenecks","targetType":"oracle_database","mcName":"userCpuTimeCnt","mgName":"WaitBottlenecks","mgDisplayName":"Wait Bottlenecks","isKey":0,"groupKeyColumns":
 [],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_database_WaitBottlenecks_userioWaitCnt","_value":null,"dataType":"number","displayName":"Active Sessions Waiting: 
 I/O","displayDetails":"Wait Bottlenecks","targetType":"oracle_database","mcName":"userioWaitCnt","mgName":"WaitBottlenecks","mgDisplayName":"Wait Bottlenecks","isKey":0,"groupKeyColumns":
-[],"isConfig":0}}]}',0,l_tenantid);
+[],"isConfig":0}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -221,7 +222,7 @@ values (3011,'Listeners Overview','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXT
 {"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_listener_Load_estConns","_value":null,"dataType":"number","displayName":"Connections 
 Established","displayDetails":"Load","targetType":"oracle_listener","mcName":"estConns","mgName":"Load","mgDisplayName":"Load","isKey":0,"groupKeyColumns":[],"isConfig":0}},
 {"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_listener_Load_refConns","_value":null,"dataType":"number","displayName":"Connections Refused 
-(per","displayDetails":"Load","targetType":"oracle_listener","mcName":"refConns","mgName":"Load","mgDisplayName":"Load","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}',0,l_tenantid);
+(per","displayDetails":"Load","targetType":"oracle_listener","mcName":"refConns","mgName":"Load","mgDisplayName":"Load","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -241,7 +242,7 @@ Success Rate
 second","displayDetails":"Authorizations","targetType":"oracle_oam","mcName":"authzRequests.persec","mgName":"Authorizations","mgDisplayName":"Authorizations","isKey":0,"groupKeyColumns":
 [],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_oam_Authorizations_authzSuccessFailure.rate","_value":null,"dataType":"number","displayName":"Authorization Success 
 Rate (%)","displayDetails":"Authorizations","targetType":"oracle_oam","mcName":"authzSuccessFailure.rate","mgName":"Authorizations","mgDisplayName":"Authorizations","isKey":0,"groupKeyColumns":
-[],"isConfig":0}}]}',0,l_tenantid);
+[],"isConfig":0}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -258,7 +259,7 @@ Executions","displayDetails":"Adapters","targetType":"oracle_oim","mcName":"comp
 Executions","displayDetails":"Events Handler","targetType":"oracle_oim","mcName":"completedExec","mgName":"EventsHandler","mgDisplayName":"Events Handler","isKey":0,"groupKeyColumns":
 ["eventName"],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_oim_EventsHandler_avgProcess","_value":null,"dataType":"number","displayName":"Average Events Execution 
 Time (ms)","displayDetails":"Events Handler","targetType":"oracle_oim","mcName":"avgProcess","mgName":"EventsHandler","mgDisplayName":"Events Handler","isKey":0,"groupKeyColumns":
-["eventName"],"isConfig":0}}]}',0,l_tenantid);
+["eventName"],"isConfig":0}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -274,7 +275,7 @@ Requests","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"Metr
 Requests","targetType":"oracle_oim_cluster","mcName":"noOfFailedSelfSvcReq","mgName":"SelfSvcRequests","mgDisplayName":"Self Service Registration Requests","isKey":0,"groupKeyColumns":
 [],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_oim_cluster_SelfSvcRequests_noOfPendingSelfSvcReq","_value":null,"dataType":"number","displayName":"Pending Self 
 Service Registration Requests","displayDetails":"Self Service Registration Requests","targetType":"oracle_oim_cluster","mcName":"noOfPendingSelfSvcReq","mgName":"SelfSvcRequests","mgDisplayName":"Self 
-Service Registration Requests","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}',0,l_tenantid);
+Service Registration Requests","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -294,7 +295,7 @@ Metrics","targetType":"weblogic_j2eeserver","mcName":"heapUsedPercentage.value",
 Metrics","targetType":"weblogic_j2eeserver","mcName":"cpuUsage.percentage","mgName":"Jvm","mgDisplayName":"JVM Metrics","isKey":0,"groupKeyColumns":[],"isConfig":0}},
 {"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_JvmGarbageCollectors_oldHeapPercentFreeAfterGc","_value":null,"dataType":"number","displayName":"Garbage Collector - Old 
 Heap Percent Free after GC (%)","displayDetails":"JVM Garbage Collectors","targetType":"weblogic_j2eeserver","mcName":"oldHeapPercentFreeAfterGc","mgName":"JvmGarbageCollectors","mgDisplayName":"JVM 
-Garbage Collectors","isKey":0,"groupKeyColumns":["name"],"isConfig":0}}]}',0,l_tenantid);
+Garbage Collectors","isKey":0,"groupKeyColumns":["name"],"isConfig":0}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -312,7 +313,7 @@ Time","targetType":"oracle_ldap","mcName":"compareOpLatency","mgName":"LDAPserve
 Time","displayDetails":"LDAP Operation Response Time","targetType":"oracle_ldap","mcName":"mesgSrchOpLatency","mgName":"LDAPserverOpLatencyCC","mgDisplayName":"LDAP Operation Response 
 Time","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":
 {"id":"oracle_ldap_LDAPserverResponseCC_lDAPserverResponse","_value":null,"dataType":"number","displayName":"Server Response (ms)","displayDetails":"LDAP 
-Response","targetType":"oracle_ldap","mcName":"lDAPserverResponse","mgName":"LDAPserverResponseCC","mgDisplayName":"LDAP Response","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}',0,l_tenantid);
+Response","targetType":"oracle_ldap","mcName":"lDAPserverResponse","mgName":"LDAPserverResponseCC","mgDisplayName":"LDAP Response","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}',0,'&TENANT_ID');
 
 Insert into EMS_ANALYTICS_SEARCH 
 (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID
@@ -329,7 +330,7 @@ Processes","displayDetails":"Load","targetType":"host","mcName":"noOfProcs","mgN
 (%)","displayDetails":"Load","targetType":"host","mcName":"logicMemfreePct","mgName":"Load","mgDisplayName":"Load","isKey":0,"groupKeyColumns":[],"isConfig":0}},
 {"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_TotalDiskUsage_totused","_value":null,"dataType":"number","displayName":"Total Disk Space Utilized (across all local filesystems in 
 MB)","displayDetails":"Total Disk Usage","targetType":"host","mcName":"totused","mgName":"TotalDiskUsage","mgDisplayName":"Total Disk Usage","isKey":0,"groupKeyColumns":
-[],"isConfig":0}}]}',0,l_tenantid);
+[],"isConfig":0}}]}',0,'&TENANT_ID');
 
 insert into EMS_ANALYTICS_LAST_ACCESS(OBJECT_ID,ACCESSED_BY,OBJECT_TYPE,ACCESS_DATE,TENANT_ID) 
-select SEARCH_ID,'SYSMAN',2,SYS_EXTRACT_UTC(SYSTIMESTAMP),l_tenantid from EMS_ANALYTICS_SEARCH where search_id>=3000 and search_id<=3999 and TENANT_ID =l_tenantid;
+select SEARCH_ID,'SYSMAN',2,SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID' from EMS_ANALYTICS_SEARCH where search_id>=3000 and search_id<=3999 and TENANT_ID ='&TENANT_ID';

@@ -24,7 +24,7 @@ public class UpdateSearchUtil
 	public static void exportSearches(long categoryId, String endpoint, String outputfile, String authToken, String tenantid)
 	{
 
-		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken)) {
+		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken, tenantid)) {
 			System.out.println("The endpoint was not reachable.");
 			return;
 		}
@@ -63,7 +63,7 @@ public class UpdateSearchUtil
 		String data = "";
 		String outputData = "";
 
-		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken)) {
+		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken, tenantid)) {
 			System.out.println("The endpoint was not reachable.");
 			return;
 		}
@@ -105,12 +105,13 @@ public class UpdateSearchUtil
 		System.out.println("The import process completed.");
 	}
 
-	public static boolean isEndpointReachable(String endpoint, String authToken)
+	public static boolean isEndpointReachable(String endpoint, String authToken, String tenantid)
 	{
 		try {
 			RestAssured.useRelaxedHTTPSValidation();
 			RestAssured.baseURI = endpoint;
-			Response res = RestAssured.given().header("Authorization", authToken).when().get();
+			Response res = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN", tenantid)
+					.when().get();
 			if (res.getStatusCode() == 200) {
 				return true;
 			}

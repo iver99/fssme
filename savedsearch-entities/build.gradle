@@ -7,6 +7,11 @@ jar {
 		include '*.xml'
 		into('META-INF') 
 	}
+	
+	from('src/main/java')  
+     {
+        include 'log4j_ssf.properties'
+     }
 }
 
 dependencies {

@@ -17,5 +17,6 @@ Rem    miayu		09/30/14 - upgrade TA OOB Searches
 Rem    sdhamdhe		09/18/14 - placeholder  
 Rem
 
+DEFINE TENANT_ID ='&1'
 Rem upgrade Target Analytics OOB Searches
-@./upgrade_056_057_ta_dml.sql
+@./upgrade_056_057_ta_dml.sql &TENANT_ID

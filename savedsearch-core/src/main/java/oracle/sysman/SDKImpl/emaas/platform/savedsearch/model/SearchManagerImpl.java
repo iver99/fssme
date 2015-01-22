@@ -485,12 +485,6 @@ public class SearchManagerImpl extends SearchManager
 			for (ImportSearchImpl tmpImportSrImpl : searchList) {
 				Search search = tmpImportSrImpl.getSearch();
 				Object obj = tmpImportSrImpl.getFolderDetails();
-				if (obj instanceof Integer) {
-					if ((Integer) obj == 1) {
-						obj = getRootFolder(1, em);
-					}
-				}
-
 				Object cateObj = tmpImportSrImpl.getCategoryDetails();
 				try {
 					if (search.getId() != null && search.getId() > 0) {
@@ -517,7 +511,7 @@ public class SearchManagerImpl extends SearchManager
 						if (obj != null && obj instanceof FolderImpl) {
 							Folder fld = (Folder) obj;
 							if (fld.getParentId() == null || fld.getParentId() == 0) {
-								fld.setParentId(getRootFolder(1, em));
+								fld.setParentId(1);
 							}
 							EmAnalyticsFolder objFolder = EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(fld);
 
@@ -557,12 +551,6 @@ public class SearchManagerImpl extends SearchManager
 							if (obj != null && obj instanceof Integer) {
 								Integer id = null;
 								EmAnalyticsFolder pFolderObj = null;
-								if ((Integer) obj == 1) {
-									obj = getRootFolder(1, em);
-									id = (Integer) obj;
-
-								}
-
 								searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
 										.setParameter("folderId", id).setParameter("searchName", search.getName())
 										.getSingleResult();
@@ -613,7 +601,7 @@ public class SearchManagerImpl extends SearchManager
 							if (obj instanceof FolderImpl) {
 								fld = (Folder) obj;
 								if (fld.getParentId() == null || fld.getParentId() == 0) {
-									fld.setParentId(getRootFolder(1, em));
+									fld.setParentId(1);
 								}
 								EmAnalyticsFolder objFolder = EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(fld);
 								if (objFolder != null) {
@@ -922,23 +910,6 @@ public class SearchManagerImpl extends SearchManager
 			folder = null;
 		}
 		return folder;
-	}
-
-	private Integer getRootFolder(int obj, EntityManager em)
-	{
-		Integer value = null;
-		EmAnalyticsFolder pFolderObj = null;
-		if (obj == 1) {
-			try {
-				pFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders").getSingleResult();
-				value = (int) pFolderObj.getFolderId();
-			}
-			catch (NoResultException e) {
-				pFolderObj = null;
-			}
-		}
-		return value;
-
 	}
 
 	private void OrderBybuilder(StringBuilder query, String[] orderBy)

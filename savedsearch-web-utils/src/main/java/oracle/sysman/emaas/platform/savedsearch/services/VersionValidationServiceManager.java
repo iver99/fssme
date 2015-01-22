@@ -31,8 +31,8 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceversionvalidation");
 	public static final String SERVICE_NAME_VERSION_VALIDATION = "Version Validation Service";
-	public static final int SSF_CODE_VERSION_MAJOR = 0;
-	public static final int SSF_CODE_VERSION_MINOR = 5;
+	public static final int SSF_CODE_VERSION_MAJOR = 1;
+	public static final int SSF_CODE_VERSION_MINOR = 0;
 
 	/**
 	 * Code Version History <br>
@@ -57,7 +57,7 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 		// TODO Auto-generated method stub
 		SchemaVersion schemaVer = VersionManager.getInstance().getSchemaVersion();
 		try {
-			if (SSF_CODE_VERSION_MAJOR == schemaVer.getMajorVersion() && SSF_CODE_VERSION_MINOR <= schemaVer.getMinorVersion()) {
+			if (SSF_CODE_VERSION_MAJOR == schemaVer.getMajorVersion() && SSF_CODE_VERSION_MINOR == schemaVer.getMinorVersion()) {
 				logger.info("code version matched schema version:(" + SSF_CODE_VERSION_MAJOR + "." + SSF_CODE_VERSION_MINOR + ")");
 			}
 			else {

@@ -56,6 +56,7 @@ public class UpdateSearchTest extends BaseTest
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
+		UpdateSearchTest.setup(tenantimport);
 	}
 
 	private static String getStringFromInputStream(InputStream is)
@@ -89,6 +90,16 @@ public class UpdateSearchTest extends BaseTest
 
 		return sb.toString();
 
+	}
+
+	private static void setup(String value)
+	{
+		Response res2 = null;
+		res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+				.header("X-USER-IDENTITY-DOMAIN", value).when().post("/admin/tenantonboard");
+		System.out.println(res2.asString());
+		System.out.println("Status code is: " + res2.getStatusCode());
+		Assert.assertTrue(res2.getStatusCode() == 201);
 	}
 
 	/**
