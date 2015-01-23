@@ -20,7 +20,7 @@ import javax.ws.rs.core.HttpHeaders;
  */
 public class HeadersUtil
 {
-	private static final String HEADER_TENANT_ID = "X-USER-IDENTITY-DOMAIN";
+	private static final String HEADER_TENANT_ID = "X-USER-IDENTITY-DOMAIN-NAME";
 
 	public static String getTenantId(HttpHeaders request)
 	{
