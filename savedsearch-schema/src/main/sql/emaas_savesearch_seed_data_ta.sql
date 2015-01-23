@@ -19,7 +19,7 @@ Rem    WKEICHER    09/30/14 - Update TA OOB Searches
 Rem    miayu       07/02/14 - Created for Target Analytics
 Rem
 
-DEFINE TENANT_ID ="&1"
+DEFINE TENANT_ID ='&1'
 
 
 Insert into EMS_ANALYTICS_FOLDERS 

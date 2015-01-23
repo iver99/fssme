@@ -1,5 +1,5 @@
 Rem  drv: <migrate type="data_upgrade" version="13.1.0.0" />
-Rem $Header: emcore/source/oracle/sysman/emdrep/sql/core/13.1.0.0/emanalytics/eman_data_upgrade.sql /st_emgc_pt-13.1mstr/2 2014/02/03 02:50:59 saurgarg Exp $
+Rem  $Header: emcore/source/oracle/sysman/emdrep/sql/core/13.1.0.0/emanalytics/eman_data_upgrade.sql /st_emgc_pt-13.1mstr/2 2014/02/03 025059 saurgarg Exp $
 Rem
 Rem eman_data_upgrade.sql
 Rem
@@ -22,9 +22,12 @@ Rem    miayu       06/06/14 - Reserve some permanent category/folder ID(s) for i
 Rem    kuabhina    12/13/13 - Created
 Rem
 
-DEFINE TENANT_ID = "&1"
 
---Insert into EMS_ANALYTICS_SCHEMA_VER_SSF(MAJOR,MINOR) values(0,5);
+DEFINE TENANT_ID = '&1'
+
+Delete from EMS_ANALYTICS_SCHEMA_VER_SSF;
+
+Insert into EMS_ANALYTICS_SCHEMA_VER_SSF(MAJOR,MINOR) values(1,0);
 
 --Rem SEED DATA FOR FOLDER
 Insert into EMS_ANALYTICS_FOLDERS (FOLDER_ID,NAME,PARENT_ID,DESCRIPTION,CREATION_DATE,OWNER,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,
@@ -69,3 +72,4 @@ insert into EMS_ANALYTICS_LAST_ACCESS(OBJECT_ID,ACCESSED_BY,OBJECT_TYPE,ACCESS_D
 values (9998,'SYSMAN',2,SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
 insert into EMS_ANALYTICS_LAST_ACCESS(OBJECT_ID,ACCESSED_BY,OBJECT_TYPE,ACCESS_DATE,TENANT_ID) 
 values (9999,'SYSMAN',2,SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+

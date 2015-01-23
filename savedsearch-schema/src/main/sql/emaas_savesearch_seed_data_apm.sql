@@ -19,7 +19,7 @@ Rem    evazhang  10/16/14 - Add OOB sub-folders for APMCS
 Rem    miayu       10/11/14 - Created for APMCS
 Rem
 
-DEFINE TENANT_ID ="&1"
+DEFINE TENANT_ID ='&1'
 
 -- folder id 5 is reserved as root folder for APMCS
 Insert into EMS_ANALYTICS_FOLDERS 

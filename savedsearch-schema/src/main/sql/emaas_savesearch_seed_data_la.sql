@@ -19,7 +19,7 @@ Rem    jerrusse       08/21/14 - Created for Log Analytics
 Rem
 
 
-DEFINE TENANT_ID = "&1"
+DEFINE TENANT_ID = '&1'
 
 -- *********************** FOLDERS ********************************
 -- folder id between 200 - 299 are reserved for Log Analytics
