@@ -9,12 +9,14 @@ Rem    NAME
 Rem      emaas_tenant_onboarding.sql
 Rem
 Rem    DESCRIPTION
-Rem      EM Analytics framework data upgrade sql file.
+Rem      Tenant onboarding file for Widgets Frameowrk - tenantid is passed by RM & we call seed data with 
+Rem      that tenant id & data gets inserted for that tenant
 Rem
 Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
+Rem    vinjoshi   1/23/1015 	Created
      
 WHENEVER SQLERROR EXIT ROLLBACK
 SET FEEDBACK ON
