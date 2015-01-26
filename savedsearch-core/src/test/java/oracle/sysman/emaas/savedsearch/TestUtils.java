@@ -27,7 +27,7 @@ public class TestUtils
 	{
 		Long internalId = null;
 
-		try {
+		/*try {
 			internalId = Long.parseLong(id);
 		}
 		catch (NumberFormatException e) {
@@ -36,7 +36,7 @@ public class TestUtils
 
 		if (internalId != null) {
 			return internalId;
-		}
+		}*/
 
 		if (id == null) {
 			new EMAnalyticsFwkException("Tenant Id cannot be null.", EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);

@@ -33,7 +33,7 @@ public class HeadersUtil
 		String header = request.getHeader(HEADER_TENANT_ID);
 		Long internalId = null;
 
-		try {
+		/*try {
 			internalId = Long.parseLong(header);
 		}
 		catch (NumberFormatException e) {
@@ -42,7 +42,7 @@ public class HeadersUtil
 
 		if (internalId != null) {
 			return internalId;
-		}
+		}*/
 
 		if (header == null) {
 			new EMAnalyticsFwkException("Tenant Id cannot be null.", EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);
