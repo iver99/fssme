@@ -105,6 +105,10 @@ Rem DESCRIPTION_NLSID - description Nlsid to map to messages
 Rem DESCRIPTION_SUBSYSTEM - Subsystem to map to messages
 Rem EM_PLUGIN_ID - Id of the plugin to which category belongs
 Rem DEFAULT_FOLDER_ID - Default folder ID for the category entities
+Rem PROVIDER_NAME - Widget provider's service name
+Rem PROVIDER_VERSION - Widget provider's service version
+Rem PROVIDER_DISCOVERY - Query criteria used to get widget discovery REST API
+Rem PROVIDER_ASSET_ROOT - Query criteria used to get the URL of widget asset root
 Rem TENANT_ID - adding  TENANT_ID  to isolate data from other tenant
 Rem
 
@@ -122,6 +126,10 @@ CREATE TABLE EMS_ANALYTICS_CATEGORY
     EM_PLUGIN_ID           VARCHAR2(64),
     DEFAULT_FOLDER_ID      NUMBER(*,0),
     DELETED                NUMBER(*,0) default 0 NOT NULL,
+    PROVIDER_NAME          VARCHAR2(64) NOT NULL,
+    PROVIDER_VERSION       VARCHAR2(64) NOT NULL,
+    PROVIDER_DISCOVERY     VARCHAR2(64),
+    PROVIDER_ASSET_ROOT    VARCHAR2(64) NOT NULL,
     TENANT_ID              NUMBER(*,0) NOT NULL,
     CONSTRAINT EMS_ANALYTICS_CATEGORY_PK PRIMARY KEY (CATEGORY_ID,TENANT_ID) USING INDEX,
     CONSTRAINT EMS_ANALYICS_CATEGORY_U01 UNIQUE (NAME,DELETED,TENANT_ID) USING INDEX,
