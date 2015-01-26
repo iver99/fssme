@@ -87,7 +87,7 @@ public class SearchParamTest extends BaseTest
 			TenantContext.setContext(opc1);
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
-			folder.setName("SearchPramTest23");
+			folder.setName("SearchPramTest23UT");
 			folder.setDescription("Test Parameter Description");
 			folder.setUiHidden(false);
 			folder = objFolder.saveFolder(folder);
@@ -99,6 +99,10 @@ public class SearchParamTest extends BaseTest
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 			cat.setOwner(currentUser);
 			cat.setDefaultFolderId(folder.getParentId());
+			cat.setProviderName("ProviderNameTest");
+			cat.setProviderVersion("ProviderVersionTest");
+			cat.setProviderDiscovery("ProviderDiscoveryTest");
+			cat.setProviderAssetRoot("ProviderAssetRootTest");
 			cat = objCategory.saveCategory(cat);
 			categoryId = cat.getId();
 

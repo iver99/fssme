@@ -758,7 +758,7 @@ public class SearchTest extends BaseTest
 		List<Search> listResult2 = null;
 
 		CategoryDetails catDetails = new CategoryDetails();
-		catDetails.setName("Demo Analytics");
+		catDetails.setName("Demo Analytics For UT");
 		catDetails.setProviderName("DemoProviderName");
 		catDetails.setProviderVersion("DemoProviderVersion");
 		catDetails.setProviderDiscovery("DemoProviderDiscovery");
@@ -766,12 +766,12 @@ public class SearchTest extends BaseTest
 		JAXBElement category = objectFac.createCategory(catDetails);
 
 		FolderDetails folderDetails = new FolderDetails();
-		folderDetails.setName("Demo Searches");
+		folderDetails.setName("Demo Searches for UT");
 		folderDetails.setParentId(1);
 		JAXBElement folder = objectFac.createFolder(folderDetails);
 
 		FolderDetails folderDetails1 = new FolderDetails();
-		folderDetails1.setName("Demo Searches1");
+		folderDetails1.setName("Demo Searches for UT1");
 		folderDetails1.setParentId(1);
 		JAXBElement folder_2 = objectFac.createFolder(folderDetails1);
 		try {
