@@ -57,6 +57,7 @@ subprojects {
 
 configurations {
         prebuild_log4j { transitive = false }
+        prebuild_tenant_sdk { transitive = false }
 	prebuild_toplink { transitive = false }
 	prebuild_servicemanager { transitive = false } 
 	prebuild_savedsearch { transitive = false }
@@ -71,7 +72,8 @@ configurations {
 dependencies {
 		
 	prebuild_log4j 'log4j:log4j:1.2.17'
-	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
+	prebuild_tenant_sdk 'com.oracle.emaas:emaas-platform-tenant-sdk:0.1'
+        prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.0'
 	prebuild_servicemanager 'emaas.platform:registry-client:0.23.4',
                                 'emaas.platform:registry-lookup-client:0.23.4'
@@ -116,6 +118,7 @@ task preBuildCompile(type: Copy) {
    ext.afDir = new File(rootDir, 'dependencies/artifactory')   
    from configurations.prebuild_toplink
    from configurations.prebuild_log4j
+   from configurations.prebuild_tenant_sdk
    from configurations.prebuild_servicemanager
    from configurations.prebuild_savedsearch
    from configurations.prebuild_junit
