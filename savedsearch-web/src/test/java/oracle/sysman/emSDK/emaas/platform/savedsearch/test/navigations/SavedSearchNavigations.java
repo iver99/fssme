@@ -38,7 +38,7 @@ public class SavedSearchNavigations
 	public static void afterTest()
 	{
 		Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().delete("/folder/" + folderid);
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + folderid);
 		System.out.println(res2.asString());
 		System.out.println("Status code is: " + res2.getStatusCode());
 		Assert.assertTrue(res2.getStatusCode() == 204);
@@ -50,14 +50,14 @@ public class SavedSearchNavigations
 
 		String jsonString = "{ \"name\":\"FolderTesting\",\"description\":\"Folder for  searches\"}";
 		Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).body(jsonString).when().post("/folder");
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString).when().post("/folder");
 		System.out.println(res.asString());
 		folderid = res.jsonPath().get("id");
 
 		/*String jsonString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><CategorySet><Category><Name>MyCategoryTesting</Name><Description>Testing</Description><DefaultFolderId>"
 				+ folderid + "</DefaultFolderId></Category></CategorySet>";
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.body(jsonString1).header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().post("/importcategories");
+				.body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -96,7 +96,7 @@ public class SavedSearchNavigations
 			System.out.println("This test is to get all the folders available with details");
 			int position = -1;
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/entities?folderId=" + folderid);
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + folderid);
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type        :" + jp.get("type[0]"));
@@ -141,7 +141,7 @@ public class SavedSearchNavigations
 			System.out.println("This test is to verify get entities with non-existed folder Id");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/entities?folderId=3333333333333");
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=3333333333333");
 			Assert.assertEquals(res.asString(), "Folder with the Id 3333333333333 does not exist");
 			Assert.assertEquals(res.getStatusCode(), 404);
 			System.out.println("------------------------------------------");
@@ -164,7 +164,7 @@ public class SavedSearchNavigations
 			System.out.println("This test is to get the root folder details");
 			int position = -1;
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/");
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/");
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Type       :" + jp.get("type"));
@@ -209,7 +209,7 @@ public class SavedSearchNavigations
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to get the details of the top root folder");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/folder/" + id);
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/folder/" + id);
 			System.out.println(res.toString());
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
@@ -235,7 +235,7 @@ public class SavedSearchNavigations
 	{
 
 		Response resroot = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("");
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("");
 		JsonPath jpRoot = resroot.jsonPath();
 
 		List<Integer> id = jpRoot.get("id");

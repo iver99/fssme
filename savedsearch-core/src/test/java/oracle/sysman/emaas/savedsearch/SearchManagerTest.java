@@ -126,21 +126,6 @@ public class SearchManagerTest extends BaseTest
 		return widget;
 	}
 
-	private static void setup(String value)
-	{
-		TenantContext.setContext(value);
-		try {
-			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-
-	}
-
 	@BeforeClass
 	public void initTenantDetails()
 	{

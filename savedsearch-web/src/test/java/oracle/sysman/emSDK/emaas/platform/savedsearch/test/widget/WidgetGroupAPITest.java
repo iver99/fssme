@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.widget;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -20,6 +21,7 @@ public class WidgetGroupAPITest
 	static String portno;
 	static String serveruri;
 	static String authToken;
+	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC1;
 
 	@BeforeClass
 	public static void setUp()
@@ -43,7 +45,8 @@ public class WidgetGroupAPITest
 			System.out.println("GET ALL Widget Groups");
 			System.out.println("											");
 
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/widgetgroups");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/widgetgroups");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
