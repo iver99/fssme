@@ -18,6 +18,7 @@
 			<class name="oracle.sysman.emaas.savedsearch.CategoryDetailsTest" />
 			<class name="oracle.sysman.emaas.savedsearch.ImportTest" />
 			<class name="oracle.sysman.emaas.savedsearch.MultitenentFolderTest" />
+			<class name="oracle.sysman.emaas.savedsearch.MultitenentCategoryTest"/>
 			<class name="oracle.sysman.emaas.savedsearch.MultitenentSearchTest" />
 			<class name="oracle.sysman.emaas.savedsearch.Cleanup" />
 		</classes>

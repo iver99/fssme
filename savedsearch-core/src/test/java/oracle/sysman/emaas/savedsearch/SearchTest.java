@@ -70,6 +70,10 @@ public class SearchTest extends BaseTest
 			cat.setName("CategoryTestOne");
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 			cat.setOwner(currentUser);
+			cat.setProviderName("ProviderNameTest");
+			cat.setProviderVersion("ProviderVersionTest");
+			cat.setProviderDiscovery("ProviderDiscoveryTest");
+			cat.setProviderAssetRoot("ProviderAssetRootTest");
 			cat = objCategory.saveCategory(cat);
 			categoryId = cat.getId();
 			AssertJUnit.assertFalse(categoryId == 0);
@@ -158,6 +162,10 @@ public class SearchTest extends BaseTest
 			cat.setName("CategoryTestOneTest1");
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 			cat.setOwner(currentUser);
+			cat.setProviderName("ProviderNameTest");
+			cat.setProviderVersion("ProviderVersionTest");
+			cat.setProviderDiscovery("ProviderDiscoveryTest");
+			cat.setProviderAssetRoot("ProviderAssetRootTest");
 			cat.setDefaultFolderId(folderId);
 			cat = objCategory.saveCategory(cat);
 			categoryId = cat.getId();
@@ -244,6 +252,10 @@ public class SearchTest extends BaseTest
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 			cat.setOwner(currentUser);
 			cat.setDefaultFolderId(folderId);
+			cat.setProviderName("ProviderNameTest");
+			cat.setProviderVersion("ProviderVersionTest");
+			cat.setProviderDiscovery("ProviderDiscoveryTest");
+			cat.setProviderAssetRoot("ProviderAssetRootTest");
 			cat = objCategory.saveCategory(cat);
 			categoryId = cat.getId();
 
@@ -427,6 +439,10 @@ public class SearchTest extends BaseTest
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 			cat.setOwner(currentUser);
 			cat.setDefaultFolderId(folderId);
+			cat.setProviderName("ProviderNameTest");
+			cat.setProviderVersion("ProviderVersionTest");
+			cat.setProviderDiscovery("ProviderDiscoveryTest");
+			cat.setProviderAssetRoot("ProviderAssetRootTest");
 			cat = objCategory.saveCategory(cat);
 			categoryId = cat.getId();
 
@@ -491,6 +507,10 @@ public class SearchTest extends BaseTest
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 			cat.setOwner(currentUser);
 			cat.setDefaultFolderId(folderId);
+			cat.setProviderName("ProviderNameTest");
+			cat.setProviderVersion("ProviderVersionTest");
+			cat.setProviderDiscovery("ProviderDiscoveryTest");
+			cat.setProviderAssetRoot("ProviderAssetRootTest");
 			cat = objCategory.saveCategory(cat);
 			int categoryId = cat.getId();
 
@@ -690,6 +710,10 @@ public class SearchTest extends BaseTest
 		CategoryManager objCategory = CategoryManagerImpl.getInstance();
 		Category cat = new CategoryImpl();
 		cat.setName("CategoryTestMSearch");
+		cat.setProviderName("ProviderNameTest");
+		cat.setProviderVersion("ProviderVersionTest");
+		cat.setProviderDiscovery("ProviderDiscoveryTest");
+		cat.setProviderAssetRoot("ProviderAssetRootTest");
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		cat.setOwner(currentUser);
 		cat.setDefaultFolderId(folder1.getParentId());
@@ -877,6 +901,10 @@ public class SearchTest extends BaseTest
 			cat.setName("C1");
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 			cat.setOwner(currentUser);
+			cat.setProviderName("ProviderNameTest");
+			cat.setProviderVersion("ProviderVersionTest");
+			cat.setProviderDiscovery("ProviderDiscoveryTest");
+			cat.setProviderAssetRoot("ProviderAssetRootTest");
 			cat.setDefaultFolderId(folder1.getParentId());
 			cat = objCategory.saveCategory(cat);
 			cId = cat.getId();

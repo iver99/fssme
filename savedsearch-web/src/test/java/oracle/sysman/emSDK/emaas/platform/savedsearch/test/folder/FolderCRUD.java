@@ -80,7 +80,10 @@ public class FolderCRUD
 
 	public static void importCategories() throws Exception
 	{
-		String jsonString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><CategorySet><Category><Name>MyCategory</Name></Category></CategorySet>";
+		String jsonString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+				+ "<CategorySet><Category><Name>MyCategory</Name>"
+				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
+				+ "</Category></CategorySet>";
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
 				.body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
