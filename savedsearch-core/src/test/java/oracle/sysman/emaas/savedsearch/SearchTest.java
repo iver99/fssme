@@ -13,7 +13,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.CategoryDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
@@ -45,7 +44,7 @@ public class SearchTest extends BaseTest
 	private static Search dupSearch;
 	private static final int TA_SEARCH_ID = 3000;//a system search that always exists
 
-	private static final String TENANT_ID_OPC1 = "TenantOpc1";
+	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
 	@BeforeClass
 	public static void initialization() throws Exception
@@ -53,8 +52,8 @@ public class SearchTest extends BaseTest
 
 		try {
 			//create a folder to insert search into it
-			SearchTest.setup(TENANT_ID_OPC1);
-			TenantContext.setContext(TENANT_ID_OPC1);
+			Long opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
+			TenantContext.setContext(opc1);
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = objFolder.createNewFolder();
 
@@ -125,21 +124,6 @@ public class SearchTest extends BaseTest
 		finally {
 			TenantContext.clearContext();
 		}
-	}
-
-	private static void setup(String value)
-	{
-		TenantContext.setContext(value);
-		try {
-			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-
 	}
 
 	@Test

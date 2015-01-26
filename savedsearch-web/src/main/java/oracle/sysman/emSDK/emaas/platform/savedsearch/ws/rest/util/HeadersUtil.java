@@ -10,10 +10,16 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.HttpHeaders;
+
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
+
+/**
+ * @author vinjoshi
+ *
+ */
 
 /**
  * @author vinjoshi
@@ -22,15 +28,39 @@ public class HeadersUtil
 {
 	private static final String HEADER_TENANT_ID = "X-USER-IDENTITY-DOMAIN";
 
-	public static String getTenantId(HttpHeaders request)
-	{
-		List<String> header = request.getRequestHeader(HEADER_TENANT_ID);
-		return header.get(0);
-	}
-
-	public static String getTenantId(HttpServletRequest request)
+	public static Long getInternalTenantId(HttpServletRequest request)
 	{
 		String header = request.getHeader(HEADER_TENANT_ID);
-		return header;
+		Long internalId = null;
+
+		/* For Testing
+		try {
+			internalId = Long.parseLong(header);
+		}
+		catch (NumberFormatException e) {
+
+		}
+
+		if (internalId != null) {
+			return internalId;
+		}*/
+
+		if (header == null) {
+			new EMAnalyticsFwkException("Tenant Id cannot be null.", EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);
+		}
+		try {
+			internalId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(header);
+		}
+		catch (BasicServiceMalfunctionException e) {
+			new EMAnalyticsFwkException("Tenant Id " + header + " does not exist.", EMAnalyticsFwkException.ERR_VALID_TENANT_ID,
+					null);
+		}
+
+		return internalId;
+	}
+
+	public static Long getTenantId(HttpServletRequest request) throws EMAnalyticsFwkException
+	{
+		return HeadersUtil.getInternalTenantId(request);
 	}
 }

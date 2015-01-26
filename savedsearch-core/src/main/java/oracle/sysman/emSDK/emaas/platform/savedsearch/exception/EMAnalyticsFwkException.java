@@ -87,6 +87,9 @@ public class EMAnalyticsFwkException extends Exception
 	//upgrade data
 	public static final int ERR_UPGRADE_DATA = 50010;
 
+	public static final int ERR_EMPTY_TENANT_ID = 50011;
+
+	public static final int ERR_VALID_TENANT_ID = 500112;
 	/**
 	 * Exception codes end
 	 */

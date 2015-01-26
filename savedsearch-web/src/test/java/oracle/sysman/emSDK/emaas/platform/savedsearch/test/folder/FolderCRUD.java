@@ -5,6 +5,7 @@ import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -20,7 +21,7 @@ import com.jayway.restassured.response.Response;
 
 public class FolderCRUD
 {
-	static String TENANT_ID_OPC1 = "opc1";
+	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC1;
 
 	/**
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
@@ -100,8 +101,6 @@ public class FolderCRUD
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
-		FolderCRUD.setup(TENANT_ID_OPC1);
-		TenantContext.setContext(TENANT_ID_OPC1);
 		try {
 			FolderCRUD.importCategories();
 
@@ -109,16 +108,6 @@ public class FolderCRUD
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private static void setup(String value)
-	{
-		Response res2 = null;
-		res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN", value).when().post("/admin/tenantonboard");
-		System.out.println(res2.asString());
-		System.out.println("Status code is: " + res2.getStatusCode());
-		Assert.assertTrue(res2.getStatusCode() == 201);
 	}
 
 	@Test

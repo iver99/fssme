@@ -3,7 +3,6 @@ package oracle.sysman.emaas.savedsearch;
 import java.util.ArrayList;
 import java.util.List;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -19,9 +18,8 @@ public class CategoryTest extends BaseTest
 {
 	private static Integer categoryId;
 
-	private static final String TENANT_ID_OPC1 = "TenantOpc1";
-
-	private static final String TENANT_ID_OPC2 = "TenantOpc2";
+	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
+	private static final String TENANT_ID_OPC2 = TestUtils.TENANT_ID_OPC2;
 
 	@AfterClass
 	public static void testDelete()
@@ -88,29 +86,10 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	private static void setup(String value)
-	{
-		TenantContext.setContext(value);
-		try {
-
-			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail("Upgrade fail");
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-
-	}
-
 	@BeforeClass
 	public void initTenantDetails()
 	{
-		CategoryTest.setup(TENANT_ID_OPC1);
-		CategoryTest.setup(TENANT_ID_OPC2);
-		TenantContext.setContext(TENANT_ID_OPC1);
+		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
 
 	}
 
@@ -284,7 +263,9 @@ public class CategoryTest extends BaseTest
 	@Test
 	public void testSaveCategory_DuplicateName() throws Exception
 	{
-		TenantContext.setContext(TENANT_ID_OPC2);
+
+		Long opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
+		TenantContext.setContext(opc1);
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("Log Analytics");

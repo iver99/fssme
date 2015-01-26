@@ -9,7 +9,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -30,7 +29,7 @@ public class SearchParamTest extends BaseTest
 	private static Integer folderId;
 	private static Integer categoryId;
 	private static Search searchObj;
-	private static final String TENANT_ID_OPC1 = "TenantOpc1";
+	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
 	@AfterClass
 	public static void testEndSearchparam() throws Exception
@@ -83,8 +82,9 @@ public class SearchParamTest extends BaseTest
 	{
 
 		try {
-			SearchParamTest.setup(TENANT_ID_OPC1);
-			TenantContext.setContext(TENANT_ID_OPC1);
+
+			Long opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
+			TenantContext.setContext(opc1);
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
 			folder.setName("SearchPramTest23");
@@ -138,22 +138,6 @@ public class SearchParamTest extends BaseTest
 			e.printStackTrace();
 			throw new Exception(e);
 		}
-	}
-
-	private static void setup(String value)
-	{
-		TenantContext.setContext(value);
-		try {
-
-			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-
 	}
 
 	@Test

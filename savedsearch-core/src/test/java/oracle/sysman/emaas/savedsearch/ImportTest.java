@@ -11,7 +11,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportCategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ParameterDetails;
@@ -32,7 +31,7 @@ import org.testng.annotations.Test;
 public class ImportTest extends BaseTest
 {
 
-	private static final String TENANT_ID_OPC1 = "TenantImportOpc1";
+	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
 	@Test
 	public static void testImportCategorySet() throws Exception
@@ -291,27 +290,10 @@ public class ImportTest extends BaseTest
 		return impCat;
 	}
 
-	private static void setup(String value)
-	{
-		TenantContext.setContext(value);
-		try {
-			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-
-	}
-
 	@BeforeClass
 	public void initTenantDetails()
 	{
-		ImportTest.setup(TENANT_ID_OPC1);
-		TenantContext.setContext(TENANT_ID_OPC1);
-
+		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
 	}
 
 	@AfterClass

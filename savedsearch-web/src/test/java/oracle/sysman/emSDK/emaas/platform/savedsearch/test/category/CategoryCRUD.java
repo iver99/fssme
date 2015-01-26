@@ -5,6 +5,7 @@ import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -30,7 +31,7 @@ public class CategoryCRUD
 	static String portno;
 	static String serveruri;
 	static String authToken;
-	static String TENANT_ID_OPC1 = "opc1";
+	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC1;
 
 	static int catid = -1;
 	static int folderid = -1;
@@ -79,24 +80,12 @@ public class CategoryCRUD
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
-		CategoryCRUD.setup(TENANT_ID_OPC1);
-		TenantContext.setContext(TENANT_ID_OPC1);
 		try {
 			CategoryCRUD.createinitObject();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private static void setup(String value)
-	{
-		Response res2 = null;
-		res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN", value).when().post("/admin/tenantonboard");
-		System.out.println(res2.asString());
-		System.out.println("Status code is: " + res2.getStatusCode());
-		Assert.assertTrue(res2.getStatusCode() == 201);
 	}
 
 	/**

@@ -11,7 +11,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.UpgradeManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -33,7 +32,8 @@ import org.testng.annotations.Test;
 public class SearchManagerTest extends BaseTest
 {
 
-	private static final String TENANT_ID_OPC1 = "TenantOpc1";
+	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
+	private static Long opc1 = null;
 
 	// Important: keep this value the same with sequence step (value for 'INCREMENT BY') for EMS_ANALYTICS_SEARCH_SEQ
 	private static final int SEQ_ALLOCATION_SIZE = 1;
@@ -73,26 +73,11 @@ public class SearchManagerTest extends BaseTest
 		return search;
 	}
 
-	private static void setup(String value)
-	{
-		TenantContext.setContext(value);
-		try {
-			AssertJUnit.assertTrue(UpgradeManagerImpl.getInstance().upgradeData() == true);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-
-	}
-
 	@BeforeClass
 	public void initTenantDetails()
 	{
-		SearchManagerTest.setup(TENANT_ID_OPC1);
-		TenantContext.setContext(TENANT_ID_OPC1);
+		opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
+		TenantContext.setContext(opc1);
 
 	}
 

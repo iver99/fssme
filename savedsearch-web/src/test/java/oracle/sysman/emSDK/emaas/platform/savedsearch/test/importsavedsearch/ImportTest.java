@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -26,7 +27,7 @@ public class ImportTest
 	static String portno;
 	static String serveruri;
 	static String authToken;
-	static String TENANT_ID_OPC1 = "opc1";
+	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC1;
 
 	private static final String FOLDER_XML = "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/Folder.xml";
 	private static final String CATEGORY_XML = "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/Category.xml";
@@ -46,8 +47,6 @@ public class ImportTest
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
-		ImportTest.setup(TENANT_ID_OPC1);
-		TenantContext.setContext(TENANT_ID_OPC1);
 	}
 
 	private static String getStringFromInputStream(InputStream is)
@@ -81,16 +80,6 @@ public class ImportTest
 
 		return sb.toString();
 
-	}
-
-	private static void setup(String value)
-	{
-		Response res2 = null;
-		res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN", value).when().post("/admin/tenantonboard");
-		System.out.println(res2.asString());
-		System.out.println("Status code is: " + res2.getStatusCode());
-		Assert.assertTrue(res2.getStatusCode() == 201);
 	}
 
 	@Test

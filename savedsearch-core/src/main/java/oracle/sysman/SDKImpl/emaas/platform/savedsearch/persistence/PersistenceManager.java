@@ -76,9 +76,9 @@ public class PersistenceManager
 		}
 	}
 
-	public EntityManager getEntityManager(String value)
+	public EntityManager getEntityManager(Long value)
 	{
-		Map<String, String> emProperties = new HashMap<String, String>();
+		Map<String, Long> emProperties = new HashMap<String, Long>();
 		emProperties.put(TENANT_ID_STR, value);
 		return emf.createEntityManager(emProperties);
 	}

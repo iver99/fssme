@@ -37,17 +37,14 @@ public class SavedSearchCORSFilter implements Filter
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept, X-USER-IDENTITY-DOMAIN-NAME, Authorization, x-sso-client");
 
-		String tenantId = HeadersUtil.getTenantId((HttpServletRequest) request);
-		if (tenantId == null || tenantId.trim().length() == 0) {
-			hRes.sendError(HttpServletResponse.SC_BAD_REQUEST, "Please specify tenantid");
-			return;
-		}
-		TenantContext.setContext(tenantId);
 		try {
+			Long tenantId = HeadersUtil.getTenantId((HttpServletRequest) request);
+			TenantContext.setContext(tenantId);
 			chain.doFilter(request, response);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			hRes.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 		finally {
 			//always remove tenant-id from thradlocal when request completed or on error 

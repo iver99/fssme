@@ -5,6 +5,7 @@ import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -29,7 +30,7 @@ public class SearchesCRUD
 	static String portno;
 	static String serveruri;
 	static String authToken;
-	static String TENANT_ID_OPC1 = "opc1";
+	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC1;
 	static int catid = -1;
 	static int folderid = -1;
 	static String catName = "";
@@ -109,24 +110,12 @@ public class SearchesCRUD
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
-		SearchesCRUD.setup(TENANT_ID_OPC1);
-		TenantContext.setContext(TENANT_ID_OPC1);
 		try {
 			SearchesCRUD.createinitObject();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private static void setup(String value)
-	{
-		Response res2 = null;
-		res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN", value).when().post("/admin/tenantonboard");
-		System.out.println(res2.asString());
-		System.out.println("Status code is: " + res2.getStatusCode());
-		Assert.assertTrue(res2.getStatusCode() == 201);
 	}
 
 	@Test
@@ -138,8 +127,7 @@ public class SearchesCRUD
 		try {
 			System.out.println("------------------------------------------");
 			System.out.println("Create a folder and a serch in it to see the hierarchy of folder path");
-			// int position = -1;
-			TenantContext.setContext("TenantOpc1");
+			// int position = -1;			
 			System.out.println("Creating a Folder");
 			String jsonString = "{ \"name\":\"Folder_cont\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()

@@ -5,6 +5,7 @@ import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -31,7 +32,7 @@ public class SavedSearchNavigations
 	static int catid = -1;
 	static int folderid = -1;
 	static String catName = "";
-	static String TENANT_ID_OPC1 = "opc1";
+	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC1;
 
 	@AfterClass
 	public static void afterTest()
@@ -76,24 +77,12 @@ public class SavedSearchNavigations
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
-		SavedSearchNavigations.setup(TENANT_ID_OPC1);
-		TenantContext.setContext(TENANT_ID_OPC1);
 		try {
 			SavedSearchNavigations.createinitObject();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private static void setup(String value)
-	{
-		Response res2 = null;
-		res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN", value).when().post("/admin/tenantonboard");
-		System.out.println(res2.asString());
-		System.out.println("Status code is: " + res2.getStatusCode());
-		Assert.assertTrue(res2.getStatusCode() == 201);
 	}
 
 	@Test
