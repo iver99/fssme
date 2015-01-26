@@ -9,21 +9,22 @@ tenant_hydration_sql_filename = "emaas_tenant_onboarding.sql"
 
 # Couples of assumptions:
 #    1. the schema user/password information is passed in
-#       explicitly since the dashboard schema is dynamically
+#       explicitly since the SSF schema is dynamically
 #       assigned during runtime
 #    2. the database information lookup will also be passed in
 #       as well, which means that the entity naming and
 #       lookup information will be available
 #    3. the host where this recipe is run on has the software
 #       unbundled
+#	   4. the id being passed is INTERNAL TENANT ID - NOT the one that gets passed around in X-USER-IDENTITY....
 
 # Step 0: validate the parameters that must be explicitly passed in
 bash "checkTenantID" do
   code <<-EOF
-    echo "`date` --- Chef Recipe::tenantHydration --- missing tenantID" >> #{node["log_dir"]}/savedSearchDatasource.log
+    echo "`date` --- Chef Recipe::tenantHydration --- missing tenantID -- we need internalTenantID" >> #{node["log_dir"]}/savedSearchDatasource.log
     exit 1;
   EOF
-  not_if { node['tenantID'] }
+  not_if { node['internalTenantID'] }
 end
 
 # Step 1: get the datasource information so we could connect
@@ -63,7 +64,7 @@ bash "unbundle_schema_zipe" do
 
     # echo "`date` -- Tenant Hydration: running the script now" >> #{node["log_dir"]}/savedSearchDatasource.log
     # #{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} << eof_sql > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
-    # @emaas_tenant_onboarding.sql #{node["tenantID"]}
+    # @emaas_tenant_onboarding.sql #{node["internalTenantID"]}
     # eof_sql
 EOH
 }
@@ -73,7 +74,7 @@ end
 # Executing the Tenant Hydration SQL file
 execute "run_tenant_hydration_sql" do
     cwd tenant_hydration_schema_script_dir
-    command lazy {"#{node["dbhome"]}/bin/sqlplus #{node["db_url"]} @#{tenant_hydration_sql_filename} #{node["tenantID"]} >> #{node["log_dir"]}/savedSearchDatasource.log"}
+    command lazy {"#{node["dbhome"]}/bin/sqlplus #{node["db_url"]} @#{tenant_hydration_sql_filename} #{node["internalTenantID"]} >> #{node["log_dir"]}/savedSearchDatasource.log"}
 end
 
 
