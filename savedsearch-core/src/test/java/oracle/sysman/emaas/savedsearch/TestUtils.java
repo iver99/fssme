@@ -19,15 +19,14 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdPro
  */
 public class TestUtils
 {
-	public static final String TENANT_ID_OPC1 = "TenantOpc1";
-	public static final String TENANT_ID_OPC2 = "TenantOpc2";
-	public static final String TENANT_ID_OPC3 = "TenantOpc3";
+	public static final String TENANT_ID_OPC1 = "1";
+	public static final String TENANT_ID_OPC2 = "2";
+	public static final String TENANT_ID_OPC3 = "3";
 
 	public static Long getInternalTenantId(String id)
 	{
 		Long internalId = null;
 
-		/* for testing 
 		try {
 			internalId = Long.parseLong(id);
 		}
@@ -37,7 +36,7 @@ public class TestUtils
 
 		if (internalId != null) {
 			return internalId;
-		} */
+		}
 
 		if (id == null) {
 			new EMAnalyticsFwkException("Tenant Id cannot be null.", EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);

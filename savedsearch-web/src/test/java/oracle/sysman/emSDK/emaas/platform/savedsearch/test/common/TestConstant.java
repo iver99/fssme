@@ -16,8 +16,8 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.test.common;
 public class TestConstant
 {
 
-	public static final String TENANT_ID_OPC1 = "TenantOpc1";
-	public static final String TENANT_ID_OPC2 = "TenantOpc2";
-	public static final String TENANT_ID_OPC3 = "TenantOpc3";
+	public static final String TENANT_ID_OPC1 = "1";
+	public static final String TENANT_ID_OPC2 = "2";
+	public static final String TENANT_ID_OPC3 = "3";
 
 }
