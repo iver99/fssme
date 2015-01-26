@@ -33,11 +33,11 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "ssftenant.id", length = 32)
 @Table(name = "EMS_ANALYTICS_CATEGORY")
 @NamedQueries({
-		@NamedQuery(name = "Category.getCategoryById", query = "SELECT e FROM EmAnalyticsCategory e Where e.categoryId = :id  AND e.deleted =0 "),
-		@NamedQuery(name = "Category.getCategoryByFolder", query = "SELECT e FROM EmAnalyticsCategory e Where e.emAnalyticsFolder = :id  AND e.deleted =0 "),
-		@NamedQuery(name = "Category.getAllCategory", query = "SELECT e FROM EmAnalyticsCategory e Where e.deleted =0 "),
-		@NamedQuery(name = "Category.getCategoryByName", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
-				+ ":categoryName" + " AND e.deleted = 0 ") })
+	@NamedQuery(name = "Category.getCategoryById", query = "SELECT e FROM EmAnalyticsCategory e Where e.categoryId = :id  AND e.deleted =0 "),
+	@NamedQuery(name = "Category.getCategoryByFolder", query = "SELECT e FROM EmAnalyticsCategory e Where e.emAnalyticsFolder = :id  AND e.deleted =0 "),
+	@NamedQuery(name = "Category.getAllCategory", query = "SELECT e FROM EmAnalyticsCategory e Where e.deleted =0 "),
+	@NamedQuery(name = "Category.getCategoryByName", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
+			+ ":categoryName" + " AND e.deleted = 0 ") })
 @SequenceGenerator(name = "EMS_ANALYTICS_CATEGORY_SEQ", sequenceName = "EMS_ANALYTICS_CATEGORY_SEQ", allocationSize = 1)
 public class EmAnalyticsCategory implements Serializable
 {
@@ -81,6 +81,18 @@ public class EmAnalyticsCategory implements Serializable
 
 	@Column(name = "DELETED")
 	private long deleted;
+
+	@Column(name = "PROVIDER_NAME")
+	private String providerName;
+
+	@Column(name = "PROVIDER_VERSION")
+	private String providerVersion;
+
+	@Column(name = "PROVIDER_DISCOVERY")
+	private String providerDiscovery;
+
+	@Column(name = "PROVIDER_ASSET_ROOT")
+	private String providerAssetRoot;
 
 	//bi-directional many-to-one association to EmAnalyticsCategoryParam
 
@@ -169,6 +181,26 @@ public class EmAnalyticsCategory implements Serializable
 		return owner;
 	}
 
+	public String getProviderAssetRoot()
+	{
+		return providerAssetRoot;
+	}
+
+	public String getProviderDiscovery()
+	{
+		return providerDiscovery;
+	}
+
+	public String getProviderName()
+	{
+		return providerName;
+	}
+
+	public String getProviderVersion()
+	{
+		return providerVersion;
+	}
+
 	public void setCategoryId(long categoryId)
 	{
 		this.categoryId = categoryId;
@@ -237,6 +269,26 @@ public class EmAnalyticsCategory implements Serializable
 	public void setOwner(String owner)
 	{
 		this.owner = owner;
+	}
+
+	public void setProviderAssetRoot(String providerAssetRoot)
+	{
+		this.providerAssetRoot = providerAssetRoot;
+	}
+
+	public void setProviderDiscovery(String providerDiscovery)
+	{
+		this.providerDiscovery = providerDiscovery;
+	}
+
+	public void setProviderName(String providerName)
+	{
+		this.providerName = providerName;
+	}
+
+	public void setProviderVersion(String providerVersion)
+	{
+		this.providerVersion = providerVersion;
 	}
 
 }

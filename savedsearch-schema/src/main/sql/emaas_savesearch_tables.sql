@@ -16,6 +16,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
+Rem    aduan       01/14/15 - Add columns to Search and Category table to support widget framework
 Rem    miayu       08/22/14 - Introduce schema version
 Rem    saurgarg    01/27/14 - adding category params table and other changes
 Rem    kuabhina    12/13/13 - Created
@@ -182,6 +183,7 @@ Rem IS_LOCKED -  whether the search is locked or not for update to its metadata
 Rem METADATA_CLOB  - clob to store search metadata.
 Rem SEARCH_DISPLAY_STR - display string for search content.
 Rem UI_HIDDEN - Attribute to mark the folder hidden from being displayed in UI
+Rem IS_WIDGET - Whether the search is a widget or not
 Rem
 
 CREATE TABLE EMS_ANALYTICS_SEARCH
@@ -207,7 +209,8 @@ CREATE TABLE EMS_ANALYTICS_SEARCH
     SEARCH_DISPLAY_STR     CLOB,
     UI_HIDDEN		   NUMBER(1,0) default 0 not null constraint EMS_ANALYTICS_SRCH_UIHID1 check (UI_HIDDEN between 0 and 1),
     DELETED                NUMBER(*,0) default 0 NOT NULL, 
-    TENANT_ID              NUMBER(*,0) NOT NULL, 
+    IS_WIDGET          	   NUMBER(1,0) default 0 not null constraint EMS_ANALYTICS_SRCH_LCK2 check (IS_WIDGET between 0 and 1),
+    TENANT_ID              VARCHAR2(32) NOT NULL, 
     CONSTRAINT EMS_ANALYTICS_SEARCH_PK PRIMARY KEY (SEARCH_ID,TENANT_ID) USING INDEX ,
     CONSTRAINT EMS_ANALYTICS_SEARCH_U01 UNIQUE (NAME, FOLDER_ID, CATEGORY_ID ,DELETED,TENANT_ID) USING INDEX ,
     CONSTRAINT EMS_ANALYTICS_SEARCH_FK1 FOREIGN KEY (CATEGORY_ID,TENANT_ID) REFERENCES EMS_ANALYTICS_CATEGORY (CATEGORY_ID,TENANT_ID),

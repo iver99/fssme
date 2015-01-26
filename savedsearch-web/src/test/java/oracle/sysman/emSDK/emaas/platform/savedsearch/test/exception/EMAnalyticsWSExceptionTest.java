@@ -1,4 +1,6 @@
-package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception;
+package oracle.sysman.emSDK.emaas.platform.savedsearch.test.exception;
+
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

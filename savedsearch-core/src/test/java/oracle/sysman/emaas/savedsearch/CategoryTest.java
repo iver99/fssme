@@ -52,6 +52,10 @@ public class CategoryTest extends BaseTest
 			Category category = catMan.createNewCategory();
 			category.setName("CategoryName");
 			category.setDescription("CategoryTest");
+			category.setProviderName("ProviderNameTest");
+			category.setProviderVersion("ProviderVersionTest");
+			category.setProviderDiscovery("ProviderDiscoveryTest");
+			category.setProviderAssetRoot("ProviderAssetRootTest");
 
 			// set the parameter for the category
 			Parameter sp1 = new Parameter();
@@ -76,6 +80,10 @@ public class CategoryTest extends BaseTest
 			// assert the value we have saved
 			AssertJUnit.assertEquals("CategoryName", category.getName());
 			AssertJUnit.assertEquals("CategoryTest", category.getDescription());
+			AssertJUnit.assertEquals("ProviderNameTest", category.getProviderName());
+			AssertJUnit.assertEquals("ProviderVersionTest", category.getProviderVersion());
+			AssertJUnit.assertEquals("ProviderDiscoveryTest", category.getProviderDiscovery());
+			AssertJUnit.assertEquals("ProviderAssetRootTest", category.getProviderAssetRoot());
 			// Assert.assertEquals("MyCategory", category.getDisplayName());
 			AssertJUnit.assertNotNull(category.getCreatedOn());
 
@@ -129,6 +137,10 @@ public class CategoryTest extends BaseTest
 			category.setName("testName");
 			category.setDescription("testcase checking");
 			category.setDefaultFolderId(1);
+			category.setProviderName("ProviderNameTestEdit");
+			category.setProviderVersion("ProviderVersionTestEdit");
+			category.setProviderDiscovery("ProviderDiscoveryTestEdit");
+			category.setProviderAssetRoot("ProviderAssetRootTestEdit");
 
 			// set the parameter for the category
 			Parameter sp1 = new Parameter();
@@ -147,6 +159,10 @@ public class CategoryTest extends BaseTest
 
 			AssertJUnit.assertEquals("testName", category.getName());
 			AssertJUnit.assertEquals("testcase checking", category.getDescription());
+			AssertJUnit.assertEquals("ProviderNameTestEdit", category.getProviderName());
+			AssertJUnit.assertEquals("ProviderVersionTestEdit", category.getProviderVersion());
+			AssertJUnit.assertEquals("ProviderDiscoveryTestEdit", category.getProviderDiscovery());
+			AssertJUnit.assertEquals("ProviderAssetRootTestEdit", category.getProviderAssetRoot());
 			// Assert.assertEquals("displayTestName",
 			// category.getDisplayName());
 
@@ -269,6 +285,10 @@ public class CategoryTest extends BaseTest
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("Log Analytics");
+		category.setProviderName("ProviderNameUT");
+		category.setProviderVersion("ProviderVersionUT");
+		category.setProviderDiscovery("ProviderDiscoveryUT");
+		category.setProviderAssetRoot("ProviderAssetRootUT");
 		try {
 			category = catMan.saveCategory(category);
 

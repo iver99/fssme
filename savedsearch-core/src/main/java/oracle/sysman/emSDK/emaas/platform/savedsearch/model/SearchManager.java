@@ -105,6 +105,16 @@ public abstract class SearchManager
 		return null;
 	}
 
+	/**
+	 * Returns the list of widgets belonging to a category.
+	 *
+	 * @param categoryId
+	 *            identifier of the category
+	 * @return list of widgets belonging to a category
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException;
+
 	public abstract Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException;
 
 	/**

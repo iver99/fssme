@@ -43,6 +43,7 @@ public class SearchTest extends BaseTest
 
 	private static Search dupSearch;
 	private static final int TA_SEARCH_ID = 3000;//a system search that always exists
+	private static int initialSearchCnt = 0;
 
 	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
@@ -74,6 +75,8 @@ public class SearchTest extends BaseTest
 			AssertJUnit.assertFalse(categoryId == 0);
 
 			SearchManager objSearch = SearchManager.getInstance();
+			List<Search> existedSearches = objSearch.getSearchListByCategoryId(999);
+			initialSearchCnt = existedSearches != null ? existedSearches.size() : 0;
 
 			//create a new search inside the folder we created
 			Search search = objSearch.createNewSearch();
@@ -367,7 +370,7 @@ public class SearchTest extends BaseTest
 		try {
 			List<Search> list = search.getSearchListByCategoryId(999L);
 			AssertJUnit.assertNotNull(list);
-			AssertJUnit.assertEquals(2, list.size());
+			AssertJUnit.assertEquals(initialSearchCnt, list.size());
 		}
 		catch (EMAnalyticsFwkException emanfe) {
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_GENERIC));
@@ -732,6 +735,10 @@ public class SearchTest extends BaseTest
 
 		CategoryDetails catDetails = new CategoryDetails();
 		catDetails.setName("Demo Analytics");
+		catDetails.setProviderName("DemoProviderName");
+		catDetails.setProviderVersion("DemoProviderVersion");
+		catDetails.setProviderDiscovery("DemoProviderDiscovery");
+		catDetails.setProviderAssetRoot("DemoProviderAssetRoot");
 		JAXBElement category = objectFac.createCategory(catDetails);
 
 		FolderDetails folderDetails = new FolderDetails();
@@ -785,6 +792,10 @@ public class SearchTest extends BaseTest
 
 		CategoryDetails catDetails2 = new CategoryDetails();
 		catDetails2.setName("Demo Analytics 2");
+		catDetails2.setProviderName("DemoProviderName2");
+		catDetails2.setProviderVersion("DemoProviderVersion2");
+		catDetails2.setProviderDiscovery("DemoProviderDiscovery2");
+		catDetails2.setProviderAssetRoot("DemoProviderAssetRoot2");
 		JAXBElement category2 = objectFac.createCategory(catDetails2);
 
 		FolderDetails folderDetails2 = new FolderDetails();
@@ -794,6 +805,10 @@ public class SearchTest extends BaseTest
 
 		CategoryDetails catDetails3 = new CategoryDetails();
 		catDetails3.setName("Demo Analytics 3");
+		catDetails3.setProviderName("DemoProviderName3");
+		catDetails3.setProviderVersion("DemoProviderVersion3");
+		catDetails3.setProviderDiscovery("DemoProviderDiscovery3");
+		catDetails3.setProviderAssetRoot("DemoProviderAssetRoot3");
 		JAXBElement category3 = objectFac.createCategory(catDetails3);
 
 		FolderDetails folderDetails3 = new FolderDetails();

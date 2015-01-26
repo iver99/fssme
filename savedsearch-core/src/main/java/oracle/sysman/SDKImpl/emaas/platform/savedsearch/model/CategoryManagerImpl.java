@@ -495,6 +495,10 @@ public class CategoryManagerImpl extends CategoryManager
 
 			rtnObj.setOwner(category.getOwner());
 			rtnObj.setCreatedOn(category.getCreationDate());
+			rtnObj.setProviderName(category.getProviderName());
+			rtnObj.setProviderVersion(category.getProviderVersion());
+			rtnObj.setProviderDiscovery(category.getProviderDiscovery());
+			rtnObj.setProviderAssetRoot(category.getProviderAssetRoot());
 
 			// handle params
 

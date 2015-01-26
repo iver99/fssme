@@ -46,7 +46,7 @@ public class SearchManagerImpl extends SearchManager
 
 	/**
 	 * Get SearchManagerImpl singleton instance.
-	 * 
+	 *
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
@@ -420,6 +420,44 @@ public class SearchManagerImpl extends SearchManager
 
 		}
 		return rtnobj;
+	}
+
+	@Override
+	public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+	{
+		EntityManager em = null;
+		try {
+			List<Search> rtnobj = new ArrayList<Search>();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getWidgetListByCategory")
+					.setParameter("categoryId", categoryId).getResultList();
+			for (EmAnalyticsSearch searchObj : searchList) {
+				em.refresh(searchObj);
+				rtnobj.add(createSearchObject(searchObj, null));
+			}
+
+			return rtnobj;
+		}
+		catch (Exception e) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
+				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
+				throw new EMAnalyticsFwkException(
+						"Error while connecting to data source, please check the data source details: ",
+						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
+			}
+			else {
+				_logger.error("Error while retrieving the list of widgets for the categoryId : " + categoryId, e);
+				throw new EMAnalyticsFwkException(
+						"Error while retrieving the list of widgets for the categoryId : " + categoryId,
+						EMAnalyticsFwkException.ERR_GENERIC, null, e);
+			}
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+
 	}
 
 	@Override
@@ -820,6 +858,7 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setSystemSearch(searchObj.getSystemSearch() != null && searchObj.getSystemSearch().intValue() == 1 ? true
 					: false);
 			rtnObj.setLastAccessDate(searchObj.getAccessDate());
+			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
 
 			{
 				List<SearchParameter> searchParams = null;

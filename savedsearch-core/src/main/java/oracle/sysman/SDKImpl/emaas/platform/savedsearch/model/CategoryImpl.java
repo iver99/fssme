@@ -12,7 +12,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 
 @XmlRootElement
-@XmlType(propOrder = { "id", "name", "description", "owner", "createdOn", "defaultFolderId", "parameters" })
+@XmlType(propOrder = { "id", "name", "description", "owner", "createdOn", "defaultFolderId", "providerName", "providerVersion",
+		"providerDiscovery", "providerAssetRoot", "parameters" })
 public class CategoryImpl implements Category
 {
 	private Integer id;
@@ -22,6 +23,10 @@ public class CategoryImpl implements Category
 	private List<Parameter> parameters;
 	private String owner;
 	private Date creationDate;
+	private String providerName;
+	private String providerVersion;
+	private String providerDiscovery;
+	private String providerAssetRoot;
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category#getCreationDate()
@@ -69,6 +74,30 @@ public class CategoryImpl implements Category
 	public List<Parameter> getParameters()
 	{
 		return parameters;
+	}
+
+	@Override
+	public String getProviderAssetRoot()
+	{
+		return providerAssetRoot;
+	}
+
+	@Override
+	public String getProviderDiscovery()
+	{
+		return providerDiscovery;
+	}
+
+	@Override
+	public String getProviderName()
+	{
+		return providerName;
+	}
+
+	@Override
+	public String getProviderVersion()
+	{
+		return providerVersion;
 	}
 
 	/* (non-Javadoc)
@@ -121,5 +150,29 @@ public class CategoryImpl implements Category
 	public void setParameters(List<Parameter> parameters)
 	{
 		this.parameters = parameters;
+	}
+
+	@Override
+	public void setProviderAssetRoot(String providerAssetRoot)
+	{
+		this.providerAssetRoot = providerAssetRoot;
+	}
+
+	@Override
+	public void setProviderDiscovery(String providerDiscovery)
+	{
+		this.providerDiscovery = providerDiscovery;
+	}
+
+	@Override
+	public void setProviderName(String providerName)
+	{
+		this.providerName = providerName;
+	}
+
+	@Override
+	public void setProviderVersion(String providerVersion)
+	{
+		this.providerVersion = providerVersion;
 	}
 }

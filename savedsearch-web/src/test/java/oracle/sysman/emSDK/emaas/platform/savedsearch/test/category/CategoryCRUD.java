@@ -138,9 +138,19 @@ public class CategoryCRUD
 			System.out.println("Category Id   :" + jp.get("id"));
 			System.out.println("Description   :" + jp.get("description"));
 			System.out.println("defaultFolder :" + jp.get("defaultFolder"));
-			Assert.assertEquals(jp.get("description"), "Testing");
-			Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
-			Assert.assertEquals(jp.get("id"), catid);
+			System.out.println("providerName :" + jp.get("providerName"));
+			System.out.println("providerVersion :" + jp.get("providerVersion"));
+			System.out.println("providerAssetRoot :" + jp.get("providerAssetRoot"));
+			Assert.assertEquals(jp.get("description"), "Search Category for Log Analytics");
+			Assert.assertEquals(jp.get("name"), "Log Analytics");
+			Assert.assertEquals(jp.get("id"), 1);
+			Assert.assertEquals(jp.getMap("defaultFolder").get("id"), 2);
+			Assert.assertEquals(jp.get("providerName"), "Log Analytics");
+			Assert.assertEquals(jp.get("providerVersion"), "1.0");
+			Assert.assertEquals(jp.get("providerAssetRoot"), "assetRoot");
+			//			Assert.assertEquals(jp.get("description"), "Testing");
+			//			Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
+			//			Assert.assertEquals(jp.get("id"), catid);
 			Assert.assertNotNull(jp.get("href"));
 			Assert.assertTrue(String.valueOf(jp.get("href")).contains("/savedsearch/v1/category/" + jp.get("id")));
 			Assert.assertTrue(res.getStatusCode() == 200);
@@ -173,9 +183,19 @@ public class CategoryCRUD
 			System.out.println("Category Id    :" + jp.get("id"));
 			System.out.println("Description    :" + jp.get("description"));
 			System.out.println("defaultFolderId:" + jp.get("defaultFolderId"));
-			Assert.assertEquals(jp.get("description"), "Testing");
-			Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
-			Assert.assertEquals(jp.get("id"), catid);
+			System.out.println("providerName :" + jp.get("providerName"));
+			System.out.println("providerVersion :" + jp.get("providerVersion"));
+			System.out.println("providerAssetRoot :" + jp.get("providerAssetRoot"));
+			Assert.assertEquals(jp.get("description"), "Search Category for Log Analytics");
+			Assert.assertEquals(jp.get("name"), "Log Analytics");
+			Assert.assertEquals(jp.get("id"), 1);
+			Assert.assertEquals(jp.getMap("defaultFolder").get("id"), 2);
+			Assert.assertEquals(jp.get("providerName"), "Log Analytics");
+			Assert.assertEquals(jp.get("providerVersion"), "1.0");
+			Assert.assertEquals(jp.get("providerAssetRoot"), "assetRoot");
+			//			Assert.assertEquals(jp.get("description"), "Testing");
+			//			Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
+			//			Assert.assertEquals(jp.get("id"), catid);
 			Assert.assertNotNull(jp.get("href"));
 			Assert.assertTrue(String.valueOf(jp.get("href")).contains("/savedsearch/v1/category/" + jp.get("id")));
 
@@ -379,7 +399,7 @@ public class CategoryCRUD
 		try {
 			System.out.println("------------------------------------------");
 			System.out
-					.println("This test is to validate the response & status with categoryName, categoryId & folderId combinations");
+			.println("This test is to validate the response & status with categoryName, categoryId & folderId combinations");
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when()
 					.get("/searches?categoryId=" + catid + "&categoryname=" + catName + "&folderId=" + folderid);
@@ -404,7 +424,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("Case1:This test is to validate the response and status when the searches by category with bad url");
+			.println("Case1:This test is to validate the response and status when the searches by category with bad url");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/searches?categoryId");
@@ -449,7 +469,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("This test is to validate the response when the search by category with category ID which is negative number");
+			.println("This test is to validate the response when the search by category with category ID which is negative number");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/searches?categoryId=-1");
 
@@ -475,7 +495,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("This test is to validate the response when the search by category with category ID which is not exist");
+			.println("This test is to validate the response when the search by category with category ID which is not exist");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/searches?categoryId=4567890");
 
@@ -500,9 +520,10 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("This test is to validate the response when the searches by category with category name which is not exist");
+			.println("This test is to validate the response when the searches by category with category name which is not exist");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when().get("/searches?categoryName=MyAnalytics");
+
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
@@ -525,7 +546,7 @@ public class CategoryCRUD
 	{
 		try {
 			System.out
-					.println("This test is to validate the response when the search by category whose category name & id are not exist");
+			.println("This test is to validate the response when the search by category whose category name & id are not exist");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header("X-USER-IDENTITY-DOMAIN", TENANT_ID_OPC1).when()
 					.get("/searches?categoryName=invalidCategory&categoryId=200000");
@@ -669,7 +690,7 @@ public class CategoryCRUD
 		try {
 			System.out.println("------------------------------------------");
 			System.out
-					.println("This test is to perform the operation that lists all the searches by the specified category name");
+			.println("This test is to perform the operation that lists all the searches by the specified category name");
 			System.out.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;

@@ -12,7 +12,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
 @XmlRootElement
 @XmlType(propOrder = { "id", "name", "description", "guid", "folderId", "categoryId", "owner", "createdOn", "lastModifiedOn",
-		"lastAccessDate", "lastModifiedBy", "metadata", "queryStr", "systemSearch", "locked", "uiHidden", "parameters" })
+		"lastAccessDate", "lastModifiedBy", "metadata", "queryStr", "systemSearch", "locked", "isWidget", "uiHidden",
+		"parameters" })
 public class SearchImpl extends SearchSummaryImpl implements Search
 {
 
@@ -21,6 +22,13 @@ public class SearchImpl extends SearchSummaryImpl implements Search
 	protected String queryStr;
 	protected boolean locked;
 	protected boolean uiHidden;
+	protected boolean isWidget;
+
+	@Override
+	public boolean getIsWidget()
+	{
+		return isWidget;
+	}
 
 	@Override
 	public String getMetadata()
@@ -52,6 +60,12 @@ public class SearchImpl extends SearchSummaryImpl implements Search
 	public boolean isUiHidden()
 	{
 		return uiHidden;
+	}
+
+	@Override
+	public void setIsWidget(boolean isWidget)
+	{
+		this.isWidget = isWidget;
 	}
 
 	@Override

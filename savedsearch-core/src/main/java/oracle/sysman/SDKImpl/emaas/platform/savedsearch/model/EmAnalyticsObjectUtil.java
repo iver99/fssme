@@ -136,6 +136,10 @@ class EmAnalyticsObjectUtil
 		categoryObj.setOwner(currentUser);
 		categoryObj.setCreationDate(utcNow);
 		categoryObj.setDeleted(0);
+		categoryObj.setProviderName(category.getProviderName());
+		categoryObj.setProviderVersion(category.getProviderVersion());
+		categoryObj.setProviderDiscovery(category.getProviderDiscovery());
+		categoryObj.setProviderAssetRoot(category.getProviderAssetRoot());
 		if (category.getDefaultFolderId() != null) {
 			EmAnalyticsFolder defaultFolderObj = EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em);
 			if (defaultFolderObj == null) {
@@ -174,6 +178,10 @@ class EmAnalyticsObjectUtil
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		categoryEntity.setOwner(currentUser);
 		categoryEntity.setDeleted(0);
+		categoryEntity.setProviderName(category.getProviderName());
+		categoryEntity.setProviderVersion(category.getProviderVersion());
+		categoryEntity.setProviderDiscovery(category.getProviderDiscovery());
+		categoryEntity.setProviderAssetRoot(category.getProviderAssetRoot());
 		if (category.getDefaultFolderId() != null) {
 			categoryEntity.setEmAnalyticsFolder(EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em));
 		}
@@ -368,6 +376,7 @@ class EmAnalyticsObjectUtil
 		searchEntity.setMetadataClob(search.getMetadata());
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
 		searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden() ? 1 : 0));
+		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
 		searchEntity.setDeleted(0);
 		List<SearchParameter> params = search.getParameters();
 		if (params != null && params.size() != 0) {
@@ -436,6 +445,7 @@ class EmAnalyticsObjectUtil
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
 
 		searchEntity.setUiHidden(new java.math.BigDecimal(search != null && search.isUiHidden() ? 1 : 0));
+		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
 		searchEntity.setDeleted(0);
 		searchEntity.setName(search.getName());
 		List<SearchParameter> params = search.getParameters();
