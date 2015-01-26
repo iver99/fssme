@@ -503,8 +503,8 @@ public class SearchAPI
 	 */
 	@PUT
 	@Path("{id: [0-9]*}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes
+	@Produces
 	public Response editSearchAccessDate(@PathParam("id") long searchId, @QueryParam("updateLastAccessTime") boolean update)
 	{
 		String query = uri.getRequestUri().getQuery();

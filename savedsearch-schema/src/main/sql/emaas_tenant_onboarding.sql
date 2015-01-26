@@ -24,9 +24,19 @@ SET SERVEROUTPUT ON
 DEFINE  TENANT_ID = '&1'
 DECLARE	
       V_RootFolder EMS_ANALYTICS_FOLDERS%rowtype;
+       Valid_Input NUMBER;
        BEGIN
 -- If the root folder not present then insert the OOB serches , otherwise do nothing 
 -- for given tenant.
+	BEGIN
+
+	Valid_Input := TO_NUMBER( &TENANT_ID);
+
+	EXCEPTION 
+	WHEN VALUE_ERROR THEN
+	 RAISE_APPLICATION_ERROR(-21000, ' Please  specify valid internale tenant id');
+	END;
+	
        SELECT * INTO V_RootFolder FROM EMS_ANALYTICS_FOLDERS WHERE FOLDER_ID =1 AND TENANT_ID ='&TENANT_ID';
        DBMS_OUTPUT.PUT_LINE('OOB searches for &TENANT_ID is already present');        
        RAISE_APPLICATION_ERROR(-20000, ' OOB searches for &TENANT_ID is already present');

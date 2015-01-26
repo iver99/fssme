@@ -24,7 +24,17 @@ SET SERVEROUTPUT ON
 
 DECLARE
   V_Version EMS_ANALYTICS_SCHEMA_VER_SSF%rowtype;
+  Valid_Input NUMBER;	
 BEGIN
+
+	BEGIN
+    
+        Valid_Input := TO_NUMBER( &TENANT_ID);
+
+        EXCEPTION  
+        WHEN VALUE_ERROR THEN
+         RAISE_APPLICATION_ERROR(-21000, ' Please  specify valid internale tenant id');
+        END; 
  SELECT * INTO V_Version FROM EMS_ANALYTICS_SCHEMA_VER_SSF  WHERE MAJOR=1 AND MINOR =0;
        DBMS_OUTPUT.PUT_LINE('Schema already upgraded');
        RAISE_APPLICATION_ERROR(-20000, 'Schema already upgraded');
