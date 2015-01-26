@@ -26,7 +26,7 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdPro
  */
 public class HeadersUtil
 {
-	private static final String HEADER_TENANT_ID = "X-USER-IDENTITY-DOMAIN";
+	private static final String HEADER_TENANT_ID = "X-USER-IDENTITY-DOMAIN-NAME";
 
 	public static Long getInternalTenantId(HttpServletRequest request)
 	{
