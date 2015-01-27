@@ -17,7 +17,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.HeadersUtil;
 /**
  * Support across domain access CORS: Cross-Origin Resource Sharing Reference: http://enable-cors.org/ http://www.w3.org/TR/cors/
  * http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
- * 
+ *
  * @author miayu
  */
 public class SavedSearchCORSFilter implements Filter
@@ -29,7 +29,7 @@ public class SavedSearchCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
@@ -37,18 +37,28 @@ public class SavedSearchCORSFilter implements Filter
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept, X-USER-IDENTITY-DOMAIN-NAME, Authorization, x-sso-client");
 
-		try {
-			Long tenantId = HeadersUtil.getTenantId((HttpServletRequest) request);
-			TenantContext.setContext(tenantId);
-			chain.doFilter(request, response);
+		if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) request).getMethod())) {
+			try {
+				chain.doFilter(request, response);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		catch (Exception e) {
-			hRes.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			return;
-		}
-		finally {
-			//always remove tenant-id from thradlocal when request completed or on error 
-			TenantContext.clearContext();
+		else {
+			try {
+				Long tenantId = HeadersUtil.getTenantId((HttpServletRequest) request);
+				TenantContext.setContext(tenantId);
+				chain.doFilter(request, response);
+			}
+			catch (Exception e) {
+				hRes.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+				return;
+			}
+			finally {
+				//always remove tenant-id from thradlocal when request completed or on error
+				TenantContext.clearContext();
+			}
 		}
 
 	}
