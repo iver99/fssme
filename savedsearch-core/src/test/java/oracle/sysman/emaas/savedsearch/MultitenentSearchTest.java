@@ -22,7 +22,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * @author vinjoshi
@@ -47,6 +47,10 @@ public class MultitenentSearchTest extends BaseTest
 			Category catObj = new CategoryImpl();
 			catObj.setName("TestMultitencyCat");
 			catObj.setDescription("TestMultitency Desc");
+			catObj.setProviderName("ProviderNameTest");
+			catObj.setProviderVersion("ProviderVersionTest");
+			catObj.setProviderDiscovery("ProviderDiscoveryTest");
+			catObj.setProviderAssetRoot("ProviderAssetRootTest");
 			catObj = fmger.saveCategory(catObj);
 			id = catObj.getId();
 		}
@@ -177,9 +181,12 @@ public class MultitenentSearchTest extends BaseTest
 		MultitenentSearchTest.searchTest();
 	}
 
-	@BeforeClass
+	@Test
 	public static void searchTest()
 	{
+		opc1 = TestUtils.getInternalTenantId(TENANT_OPC1);
+		opc2 = TestUtils.getInternalTenantId(TENANT_OPC2);
+		opc3 = TestUtils.getInternalTenantId(TENANT_OPC3);
 
 		int id1 = MultitenentSearchTest.createSearch(opc1);
 		int id2 = MultitenentSearchTest.createSearch(opc2);

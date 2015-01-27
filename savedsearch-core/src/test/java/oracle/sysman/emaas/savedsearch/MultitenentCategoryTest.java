@@ -16,7 +16,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * @author vinjoshi
@@ -32,13 +32,12 @@ public class MultitenentCategoryTest extends BaseTest
 	private static Long opc2 = null;
 	private static Long opc3 = null;
 
-	@BeforeClass
+	@Test
 	public static void categoryTest()
 	{
-
 		opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
-		opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
-		opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
+		opc2 = TestUtils.getInternalTenantId(TENANT_ID_OPC2);
+		opc3 = TestUtils.getInternalTenantId(TENANT_ID_OPC3);
 
 		int id1 = MultitenentCategoryTest.createCategory(opc1);
 		int id2 = MultitenentCategoryTest.createCategory(opc2);
@@ -73,6 +72,10 @@ public class MultitenentCategoryTest extends BaseTest
 			Category catObj = new CategoryImpl();
 			catObj.setName("TestMultitency");
 			catObj.setDescription("TestMultitency Desc");
+			catObj.setProviderName("ProviderNameTest");
+			catObj.setProviderVersion("ProviderVersionTest");
+			catObj.setProviderDiscovery("ProviderDiscoveryTest");
+			catObj.setProviderAssetRoot("ProviderAssetRootTest");
 			catObj = fmger.saveCategory(catObj);
 			id = catObj.getId();
 		}

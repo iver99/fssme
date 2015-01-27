@@ -28,31 +28,20 @@ public class HeadersUtil
 {
 	private static final String HEADER_TENANT_ID = "X-USER-IDENTITY-DOMAIN-NAME";
 
-	public static Long getInternalTenantId(HttpServletRequest request)
+	public static Long getInternalTenantId(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
 		String header = request.getHeader(HEADER_TENANT_ID);
 		Long internalId = null;
-
-		/*try {
-			internalId = Long.parseLong(header);
-		}
-		catch (NumberFormatException e) {
-
-		}
-
-		if (internalId != null) {
-			return internalId;
-		}*/
-
 		if (header == null) {
-			new EMAnalyticsFwkException("Tenant Id cannot be null.", EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);
+			throw new EMAnalyticsFwkException("Tenant Id cannot be null.", EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);
 		}
 		try {
 			internalId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(header);
+			System.out.println("found");
 		}
 		catch (BasicServiceMalfunctionException e) {
-			new EMAnalyticsFwkException("Tenant Id " + header + " does not exist.", EMAnalyticsFwkException.ERR_VALID_TENANT_ID,
-					null);
+			throw new EMAnalyticsFwkException("Tenant Id " + header + " does not exist.",
+					EMAnalyticsFwkException.ERR_VALID_TENANT_ID, null);
 		}
 
 		return internalId;

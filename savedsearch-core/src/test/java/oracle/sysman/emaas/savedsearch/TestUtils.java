@@ -10,7 +10,6 @@
 
 package oracle.sysman.emaas.savedsearch;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 
@@ -27,25 +26,21 @@ public class TestUtils
 	{
 		Long internalId = null;
 
-		/*try {
+		try {
 			internalId = Long.parseLong(id);
 		}
 		catch (NumberFormatException e) {
-
+			id = null;
 		}
 
 		if (internalId != null) {
 			return internalId;
-		}*/
-
-		if (id == null) {
-			new EMAnalyticsFwkException("Tenant Id cannot be null.", EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);
 		}
 		try {
 			internalId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(id);
 		}
 		catch (BasicServiceMalfunctionException e) {
-			new EMAnalyticsFwkException("Tenant Id " + id + " does not exist.", EMAnalyticsFwkException.ERR_VALID_TENANT_ID, null);
+			id = null;
 		}
 
 		return internalId;

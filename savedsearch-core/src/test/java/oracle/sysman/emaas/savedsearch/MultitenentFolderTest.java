@@ -16,7 +16,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * @author vinjoshi
@@ -28,9 +28,9 @@ public class MultitenentFolderTest extends BaseTest
 	private static final String TENANT_OPC2 = TestUtils.TENANT_ID_OPC2;
 	private static final String TENANT_OPC3 = TestUtils.TENANT_ID_OPC3;
 
-	private static final Long opc1 = null;
-	private static final Long opc2 = null;
-	private static final Long opc3 = null;
+	private static Long opc1 = null;
+	private static Long opc2 = null;
+	private static Long opc3 = null;
 
 	public static int createfolder(Long value)
 	{
@@ -71,9 +71,12 @@ public class MultitenentFolderTest extends BaseTest
 		return bResult;
 	}
 
-	@BeforeClass
+	@Test
 	public static void folderTest()
 	{
+		opc1 = TestUtils.getInternalTenantId(TENANT_OPC1);
+		opc2 = TestUtils.getInternalTenantId(TENANT_OPC2);
+		opc3 = TestUtils.getInternalTenantId(TENANT_OPC3);
 
 		int id1 = MultitenentFolderTest.createfolder(opc1);
 		int id2 = MultitenentFolderTest.createfolder(opc2);
