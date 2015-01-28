@@ -118,7 +118,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getFullCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, null, false);
 	}
@@ -163,7 +163,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray) throws JSONException,
-			EMAnalyticsFwkJsonException
+	EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
 				NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET }, folderPathArray, false);
@@ -205,7 +205,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-			EMAnalyticsFwkJsonException
+	EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
@@ -236,7 +236,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder, boolean includeType) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getFolderJsonObj(baseUri, folder, new String[] { NAME_OWNER, NAME_LASTMODIFIEDBY,
 				NAME_FOLDER_PARENTFOLDER, NAME_FOLDER_UIHIDDEN }, true, includeType);
@@ -267,7 +267,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search, boolean includeType) throws JSONException,
-			EMAnalyticsFwkJsonException
+	EMAnalyticsFwkJsonException
 	{
 		return EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search, null, includeType);
 	}
@@ -366,6 +366,17 @@ public class EntityJsonUtil
 				}
 			}
 		}
+		//Get provider info from category if it doesn't exist in search parameters
+		if (!widgetObj.has(NAME_WIDGET_PROVIDER_NAME)) {
+			widgetObj.put(NAME_WIDGET_PROVIDER_NAME, category.getProviderName());
+		}
+		if (!widgetObj.has(NAME_WIDGET_PROVIDER_VERSION)) {
+			widgetObj.put(NAME_WIDGET_PROVIDER_VERSION, category.getProviderVersion());
+		}
+		if (!widgetObj.has(NAME_WIDGET_PROVIDER_ASSET_ROOT)) {
+			widgetObj.put(NAME_WIDGET_PROVIDER_ASSET_ROOT, category.getProviderAssetRoot());
+		}
+
 		//Check if it is a valid widget, if not then return null
 		if (widgetObj.has(NAME_WIDGET_KOC_NAME) && widgetObj.has(NAME_WIDGET_VIEWMODEL) && widgetObj.has(NAME_WIDGET_TEMPLATE)
 				&& widgetObj.has(NAME_WIDGET_PROVIDER_NAME) && widgetObj.has(NAME_WIDGET_PROVIDER_VERSION)

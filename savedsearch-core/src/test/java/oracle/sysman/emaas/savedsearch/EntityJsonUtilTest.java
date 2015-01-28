@@ -462,6 +462,9 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING11 = "\"PROVIDER_VERSION\":\"0.1\"";
 		final String VERIFY_STRING12 = "\"PROVIDER_NAME\":\"DB Analytics\"";
 		final String VERIFY_STRING13 = "\"PROVIDER_ASSET_ROOT\":\"home\"";
+		final String VERIFY_STRING14 = "\"PROVIDER_VERSION\":\"Provider version for UT\"";
+		final String VERIFY_STRING15 = "\"PROVIDER_NAME\":\"Provider name for UT\"";
+		final String VERIFY_STRING16 = "\"PROVIDER_ASSET_ROOT\":\"Provider asset root for UT\"";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
@@ -478,7 +481,16 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
 
-		widget.getParameters().remove(0);
+		widget.getParameters().remove(5);
+		widget.getParameters().remove(4);
+		widget.getParameters().remove(3);
+		widgetObj = EntityJsonUtil.getWidgetJsonObj(uri, widget, category);
+		Assert.assertNotNull(widgetObj);
+		output = widgetObj.toString();
+		Assert.assertTrue(output.contains(VERIFY_STRING14), VERIFY_STRING14 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING15), VERIFY_STRING15 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING16), VERIFY_STRING16 + " is NOT found as expected");
+		widget.getParameters().remove(2);
 		widgetObj = EntityJsonUtil.getWidgetJsonObj(uri, widget, category);
 		Assert.assertNull(widgetObj);
 	}
