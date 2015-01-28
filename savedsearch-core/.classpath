@@ -32,6 +32,5 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/emaas-platform-tenant-sdk-0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

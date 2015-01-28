@@ -12,31 +12,6 @@ task runDEVTestSuite(type: Test){
 }
 
 
-
-jar {
-	from('../savedsearch-schema/src/main/sql/')
-	{ 
-		include '*.*'
-		
-		
-		 
-	}
-	from('../savedsearch-schema/src/main/sql/upgrade')
-	{ 
-		include '*.*'
-		
-		 
-	}
-	
-	from('../savedsearch-schema/src/main/sql/upgrade')
-	{ 
-		include '*.*'
-		into('/oracle') 
-	}
-	
-}
-
-
 dependencies {
 	compile project(':savedsearch-entities')
 	testRuntime(group: 'com.oracle.weblogic', name: 'ojdbc6', version: '12.1.2-0-0')
@@ -51,7 +26,6 @@ dependencies {
     compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.1')
     compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12')
     compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')
-    compile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.1')
    }
 
 

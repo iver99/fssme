@@ -10,9 +10,6 @@
 
 package oracle.sysman.emaas.savedsearch;
 
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
-
 /**
  * @author vinjoshi
  */
@@ -32,17 +29,6 @@ public class TestUtils
 		catch (NumberFormatException e) {
 			id = null;
 		}
-
-		if (internalId != null) {
-			return internalId;
-		}
-		try {
-			internalId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(id);
-		}
-		catch (BasicServiceMalfunctionException e) {
-			id = null;
-		}
-
 		return internalId;
 	}
 }
