@@ -22,8 +22,8 @@ public class ExportSearchObject
 		if (host.toLowerCase().startsWith(UpdateUtilConstants.WWW_STR)) {
 			host = host.substring(UpdateUtilConstants.WWW_STR.length() + 1);
 		}
-		Response res1 = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN", tenantid).when()
-				.get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId + UpdateUtilConstants.SEARCHES);
+		Response res1 = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
+				.when().get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId + UpdateUtilConstants.SEARCHES);
 
 		if (res1.getStatusCode() == 200) {
 			output = res1.getBody().asString();

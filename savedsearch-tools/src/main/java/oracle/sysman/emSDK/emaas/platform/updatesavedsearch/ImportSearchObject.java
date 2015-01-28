@@ -28,8 +28,8 @@ public class ImportSearchObject
 		if (host.toLowerCase().startsWith(UpdateUtilConstants.WWW_STR)) {
 			host = host.substring(UpdateUtilConstants.WWW_STR.length() + 1);
 		}
-		Response res1 = RestAssured.given().contentType(ContentType.XML).headers(UpdateUtilConstants.DOMAIN_NAME, host)
-				.header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN", tenantid).body(jsonString1).when()
+		Response res1 = RestAssured.given().contentType(ContentType.XML).header("Authorization", authToken)
+				.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when()
 				.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
 		output = res1.getBody().asString();
 		if (res1.getStatusCode() == 200) {

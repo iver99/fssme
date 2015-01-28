@@ -11,6 +11,9 @@
      </SearchParameters>          
      <Category>
        <Name>CatSearchUtil</Name>
+        <ProviderName>MySearchProvider</ProviderName>
+       <ProviderVersion>1.0</ProviderVersion>
+       <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
      </Category>     
      <FolderId>1</FolderId>       
   </Search> 
@@ -28,6 +31,9 @@
      </SearchParameters>     
         <Category>
        <Name>CatSearchUtil</Name>
+         <ProviderName>MySearchProvider</ProviderName>
+       <ProviderVersion>1.0</ProviderVersion>
+       <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
      </Category>     
   </Search> 
 

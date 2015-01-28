@@ -110,7 +110,7 @@ public class UpdateSearchUtil
 		try {
 			RestAssured.useRelaxedHTTPSValidation();
 			RestAssured.baseURI = endpoint;
-			Response res = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN", tenantid)
+			Response res = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
 					.when().get();
 			if (res.getStatusCode() == 200) {
 				return true;
