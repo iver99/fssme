@@ -15,6 +15,8 @@ public class CommonTest
 	private final String portno;
 	private final String serveruri;
 	private final String authToken;
+	private static final String TESTENV_QA_TEST_PROP = "SSF.QA.TESTENV";
+
 	/**
 	 * Sets up RESTAssured defaults before executing test cases Enables logging Reading the inputs from the testenv.properties
 	 * file
@@ -25,6 +27,7 @@ public class CommonTest
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {
+			System.setProperty(TESTENV_QA_TEST_PROP, "true");
 			input = new FileInputStream("testenv.properties");
 			prop.load(input);
 			System.out.println("---------------------------------------------------------------------");
@@ -40,13 +43,18 @@ public class CommonTest
 
 		HOSTNAME = prop.getProperty("hostname");
 		portno = prop.getProperty("port");
-		authToken=prop.getProperty("authToken");
+		authToken = prop.getProperty("authToken");
 		serveruri = "http://" + HOSTNAME + ":" + portno;
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = serveruri;
 		RestAssured.basePath = "/savedsearch/v1";
 		RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 
+	}
+
+	public String getAuthToken()
+	{
+		return authToken;
 	}
 
 	public String getHOSTNAME()
@@ -62,9 +70,5 @@ public class CommonTest
 	public String getServeruri()
 	{
 		return serveruri;
-	}
-	public String getAuthToken()
-	{
-		return authToken;
 	}
 }

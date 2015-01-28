@@ -47,6 +47,7 @@ public class WidgetAPITest
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/widgets");
 
 			System.out.println("											");

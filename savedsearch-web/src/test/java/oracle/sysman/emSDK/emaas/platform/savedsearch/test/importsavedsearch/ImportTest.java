@@ -91,7 +91,8 @@ public class ImportTest
 		InputStream stream = ImportTest.class.getClassLoader().getResourceAsStream(CATEGORY_XML);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString1)
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -111,7 +112,8 @@ public class ImportTest
 	{
 		try {
 			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.body("").header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body("")
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
 		}
@@ -128,7 +130,8 @@ public class ImportTest
 	{
 		try {
 			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.body("").header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importfolders");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body("")
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importfolders");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
 		}
@@ -146,7 +149,8 @@ public class ImportTest
 		InputStream stream = ImportTest.class.getClassLoader().getResourceAsStream(FOLDER_XML);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importfolders");
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString1)
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importfolders");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -168,12 +172,14 @@ public class ImportTest
 		InputStream stream = ImportTest.class.getClassLoader().getResourceAsStream(SEARCH_XML);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importsearches");
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString1)
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importsearches");
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			System.out.println("deleteing folders and  searches::");
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			System.out.println("deleteing folders and  searches::::" + res.getBody().asString());
@@ -195,7 +201,8 @@ public class ImportTest
 	{
 		try {
 			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.body("").header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importsearches");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body("")
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importsearches");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
 		}
@@ -207,7 +214,8 @@ public class ImportTest
 	private boolean deleteFolder(int myfolderID)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + myfolderID);
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+				.when().delete("/folder/" + myfolderID);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
 
@@ -216,7 +224,8 @@ public class ImportTest
 	private boolean deleteSearch(int mySearchId)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + mySearchId);
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+				.when().delete("/search/" + mySearchId);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
 
@@ -225,7 +234,8 @@ public class ImportTest
 	private Boolean verifyCategory(int mycatID, String mycatName)
 	{
 		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category/" + mycatID);
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+				.when().get("/category/" + mycatID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {
 			System.out.println(res1.getStatusCode());
@@ -250,7 +260,8 @@ public class ImportTest
 	private boolean verifyFolder(int myfolderID, String myfolderName)
 	{
 		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/folder/" + myfolderID);
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+				.when().get("/folder/" + myfolderID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {
 			System.out.println(res1.getStatusCode());
