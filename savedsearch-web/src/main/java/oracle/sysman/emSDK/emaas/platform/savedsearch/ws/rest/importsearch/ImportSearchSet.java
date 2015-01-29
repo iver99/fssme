@@ -28,7 +28,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Import Searches Services
- * 
+ *
  * @since 0.1
  */
 @Path("importsearches")
@@ -41,7 +41,7 @@ public class ImportSearchSet
 	 * Import the searches with defined XML file<br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importsearches</font><br>
 	 * The string "importsearches" in the URL signifies import operation on search.<br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param xml
 	 *            "xml" is the XML definition used to import search<br>
@@ -54,12 +54,15 @@ public class ImportSearchSet
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Param1&lt;/Name&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Type&gt;STRING&lt;/Type&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Value&gt;ALL&lt;/Value&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Value&gt;ALL&lt;/Value&gt;&lt;br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameters&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;cat_name&lt;/Name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
 	 *            category name is not existed, it would create a new category with the given name --&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderName&gt;MySearchProvider&lt;/ProviderName&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderVersion&gt;1.0&lt;/ProviderVersion&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderAssetRoot&gt;assetRoot&lt;/ProviderAssetRoot&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Folder&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;fol_name&lt;/Name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
