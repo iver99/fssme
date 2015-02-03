@@ -50,11 +50,32 @@ DECLARE
 @emaas_savesearch_seed_data_la.sql  &TENANT_ID
 @emaas_savesearch_seed_data_ta.sql  &TENANT_ID
 @emaas_savesearch_seed_data_apm.sql  &TENANT_ID
-commit;
+
 
 /
 
 BEGIN
- DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
+
+UPDATE EMS_ANALYTICS_CATEGORY
+SET PROVIDER_NAME = 'LoganService' ,
+    PROVIDER_VERSION ='0.1'	
+    WHERE CATEGORY_ID = 1 AND TENANT_ID ='&TENANT_ID';
+
+
+UPDATE EMS_ANALYTICS_CATEGORY
+SET PROVIDER_NAME = 'TargetAnalytics' ,
+    PROVIDER_VERSION ='1.0.5'	
+    WHERE CATEGORY_ID = 2 AND TENANT_ID ='&TENANT_ID';
+
+
+
+UPDATE EMS_ANALYTICS_CATEGORY
+SET PROVIDER_NAME = 'ApmUI' ,
+    PROVIDER_VERSION ='0.1'	
+    WHERE CATEGORY_ID = 4 AND TENANT_ID ='&TENANT_ID';
+
+DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
+
+COMMIT;
 END;
 /
