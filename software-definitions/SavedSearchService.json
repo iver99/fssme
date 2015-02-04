@@ -1,7 +1,7 @@
         {
             "name": "SavedSearchService",
             "serviceName": "SavedSearchService",
-            "version": "1.0.0",
+            "version": "SERVICEVERSION",
             "ephemeral": true,
             "chefRunlistItems": [
                 {

@@ -1,5 +1,8 @@
 <EMaaSManifest>
 <Application Name="Platform" Version="1.0.0" >
-<Service Name="SavedSearchService" Version="1.0.0" softwarejson="software-definitions/SavedSearchService.json" />
+<Service Name="SavedSearchService" Version="1.0.0">
+	<artifact name="softwarejson" loc="software-definitions/SavedSearchService.json" />
+	<artifact name="cookbook" loc="savedsearch-chef/savedsearchService" />
+	<artifact name="software" loc="deploy-list.xml" />
 </Application>
 </EMaaSManifest>
