@@ -24,7 +24,7 @@ public abstract class BaseTest
 {
 
 	static {
-		System.setProperty("SSF.INTERNAL.TESTENV", "true");
+		System.setProperty("SSF.TESTENV", "true");
 
 	}
 }

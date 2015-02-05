@@ -28,13 +28,15 @@ public class UpdateSavedSearchLog
 	{
 		InputStream stream = ClassLoader.getSystemResourceAsStream("log4j_ssf.properties");
 		Properties props = new Properties();
-		try {
-			props.load(stream);
+		if (stream != null) {
+			try {
+				props.load(stream);
+			}
+			catch (IOException e1) {
+				System.out.println(e1);
+			}
+			PropertyConfigurator.configure(props);
 		}
-		catch (IOException e1) {
-			System.out.println(e1);
-		}
-		PropertyConfigurator.configure(props);
 	}
 
 }
