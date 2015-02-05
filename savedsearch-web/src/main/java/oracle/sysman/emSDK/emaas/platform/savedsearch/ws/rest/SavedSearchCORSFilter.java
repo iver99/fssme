@@ -17,7 +17,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.HeadersUtil;
 /**
  * Support across domain access CORS: Cross-Origin Resource Sharing Reference: http://enable-cors.org/ http://www.w3.org/TR/cors/
  * http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
- *
+ * 
  * @author miayu
  */
 public class SavedSearchCORSFilter implements Filter
@@ -29,13 +29,23 @@ public class SavedSearchCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	ServletException
+			ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
-		hRes.addHeader("Access-Control-Allow-Origin", "*");
+		HttpServletRequest hReq = (HttpServletRequest) request;
+		if (hReq.getHeader("Origin") != null) {
+			String origin = hReq.getHeader("Origin");
+			hRes.addHeader("Access-Control-Allow-Origin", origin);
+			// allow cookies
+			hRes.addHeader("Access-Control-Allow-Credentials", "true");
+		}
+		else {
+			// non-specific origin, cannot support cookies
+			hRes.addHeader("Access-Control-Allow-Origin", "*");
+		}
 		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
-				"Origin, X-Requested-With, Content-Type, Accept, X-USER-IDENTITY-DOMAIN-NAME, Authorization, x-sso-client");
+				"Origin, X-Requested-With, Content-Type, Accept, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,   Authorization, x-sso-client");
 
 		if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) request).getMethod())) {
 			try {
