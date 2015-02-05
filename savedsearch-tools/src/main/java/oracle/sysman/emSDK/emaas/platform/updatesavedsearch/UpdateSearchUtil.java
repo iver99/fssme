@@ -124,6 +124,11 @@ public class UpdateSearchUtil
 		return false;
 	}
 
+	public static boolean isTestEnv()
+	{
+		return System.setProperty("SSF.INTERNAL.TESTENV", "true").equalsIgnoreCase("true");
+	}
+
 	public static List<SearchEntity> JSONToSearchList(String jsonStr) throws JsonParseException, JsonMappingException,
 			IOException
 	{

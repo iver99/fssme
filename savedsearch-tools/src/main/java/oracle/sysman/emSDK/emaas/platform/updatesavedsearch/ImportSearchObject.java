@@ -28,9 +28,21 @@ public class ImportSearchObject
 		if (host.toLowerCase().startsWith(UpdateUtilConstants.WWW_STR)) {
 			host = host.substring(UpdateUtilConstants.WWW_STR.length() + 1);
 		}
-		Response res1 = RestAssured.given().contentType(ContentType.XML).header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when()
-				.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
+		Response res1 = null;
+		if (UpdateSearchUtil.isTestEnv()) {
+			res1 = RestAssured.given().contentType(ContentType.XML).header("Authorization", authToken)
+					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when()
+					.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
+		}
+		else
+
+		{
+			res1 = RestAssured.given().contentType(ContentType.XML).header("Authorization", authToken)
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when()
+					.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
+		}
+
 		output = res1.getBody().asString();
 		if (res1.getStatusCode() == 200) {
 			JSONArray arrfld = new JSONArray(output);

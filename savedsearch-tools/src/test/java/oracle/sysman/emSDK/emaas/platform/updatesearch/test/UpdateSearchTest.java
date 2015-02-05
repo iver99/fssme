@@ -19,6 +19,7 @@ import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.ExportSearchObject;
 import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.ImportSearchObject;
+import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.UpdateUtilConstants;
 import oracle.sysman.emSDK.emaas.platform.updatesearch.test.common.BaseTest;
 import oracle.sysman.emSDK.emaas.platform.updatesearch.test.common.CommonTest;
 
@@ -46,7 +47,7 @@ public class UpdateSearchTest extends BaseTest
 	private static final String tenantimport = "1";
 	private static final String tenantimport1 = "2";
 	private static final String SEARCH_XML = "oracle/sysman/emSDK/emaas/platform/updatesearch/test/Search.xml";
-	private static final String CAT_NAME = "CatSearchUtil";
+	private static final String CAT_NAME = "MTSearchMt";
 
 	@BeforeClass
 	public static void setUp()
@@ -99,6 +100,7 @@ public class UpdateSearchTest extends BaseTest
 	{
 
 		Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 				.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport).when().get("/category?name=" + name);
 		JsonPath jp = res.jsonPath();
 		return jp.get("id");
@@ -135,14 +137,16 @@ public class UpdateSearchTest extends BaseTest
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport1).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
-			Assert.assertTrue(listID.contains(jsonObj.getLong("id")));
+			Assert.assertTrue(res.getStatusCode() == 404);
 		}
 
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			System.out.println("deleteing searches::::" + res.getBody().asString());
@@ -156,6 +160,7 @@ public class UpdateSearchTest extends BaseTest
 	private boolean deleteSearch(int mySearchId)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 				.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport).when().delete("/search/" + mySearchId);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
