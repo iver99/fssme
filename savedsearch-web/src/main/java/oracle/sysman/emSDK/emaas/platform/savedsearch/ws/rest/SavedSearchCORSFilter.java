@@ -58,6 +58,7 @@ public class SavedSearchCORSFilter implements Filter
 		else {
 			try {
 				Long tenantId = HeadersUtil.getTenantId((HttpServletRequest) request);
+
 				TenantContext.setContext(tenantId);
 				chain.doFilter(request, response);
 			}

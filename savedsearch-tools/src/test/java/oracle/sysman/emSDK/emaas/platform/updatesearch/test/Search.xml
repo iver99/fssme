@@ -2,7 +2,7 @@
 <SearchSet>
  
    <Search>
-     <Name>MySearchByUtil</Name> 
+     <Name>MTSearchMt</Name> 
      <SearchParameters>
        <SearchParameter>
        			<Name>Param1</Name> 
@@ -10,7 +10,7 @@
        </SearchParameter>
      </SearchParameters>          
      <Category>
-       <Name>CatSearchUtil</Name>
+       <Name>MTSearchMt</Name>
         <ProviderName>MySearchProvider</ProviderName>
        <ProviderVersion>1.0</ProviderVersion>
        <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
@@ -22,7 +22,7 @@
   
   <Search>
      <FolderId>1</FolderId>      
-     <Name>MySearchUtil1</Name> 
+     <Name>MTSearchMt1</Name> 
      <SearchParameters>
        <SearchParameter>
    	<Name>Param1</Name> 
@@ -30,7 +30,7 @@
        </SearchParameter>
      </SearchParameters>     
         <Category>
-       <Name>CatSearchUtil</Name>
+       <Name>MTSearchMt</Name>
          <ProviderName>MySearchProvider</ProviderName>
        <ProviderVersion>1.0</ProviderVersion>
        <ProviderAssetRoot>assetRoot</ProviderAssetRoot>

@@ -69,6 +69,12 @@ public class HeadersUtil
 				throw new EMAnalyticsFwkException("Tenant Id " + header + " does not exist.",
 						EMAnalyticsFwkException.ERR_VALID_TENANT_ID, null);
 			}
+
+			if (internalId == null) {
+				throw new EMAnalyticsFwkException("Internal Tenant Id is null.", EMAnalyticsFwkException.ERR_VALID_TENANT_ID,
+						null);
+			}
+
 		}
 
 		return internalId;
