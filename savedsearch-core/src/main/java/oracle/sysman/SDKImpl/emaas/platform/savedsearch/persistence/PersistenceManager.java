@@ -12,33 +12,29 @@ import javax.persistence.Persistence;
 
 public class PersistenceManager
 {
+	private static class PersistenceManagerHelper
+	{
+		private static final PersistenceManager singleton = new PersistenceManager();
+	}
+
 	/**
 	 * An internal property to know whether test env is in use true: test env is in use null or non-true: test env is NOT in use
 	 */
 	public static final String TESTENV_PROP = "SSF.INTERNAL.TESTENV";
+
 	/**
 	 * For the whole JVM life cycle, IS_TEST_ENV can only be set once
 	 */
 	private static Boolean IS_TEST_ENV = null;
 
 	private static final String PERSISTENCE_UNIT = "EmaasAnalyticsPublicModel";
-
 	private static final String TEST_PERSISTENCE_UNIT = "EmaasAnalyticsPublicModelTest";
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
-	private static PersistenceManager singleton;
 	private static final String TENANT_ID_STR = "ssftenant.id";
-	private static Object lock = new Object();
 
 	public static PersistenceManager getInstance()
 	{
-		if (singleton == null) {
-			synchronized (lock) {
-				if (singleton == null) {
-					singleton = new PersistenceManager();
-				}
-			}
-		}
-		return singleton;
+		return PersistenceManagerHelper.singleton;
 	}
 
 	private EntityManagerFactory emf;
@@ -103,6 +99,16 @@ public class PersistenceManager
 		catch (Exception ex) {
 			ex.printStackTrace();
 
+		}
+		finally {
+			if (input != null) {
+				try {
+					input.close();
+				}
+				catch (Exception e) {
+					//ignore exception
+				}
+			}
 		}
 		return connectionProps;
 

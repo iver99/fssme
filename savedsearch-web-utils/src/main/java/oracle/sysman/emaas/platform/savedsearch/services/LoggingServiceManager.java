@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.savedsearch.services;
 
+import java.io.InputStream;
+
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 
 import org.apache.log4j.LogManager;
@@ -40,8 +42,21 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
-		new DOMConfigurator().doConfigure(LoggingServiceManager.class.getResourceAsStream("/log4j_ssf.xml"),
-				LogManager.getLoggerRepository());
+		InputStream stream = null;
+		try {
+			stream = LoggingServiceManager.class.getResourceAsStream("/log4j_ssf.xml");
+			new DOMConfigurator().doConfigure(stream, LogManager.getLoggerRepository());
+		}
+		finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				}
+				catch (Exception e) {
+					//ignore exception
+				}
+			}
+		}
 	}
 
 	/* (non-Javadoc)

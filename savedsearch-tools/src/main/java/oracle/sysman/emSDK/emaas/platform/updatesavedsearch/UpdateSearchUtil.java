@@ -47,7 +47,7 @@ public class UpdateSearchUtil
 		catch (IOException e) {
 			System.out.println("Error : an error occurred while writing data to file : " + outputfile
 					+ " Please refer to the log file for more details.");
-			_logger.error("Error : an error occurred while writing data to file : " + outputfile);
+			_logger.error("Error : an error occurred while writing data to file : ");
 			return;
 		}
 		catch (Exception e) {
@@ -98,8 +98,7 @@ public class UpdateSearchUtil
 		catch (IOException e) {
 			System.out.println("an error occurred while writing data to file : " + outputfile
 					+ " Please refer to the log file for more details.");
-			_logger.error("an error occurred while writing data to file : " + outputfile
-					+ " Please refer to the log file for more details.");
+			_logger.error("an error occurred while writing data to file Please refer to the log file for more details.");
 			return;
 		}
 		System.out.println("The import process completed.");

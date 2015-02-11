@@ -40,7 +40,16 @@ public class CommonTest
 
 			e.printStackTrace();
 		}
-
+		finally {
+			if (input != null) {
+				try {
+					input.close();
+				}
+				catch (IOException e) {
+					//ignore					
+				}
+			}
+		}
 		HOSTNAME = prop.getProperty("hostname");
 		portno = prop.getProperty("port");
 		authToken = prop.getProperty("authToken");

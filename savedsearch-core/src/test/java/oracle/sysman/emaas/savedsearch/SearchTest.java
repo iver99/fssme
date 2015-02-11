@@ -469,7 +469,10 @@ public class SearchTest extends BaseTest
 		}
 		finally {
 			//delete the new search
-			objSearch.deleteSearch(snew.getId(), true);
+			AssertJUnit.assertNotNull(snew);
+			if (snew != null) {
+				objSearch.deleteSearch(snew.getId(), true);
+			}
 			objCategory.deleteCategory(categoryId, true);
 			objFolder.deleteFolder(folderId, true);
 		}
