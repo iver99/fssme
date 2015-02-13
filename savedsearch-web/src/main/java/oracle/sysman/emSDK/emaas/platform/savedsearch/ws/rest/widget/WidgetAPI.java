@@ -18,7 +18,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -31,7 +32,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/widgets")
 public class WidgetAPI
 {
-	private static final Logger _logger = Logger.getLogger(WidgetAPI.class);
+	private static final Logger _logger = LogManager.getLogger(WidgetAPI.class);
 	@Context
 	UriInfo uri;
 

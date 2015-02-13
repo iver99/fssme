@@ -21,7 +21,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -38,7 +39,7 @@ public class CategoryAPI
 	@Context
 	private UriInfo uri;
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
-	private static final Logger _logger = Logger.getLogger(CategoryAPI.class);
+	private static final Logger _logger = LogManager.getLogger(CategoryAPI.class);
 
 	/*	@DELETE
 		@Path("{id : [0-9]*}")
@@ -249,7 +250,6 @@ public class CategoryAPI
 		int statusCode = 200;
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
-
 			Category category = catMan.getCategory(categoryId);
 			JSONObject jsonObj = EntityJsonUtil.getFullCategoryJsonObj(uri.getBaseUri(), category);
 			message = jsonObj.toString();

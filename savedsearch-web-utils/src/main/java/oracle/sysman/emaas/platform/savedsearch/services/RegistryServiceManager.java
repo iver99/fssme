@@ -22,7 +22,8 @@ import oracle.sysman.emaas.platform.savedsearch.services.RegistryServiceManager.
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import weblogic.application.ApplicationLifecycleEvent;
 
@@ -176,7 +177,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_SEARCH = "/savedsearch/v1/search";
 	private static final String NAV_FOLDER = "/savedsearch/v1/folder";
 	private static final String NAV_CATEGORY = "/savedsearch/v1/category";
-	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
+	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceregistry");
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
@@ -248,15 +249,15 @@ public class RegistryServiceManager implements ApplicationServiceManager
 								new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
 										.withHref(applicationUrl + NAV_FOLDER),
 								new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
-		
+
 		InfoManager
 		.getInstance()
 		.getInfo()
 		.setLinks(
-				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrlSSL + NAV_BASE),
-						new Link().withRel("search").withHref(applicationUrlSSL + NAV_SEARCH), new Link().withRel("folder")
+				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrlSSL + NAV_BASE), new Link()
+				.withRel("search").withHref(applicationUrlSSL + NAV_SEARCH), new Link().withRel("folder")
 								.withHref(applicationUrlSSL + NAV_FOLDER),
-						new Link().withRel("category").withHref(applicationUrlSSL + NAV_CATEGORY)));
+				new Link().withRel("category").withHref(applicationUrlSSL + NAV_CATEGORY)));
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();

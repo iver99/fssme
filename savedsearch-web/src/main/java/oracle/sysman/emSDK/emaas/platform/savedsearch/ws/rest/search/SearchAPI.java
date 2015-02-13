@@ -30,14 +30,15 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Search Services
- * 
+ *
  * @since 0.1
  */
 @Path("search")
@@ -45,7 +46,7 @@ public class SearchAPI
 {
 
 	private static final String FOLDER_PATH = "flattenedFolderPath";
-	private static final Logger _logger = Logger.getLogger(SearchAPI.class);
+	private static final Logger _logger = LogManager.getLogger(SearchAPI.class);
 	@Context
 	UriInfo uri;
 
@@ -54,7 +55,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search</font><br>
 	 * The string "search" in the URL signifies create operation on search.<br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            The search details <br>
@@ -253,7 +254,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies delete operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The id of saved-search which user wants to delete
@@ -307,7 +308,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies edit operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            JSON string which contains all key value pairs that the user wants to edit.<br>
@@ -466,7 +467,7 @@ public class SearchAPI
 	 * number&gt;/savedsearch/v1/search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;</font><br>
 	 * The string "search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;" in the URL signifies set last accesst time
 	 * operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The saved-search id to edit
@@ -530,7 +531,7 @@ public class SearchAPI
 	 * The string "search/&lt;id&gt;?flattenedFolderPath=&lt;boolean value&gt;" in the URL signifies get the search operation on
 	 * search with given id. <br>
 	 * If "flattenedFolderPath = true", the flattened folder hierarchy will be added to any search
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchid
 	 *            The id of saved-search which user wants to read
