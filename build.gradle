@@ -32,8 +32,9 @@ artifactory {
 	contextUrl = "${artifactory_contextUrl}" 
 	publish { 
 		repository { 
-			repoKey = 'em-libs-release-local' 
-			username = "${artifactory_user}" 
+	//		repoKey = 'em-libs-release-local' 
+		repoKey = 'emaas-sandbox-local'	
+		username = "${artifactory_user}" 
 			password = "${artifactory_password}" 
 			maven = true 
 		} 
