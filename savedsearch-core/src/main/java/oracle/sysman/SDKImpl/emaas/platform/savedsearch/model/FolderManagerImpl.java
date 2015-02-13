@@ -16,18 +16,19 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FolderManagerImpl extends FolderManager
 {
 	// Logger
-	private static final Logger _logger = Logger.getLogger(FolderManagerImpl.class);
+	private static final Logger _logger = LogManager.getLogger(FolderManagerImpl.class);
 
 	private static final FolderManagerImpl _instance = new FolderManagerImpl();
 
 	/**
 	 * Get FolderManagerImpl singleton instance.
-	 * 
+	 *
 	 * @return Instance of FolderManagerImpl
 	 */
 	public static FolderManagerImpl getInstance()

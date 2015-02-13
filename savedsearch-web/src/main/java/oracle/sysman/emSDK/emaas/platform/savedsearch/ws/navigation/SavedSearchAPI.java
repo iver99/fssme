@@ -24,7 +24,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -37,7 +38,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("")
 public class SavedSearchAPI
 {
-	private static final Logger _logger = Logger.getLogger(SearchManagerImpl.class);
+	private static final Logger _logger = LogManager.getLogger(SearchManagerImpl.class);
 	@Context
 	UriInfo uri;
 
@@ -331,7 +332,7 @@ public class SavedSearchAPI
 	}
 
 	private String getFolderDetails(long id) throws EMAnalyticsFwkException, JSONException, UnsupportedEncodingException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 
 		String message = new String();
