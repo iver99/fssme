@@ -16,7 +16,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -29,7 +30,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/widgetgroups")
 public class WidgetGroupAPI
 {
-	private static final Logger _logger = Logger.getLogger(WidgetGroupAPI.class);
+	private static final Logger _logger = LogManager.getLogger(WidgetGroupAPI.class);
 	@Context
 	UriInfo uri;
 

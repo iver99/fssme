@@ -12,7 +12,8 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-1.2.17.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-api-2.0.2.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-core-2.0.2.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/javax.persistence-2.0.0.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/testng-6.8.8.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/ojdbc6-12.1.2-0-0.jar"/>

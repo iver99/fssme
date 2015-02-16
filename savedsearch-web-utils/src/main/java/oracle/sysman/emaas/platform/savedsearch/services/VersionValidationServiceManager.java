@@ -16,19 +16,20 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.VersionManager;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import weblogic.application.ApplicationLifecycleEvent;
 
 /**
  * Code version should match schema version, this is used to validate this during SSF service startup If validation fails, SSF
  * service will not startup
- * 
+ *
  * @author miao
  */
 public class VersionValidationServiceManager implements ApplicationServiceManager
 {
-	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
+	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceversionvalidation");
 	public static final String SERVICE_NAME_VERSION_VALIDATION = "Version Validation Service";
 	public static final int SSF_CODE_VERSION_MAJOR = 1;

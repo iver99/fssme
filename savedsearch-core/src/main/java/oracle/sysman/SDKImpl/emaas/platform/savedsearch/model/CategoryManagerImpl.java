@@ -46,12 +46,13 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CategoryManagerImpl extends CategoryManager
 {
 	// Logger
-	private static final Logger _logger = Logger.getLogger(CategoryManagerImpl.class);
+	private static final Logger _logger = LogManager.getLogger(CategoryManagerImpl.class);
 
 	private static final CategoryManagerImpl _instance = new CategoryManagerImpl();
 

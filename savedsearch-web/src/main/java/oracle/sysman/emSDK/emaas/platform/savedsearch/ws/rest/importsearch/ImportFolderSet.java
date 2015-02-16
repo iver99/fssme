@@ -22,26 +22,27 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Import Folders Services
- * 
+ *
  * @since 0.1
  */
 @Path("importfolders")
 public class ImportFolderSet
 {
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/folder.xsd";
-	private static final Logger _logger = Logger.getLogger(ImportFolderSet.class);
+	private static final Logger _logger = LogManager.getLogger(ImportFolderSet.class);
 
 	/**
 	 * Import the folders with defined XML file<br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importfolders</font><br>
 	 * The string "importfolders" in the URL signifies import operation on folder.<br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param xml
 	 *            "xml" is the XML definition used to import folder<br>
