@@ -34,6 +34,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -191,7 +192,8 @@ public class CategoryManagerImpl extends CategoryManager
 
 			EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 
-			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory").getResultList();
+			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			if (categories == null) {
 				categories = new ArrayList<Category>();
 			}
@@ -267,7 +269,8 @@ public class CategoryManagerImpl extends CategoryManager
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 
 			EmAnalyticsCategory categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
-					.setParameter("categoryName", categoryName).getSingleResult();
+					.setParameter("categoryName", categoryName)
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
 
 			if (categoryObj != null) {
 				category = createCategoryObject(categoryObj, null);
@@ -371,7 +374,9 @@ public class CategoryManagerImpl extends CategoryManager
 						EmAnalyticsCategory categoryObj = null;
 						try {
 							categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
-									.setParameter("categoryName", category.getName()).getSingleResult();
+									.setParameter("categoryName", category.getName())
+									.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+									.getSingleResult();
 							categorytmp.setId((int) categoryObj.getCategoryId());
 							importedList.add(createCategoryObject(categoryObj, null));
 						}

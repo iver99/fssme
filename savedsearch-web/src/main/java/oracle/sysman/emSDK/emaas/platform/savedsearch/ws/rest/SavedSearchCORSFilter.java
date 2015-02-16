@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.HeadersUtil;
 
 /**
@@ -56,9 +57,9 @@ public class SavedSearchCORSFilter implements Filter
 		}
 		else {
 			try {
-				Long tenantId = HeadersUtil.getTenantId((HttpServletRequest) request);
+				TenantInfo info = HeadersUtil.getTenantInfo((HttpServletRequest) request);
 
-				TenantContext.setContext(tenantId);
+				TenantContext.setContext(info);
 				chain.doFilter(request, response);
 			}
 			catch (Exception e) {

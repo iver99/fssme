@@ -33,10 +33,10 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Table(name = "EMS_ANALYTICS_FOLDERS")
 @NamedQueries({
 		@NamedQuery(name = "Folder.getSubFolder", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= "
-				+ ":parentFolder" + " AND o.deleted=0"),
-		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.deleted=0"),
-		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername AND O.deleted =0"),
-		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername AND O.deleted =0") })
+				+ ":parentFolder" + " AND o.deleted=0 AND o.owner in ('ORACLE',:userName)"),
+		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.deleted=0 AND o.owner in ('ORACLE',:userName)"),
+		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername AND O.deleted =0 AND o.owner in ('ORACLE',:userName)"),
+		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername AND O.deleted =0 AND o.owner in ('ORACLE',:userName)") })
 @SequenceGenerator(name = "EMS_ANALYTICS_FOLDERS_SEQ", sequenceName = "EMS_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
 public class EmAnalyticsFolder implements Serializable
 {
@@ -77,6 +77,7 @@ public class EmAnalyticsFolder implements Serializable
 	@Column(name = "NAME_SUBSYSTEM")
 	private String nameSubsystem;
 
+	@Column(name = "OWNER")
 	private String owner;
 
 	@Column(name = "SYSTEM_FOLDER")

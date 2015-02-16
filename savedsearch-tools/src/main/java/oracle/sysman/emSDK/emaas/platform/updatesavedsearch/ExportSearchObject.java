@@ -14,6 +14,7 @@ public class ExportSearchObject
 	public String exportSearch(long categoryId, String endpoint, String authToken, String tenantid) throws Exception
 	{
 		String output = "";
+		TenantUtil objTenent = new TenantUtil(tenantid);
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = endpoint;
 		RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
@@ -24,12 +25,16 @@ public class ExportSearchObject
 		}
 		Response res1 = null;
 		if (UpdateSearchUtil.isTestEnv()) {
-			res1 = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
+			res1 = RestAssured.given().header("Authorization", authToken)
+					.header("X-USER-IDENTITY-DOMAIN-NAME", objTenent.getTenantId())
+					.header("X-REMOTE-USER", objTenent.getUserName())
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER).when()
 					.get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId + UpdateUtilConstants.SEARCHES);
 		}
 		else {
-			res1 = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when()
+			res1 = RestAssured.given().header("Authorization", authToken)
+					.header("X-USER-IDENTITY-DOMAIN-NAME", objTenent.getTenantId())
+					.header("X-REMOTE-USER", objTenent.getUserName()).when()
 					.get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId + UpdateUtilConstants.SEARCHES);
 		}
 

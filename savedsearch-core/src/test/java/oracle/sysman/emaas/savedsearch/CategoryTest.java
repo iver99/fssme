@@ -8,6 +8,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -19,7 +20,6 @@ public class CategoryTest extends BaseTest
 	private static Integer categoryId;
 
 	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
-	private static final String TENANT_ID_OPC2 = TestUtils.TENANT_ID_OPC2;
 
 	@AfterClass
 	public static void testDelete()
@@ -97,7 +97,8 @@ public class CategoryTest extends BaseTest
 	@BeforeClass
 	public void initTenantDetails()
 	{
-		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+				.getInternalTenantId(TENANT_ID_OPC1)));
 
 	}
 
@@ -234,6 +235,7 @@ public class CategoryTest extends BaseTest
 	@Test
 	public void testgetCategoryInvalidId() throws Exception
 	{
+
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
 			catMan.getCategory(99898987898L);
@@ -243,6 +245,7 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST));
 		}
+
 	}
 
 	@Test
@@ -262,6 +265,7 @@ public class CategoryTest extends BaseTest
 	@Test
 	public void testInvalidData() throws Exception
 	{
+
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("CategoryName");
@@ -280,8 +284,6 @@ public class CategoryTest extends BaseTest
 	public void testSaveCategory_DuplicateName() throws Exception
 	{
 
-		Long opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
-		TenantContext.setContext(opc1);
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("Log Analytics");
@@ -296,9 +298,7 @@ public class CategoryTest extends BaseTest
 		catch (EMAnalyticsFwkException emanfe) {
 			AssertJUnit.assertEquals(emanfe.getErrorCode(), EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME);
 		}
-		finally {
-			TenantContext.clearContext();
-		}
+
 	}
 
 }

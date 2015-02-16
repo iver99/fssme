@@ -20,6 +20,7 @@ public class ImportSearchObject
 
 		String output = "";
 		String jsonString1 = sData;
+		TenantUtil objTenent = new TenantUtil(tenantid);
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = endpoint;
 		RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
@@ -33,14 +34,16 @@ public class ImportSearchObject
 		if (UpdateSearchUtil.isTestEnv()) {
 			res1 = RestAssured.given().contentType(ContentType.XML).header("Authorization", authToken)
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", objTenent.getTenantId())
+					.header("X-REMOTE-USER", objTenent.getUserName()).body(jsonString1).when()
 					.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
 		}
 		else
 
 		{
 			res1 = RestAssured.given().contentType(ContentType.XML).header("Authorization", authToken)
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", objTenent.getTenantId())
+					.header("X-REMOTE-USER", objTenent.getUserName()).body(jsonString1).when()
 					.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
 		}
 

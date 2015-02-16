@@ -22,6 +22,7 @@ public class WidgetGroupAPITest
 	static String serveruri;
 	static String authToken;
 	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC1;
+	static String TENANT_ID1 = TestConstant.TENANT_ID1;
 
 	@BeforeClass
 	public static void setUp()
@@ -46,7 +47,7 @@ public class WidgetGroupAPITest
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/widgetgroups");
 
 			System.out.println("											");

@@ -37,21 +37,22 @@ public class SearchesCRUD
 	static int folderid1 = -1;
 	static int catid1 = -1;
 	static String catName1 = "";
+	static String TENANT_ID1 = TestConstant.TENANT_ID1;
 
 	@AfterClass
 	public static void afterTest()
 	{
 
 		Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-				.when().delete("/folder/" + folderid);
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + folderid);
 		System.out.println(res2.asString());
 		System.out.println("Status code is: " + res2.getStatusCode());
 		Assert.assertTrue(res2.getStatusCode() == 204);
 
 		res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-				.when().delete("/folder/" + folderid1);
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + folderid1);
 		System.out.println(res2.asString());
 		System.out.println("Status code is: " + res2.getStatusCode());
 		Assert.assertTrue(res2.getStatusCode() == 204);
@@ -64,15 +65,15 @@ public class SearchesCRUD
 
 		String jsonString = "{ \"name\":\"Custom1\",\"description\":\"Folder for  searches\"}";
 		Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-				.body(jsonString).when().post("/folder");
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString).when().post("/folder");
 		System.out.println(res.asString());
 		folderid = res.jsonPath().get("id");
 
 		String jsonString2 = "{ \"name\":\"Custom21\",\"description\":\"Folder for  searches\"}";
 		Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-				.body(jsonString2).when().post("/folder");
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString2).when().post("/folder");
 		System.out.println(res2.asString());
 		folderid1 = res2.jsonPath().get("id");
 
@@ -80,7 +81,7 @@ public class SearchesCRUD
 				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
 				+ "</Category></CategorySet>";
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString1)
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
@@ -96,7 +97,7 @@ public class SearchesCRUD
 				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
 				+ "</Category></CategorySet>";
 		Response res3 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString3)
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString3)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld1 = new JSONArray(res3.getBody().asString());
@@ -139,8 +140,9 @@ public class SearchesCRUD
 			System.out.println("Creating a Folder");
 			String jsonString = "{ \"name\":\"Folder_cont\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/folder");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			// System.out.println(res1.asString());
 			System.out.println("											");
@@ -158,7 +160,8 @@ public class SearchesCRUD
 					+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			JsonPath jp2 = res2.jsonPath();
 			System.out.println("Status code is: " + res2.getStatusCode());
 			// System.out.println(res2.asString());
@@ -169,7 +172,7 @@ public class SearchesCRUD
 			System.out.println("											");
 			System.out.println("Trying to get search with flattened folder details");
 			Response res3 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
 					.get("/search/" + jp2.get("id") + "?flattenedFolderPath=true");
 			JsonPath jp3 = res3.jsonPath();
@@ -185,7 +188,8 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + jp2.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.delete("/search/" + jp2.get("id"));
 			// System.out.println(res4.asString());
 			System.out.println("Status code is: " + res4.getStatusCode());
 			System.out.println("											");
@@ -193,7 +197,8 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + jp1.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.delete("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res5.getStatusCode());
 			// System.out.println("											");
@@ -220,7 +225,7 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
 					.get("/search/10000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -247,7 +252,7 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
 					.delete("/search/1000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -274,7 +279,7 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
 					.put("/search/100000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -301,7 +306,8 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches/");
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/searches/");
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertEquals(res.asString(),
 					"Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount");
@@ -309,7 +315,8 @@ public class SearchesCRUD
 
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches");
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/searches");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertEquals(res1.asString(),
 					"Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount");
@@ -335,7 +342,8 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryId=-1");
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/searches?categoryId=-1");
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertEquals(res.asString(), "Id/count should be a positive number and not an alphanumeric");
 			Assert.assertTrue(res.getStatusCode() == 400);
@@ -357,7 +365,8 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?lastAccessCount=0");
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/searches?lastAccessCount=0");
 			// JsonPath jp = res.jsonPath();
 			// System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -384,7 +393,8 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?lastAccessCount=-1");
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/searches?lastAccessCount=-1");
 			// JsonPath jp = res.jsonPath();
 			// System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -411,7 +421,8 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?lastAccessCount=sravan");
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/searches?lastAccessCount=sravan");
 			// JsonPath jp = res.jsonPath();
 			// System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -436,7 +447,7 @@ public class SearchesCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to Check for the valid response body when the search isn't available");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/search/555");
 
 			System.out.println("											");
@@ -476,8 +487,9 @@ public class SearchesCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\",\"attributes\":\"test\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -500,7 +512,8 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
 			System.out.println("											");
@@ -511,7 +524,7 @@ public class SearchesCRUD
 			System.out.println("GET operation is in-progress to assert the successful search creation");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + folderid);
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
@@ -539,7 +552,7 @@ public class SearchesCRUD
 			 * Response res3 =
 			 * RestAssured.given().contentType(ContentType.JSON).
 			 * headers("X-USER-IDENTITY-DOMAIN-NAME", HOSTNAME)
-			 * .log().everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/"+jp1.get("id"));
+			 * .log().everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/"+jp1.get("id"));
 			 * //JsonPath jp6 = res6.jsonPath();
 			 * System.out.println(res3.asString());
 			 * Assert.assertTrue(res3.getStatusCode() == 204);
@@ -570,8 +583,9 @@ public class SearchesCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\" \",\"type\":\"STRING\",\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			System.out.println("											");
@@ -602,8 +616,9 @@ public class SearchesCRUD
 					+ folderid1
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			System.out.println("											");
@@ -632,8 +647,9 @@ public class SearchesCRUD
 
 			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":3000},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			System.out.println("											");
@@ -662,8 +678,9 @@ public class SearchesCRUD
 
 			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":3000},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":\"text\",\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			System.out.println("											");
@@ -690,8 +707,9 @@ public class SearchesCRUD
 			System.out.println("POST method is in-progress to create a new search with blank name");
 			String jsonString = "{\"name\":\" \",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -721,7 +739,7 @@ public class SearchesCRUD
 			System.out.println("											");
 			int position = -1;
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + folderid);
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
@@ -753,8 +771,8 @@ public class SearchesCRUD
 
 					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 							.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-							.body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-							.put("/search/" + searchID);
+							.header("X-REMOTE-USER", TENANT_ID1).body(jsonString)
+							.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + searchID);
 					System.out.println("											");
 					System.out.println("Status code is: " + res1.getStatusCode());
 					System.out.println("											");
@@ -794,8 +812,9 @@ public class SearchesCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			JsonPath jp = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -811,7 +830,7 @@ public class SearchesCRUD
 			String jsonString1 = "{ \"category\":{}}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString1)
+					.header("X-REMOTE-USER", TENANT_ID1).header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -825,7 +844,7 @@ public class SearchesCRUD
 			String jsonString2 = "{\"name\":\"Search for test edit category_edit\"}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString2)
+					.header("X-REMOTE-USER", TENANT_ID1).header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString2)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
 			JsonPath jp3 = res3.jsonPath();
 			System.out.println("											");
@@ -843,7 +862,7 @@ public class SearchesCRUD
 			String jsonString3 = "{ \"category\":{\"id\":" + catid + "}}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString3)
+					.header("X-REMOTE-USER", TENANT_ID1).header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString3)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
 			JsonPath jp4 = res4.jsonPath();
 			System.out.println("											");
@@ -859,7 +878,8 @@ public class SearchesCRUD
 			System.out.println("DELETE method is in-progress to clear data");
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.delete("/search/" + jp.get("id"));
 			// JsonPath jp7 = res7.jsonPath();
 			System.out.println(res7.asString());
 			Assert.assertTrue(res7.getStatusCode() == 204);
@@ -889,8 +909,9 @@ public class SearchesCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			JsonPath jp = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -905,8 +926,8 @@ public class SearchesCRUD
 					+ "},\"folder\":{},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString_edit).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit)
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.asString(), "The folder key for search is missing in the input JSON Object");
@@ -914,7 +935,8 @@ public class SearchesCRUD
 			System.out.println("DELETE method is in-progress to clear data");
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.delete("/search/" + jp.get("id"));
 
 			System.out.println(res7.asString());
 			Assert.assertTrue(res7.getStatusCode() == 204);
@@ -944,8 +966,9 @@ public class SearchesCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			JsonPath jp = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -962,8 +985,8 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString_edit).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit)
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.asString(), "The name key for search can not be empty in the input JSON Object");
@@ -971,7 +994,8 @@ public class SearchesCRUD
 			System.out.println("DELETE method is in-progress to clear data");
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.delete("/search/" + jp.get("id"));
 			// JsonPath jp7 = res7.jsonPath();
 			System.out.println(res7.asString());
 			Assert.assertTrue(res7.getStatusCode() == 204);
@@ -1001,8 +1025,9 @@ public class SearchesCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			JsonPath jp = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -1014,8 +1039,8 @@ public class SearchesCRUD
 			String jsonString_edit = "{\"parameters\":[{\"name\":\" \",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString_edit).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit)
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.asString(), "The name key for search param can not be empty in the input JSON Object");
@@ -1024,8 +1049,8 @@ public class SearchesCRUD
 			String jsonString_edit1 = "{\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString_edit1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit1)
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
 			System.out.println(res3.asString());
 			Assert.assertTrue(res3.getStatusCode() == 400);
 			Assert.assertEquals(res3.asString(), "The name key for search param is missing in the input JSON Object");
@@ -1034,8 +1059,8 @@ public class SearchesCRUD
 			String jsonString_edit2 = "{\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString_edit2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit2)
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
 			System.out.println(res4.asString());
 			Assert.assertTrue(res4.getStatusCode() == 400);
 			Assert.assertEquals(res4.asString(), "The type key for search param is missing in the input JSON Object");
@@ -1044,8 +1069,8 @@ public class SearchesCRUD
 			String jsonString_edit3 = "{\"parameters\":[{\"name\":\"sample\",\"type\":text	,\"value\":\"my_value\"}]}";
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString_edit3).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit3)
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
 			System.out.println(res5.asString());
 			Assert.assertTrue(res5.getStatusCode() == 400);
 			Assert.assertEquals(res5.asString(), "Invalid param type, please specify either STRING or CLOB");
@@ -1053,7 +1078,8 @@ public class SearchesCRUD
 			System.out.println("DELETE method is in-progress to clear data");
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.delete("/search/" + jp.get("id"));
 			// JsonPath jp7 = res7.jsonPath();
 			System.out.println(res7.asString());
 			Assert.assertTrue(res7.getStatusCode() == 204);
@@ -1085,8 +1111,9 @@ public class SearchesCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
 			System.out.println("											");
@@ -1102,7 +1129,7 @@ public class SearchesCRUD
 			 * "{\"name\":\"MyLostSearch!!!\",\"categoryId\":1,\"folderId\":2,\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}"
 			 * ; Response res1 = given().contentType(ContentType.JSON)
 			 * .log()
-			 * .everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+			 * .everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
 			 * System.out.println("											");
 			 * System.out.println("Status code is: " + res1.getStatusCode());
 			 * System.out.println("											");
@@ -1120,7 +1147,8 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
 			System.out.println("											");
@@ -1136,7 +1164,8 @@ public class SearchesCRUD
 					+ "},\"name\":\"My_Search\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString3).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString3).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res3.getStatusCode());
 			System.out.println("											");
@@ -1154,7 +1183,8 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString4).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString4).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res4.getStatusCode());
 			System.out.println("											");
@@ -1173,7 +1203,8 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString5).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString5).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res5.getStatusCode());
 			System.out.println("											");
@@ -1206,7 +1237,7 @@ public class SearchesCRUD
 			System.out.println("											");
 			int position = -1;
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + folderid);
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -1230,7 +1261,7 @@ public class SearchesCRUD
 					System.out.println("											");
 					System.out.println("Read the search details before its deletion");
 					Response res0 = RestAssured.given().log().everything().header("Authorization", authToken)
-							.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+							.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 							.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/search/" + mysearchID);
 					JsonPath jp0 = res0.jsonPath();
 					System.out.println("											");
@@ -1246,7 +1277,8 @@ public class SearchesCRUD
 					System.out.println("											");
 					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 							.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-							.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + mysearchID);
+							.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+							.delete("/search/" + mysearchID);
 					System.out.println("											");
 					System.out.println("Status code is: " + res1.getStatusCode());
 					System.out.println("											");
@@ -1254,7 +1286,8 @@ public class SearchesCRUD
 					Assert.assertTrue(res1.getStatusCode() == 204);
 					Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 							.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-							.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/search/" + mysearchID);
+							.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+							.get("/search/" + mysearchID);
 					System.out.println(res2.asString());
 					System.out.println("Status code is: " + res2.getStatusCode());
 					System.out.println("==DELETE operation is succeeded");
@@ -1285,7 +1318,8 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -1304,7 +1338,8 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			JsonPath jp2 = res2.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -1325,7 +1360,8 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?lastAccessCount=2");
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/searches?lastAccessCount=2");
 			JsonPath jp3 = res3.jsonPath();
 			// System.out.println(res3.asString());
 			System.out.println("Last accessed top 2 search Id's are  :" + jp3.get("id"));
@@ -1341,7 +1377,7 @@ public class SearchesCRUD
 			System.out.println("Now set the last access time to the search whose id: " + jp3.get("id[1]") + " with PUT method");
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
 					.put("/search/" + jp3.get("id[1]") + "?updateLastAccessTime=true");
 			// JsonPath jp4 = res4.jsonPath();
 			String str_updateTime = res4.asString();
@@ -1355,7 +1391,8 @@ public class SearchesCRUD
 			System.out.println("Now verify if the lastAccesDate is set");
 			Response res4_1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/search/" + jp3.get("id[1]"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/search/" + jp3.get("id[1]"));
 			JsonPath jp4_1 = res4_1.jsonPath();
 			Assert.assertTrue(res4_1.getStatusCode() == 200);
 			Assert.assertEquals(jp4_1.get("lastAccessDate"), str_updateTime);
@@ -1370,7 +1407,7 @@ public class SearchesCRUD
 			System.out.println("Now set the last access time to the search whose id: " + jp3.get("id[0]") + " with PUT method");
 			Response res4_3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
 					.put("/search/" + jp3.get("id[0]") + "?updateLastAccessTime=false");
 			// JsonPath jp4 = res4.jsonPath();
 
@@ -1384,7 +1421,8 @@ public class SearchesCRUD
 			System.out.println("Now verify if the lastAccesDate is set");
 			Response res4_4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/search/" + jp3.get("id[0]"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/search/" + jp3.get("id[0]"));
 			JsonPath jp4_2 = res4_4.jsonPath();
 			Assert.assertTrue(res4_4.getStatusCode() == 200);
 			Assert.assertEquals(jp4_2.get("lastAccessDate"), str_lastAccessTime);
@@ -1400,7 +1438,8 @@ public class SearchesCRUD
 			System.out.println("											");
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?lastAccessCount=2");
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.get("/searches?lastAccessCount=2");
 			JsonPath jp5 = res5.jsonPath();
 			// System.out.println(res5.asString());
 			System.out.println("Last accessed top 2 search Id's are  :" + jp5.get("id"));
@@ -1409,13 +1448,15 @@ public class SearchesCRUD
 			System.out.println("Cleaning up the searches that are created in this scenario");
 			Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + jp1.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.delete("/search/" + jp1.get("id"));
 			// JsonPath jp6 = res6.jsonPath();
 			System.out.println(res6.asString());
 			Assert.assertTrue(res6.getStatusCode() == 204);
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + jp2.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.delete("/search/" + jp2.get("id"));
 			// JsonPath jp7 = res7.jsonPath();
 			System.out.println(res7.asString());
 			Assert.assertTrue(res7.getStatusCode() == 204);
@@ -1443,7 +1484,8 @@ public class SearchesCRUD
 					+ folderid + "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/search");
+					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.when().post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -1462,7 +1504,7 @@ public class SearchesCRUD
 					+ " with PUT method, but no value for parameter");
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
 					.put("/search/" + jp1.get("id") + "?updateLastAccessTime");
 
 			System.out.println(res2.asString());
@@ -1483,7 +1525,8 @@ public class SearchesCRUD
 					+ " with PUT method, but no value for parameter");
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp1.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.put("/search/" + jp1.get("id"));
 
 			System.out.println(res3.asString());
 			System.out.println("											");
@@ -1501,7 +1544,8 @@ public class SearchesCRUD
 
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + jp1.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.delete("/search/" + jp1.get("id"));
 			// JsonPath jp7 = res7.jsonPath();
 			System.out.println(res7.asString());
 			Assert.assertTrue(res7.getStatusCode() == 204);
@@ -1526,7 +1570,7 @@ public class SearchesCRUD
 			System.out.println("                                      ");
 			int position = -1;
 			int systemsearchId = -1;
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryId=1");
 			JsonPath jp = res.jsonPath();
 
@@ -1547,7 +1591,7 @@ public class SearchesCRUD
 			}
 
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
 					.delete("/search/" + systemsearchId);
 			System.out.println("Status code:" + res1.getStatusCode());
 			System.out.println(res1.asString());
@@ -1577,7 +1621,7 @@ public class SearchesCRUD
 			System.out.println("                                      ");
 			int position = -1;
 			int systemsearchId = -1;
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryId=1");
 			JsonPath jp = res.jsonPath();
 
@@ -1599,7 +1643,7 @@ public class SearchesCRUD
 			String jsonString = "{ \"name\":\"System_Search_Edit\"}";
 
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
 					.put("/search/" + systemsearchId);
 			System.out.println("Status code:" + res1.getStatusCode());
 			System.out.println(res1.asString());

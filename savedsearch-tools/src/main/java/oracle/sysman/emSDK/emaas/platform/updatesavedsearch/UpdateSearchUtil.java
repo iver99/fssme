@@ -107,10 +107,12 @@ public class UpdateSearchUtil
 	public static boolean isEndpointReachable(String endpoint, String authToken, String tenantid)
 	{
 		try {
+			TenantUtil objTenent = new TenantUtil(tenantid);
 			RestAssured.useRelaxedHTTPSValidation();
 			RestAssured.baseURI = endpoint;
-			Response res = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
-					.when().get();
+			Response res = RestAssured.given().header("Authorization", authToken)
+					.header("X-USER-IDENTITY-DOMAIN-NAME", objTenent.getTenantId())
+					.header("X-REMOTE-USER", objTenent.getUserName()).when().get();
 			if (res.getStatusCode() == 200) {
 				return true;
 			}

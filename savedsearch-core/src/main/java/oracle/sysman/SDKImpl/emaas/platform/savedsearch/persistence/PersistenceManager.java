@@ -10,6 +10,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+
 public class PersistenceManager
 {
 	private static class PersistenceManagerHelper
@@ -31,9 +33,11 @@ public class PersistenceManager
 	private static final String TEST_PERSISTENCE_UNIT = "EmaasAnalyticsPublicModelTest";
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
 	private static final String TENANT_ID_STR = "ssftenant.id";
+	private static final String TENANT_USERID = "ssfuser.id";
 
 	public static PersistenceManager getInstance()
 	{
+
 		return PersistenceManagerHelper.singleton;
 	}
 
@@ -72,10 +76,11 @@ public class PersistenceManager
 		}
 	}
 
-	public EntityManager getEntityManager(Long value)
+	public EntityManager getEntityManager(TenantInfo value)
 	{
-		Map<String, Long> emProperties = new HashMap<String, Long>();
-		emProperties.put(TENANT_ID_STR, value);
+		Map<String, String> emProperties = new HashMap<String, String>();
+		emProperties.put(TENANT_ID_STR, String.valueOf(value.getTenantInternalId()));
+		emProperties.put(TENANT_USERID, value.getUsername());
 		return emf.createEntityManager(emProperties);
 	}
 
