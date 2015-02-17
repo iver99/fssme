@@ -536,10 +536,10 @@ public class SearchManagerImpl extends SearchManager
 					if (search.getId() != null && search.getId() > 0) {
 
 						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getSearchById(search.getId(), em);
-						if (emSearch != null && emSearch.getSystemSearch() != null && emSearch.getSystemSearch().intValue() == 1) {
+						/*if (emSearch != null && emSearch.getSystemSearch() != null && emSearch.getSystemSearch().intValue() == 1) {
 							importedList.add(createSearchObject(emSearch, null));
 							continue;
-						}
+						}*/
 
 						if (obj != null) {
 							if (obj instanceof Integer) {

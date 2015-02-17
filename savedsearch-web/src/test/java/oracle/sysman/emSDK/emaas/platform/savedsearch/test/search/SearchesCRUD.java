@@ -81,8 +81,8 @@ public class SearchesCRUD
 				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
 				+ "</Category></CategorySet>";
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -97,8 +97,8 @@ public class SearchesCRUD
 				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
 				+ "</Category></CategorySet>";
 		Response res3 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString3)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString3).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld1 = new JSONArray(res3.getBody().asString());
 		for (int index = 0; index < arrfld1.length(); index++) {
@@ -141,7 +141,7 @@ public class SearchesCRUD
 			String jsonString = "{ \"name\":\"Folder_cont\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
 					.when().post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			// System.out.println(res1.asString());
@@ -488,7 +488,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\",\"attributes\":\"test\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
 					.when().post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
@@ -584,7 +584,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\" \",\"type\":\"STRING\",\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
 					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -617,7 +617,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
 					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -708,7 +708,7 @@ public class SearchesCRUD
 			String jsonString = "{\"name\":\" \",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
 					.when().post("/search");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -771,8 +771,8 @@ public class SearchesCRUD
 
 					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 							.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-							.header("X-REMOTE-USER", TENANT_ID1).body(jsonString)
-							.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + searchID);
+							.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+							.body(jsonString).when().put("/search/" + searchID);
 					System.out.println("											");
 					System.out.println("Status code is: " + res1.getStatusCode());
 					System.out.println("											");
@@ -844,8 +844,9 @@ public class SearchesCRUD
 			String jsonString2 = "{\"name\":\"Search for test edit category_edit\"}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString2)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header("X_SSF_API_AUTH", "ORACLE_INTERNAL")
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString2).when()
+					.put("/search/" + jp.get("id"));
 			JsonPath jp3 = res3.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -862,8 +863,9 @@ public class SearchesCRUD
 			String jsonString3 = "{ \"category\":{\"id\":" + catid + "}}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header("X_SSF_API_AUTH", "ORACLE_INTERNAL").body(jsonString3)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header("X_SSF_API_AUTH", "ORACLE_INTERNAL")
+					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString3).when()
+					.put("/search/" + jp.get("id"));
 			JsonPath jp4 = res4.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res4.getStatusCode());
@@ -910,7 +912,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
 					.when().post("/search");
 			JsonPath jp = res1.jsonPath();
 			System.out.println(res1.asString());
@@ -967,7 +969,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
 					.when().post("/search");
 			JsonPath jp = res1.jsonPath();
 			System.out.println(res1.asString());
@@ -985,8 +987,8 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.body(jsonString_edit).when().put("/search/" + jp.get("id"));
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.asString(), "The name key for search can not be empty in the input JSON Object");
@@ -1026,7 +1028,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
 					.when().post("/search");
 			JsonPath jp = res1.jsonPath();
 			System.out.println(res1.asString());
@@ -1039,8 +1041,8 @@ public class SearchesCRUD
 			String jsonString_edit = "{\"parameters\":[{\"name\":\" \",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.body(jsonString_edit).when().put("/search/" + jp.get("id"));
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.asString(), "The name key for search param can not be empty in the input JSON Object");
@@ -1049,8 +1051,8 @@ public class SearchesCRUD
 			String jsonString_edit1 = "{\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.body(jsonString_edit1).when().put("/search/" + jp.get("id"));
 			System.out.println(res3.asString());
 			Assert.assertTrue(res3.getStatusCode() == 400);
 			Assert.assertEquals(res3.asString(), "The name key for search param is missing in the input JSON Object");
@@ -1059,8 +1061,8 @@ public class SearchesCRUD
 			String jsonString_edit2 = "{\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_edit2)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/search/" + jp.get("id"));
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.body(jsonString_edit2).when().put("/search/" + jp.get("id"));
 			System.out.println(res4.asString());
 			Assert.assertTrue(res4.getStatusCode() == 400);
 			Assert.assertEquals(res4.asString(), "The type key for search param is missing in the input JSON Object");
@@ -1112,7 +1114,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
 					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -1147,7 +1149,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString2)
 					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -1164,7 +1166,7 @@ public class SearchesCRUD
 					+ "},\"name\":\"My_Search\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString3).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString3)
 					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -1183,7 +1185,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString4).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString4)
 					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res4.getStatusCode());
@@ -1203,7 +1205,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString5).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString5)
 					.when().post("/search");
 			System.out.println("											");
 			System.out.println("Status code is: " + res5.getStatusCode());
@@ -1318,7 +1320,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString1)
 					.when().post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
@@ -1338,7 +1340,7 @@ public class SearchesCRUD
 					+ "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString2)
 					.when().post("/search");
 			JsonPath jp2 = res2.jsonPath();
 			System.out.println("											");
@@ -1484,7 +1486,7 @@ public class SearchesCRUD
 					+ folderid + "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
+					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString1)
 					.when().post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
