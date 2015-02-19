@@ -4,5 +4,6 @@
 	<artifact name="softwarejson" loc="software-definitions/SavedSearchService.json" />
 	<artifact name="cookbook" loc="savedsearch-chef/savedsearchService" />
 	<artifact name="software" loc="deploy-list.xml" />
+</Service>
 </Application>
 </EMaaSManifest>
