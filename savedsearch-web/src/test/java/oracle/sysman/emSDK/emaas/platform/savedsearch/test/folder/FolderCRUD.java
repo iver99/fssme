@@ -1178,7 +1178,7 @@ public class FolderCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("POST method is in-progress to create a new folder and then to create searches in it");
 
-			String jsonString1 = "{ \"name\":\"Folder_searches\",\"description\":\"Folder for EMAAS searches\"}";
+			String jsonString1 = "{ \"name\":\"Folder_searches6\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
 					.body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/folder");
@@ -1197,7 +1197,7 @@ public class FolderCRUD
 					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/folder/" + jp1.get("id"));
 			JsonPath jp0 = res.jsonPath();
-			Assert.assertEquals(jp0.get("name"), "Folder_searches");
+			Assert.assertEquals(jp0.get("name"), "Folder_searches6");
 			Assert.assertEquals(jp0.get("id"), jp1.get("id"));
 			Assert.assertEquals(jp0.getMap("parentFolder").get("id"), id);
 			Assert.assertEquals(jp0.getMap("parentFolder").get("href"), "http://" + HOSTNAME + ":" + portno

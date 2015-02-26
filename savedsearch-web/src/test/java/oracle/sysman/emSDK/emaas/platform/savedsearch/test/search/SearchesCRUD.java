@@ -137,7 +137,7 @@ public class SearchesCRUD
 			System.out.println("Create a folder and a serch in it to see the hierarchy of folder path");
 			// int position = -1;			
 			System.out.println("Creating a Folder");
-			String jsonString = "{ \"name\":\"Folder_cont\",\"description\":\"Folder for EMAAS searches\"}";
+			String jsonString = "{ \"name\":\"Folder_cont5\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).body(jsonString)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/folder");
@@ -178,7 +178,7 @@ public class SearchesCRUD
 			System.out.println("Search Name :" + jp3.get("name"));
 			System.out.println("Search ID  :" + jp3.get("id"));
 			System.out.println("flattenedFolderPath :" + jp3.get("flattenedFolderPath"));
-			Assert.assertEquals(jp3.get("flattenedFolderPath[0]"), "Folder_cont");
+			Assert.assertEquals(jp3.get("flattenedFolderPath[0]"), "Folder_cont5");
 			Assert.assertEquals(jp3.get("flattenedFolderPath[1]"), "All Searches");
 			System.out.println("											");
 			System.out.println("Deleting search created above");
