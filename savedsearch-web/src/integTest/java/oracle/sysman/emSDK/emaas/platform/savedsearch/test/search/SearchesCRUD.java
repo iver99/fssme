@@ -1,5 +1,4 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.search;
-import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 

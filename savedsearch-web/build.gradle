@@ -241,6 +241,12 @@ lrgConfig project(':savedsearch-web')
 	lrgConfig(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1')
 	lrgConfig(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3')
 	lrgConfig(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1')
+
+
+ 	lrgConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2')
+        lrgConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2')
+
+
 	
 	lrgConfig(group: 'org.testng', name:'testng', version:'6.8.8')
 	lrgConfig(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1')

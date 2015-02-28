@@ -78,7 +78,7 @@ configurations {
 
 dependencies {
 		
-	prebuild_log4j 'org.apache.logging.log4j:log4j-core:2.0.2'
+	prebuild_log4j 'org.apache.logging.log4j:log4j-core:2.0.2',
 	               'org.apache.logging.log4j:log4j-api:2.0.2'
 	prebuild_tenant_sdk 'com.oracle.emaas:emaas-platform-tenant-sdk:0.1'
         prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
