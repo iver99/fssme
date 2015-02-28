@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="18" passed="18">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="3306" started-at="2015-02-28T06:13:28Z" finished-at="2015-02-28T06:13:31Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="3306" started-at="2015-02-28T06:13:28Z" finished-at="2015-02-28T06:13:31Z">
+      <class name="oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD">
+        <test-method status="PASS" signature="setUp()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="setUp" is-config="true" duration-ms="1969" started-at="2015-02-27T22:13:28Z" finished-at="2015-02-27T22:13:30Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method status="PASS" signature="category_badURLs()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="category_badURLs" duration-ms="53" started-at="2015-02-27T22:13:30Z" finished-at="2015-02-27T22:13:30Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- category_badURLs -->
+        <test-method status="PASS" signature="getCategory_detailsbyId()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="getCategory_detailsbyId" duration-ms="197" started-at="2015-02-27T22:13:30Z" finished-at="2015-02-27T22:13:30Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getCategory_detailsbyId -->
+        <test-method status="PASS" signature="getCategory_detailsbyName()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="getCategory_detailsbyName" duration-ms="209" started-at="2015-02-27T22:13:30Z" finished-at="2015-02-27T22:13:30Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getCategory_detailsbyName -->
+        <test-method status="PASS" signature="getCategory_noName()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="getCategory_noName" duration-ms="31" started-at="2015-02-27T22:13:30Z" finished-at="2015-02-27T22:13:30Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getCategory_noName -->
+        <test-method status="PASS" signature="getCategory_wrongName()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="getCategory_wrongName" duration-ms="26" started-at="2015-02-27T22:13:30Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getCategory_wrongName -->
+        <test-method status="PASS" signature="getSearchDetailsById()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="getSearchDetailsById" duration-ms="129" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getSearchDetailsById -->
+        <test-method status="PASS" signature="getSearchDetailsById_ErrorId()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="getSearchDetailsById_ErrorId" duration-ms="39" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getSearchDetailsById_ErrorId -->
+        <test-method status="PASS" signature="listAllCategories()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="listAllCategories" duration-ms="131" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- listAllCategories -->
+        <test-method status="PASS" signature="searchesbyCategoryId()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategoryId" duration-ms="165" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategoryId -->
+        <test-method status="PASS" signature="searchesbyCategoryName()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategoryName" duration-ms="156" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategoryName -->
+        <test-method status="PASS" signature="searchesbyCategoryParams()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategoryParams" duration-ms="13" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategoryParams -->
+        <test-method status="PASS" signature="searchesbyCategory_3queryParams()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategory_3queryParams" duration-ms="19" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategory_3queryParams -->
+        <test-method status="PASS" signature="searchesbyCategory_ParamcaseCheck()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategory_ParamcaseCheck" duration-ms="13" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategory_ParamcaseCheck -->
+        <test-method status="PASS" signature="searchesbyCategory_badRequest()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategory_badRequest" duration-ms="36" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategory_badRequest -->
+        <test-method status="PASS" signature="searchesbyCategory_id_notExist()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategory_id_notExist" duration-ms="14" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategory_id_notExist -->
+        <test-method status="PASS" signature="searchesbyCategory_invalid_name()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategory_invalid_name" duration-ms="17" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategory_invalid_name -->
+        <test-method status="PASS" signature="searchesbyCategory_invalid_nameANDid()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategory_invalid_nameANDid" duration-ms="15" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategory_invalid_nameANDid -->
+        <test-method status="PASS" signature="searchesbyCategory_querycaseCheck()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="searchesbyCategory_querycaseCheck" duration-ms="16" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- searchesbyCategory_querycaseCheck -->
+        <test-method status="PASS" signature="afterTest()[pri:0, instance:oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD@5a4a6010]" name="afterTest" is-config="true" duration-ms="29" started-at="2015-02-27T22:13:31Z" finished-at="2015-02-27T22:13:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterTest -->
+      </class> <!-- oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

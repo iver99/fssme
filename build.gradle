@@ -12,8 +12,11 @@ ext.serviceDistDir = "${distDir}${serviceInstallPath}"
 apply plugin: 'java' 
 
 allprojects {  
+	apply plugin: 'artifactory-publish'
 	apply plugin: 'artifactory' 
 	apply plugin: 'DevInfraPlugin' 
+      	apply plugin: 'maven-publish'
+	apply plugin: 'em-test-infra'
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
@@ -27,15 +30,19 @@ allprojects {
 	mavenCentral()  
 	}  
 }
+artifactoryPublish{
+	                skip = true
+	}
 
 artifactory { 
 	contextUrl = "${artifactory_contextUrl}" 
 	publish { 
 		repository { 
-			repoKey = 'em-libs-release-local' 
+			repoKey = 'emaas-sandbox-local'			
 			username = "${artifactory_user}" 
 			password = "${artifactory_password}" 
 			maven = true 
+			publishPom=true	
 		} 
 	} 
 	resolve {  
@@ -183,6 +190,7 @@ buildscript {
 	dependencies {  
 		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.1.0'  
 		classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
+		classpath group: 'com.oracle.emaas.emdi', name: 'testinfra', version: "${testinfraVersion}", transitive: true
 	}  
 }
 
