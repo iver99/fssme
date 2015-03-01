@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
@@ -130,8 +131,9 @@ public class ImportFolderSet
 	@Consumes("application/xml")
 	public Response importsFolders(String xml)
 	{
-		_logger.info("import folders: \n" + xml);
+
 		Response res = null;
+		InputStream stream = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 		}
@@ -139,7 +141,7 @@ public class ImportFolderSet
 		String msg = "";
 		try {
 			JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
-			InputStream stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			FolderSet folders = (FolderSet) JAXBUtil.unmarshal(sReader, stream, jaxbContext);
@@ -170,6 +172,16 @@ public class ImportFolderSet
 			msg = "An internal error has occurred  while importing folder ";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 			e.printStackTrace();
+		}
+		finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				}
+				catch (IOException e) {
+
+				}
+			}
 		}
 		return res;
 	}

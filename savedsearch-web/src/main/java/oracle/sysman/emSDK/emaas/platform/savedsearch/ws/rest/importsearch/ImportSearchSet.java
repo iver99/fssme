@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
@@ -28,7 +29,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Import Searches Services
- *
+ * 
  * @since 0.1
  */
 @Path("importsearches")
@@ -41,7 +42,7 @@ public class ImportSearchSet
 	 * Import the searches with defined XML file<br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importsearches</font><br>
 	 * The string "importsearches" in the URL signifies import operation on search.<br>
-	 *
+	 * 
 	 * @since 0.1
 	 * @param xml
 	 *            "xml" is the XML definition used to import search<br>
@@ -214,15 +215,16 @@ public class ImportSearchSet
 	@Consumes("application/xml")
 	public Response importSearches(String xml)
 	{
-		_logger.info("import searches: \n" + xml);
+
 		Response res = null;
+		InputStream stream = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity("Please specify input with valid format").build();
 		}
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			InputStream stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			SearchSet searches = (SearchSet) JAXBUtil.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(ObjectFactory.class));
@@ -254,6 +256,16 @@ public class ImportSearchSet
 			_logger.error("Failed to import searches (2)", e);
 			msg = "An internal error has occurred" + e.getMessage();
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+		}
+		finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				}
+				catch (IOException e) {
+
+				}
+			}
 		}
 		return res;
 	}

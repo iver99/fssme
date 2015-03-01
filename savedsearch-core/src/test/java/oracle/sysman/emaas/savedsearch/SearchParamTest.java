@@ -63,12 +63,14 @@ public class SearchParamTest extends BaseTest
 		finally {
 			//now delete all the searchParams and search and folder
 
-			tmpSearch.setParameters(new ArrayList<SearchParameter>());
-			tmpSearch = SearchManagerImpl.getInstance().editSearch(tmpSearch);
-			//now delete the search
-			SearchManagerImpl objSearch = SearchManagerImpl.getInstance();
-			objSearch.deleteSearch(tmpSearch.getId(), true);
-
+			AssertJUnit.assertTrue(tmpSearch != null);
+			if (tmpSearch != null) {
+				tmpSearch.setParameters(new ArrayList<SearchParameter>());
+				tmpSearch = SearchManagerImpl.getInstance().editSearch(tmpSearch);
+				//now delete the search
+				SearchManagerImpl objSearch = SearchManagerImpl.getInstance();
+				objSearch.deleteSearch(tmpSearch.getId(), true);
+			}
 			CategoryManagerImpl.getInstance().deleteCategory(categoryId, true);
 			//now delete the folder
 			FolderManagerImpl.getInstance().deleteFolder(folderId, true);

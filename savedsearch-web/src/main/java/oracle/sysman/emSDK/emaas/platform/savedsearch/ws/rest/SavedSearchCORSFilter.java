@@ -33,15 +33,14 @@ public class SavedSearchCORSFilter implements Filter
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
+		hRes.addHeader("Access-Control-Allow-Origin", "*");
 		if (hReq.getHeader("Origin") != null) {
-			String origin = hReq.getHeader("Origin");
-			hRes.addHeader("Access-Control-Allow-Origin", origin);
-			// allow cookies
+
 			hRes.addHeader("Access-Control-Allow-Credentials", "true");
 		}
 		else {
 			// non-specific origin, cannot support cookies
-			hRes.addHeader("Access-Control-Allow-Origin", "*");
+			//hRes.addHeader("Access-Control-Allow-Origin", "*");
 		}
 		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
 		hRes.addHeader("Access-Control-Allow-Headers",

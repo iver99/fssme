@@ -485,7 +485,7 @@ public class FolderManagerImpl extends FolderManager
 			return createFolderObject(folderObj, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Folder with name " + folder.getName() + " was saved but could not bve retrieved back", eme);
+			_logger.error("Folder  was saved but could not bve retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {

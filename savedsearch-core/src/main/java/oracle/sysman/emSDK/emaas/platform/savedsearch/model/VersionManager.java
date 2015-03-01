@@ -55,9 +55,9 @@ public class VersionManager
 				schemaVersion = new SchemaVersion(ver.getId().getMajor(), ver.getId().getMinor());
 			}
 			else {
-				final String errMsg = "Invalid Schema Version are detected: " + vers;
+				final String errMsg = "Invalid Schema Version are detected: ";
 				_logger.error(errMsg);
-				throw new RuntimeException(errMsg);
+				throw new RuntimeException(errMsg + vers);
 			}
 		}
 		finally {

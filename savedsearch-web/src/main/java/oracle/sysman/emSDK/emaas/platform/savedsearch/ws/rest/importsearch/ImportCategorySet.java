@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
@@ -27,7 +28,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Import Category Services
- *
+ * 
  * @since 0.1
  */
 @Path("importcategories")
@@ -40,7 +41,7 @@ public class ImportCategorySet
 	 * Import the category with defined XML file<br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importcategories</font><br>
 	 * The string "importcategories" in the URL signifies import operation on category.<br>
-	 *
+	 * 
 	 * @since 0.1
 	 * @param xml
 	 *            "xml" is the XML definition used to import category<br>
@@ -161,16 +162,15 @@ public class ImportCategorySet
 	@Consumes("application/xml")
 	public Response importsCategories(String xml)
 	{
-		_logger.info("import categories: \n" + xml);
 		Response res = null;
+		InputStream stream = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity("Please specify input with valid format").build();
 		}
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			InputStream stream = ImportCategorySet.class.getClassLoader().getResourceAsStream(resourcePath);
-			stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+			stream = ImportCategorySet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			CategorySet categories = (CategorySet) JAXBUtil.unmarshal(sReader, stream,
@@ -203,6 +203,16 @@ public class ImportCategorySet
 			_logger.error("Failed to import categories (2)", e);
 			msg = "An internal error has occurred";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+		}
+		finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				}
+				catch (IOException e) {
+
+				}
+			}
 		}
 		return res;
 	}

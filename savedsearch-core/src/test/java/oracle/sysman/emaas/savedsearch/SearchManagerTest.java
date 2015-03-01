@@ -274,10 +274,11 @@ public class SearchManagerTest extends BaseTest
 		}
 
 		AssertJUnit.assertNotNull(queried);
-		AssertJUnit.assertEquals(2, queried.size());
-		assertSearchEquals(search1, queried.get(0));
-		assertSearchEquals(search2, queried.get(1));
-
+		if (queried != null) {
+			AssertJUnit.assertEquals(2, queried.size());
+			assertSearchEquals(search1, queried.get(0));
+			assertSearchEquals(search2, queried.get(1));
+		}
 		sm.deleteSearch(search1.getId(), true);
 		sm.deleteSearch(search2.getId(), true);
 		cm.deleteCategory(cat.getId(), true);
@@ -307,9 +308,11 @@ public class SearchManagerTest extends BaseTest
 		}
 
 		AssertJUnit.assertNotNull(queried);
-		AssertJUnit.assertEquals(2, queried.size());
-		assertSearchEquals(search1, queried.get(0));
-		assertSearchEquals(search2, queried.get(1));
+		if (queried != null) {
+			AssertJUnit.assertEquals(2, queried.size());
+			assertSearchEquals(search1, queried.get(0));
+			assertSearchEquals(search2, queried.get(1));
+		}
 
 		sm.deleteSearch(search1.getId(), true);
 		sm.deleteSearch(search2.getId(), true);
@@ -374,16 +377,20 @@ public class SearchManagerTest extends BaseTest
 		}
 
 		AssertJUnit.assertNotNull(queried);
-		AssertJUnit.assertEquals(2, queried.size());
+		if (queried != null) {
+			AssertJUnit.assertEquals(2, queried.size());
+		}
 
 		Search savedWidget1 = null;
 		Search savedWidget2 = null;
-		for (Search widget : queried) {
-			if (widget1.getId().equals(widget.getId())) {
-				savedWidget1 = widget;
-			}
-			else if (widget2.getId().equals(widget.getId())) {
-				savedWidget2 = widget;
+		if (queried != null) {
+			for (Search widget : queried) {
+				if (widget1.getId().equals(widget.getId())) {
+					savedWidget1 = widget;
+				}
+				else if (widget2.getId().equals(widget.getId())) {
+					savedWidget2 = widget;
+				}
 			}
 		}
 		assertSearchEquals(widget1, savedWidget1);

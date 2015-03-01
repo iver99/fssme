@@ -119,8 +119,7 @@ public class UpdateSearchTest extends BaseTest
 		String inputData = UpdateSearchTest.getStringFromInputStream(stream);
 		String outputData = objUpdate.importSearches(serveruri, inputData, authToken, tenantimport);
 		List<Long> listID = new ArrayList<Long>();
-
-		String[] tmpList = outputData.split(System.getProperty("line.separator"));
+		String[] tmpList = outputData.split("\n");
 
 		for (String element : tmpList) {
 			if (element != null) {

@@ -214,7 +214,7 @@ public class SearchAPI
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createSearch(JSONObject inputJsonObj)
 	{
-		_logger.info("create search: \n" + inputJsonObj);
+
 		String message = "";
 		int statusCode = 201;
 		JSONObject jsonObj;
@@ -414,7 +414,6 @@ public class SearchAPI
 	public Response editSearch(JSONObject inputJsonObj, @HeaderParam("X_SSF_API_AUTH") String updateCategory,
 			@PathParam("id") long searchId)
 	{
-		_logger.info("edit search: \n" + inputJsonObj);
 		String message = null;
 		int statusCode = 200;
 		JSONObject jsonObj;
