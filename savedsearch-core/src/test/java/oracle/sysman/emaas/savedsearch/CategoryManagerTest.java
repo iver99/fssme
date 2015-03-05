@@ -11,12 +11,29 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.testng.AssertJUnit;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class CategoryManagerTest extends BaseTest
 {
+	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
+
+	@BeforeClass
+	public void initTenantDetails()
+	{
+		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+	}
+
+	@AfterClass
+	public void removeTenantDetails()
+	{
+		TenantContext.clearContext();
+	}
+
 	@Test
 	public void testDeleteCategoryWithSearch() throws EMAnalyticsFwkException
 	{
@@ -33,6 +50,10 @@ public class CategoryManagerTest extends BaseTest
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		cat.setOwner(currentUser);
 		cat.setDefaultFolderId(folder.getParentId());
+		cat.setProviderName("TestProviderName");
+		cat.setProviderVersion("TestProviderVersion");
+		cat.setProviderDiscovery("TestProviderDiscovery");
+		cat.setProviderAssetRoot("TestProviderAssetRoot");
 		cat = objCategory.saveCategory(cat);
 
 		SearchManager objSearch = SearchManager.getInstance();
@@ -43,6 +64,7 @@ public class CategoryManagerTest extends BaseTest
 		search.setName("Dummy Search");
 		search.setFolderId(folder.getId());
 		search.setCategoryId(cat.getId());
+		search.setIsWidget(false);
 		search = objSearch.saveSearch(search);
 
 		// soft deletion test

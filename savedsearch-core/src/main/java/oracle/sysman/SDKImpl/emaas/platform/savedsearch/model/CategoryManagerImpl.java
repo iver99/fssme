@@ -40,16 +40,18 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CategoryManagerImpl extends CategoryManager
 {
 	// Logger
-	private static final Logger _logger = Logger.getLogger(CategoryManagerImpl.class);
+	private static final Logger _logger = LogManager.getLogger(CategoryManagerImpl.class);
 
 	private static final CategoryManagerImpl _instance = new CategoryManagerImpl();
 
@@ -79,8 +81,7 @@ public class CategoryManagerImpl extends CategoryManager
 		EntityManager em = null;
 		EmAnalyticsCategory categoryObj = null;
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			if (permanently) {
 				categoryObj = EmAnalyticsObjectUtil.getCategoryByIdForDelete(categoryId, em);
 			}
@@ -139,9 +140,7 @@ public class CategoryManagerImpl extends CategoryManager
 	{
 		EntityManager em = null;
 		try {
-			EntityManagerFactory emf;
-			emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsCategory categoryEntity = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
 			em.getTransaction().begin();
 			em.merge(categoryEntity);
@@ -174,7 +173,7 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 		}
 		catch (Exception e) {
-			_logger.error("Error while updating the category: " + category.getName(), e);
+			_logger.error("Error while updating the category name: ", e);
 			throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
 					EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, e);
 		}
@@ -190,8 +189,8 @@ public class CategoryManagerImpl extends CategoryManager
 	{
 		List<Category> categories = null;
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			EntityManager em = emf.createEntityManager();
+
+			EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 
 			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory").getResultList();
 			if (categories == null) {
@@ -223,9 +222,9 @@ public class CategoryManagerImpl extends CategoryManager
 	public Category getCategory(long categoryId) throws EMAnalyticsFwkException
 	{
 		Category category = null;
+		EntityManager em = null;
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			EntityManager em = emf.createEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			if (categoryObj != null) {
 				em.refresh(categoryObj);
@@ -245,22 +244,28 @@ public class CategoryManagerImpl extends CategoryManager
 						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID, new Object[] { categoryId }, e);
 			}
 		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 		if (category == null) {
 			_logger.error("Category identified by ID: " + categoryId + " does not exist");
 			throw new EMAnalyticsFwkException("Category object by ID: " + categoryId + " does not exist",
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, new Object[] { categoryId });
 		}
+
 		return category;
 	}
 
 	@Override
 	public Category getCategory(String categoryName) throws EMAnalyticsFwkException
 	{
-
+		EntityManager em = null;
 		Category category = null;
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			EntityManager em = emf.createEntityManager();
+
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 
 			EmAnalyticsCategory categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
 					.setParameter("categoryName", categoryName).getSingleResult();
@@ -270,13 +275,19 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 		}
 		catch (Exception e) {
-			_logger.error("Error while getting the category object by Name: " + categoryName, e);
+			_logger.error("Error while getting the category object by Name ", e);
 			e.printStackTrace();
 			throw new EMAnalyticsFwkException("Category object by Name: " + categoryName + " does not exist",
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName }, e);
 		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+
+		}
 		if (category == null) {
-			_logger.error("Category object by name: " + categoryName + " does not exist");
+			_logger.error("Category object by name does not exist");
 			throw new EMAnalyticsFwkException("Category object by name: " + categoryName + " does not exist",
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName });
 		}
@@ -289,9 +300,7 @@ public class CategoryManagerImpl extends CategoryManager
 		EntityManager em = null;
 
 		try {
-			EntityManagerFactory emf;
-			emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			em.getTransaction().begin();
 			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
 			em.persist(categoryObj);
@@ -332,6 +341,7 @@ public class CategoryManagerImpl extends CategoryManager
 			if (em != null) {
 				em.close();
 			}
+
 		}
 
 	}
@@ -346,8 +356,7 @@ public class CategoryManagerImpl extends CategoryManager
 		Category category = null;
 		List<Category> importedList = new ArrayList<Category>();
 		try {
-			emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 
 			em.getTransaction().begin();
 			for (ImportCategoryImpl categorytmp : categories) {
@@ -436,6 +445,7 @@ public class CategoryManagerImpl extends CategoryManager
 			if (em != null) {
 				em.close();
 			}
+
 		}
 		return importedList;
 	}
@@ -486,6 +496,10 @@ public class CategoryManagerImpl extends CategoryManager
 
 			rtnObj.setOwner(category.getOwner());
 			rtnObj.setCreatedOn(category.getCreationDate());
+			rtnObj.setProviderName(category.getProviderName());
+			rtnObj.setProviderVersion(category.getProviderVersion());
+			rtnObj.setProviderDiscovery(category.getProviderDiscovery());
+			rtnObj.setProviderAssetRoot(category.getProviderAssetRoot());
 
 			// handle params
 

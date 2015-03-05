@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
@@ -21,26 +22,27 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Import Folders Services
- * 
+ *
  * @since 0.1
  */
 @Path("importfolders")
 public class ImportFolderSet
 {
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/folder.xsd";
-	private static final Logger _logger = Logger.getLogger(ImportFolderSet.class);
+	private static final Logger _logger = LogManager.getLogger(ImportFolderSet.class);
 
 	/**
 	 * Import the folders with defined XML file<br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/importfolders</font><br>
 	 * The string "importfolders" in the URL signifies import operation on folder.<br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param xml
 	 *            "xml" is the XML definition used to import folder<br>
@@ -130,8 +132,9 @@ public class ImportFolderSet
 	@Consumes("application/xml")
 	public Response importsFolders(String xml)
 	{
-		_logger.info("import folders: \n" + xml);
+
 		Response res = null;
+		InputStream stream = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 		}
@@ -139,7 +142,7 @@ public class ImportFolderSet
 		String msg = "";
 		try {
 			JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
-			InputStream stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			FolderSet folders = (FolderSet) JAXBUtil.unmarshal(sReader, stream, jaxbContext);
@@ -170,6 +173,16 @@ public class ImportFolderSet
 			msg = "An internal error has occurred  while importing folder ";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 			e.printStackTrace();
+		}
+		finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				}
+				catch (IOException e) {
+
+				}
+			}
 		}
 		return res;
 	}

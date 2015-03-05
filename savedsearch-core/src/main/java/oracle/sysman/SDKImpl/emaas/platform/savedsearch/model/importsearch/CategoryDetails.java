@@ -1,6 +1,5 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +10,12 @@ import javax.xml.bind.annotation.XmlType;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 
-
 /**
- * <p>Java class for categoryDetails complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for categoryDetails complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="categoryDetails">
  *   &lt;complexContent>
@@ -48,203 +47,271 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "categoryDetails", propOrder = {
 
 })
-public class CategoryDetails {
+public class CategoryDetails
+{
 
-	@XmlElement(name="Id")
-    protected Integer id;
-    @XmlElement(required = true ,name="Name")
-    protected String name;
-    @XmlElement(name="Description")
-    protected String description;
-    @XmlElement(name="DefaultFolderId")
-    protected Integer defaultFolderId;
-    @XmlElement(name="Parameters")
-    protected CategoryDetails.Parameters parameters;
+	/**
+	 * <p>
+	 * Java class for anonymous complex type.
+	 * <p>
+	 * The following schema fragment specifies the expected content contained within this class.
+	 * 
+	 * <pre>
+	 * &lt;complexType>
+	 *   &lt;complexContent>
+	 *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+	 *       &lt;sequence>
+	 *         &lt;element name="parameter" type="{}parameter" maxOccurs="unbounded" minOccurs="0"/>
+	 *       &lt;/sequence>
+	 *     &lt;/restriction>
+	 *   &lt;/complexContent>
+	 * &lt;/complexType>
+	 * </pre>
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "", propOrder = { "parameter" })
+	public static class Parameters
+	{
 
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
-     */
-    public Integer getId() {
-        return id;
-    }
+		protected List<Parameter> parameter;
 
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
-     */
-    public void setId(Integer value) {
-        this.id = value;
-    }
+		/**
+		 * Gets the value of the parameter property.
+		 * <p>
+		 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
+		 * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+		 * parameter property.
+		 * <p>
+		 * For example, to add a new item, do as follows:
+		 * 
+		 * <pre>
+		 * getParameter().add(newItem);
+		 * </pre>
+		 * <p>
+		 * Objects of the following type(s) are allowed in the list {@link Parameter }
+		 */
+		public List<Parameter> getParameter()
+		{
+			if (parameter == null) {
+				parameter = new ArrayList<Parameter>();
+			}
+			return parameter;
+		}
 
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
+	}
 
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
+	@XmlElement(name = "Id")
+	protected Integer id;
+	@XmlElement(required = true, name = "Name")
+	protected String name;
+	@XmlElement(name = "Description")
+	protected String description;
+	@XmlElement(name = "ProviderName")
+	protected String providerName;
+	@XmlElement(name = "ProviderVersion")
+	protected String providerVersion;
+	@XmlElement(name = "ProviderDiscovery")
+	protected String providerDiscovery;
+	@XmlElement(name = "ProviderAssetRoot")
+	protected String providerAssetRoot;
+	@XmlElement(name = "DefaultFolderId")
+	protected Integer defaultFolderId;
 
-    /**
-     * Gets the value of the description property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getDescription() {
-        return description;
-    }
+	@XmlElement(name = "Parameters")
+	protected CategoryDetails.Parameters parameters;
 
-    /**
-     * Sets the value of the description property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDescription(String value) {
-        this.description = value;
-    }
+	/**
+	 * Gets the value of the defaultFolderId property.
+	 * 
+	 * @return possible object is {@link Integer }
+	 */
+	public Integer getDefaultFolderId()
+	{
+		return defaultFolderId;
+	}
 
-    /**
-     * Gets the value of the defaultFolderId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
-     */
-    public Integer getDefaultFolderId() {
-        return defaultFolderId;
-    }
+	/**
+	 * Gets the value of the description property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getDescription()
+	{
+		return description;
+	}
 
-    /**
-     * Sets the value of the defaultFolderId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
-     */
-    public void setDefaultFolderId(Integer value) {
-        this.defaultFolderId = value;
-    }
+	/**
+	 * Gets the value of the id property.
+	 * 
+	 * @return possible object is {@link Integer }
+	 */
+	public Integer getId()
+	{
+		return id;
+	}
 
-    /**
-     * Gets the value of the parameters property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link CategoryDetails.Parameters }
-     *     
-     */
-    public CategoryDetails.Parameters getParameters() {
-        return parameters;
-    }
+	/**
+	 * Gets the value of the name property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getName()
+	{
+		return name;
+	}
 
-    /**
-     * Sets the value of the parameters property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CategoryDetails.Parameters }
-     *     
-     */
-    public void setParameters(CategoryDetails.Parameters value) {
-        this.parameters = value;
-    }
+	/**
+	 * Gets the value of the parameters property.
+	 * 
+	 * @return possible object is {@link CategoryDetails.Parameters }
+	 */
+	public CategoryDetails.Parameters getParameters()
+	{
+		return parameters;
+	}
 
+	/**
+	 * Gets the value of the provider asset root property.
+	 *
+	 * @return possible object is {@link String }
+	 */
+	public String getProviderAssetRoot()
+	{
+		return providerAssetRoot;
+	}
 
-    /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="parameter" type="{}parameter" maxOccurs="unbounded" minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "parameter"
-    })
-    public static class Parameters {
+	/**
+	 * Gets the value of the provider discovery property.
+	 *
+	 * @return possible object is {@link String }
+	 */
+	public String getProviderDiscovery()
+	{
+		return providerDiscovery;
+	}
 
-        protected List<Parameter> parameter;
+	/**
+	 * Gets the value of the provider name property.
+	 *
+	 * @return possible object is {@link String }
+	 */
+	public String getProviderName()
+	{
+		return providerName;
+	}
 
-        /**
-         * Gets the value of the parameter property.
-         * 
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the parameter property.
-         * 
-         * <p>
-         * For example, to add a new item, do as follows:
-         * <pre>
-         *    getParameter().add(newItem);
-         * </pre>
-         * 
-         * 
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link Parameter }
-         * 
-         * 
-         */
-        public List<Parameter> getParameter() {
-            if (parameter == null) {
-                parameter = new ArrayList<Parameter>();
-            }
-            return this.parameter;
-        }
+	/**
+	 * Gets the value of the provider version property.
+	 *
+	 * @return possible object is {@link String }
+	 */
+	public String getProviderVersion()
+	{
+		return providerVersion;
+	}
 
-    }
+	/**
+	 * Sets the value of the defaultFolderId property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Integer }
+	 */
+	public void setDefaultFolderId(Integer value)
+	{
+		defaultFolderId = value;
+	}
+
+	/**
+	 * Sets the value of the description property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setDescription(String value)
+	{
+		description = value;
+	}
+
+	/**
+	 * Sets the value of the id property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Integer }
+	 */
+	public void setId(Integer value)
+	{
+		id = value;
+	}
+
+	/**
+	 * Sets the value of the name property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setName(String value)
+	{
+		name = value;
+	}
+
+	/**
+	 * Sets the value of the parameters property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link CategoryDetails.Parameters }
+	 */
+	public void setParameters(CategoryDetails.Parameters value)
+	{
+		parameters = value;
+	}
+
+	/**
+	 * Sets the value of the provider asset root property.
+	 *
+	 * @param providerAssetRoot
+	 *            allowed object is {@link String }
+	 */
+	public void setProviderAssetRoot(String providerAssetRoot)
+	{
+		this.providerAssetRoot = providerAssetRoot;
+	}
+
+	/**
+	 * Sets the value of the provider discovery property.
+	 *
+	 * @param providerDiscovery
+	 *            allowed object is {@link String }
+	 */
+	public void setProviderDiscovery(String providerDiscovery)
+	{
+		this.providerDiscovery = providerDiscovery;
+	}
+
+	/**
+	 * Sets the value of the provider name property.
+	 *
+	 * @param providerName
+	 *            allowed object is {@link String }
+	 */
+	public void setProviderName(String providerName)
+	{
+		this.providerName = providerName;
+	}
+
+	/**
+	 * Sets the value of the provider version property.
+	 *
+	 * @param providerVersion
+	 *            allowed object is {@link String }
+	 */
+	public void setProviderVersion(String providerVersion)
+	{
+		this.providerVersion = providerVersion;
+	}
 
 }

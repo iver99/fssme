@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
@@ -22,7 +23,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -34,7 +36,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("importsearches")
 public class ImportSearchSet
 {
-	private static final Logger _logger = Logger.getLogger(ImportSearchSet.class);
+	private static final Logger _logger = LogManager.getLogger(ImportSearchSet.class);
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
 
 	/**
@@ -54,12 +56,15 @@ public class ImportSearchSet
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;Param1&lt;/Name&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Type&gt;STRING&lt;/Type&gt;<br>
-	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Value&gt;ALL&lt;/Value&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Value&gt;ALL&lt;/Value&gt;&lt;br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameter&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/SearchParameters&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;cat_name&lt;/Name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
 	 *            category name is not existed, it would create a new category with the given name --&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderName&gt;MySearchProvider&lt;/ProviderName&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderVersion&gt;1.0&lt;/ProviderVersion&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderAssetRoot&gt;assetRoot&lt;/ProviderAssetRoot&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Folder&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Name&gt;fol_name&lt;/Name&gt;&nbsp;&nbsp;&nbsp;&nbsp;&lt!-- If the
@@ -211,15 +216,16 @@ public class ImportSearchSet
 	@Consumes("application/xml")
 	public Response importSearches(String xml)
 	{
-		_logger.info("import searches: \n" + xml);
+
 		Response res = null;
+		InputStream stream = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity("Please specify input with valid format").build();
 		}
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			InputStream stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			SearchSet searches = (SearchSet) JAXBUtil.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(ObjectFactory.class));
@@ -251,6 +257,16 @@ public class ImportSearchSet
 			_logger.error("Failed to import searches (2)", e);
 			msg = "An internal error has occurred" + e.getMessage();
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+		}
+		finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				}
+				catch (IOException e) {
+
+				}
+			}
 		}
 		return res;
 	}

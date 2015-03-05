@@ -12,30 +12,37 @@ ext.serviceDistDir = "${distDir}${serviceInstallPath}"
 apply plugin: 'java' 
 
 allprojects {  
+	apply plugin: 'artifactory-publish'
 	apply plugin: 'artifactory' 
 	apply plugin: 'DevInfraPlugin' 
+      	apply plugin: 'maven-publish'
+	apply plugin: 'em-test-infra'
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
 		maven {  
-			url = "${artifactory_contextUrl}" + '/repo'  
+			url = "${artifactory_contextUrl}" + '/emaas-virtual'  
 			credentials {  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 		} 
 	}  
-	mavenCentral()  
+//	mavenCentral()  
 	}  
 }
+artifactoryPublish{
+	                skip = true
+	}
 
 artifactory { 
 	contextUrl = "${artifactory_contextUrl}" 
 	publish { 
 		repository { 
-			repoKey = 'em-libs-release-local' 
+			repoKey = 'emaas-sandbox-local'			
 			username = "${artifactory_user}" 
 			password = "${artifactory_password}" 
 			maven = true 
+			publishPom=true	
 		} 
 	} 
 	resolve {  
@@ -57,6 +64,7 @@ subprojects {
 
 configurations {
         prebuild_log4j { transitive = false }
+        prebuild_tenant_sdk { transitive = false }
 	prebuild_toplink { transitive = false }
 	prebuild_servicemanager { transitive = false } 
 	prebuild_savedsearch { transitive = false }
@@ -70,8 +78,10 @@ configurations {
 
 dependencies {
 		
-	prebuild_log4j 'log4j:log4j:1.2.17'
-	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
+	prebuild_log4j 'org.apache.logging.log4j:log4j-core:2.0.2',
+	               'org.apache.logging.log4j:log4j-api:2.0.2'
+	prebuild_tenant_sdk 'com.oracle.emaas:emaas-platform-tenant-sdk:0.1'
+        prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.0'
 	prebuild_servicemanager 'emaas.platform:registry-client:0.23.4',
                                 'emaas.platform:registry-lookup-client:0.23.4'
@@ -116,6 +126,7 @@ task preBuildCompile(type: Copy) {
    ext.afDir = new File(rootDir, 'dependencies/artifactory')   
    from configurations.prebuild_toplink
    from configurations.prebuild_log4j
+   from configurations.prebuild_tenant_sdk
    from configurations.prebuild_servicemanager
    from configurations.prebuild_savedsearch
    from configurations.prebuild_junit
@@ -168,18 +179,19 @@ buildscript {
 	repositories {  
 		mavenLocal()  
 		maven {  
-			url = "${artifactory_contextUrl}" + '/repo' 
+			url = "${artifactory_contextUrl}" + '/emaas-virtual' 
 			credentials {  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 			}  
 		} 
-		mavenCentral()  
+	//	mavenCentral()  
 	}
 
 	dependencies {  
-		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.1.0'  
+		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
 		classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
+		classpath group: 'com.oracle.emaas.emdi', name: 'testinfra', version: "${testinfraVersion}", transitive: true
 	}  
 }
 

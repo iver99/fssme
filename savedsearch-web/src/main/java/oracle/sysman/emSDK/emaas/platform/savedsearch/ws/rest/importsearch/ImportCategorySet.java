@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
@@ -21,7 +22,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -33,7 +35,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("importcategories")
 public class ImportCategorySet
 {
-	private static final Logger _logger = Logger.getLogger(ImportCategorySet.class);
+	private static final Logger _logger = LogManager.getLogger(ImportCategorySet.class);
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/category.xsd";
 
 	/**
@@ -52,6 +54,14 @@ public class ImportCategorySet
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;DefaultFolderId&gt;1&lt;/
 	 *            DefaultFolderId&gt; &nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- optional, if we don't specify it will insert null else it
 	 *            will take the one which is as input --&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderName&gt;Log
+	 *            Analytics&lt;/ProviderName&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderVersion&gt;1.0&lt;/
+	 *            ProviderVersion&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderDiscovery&gt;discovery&lt;/
+	 *            ProviderDiscovery&gt;<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProviderAssetRoot&gt;asset&lt;/
+	 *            ProviderAssetRoot&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Category&gt;<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/CategorySet&gt;</font><br>
 	 *            Input Spec:<br>
@@ -77,6 +87,34 @@ public class ImportCategorySet
 	 *            <td>N/A</td>
 	 *            <td>&nbsp;</td>
 	 *            </tr>
+	 *            <tr>
+	 *            <td>Provider Name</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Provider Version</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Provider Discovery</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>N</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>Provider Asset Root</td>
+	 *            <td>VARCHAR2(64 BYTE)</td>
+	 *            <td>Y</td>
+	 *            <td>N/A</td>
+	 *            <td>&nbsp;</td>
+	 *            </tr>
 	 *            </table>
 	 * @return The category with id and name<br>
 	 *         Response Sample:<br>
@@ -84,6 +122,10 @@ public class ImportCategorySet
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 1121,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "name": "Category123"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "providerName": "Log Analytics"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "providerVersion": "1.0"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "providerDiscovery": "discovery"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "providerAssetRoot": "asset"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
 	 * <br>
@@ -121,16 +163,15 @@ public class ImportCategorySet
 	@Consumes("application/xml")
 	public Response importsCategories(String xml)
 	{
-		_logger.info("import categories: \n" + xml);
 		Response res = null;
+		InputStream stream = null;
 		if (xml != null && xml.length() == 0) {
 			return res = Response.status(Status.BAD_REQUEST).entity("Please specify input with valid format").build();
 		}
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			InputStream stream = ImportCategorySet.class.getClassLoader().getResourceAsStream(resourcePath);
-			stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+			stream = ImportCategorySet.class.getClassLoader().getResourceAsStream(resourcePath);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			CategorySet categories = (CategorySet) JAXBUtil.unmarshal(sReader, stream,
@@ -163,6 +204,16 @@ public class ImportCategorySet
 			_logger.error("Failed to import categories (2)", e);
 			msg = "An internal error has occurred";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+		}
+		finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				}
+				catch (IOException e) {
+
+				}
+			}
 		}
 		return res;
 	}

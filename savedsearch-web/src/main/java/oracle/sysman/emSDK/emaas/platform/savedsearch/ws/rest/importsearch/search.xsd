@@ -28,6 +28,7 @@
       <xs:element name="QueryStr" type="xs:string" minOccurs="0"/>
       <xs:element name="Locked" type="xs:boolean" minOccurs="0"/>
       <xs:element name="UiHidden" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="IsWidget" type="xs:boolean" minOccurs="0"/>
       <xs:element name="SearchParameters" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
@@ -62,7 +63,29 @@
 		  </xs:simpleType>
 		</xs:element>
       <xs:element name="Description" type="xs:string" minOccurs="0"/>
-      <xs:element name="DefaultFolderId" type="xs:int" minOccurs="0"/>     
+      <xs:element name="DefaultFolderId" type="xs:int" minOccurs="0"/> 
+      <xs:element name="ProviderName" minOccurs="1" nillable="false">
+		  <xs:simpleType>
+		     <xs:restriction base="xs:string">
+		       <xs:minLength value="1"/>
+		     </xs:restriction>
+		  </xs:simpleType>
+	  </xs:element>
+	  <xs:element name="ProviderVersion" minOccurs="1" nillable="false">
+		  <xs:simpleType>
+		     <xs:restriction base="xs:string">
+		       <xs:minLength value="1"/>
+		     </xs:restriction>
+		  </xs:simpleType>
+	  </xs:element>
+	  <xs:element name="ProviderDiscovery" type="xs:string" minOccurs="0"/>
+	  <xs:element name="ProviderAssetRoot" minOccurs="1" nillable="false">
+		  <xs:simpleType>
+		     <xs:restriction base="xs:string">
+		       <xs:minLength value="1"/>
+		     </xs:restriction>
+		  </xs:simpleType>
+	  </xs:element>    
       <xs:element name="Parameters" minOccurs="0">
         <xs:complexType>
           <xs:sequence>

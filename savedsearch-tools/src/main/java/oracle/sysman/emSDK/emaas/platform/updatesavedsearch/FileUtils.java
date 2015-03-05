@@ -14,15 +14,27 @@ public class FileUtils
 
 	public static void createOutputfile(String outputfile, String Data) throws IOException
 	{
-		File file = new File(outputfile);
+		File file = null;
+		FileWriter fw = null;
+		BufferedWriter bw = null;
 		// if file doesnt exists, then create it
-		if (!file.exists()) {
-			file.createNewFile();
+		try {
+			file = new File(outputfile);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			fw = new FileWriter(file.getAbsoluteFile());
+			bw = new BufferedWriter(fw);
+			bw.write(Data);
 		}
-		FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fw);
-		bw.write(Data);
-		bw.close();
+		finally {
+			if (bw != null) {
+				bw.close();
+			}
+			if (fw != null) {
+				fw.close();
+			}
+		}
 	}
 
 	public static boolean deleteFile(String filePath) throws Exception
@@ -45,7 +57,10 @@ public class FileUtils
 		try {
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
-				stringBuilder.append(line).append("\n");
+				if (line.startsWith("--") || line.startsWith("Rem") || line.trim().length() == 0) {
+					continue;
+				}
+				stringBuilder.append(line + System.getProperty("line.separator"));
 			}
 			System.out.print(stringBuilder.toString());
 		}
@@ -73,15 +88,30 @@ public class FileUtils
 
 	public static String readFile(String filePath) throws IOException
 	{
+		BufferedReader reader = null;
+		FileReader fReader = null;
 		StringBuffer fileData = new StringBuffer();
-		BufferedReader reader = new BufferedReader(new FileReader(filePath));
-		char[] buf = new char[1024];
-		int numRead = 0;
-		while ((numRead = reader.read(buf)) != -1) {
-			String readData = String.valueOf(buf, 0, numRead);
-			fileData.append(readData);
+		try {
+			fReader = new FileReader(filePath);
+			reader = new BufferedReader(fReader);
+			char[] buf = new char[1024];
+			int numRead = 0;
+			if (reader != null) {
+				while ((numRead = reader.read(buf)) != -1) {
+					String readData = String.valueOf(buf, 0, numRead);
+					fileData.append(readData);
+				}
+			}
 		}
-		reader.close();
+		finally {
+			if (reader != null) {
+				reader.close();
+			}
+			if (fReader != null) {
+				fReader.close();
+			}
+		}
 		return fileData.toString();
 	}
+
 }

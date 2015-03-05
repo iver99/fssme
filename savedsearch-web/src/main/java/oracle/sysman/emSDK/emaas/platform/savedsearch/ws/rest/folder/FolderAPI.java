@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -25,7 +26,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Folder Services
- *
+ * 
  * @since 0.1
  */
 @Path("folder")
@@ -34,12 +35,15 @@ public class FolderAPI
 	@Context
 	private UriInfo uri;
 
+	@Context
+	private HttpHeaders headers;
+
 	/**
 	 * Create a folder<br>
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder</font><br>
 	 * The string "folder" in the URL signifies create operation on search.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param folderObj
 	 *            "folderObj" is the input JSON string which contains all the information needed to create a new folder.<br>
@@ -192,7 +196,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder/&lt;id&gt;</font><br>
 	 * The string "folder/&lt;id&gt;" in the URL signifies delete operation with given folder Id.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which user wants to delete
@@ -243,7 +247,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder/&lt;id&gt;</font><br>
 	 * The string "folder/&lt;id&gt;" in the URL signifies edit operation with given folder Id.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which the user wants to edit<br>
@@ -313,6 +317,7 @@ public class FolderAPI
 		JSONObject jsonObj;
 		int statusCode = 200;
 		try {
+
 			FolderManager mgrFolder = FolderManager.getInstance();
 			objFld = getFolderFromJsonForEdit(folderObj, mgrFolder.getFolder(id));
 			objFld = mgrFolder.updateFolder(objFld);
@@ -346,7 +351,7 @@ public class FolderAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/folder/&lt;id&gt;</font><br>
 	 * The string "folder/&lt;id&gt;" in the URL signifies read operation with given folder Id.
-	 *
+	 * 
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id which user wants to get the details.

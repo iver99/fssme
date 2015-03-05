@@ -19,6 +19,7 @@ import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.ExportSearchObject;
 import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.ImportSearchObject;
+import oracle.sysman.emSDK.emaas.platform.updatesavedsearch.UpdateUtilConstants;
 import oracle.sysman.emSDK.emaas.platform.updatesearch.test.common.BaseTest;
 import oracle.sysman.emSDK.emaas.platform.updatesearch.test.common.CommonTest;
 
@@ -43,9 +44,10 @@ public class UpdateSearchTest extends BaseTest
 	static String portno;
 	static String serveruri;
 	static String authToken;
-
+	private static final String tenantimport = "1";
+	private static final String tenantimport1 = "2";
 	private static final String SEARCH_XML = "oracle/sysman/emSDK/emaas/platform/updatesearch/test/Search.xml";
-	private static final String CAT_NAME = "CatSearchUtil";
+	private static final String CAT_NAME = "MTSearchMt";
 
 	@BeforeClass
 	public static void setUp()
@@ -97,8 +99,9 @@ public class UpdateSearchTest extends BaseTest
 	public Integer getCategoryDetailsbyName(String name)
 	{
 
-		Response res = RestAssured.given().log().everything().header("Authorization", authToken).when()
-				.get("/category?name=" + name);
+		Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
+				.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport).when().get("/category?name=" + name);
 		JsonPath jp = res.jsonPath();
 		return jp.get("id");
 
@@ -114,10 +117,9 @@ public class UpdateSearchTest extends BaseTest
 		InputStream stream = UpdateSearchTest.class.getClassLoader().getResourceAsStream(SEARCH_XML);
 		ImportSearchObject objUpdate = new ImportSearchObject();
 		String inputData = UpdateSearchTest.getStringFromInputStream(stream);
-		String outputData = objUpdate.importSearches(serveruri, inputData, authToken);
+		String outputData = objUpdate.importSearches(serveruri, inputData, authToken, tenantimport);
 		List<Long> listID = new ArrayList<Long>();
-
-		String[] tmpList = outputData.split(System.getProperty("line.separator"));
+		String[] tmpList = outputData.split("\n");
 
 		for (String element : tmpList) {
 			if (element != null) {
@@ -128,12 +130,23 @@ public class UpdateSearchTest extends BaseTest
 
 		long id = getCategoryDetailsbyName(CAT_NAME);
 		ExportSearchObject expObj = new ExportSearchObject();
-		outputData = expObj.exportSearch(id, serveruri, authToken);
+		outputData = expObj.exportSearch(id, serveruri, authToken, tenantimport);
 		JSONArray arrfld = new JSONArray(outputData);
+
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when()
-					.get("/search/" + jsonObj.getInt("id"));
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport1).when().get("/search/" + jsonObj.getInt("id"));
+			JsonPath jp = res.jsonPath();
+			Assert.assertTrue(res.getStatusCode() == 404);
+		}
+
+		for (int index = 0; index < arrfld.length(); index++) {
+			JSONObject jsonObj = arrfld.getJSONObject(index);
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			System.out.println("deleteing searches::::" + res.getBody().asString());
 			Assert.assertTrue(listID.contains(jsonObj.getLong("id")));
@@ -146,7 +159,8 @@ public class UpdateSearchTest extends BaseTest
 	private boolean deleteSearch(int mySearchId)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.when().delete("/search/" + mySearchId);
+				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
+				.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport).when().delete("/search/" + mySearchId);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
 

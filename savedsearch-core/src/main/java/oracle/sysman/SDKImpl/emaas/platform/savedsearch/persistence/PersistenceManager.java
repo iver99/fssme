@@ -2,39 +2,39 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class PersistenceManager
 {
+	private static class PersistenceManagerHelper
+	{
+		private static final PersistenceManager singleton = new PersistenceManager();
+	}
+
 	/**
 	 * An internal property to know whether test env is in use true: test env is in use null or non-true: test env is NOT in use
 	 */
 	public static final String TESTENV_PROP = "SSF.INTERNAL.TESTENV";
+
 	/**
 	 * For the whole JVM life cycle, IS_TEST_ENV can only be set once
 	 */
 	private static Boolean IS_TEST_ENV = null;
 
 	private static final String PERSISTENCE_UNIT = "EmaasAnalyticsPublicModel";
-
 	private static final String TEST_PERSISTENCE_UNIT = "EmaasAnalyticsPublicModelTest";
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
-	private static PersistenceManager singleton;
-	private static Object lock = new Object();
+	private static final String TENANT_ID_STR = "ssftenant.id";
 
 	public static PersistenceManager getInstance()
 	{
-		if (singleton == null) {
-			synchronized (lock) {
-				if (singleton == null) {
-					singleton = new PersistenceManager();
-				}
-			}
-		}
-		return singleton;
+		return PersistenceManagerHelper.singleton;
 	}
 
 	private EntityManagerFactory emf;
@@ -72,6 +72,13 @@ public class PersistenceManager
 		}
 	}
 
+	public EntityManager getEntityManager(Long value)
+	{
+		Map<String, Long> emProperties = new HashMap<String, Long>();
+		emProperties.put(TENANT_ID_STR, value);
+		return emf.createEntityManager(emProperties);
+	}
+
 	public EntityManagerFactory getEntityManagerFactory()
 	{
 		if (emf == null || !emf.isOpen()) {
@@ -93,15 +100,27 @@ public class PersistenceManager
 			ex.printStackTrace();
 
 		}
+		finally {
+			if (input != null) {
+				try {
+					input.close();
+				}
+				catch (Exception e) {
+					//ignore exception
+				}
+			}
+		}
 		return connectionProps;
 
 	}
 
 	protected void createEntityManagerFactory(String puName, Properties props)
 	{
+
 		if (emf == null || !emf.isOpen()) {
 			emf = Persistence.createEntityManagerFactory(puName, props);
 		}
+
 	}
 
 }

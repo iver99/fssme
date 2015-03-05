@@ -21,17 +21,17 @@ public class UpdateSearchUtil
 
 	private static Logger _logger = UpdateSavedSearchLog.getLogger(UpdateSearchUtil.class);
 
-	public static void exportSearches(long categoryId, String endpoint, String outputfile, String authToken)
+	public static void exportSearches(long categoryId, String endpoint, String outputfile, String authToken, String tenantid)
 	{
 
-		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken)) {
+		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken, tenantid)) {
 			System.out.println("The endpoint was not reachable.");
 			return;
 		}
 
 		try {
 			ExportSearchObject objExport = new ExportSearchObject();
-			String data = objExport.exportSearch(categoryId, endpoint, authToken);
+			String data = objExport.exportSearch(categoryId, endpoint, authToken, tenantid);
 			List<SearchEntity> list = UpdateSearchUtil.JSONToSearchList(data);
 			ExportSearchSet exportList = new ExportSearchSet();
 			exportList.setSearchSet(list);
@@ -47,7 +47,7 @@ public class UpdateSearchUtil
 		catch (IOException e) {
 			System.out.println("Error : an error occurred while writing data to file : " + outputfile
 					+ " Please refer to the log file for more details.");
-			_logger.error("Error : an error occurred while writing data to file : " + outputfile);
+			_logger.error("Error : an error occurred while writing data to file : ");
 			return;
 		}
 		catch (Exception e) {
@@ -58,12 +58,12 @@ public class UpdateSearchUtil
 		}
 	}
 
-	public static void importSearches(String endpoint, String inputfile, String outputfile, String authToken)
+	public static void importSearches(String endpoint, String inputfile, String outputfile, String authToken, String tenantid)
 	{
 		String data = "";
 		String outputData = "";
 
-		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken)) {
+		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken, tenantid)) {
 			System.out.println("The endpoint was not reachable.");
 			return;
 		}
@@ -84,7 +84,7 @@ public class UpdateSearchUtil
 		}
 		ImportSearchObject objUpdate = new ImportSearchObject();
 		try {
-			outputData = objUpdate.importSearches(endpoint, data, authToken);
+			outputData = objUpdate.importSearches(endpoint, data, authToken, tenantid);
 		}
 		catch (Exception e1) {
 			_logger.error("Error : An error occurred while creating or updating search object" + e1.getMessage());
@@ -98,19 +98,19 @@ public class UpdateSearchUtil
 		catch (IOException e) {
 			System.out.println("an error occurred while writing data to file : " + outputfile
 					+ " Please refer to the log file for more details.");
-			_logger.error("an error occurred while writing data to file : " + outputfile
-					+ " Please refer to the log file for more details.");
+			_logger.error("an error occurred while writing data to file Please refer to the log file for more details.");
 			return;
 		}
 		System.out.println("The import process completed.");
 	}
 
-	public static boolean isEndpointReachable(String endpoint, String authToken)
+	public static boolean isEndpointReachable(String endpoint, String authToken, String tenantid)
 	{
 		try {
 			RestAssured.useRelaxedHTTPSValidation();
 			RestAssured.baseURI = endpoint;
-			Response res = RestAssured.given().header("Authorization", authToken).when().get();
+			Response res = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
+					.when().get();
 			if (res.getStatusCode() == 200) {
 				return true;
 			}
@@ -121,6 +121,11 @@ public class UpdateSearchUtil
 					+ " Please refer to the log file for more details.");
 		}
 		return false;
+	}
+
+	public static boolean isTestEnv()
+	{
+		return System.setProperty("SSF.TESTENV", "true").equalsIgnoreCase("true");
 	}
 
 	public static List<SearchEntity> JSONToSearchList(String jsonStr) throws JsonParseException, JsonMappingException,

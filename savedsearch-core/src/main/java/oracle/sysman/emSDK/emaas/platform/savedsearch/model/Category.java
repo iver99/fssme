@@ -74,6 +74,26 @@ public interface Category
 	public List<Parameter> getParameters();
 
 	/**
+	 * Return provider's asset root reference name of this category
+	 */
+	public String getProviderAssetRoot();
+
+	/**
+	 * Return provider's widget discovery reference name of this category
+	 */
+	public String getProviderDiscovery();
+
+	/**
+	 * Return provider name of this category
+	 */
+	public String getProviderName();
+
+	/**
+	 * Return provider version of this category
+	 */
+	public String getProviderVersion();
+
+	/**
 	 * Set creation date of this category
 	 *
 	 * @param date
@@ -117,5 +137,37 @@ public interface Category
 	 *            List of parameters
 	 */
 	public void setParameters(List<Parameter> param);
+
+	/**
+	 * Set provider's asset root reference name of this category
+	 *
+	 * @param providerAssetRoot
+	 *            Provider's asset root reference name
+	 */
+	public void setProviderAssetRoot(String providerAssetroot);
+
+	/**
+	 * Set provider's widget discovery reference name of this category
+	 *
+	 * @param providerDiscovery
+	 *            Provider's widget discovery reference name
+	 */
+	public void setProviderDiscovery(String providerDiscovery);
+
+	/**
+	 * Set provider name of this category
+	 *
+	 * @param providerName
+	 *            Name of the provider for this category
+	 */
+	public void setProviderName(String providerName);
+
+	/**
+	 * Set provider version of this category
+	 *
+	 * @param providerVersion
+	 *            Version of the provider for this category
+	 */
+	public void setProviderVersion(String providerVersion);
 
 }

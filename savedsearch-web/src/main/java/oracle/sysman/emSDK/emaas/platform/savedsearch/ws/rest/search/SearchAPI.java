@@ -30,14 +30,15 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Search Services
- * 
+ *
  * @since 0.1
  */
 @Path("search")
@@ -45,7 +46,7 @@ public class SearchAPI
 {
 
 	private static final String FOLDER_PATH = "flattenedFolderPath";
-	private static final Logger _logger = Logger.getLogger(SearchAPI.class);
+	private static final Logger _logger = LogManager.getLogger(SearchAPI.class);
 	@Context
 	UriInfo uri;
 
@@ -54,7 +55,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search</font><br>
 	 * The string "search" in the URL signifies create operation on search.<br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            The search details <br>
@@ -77,7 +78,7 @@ public class SearchAPI
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "value":"this is a demo"<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; ]<br>
-	 *            ` } </font><br>
+	 *            } </font><br>
 	 *            Input Spec:<br>
 	 *            <table border="1">
 	 *            <tr>
@@ -214,7 +215,7 @@ public class SearchAPI
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createSearch(JSONObject inputJsonObj)
 	{
-		_logger.info("create search: \n" + inputJsonObj);
+
 		String message = "";
 		int statusCode = 201;
 		JSONObject jsonObj;
@@ -253,7 +254,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies delete operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The id of saved-search which user wants to delete
@@ -307,7 +308,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies edit operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            JSON string which contains all key value pairs that the user wants to edit.<br>
@@ -414,7 +415,6 @@ public class SearchAPI
 	public Response editSearch(JSONObject inputJsonObj, @HeaderParam("X_SSF_API_AUTH") String updateCategory,
 			@PathParam("id") long searchId)
 	{
-		_logger.info("edit search: \n" + inputJsonObj);
 		String message = null;
 		int statusCode = 200;
 		JSONObject jsonObj;
@@ -467,7 +467,7 @@ public class SearchAPI
 	 * number&gt;/savedsearch/v1/search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;</font><br>
 	 * The string "search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;" in the URL signifies set last accesst time
 	 * operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The saved-search id to edit
@@ -531,7 +531,7 @@ public class SearchAPI
 	 * The string "search/&lt;id&gt;?flattenedFolderPath=&lt;boolean value&gt;" in the URL signifies get the search operation on
 	 * search with given id. <br>
 	 * If "flattenedFolderPath = true", the flattened folder hierarchy will be added to any search
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchid
 	 *            The id of saved-search which user wants to read
@@ -694,6 +694,7 @@ public class SearchAPI
 		// non-nullable with db defaults !!
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
+		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
 
 		// Parameters
 		if (json.has("parameters")) {
@@ -812,6 +813,7 @@ public class SearchAPI
 
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
+		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
 
 		// Nullable properties !
 		searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));

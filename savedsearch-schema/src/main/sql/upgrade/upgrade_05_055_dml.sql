@@ -16,6 +16,9 @@ Rem    MODIFIED   (MM/DD/YY)
 Rem    sdhamdhe		09/10/14 - New OOB searches for TA
 Rem
 
+
+
+
 -- re-entrant-ness
 delete from EMS_ANALYTICS_SEARCH where SEARCH_ID > 3009 AND SEARCH_ID < 3018;
 commit;

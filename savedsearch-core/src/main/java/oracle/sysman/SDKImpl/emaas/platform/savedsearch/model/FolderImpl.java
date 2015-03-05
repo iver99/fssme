@@ -27,8 +27,6 @@ public class FolderImpl implements Folder
 
 	protected boolean uiHidden;
 
-	//protected String emPluginId;
-
 	@Override
 	public Date getCreatedOn()
 	{
@@ -93,7 +91,7 @@ public class FolderImpl implements Folder
 	 * @param creationDate
 	 *            the creationDate to set
 	 */
-	 public void setCreatedOn(Date createdOn)
+	public void setCreatedOn(Date createdOn)
 	{
 		this.createdOn = createdOn;
 	}
