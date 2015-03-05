@@ -28,13 +28,14 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SearchManagerImpl extends SearchManager
 {
 
 	//  Logger
-	private static final Logger _logger = Logger.getLogger(SearchManagerImpl.class);
+	private static final Logger _logger = LogManager.getLogger(SearchManagerImpl.class);
 
 	public static final SearchManagerImpl _instance = new SearchManagerImpl();
 	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.deleted=0 ";

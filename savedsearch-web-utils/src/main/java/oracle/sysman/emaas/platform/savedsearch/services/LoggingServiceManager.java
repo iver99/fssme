@@ -10,12 +10,16 @@
 
 package oracle.sysman.emaas.platform.savedsearch.services;
 
-import java.io.InputStream;
+import java.lang.management.ManagementFactory;
+import java.net.URL;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
+import oracle.sysman.emaas.platform.savedsearch.wls.management.AppLoggingManageMXBean;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import weblogic.application.ApplicationLifecycleEvent;
 
@@ -25,6 +29,7 @@ import weblogic.application.ApplicationLifecycleEvent;
  */
 public class LoggingServiceManager implements ApplicationServiceManager
 {
+	public static final String MBEAN_NAME = "oracle.sysman.emaas.platform.savedsearch.logging.beans:type=AppLoggingManageMXBean";
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#getName()
@@ -32,7 +37,6 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public String getName()
 	{
-		// TODO Auto-generated method stub
 		return "Saved Search Logging Service";
 	}
 
@@ -42,21 +46,8 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
-		InputStream stream = null;
-		try {
-			stream = LoggingServiceManager.class.getResourceAsStream("/log4j_ssf.xml");
-			new DOMConfigurator().doConfigure(stream, LogManager.getLoggerRepository());
-		}
-		finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				}
-				catch (Exception e) {
-					//ignore exception
-				}
-			}
-		}
+		URL url = LoggingServiceManager.class.getResource("/log4j2_ssf.xml");
+		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
 	}
 
 	/* (non-Javadoc)
@@ -74,8 +65,8 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
-		// TODO Auto-generated method stub
-
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		mbs.registerMBean(new AppLoggingManageMXBean(), new ObjectName(MBEAN_NAME));
 	}
 
 	/* (non-Javadoc)
@@ -84,7 +75,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		// TODO Auto-generated method stub
-
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		mbs.unregisterMBean(new ObjectName(MBEAN_NAME));
 	}
 }

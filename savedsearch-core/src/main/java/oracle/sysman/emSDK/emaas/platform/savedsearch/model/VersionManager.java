@@ -18,14 +18,15 @@ import javax.persistence.EntityManagerFactory;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVer;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
  */
 public class VersionManager
 {
-	private static final Logger _logger = Logger.getLogger(VersionManager.class);
+	private static final Logger _logger = LogManager.getLogger(VersionManager.class);
 
 	private static final VersionManager verMgr = new VersionManager();
 

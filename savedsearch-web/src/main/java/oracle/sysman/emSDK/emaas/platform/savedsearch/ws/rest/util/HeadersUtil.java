@@ -16,7 +16,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author vinjoshi
@@ -31,7 +32,7 @@ public class HeadersUtil
 	private static final String HEADER_TENANT_ID = "X-USER-IDENTITY-DOMAIN-NAME";
 	public static final String SSF_HEADER = "ssfheadertest";
 
-	private static final Logger _logger = Logger.getLogger(HeadersUtil.class);
+	private static final Logger _logger = LogManager.getLogger(HeadersUtil.class);
 
 	public static Long getTenantId(HttpServletRequest request) throws EMAnalyticsFwkException
 	{

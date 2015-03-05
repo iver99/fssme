@@ -23,7 +23,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -35,7 +36,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("importsearches")
 public class ImportSearchSet
 {
-	private static final Logger _logger = Logger.getLogger(ImportSearchSet.class);
+	private static final Logger _logger = LogManager.getLogger(ImportSearchSet.class);
 	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
 
 	/**
