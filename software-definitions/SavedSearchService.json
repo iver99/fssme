@@ -1,50 +1,52 @@
+{
+    "name": "SavedSearchService",
+    "serviceName": "SavedSearchService",
+    "version": "SERVICEVERSION",
+    "ephemeral": true,
+    "chefRunlistItems": [
         {
-            "name": "SavedSearchService",
-            "serviceName": "SavedSearchService",
-            "version": "SERVICEVERSION",
-            "ephemeral": true,
-            "chefRunlistItems": [
-                {
-                    "name": "savedsearchService",
-                    "operation": "deploy"
-                },
-                {
-                    "name": "emsaas-weblogic::undeploy_app",
-                    "operation": "undeploy",
-                    "configurations": [
-                        {
-                            "name": "applicationName",
-                            "defaultValue": "emaas-applications-savedsearch-ear"
-                        }
-                    ]
-                },
-                {
-                    "name": "emsaas-weblogic::start_app",
-                    "operation": "start",
-                    "configurations": [
-                        {
-                            "name": "applicationName",
-                            "defaultValue": "emaas-applications-savedsearch-ear"
-                        }
-                    ]
-                },
-                {
-                    "name": "emsaas-weblogic::stop_app",
-                    "operation": "stop",
-                    "configurations": [
-                        {
-                            "name": "applicationName",
-                            "defaultValue": "emaas-applications-savedsearch-ear"
-                        }
-                    ]
-                }
-            ],
-            "chefCookbook": {
-                "href": "<cookbook>",
-                "rel": "link/gzip"
-            },
-            "softwareImage": {
-                "rel": "link/gzip",
-                "href": "<software>"
-            }
+            "name": "savedsearchService",
+            "operation": "deploy"
+        },
+        {
+            "name": "emsaas-weblogic::undeploy_app",
+            "operation": "undeploy",
+            "configurations": [{
+                "name": "applicationName",
+                "defaultValue": "emaas-applications-savedsearch-ear"
+            }]
+        },
+        {
+            "name": "emsaas-weblogic::start_app",
+            "operation": "start",
+            "configurations": [{
+                "name": "applicationName",
+                "defaultValue": "emaas-applications-savedsearch-ear"
+            }]
+        },
+        {
+            "name": "emsaas-weblogic::stop_app",
+            "operation": "stop",
+            "configurations": [{
+                "name": "applicationName",
+                "defaultValue": "emaas-applications-savedsearch-ear"
+            }]
+        },
+        {
+            "name": "savedsearchService::tenantHydration",
+            "operation": "tenantHydration",
+            "configurations": [{
+                "name": "internalTenantID",
+                "required": true
+            }]
         }
+    ],
+    "chefCookbook": {
+        "href": "<cookbook>",
+        "rel": "link\/gzip"
+    },
+    "softwareImage": {
+        "rel": "link\/gzip",
+        "href": "<software>"
+    }
+}
