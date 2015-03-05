@@ -92,7 +92,11 @@ public class SavedSearchCORSFilter implements Filter
 
 	private boolean isParameterPresent(HttpServletRequest hReq)
 	{
-		return hReq.getParameterMap().containsKey(PARAM_NAME);
+		boolean bResult = false;
+		if (hReq.getParameterMap() != null) {
+			bResult = hReq.getParameterMap().containsKey(PARAM_NAME);
+		}
+		return bResult;
 
 	}
 }
