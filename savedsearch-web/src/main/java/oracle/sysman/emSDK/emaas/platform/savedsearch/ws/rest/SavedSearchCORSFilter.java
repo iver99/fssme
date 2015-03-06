@@ -22,6 +22,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.HeadersUtil;
  */
 public class SavedSearchCORSFilter implements Filter
 {
+
+	private static final String PARAM_NAME = "updateLastAccessTime";
+
 	@Override
 	public void destroy()
 	{
@@ -33,6 +36,7 @@ public class SavedSearchCORSFilter implements Filter
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
+
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
 		if (hReq.getHeader("Origin") != null) {
 
@@ -59,7 +63,15 @@ public class SavedSearchCORSFilter implements Filter
 				Long tenantId = HeadersUtil.getTenantId((HttpServletRequest) request);
 
 				TenantContext.setContext(tenantId);
-				chain.doFilter(request, response);
+				if (isParameterPresent(hReq))
+
+				{
+					HttpServletRequest newRequest = new RemoveHeader(hReq);
+					chain.doFilter(newRequest, response);
+				}
+				else {
+					chain.doFilter(request, response);
+				}
 			}
 			catch (Exception e) {
 				hRes.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
@@ -78,4 +90,9 @@ public class SavedSearchCORSFilter implements Filter
 	{
 	}
 
+	private boolean isParameterPresent(HttpServletRequest hReq)
+	{
+		return hReq.getParameterMap().containsKey(PARAM_NAME);
+
+	}
 }
