@@ -14,13 +14,18 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 
 	private final NonCatalogLogger logger = new NonCatalogLogger(APPLICATION_LOGGER_SUBSYSTEM + ".services");
 
-	private List<ApplicationServiceManager> registeredServices = new ArrayList<ApplicationServiceManager>();
+	private final List<ApplicationServiceManager> registeredServices = new ArrayList<ApplicationServiceManager>();
 
 	public AbstractApplicationLifecycleService(ApplicationServiceManager... services)
 	{
 		for (ApplicationServiceManager service : services) {
 			registeredServices.add(service);
 		}
+	}
+
+	public void addApplicationServiceManager(ApplicationServiceManager service)
+	{
+		registeredServices.add(service);
 	}
 
 	@Override
