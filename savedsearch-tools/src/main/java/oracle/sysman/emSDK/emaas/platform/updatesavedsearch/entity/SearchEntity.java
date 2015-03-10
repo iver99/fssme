@@ -60,7 +60,7 @@ public class SearchEntity extends Entity
 		return folderId;
 	}
 
-	@XmlElement(name = "Widget")
+	@XmlElement(name = "IsWidget")
 	public String getIsWidget()
 	{
 		return widget;
