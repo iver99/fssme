@@ -14,6 +14,7 @@ import javax.persistence.NoResultException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -38,14 +39,16 @@ class EmAnalyticsObjectUtil
 	{
 		EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 		int count = ((Number) em.createNamedQuery("Search.getSearchCountByFolder").setParameter("folder", folder)
-				.getSingleResult()).intValue();
+				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult())
+				.intValue();
 
 		if (count > 0) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with searches",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
 
-		if (em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder).getResultList().size() > 0) {
+		if (em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder)
+				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList().size() > 0) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with categories",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
@@ -54,7 +57,7 @@ class EmAnalyticsObjectUtil
 			EmAnalyticsFolder folderObj = folder;
 			String parentFolder = "parentFolder";
 			List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
-					.getResultList();
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 
 			if (folderList.size() > 0) {
 				throw new EMAnalyticsFwkException("Sub folders founds", EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
@@ -74,7 +77,9 @@ class EmAnalyticsObjectUtil
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null) {
-				if (cateObj.getDeleted() == 0) {
+				if (cateObj.getDeleted() == 0
+						&& (cateObj.getOwner().equals("ORACLE") || cateObj.getOwner().equals(
+								TenantContext.getContext().getUsername()))) {
 
 					return cateObj;
 				}
@@ -98,7 +103,9 @@ class EmAnalyticsObjectUtil
 		try {
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
-			if (cateObj != null) {
+			if (cateObj != null
+					&& (cateObj.getOwner().equals("ORACLE") || cateObj.getOwner()
+							.equals(TenantContext.getContext().getUsername()))) {
 
 				return cateObj;
 			}
@@ -117,7 +124,8 @@ class EmAnalyticsObjectUtil
 	{
 		try {
 			return (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
-					.setParameter("categoryName", categoryName).getSingleResult();
+					.setParameter("categoryName", categoryName)
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
 		}
 		catch (NoResultException e) {
 			return null;
@@ -225,7 +233,9 @@ class EmAnalyticsObjectUtil
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			if (folder.getParentId() == null) {
 				folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolderByName")
-						.setParameter("foldername", folder.getName()).getSingleResult();
+						.setParameter("foldername", folder.getName())
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getSingleResult();
 
 			}
 			else {
@@ -233,7 +243,9 @@ class EmAnalyticsObjectUtil
 					EmAnalyticsFolder parentFolderObj = null;
 					if (folder.getParentId() == 1) {
 						try {
-							parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders").getSingleResult();
+							parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
+									.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+									.getSingleResult();
 						}
 						catch (NoResultException e) {
 							parentFolderObj = null;
@@ -248,6 +260,7 @@ class EmAnalyticsObjectUtil
 					String parentFolder = "parentFolder";
 					folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getSubFolderByName")
 							.setParameter(parentFolder, parentFolderObj).setParameter("foldername", folder.getName())
+							.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 							.getSingleResult();
 				}
 			}
@@ -315,7 +328,9 @@ class EmAnalyticsObjectUtil
 
 				if (folder.getParentId() == 1) { //get root for folder for tenant-id
 					try {
-						parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders").getSingleResult();
+						parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
+								.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+								.getSingleResult();
 					}
 					catch (NoResultException e) {
 						parentFolderObj = null;
@@ -497,7 +512,10 @@ class EmAnalyticsObjectUtil
 		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
-			if (folderObj != null && folderObj.getDeleted() == 0) {
+			if (folderObj != null
+					&& folderObj.getDeleted() == 0
+					&& (folderObj.getOwner().equals("ORACLE") || folderObj.getOwner().equals(
+							TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -522,7 +540,9 @@ class EmAnalyticsObjectUtil
 		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
-			if (folderObj != null) {
+			if (folderObj != null
+					&& (folderObj.getOwner().equals("ORACLE") || folderObj.getOwner().equals(
+							TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -566,7 +586,9 @@ class EmAnalyticsObjectUtil
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null) {
-				if (searchObj.getDeleted() == 0) {
+				if (searchObj.getDeleted() == 0
+						&& (searchObj.getOwner().equals("ORACLE") || searchObj.getOwner().equals(
+								TenantContext.getContext().getUsername()))) {
 
 					return searchObj;
 				}
@@ -628,7 +650,9 @@ class EmAnalyticsObjectUtil
 		try {
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
-			if (searchObj != null) {
+			if (searchObj != null
+					&& (searchObj.getOwner().equals("ORACLE") || searchObj.getOwner().equals(
+							TenantContext.getContext().getUsername()))) {
 				return searchObj;
 			}
 			else {

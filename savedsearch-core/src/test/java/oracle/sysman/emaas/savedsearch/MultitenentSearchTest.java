@@ -20,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -37,6 +38,13 @@ public class MultitenentSearchTest extends BaseTest
 	private static Long opc1 = null;
 	private static Long opc2 = null;
 	private static Long opc3 = null;
+	private static final String TENANT_ID1 = TestUtils.TENANT_ID1;
+	private static final String TENANT_ID2 = TestUtils.TENANT_ID2;
+	private static final String TENANT_ID3 = TestUtils.TENANT_ID3;
+
+	private static String username1 = null;
+	private static String username2 = null;
+	private static String username3 = null;
 
 	public static int createCategory()
 	{
@@ -79,10 +87,10 @@ public class MultitenentSearchTest extends BaseTest
 		return id;
 	}
 
-	public static int createSearch(Long value)
+	public static int createSearch(Long value, String username)
 	{
 		int id = 0;
-		TenantContext.setContext(value);
+		TenantContext.setContext(new TenantInfo(username, value));
 		try {
 			SearchManager fmger = SearchManager.getInstance();
 			Search search = new SearchImpl();
@@ -134,13 +142,13 @@ public class MultitenentSearchTest extends BaseTest
 		return bResult;
 	}
 
-	public static boolean deleteSearch(int id, Long value)
+	public static boolean deleteSearch(int id, Long value, String username)
 	{
 		boolean bResult = false;
 		boolean bResult1 = false;
 		boolean bResult2 = false;
 		try {
-			TenantContext.setContext(value);
+			TenantContext.setContext(new TenantInfo(username, value));
 			SearchManager fmger = SearchManager.getInstance();
 			Search sr = fmger.getSearch(id);
 			int catid = sr.getCategoryId();
@@ -159,11 +167,11 @@ public class MultitenentSearchTest extends BaseTest
 		return bResult && bResult1 && bResult2;
 	}
 
-	public static Search getSearch(int id, Long value)
+	public static Search getSearch(int id, Long value, String username)
 	{
 		Search fld = null;
 		try {
-			TenantContext.setContext(value);
+			TenantContext.setContext(new TenantInfo(username, value));
 			SearchManager fmger = SearchManager.getInstance();
 			fld = fmger.getSearch(id);
 		}
@@ -188,33 +196,37 @@ public class MultitenentSearchTest extends BaseTest
 		opc2 = TestUtils.getInternalTenantId(TENANT_OPC2);
 		opc3 = TestUtils.getInternalTenantId(TENANT_OPC3);
 
-		int id1 = MultitenentSearchTest.createSearch(opc1);
-		int id2 = MultitenentSearchTest.createSearch(opc2);
-		int id3 = MultitenentSearchTest.createSearch(opc3);
+		username1 = TestUtils.getUsername(TENANT_ID1);
+		username2 = TestUtils.getUsername(TENANT_ID2);
+		username3 = TestUtils.getUsername(TENANT_ID3);
+
+		int id1 = MultitenentSearchTest.createSearch(opc1, username1);
+		int id2 = MultitenentSearchTest.createSearch(opc2, username2);
+		int id3 = MultitenentSearchTest.createSearch(opc3, username3);
 		Assert.assertTrue(id1 > 0);
 		Assert.assertTrue(id2 > 0);
 		Assert.assertTrue(id3 > 0);
 
-		Search s1 = MultitenentSearchTest.getSearch(id1, opc1);
-		Search s2 = MultitenentSearchTest.getSearch(id2, opc2);
-		Search s3 = MultitenentSearchTest.getSearch(id3, opc3);
+		Search s1 = MultitenentSearchTest.getSearch(id1, opc1, username1);
+		Search s2 = MultitenentSearchTest.getSearch(id2, opc2, username2);
+		Search s3 = MultitenentSearchTest.getSearch(id3, opc3, username3);
 
 		Assert.assertTrue(s1 != null);
 		Assert.assertTrue(s2 != null);
 		Assert.assertTrue(s3 != null);
 
-		Assert.assertTrue(MultitenentSearchTest.getSearch(id1, opc2) == null);
-		Assert.assertTrue(MultitenentSearchTest.getSearch(id1, opc3) == null);
+		Assert.assertTrue(MultitenentSearchTest.getSearch(id1, opc2, username2) == null);
+		Assert.assertTrue(MultitenentSearchTest.getSearch(id1, opc3, username3) == null);
 
-		Assert.assertTrue(MultitenentSearchTest.getSearch(id2, opc1) == null);
-		Assert.assertTrue(MultitenentSearchTest.getSearch(id2, opc3) == null);
+		Assert.assertTrue(MultitenentSearchTest.getSearch(id2, opc1, username1) == null);
+		Assert.assertTrue(MultitenentSearchTest.getSearch(id2, opc3, username3) == null);
 
-		Assert.assertTrue(MultitenentSearchTest.getSearch(id3, opc1) == null);
-		Assert.assertTrue(MultitenentSearchTest.getSearch(id3, opc2) == null);
+		Assert.assertTrue(MultitenentSearchTest.getSearch(id3, opc1, username1) == null);
+		Assert.assertTrue(MultitenentSearchTest.getSearch(id3, opc2, username2) == null);
 
-		Assert.assertTrue(MultitenentSearchTest.deleteSearch(id1, opc1) == true);
-		Assert.assertTrue(MultitenentSearchTest.deleteSearch(id2, opc2) == true);
-		Assert.assertTrue(MultitenentSearchTest.deleteSearch(id3, opc3) == true);
+		Assert.assertTrue(MultitenentSearchTest.deleteSearch(id1, opc1, username1) == true);
+		Assert.assertTrue(MultitenentSearchTest.deleteSearch(id2, opc2, username2) == true);
+		Assert.assertTrue(MultitenentSearchTest.deleteSearch(id3, opc3, username3) == true);
 	}
 
 }

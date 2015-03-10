@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
@@ -205,7 +206,8 @@ public class FolderManagerImpl extends FolderManager
 		Folder fld = null;
 		EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		try {
-			parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders").getSingleResult();
+			parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
 		}
 		catch (NoResultException e) {
 			parentFolderObj = null;
@@ -227,12 +229,14 @@ public class FolderManagerImpl extends FolderManager
 			List<EmAnalyticsFolder> folderList;
 
 			if (folderId <= 0) {
-				folderList = em.createNamedQuery("Folder.getRootFolders").getResultList();
+				folderList = em.createNamedQuery("Folder.getRootFolders")
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			}
 			else {
 				EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 				String parentFolder = "parentFolder";
-				folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj).getResultList();
+				folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			}
 
 			if (folderList != null) {
@@ -593,13 +597,17 @@ public class FolderManagerImpl extends FolderManager
 			//em = emf.createEntityManager();
 			if (parentId == 0) {
 				folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolderByName")
-						.setParameter("foldername", name).getSingleResult();
+						.setParameter("foldername", name)
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getSingleResult();
 			}
 			else {
 				EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(parentId, em);
 				String parentFolder = "parentFolder";
 				folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getSubFolderByName")
-						.setParameter(parentFolder, parentFolderObj).setParameter("foldername", name).getSingleResult();
+						.setParameter(parentFolder, parentFolderObj).setParameter("foldername", name)
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getSingleResult();
 			}
 
 		}

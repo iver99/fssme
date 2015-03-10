@@ -11,6 +11,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
@@ -36,7 +37,9 @@ public class FolderManagerTest extends BaseTest
 		long folderId = 0;
 		long folderId1 = 0;
 		try {
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC2));
+
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC2)));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
 			folder.setName("FolderTestopc");
@@ -55,7 +58,10 @@ public class FolderManagerTest extends BaseTest
 		}
 
 		try {
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC3));
+
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC3)));
+
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
 			folder.setName("FolderTestopc");
@@ -75,7 +81,9 @@ public class FolderManagerTest extends BaseTest
 
 		Folder folder = null;
 		try {
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC2));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC2)));
+
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			folder = objFolder.getFolder(folderId1);
 
@@ -88,7 +96,9 @@ public class FolderManagerTest extends BaseTest
 		}
 
 		try {
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC3));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC3)));
+
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			folder = objFolder.getFolder(folderId);
 
@@ -103,7 +113,8 @@ public class FolderManagerTest extends BaseTest
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
 		try {
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC3));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC3)));
 			objFolder.deleteFolder(folderId1, true);
 		}
 		finally {
@@ -111,7 +122,8 @@ public class FolderManagerTest extends BaseTest
 		}
 
 		try {
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC2));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC2)));
 			objFolder.deleteFolder(folderId, true);
 		}
 		finally {
@@ -125,7 +137,8 @@ public class FolderManagerTest extends BaseTest
 	{
 
 		try {
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			objFolder.deleteFolder(folderId, true);
 		}
@@ -142,7 +155,8 @@ public class FolderManagerTest extends BaseTest
 	{
 		try {
 
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
 
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
@@ -192,6 +206,8 @@ public class FolderManagerTest extends BaseTest
 	public void testDeleteInvalidFolderId() throws Exception
 	{
 		FolderManager foldMan = FolderManager.getInstance();
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+				.getInternalTenantId(TENANT_ID_OPC1)));
 		try {
 			foldMan.deleteFolder(987656788498L, true);
 		}
@@ -209,7 +225,8 @@ public class FolderManagerTest extends BaseTest
 	{
 		try {
 			//create the category with the folder
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
 			CategoryManager catMan = CategoryManager.getInstance();
 			Category category = catMan.createNewCategory();
 			category.setName("TestCategoryWithFolder");
@@ -252,7 +269,8 @@ public class FolderManagerTest extends BaseTest
 	@Test
 	public void testDuplicate() throws Exception
 	{
-		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+				.getInternalTenantId(TENANT_ID_OPC1)));
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 			// create one folder
@@ -323,7 +341,8 @@ public class FolderManagerTest extends BaseTest
 	@Test
 	public void testGetInvalidFolderId() throws Exception
 	{
-		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+				.getInternalTenantId(TENANT_ID_OPC1)));
 		FolderManager foldMan = FolderManager.getInstance();
 		try {
 			foldMan.getFolder(987656788498L);
@@ -341,7 +360,8 @@ public class FolderManagerTest extends BaseTest
 	public void testGetpathforFolderId() throws Exception
 	{
 		try {
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
 			String[] path = objFolder.getPathForFolderId(folderId);
@@ -361,7 +381,8 @@ public class FolderManagerTest extends BaseTest
 	@Test
 	public void testGetSubFolder() throws Exception
 	{
-		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+				.getInternalTenantId(TENANT_ID_OPC1)));
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		List<Folder> folderList = new ArrayList<Folder>();
 		try {
@@ -438,7 +459,8 @@ public class FolderManagerTest extends BaseTest
 	@Test
 	public void testInvalidParentFolder() throws Exception
 	{
-		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+				.getInternalTenantId(TENANT_ID_OPC1)));
 
 		FolderManager fman = FolderManager.getInstance();
 
@@ -465,7 +487,8 @@ public class FolderManagerTest extends BaseTest
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 
-			TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
 			Folder folder = objFolder.getFolder(folderId);
 			AssertJUnit.assertNotNull(folder);
 			folder.setName("My folder");

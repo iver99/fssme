@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.common;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+
 public class ExecutionContext
 {
 	private static ExecutionContext instance = new ExecutionContext();
@@ -15,8 +17,14 @@ public class ExecutionContext
 
 	public String getCurrentUser()
 	{
-		// TODO: to be updated once user/role for EMaaS is supported
-		return "SYSMAN";
+		String name = null;
+		if (TenantContext.getContext() != null) {
+			name = TenantContext.getContext().getUsername();
+		}
+		if (name == null) {
+			name = "SYSMAN";
+		}
+		return name;
 	}
 
 }

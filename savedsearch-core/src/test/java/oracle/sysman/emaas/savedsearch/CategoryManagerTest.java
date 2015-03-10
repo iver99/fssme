@@ -12,6 +12,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -25,7 +26,8 @@ public class CategoryManagerTest extends BaseTest
 	@BeforeClass
 	public void initTenantDetails()
 	{
-		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+				.getInternalTenantId(TENANT_ID_OPC1)));
 	}
 
 	@AfterClass

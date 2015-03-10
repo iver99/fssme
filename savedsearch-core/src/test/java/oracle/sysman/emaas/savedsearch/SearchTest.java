@@ -25,6 +25,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
@@ -53,8 +54,8 @@ public class SearchTest extends BaseTest
 
 		try {
 			//create a folder to insert search into it
-			Long opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
-			TenantContext.setContext(opc1);
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = objFolder.createNewFolder();
 

@@ -22,6 +22,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -310,7 +311,8 @@ public class ImportTest extends BaseTest
 	@BeforeClass
 	public void initTenantDetails()
 	{
-		TenantContext.setContext(TestUtils.getInternalTenantId(TENANT_ID_OPC1));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+				.getInternalTenantId(TENANT_ID_OPC1)));
 	}
 
 	@AfterClass

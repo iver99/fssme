@@ -33,11 +33,11 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "ssftenant.id", length = 32)
 @Table(name = "EMS_ANALYTICS_CATEGORY")
 @NamedQueries({
-	@NamedQuery(name = "Category.getCategoryById", query = "SELECT e FROM EmAnalyticsCategory e Where e.categoryId = :id  AND e.deleted =0 "),
-	@NamedQuery(name = "Category.getCategoryByFolder", query = "SELECT e FROM EmAnalyticsCategory e Where e.emAnalyticsFolder = :id  AND e.deleted =0 "),
-	@NamedQuery(name = "Category.getAllCategory", query = "SELECT e FROM EmAnalyticsCategory e Where e.deleted =0 "),
-	@NamedQuery(name = "Category.getCategoryByName", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
-			+ ":categoryName" + " AND e.deleted = 0 ") })
+		@NamedQuery(name = "Category.getCategoryById", query = "SELECT e FROM EmAnalyticsCategory e Where e.categoryId = :id  AND e.deleted =0  AND e.owner in ('ORACLE',:userName)"),
+		@NamedQuery(name = "Category.getCategoryByFolder", query = "SELECT e FROM EmAnalyticsCategory e Where e.emAnalyticsFolder = :id  AND e.deleted =0  AND e.owner in ('ORACLE',:userName)"),
+		@NamedQuery(name = "Category.getAllCategory", query = "SELECT e FROM EmAnalyticsCategory e Where e.deleted =0  AND e.owner in ('ORACLE',:userName)"),
+		@NamedQuery(name = "Category.getCategoryByName", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
+				+ ":categoryName" + " AND e.deleted = 0  AND e.owner in ('ORACLE',:userName)") })
 @SequenceGenerator(name = "EMS_ANALYTICS_CATEGORY_SEQ", sequenceName = "EMS_ANALYTICS_CATEGORY_SEQ", allocationSize = 1)
 public class EmAnalyticsCategory implements Serializable
 {
