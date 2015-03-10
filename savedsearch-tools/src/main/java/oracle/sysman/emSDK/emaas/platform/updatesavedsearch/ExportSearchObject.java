@@ -24,12 +24,14 @@ public class ExportSearchObject
 		}
 		Response res1 = null;
 		if (UpdateSearchUtil.isTestEnv()) {
-			res1 = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
+			res1 = RestAssured.given().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
+					.header(UpdateUtilConstants.SSF_DOMAIN_NAME, tenantid)
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER).when()
 					.get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId + UpdateUtilConstants.SEARCHES);
 		}
 		else {
-			res1 = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when()
+			res1 = RestAssured.given().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
+					.header(UpdateUtilConstants.SSF_DOMAIN_NAME, tenantid).when()
 					.get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId + UpdateUtilConstants.SEARCHES);
 		}
 

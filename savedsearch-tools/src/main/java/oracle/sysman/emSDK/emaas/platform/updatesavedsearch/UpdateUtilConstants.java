@@ -37,4 +37,7 @@ public class UpdateUtilConstants
 	public static final String AUTH_TOKEN = "-authToken";
 	public static final String TENANT_TOKEN = "-tenantid";
 	public static final String SSF_HEADER = "ssfheadertest";
+	public static final String SSF_AUTHORIZATION = "Authorization";
+	public static final String SSF_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+	public static final String SSF_TEST_ENV = "SSF.TESTENV";
 }

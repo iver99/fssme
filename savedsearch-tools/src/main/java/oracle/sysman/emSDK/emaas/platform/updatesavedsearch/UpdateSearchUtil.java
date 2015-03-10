@@ -109,8 +109,8 @@ public class UpdateSearchUtil
 		try {
 			RestAssured.useRelaxedHTTPSValidation();
 			RestAssured.baseURI = endpoint;
-			Response res = RestAssured.given().header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
-					.when().get();
+			Response res = RestAssured.given().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
+					.header(UpdateUtilConstants.DOMAIN_NAME, tenantid).when().get();
 			if (res.getStatusCode() == 200) {
 				return true;
 			}
@@ -125,7 +125,9 @@ public class UpdateSearchUtil
 
 	public static boolean isTestEnv()
 	{
-		return System.setProperty("SSF.TESTENV", "true").equalsIgnoreCase("true");
+		String stesting = System.getProperty(UpdateUtilConstants.SSF_TEST_ENV, "false");
+		stesting = stesting == null ? "false" : stesting;
+		return stesting.equalsIgnoreCase("true");
 	}
 
 	public static List<SearchEntity> JSONToSearchList(String jsonStr) throws JsonParseException, JsonMappingException,
