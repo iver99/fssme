@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CategorySet> 
+  <Category>
+     <Name>MyCategory</Name> 
+     <ProviderName>MyProvider1</ProviderName>
+     <ProviderVersion>1.0</ProviderVersion>
+     <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
+  </Category>  
+  <Category>
+     <Name>MyCategory1</Name> 
+     <DefaultFolderId>1</DefaultFolderId>
+     <ProviderName>MyProvider2</ProviderName>
+     <ProviderVersion>1.0</ProviderVersion>
+     <ProviderDiscovery>discovery</ProviderDiscovery>
+     <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
+  </Category>
+   <Category>
+     <Name>MyCategory3</Name> 
+     <ProviderName>MyProvider3</ProviderName>
+     <ProviderVersion>1.0</ProviderVersion>
+     <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
+     <Parameters>
+       <Parameter>
+       	<Name>Param1</Name> 
+       </Parameter>
+     </Parameters>
+     <Folder>
+      <Name>Category1</Name>
+      <UiHidden>false</UiHidden>
+    </Folder>
+  </Category>
+</CategorySet>
