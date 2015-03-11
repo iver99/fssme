@@ -62,6 +62,12 @@ war {
 }
 
 sourceSets {
+ 			 test {
+                                java {
+                                          srcDirs = ['src/test/java']
+                                }
+                                resources.srcDirs = ['src/test/java']
+                            }
 
 
 			    integTest {
@@ -117,14 +123,15 @@ publishing {
         }
     }
 }
-//task runQATestSuite(type: Test){
-//        useTestNG(){
-//        dependsOn ':savedsearch-ear:ear'
-//        useDefaultListeners = true
-//        outputDirectory = file("$buildDir/testngoutput")
-//        suites file('testngsuite.xml')
-//        }
-//}
+task runQATestSuite(type: Test){
+        useTestNG(){
+        dependsOn ':savedsearch-ear:ear'
+       useDefaultListeners = true
+        outputDirectory = file("$buildDir/testngoutput")
+       suites file('testngsuite.xml')
+      }
+}
+
 
 /**
  * Generates documentation for the REST service API
