@@ -220,6 +220,22 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		return "Service Registry Service";
 	}
 
+	/**
+	 * Update saved search service status to out of service on service manager
+	 */
+	public void makeServiceOutOfService()
+	{
+		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.OUT_OF_SERVICE);
+	}
+
+	/**
+	 * Update saved search service status to up on service manager
+	 */
+	public void makeServiceUp()
+	{
+		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
+	}
+
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
@@ -234,30 +250,30 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
 		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-				.virtualEndpoints(applicationUrlSSL + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
-				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+		.virtualEndpoints(applicationUrlSSL + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
+		.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
 		InfoManager
-				.getInstance()
-				.getInfo()
-				.setLinks(
-						Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
-								new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
-										.withHref(applicationUrl + NAV_FOLDER),
-								new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
-
-		InfoManager
 		.getInstance()
 		.getInfo()
 		.setLinks(
-				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrlSSL + NAV_BASE), new Link()
-				.withRel("search").withHref(applicationUrlSSL + NAV_SEARCH), new Link().withRel("folder")
-								.withHref(applicationUrlSSL + NAV_FOLDER),
-				new Link().withRel("category").withHref(applicationUrlSSL + NAV_CATEGORY)));
+				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
+						new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
+						.withHref(applicationUrl + NAV_FOLDER),
+						new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
+
+		InfoManager
+				.getInstance()
+				.getInfo()
+				.setLinks(
+						Arrays.asList(new Link().withRel("navigation").withHref(applicationUrlSSL + NAV_BASE), new Link()
+								.withRel("search").withHref(applicationUrlSSL + NAV_SEARCH), new Link().withRel("folder")
+				.withHref(applicationUrlSSL + NAV_FOLDER),
+								new Link().withRel("category").withHref(applicationUrlSSL + NAV_CATEGORY)));
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
