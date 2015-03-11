@@ -18,7 +18,7 @@
      <Folder>
       <Name>SearchFolder</Name>
       <UiHidden>false</UiHidden>
-    </Folder>
+    </Folder>    
   </Search> 
   
   
@@ -41,7 +41,7 @@
        <ProviderName>MySearchProvider1</ProviderName>
        <ProviderVersion>1.0</ProviderVersion>
        <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
-     </Category>      
+     </Category>     
   </Search> 
 
 
@@ -62,7 +62,7 @@
        <ProviderName>MySearchProvider1</ProviderName>
        <ProviderVersion>1.0</ProviderVersion>
        <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
-     </Category>  
+     </Category>     
   </Search> 
   
 </SearchSet>  

@@ -62,8 +62,11 @@ public class SearchEntity extends Entity
 
 	@XmlElement(name = "IsWidget")
 	public String getIsWidget()
+
 	{
+
 		return widget;
+
 	}
 
 	@XmlElement(name = "Locked")

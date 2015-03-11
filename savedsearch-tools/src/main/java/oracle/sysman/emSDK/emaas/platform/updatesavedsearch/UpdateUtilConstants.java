@@ -40,4 +40,7 @@ public class UpdateUtilConstants
 	public static final String SSF_AUTHORIZATION = "Authorization";
 	public static final String SSF_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 	public static final String SSF_TEST_ENV = "SSF.TESTENV";
+	public static final String SSF_REMOTE_USER = "X-REMOTE-USER";
+	public static final String SSF_OOB = "SSF_OOB";
+	public static final String SSF_ORACLE = ".ORACLE";
 }

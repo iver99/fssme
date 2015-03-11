@@ -13,6 +13,7 @@ import javax.persistence.PersistenceException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -34,14 +35,14 @@ import org.apache.logging.log4j.Logger;
 public class SearchManagerImpl extends SearchManager
 {
 
-	//  Logger
+	//  LoggergetSearchListByCategoryId
 	private static final Logger _logger = LogManager.getLogger(SearchManagerImpl.class);
 
 	public static final SearchManagerImpl _instance = new SearchManagerImpl();
 	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.deleted=0 ";
 	private static final String FILTER_BY_CATEGORY = "and e.emAnalyticsCategory = :category ";
 	private static final String SEARCH_ENT_PREFIX = "e.";
-	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.lastAccess.accessDate DESC ";
+	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 and e.owner in ('ORACLE',:userName) order by e.lastAccess.accessDate DESC ";
 
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
@@ -239,7 +240,8 @@ public class SearchManagerImpl extends SearchManager
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName").setParameter("folderId", folderId)
-					.setParameter("searchName", name).getSingleResult();
+					.setParameter("searchName", name)
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
 
 			return createSearchObject(searchEntity, null);
 		}
@@ -313,7 +315,8 @@ public class SearchManagerImpl extends SearchManager
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//			EmAnalyticsCategory category = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByCategory")
-					.setParameter("categoryId", categoryId).getResultList();
+					.setParameter("categoryId", categoryId)
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
 				em.refresh(searchObj);
 				rtnobj.add(createSearchObject(searchObj, null));
@@ -352,7 +355,8 @@ public class SearchManagerImpl extends SearchManager
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByFolder")
-					.setParameter("folderId", folderId).getResultList();
+					.setParameter("folderId", folderId)
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
 				em.refresh(searchObj);
 				rtnobj.add(createSearchObject(searchObj, null));
@@ -391,7 +395,9 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			StringBuilder query = new StringBuilder(LASTACCESS_ORDERBY);
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			searchList = em.createQuery(query.toString()).setMaxResults(count).getResultList();
+			searchList = em.createQuery(query.toString())
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+					.setMaxResults(count).getResultList();
 
 			for (EmAnalyticsSearch searchObj : searchList) {
 				rtnobj.add(createSearchObject(searchObj, null));
@@ -424,6 +430,45 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
+	public List<Search> getSystemSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+	{
+		EntityManager em = null;
+		try {
+			List<Search> rtnobj = new ArrayList<Search>();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			//			EmAnalyticsCategory category = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
+			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSystemSearchListByCategory")
+					.setParameter("categoryId", categoryId).getResultList();
+			for (EmAnalyticsSearch searchObj : searchList) {
+				em.refresh(searchObj);
+				rtnobj.add(createSearchObject(searchObj, null));
+			}
+
+			return rtnobj;
+		}
+		catch (Exception e) {
+			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
+				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
+				throw new EMAnalyticsFwkException(
+						"Error while connecting to data source, please check the data source details: ",
+						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
+			}
+			else {
+				_logger.error("Error while retrieving the list of searches for the categoryD : " + categoryId, e);
+				throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the categoryId : "
+						+ categoryId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
+			}
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+
+		}
+
+	}
+
+	@Override
 	public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
@@ -431,7 +476,8 @@ public class SearchManagerImpl extends SearchManager
 			List<Search> rtnobj = new ArrayList<Search>();
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getWidgetListByCategory")
-					.setParameter("categoryId", categoryId).getResultList();
+					.setParameter("categoryId", categoryId)
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
 				em.refresh(searchObj);
 				rtnobj.add(createSearchObject(searchObj, null));
@@ -513,6 +559,11 @@ public class SearchManagerImpl extends SearchManager
 
 	public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList) throws Exception
 	{
+		return saveMultipleSearch(searchList, false);
+	}
+
+	public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList, boolean isOobSearch) throws Exception
+	{
 
 		EntityManager em = null;
 		boolean bCommit = true;
@@ -592,6 +643,7 @@ public class SearchManagerImpl extends SearchManager
 								EmAnalyticsFolder pFolderObj = null;
 								searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
 										.setParameter("folderId", id).setParameter("searchName", search.getName())
+										.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 										.getSingleResult();
 								tmpImportSrImpl.setId((int) searchEntity.getId());
 								importedList.add(createSearchObject(searchEntity, null));
@@ -651,8 +703,11 @@ public class SearchManagerImpl extends SearchManager
 							if (cateObj != null) {
 								if (cateObj instanceof CategoryImpl) {
 									try {
-										categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
-												.setParameter("categoryName", ((Category) cateObj).getName()).getSingleResult();
+										categoryObj = (EmAnalyticsCategory) em
+												.createNamedQuery("Category.getCategoryByName")
+												.setParameter("categoryName", ((Category) cateObj).getName())
+												.setParameter(QueryParameterConstant.USER_NAME,
+														TenantContext.getContext().getUsername()).getSingleResult();
 									}
 									catch (NoResultException e) {
 
@@ -670,9 +725,12 @@ public class SearchManagerImpl extends SearchManager
 								if (search.getFolderId() != null) {
 									try {
 
-										searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
+										searchEntity = (EmAnalyticsSearch) em
+												.createNamedQuery("Search.getSearchByName")
 												.setParameter("folderId", search.getFolderId())
-												.setParameter("searchName", search.getName()).getSingleResult();
+												.setParameter("searchName", search.getName())
+												.setParameter(QueryParameterConstant.USER_NAME,
+														TenantContext.getContext().getUsername()).getSingleResult();
 									}
 									catch (NoResultException e) {
 
@@ -937,7 +995,9 @@ public class SearchManagerImpl extends SearchManager
 					try {
 						folder = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd((Folder) search.getFolderDetails(), em);
 						folder = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolderByName")
-								.setParameter("foldername", folder.getName()).getSingleResult();
+								.setParameter("foldername", folder.getName())
+								.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+								.getSingleResult();
 
 					}
 					catch (NoResultException e) {
@@ -950,23 +1010,6 @@ public class SearchManagerImpl extends SearchManager
 			folder = null;
 		}
 		return folder;
-	}
-
-	private void OrderBybuilder(StringBuilder query, String[] orderBy)
-	{
-		// incidentally the field names for EmAnalyticsSearch and SearchImpl is
-		// same , hence order by will work here
-		if (orderBy != null && orderBy.length != 0 && orderBy[0].length() != 0) {
-			if (orderBy[0] != null) {
-				query.append(" ORDER BY " + SEARCH_ENT_PREFIX + orderBy[0].replaceAll("-", " "));
-			}
-			for (int i = 1; i < orderBy.length; i++) {
-				if (orderBy[i] != null) {
-					query.append("," + SEARCH_ENT_PREFIX + orderBy[i].replaceAll("-", " "));
-				}
-			}
-		}
-
 	}
 
 	/*
@@ -987,6 +1030,23 @@ public class SearchManagerImpl extends SearchManager
 	 * }catch(NoResultException e){ folder=null; } } } } catch
 	 * (EMAnalyticsFwkException e) { folder =null; } return folder; }
 	 */
+
+	private void OrderBybuilder(StringBuilder query, String[] orderBy)
+	{
+		// incidentally the field names for EmAnalyticsSearch and SearchImpl is
+		// same , hence order by will work here
+		if (orderBy != null && orderBy.length != 0 && orderBy[0].length() != 0) {
+			if (orderBy[0] != null) {
+				query.append(" ORDER BY " + SEARCH_ENT_PREFIX + orderBy[0].replaceAll("-", " "));
+			}
+			for (int i = 1; i < orderBy.length; i++) {
+				if (orderBy[i] != null) {
+					query.append("," + SEARCH_ENT_PREFIX + orderBy[i].replaceAll("-", " "));
+				}
+			}
+		}
+
+	}
 
 	private void updateSearchLastAccess(EmAnalyticsSearch search, Date lastAccessDate)
 	{
