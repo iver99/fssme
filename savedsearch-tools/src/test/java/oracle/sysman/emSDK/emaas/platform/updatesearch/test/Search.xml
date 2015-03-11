@@ -15,7 +15,8 @@
        <ProviderVersion>1.0</ProviderVersion>
        <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
      </Category>     
-     <FolderId>1</FolderId>       
+     <FolderId>1</FolderId>    
+       <IsWidget>true</IsWidget> 
   </Search> 
   
   
@@ -35,6 +36,7 @@
        <ProviderVersion>1.0</ProviderVersion>
        <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
      </Category>     
+     <IsWidget>true</IsWidget>
   </Search> 
 
    

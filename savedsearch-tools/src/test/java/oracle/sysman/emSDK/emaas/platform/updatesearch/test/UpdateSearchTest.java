@@ -47,8 +47,8 @@ public class UpdateSearchTest extends BaseTest
 	static String authToken;
 	private static final String tenantimport = "1";
 	private static final String tenantimport1 = "2";
-	public static final String TENANT_ID1 = "1.User1";
-	public static final String TENANT_ID2 = "2.User2";
+	public static final String TENANT_ID1 = "1.ORACLE";
+	public static final String TENANT_ID2 = "2.ORACLE";
 	private static final String SEARCH_XML = "oracle/sysman/emSDK/emaas/platform/updatesearch/test/Search.xml";
 	private static final String CAT_NAME = "MTSearchMt";
 
@@ -102,10 +102,10 @@ public class UpdateSearchTest extends BaseTest
 	public Integer getCategoryDetailsbyName(String name)
 	{
 		TenantUtil obj = new TenantUtil(TENANT_ID1);
-		Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+		Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
-				.header("X-USER-IDENTITY-DOMAIN-NAME", obj.getTenantId()).header("X-REMOTE-USER", obj.getUserName()).when()
-				.get("/category?name=" + name);
+				.header(UpdateUtilConstants.SSF_DOMAIN_NAME, obj.getTenantId())
+				.header(UpdateUtilConstants.SSF_REMOTE_USER, obj.getUserName()).when().get("/category?name=" + name);
 		JsonPath jp = res.jsonPath();
 		return jp.get("id");
 
@@ -139,10 +139,10 @@ public class UpdateSearchTest extends BaseTest
 		TenantUtil obj = new TenantUtil(TENANT_ID2);
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+			Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
-					.header("X-USER-IDENTITY-DOMAIN-NAME", obj.getTenantId()).header("X-REMOTE-USER", obj.getUserName()).when()
-					.get("/search/" + jsonObj.getInt("id"));
+					.header(UpdateUtilConstants.SSF_DOMAIN_NAME, obj.getTenantId())
+					.header(UpdateUtilConstants.SSF_REMOTE_USER, obj.getUserName()).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			Assert.assertTrue(res.getStatusCode() == 404);
 		}
@@ -150,15 +150,15 @@ public class UpdateSearchTest extends BaseTest
 		TenantUtil objTenent = new TenantUtil(TENANT_ID2);
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+			Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
-					.header("X-USER-IDENTITY-DOMAIN-NAME", objTenent.getTenantId())
-					.header("X-REMOTE-USER", objTenent.getUserName()).when().get("/search/" + jsonObj.getInt("id"));
+					.header(UpdateUtilConstants.SSF_DOMAIN_NAME, objTenent.getTenantId())
+					.header(UpdateUtilConstants.SSF_REMOTE_USER, objTenent.getUserName()).when()
+					.get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			System.out.println("deleteing searches::::" + res.getBody().asString());
 			Assert.assertTrue(listID.contains(jsonObj.getLong("id")));
-			Assert.assertTrue(deleteSearch(jsonObj.getInt("id")) == true);
-			System.out.println("deleted  searches");
+
 		}
 
 	}

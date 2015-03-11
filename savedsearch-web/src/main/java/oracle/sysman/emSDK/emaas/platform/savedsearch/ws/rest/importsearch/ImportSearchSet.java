@@ -6,6 +6,7 @@ import java.io.StringReader;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -214,7 +215,7 @@ public class ImportSearchSet
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes("application/xml")
-	public Response importSearches(String xml)
+	public Response importSearches(String xml, @HeaderParam("SSF_OOB") String oobSearch)
 	{
 
 		Response res = null;
@@ -236,7 +237,16 @@ public class ImportSearchSet
 			if (validateData(list)) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 			}
-			List<Search> addedList = SearchManagerImpl.getInstance().saveMultipleSearch(list);
+
+			boolean bResult = false;
+			if (oobSearch == null) {
+				bResult = false;
+			}
+			if (oobSearch.equalsIgnoreCase("true")) {
+				bResult = true;
+			}
+
+			List<Search> addedList = SearchManagerImpl.getInstance().saveMultipleSearch(list, bResult);
 			JSONArray jsonArray = new JSONArray();
 			for (Search impSearch : addedList) {
 				JSONObject jObj = new JSONObject();

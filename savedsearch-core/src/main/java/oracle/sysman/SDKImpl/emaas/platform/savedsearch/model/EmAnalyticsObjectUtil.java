@@ -292,7 +292,8 @@ class EmAnalyticsObjectUtil
 		folderObj.setLastModifiedBy(currentUser);
 		folderObj.setLastModificationDate(utcNow);
 		folderObj.setUiHidden(new BigDecimal(0));
-		folderObj.setSystemFolder(new BigDecimal(0));
+		boolean bResult = "ORACLE".equals(currentUser);
+		folderObj.setSystemFolder(bResult ? new BigDecimal(1) : new BigDecimal(0));
 		folderObj.setDeleted(0);
 		if (folder.getParentId() != null) {
 
@@ -386,7 +387,8 @@ class EmAnalyticsObjectUtil
 		searchEntity.setCreationDate(utcDate);
 		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcDate);
-		searchEntity.setSystemSearch(new java.math.BigDecimal(0));
+		boolean isSystemSearch = "ORACLE".equals(currentUser);
+		searchEntity.setSystemSearch(isSystemSearch ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setMetadataClob(search.getMetadata());
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
@@ -514,7 +516,7 @@ class EmAnalyticsObjectUtil
 			folderObj = em.find(EmAnalyticsFolder.class, id);
 			if (folderObj != null
 					&& folderObj.getDeleted() == 0
-					&& (folderObj.getOwner().equals("ORACLE") || folderObj.getOwner().equals(
+					&& (folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
 							TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
@@ -541,7 +543,7 @@ class EmAnalyticsObjectUtil
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
 			if (folderObj != null
-					&& (folderObj.getOwner().equals("ORACLE") || folderObj.getOwner().equals(
+					&& (folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
 							TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
@@ -587,7 +589,7 @@ class EmAnalyticsObjectUtil
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null) {
 				if (searchObj.getDeleted() == 0
-						&& (searchObj.getOwner().equals("ORACLE") || searchObj.getOwner().equals(
+						&& (searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
 								TenantContext.getContext().getUsername()))) {
 
 					return searchObj;
@@ -651,7 +653,7 @@ class EmAnalyticsObjectUtil
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null
-					&& (searchObj.getOwner().equals("ORACLE") || searchObj.getOwner().equals(
+					&& (searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
 							TenantContext.getContext().getUsername()))) {
 				return searchObj;
 			}

@@ -21,9 +21,6 @@ public class ExecutionContext
 		if (TenantContext.getContext() != null) {
 			name = TenantContext.getContext().getUsername();
 		}
-		if (name == null) {
-			name = "SYSMAN";
-		}
 		return name;
 	}
 

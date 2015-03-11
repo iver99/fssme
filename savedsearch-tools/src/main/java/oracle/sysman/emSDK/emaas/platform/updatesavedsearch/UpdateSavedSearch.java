@@ -221,6 +221,7 @@ public class UpdateSavedSearch
 					if (m_tenantid.length() == 0) {
 						throw new IllegalArgumentException("Please specify valid Tenant Id");
 					}
+					m_tenantid = m_tenantid + UpdateUtilConstants.SSF_ORACLE;
 					foundTenant = true;
 				}
 				else if (args[index].equalsIgnoreCase(UpdateUtilConstants.AUTH_TOKEN)) {

@@ -30,20 +30,19 @@ public class ImportSearchObject
 			host = host.substring(UpdateUtilConstants.WWW_STR.length() + 1);
 		}
 		Response res1 = null;
-		System.out.println("UpdateSearchUtil.isTestEnv()" + UpdateSearchUtil.isTestEnv());
 		if (UpdateSearchUtil.isTestEnv()) {
-			res1 = RestAssured.given().contentType(ContentType.XML).header("Authorization", authToken)
+			res1 = RestAssured.given().contentType(ContentType.XML).header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
-					.header("X-USER-IDENTITY-DOMAIN-NAME", objTenent.getTenantId())
-					.header("X-REMOTE-USER", objTenent.getUserName()).body(jsonString1).when()
+					.header(UpdateUtilConstants.DOMAIN_NAME, objTenent.getTenantId()).header(UpdateUtilConstants.SSF_OOB, "true")
+					.header(UpdateUtilConstants.SSF_REMOTE_USER, objTenent.getUserName()).body(jsonString1).when()
 					.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
 		}
 		else
 
 		{
-			res1 = RestAssured.given().contentType(ContentType.XML).header("Authorization", authToken)
-					.header("X-USER-IDENTITY-DOMAIN-NAME", objTenent.getTenantId())
-					.header("X-REMOTE-USER", objTenent.getUserName()).body(jsonString1).when()
+			res1 = RestAssured.given().contentType(ContentType.XML).header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
+					.header(UpdateUtilConstants.DOMAIN_NAME, objTenent.getTenantId()).header(UpdateUtilConstants.SSF_OOB, "true")
+					.header(UpdateUtilConstants.SSF_REMOTE_USER, objTenent.getUserName()).body(jsonString1).when()
 					.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
 		}
 

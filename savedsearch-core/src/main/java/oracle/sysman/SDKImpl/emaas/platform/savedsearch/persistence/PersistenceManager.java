@@ -80,7 +80,6 @@ public class PersistenceManager
 	{
 		Map<String, String> emProperties = new HashMap<String, String>();
 		emProperties.put(TENANT_ID_STR, String.valueOf(value.getTenantInternalId()));
-		emProperties.put(TENANT_USERID, value.getUsername());
 		return emf.createEntityManager(emProperties);
 	}
 
