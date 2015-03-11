@@ -242,7 +242,7 @@ public class ImportSearchSet
 			if (oobSearch == null) {
 				bResult = false;
 			}
-			if (oobSearch.equalsIgnoreCase("true")) {
+			if (oobSearch != null && oobSearch.equalsIgnoreCase("true")) {
 				bResult = true;
 			}
 

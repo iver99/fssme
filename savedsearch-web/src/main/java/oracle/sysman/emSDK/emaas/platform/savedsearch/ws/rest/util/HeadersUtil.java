@@ -59,7 +59,6 @@ public class HeadersUtil
 		if (testHeader != null) {
 			isTestEnv = testHeader.equalsIgnoreCase(SSF_HEADER);
 		}
-
 		if (isTestEnv) {
 			try {
 				internalId = Long.parseLong(header);

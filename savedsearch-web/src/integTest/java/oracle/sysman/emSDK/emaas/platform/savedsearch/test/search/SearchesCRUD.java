@@ -1,4 +1,5 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.search;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class SearchesCRUD
 	public static void createinitObject() throws Exception
 	{
 
-		String jsonString = "{ \"name\":\"Custom1\",\"description\":\"Folder for  searches\"}";
+		String jsonString = "{ \"name\":\"set \",\"description\":\"Folder for  searches\"}";
 		Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString).when().post("/folder");

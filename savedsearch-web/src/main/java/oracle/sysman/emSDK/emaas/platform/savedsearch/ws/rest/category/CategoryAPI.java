@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -582,7 +583,7 @@ public class CategoryAPI
 	@GET
 	@Path("{id}/searches")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearchesByCategory(@PathParam("id") String categoryId)
+	public Response getSearchesByCategory(@PathParam("id") String categoryId, @HeaderParam("SSF_OOB") String oobSearch)
 	{
 		SearchManager searchMan = SearchManager.getInstance();
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -616,9 +617,23 @@ public class CategoryAPI
 		}
 
 		try {
+
+			boolean bResult = false;
+			if (oobSearch == null) {
+				bResult = false;
+			}
+			if (oobSearch != null && oobSearch.equalsIgnoreCase("true")) {
+				bResult = true;
+			}
+
 			// just for checking whether category with given Id exist or not
 			catMan.getCategory(tmpCatId);
-			searchList = searchMan.getSystemSearchListByCategoryId(tmpCatId);
+			if (bResult) {
+				searchList = searchMan.getSystemSearchListByCategoryId(tmpCatId);
+			}
+			else {
+				searchList = searchMan.getSearchListByCategoryId(tmpCatId);
+			}
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
