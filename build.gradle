@@ -78,7 +78,9 @@ configurations {
 
 dependencies {
 		
-	prebuild_log4j 'log4j:log4j:1.2.16'
+	
+	prebuild_log4j 'org.apache.logging.log4j:log4j-core:2.0.1',
+                       'org.apache.logging.log4j:log4j-api:2.0.1'
 	prebuild_tenant_sdk 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2'
         prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.5'
@@ -109,7 +111,7 @@ dependencies {
 	prebuild_testng 'org.testng:testng:6.8.8',
 			'com.sun.jersey:jersey-client:1.17',
 			'com.oracle.weblogic:jersey-multipart-1.17.1:12.1.2-0-0',
-		//	'org.codehaus.groovy:groovy-all:2.2.1',
+			'org.codehaus.groovy:groovy-all:2.2.1',
 			'org.apache.commons:commons-lang3:3.1',
 			'com.jayway.jsonpath:json-path:0.9.1',
 			'com.jayway.restassured:xml-path:1.9.0',
