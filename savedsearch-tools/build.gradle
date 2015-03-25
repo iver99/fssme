@@ -39,7 +39,7 @@ dependencies {
 	compile(group: 'log4j', name: 'log4j', version:'1.2.16')
     compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
 	compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6')    
-	compile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
+	compile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0')
 	compile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')	
 	compile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0')	
 //	compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1')	
