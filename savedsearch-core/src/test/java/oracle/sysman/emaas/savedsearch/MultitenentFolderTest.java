@@ -14,6 +14,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,10 +33,18 @@ public class MultitenentFolderTest extends BaseTest
 	private static Long opc2 = null;
 	private static Long opc3 = null;
 
-	public static int createfolder(Long value)
+	private static String username1 = null;
+	private static String username2 = null;
+	private static String username3 = null;
+
+	private static final String TENANT_ID1 = TestUtils.TENANT_ID1;
+	private static final String TENANT_ID2 = TestUtils.TENANT_ID2;
+	private static final String TENANT_ID3 = TestUtils.TENANT_ID3;
+
+	public static int createfolder(Long value, String username)
 	{
 		int id = 0;
-		TenantContext.setContext(value);
+		TenantContext.setContext(new TenantInfo(username, value));
 		try {
 			FolderManager fmger = FolderManager.getInstance();
 			Folder fld = new FolderImpl();
@@ -53,11 +62,11 @@ public class MultitenentFolderTest extends BaseTest
 		return id;
 	}
 
-	public static boolean deleteFolder(int id, Long value)
+	public static boolean deleteFolder(int id, Long value, String username)
 	{
 		boolean bResult = false;
 		try {
-			TenantContext.setContext(value);
+			TenantContext.setContext(new TenantInfo(username, value));
 			FolderManager fmger = FolderManager.getInstance();
 			fmger.deleteFolder(id, true);
 			bResult = true;
@@ -78,35 +87,39 @@ public class MultitenentFolderTest extends BaseTest
 		opc2 = TestUtils.getInternalTenantId(TENANT_OPC2);
 		opc3 = TestUtils.getInternalTenantId(TENANT_OPC3);
 
-		int id1 = MultitenentFolderTest.createfolder(opc1);
-		int id2 = MultitenentFolderTest.createfolder(opc2);
-		int id3 = MultitenentFolderTest.createfolder(opc3);
+		username1 = TestUtils.getUsername(TENANT_ID1);
+		username2 = TestUtils.getUsername(TENANT_ID2);
+		username3 = TestUtils.getUsername(TENANT_ID3);
+
+		int id1 = MultitenentFolderTest.createfolder(opc1, username1);
+		int id2 = MultitenentFolderTest.createfolder(opc2, username2);
+		int id3 = MultitenentFolderTest.createfolder(opc3, username3);
 		Assert.assertTrue(id1 > 0);
 		Assert.assertTrue(id2 > 0);
 		Assert.assertTrue(id3 > 0);
 
-		Assert.assertTrue(MultitenentFolderTest.getFolder(id1, opc1) != null);
-		Assert.assertTrue(MultitenentFolderTest.getFolder(id2, opc2) != null);
-		Assert.assertTrue(MultitenentFolderTest.getFolder(id3, opc3) != null);
+		Assert.assertTrue(MultitenentFolderTest.getFolder(id1, opc1, username1) != null);
+		Assert.assertTrue(MultitenentFolderTest.getFolder(id2, opc2, username2) != null);
+		Assert.assertTrue(MultitenentFolderTest.getFolder(id3, opc3, username3) != null);
 
-		Assert.assertTrue(MultitenentFolderTest.getFolder(id1, opc2) == null);
-		Assert.assertTrue(MultitenentFolderTest.getFolder(id1, opc3) == null);
+		Assert.assertTrue(MultitenentFolderTest.getFolder(id1, opc2, username2) == null);
+		Assert.assertTrue(MultitenentFolderTest.getFolder(id1, opc3, username3) == null);
 
-		Assert.assertTrue(MultitenentFolderTest.getFolder(id2, opc1) == null);
-		Assert.assertTrue(MultitenentFolderTest.getFolder(id2, opc3) == null);
-		Assert.assertTrue(MultitenentFolderTest.getFolder(id3, opc1) == null);
-		Assert.assertTrue(MultitenentFolderTest.getFolder(id3, opc2) == null);
+		Assert.assertTrue(MultitenentFolderTest.getFolder(id2, opc1, username1) == null);
+		Assert.assertTrue(MultitenentFolderTest.getFolder(id2, opc3, username3) == null);
+		Assert.assertTrue(MultitenentFolderTest.getFolder(id3, opc1, username1) == null);
+		Assert.assertTrue(MultitenentFolderTest.getFolder(id3, opc2, username2) == null);
 
-		Assert.assertTrue(MultitenentFolderTest.deleteFolder(id1, opc1) == true);
-		Assert.assertTrue(MultitenentFolderTest.deleteFolder(id2, opc2) == true);
-		Assert.assertTrue(MultitenentFolderTest.deleteFolder(id3, opc3) == true);
+		Assert.assertTrue(MultitenentFolderTest.deleteFolder(id1, opc1, username1) == true);
+		Assert.assertTrue(MultitenentFolderTest.deleteFolder(id2, opc2, username2) == true);
+		Assert.assertTrue(MultitenentFolderTest.deleteFolder(id3, opc3, username3) == true);
 	}
 
-	public static Folder getFolder(int id, Long value)
+	public static Folder getFolder(int id, Long value, String username)
 	{
 		Folder fld = null;
 		try {
-			TenantContext.setContext(value);
+			TenantContext.setContext(new TenantInfo(username, value));
 			FolderManager fmger = FolderManager.getInstance();
 			fld = fmger.getFolder(id);
 		}

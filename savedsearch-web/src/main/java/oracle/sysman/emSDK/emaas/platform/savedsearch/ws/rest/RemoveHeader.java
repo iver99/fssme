@@ -37,6 +37,7 @@ public class RemoveHeader extends HttpServletRequestWrapper
 		return header != null ? header : super.getParameter(name); // Note: you can't use getParameterValues() here.
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Enumeration getHeaderNames()
 	{

@@ -17,6 +17,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -85,8 +86,9 @@ public class SearchParamTest extends BaseTest
 
 		try {
 
-			Long opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
-			TenantContext.setContext(opc1);
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
+
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
 			folder.setName("SearchPramTest23UT");

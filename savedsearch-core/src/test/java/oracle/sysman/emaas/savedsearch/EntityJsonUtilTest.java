@@ -22,7 +22,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
@@ -40,7 +39,7 @@ public class EntityJsonUtilTest extends BaseTest
 	private static FolderImpl folder = new FolderImpl();
 	private static CategoryImpl category = new CategoryImpl();
 	private static URI uri = null;
-	private static String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+	private static String currentUser = "SYSMAN";
 	private static final String HOST_PORT = "slc04pxi.us.oracle.com:7001";
 	static {
 		try {
@@ -164,7 +163,7 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetFullCategoryObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-	URISyntaxException
+			URISyntaxException
 	{
 		JSONObject fullCategoryObj = EntityJsonUtil.getFullCategoryJsonObj(uri, category);
 		String output = fullCategoryObj.toString();
@@ -201,7 +200,7 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetFullFolderObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-	URISyntaxException
+			URISyntaxException
 	{
 		JSONObject fullFolderObj = EntityJsonUtil.getFullFolderJsonObj(uri, folder);
 		String output = fullFolderObj.toString();
@@ -234,14 +233,14 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetFullSearchJsonObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-	URISyntaxException
+			URISyntaxException
 	{
 		JSONObject fullSearchObj = EntityJsonUtil.getFullSearchJsonObj(uri, search);
 		String output = fullSearchObj.toString();
 		//		System.out.println(output);
 
 		JSONObject fullSearchObjWithFolderPath = EntityJsonUtil.getFullSearchJsonObj(uri, search, new String[] { "parent Folder",
-		"Root Folder" });
+				"Root Folder" });
 		String output2 = fullSearchObjWithFolderPath.toString();
 		//		System.out.println(output2);
 
@@ -284,7 +283,7 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetSimpleCategoryObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-	URISyntaxException
+			URISyntaxException
 	{
 		JSONObject simpleCategoryObj = EntityJsonUtil.getSimpleCategoryJsonObj(uri, category);
 		String output = simpleCategoryObj.toString();
@@ -323,7 +322,7 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetSimpleFolderJsonObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-	URISyntaxException
+			URISyntaxException
 	{
 		JSONObject simpleFolderObj = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder);
 		String output = simpleFolderObj.toString();
@@ -363,7 +362,7 @@ public class EntityJsonUtilTest extends BaseTest
 
 	@Test
 	public void testGetSimpleSearchJsonObj() throws JSONException, EMAnalyticsFwkJsonException, MalformedURLException,
-	URISyntaxException
+			URISyntaxException
 	{
 		JSONObject simpleSearchObj = EntityJsonUtil.getSimpleSearchJsonObj(uri, search);
 		String output = simpleSearchObj.toString();

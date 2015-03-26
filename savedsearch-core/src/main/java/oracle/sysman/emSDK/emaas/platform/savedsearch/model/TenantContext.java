@@ -30,14 +30,14 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 public class TenantContext
 {
 
-	private static final ThreadLocal<Long> _threadLocal = new ThreadLocal<Long>();
+	private static final ThreadLocal<TenantInfo> _threadLocal = new ThreadLocal<TenantInfo>();
 
 	/**
 	 * clear context to avoid memory leak for TaasContext
 	 */
 	public static void clearContext()
 	{
-		Long current = _threadLocal.get();
+		TenantInfo current = _threadLocal.get();
 		if (current != null) {
 
 			_threadLocal.remove();
@@ -46,14 +46,14 @@ public class TenantContext
 
 	}
 
-	public static Long getContext()
+	public static TenantInfo getContext()
 	{
 		return _threadLocal.get();
 	}
 
-	public static void setContext(Long value)
+	public static void setContext(TenantInfo info)
 	{
-		_threadLocal.set(value);
+		_threadLocal.set(info);
 
 	}
 

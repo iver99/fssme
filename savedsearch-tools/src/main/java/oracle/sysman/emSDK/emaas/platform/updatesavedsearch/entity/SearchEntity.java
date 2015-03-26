@@ -21,6 +21,7 @@ public class SearchEntity extends Entity
 	private String folderId;
 	private String categoryId;
 	private String metadata;
+	private String widget;
 
 	private List<SearchParamEntity> parameters;
 
@@ -57,6 +58,15 @@ public class SearchEntity extends Entity
 	public String getFolderId()
 	{
 		return folderId;
+	}
+
+	@XmlElement(name = "IsWidget")
+	public String getIsWidget()
+
+	{
+
+		return widget;
+
 	}
 
 	@XmlElement(name = "Locked")
@@ -102,6 +112,11 @@ public class SearchEntity extends Entity
 		setCategoryId(category.getId());
 	}
 
+	public void setCategoryId(String categoryId)
+	{
+		this.categoryId = categoryId;
+	}
+
 	/* public void setCreationDate(Date creationDate)
 	 {
 	     this.creationDate = creationDate;
@@ -111,11 +126,6 @@ public class SearchEntity extends Entity
 	 {
 	     return creationDate;
 	 }*/
-
-	public void setCategoryId(String categoryId)
-	{
-		this.categoryId = categoryId;
-	}
 
 	public void setDescription(String description)
 	{
@@ -131,6 +141,11 @@ public class SearchEntity extends Entity
 	public void setFolderId(String folderId)
 	{
 		this.folderId = folderId;
+	}
+
+	public void setIsWidget(String value)
+	{
+		widget = value;
 	}
 
 	/* public void setLastModifiedBy(String lastModifiedBy)
