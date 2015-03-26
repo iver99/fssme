@@ -14,8 +14,8 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory//json-path-1.8.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory//xml-path-1.9.0.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory//log4j-1.2.17.jar"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory//registry-client-0.4.jar"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory//registry-lookup-client-0.3.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory//registry-client-0.29.1.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory//registry-lookup-client-0.23.6.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory//jackson-core-asl-1.9.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory//jackson-mapper-asl-1.9.12.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory//jersey-core-1.17.1.jar"/>

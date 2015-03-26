@@ -17,7 +17,7 @@
         <dependent-module archiveName="registry-lookup-client-0.23.4.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/registry-lookup-client-0.23.4.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="registry-client-0.23.4.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/registry-client-0.23.4.jar">
+        <dependent-module archiveName="registry-client-0.29.1.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/registry-client-0.29.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="emaas-platform-tenant-sdk-0.1.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/emaas-platform-tenant-sdk-0.1.jar">
