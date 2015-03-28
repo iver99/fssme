@@ -17,6 +17,8 @@ default["apps_dir"] = "#{node["base_dir"]}/Applications"
 default["jdk_dir"] = "#{node["infra_dir"]}/java"
 default["java_home"] = "#{node["jdk_dir"]}/jdk1.7.0_51"
 
+default["SAAS_API_version"] = "0.1"
+
 default["file_domain_create"] = "#{node["log_dir"]}/savedSearchCreateDomain.py"
 
 default["myApplicationName"]="emaas-applications-savedsearch-ear"
