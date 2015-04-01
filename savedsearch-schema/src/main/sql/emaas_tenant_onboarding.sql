@@ -78,7 +78,7 @@ SET PROVIDER_NAME = 'ApmUI' ,
 UPDATE EMS_ANALYTICS_CATEGORY
 SET PROVIDER_NAME = 'EmcitasApplications' ,
     PROVIDER_VERSION ='0.1',
-    PROVIDER_ASSET_ROOT ='home'		
+    PROVIDER_ASSET_ROOT ='assetRoot'		
     WHERE CATEGORY_ID = 3 AND TENANT_ID ='&TENANT_ID';
     
 DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
