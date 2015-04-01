@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-client-0.23.4.jar"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-lookup-client-0.23.4.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-client-0.23.6.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-lookup-client-0.23.6.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/wlfullclient-2.6.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/savedsearch-core"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
@@ -16,7 +16,7 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-api-2.0.2.jar"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-core-2.0.2.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-api-2.0.1.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-core-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

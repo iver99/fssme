@@ -27,15 +27,14 @@ public class ExportSearchObject
 		if (UpdateSearchUtil.isTestEnv()) {
 			res1 = RestAssured.given().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.DOMAIN_NAME, objTenent.getTenantId())
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, objTenent.getUserName())
-					.header(UpdateUtilConstants.SSF_OOB, "true")
+					.header(UpdateUtilConstants.SSF_REMOTE_USER, tenantid).header(UpdateUtilConstants.SSF_OOB, "true")
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER).when()
 					.get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId + UpdateUtilConstants.SEARCHES);
 		}
 		else {
 			res1 = RestAssured.given().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.DOMAIN_NAME, objTenent.getTenantId()).header(UpdateUtilConstants.SSF_OOB, "true")
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, objTenent.getUserName()).when()
+					.header(UpdateUtilConstants.SSF_REMOTE_USER, tenantid).when()
 					.get(UpdateUtilConstants.GET_SEARCH_BY_CAREGORY_STR + categoryId + UpdateUtilConstants.SEARCHES);
 		}
 
