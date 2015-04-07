@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.savedsearch.wls.lifecycle;
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import weblogic.application.ApplicationException;
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.application.ApplicationLifecycleListener;
@@ -105,6 +106,11 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 			}
 			logger.error("Service failed to pre-stop", t);
 			throw new ApplicationException("some of the essential services failed to pre-stop");
+		}
+		finally {
+			logger.info("Pre-stopping service, attempting to close entityimanager factory");
+			PersistenceManager.getInstance().closeEntityManagerFactory();
+			logger.info("Pre-stopping service, entityimanager factory closed");
 		}
 	}
 }
