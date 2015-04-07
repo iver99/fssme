@@ -5,11 +5,11 @@
     "ephemeral": true,
     "chefRunlistItems": [
         {
-            "name": "savedsearchService",
+            "name": "cookbook-emcs-savedsearchService",
             "operation": "deploy"
         },
         {
-            "name": "emsaas-weblogic::undeploy_app",
+            "name": "cookbook-emcs-emsaas-weblogic::undeploy_app",
             "operation": "undeploy",
             "configurations": [{
                 "name": "applicationName",
@@ -17,7 +17,7 @@
             }]
         },
         {
-            "name": "emsaas-weblogic::start_app",
+            "name": "cookbook-emcs-emsaas-weblogic::start_app",
             "operation": "start",
             "configurations": [{
                 "name": "applicationName",
@@ -25,7 +25,7 @@
             }]
         },
         {
-            "name": "emsaas-weblogic::stop_app",
+            "name": "cookbook-emcs-emsaas-weblogic::stop_app",
             "operation": "stop",
             "configurations": [{
                 "name": "applicationName",
@@ -33,7 +33,7 @@
             }]
         },
         {
-            "name": "savedsearchService::tenantHydration",
+            "name": "cookbook-emcs-savedsearchService::tenantHydration",
             "operation": "tenantHydration",
             "configurations": [{
                 "name": "internalTenantID",
