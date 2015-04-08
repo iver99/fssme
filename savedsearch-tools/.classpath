@@ -7,7 +7,7 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/rest-assured-2.3.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/rest-assured-common-2.3.1.jar"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/jettison-1.3.4.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jettison-1.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/httpclient-4.3.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/httpcore-4.3.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/httpmime-4.3.1.jar"/>

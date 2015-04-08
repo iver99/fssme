@@ -73,4 +73,5 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
         useRestAssured=true
 
 }
+
 task emcpssf_qa_test (dependsOn: QATest)

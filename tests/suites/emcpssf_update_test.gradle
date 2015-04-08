@@ -63,4 +63,5 @@ include 'oracle/sysman/emSDK/emaas/platform/updatesearch/test/*'
 include 'oracle/sysman/emSDK/emaas/platform/updatesearch/test/common/*'
 include 'oracle/sysman/emSDK/emaas/platform/updatesearch/test/updatesearchexception/*'
 }
+
      task emcpssf_update_test (dependsOn:UPDATETest)

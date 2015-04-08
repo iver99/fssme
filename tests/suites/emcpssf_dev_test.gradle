@@ -57,9 +57,12 @@ configurations{
 restAssured.exclude module: "groovy"
 
 }
+
 }
      task DEVTest(type:EMTest){
 include "oracle/sysman/emaas/savedsearch/*"
+
+     
 useRestAssured =true
 }
 
