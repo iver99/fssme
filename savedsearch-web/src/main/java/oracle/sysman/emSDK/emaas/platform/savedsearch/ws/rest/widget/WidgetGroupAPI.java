@@ -87,8 +87,10 @@ public class WidgetGroupAPI
 		try {
 			catList = catMan.getAllCategories();
 			for (Category category : catList) {
-				JSONObject jsonWidgetGroup = EntityJsonUtil.getWidgetGroupJsonObj(uri.getBaseUri(), category);
-				jsonArray.put(jsonWidgetGroup);
+				if (!"home".equalsIgnoreCase(category.getProviderAssetRoot())) {
+					JSONObject jsonWidgetGroup = EntityJsonUtil.getWidgetGroupJsonObj(uri.getBaseUri(), category);
+					jsonArray.put(jsonWidgetGroup);
+				}
 			}
 			message = jsonArray.toString();
 		}
