@@ -28,7 +28,7 @@ buildscript {
             url = "${artifactory_contextUrl}/repo" }
     }
     dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'testinfra', version: "${testinfraVersion}", transitive: true
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
     }
 }
 repositories {
@@ -36,7 +36,7 @@ repositories {
         url = "${artifactory_contextUrl}/repo"
     }
 }
-apply plugin: 'em-test-infra'
+apply plugin: 'TestInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -52,5 +52,9 @@ repositories {
 dependencies {
     lrgConfig(group: 'com.oracle.emcpssf.integTest', name: 'savedsearch-tools-integ-tests', version: '0.1')
 }
-     task UPDATETest(type:EMTest)
+     task UPDATETest(type:EMTest){
+include 'oracle/sysman/emSDK/emaas/platform/updatesearch/test/**'
+include 'oracle/sysman/emSDK/emaas/platform/updatesearch/test/common/*'
+include 'oracle/sysman/emSDK/emaas/platform/updatesearch/test/updatesearchexception*'
+}
      task emcpssf_update_test (dependsOn:UPDATETest)

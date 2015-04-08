@@ -28,7 +28,7 @@ buildscript {
             url = "${artifactory_contextUrl}/repo" }
     }
     dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'testinfra', version: "${testinfraVersion}", transitive: true
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
     }
 }
 repositories {
@@ -36,7 +36,7 @@ repositories {
         url = "${artifactory_contextUrl}/repo"
     }
 }
-apply plugin: 'em-test-infra'
+apply plugin: 'TestInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -53,5 +53,10 @@ dependencies {
     lrgConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-web-integ-tests', version: '1.0.1')
 
 }
-     task QATest(type:EMTest)
+     task QATest(type:EMTest){
+ include "oracle.sysman.emSDK.emaas.platform.savedsearch.test.*"
+ include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
+        useRestAssured=true
+
+}
 task emcpssf_qa_test (dependsOn: QATest)
