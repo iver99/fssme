@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/integTest/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/savedsearch-ee"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/savedsearch-db"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
-	<classpathentry kind="src" path=".apt_src">
-		<attributes>
-			<attribute name="optional" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-api-2.0.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-core-2.0.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/javax.persistence-2.0.5.jar"/>
