@@ -2,7 +2,7 @@
 <Application Name="Platform" Version="1.0.0" >
 <Service Name="SavedSearchService" Version="1.0.0" type="schema,app" >
 	<artifact name="softwarejson" loc="software-definitions/SavedSearchService.json" />
-	<artifact name="cookbook" loc="savedsearch-chef/savedsearchService" />
+	<artifact name="cookbook" loc="savedsearch-chef/cookbook-emcs-savedsearchService" />
 	<artifact name="software" loc="deploy-list.xml" />
 </Service>
 </Application>
