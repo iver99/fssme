@@ -1,4 +1,3 @@
-Rem  drv: <migrate type="data_upgrade" version="13.1.0.0" />
 Rem
 Rem emaas_savesearch_seed_data_ta.sql
 Rem
@@ -15,6 +14,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
+Rem    miayu       04/21/15 - Only OOB SEARCHES are expected to be in this file
 Rem    WKEICHER    09/30/14 - Update TA OOB Searches
 Rem    miayu       07/02/14 - Created for Target Analytics
 Rem
