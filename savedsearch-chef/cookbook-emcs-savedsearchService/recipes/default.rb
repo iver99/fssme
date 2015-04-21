@@ -5,7 +5,7 @@
 #
 
 #Recipe to create schema
-include_recipe 'savedsearchService::savedsearch_schema'
+include_recipe 'cookbook-emcs-savedsearchService::savedsearch_schema'
 
 #Recipe to create Datasource
-include_recipe 'savedsearchService::savedsearch_eardeploy'
+include_recipe 'cookbook-emcs-savedsearchService::savedsearch_eardeploy'
