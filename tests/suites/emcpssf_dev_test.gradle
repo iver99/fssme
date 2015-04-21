@@ -50,11 +50,16 @@ repositories {
             url = "${artifactory_contextUrl}/repo" }
     }
 dependencies {
-    lrgConfig (group: 'com.oracle.emcpssf', name: 'savedsearch-core-integ-tests', version: '1.0.1')
+    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core-integ-tests', version: '1.0.1'){
+exclude('module':'groovy')
+}
+configurations{
+restAssured.exclude module: "groovy"
 
 }
+}
      task DEVTest(type:EMTest){
-include "oracle/sysman/emaas/savedsearch.*"
+include "oracle/sysman/emaas/savedsearch/*"
 useRestAssured =true
 }
 

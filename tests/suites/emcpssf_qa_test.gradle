@@ -38,7 +38,7 @@ repositories {
 }
 apply plugin: 'TestInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
-/* *************************************************************************************************
+/* ************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
  
@@ -50,12 +50,26 @@ repositories {
             url = "${artifactory_contextUrl}/repo" }
     }
 dependencies {
-    lrgConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-web-integ-tests', version: '1.0.1')
-
+    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-web-integ-tests', version: '1.0.1'){
+exclude('module':'groovy')
+}
+configurations{
+restAssured.exclude module: 'groovy'
+}
 }
      task QATest(type:EMTest){
- include "oracle.sysman.emSDK.emaas.platform.savedsearch.test.*"
- include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
+ include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/folder/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/search/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
+
+
+// include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
         useRestAssured=true
 
 }
