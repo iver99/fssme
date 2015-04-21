@@ -18,7 +18,7 @@ dependencies {
 	lrgConfig project(':savedsearch-entities'){ transitive = false }
         lrgConfig project(':savedsearch-core'){transitive=false}	
 lrgConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
-	lrgConfig(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
+//	lrgConfig(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	lrgConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2'){ transitive = false }
     	lrgConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2'){ transitive = false }
 	lrgConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5'){ transitive = false }
@@ -31,5 +31,4 @@ lrgConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){trans
 //    	lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12'){ transitive = false }
 //    	lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12'){ transitive = false }
 //    	lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
-
 }
