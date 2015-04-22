@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+//import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 import java.io.IOException;
@@ -37,14 +37,14 @@ public class ImportTest
 	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC1;
 	static String TENANT_ID1 = TestConstant.TENANT_ID1;
 
-	private static final String FOLDER_XML = "/Folder.xml";
+	private static final String FOLDER_XML = "Folder.xml";
 	private static final String CATEGORY_XML = "Category.xml";
-	private static final String SEARCH_XML = "/Search.xml";
+	private static final String SEARCH_XML = "Search.xml";
 
 	@AfterClass
 	public static void afterTest()
 	{
-		TenantContext.clearContext();
+		//TenantContext.clearContext();
 	}
 
 	@BeforeClass
@@ -99,9 +99,7 @@ public class ImportTest
 
 
 		InputStream stream = getResourceAsStream(CATEGORY_XML,ImportTest.class);
-		if(stream ==null)
-			stream  =getResourceAsStream("/"+CATEGORY_XML,ImportTest.class); 		
-	
+		
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
 				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
@@ -159,9 +157,7 @@ public class ImportTest
 	 */
 	public void importFolders() throws Exception
 	{
-		InputStream stream = ImportTest.class.getClassLoader().getResourceAsStream(FOLDER_XML);
-		if(stream ==null)
-		stream=this.getClass().getClassLoader().getResourceAsStream(FOLDER_XML);
+		InputStream stream = getResourceAsStream(FOLDER_XML,ImportTest.class);		
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
 				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
@@ -184,9 +180,7 @@ public class ImportTest
 	 */
 	public void importSearches() throws Exception
 	{
-		InputStream stream = ImportTest.class.getClassLoader().getResourceAsStream(SEARCH_XML);
-		if(stream ==null)
-		stream=this.getClass().getClassLoader().getResourceAsStream(SEARCH_XML);
+		InputStream stream = getResourceAsStream(SEARCH_XML,ImportTest.class);		
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
 				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
@@ -351,13 +345,7 @@ public class ImportTest
       return url;
   }
   
-  /**
-   * This is a convenience method to load a resource as a stream. <p/> The
-   * algorithm used to find the resource is given in getResource()
-   * 
-   * @param resourceName The name of the resource to load
-   * @param callingClass The Class object of the calling object
-   */
+  
   public static InputStream getResourceAsStream(String resourceName, Class callingClass) {
       URL url = getResource(resourceName, callingClass);
 
@@ -368,18 +356,7 @@ public class ImportTest
       }
   }
 
-  /**
-   * Load a given resources. <p/> This method will try to load the resources
-   * using the following methods (in order):
-   * <ul>
-   * <li>From Thread.currentThread().getContextClassLoader()
-   * <li>From ClassLoaderUtil.class.getClassLoader()
-   * <li>callingClass.getClassLoader()
-   * </ul>
-   * 
-   * @param resourceName The name of the resource to load
-   * @param callingClass The Class object of the calling object
-   */
+  
   public static List<URL> getResources(String resourceName, Class callingClass) {
       List<URL> ret = new ArrayList<URL>();
       Enumeration<URL> urls = new Enumeration<URL>() {
