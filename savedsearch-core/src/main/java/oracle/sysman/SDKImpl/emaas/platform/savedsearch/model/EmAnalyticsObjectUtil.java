@@ -455,8 +455,8 @@ class EmAnalyticsObjectUtil
 		searchEntity.setOwner(currentUser);
 		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcNow);
-		searchEntity.setSystemSearch(search != null && search.isSystemSearch() ? new java.math.BigDecimal(1)
-				: new java.math.BigDecimal(0));
+		boolean isSystemSearch = "ORACLE".equals(currentUser);
+		searchEntity.setSystemSearch(isSystemSearch ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
