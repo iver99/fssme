@@ -580,10 +580,19 @@ public class SearchManagerImpl extends SearchManager
 					if (search.getId() != null && search.getId() > 0) {
 
 						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getSearchById(search.getId(), em);
-						/*if (emSearch != null && emSearch.getSystemSearch() != null && emSearch.getSystemSearch().intValue() == 1) {
+						// checking that ,it is system search and method is not  calling from updateutility.
+						if (!isOobSearch && emSearch != null && emSearch.getSystemSearch() != null
+								&& emSearch.getSystemSearch().intValue() == 1) {
 							importedList.add(createSearchObject(emSearch, null));
 							continue;
-						}*/
+						}
+
+						// checking that ,it is system search and method is not  calling from updateutility.
+						if (isOobSearch && emSearch != null && emSearch.getSystemSearch() != null
+								&& emSearch.getSystemSearch().intValue() != 1) {
+							importedList.add(createSearchObject(emSearch, null));
+							continue;
+						}
 
 						if (obj != null) {
 							if (obj instanceof Integer) {
@@ -627,6 +636,13 @@ public class SearchManagerImpl extends SearchManager
 							}
 							else {
 								continue;
+							}
+						}
+
+						if (cateObj instanceof CategoryImpl) {
+							if (search.getCategoryId() == null) {
+								EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
+								search.setCategoryId((int) iCategory.getCategoryId());
 							}
 						}
 

@@ -1,20 +1,16 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.importsavedsearch;
-import java.util.Enumeration;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-//import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -44,7 +40,142 @@ public class ImportTest
 	@AfterClass
 	public static void afterTest()
 	{
-		//TenantContext.clearContext();
+
+	}
+
+	public static URL getResource(String resourceName, Class callingClass)
+	{
+		URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
+		if (url == null && resourceName.startsWith("/")) {
+			//certain classloaders need it without the leading /
+			url = Thread.currentThread().getContextClassLoader().getResource(resourceName.substring(1));
+		}
+
+		ClassLoader cluClassloader = ImportTest.class.getClassLoader();
+		if (cluClassloader == null) {
+			cluClassloader = ClassLoader.getSystemClassLoader();
+		}
+		if (url == null) {
+			url = cluClassloader.getResource(resourceName);
+		}
+		if (url == null && resourceName.startsWith("/")) {
+			//certain classloaders need it without the leading /
+			url = cluClassloader.getResource(resourceName.substring(1));
+		}
+
+		if (url == null) {
+			ClassLoader cl = callingClass.getClassLoader();
+
+			if (cl != null) {
+				url = cl.getResource(resourceName);
+			}
+		}
+
+		if (url == null) {
+			url = callingClass.getResource(resourceName);
+		}
+
+		if (url == null && resourceName != null && resourceName.charAt(0) != '/') {
+			return ImportTest.getResource('/' + resourceName, callingClass);
+		}
+
+		return url;
+	}
+
+	public static InputStream getResourceAsStream(String resourceName, Class callingClass)
+	{
+		URL url = ImportTest.getResource(resourceName, callingClass);
+
+		try {
+			return url != null ? url.openStream() : null;
+		}
+		catch (IOException e) {
+			return null;
+		}
+	}
+
+	public static List<URL> getResources(String resourceName, Class callingClass)
+	{
+		List<URL> ret = new ArrayList<URL>();
+		Enumeration<URL> urls = new Enumeration<URL>() {
+			@Override
+			public boolean hasMoreElements()
+			{
+				return false;
+			}
+
+			@Override
+			public URL nextElement()
+			{
+				return null;
+			}
+
+		};
+		try {
+			urls = Thread.currentThread().getContextClassLoader().getResources(resourceName);
+		}
+		catch (IOException e) {
+			//ignore
+		}
+		if (!urls.hasMoreElements() && resourceName.startsWith("/")) {
+			//certain classloaders need it without the leading /
+			try {
+				urls = Thread.currentThread().getContextClassLoader().getResources(resourceName.substring(1));
+			}
+			catch (IOException e) {
+				// ignore
+			}
+		}
+
+		ClassLoader cluClassloader = ImportTest.class.getClassLoader();
+		if (cluClassloader == null) {
+			cluClassloader = ClassLoader.getSystemClassLoader();
+		}
+		if (!urls.hasMoreElements()) {
+			try {
+				urls = cluClassloader.getResources(resourceName);
+			}
+			catch (IOException e) {
+				// ignore
+			}
+		}
+		if (!urls.hasMoreElements() && resourceName.startsWith("/")) {
+			//certain classloaders need it without the leading /
+			try {
+				urls = cluClassloader.getResources(resourceName.substring(1));
+			}
+			catch (IOException e) {
+				// ignore
+			}
+		}
+
+		if (!urls.hasMoreElements()) {
+			ClassLoader cl = callingClass.getClassLoader();
+
+			if (cl != null) {
+				try {
+					urls = cl.getResources(resourceName);
+				}
+				catch (IOException e) {
+					// ignore
+				}
+			}
+		}
+
+		if (!urls.hasMoreElements()) {
+			URL url = callingClass.getResource(resourceName);
+			if (url != null) {
+				ret.add(url);
+			}
+		}
+		while (urls.hasMoreElements()) {
+			ret.add(urls.nextElement());
+		}
+
+		if (ret.isEmpty() && resourceName != null && resourceName.charAt(0) != '/') {
+			return ImportTest.getResources('/' + resourceName, callingClass);
+		}
+		return ret;
 	}
 
 	@BeforeClass
@@ -97,9 +228,8 @@ public class ImportTest
 	public void importCategories() throws Exception
 	{
 
+		InputStream stream = ImportTest.getResourceAsStream(CATEGORY_XML, ImportTest.class);
 
-		InputStream stream = getResourceAsStream(CATEGORY_XML,ImportTest.class);
-		
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
 				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
@@ -157,7 +287,7 @@ public class ImportTest
 	 */
 	public void importFolders() throws Exception
 	{
-		InputStream stream = getResourceAsStream(FOLDER_XML,ImportTest.class);		
+		InputStream stream = ImportTest.getResourceAsStream(FOLDER_XML, ImportTest.class);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
 				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
@@ -180,7 +310,7 @@ public class ImportTest
 	 */
 	public void importSearches() throws Exception
 	{
-		InputStream stream = getResourceAsStream(SEARCH_XML,ImportTest.class);		
+		InputStream stream = ImportTest.getResourceAsStream(SEARCH_XML, ImportTest.class);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
 				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
@@ -302,136 +432,5 @@ public class ImportTest
 	{
 		return true;
 	}
-
-
-
-
- public static URL getResource(String resourceName, Class callingClass) {
-      URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
-      if (url == null && resourceName.startsWith("/")) {
-          //certain classloaders need it without the leading /
-          url = Thread.currentThread().getContextClassLoader()
-              .getResource(resourceName.substring(1));
-      }
-
-      ClassLoader cluClassloader = ImportTest.class.getClassLoader();
-      if (cluClassloader == null) {
-          cluClassloader = ClassLoader.getSystemClassLoader();
-      }
-      if (url == null) {
-          url = cluClassloader.getResource(resourceName);
-      }
-      if (url == null && resourceName.startsWith("/")) {
-          //certain classloaders need it without the leading /
-          url = cluClassloader.getResource(resourceName.substring(1));
-      }
-
-      if (url == null) {
-          ClassLoader cl = callingClass.getClassLoader();
-
-          if (cl != null) {
-              url = cl.getResource(resourceName);
-          }
-      }
-
-      if (url == null) {
-          url = callingClass.getResource(resourceName);
-      }
-      
-      if ((url == null) && (resourceName != null) && (resourceName.charAt(0) != '/')) {
-          return getResource('/' + resourceName, callingClass);
-      }
-
-      return url;
-  }
-  
-  
-  public static InputStream getResourceAsStream(String resourceName, Class callingClass) {
-      URL url = getResource(resourceName, callingClass);
-
-      try {
-          return (url != null) ? url.openStream() : null;
-      } catch (IOException e) {
-          return null;
-      }
-  }
-
-  
-  public static List<URL> getResources(String resourceName, Class callingClass) {
-      List<URL> ret = new ArrayList<URL>();
-      Enumeration<URL> urls = new Enumeration<URL>() {
-          public boolean hasMoreElements() {
-              return false;
-          }
-          public URL nextElement() {
-              return null;
-          }
-          
-      };
-      try {
-          urls = Thread.currentThread().getContextClassLoader()
-              .getResources(resourceName);
-      } catch (IOException e) {
-          //ignore
-      }
-      if (!urls.hasMoreElements() && resourceName.startsWith("/")) {
-          //certain classloaders need it without the leading /
-          try {
-              urls = Thread.currentThread().getContextClassLoader()
-                  .getResources(resourceName.substring(1));
-          } catch (IOException e) {
-              // ignore
-          }
-      }
-
-      ClassLoader cluClassloader = ImportTest.class.getClassLoader();
-      if (cluClassloader == null) {
-          cluClassloader = ClassLoader.getSystemClassLoader();
-      }
-      if (!urls.hasMoreElements()) {
-          try {
-              urls = cluClassloader.getResources(resourceName);
-          } catch (IOException e) {
-              // ignore
-          }
-      }
-      if (!urls.hasMoreElements() && resourceName.startsWith("/")) {
-          //certain classloaders need it without the leading /
-          try {
-              urls = cluClassloader.getResources(resourceName.substring(1));
-          } catch (IOException e) {
-              // ignore
-          }
-      }
-
-      if (!urls.hasMoreElements()) {
-          ClassLoader cl = callingClass.getClassLoader();
-
-          if (cl != null) {
-              try {
-                  urls = cl.getResources(resourceName);
-              } catch (IOException e) {
-                  // ignore
-              }
-          }
-      }
-
-      if (!urls.hasMoreElements()) {
-          URL url = callingClass.getResource(resourceName);
-          if (url != null) {
-              ret.add(url);
-          }
-      }
-      while (urls.hasMoreElements()) {
-          ret.add(urls.nextElement());
-      }
-
-      
-      if (ret.isEmpty() && (resourceName != null) && (resourceName.charAt(0) != '/')) {
-          return getResources('/' + resourceName, callingClass);
-      }
-      return ret;
-  }
-
 
 }

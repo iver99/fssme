@@ -3,7 +3,6 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.test.search;
 import java.util.ArrayList;
 import java.util.List;
 
-//import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
