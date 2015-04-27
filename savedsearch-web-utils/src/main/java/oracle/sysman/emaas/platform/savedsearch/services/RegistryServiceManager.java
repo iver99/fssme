@@ -174,9 +174,24 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	}
 
 	private static final String NAV_BASE = "/savedsearch/v1";
-	private static final String NAV_SEARCH = "/savedsearch/v1/search";
+	/*private static final String NAV_SEARCH = "/savedsearch/v1/search";
 	private static final String NAV_FOLDER = "/savedsearch/v1/folder";
 	private static final String NAV_CATEGORY = "/savedsearch/v1/category";
+	*/	
+	
+    private static final String STATIC_NAV= "/static/savedsearch.navigation";
+    private static final String SSO_STATIC_NAV= "/sso.static/savedsearch.navigation";    
+    private static final String STATIC_SEARCH= "/static/savedsearch.search";
+    private static final String SSO_STATIC_SEARCH= "/sso.static/savedsearch.search";    
+    private static final String STATIC_CATEGORY= "/static/savedsearch.category";
+    private static final String SSO_STATIC_CATEGORY= "/sso.static/savedsearch.category";
+    private static final String STATIC_FOLDER= "/static/savedsearch.folder";
+    private static final String SSO_STATIC_FOLDER= "/sso.static/savedsearch.folder";
+    
+    
+	
+	
+	
 	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceregistry");
 
@@ -232,7 +247,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	 * Update saved search service status to up on service manager
 	 */
 	public void makeServiceUp()
-	{
+	{				
 		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 	}
 
@@ -256,26 +271,35 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
-
 		InfoManager
 		.getInstance()
 		.getInfo()
-		.setLinks(
-				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
-						new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
-						.withHref(applicationUrl + NAV_FOLDER),
-						new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
-
+		.setLinks(Arrays.asList(new Link().withRel(STATIC_NAV).withHref(applicationUrlSSL + STATIC_NAV),
+				  new Link().withRel(SSO_STATIC_NAV).withHref(applicationUrlSSL + SSO_STATIC_NAV),
+				  new Link().withRel(STATIC_FOLDER).withHref(applicationUrlSSL + STATIC_FOLDER),
+				  new Link().withRel(SSO_STATIC_FOLDER).withHref(applicationUrlSSL + SSO_STATIC_FOLDER),
+				  new Link().withRel(STATIC_CATEGORY).withHref(applicationUrlSSL + STATIC_CATEGORY),
+				  new Link().withRel(SSO_STATIC_CATEGORY).withHref(applicationUrlSSL + SSO_STATIC_CATEGORY),
+				  new Link().withRel(STATIC_SEARCH).withHref(applicationUrlSSL + STATIC_SEARCH),
+				  new Link().withRel(SSO_STATIC_SEARCH).withHref(applicationUrlSSL + SSO_STATIC_SEARCH)
+				
+				));
+		
 		InfoManager
-				.getInstance()
-				.getInfo()
-				.setLinks(
-						Arrays.asList(new Link().withRel("navigation").withHref(applicationUrlSSL + NAV_BASE), new Link()
-								.withRel("search").withHref(applicationUrlSSL + NAV_SEARCH), new Link().withRel("folder")
-				.withHref(applicationUrlSSL + NAV_FOLDER),
-								new Link().withRel("category").withHref(applicationUrlSSL + NAV_CATEGORY)));
-
-		logger.info("Registering service with 'Service Registry'");
+		.getInstance()
+		.getInfo()
+		.setLinks(Arrays.asList(new Link().withRel(STATIC_NAV).withHref(applicationUrl + STATIC_NAV),
+				  new Link().withRel(SSO_STATIC_NAV).withHref(applicationUrl+ SSO_STATIC_NAV),
+				  new Link().withRel(STATIC_FOLDER).withHref(applicationUrl + STATIC_FOLDER),
+				  new Link().withRel(SSO_STATIC_FOLDER).withHref(applicationUrl + SSO_STATIC_FOLDER),
+				  new Link().withRel(STATIC_CATEGORY).withHref(applicationUrl + STATIC_CATEGORY),
+				  new Link().withRel(SSO_STATIC_CATEGORY).withHref(applicationUrl + SSO_STATIC_CATEGORY),
+				  new Link().withRel(STATIC_SEARCH).withHref(applicationUrl + STATIC_SEARCH),
+				  new Link().withRel(SSO_STATIC_SEARCH).withHref(applicationUrl + SSO_STATIC_SEARCH)
+				
+				));
+		
+				logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
 		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 		LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
