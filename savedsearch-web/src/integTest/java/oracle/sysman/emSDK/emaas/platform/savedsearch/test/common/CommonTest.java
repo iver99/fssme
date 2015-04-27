@@ -27,11 +27,10 @@ public class CommonTest
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {
-			System.setProperty(TESTENV_QA_TEST_PROP, "true");
-			//input = new FileInputStream("testenv.properties");
+			System.setProperty(TESTENV_QA_TEST_PROP, "true");			
 			input =      this.getClass().getClassLoader().getResourceAsStream("/testenv.properties");
-			//if(input==null)
-			//	 input =      this.getClass().getClassLoader().getResourceAsStream("testenv.properties");
+			if(input==null)
+			 input =      this.getClass().getClassLoader().getResourceAsStream("testenv.properties");
 
 			prop.load(input);
 			System.out.println("---------------------------------------------------------------------");

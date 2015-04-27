@@ -3,7 +3,6 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.test.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
@@ -57,7 +56,7 @@ public class SearchesCRUD
 		System.out.println("Status code is: " + res2.getStatusCode());
 		Assert.assertTrue(res2.getStatusCode() == 204);
 
-		TenantContext.clearContext();
+		//TenantContext.clearContext();
 	}
 
 	public static void createinitObject() throws Exception
