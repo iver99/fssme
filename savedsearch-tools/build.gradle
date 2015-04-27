@@ -46,7 +46,6 @@ dependencies {
         compile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
         compile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0'){transitive = false}
         compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
-
         compile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1'){transitive = false}
         compile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 
