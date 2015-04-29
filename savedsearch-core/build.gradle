@@ -22,7 +22,7 @@ repositories {
 }
 
 publishing {
-publications{
+    publications {
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
