@@ -58,7 +58,7 @@ restAssured.exclude module: 'groovy'
 }
 }
      task QATest(type:EMTest){
- include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/folder/*"

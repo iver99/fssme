@@ -10,6 +10,7 @@ ext.restDocOutputDir = "${restDocRootDir}"
 apply plugin: 'maven-publish'
 apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
+apply plugin:"artifactory"
 
 jar.archiveName='emcpssf_qa_test.jar'
 group = 'com.oracle.emaas.emcpssf'
@@ -36,8 +37,8 @@ repositories {
 }
 
 configurations {
-	integTestCompile.extendsFrom testCompile
-	integTestRuntime.extendsFrom testRuntime
+//	integTestCompile.extendsFrom testCompile
+//	integTestRuntime.extendsFrom testRuntime
 	restDoc
 	enunciateCore
 	ftpAntTask
@@ -75,6 +76,7 @@ sourceSets {
 
 publishing {
     publications {
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
