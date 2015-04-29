@@ -5,7 +5,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'artifactory-publish'
 apply from: 'test.gradle'
 apply plugin: 'TestInfraPlugin'
-jar.archiveName='UpdateSavedSearch.jar'
+//jar.archiveName='UpdateSavedSearch.jar'
 
 task runUpdateSearchUtilTestSuite(type: Test){
         useTestNG(){
