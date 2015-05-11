@@ -47,6 +47,18 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void handleNotification(Notification notification, Object handback)
 	{
+		logger.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
+				notificationId);
+		if (rsm.isRegistrationComplete() == null) {
+			logger.info("RegistryServiceManager hasn't registered. Check registry service next time");
+			return;
+		}
+		// check if service manager is up and registration is complete
+		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
+			logger.warn("Saved search service registration is not completed. Ignore dependant services availability checking");
+			return;
+
+		}
 		// check database available
 		boolean isDBAvailable = isDatabaseAvailable();
 		// update saved search service status
@@ -76,7 +88,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
 		notificationId = timer.addNotification("SavedSearchServiceTimer", null, this, timerTriggerAt, PERIOD, 0);
 		timer.start();
-		logger.info("Timer for saved search service dependencies checking started");
+		logger.info("Timer for saved search service dependencies checking started. notificationId={}", notificationId);
 	}
 
 	/* (non-Javadoc)
@@ -101,10 +113,11 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
+		logger.info("Pre-stopping availability service");
 		try {
 			timer.stop();
 			timer.removeNotification(notificationId);
-			logger.info("Timer for saved search service dependencies checking stopped");
+			logger.info("Timer for dashboards dependencies checking stopped. notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {
 			logger.error(e.getLocalizedMessage(), e);
