@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
+
 public class SearchManagerTestMockup
 {
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
@@ -102,10 +104,13 @@ public class SearchManagerTestMockup
 	private static Connection createConnection() throws ClassNotFoundException, SQLException
 	{
 		Properties pr = SearchManagerTestMockup.loadProperties(CONNECTION_PROPS_FILE);
-		Class.forName(pr.getProperty("javax.persistence.jdbc.driver"));
-		String url = pr.getProperty("javax.persistence.jdbc.url");
-		String user = pr.getProperty("javax.persistence.jdbc.user");
-		String password = pr.getProperty("javax.persistence.jdbc.password");
+		if (System.getenv("T_WORK") != null) {
+			pr = QAToolUtil.getDbProperties();
+		}
+		Class.forName(pr.getProperty(QAToolUtil.JDBC_PARAM_DRIVER_VALUE));
+		String url = pr.getProperty(QAToolUtil.JDBC_PARAM_URL);
+		String user = pr.getProperty(QAToolUtil.JDBC_PARAM_USER);
+		String password = pr.getProperty(QAToolUtil.JDBC_PARAM_PASSWORD);
 		return DriverManager.getConnection(url, user, password);
 	}
 

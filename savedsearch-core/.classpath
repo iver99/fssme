@@ -19,6 +19,7 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-mapper-asl-1.9.12.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-xc-1.9.2.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jettison-1.3.4.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/em-qatool-os-webdriver-1.0.4.jar"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.utility"/>

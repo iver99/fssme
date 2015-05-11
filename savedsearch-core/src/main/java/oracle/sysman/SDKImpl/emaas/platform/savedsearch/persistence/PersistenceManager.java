@@ -69,6 +69,9 @@ public class PersistenceManager
 
 		if (IS_TEST_ENV) {
 			Properties props = loadProperties(CONNECTION_PROPS_FILE);
+			if (System.getenv("T_WORK") != null) {
+				props = QAToolUtil.getDbProperties();
+			}
 			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
 		}
 		else {
