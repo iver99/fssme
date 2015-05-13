@@ -11,7 +11,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
 
 import java.util.Properties;
-
+import oracle.sysman.qatool.uifwk.utils.Utils;
 /**
  * @author vinjoshi
  */

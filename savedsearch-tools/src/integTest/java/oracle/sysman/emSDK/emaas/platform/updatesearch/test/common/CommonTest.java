@@ -21,7 +21,7 @@ import java.util.Properties;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.LogConfig;
-
+import oracle.sysman.qatool.uifwk.utils.Utils;
 public class CommonTest
 {
 
@@ -63,9 +63,12 @@ public class CommonTest
 			}
 		}
 
-		HOSTNAME = prop.getProperty("hostname");
-		portno = prop.getProperty("port");
-		authToken = prop.getProperty("authToken");
+	//	HOSTNAME = prop.getProperty("hostname");
+	HOSTNAME=Utils.getProperty("EMCS_NODE1_HOSTNAME");
+	authToken=Utils.getProperty("SAAS_AUTH_TOKEN");
+	//	portno = prop.getProperty("port");
+		portno = "7001";
+	//authToken = prop.getProperty("authToken");
 		serveruri = "http://" + HOSTNAME + ":" + portno;
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = serveruri;

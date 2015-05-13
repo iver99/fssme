@@ -25,7 +25,7 @@
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/repo" }
+            url = "${artifactory_contextUrl}/emaas-virtual" }
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
@@ -33,7 +33,7 @@ buildscript {
 }
 repositories {
     maven {
-        url = "${artifactory_contextUrl}/repo"
+        url = "${artifactory_contextUrl}/emaas-virtual"
     }
 }
 apply plugin: 'TestInfraPlugin'
@@ -47,10 +47,10 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 repositories {
 	mavenLocal()
         maven {
-            url = "${artifactory_contextUrl}/repo" }
+            url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
-    testConfig(group: 'com.oracle.emcpssf.integTest', name: 'savedsearch-tools-integ-tests', version: '0.1'){
+    testConfig(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-tools-integ-tests', version: '0.1'){
 exclude('module':'groovy')
 }
 testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"

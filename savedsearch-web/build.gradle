@@ -19,7 +19,7 @@ version = '1.0.1'
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/repo"
+            url = "${artifactory_contextUrl}/emaas-virtual"
         }
     }
     dependencies {
@@ -31,7 +31,7 @@ buildscript {
 
 repositories {
     maven {
-        url = "${artifactory_contextUrl}/repo"
+        url = "${artifactory_contextUrl}/emaas-virtual"
     }
 }
 
