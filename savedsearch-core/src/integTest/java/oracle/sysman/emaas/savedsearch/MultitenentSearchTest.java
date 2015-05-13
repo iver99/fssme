@@ -23,7 +23,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author vinjoshi
@@ -189,7 +188,7 @@ public class MultitenentSearchTest extends BaseTest
 		MultitenentSearchTest.searchTest();
 	}
 
-	@Test
+	//@Test
 	public static void searchTest()
 	{
 		opc1 = TestUtils.getInternalTenantId(TENANT_OPC1);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -30,7 +31,7 @@ public class FolderManagerTest extends BaseTest
 	private static final String TENANT_ID_OPC2 = TestUtils.TENANT_ID_OPC2;
 	private static final String TENANT_ID_OPC3 = TestUtils.TENANT_ID_OPC3;
 
-	@Test
+	// DISABLE TEST CASES   @Test
 	public static void createreadFolderByTenant() throws Exception
 	{
 
@@ -137,8 +138,9 @@ public class FolderManagerTest extends BaseTest
 	{
 
 		try {
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC1)));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_NAME).toString())));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			objFolder.deleteFolder(folderId, true);
 		}
@@ -155,9 +157,9 @@ public class FolderManagerTest extends BaseTest
 	{
 		try {
 
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC1)));
-
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_NAME).toString())));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
 			folder.setName("FolderTest");
@@ -225,8 +227,9 @@ public class FolderManagerTest extends BaseTest
 	{
 		try {
 			//create the category with the folder
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC1)));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_NAME).toString())));
 			CategoryManager catMan = CategoryManager.getInstance();
 			Category category = catMan.createNewCategory();
 			category.setName("TestCategoryWithFolder");
@@ -269,8 +272,9 @@ public class FolderManagerTest extends BaseTest
 	@Test
 	public void testDuplicate() throws Exception
 	{
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-				.getInternalTenantId(TENANT_ID_OPC1)));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_NAME).toString())));
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 			// create one folder
@@ -360,8 +364,9 @@ public class FolderManagerTest extends BaseTest
 	public void testGetpathforFolderId() throws Exception
 	{
 		try {
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC1)));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_NAME).toString())));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
 			String[] path = objFolder.getPathForFolderId(folderId);
@@ -381,8 +386,9 @@ public class FolderManagerTest extends BaseTest
 	@Test
 	public void testGetSubFolder() throws Exception
 	{
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-				.getInternalTenantId(TENANT_ID_OPC1)));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_NAME).toString())));
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		List<Folder> folderList = new ArrayList<Folder>();
 		try {
@@ -487,8 +493,9 @@ public class FolderManagerTest extends BaseTest
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC1)));
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_NAME).toString())));
 			Folder folder = objFolder.getFolder(folderId);
 			AssertJUnit.assertNotNull(folder);
 			folder.setName("My folder");

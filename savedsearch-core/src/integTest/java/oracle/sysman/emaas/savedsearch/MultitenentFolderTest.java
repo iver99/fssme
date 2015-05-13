@@ -17,7 +17,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author vinjoshi
@@ -80,7 +79,7 @@ public class MultitenentFolderTest extends BaseTest
 		return bResult;
 	}
 
-	@Test
+	//	@Test
 	public static void folderTest()
 	{
 		opc1 = TestUtils.getInternalTenantId(TENANT_OPC1);

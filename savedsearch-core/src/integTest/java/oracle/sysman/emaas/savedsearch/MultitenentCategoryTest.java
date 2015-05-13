@@ -17,7 +17,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author vinjoshi
@@ -41,7 +40,7 @@ public class MultitenentCategoryTest extends BaseTest
 	private static String username2 = null;
 	private static String username3 = null;
 
-	@Test
+	//@Test
 	public static void categoryTest()
 	{
 		opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);

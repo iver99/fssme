@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.LogConfig;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.FileUtils;
 import oracle.sysman.qatool.uifwk.utils.Utils;
 public class CommonTest
 {
@@ -15,6 +17,11 @@ public class CommonTest
 	private final String portno;
 	private final String serveruri;
 	private final String authToken;
+	 private final String tenantid;
+     private final String remoteuser;
+     private final String tenantid_2;
+
+	
 	private static final String TESTENV_QA_TEST_PROP = "SSF.QA.TESTENV";
 
 	/**
@@ -59,11 +66,23 @@ public class CommonTest
 		HOSTNAME=Utils.getProperty("EMCS_NODE1_HOSTNAME");
 		authToken=Utils.getProperty("SAAS_AUTH_TOKEN");
 		portno = "7001";
+	//	 authToken = Utils.getProperty("SAAS_AUTH_TOKEN");
+	        //tenantid = prop.getProperty("tenantid");
+	        tenantid = Utils.getProperty("TENANT_ID");
+	        tenantid_2 = prop.getProperty("tenantid_2");
+	        //remoteuser = prop.getProperty("RemoteUser");
+	        remoteuser = Utils.getProperty("SSO_USERNAME");
 		serveruri = "http://" + HOSTNAME + ":" + portno;
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = serveruri;
 		RestAssured.basePath = "/savedsearch/v1";
 		RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
+		
+		try{
+		FileUtils.createOutputfile("/scratch/common", tenantid + "  " + remoteuser + " " +serveruri);
+		}catch(Exception e){
+			
+		}
 
 	}
 
@@ -85,5 +104,15 @@ public class CommonTest
 	public String getServeruri()
 	{
 		return serveruri;
+	}
+	
+	public String getTenant()
+	{
+		return tenantid;				
+	}
+	
+	public String getRemoteUser()
+	{
+		return remoteuser;
 	}
 }

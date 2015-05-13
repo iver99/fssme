@@ -12,8 +12,6 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
 
 import java.util.Properties;
 
-import oracle.sysman.qatool.uifwk.utils.Utils;
-
 /**
  * @author vinjoshi
  */
@@ -33,6 +31,8 @@ public class QAToolUtil
 	public static final String JDBC_PARAM_PASSWORD = "javax.persistence.jdbc.password";
 	public static final String JDBC_PARAM_DRIVER = "javax.persistence.jdbc.driver";
 	public static final String JDBC_PARAM_DRIVER_VALUE = "oracle.jdbc.OracleDriver";
+	public static final String TENANT_USER_NAME = "TENANT_USER_NAME";
+	public static final String TENANT_NAME = "TENANT_NAME";
 
 	public static Properties getDbProperties()
 	{
@@ -43,6 +43,14 @@ public class QAToolUtil
 		props.put(JDBC_PARAM_USER, USER_NAME);
 		props.put(JDBC_PARAM_PASSWORD, PASSWORD);
 		props.put(JDBC_PARAM_DRIVER, JDBC_PARAM_DRIVER_VALUE);
+		return props;
+	}
+
+	public static Properties getTenantDetails()
+	{
+		Properties props = new Properties();
+		props.put(TENANT_USER_NAME, Utils.getProperty("TENANT_ID_INTERNAL") + "." + Utils.getProperty("SSO_USERNAME"));
+		props.put(TENANT_NAME, Utils.getProperty("TENANT_ID_INTERNAL"));
 		return props;
 	}
 }
