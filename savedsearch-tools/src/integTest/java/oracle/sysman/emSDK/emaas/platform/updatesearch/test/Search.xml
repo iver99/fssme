@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SearchSet>
+ 
+   <Search>
+     <Name>MTSearchMt</Name> 
+     <SearchParameters>
+       <SearchParameter>
+       			<Name>Param1</Name> 
+                <Type>STRING</Type>
+       </SearchParameter>
+     </SearchParameters>          
+     <Category>
+       <Name>MTSearchMt</Name>
+        <ProviderName>MySearchProvider</ProviderName>
+       <ProviderVersion>1.0</ProviderVersion>
+       <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
+     </Category>     
+     <FolderId>1</FolderId>    
+       <IsWidget>true</IsWidget> 
+  </Search> 
+  
+  
+  
+  <Search>
+     <FolderId>1</FolderId>      
+     <Name>MTSearchMt1</Name> 
+     <SearchParameters>
+       <SearchParameter>
+   	<Name>Param1</Name> 
+        <Type>STRING</Type>
+       </SearchParameter>
+     </SearchParameters>     
+        <Category>
+       <Name>MTSearchMt</Name>
+         <ProviderName>MySearchProvider</ProviderName>
+       <ProviderVersion>1.0</ProviderVersion>
+       <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
+     </Category>     
+     <IsWidget>true</IsWidget>
+  </Search> 
+
+   
+</SearchSet>  
