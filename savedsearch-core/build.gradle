@@ -1,5 +1,68 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+apply plugin: 'maven'
+apply plugin: 'TestInfraPlugin'
+apply from: 'test.gradle'
+buildscript {
+    repositories {
+        maven {
+            url = "${artifactory_contextUrl}/emaas-virtual"
+        }
+    }
+    dependencies {
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+    }
+}
+
+repositories {
+    maven {
+        url = "${artifactory_contextUrl}/emaas-virtual"
+    }
+}
+
+publishing {
+    publications {
+/*savedsearchCore(MavenPublication) {
+            from components.java
+        }
+*/
+        integTest(MavenPublication) {
+            setArtifactId(project.name + '-' + integTestJar.appendix)
+            artifact integTestJar.archivePath
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup)
+                    dependency.appendNode('artifactId', it.moduleName)
+                    dependency.appendNode('version', it.moduleVersion)
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "${artifactory_contextUrl}/emaas-sandbox-local"
+            credentials {
+                username = "${artifactory_user}"
+                password =  "${artifactory_password}"
+            }
+        }
+    }
+}    
+
+/*artifactoryPublish{
+publications('savedsearchCore')
+}*/
+sourceSets {
+                            test{
+                                java {
+                                          srcDirs = ['src/test/java']
+                                }
+                                resources.srcDirs = ['src/test/java']
+                            }
+ }
 
 
 
@@ -14,11 +77,11 @@ task runDEVTestSuite(type: Test){
 
 dependencies {
 	compile project(':savedsearch-entities'){transitive = false}
-	testRuntime(group: 'com.oracle.weblogic', name: 'ojdbc6', version: '12.1.2-0-0'){transitive = false}
-	testCompile(group: 'org.testng', name:'testng', version:'6.8.8')
+	testRuntime(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
+	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){transitive = false}
     compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){transitive = false}
-	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.0'){transitive = false}
+	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5'){transitive = false}
 	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2') {transitive = false}
 	compile(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2'){transitive = false}
 //	compile(group: 'javax', name: 'ejb', version: '3.2.0')
@@ -27,6 +90,7 @@ dependencies {
     compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12'){transitive = false}
     compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12'){transitive = false}
     compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
+    compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.4') {transitive=false}
    }
 
-
+build.dependsOn integTestJar
