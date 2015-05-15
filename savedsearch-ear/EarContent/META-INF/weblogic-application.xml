@@ -15,4 +15,11 @@
 	    	<wls:principal-name>users</wls:principal-name>
     	</wls:security-role-assignment>
 	</wls:security>
+    <session-descriptor>
+        <cookie-secure>true</cookie-secure>
+        <cookie-name>JSESSIONID</cookie-name>
+        <cookie-path>/microservice/sso</cookie-path>
+        <timeout-secs>60</timeout-secs>
+        <cookie-max-age-secs>10</cookie-max-age-secs>
+    </session-descriptor>
 </wls:weblogic-application>
