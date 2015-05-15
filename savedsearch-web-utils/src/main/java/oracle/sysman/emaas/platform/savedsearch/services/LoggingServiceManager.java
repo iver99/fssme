@@ -103,15 +103,21 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		if (tempMBeanExists) {
-			tempMBeanExists = false;
-			unregisterMBean(MBEAN_NAME_TMP);
+		logger.info("Pre-stopping logging service");
+		try {
+			if (tempMBeanExists) {
+				tempMBeanExists = false;
+				unregisterMBean(MBEAN_NAME_TMP);
+			}
+			unregisterMBean(MBEAN_NAME);
 		}
-		unregisterMBean(MBEAN_NAME);
+		catch (Throwable e) {
+			logger.error(e.getLocalizedMessage(), e);
+		}
 	}
 
 	private void registerMBean(String name) throws InstanceAlreadyExistsException, MBeanRegistrationException,
-			NotCompliantMBeanException, MalformedObjectNameException
+	NotCompliantMBeanException, MalformedObjectNameException
 	{
 		ObjectName on = new ObjectName(name);
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
@@ -120,7 +126,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	}
 
 	private void unregisterMBean(String name) throws MBeanRegistrationException, InstanceNotFoundException,
-			MalformedObjectNameException
+	MalformedObjectNameException
 	{
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		mbs.unregisterMBean(new ObjectName(name));
