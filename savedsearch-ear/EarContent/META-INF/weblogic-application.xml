@@ -17,7 +17,7 @@
 	</wls:security>
     <session-descriptor>
         <cookie-secure>true</cookie-secure>
-        <cookie-name>JSESSIONID</cookie-name>
+        <cookie-name>EMCS_JSESSIONID</cookie-name>
         <cookie-path>/savedsearch</cookie-path>
         <timeout-secs>60</timeout-secs>
         <cookie-max-age-secs>10</cookie-max-age-secs>
