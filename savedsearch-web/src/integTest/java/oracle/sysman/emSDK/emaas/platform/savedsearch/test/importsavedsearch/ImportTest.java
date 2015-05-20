@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
@@ -27,17 +30,152 @@ public class ImportTest
 	static String portno;
 	static String serveruri;
 	static String authToken;
-	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC1;
-	static String TENANT_ID1 = TestConstant.TENANT_ID1;
+	static String TENANT_ID_OPC1 ;
+	static String TENANT_ID1 ;
 
-	private static final String FOLDER_XML = "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/Folder.xml";
-	private static final String CATEGORY_XML = "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/Category.xml";
-	private static final String SEARCH_XML = "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/Search.xml";
+	private static final String FOLDER_XML = "Folder.xml";
+	private static final String CATEGORY_XML = "Category.xml";
+	private static final String SEARCH_XML = "Search.xml";
 
 	@AfterClass
 	public static void afterTest()
 	{
-		TenantContext.clearContext();
+
+	}
+
+	public static URL getResource(String resourceName, Class callingClass)
+	{
+		URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
+		if (url == null && resourceName.startsWith("/")) {
+			//certain classloaders need it without the leading /
+			url = Thread.currentThread().getContextClassLoader().getResource(resourceName.substring(1));
+		}
+
+		ClassLoader cluClassloader = ImportTest.class.getClassLoader();
+		if (cluClassloader == null) {
+			cluClassloader = ClassLoader.getSystemClassLoader();
+		}
+		if (url == null) {
+			url = cluClassloader.getResource(resourceName);
+		}
+		if (url == null && resourceName.startsWith("/")) {
+			//certain classloaders need it without the leading /
+			url = cluClassloader.getResource(resourceName.substring(1));
+		}
+
+		if (url == null) {
+			ClassLoader cl = callingClass.getClassLoader();
+
+			if (cl != null) {
+				url = cl.getResource(resourceName);
+			}
+		}
+
+		if (url == null) {
+			url = callingClass.getResource(resourceName);
+		}
+
+		if (url == null && resourceName != null && resourceName.charAt(0) != '/') {
+			return ImportTest.getResource('/' + resourceName, callingClass);
+		}
+
+		return url;
+	}
+
+	public static InputStream getResourceAsStream(String resourceName, Class callingClass)
+	{
+		URL url = ImportTest.getResource(resourceName, callingClass);
+
+		try {
+			return url != null ? url.openStream() : null;
+		}
+		catch (IOException e) {
+			return null;
+		}
+	}
+
+	public static List<URL> getResources(String resourceName, Class callingClass)
+	{
+		List<URL> ret = new ArrayList<URL>();
+		Enumeration<URL> urls = new Enumeration<URL>() {
+			@Override
+			public boolean hasMoreElements()
+			{
+				return false;
+			}
+
+			@Override
+			public URL nextElement()
+			{
+				return null;
+			}
+
+		};
+		try {
+			urls = Thread.currentThread().getContextClassLoader().getResources(resourceName);
+		}
+		catch (IOException e) {
+			//ignore
+		}
+		if (!urls.hasMoreElements() && resourceName.startsWith("/")) {
+			//certain classloaders need it without the leading /
+			try {
+				urls = Thread.currentThread().getContextClassLoader().getResources(resourceName.substring(1));
+			}
+			catch (IOException e) {
+				// ignore
+			}
+		}
+
+		ClassLoader cluClassloader = ImportTest.class.getClassLoader();
+		if (cluClassloader == null) {
+			cluClassloader = ClassLoader.getSystemClassLoader();
+		}
+		if (!urls.hasMoreElements()) {
+			try {
+				urls = cluClassloader.getResources(resourceName);
+			}
+			catch (IOException e) {
+				// ignore
+			}
+		}
+		if (!urls.hasMoreElements() && resourceName.startsWith("/")) {
+			//certain classloaders need it without the leading /
+			try {
+				urls = cluClassloader.getResources(resourceName.substring(1));
+			}
+			catch (IOException e) {
+				// ignore
+			}
+		}
+
+		if (!urls.hasMoreElements()) {
+			ClassLoader cl = callingClass.getClassLoader();
+
+			if (cl != null) {
+				try {
+					urls = cl.getResources(resourceName);
+				}
+				catch (IOException e) {
+					// ignore
+				}
+			}
+		}
+
+		if (!urls.hasMoreElements()) {
+			URL url = callingClass.getResource(resourceName);
+			if (url != null) {
+				ret.add(url);
+			}
+		}
+		while (urls.hasMoreElements()) {
+			ret.add(urls.nextElement());
+		}
+
+		if (ret.isEmpty() && resourceName != null && resourceName.charAt(0) != '/') {
+			return ImportTest.getResources('/' + resourceName, callingClass);
+		}
+		return ret;
 	}
 
 	@BeforeClass
@@ -48,6 +186,8 @@ public class ImportTest
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
+		TENANT_ID1 =ct.getTenant() + "."+ ct.getRemoteUser();
+		TENANT_ID_OPC1=ct.getTenant();
 	}
 
 	private static String getStringFromInputStream(InputStream is)
@@ -89,10 +229,12 @@ public class ImportTest
 	 */
 	public void importCategories() throws Exception
 	{
-		InputStream stream = ImportTest.class.getClassLoader().getResourceAsStream(CATEGORY_XML);
+
+		InputStream stream = ImportTest.getResourceAsStream(CATEGORY_XML, ImportTest.class);
+
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
+				.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
@@ -113,7 +255,7 @@ public class ImportTest
 	{
 		try {
 			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body("")
+					.header("X-REMOTE-USER", TENANT_ID1).body("")
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
@@ -131,7 +273,7 @@ public class ImportTest
 	{
 		try {
 			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body("")
+					.header("X-REMOTE-USER", TENANT_ID1).body("")
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importfolders");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
@@ -147,10 +289,10 @@ public class ImportTest
 	 */
 	public void importFolders() throws Exception
 	{
-		InputStream stream = ImportTest.class.getClassLoader().getResourceAsStream(FOLDER_XML);
+		InputStream stream = ImportTest.getResourceAsStream(FOLDER_XML, ImportTest.class);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
+				.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importfolders");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
@@ -170,17 +312,17 @@ public class ImportTest
 	 */
 	public void importSearches() throws Exception
 	{
-		InputStream stream = ImportTest.class.getClassLoader().getResourceAsStream(SEARCH_XML);
+		InputStream stream = ImportTest.getResourceAsStream(SEARCH_XML, ImportTest.class);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
+				.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importsearches");
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			System.out.println("deleteing folders and  searches::");
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+					.header("X-REMOTE-USER", TENANT_ID1)
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			System.out.println("deleteing folders and  searches::::" + res.getBody().asString());
@@ -202,7 +344,7 @@ public class ImportTest
 	{
 		try {
 			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body("")
+					.header("X-REMOTE-USER", TENANT_ID1).body("")
 					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importsearches");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
@@ -215,7 +357,7 @@ public class ImportTest
 	private boolean deleteFolder(int myfolderID)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header("X-REMOTE-USER", TENANT_ID1)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + myfolderID);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
@@ -225,7 +367,7 @@ public class ImportTest
 	private boolean deleteSearch(int mySearchId)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header("X-REMOTE-USER", TENANT_ID1)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + mySearchId);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
@@ -235,7 +377,7 @@ public class ImportTest
 	private Boolean verifyCategory(int mycatID, String mycatName)
 	{
 		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header("X-REMOTE-USER", TENANT_ID1)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category/" + mycatID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {
@@ -261,7 +403,7 @@ public class ImportTest
 	private boolean verifyFolder(int myfolderID, String myfolderName)
 	{
 		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+				.header("X-REMOTE-USER", TENANT_ID1)
 				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/folder/" + myfolderID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {

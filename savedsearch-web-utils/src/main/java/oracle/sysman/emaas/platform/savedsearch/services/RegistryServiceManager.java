@@ -1,7 +1,9 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -17,8 +19,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.savedsearch.property.PropertyReader;
-import oracle.sysman.emaas.platform.savedsearch.services.RegistryServiceManager.ServiceConfigBuilder;
-import oracle.sysman.emaas.platform.savedsearch.services.RegistryServiceManager.UrlType;
+import oracle.sysman.emaas.platform.savedsearch.utils.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 
@@ -183,10 +184,32 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		HTTP, HTTPS
 	}
 
+	//OBSOLETE_XX will be removed once static links take effect
+	private static final String OBSOLETE_NAV = "navigation";
+	private static final String OBSOLETE_SEARCH = "search";
+	private static final String OBSOLETE_FOLDER = "folder";
+	private static final String OBSOLETE_CATEGORY = "category";
+
 	private static final String NAV_BASE = "/savedsearch/v1";
 	private static final String NAV_SEARCH = "/savedsearch/v1/search";
 	private static final String NAV_FOLDER = "/savedsearch/v1/folder";
 	private static final String NAV_CATEGORY = "/savedsearch/v1/category";
+	private static final String NAV_SEARCHES = "/savedsearch/v1/searches";
+	private static final String NAV_ENTITIES = "/savedsearch/v1/entities";
+	private static final String NAV_CATEGORIES = "/savedsearch/v1/categories";
+	private static final String NAV_WIDGETS = "/savedsearch/v1/widgets";
+	private static final String NAV_WIDGETGROUPS = "/savedsearch/v1/widgetgroups";
+
+	private static final String STATIC_NAV = "static/savedsearch.navigation";
+	private static final String STATIC_SEARCH = "static/savedsearch.search";
+	private static final String STATIC_CATEGORY = "static/savedsearch.category";
+	private static final String STATIC_FOLDER = "static/savedsearch.folder";
+	private static final String STATIC_SEARCHES = "static/savedsearch.searches";
+	private static final String STATIC_ENTITIES = "static/savedsearch.entities";
+	private static final String STATIC_CATEGORIES = "static/savedsearch.categories";
+	private static final String STATIC_WIDGETS = "static/savedsearch.widgets";
+	private static final String STATIC_WIDGETGROUPS = "static/savedsearch.widgetgroups";
+
 	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceregistry");
 
@@ -224,10 +247,17 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
+	private Boolean registrationComplete = null;
+
 	@Override
 	public String getName()
 	{
 		return "Service Registry Service";
+	}
+
+	public Boolean isRegistrationComplete()
+	{
+		return registrationComplete;
 	}
 
 	/**
@@ -250,46 +280,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 		logger.info("Post-starting 'Service Registry' application service");
-		String applicationUrl = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
-		String applicationUrlSSL = RegistryServiceManager.getApplicationUrl(UrlType.HTTPS);
-		logger.debug("Application URL to register with 'Service Registry': " + applicationUrl);
-		logger.debug("Application SSL URL to register with 'Service Registry': " + applicationUrlSSL);
-
-		logger.info("Building 'Service Registry' configuration");
-		Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
-
-		ServiceConfigBuilder builder = new ServiceConfigBuilder();
-		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-		.virtualEndpoints(applicationUrlSSL + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
-		.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-                .characteristics(serviceProps.getProperty("characteristics"))
-		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
-
-		logger.info("Initializing RegistrationManager");
-		RegistrationManager.getInstance().initComponent(builder.build());
-
-		InfoManager
-		.getInstance()
-		.getInfo()
-		.setLinks(
-				Arrays.asList(new Link().withRel("navigation").withHref(applicationUrl + NAV_BASE),
-						new Link().withRel("search").withHref(applicationUrl + NAV_SEARCH), new Link().withRel("folder")
-						.withHref(applicationUrl + NAV_FOLDER),
-						new Link().withRel("category").withHref(applicationUrl + NAV_CATEGORY)));
-
-		InfoManager
-				.getInstance()
-				.getInfo()
-				.setLinks(
-						Arrays.asList(new Link().withRel("navigation").withHref(applicationUrlSSL + NAV_BASE), new Link()
-								.withRel("search").withHref(applicationUrlSSL + NAV_SEARCH), new Link().withRel("folder")
-				.withHref(applicationUrlSSL + NAV_FOLDER),
-								new Link().withRel("category").withHref(applicationUrlSSL + NAV_CATEGORY)));
-
-		logger.info("Registering service with 'Service Registry'");
-		RegistrationManager.getInstance().getRegistrationClient().register();
-		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
-		LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
+		registerService();
 
 		logger.info("Post-starting service, attempting to create entityimanager factory");
 		PersistenceManager.getInstance().createEntityManagerFactory();
@@ -317,5 +308,105 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		logger.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
 		logger.debug("Pre-stopped 'Service Regsitry'");
+	}
+
+	public boolean registerService()
+	{
+		try {
+			logger.info("Registering service...");
+			String applicationUrl = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
+			String applicationUrlSSL = RegistryServiceManager.getApplicationUrl(UrlType.HTTPS);
+			logger.debug("Application URL to register with 'Service Registry': " + applicationUrl);
+			logger.debug("Application SSL URL to register with 'Service Registry': " + applicationUrlSSL);
+
+			logger.info("Building 'Service Registry' configuration");
+			Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
+
+			logger.info("Initialize lookup manager");
+			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
+
+			logger.info("Checking RegistryService");
+			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "0.1", "collection/instances", null) == null) {
+				setRegistrationComplete(Boolean.FALSE);
+				logger.error("Failed to found registryService. Saved search service registration is not complete.");
+				return false;
+			}
+
+			ServiceConfigBuilder builder = new ServiceConfigBuilder();
+			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
+
+			StringBuilder virtualEndPoints = new StringBuilder();
+			StringBuilder canonicalEndPoints = new StringBuilder();
+			if (applicationUrl != null) {
+				virtualEndPoints.append(applicationUrl + NAV_BASE);
+				canonicalEndPoints.append(applicationUrl + NAV_BASE);
+			}
+			if (applicationUrlSSL != null) {
+				if (virtualEndPoints.length() > 0) {
+					virtualEndPoints.append(",");
+					canonicalEndPoints.append(",");
+				}
+				virtualEndPoints.append(applicationUrlSSL + NAV_BASE);
+				canonicalEndPoints.append(applicationUrlSSL + NAV_BASE);
+			}
+			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
+			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+                                        .characteristics(serviceProps.getProperty("characteristics"))
+					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+
+			logger.info("Initializing RegistrationManager");
+			RegistrationManager.getInstance().initComponent(builder.build());
+
+			List<Link> links = new ArrayList<Link>();
+			if (applicationUrl != null) {
+				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrl + NAV_BASE));
+				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrl + NAV_FOLDER));
+				links.add(new Link().withRel(OBSOLETE_CATEGORY).withHref(applicationUrl + NAV_CATEGORY));
+				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrl + NAV_SEARCH));
+				links.add(new Link().withRel(STATIC_NAV).withHref(applicationUrl + NAV_BASE));
+				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrl + NAV_FOLDER));
+				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrl + NAV_CATEGORY));
+				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrl + NAV_SEARCH));
+				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrl + NAV_SEARCHES));
+				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrl + NAV_ENTITIES));
+				links.add(new Link().withRel(STATIC_CATEGORIES).withHref(applicationUrl + NAV_CATEGORIES));
+				links.add(new Link().withRel(STATIC_WIDGETS).withHref(applicationUrl + NAV_WIDGETS));
+				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrl + NAV_WIDGETGROUPS));
+			}
+			if (applicationUrlSSL != null) {
+				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
+				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER));
+				links.add(new Link().withRel(OBSOLETE_CATEGORY).withHref(applicationUrlSSL + NAV_CATEGORY));
+				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
+				links.add(new Link().withRel(STATIC_NAV).withHref(applicationUrlSSL + NAV_BASE));
+				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER));
+				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrlSSL + NAV_CATEGORY));
+				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
+				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrlSSL + NAV_SEARCHES));
+				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrlSSL + NAV_ENTITIES));
+				links.add(new Link().withRel(STATIC_CATEGORIES).withHref(applicationUrlSSL + NAV_CATEGORIES));
+				links.add(new Link().withRel(STATIC_WIDGETS).withHref(applicationUrlSSL + NAV_WIDGETS));
+				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
+			}
+			InfoManager.getInstance().getInfo().setLinks(links);
+
+			logger.info("Registering service with 'Service Registry'");
+			RegistrationManager.getInstance().getRegistrationClient().register();
+			RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
+
+			setRegistrationComplete(Boolean.TRUE);
+			logger.info("Service manager is up. Completed saved search service registration");
+		}
+		catch (Exception e) {
+			setRegistrationComplete(Boolean.FALSE);
+			logger.error("Errors occurrs in registration. Service manager might be down. Daved search service registration is not complete.");
+			logger.error(e.getLocalizedMessage(), e);
+		}
+		return registrationComplete;
+	}
+
+	public void setRegistrationComplete(Boolean isComplete)
+	{
+		registrationComplete = isComplete;
 	}
 }
