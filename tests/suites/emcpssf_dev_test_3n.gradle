@@ -91,8 +91,7 @@ task small_deploy_3n_block(type: EMTest) {
 		
 	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/JSONUtilTest.class"
-	include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"	
-	include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"		
+	include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"			
 	include "oracle/sysman/emaas/savedsearch/CategoryTest.class"
 	include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
 	include "oracle/sysman/emaas/savedsearch/searchParamTest.class"
@@ -106,6 +105,18 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/savedsearch/MultitenentFolderTest.class"
 	include "oracle/sysman/emaas/savedsearch/MultitenentCategoryTest"
 	include "oracle/sysman/emaas/savedsearch/MultitenentSearchTest.class"
+	useRestAssured =true
+}
+   task DEVTest1(type:EMTest,dependsOn: DEVTest){	
+		
+
+	include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
+	useRestAssured =true
+}
+task DEVTest2(type:EMTest,dependsOn: DEVTest1){	
+		
+
+
 	include "oracle/sysman/emaas/savedsearch/Cleanup.class"
 	useRestAssured =true
 }
@@ -122,9 +133,9 @@ task small_deploy_3n_cleanup(type: EMTest) {
             }
         }
     }
- mustRunAfter ([small_deploy_3n_block,DEVTest])
+ mustRunAfter ([small_deploy_3n_block,DEVTest2])
 }
 
 
-task emcpssf_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
+task emcpssf_dev_test_3n (dependsOn: [DEVTest2, small_deploy_3n_cleanup])
 
