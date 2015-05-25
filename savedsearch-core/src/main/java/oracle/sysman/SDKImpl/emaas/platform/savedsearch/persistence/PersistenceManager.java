@@ -32,8 +32,7 @@ public class PersistenceManager
 	private static final String PERSISTENCE_UNIT = "EmaasAnalyticsPublicModel";
 	private static final String TEST_PERSISTENCE_UNIT = "EmaasAnalyticsPublicModelTest";
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
-	private static final String TENANT_ID_STR = "ssftenant.id";
-	private static final String TENANT_USERID = "ssfuser.id";
+	private static final String TENANT_ID_STR = "tenant";
 
 	public static PersistenceManager getInstance()
 	{

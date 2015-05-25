@@ -162,11 +162,7 @@ class EmAnalyticsObjectUtil
 			for (Parameter param : params) {
 				EmAnalyticsCategoryParam categoryParamEntity = new EmAnalyticsCategoryParam();
 				categoryParamEntity.setEmAnalyticsCategory(categoryObj);
-				EmAnalyticsCategoryParamPK id = new EmAnalyticsCategoryParamPK();
-				id.setName(param.getName());
-
-				categoryParamEntity.setId(id);
-				// categoryParamEntity.setName(param.getName());
+				categoryParamEntity.setName(param.getName());
 				categoryParamEntity.setValue(param.getValue());
 				categoryObj.getEmAnalyticsCategoryParams().add(categoryParamEntity);
 
@@ -202,7 +198,8 @@ class EmAnalyticsObjectUtil
 			EmAnalyticsCategoryParamPK newPK = new EmAnalyticsCategoryParamPK();
 			newPK.setCategoryId(category.getId());
 			newPK.setName(param.getName());
-			newCatParam.setId(newPK);
+			newCatParam.setCategoryId(category.getId());
+			newCatParam.setName(param.getName());
 			newCatParam.setEmAnalyticsCategory(categoryEntity);
 			newCatParam.setValue(param.getValue());
 			newCatParam.setEmAnalyticsCategory(categoryEntity);
@@ -213,7 +210,7 @@ class EmAnalyticsObjectUtil
 		Iterator<EmAnalyticsCategoryParam> it = existingParams.iterator();
 		while (it.hasNext()) {
 			EmAnalyticsCategoryParam catParam = it.next();
-			if (!newParams.containsKey(catParam.getId()) || newParams.containsKey(catParam.getId())
+			if (!newParams.containsKey(catParam.getCategoryId()) || newParams.containsKey(catParam.getCategoryId())
 					&& !newParams.containsValue(catParam)) {
 				it.remove();
 			}
@@ -400,12 +397,8 @@ class EmAnalyticsObjectUtil
 			for (SearchParameter param : params) {
 				EmAnalyticsSearchParam searchParamEntity = new EmAnalyticsSearchParam();
 				searchParamEntity.setEmAnalyticsSearch(searchEntity);
-
-				EmAnalyticsSearchParamPK id = new EmAnalyticsSearchParamPK();
-				id.setName(param.getName());
-				id.setSearchId(searchEntity.getId());
-
-				searchParamEntity.setId(id);
+				searchParamEntity.setSearchId(searchEntity.getId());
+				searchParamEntity.setName(param.getName());
 				searchParamEntity.setParamAttributes(param.getAttributes());
 				searchParamEntity.setParamType(new BigDecimal(param.getType().getIntValue()));
 				if (param.getType().equals(ParameterType.CLOB)) {
@@ -475,8 +468,8 @@ class EmAnalyticsObjectUtil
 				EmAnalyticsSearchParamPK newPK = new EmAnalyticsSearchParamPK();
 				newPK.setSearchId(search.getId());
 				newPK.setName(param.getName());
-
-				newSearchParam.setId(newPK);
+				newSearchParam.setSearchId(search.getId());
+				newSearchParam.setName(param.getName());
 				newSearchParam.setEmAnalyticsSearch(searchEntity);
 				newSearchParam.setParamAttributes(param.getAttributes());
 				newSearchParam.setParamType(new BigDecimal(param.getType().getIntValue()));
@@ -494,7 +487,7 @@ class EmAnalyticsObjectUtil
 		Iterator<EmAnalyticsSearchParam> it = existingParams.iterator();
 		while (it.hasNext()) {
 			EmAnalyticsSearchParam searchParam = it.next();
-			if (!newParams.containsKey(searchParam.getId()) || newParams.containsKey(searchParam.getId())
+			if (!newParams.containsKey(searchParam.getSearchId()) || newParams.containsKey(searchParam.getSearchId())
 					&& !newParams.containsValue(searchParam)) {
 				it.remove();
 			}

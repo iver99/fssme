@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -35,7 +36,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  */
 @Entity
 @Multitenant
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "ssftenant.id", length = 32)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_SEARCH")
 @NamedQueries({
 		@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
@@ -117,12 +118,15 @@ public class EmAnalyticsSearch implements Serializable
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne
-	@JoinColumn(name = "CATEGORY_ID")
+	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID"),
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
+	//	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID")
 	private EmAnalyticsCategory emAnalyticsCategory;
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
 	@ManyToOne
-	@JoinColumn(name = "FOLDER_ID")
+	@JoinColumns({ @JoinColumn(name = "FOLDER_ID", referencedColumnName = "FOLDER_ID"),
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	//bi-directional many-to-one association to EmAnalyticsSearchParam
@@ -133,6 +137,9 @@ public class EmAnalyticsSearch implements Serializable
 
 	@OneToOne(mappedBy = "emAnalyticsSearch", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private EmAnalyticsSearchLastAccess lastAccess;
+
+	@Column(name = "TENANT_ID", insertable = false, updatable = false)
+	long tenant;
 
 	/*@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "OBJECT_ID")
 	private long objectId;

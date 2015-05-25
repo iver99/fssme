@@ -12,10 +12,10 @@ public class EmAnalyticsSearchLastAccess extends EmAnalyticsLastAccess
 {
 	private static final long serialVersionUID = 7890402955076628981L;
 	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "OBJECT_ID", referencedColumnName = "SEARCH_ID", insertable = false, updatable = false)
-	//below join means one search can only be accessed by its owner, now seed data's owner is ORACLE, so seed data may not be accessed by user
-	//let's consider more about below
-	/*,@JoinColumn(name = "ACCESSED_BY", referencedColumnName = "OWNER", insertable = false, updatable = false)*/})
+	@JoinColumns({ @JoinColumn(name = "OBJECT_ID", referencedColumnName = "SEARCH_ID", insertable = false, updatable = false),
+			//below join means one search can only be accessed by its owner, now seed data's owner is ORACLE, so seed data may not be accessed by user
+			//let's consider more about below
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmAnalyticsSearch emAnalyticsSearch;
 
 	public EmAnalyticsSearchLastAccess()
