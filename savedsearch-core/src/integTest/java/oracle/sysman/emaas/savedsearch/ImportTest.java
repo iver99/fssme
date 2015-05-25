@@ -88,7 +88,7 @@ public class ImportTest extends BaseTest
 
 	}
 
-	@Test
+	//@Test
 	public static void testImportFolderSet() throws Exception
 	{
 		try {
