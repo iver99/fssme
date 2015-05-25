@@ -208,8 +208,9 @@ public class FolderManagerTest extends BaseTest
 	public void testDeleteInvalidFolderId() throws Exception
 	{
 		FolderManager foldMan = FolderManager.getInstance();
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-				.getInternalTenantId(TENANT_ID_OPC1)));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_NAME).toString())));
 		try {
 			foldMan.deleteFolder(987656788498L, true);
 		}
@@ -345,8 +346,9 @@ public class FolderManagerTest extends BaseTest
 	@Test
 	public void testGetInvalidFolderId() throws Exception
 	{
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-				.getInternalTenantId(TENANT_ID_OPC1)));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_NAME).toString())));
 		FolderManager foldMan = FolderManager.getInstance();
 		try {
 			foldMan.getFolder(987656788498L);
@@ -465,11 +467,11 @@ public class FolderManagerTest extends BaseTest
 	@Test
 	public void testInvalidParentFolder() throws Exception
 	{
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
-				.getInternalTenantId(TENANT_ID_OPC1)));
 
 		FolderManager fman = FolderManager.getInstance();
-
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_NAME).toString())));
 		Folder folder = fman.createNewFolder();
 		folder.setName("harsh kumar");
 		folder.setParentId(987876788);

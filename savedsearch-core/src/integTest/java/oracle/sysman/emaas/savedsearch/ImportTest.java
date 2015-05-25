@@ -88,19 +88,19 @@ public class ImportTest extends BaseTest
 
 	}
 
-	@Test
+	//@Test
 	public static void testImportFolderSet() throws Exception
 	{
 		try {
 
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			FolderDetails folder = new FolderDetails();
-			folder.setName("ImportFolderTest");
+			folder.setName("ImportFolderTest_g3");
 			folder.setDescription("ImportFolderDescription");
 			folder.setUiHidden(false);
 
 			FolderDetails folder1 = new FolderDetails();
-			folder1.setName("ImportFolderTest1");
+			folder1.setName("ImportFolderTest_g3");
 			folder1.setDescription("ImportFolderDescription1");
 			folder1.setUiHidden(false);
 
