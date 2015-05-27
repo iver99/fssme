@@ -25,5 +25,6 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/testng-6.8.8.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-api-2.0.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-1.2.17.jar"/>
+        <classpathentry kind="var" path="SSF/dependencies/artifactory/em-qatool-os-webdriver-1.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
