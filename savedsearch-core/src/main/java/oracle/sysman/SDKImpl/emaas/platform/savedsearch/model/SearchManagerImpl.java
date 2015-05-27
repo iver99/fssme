@@ -945,7 +945,7 @@ public class SearchManagerImpl extends SearchManager
 						searchParams = new ArrayList<SearchParameter>();
 					}
 					SearchParameter param = new SearchParameter();
-					param.setName(paramVORow.getId().getName());
+					param.setName(paramVORow.getName());
 					param.setAttributes(paramVORow.getParamAttributes());
 					param.setType(ParameterType.fromIntValue(paramVORow.getParamType().intValue()));
 

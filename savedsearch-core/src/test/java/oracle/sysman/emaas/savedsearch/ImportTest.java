@@ -215,7 +215,7 @@ public class ImportTest extends BaseTest
 			tmpDetails2.setType(ParameterType.CLOB);
 			//tmpDetails2.setValue("Value");
 			param1.getSearchParameter().add(tmpDetails2);
-			search1.getSearchParameters().getSearchParameter().add(tmpDetails2);
+			//search1.getSearchParameters().getSearchParameter().add(tmpDetails2);
 
 			List<ImportSearchImpl> list = new ArrayList<ImportSearchImpl>();
 			list.add(search);
