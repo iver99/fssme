@@ -5,8 +5,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Inheritance;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,7 +23,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 @Entity
 @Multitenant
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "ssftenant.id", length = 32)
+@IdClass(EmAnalyticsLastAccessPK.class)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_LAST_ACCESS")
 @Inheritance
 @DiscriminatorColumn(name = "OBJECT_TYPE")
@@ -32,8 +34,17 @@ public class EmAnalyticsLastAccess implements Serializable
 
 	public static final long LAST_ACCESS_TYPE_SEARCH = 2L;
 
-	@EmbeddedId
-	private EmAnalyticsLastAccessPK id;
+	@Id
+	@Column(name = "OBJECT_ID")
+	private long objectId;
+
+	@Id
+	@Column(name = "ACCESSED_BY")
+	private String accessedBy;
+
+	@Id
+	@Column(name = "OBJECT_TYPE")
+	private long objectType;
 
 	@Column(name = "ACCESS_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -45,10 +56,10 @@ public class EmAnalyticsLastAccess implements Serializable
 
 	public EmAnalyticsLastAccess(long objectId, String accessedBy, long objectType)
 	{
-		id = new EmAnalyticsLastAccessPK();
-		id.setObjectId(objectId);
-		id.setAccessedBy(accessedBy);
-		id.setObjectType(objectType);
+
+		this.objectId = objectId;
+		this.accessedBy = accessedBy;
+		this.objectType = objectType;
 	}
 
 	public Date getAccessDate()
@@ -59,34 +70,24 @@ public class EmAnalyticsLastAccess implements Serializable
 	@Transient
 	public String getAccessedBy()
 	{
-		return id.getAccessedBy();
-	}
-
-	public EmAnalyticsLastAccessPK getId()
-	{
-		return id;
+		return accessedBy;
 	}
 
 	@Transient
 	public long getObjectId()
 	{
-		return id.getObjectId();
+		return objectId;
 	}
 
 	@Transient
 	public long getObjectType()
 	{
-		return id.getObjectType();
+		return objectType;
 	}
 
 	public void setAccessDate(Date accessDate)
 	{
 		this.accessDate = accessDate;
-	}
-
-	public void setId(EmAnalyticsLastAccessPK id)
-	{
-		this.id = id;
 	}
 
 }

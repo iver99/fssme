@@ -513,7 +513,7 @@ public class CategoryManagerImpl extends CategoryManager
 				List<Parameter> categoryParams = new ArrayList<Parameter>();
 				for (EmAnalyticsCategoryParam paramObj : params) {
 					Parameter param = new Parameter();
-					param.setName(paramObj.getId().getName());
+					param.setName(paramObj.getName());
 					param.setType(ParameterType.STRING);
 					param.setValue(paramObj.getValue());
 					categoryParams.add(param);
