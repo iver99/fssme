@@ -146,6 +146,10 @@ public class TenantDataLeakTest
 			AssertJUnit.assertTrue(deleteFolder(1, 777, true));
 			AssertJUnit.assertTrue(deleteFolder(1, 888, true));
 			AssertJUnit.assertTrue(deleteFolder(1, 999, true));
+
+			deleteSeedData(conn, 777);
+			deleteSeedData(conn, 888);
+			deleteSeedData(conn, 999);
 		}
 		catch (ClassNotFoundException | SQLException e) {
 			AssertJUnit.fail(e.getMessage());
@@ -246,6 +250,10 @@ public class TenantDataLeakTest
 			AssertJUnit.assertTrue(deleteFolder(1, 888, false));
 			AssertJUnit.assertTrue(deleteFolder(1, 999, false));
 
+			deleteSeedData(conn, 777);
+			deleteSeedData(conn, 888);
+			deleteSeedData(conn, 999);
+
 		}
 		catch (ClassNotFoundException | SQLException e) {
 			AssertJUnit.fail(e.getMessage());
@@ -321,6 +329,19 @@ public class TenantDataLeakTest
 			TenantContext.clearContext();
 		}
 		return bResult;
+	}
+
+	private void deleteSeedData(Connection conn, long id)
+	{
+		try {
+			conn.setAutoCommit(false);
+			Statement st = conn.createStatement();
+			st.execute(TenantLeakData.getDeleteSql(id));
+			conn.commit();
+		}
+		catch (SQLException e) {
+			//ignore it
+		}
 	}
 
 	private void generateSeedData(Connection conn, long id) throws SQLException
