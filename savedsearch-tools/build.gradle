@@ -46,6 +46,7 @@ dependencies {
         compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
         compile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1'){transitive = false}
         compile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
+	compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.4') {transitive=false}
 
 
 }
@@ -78,6 +79,12 @@ jar {
      {
         include 'help.txt'
      }
+    
+     from('src/integTest/java/oracle/sysman/emSDK/emaas/platform/updatesearch/test')
+     {
+        include 'Search.xml'
+     }
+
 }
 
 

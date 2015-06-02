@@ -5,10 +5,12 @@ import java.math.BigDecimal;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -22,14 +24,19 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 @Entity
 @Multitenant
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "ssftenant.id", length = 32)
+@IdClass(EmAnalyticsSearchParamPK.class)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_SEARCH_PARAMS")
 public class EmAnalyticsSearchParam implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private EmAnalyticsSearchParamPK id;
+	@Id
+	@Column(name = "SEARCH_ID", insertable = false, updatable = false, nullable = false)
+	private long searchId;
+
+	@Id
+	private String name;
 
 	@Column(name = "PARAM_ATTRIBUTES")
 	private String paramAttributes;
@@ -44,73 +51,13 @@ public class EmAnalyticsSearchParam implements Serializable
 	@Column(name = "PARAM_VALUE_STR")
 	private String paramValueStr;
 
-	//bi-directional many-to-one association to EmAnalyticsSearch
-
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "SEARCH_ID", referencedColumnName = "SEARCH_ID")
+	@JoinColumns({ @JoinColumn(name = "SEARCH_ID", referencedColumnName = "SEARCH_ID"),
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmAnalyticsSearch emAnalyticsSearch;
 
 	public EmAnalyticsSearchParam()
 	{
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof EmAnalyticsSearchParam)) {
-			return false;
-		}
-		EmAnalyticsSearchParam other = (EmAnalyticsSearchParam) obj;
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		}
-		else if (!id.equals(other.id)) {
-			return false;
-		}
-		if (paramAttributes == null) {
-			if (other.paramAttributes != null) {
-				return false;
-			}
-		}
-		else if (!paramAttributes.equals(other.paramAttributes)) {
-			return false;
-		}
-		if (paramType == null) {
-			if (other.paramType != null) {
-				return false;
-			}
-		}
-		else if (!paramType.equals(other.paramType)) {
-			return false;
-		}
-		if (paramValueClob == null) {
-			if (other.paramValueClob != null) {
-				return false;
-			}
-		}
-		else if (!paramValueClob.equals(other.paramValueClob)) {
-			return false;
-		}
-		if (paramValueStr == null) {
-			if (other.paramValueStr != null) {
-				return false;
-			}
-		}
-		else if (!paramValueStr.equals(other.paramValueStr)) {
-			return false;
-		}
-		return true;
 	}
 
 	public EmAnalyticsSearch getEmAnalyticsSearch()
@@ -118,10 +65,12 @@ public class EmAnalyticsSearchParam implements Serializable
 		return emAnalyticsSearch;
 	}
 
-	public EmAnalyticsSearchParamPK getId()
+	public String getName()
 	{
-		return id;
+		return name;
 	}
+
+	//bi-directional many-to-one association to EmAnalyticsSearch
 
 	public String getParamAttributes()
 	{
@@ -132,6 +81,10 @@ public class EmAnalyticsSearchParam implements Serializable
 	{
 		return paramType;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 
 	public String getParamValueClob()
 	{
@@ -145,30 +98,22 @@ public class EmAnalyticsSearchParam implements Serializable
 		return paramValueStr;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
+	public long getSearchId()
 	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (id == null ? 0 : id.hashCode());
-		result = prime * result + (paramAttributes == null ? 0 : paramAttributes.hashCode());
-		result = prime * result + (paramType == null ? 0 : paramType.hashCode());
-		result = prime * result + (paramValueClob == null ? 0 : paramValueClob.hashCode());
-		result = prime * result + (paramValueStr == null ? 0 : paramValueStr.hashCode());
-		return result;
+		return searchId;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	*/
 	public void setEmAnalyticsSearch(EmAnalyticsSearch emAnalyticsSearch)
 	{
 		this.emAnalyticsSearch = emAnalyticsSearch;
 	}
 
-	public void setId(EmAnalyticsSearchParamPK id)
+	public void setName(String name)
 	{
-		this.id = id;
+		this.name = name;
 	}
 
 	public void setParamAttributes(String paramAttributes)
@@ -189,6 +134,11 @@ public class EmAnalyticsSearchParam implements Serializable
 	public void setParamValueStr(String paramValueStr)
 	{
 		this.paramValueStr = paramValueStr;
+	}
+
+	public void setSearchId(long searchId)
+	{
+		this.searchId = searchId;
 	}
 
 }

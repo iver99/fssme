@@ -49,8 +49,11 @@ public class UpdateSearchTest extends BaseTest
 	private static final String tenantimport1 = "2";
 	public static final String TENANT_ID1 = "1.ORACLE";
 	public static final String TENANT_ID2 = "2.ORACLE";
-	private static final String SEARCH_XML = "oracle/sysman/emSDK/emaas/platform/updatesearch/test/Search.xml";
+	private static final String SEARCH_XML = "Search.xml";
 	private static final String CAT_NAME = "MTSearchMt";
+	private static String R_TENANT_ID = "";
+	private static String R_TENANT_USER = "";
+	private static String TENANT_ID_OPC1 = "";
 
 	@BeforeClass
 	public static void setUp()
@@ -60,6 +63,9 @@ public class UpdateSearchTest extends BaseTest
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
+		R_TENANT_USER = ct.getTenant() + "." + ct.getRemoteUser();
+		R_TENANT_ID = ct.getTenant();
+
 	}
 
 	private static String getStringFromInputStream(InputStream is)
@@ -101,11 +107,9 @@ public class UpdateSearchTest extends BaseTest
 
 	public Integer getCategoryDetailsbyName(String name)
 	{
-		TenantUtil obj = new TenantUtil(TENANT_ID1);
 		Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
-				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
-				.header(UpdateUtilConstants.SSF_DOMAIN_NAME, obj.getTenantId())
-				.header(UpdateUtilConstants.SSF_REMOTE_USER, obj.getUserName()).when().get("/category?name=" + name);
+				.header(UpdateUtilConstants.SSF_DOMAIN_NAME, R_TENANT_ID)
+				.header(UpdateUtilConstants.SSF_REMOTE_USER, R_TENANT_USER).when().get("/category?name=" + name);
 		JsonPath jp = res.jsonPath();
 		return jp.get("id");
 
@@ -121,7 +125,7 @@ public class UpdateSearchTest extends BaseTest
 		InputStream stream = UpdateSearchTest.class.getClassLoader().getResourceAsStream(SEARCH_XML);
 		ImportSearchObject objUpdate = new ImportSearchObject();
 		String inputData = UpdateSearchTest.getStringFromInputStream(stream);
-		String outputData = objUpdate.importSearches(serveruri, inputData, authToken, TENANT_ID1);
+		String outputData = objUpdate.importSearches(serveruri, inputData, authToken, R_TENANT_USER);
 		List<Long> listID = new ArrayList<Long>();
 		String[] tmpList = outputData.split("\n");
 
@@ -134,20 +138,20 @@ public class UpdateSearchTest extends BaseTest
 
 		long id = getCategoryDetailsbyName(CAT_NAME);
 		ExportSearchObject expObj = new ExportSearchObject();
-		outputData = expObj.exportSearch(id, serveruri, authToken, TENANT_ID1);
+		outputData = expObj.exportSearch(id, serveruri, authToken, R_TENANT_USER);
 		JSONArray arrfld = new JSONArray(outputData);
-		TenantUtil obj = new TenantUtil(TENANT_ID2);
+
+		TenantUtil obj = new TenantUtil(R_TENANT_USER);
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
-					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 					.header(UpdateUtilConstants.SSF_DOMAIN_NAME, obj.getTenantId())
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, obj.getUserName()).when().get("/search/" + jsonObj.getInt("id"));
+					.header(UpdateUtilConstants.SSF_REMOTE_USER, R_TENANT_USER).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
-			Assert.assertTrue(res.getStatusCode() == 404);
+			Assert.assertTrue(res.getStatusCode() == 200);
 		}
 
-		TenantUtil objTenent = new TenantUtil(TENANT_ID2);
+		/*TenantUtil objTenent = new TenantUtil(TENANT_ID2);
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
@@ -157,17 +161,14 @@ public class UpdateSearchTest extends BaseTest
 					.get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			System.out.println("deleteing searches::::" + res.getBody().asString());
-			Assert.assertTrue(listID.contains(jsonObj.getLong("id")));
-
-		}
+			Assert.assertTrue(listID.contains(jsonObj.getLong("id")));*/
 
 	}
 
 	private boolean deleteSearch(int mySearchId)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
-				.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport).header("X-REMOTE-USER", TENANT_ID1).when()
+				.header("X-USER-IDENTITY-DOMAIN-NAME", R_TENANT_ID).header("X-REMOTE-USER", R_TENANT_USER).when()
 				.delete("/search/" + mySearchId);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
