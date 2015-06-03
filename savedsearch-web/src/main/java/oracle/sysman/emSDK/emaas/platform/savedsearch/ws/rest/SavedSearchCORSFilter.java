@@ -35,8 +35,11 @@ public class SavedSearchCORSFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
-		HttpServletResponse hRes = (HttpServletResponse) response;
-		HttpServletRequest hReq = (HttpServletRequest) request;
+	    HttpServletResponse hRes = (HttpServletResponse) response;
+	    HttpServletRequest hReq = (HttpServletRequest) request;
+
+	    // Only add CORS headers if the developer mode is enabled to add them
+	    if (new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
 
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
 		if (hReq.getHeader("Origin") != null) {
@@ -50,6 +53,7 @@ public class SavedSearchCORSFilter implements Filter
 		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,   Authorization, x-sso-client");
+	    }
 
 		if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) request).getMethod())) {
 			try {
