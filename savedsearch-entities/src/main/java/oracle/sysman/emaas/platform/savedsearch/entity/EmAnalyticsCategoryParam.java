@@ -46,10 +46,50 @@ public class EmAnalyticsCategoryParam implements Serializable
 	{
 	}
 
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof EmAnalyticsCategoryParam)) {
+			return false;
+		}
+		EmAnalyticsCategoryParam other = (EmAnalyticsCategoryParam) obj;
+		if (categoryId != other.categoryId) {
+			return false;
+
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		}
+		else if (!name.equals(other.name)) {
+			return false;
+		}
+
+		if (value == null) {
+			if (other.value != null) {
+				return false;
+			}
+		}
+		else if (!value.equals(other.value)) {
+			return false;
+		}
+		return true;
+	}
+
 	public long getCategoryId()
 	{
 		return categoryId;
 	}
+
+	//@Column(name="NAME")
+	//private String name;
 
 	/*public String getName() {
 		return this.name;
@@ -63,21 +103,34 @@ public class EmAnalyticsCategoryParam implements Serializable
 		return emAnalyticsCategory;
 	}
 
-	//@Column(name="NAME")
-	//private String name;
-
 	public String getName()
 	{
 		return name;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 
 	public String getValue()
 	{
 		return value;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+
+		result = prime * result + (int) (categoryId ^ categoryId >>> 32);
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (value == null ? 0 : value.hashCode());
+		return result;
+	}
+
 	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * @see java.lang.Object#hashCode()
 	 */
 
 	public void setCategoryId(long categoryId)
@@ -89,10 +142,6 @@ public class EmAnalyticsCategoryParam implements Serializable
 	{
 		this.emAnalyticsCategory = emAnalyticsCategory;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 
 	public void setName(String name)
 	{

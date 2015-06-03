@@ -16,6 +16,24 @@ package oracle.sysman.emaas.savedsearch;
 public class TenantLeakData
 {
 
+	public static String getDeleteSql(long id)
+	{
+
+		String Sql = "";
+		Sql = Sql + " declare \n";
+		Sql = Sql + " tenantid number(30) :=" + id + ";";
+		Sql = Sql + " \nbegin \n";
+
+		Sql = Sql + "delete from  EMS_ANALYTICS_LAST_ACCESS  where tenant_id = tenantid" + ";\n";
+		Sql = Sql + "delete from EMS_ANALYTICS_SEARCH_PARAMS where tenant_id =tenantid" + ";\n";
+		Sql = Sql + "delete from  EMS_ANALYTICS_SEARCH where tenant_id =tenantid" + ";\n";
+		Sql = Sql + "delete from EMS_ANALYTICS_CATEGORY_PARAMS where tenant_id =tenantid" + ";\n";
+		Sql = Sql + "delete from EMS_ANALYTICS_CATEGORY where tenant_id =tenantid" + ";\n";
+		Sql = Sql + "delete from EMS_ANALYTICS_FOLDERS where tenant_id =tenantid" + ";\n";
+		Sql = Sql + " end;";
+		return Sql;
+	}
+
 	public static String getSql(long tenantid)
 	{
 		String Sql = "";
