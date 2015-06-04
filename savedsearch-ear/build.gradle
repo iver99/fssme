@@ -5,12 +5,12 @@ configurations {
     appServer     
 }
 
-version = '1.0.0'
+//version = '1.0.0'
 group = 'emaas/applications/savedsearch-framework'
 
 def artifactId = appName 
 def groupId = group 
-def versionNumber = version
+def versionNumber = project.ext.getServiceVersion("SavedSearchService")
 
 ear 
 {
