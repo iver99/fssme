@@ -80,11 +80,11 @@ jar {
         include 'help.txt'
      }
     
-     from('src/integTest/java/oracle/sysman/emSDK/emaas/platform/updatesearch/test')
+    /* from('src/integTest/java/oracle/sysman/emSDK/emaas/platform/updatesearch/test')
      {
         include 'Search.xml'
      }
-
+*/
 }
 
 
@@ -95,7 +95,7 @@ repositories {
         url = "${artifactory_contextUrl}/emaas-virtual"
     }
 }
-publishing {
+/*publishing {
     publications {
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
@@ -130,4 +130,4 @@ buildscript {
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
     }
-}
+}*/
