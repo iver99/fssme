@@ -59,7 +59,7 @@ bash "check_schema" do
     if [ -e #{schema_exists_file} ] ; then
       rm -f #{schema_exists_file}
     fi
-    check_schema_result=`#{node["dbhome"]}/bin/sqlplus -s #{product_schema_user}/#{product_schema_password}@'#{node["database_ConnectString"]}' @#{check_schema_file} | grep "SAVED_SEARCH_SCHEMA_OK=0"`
+    check_schema_result=`#{node["dbhome"]}/bin/sqlplus -s #{product_schema_name}/#{product_schema_password}@'#{node["database_ConnectString"]}' @#{check_schema_file} | grep "SAVED_SEARCH_SCHEMA_OK=0"`
     echo "check schema result = '$check_schema_result'" >> #{node["log_dir"]}/savedSearchDatasource.log
     if [ -n "$check_schema_result" ] ; then
       echo $check_schema_result > #{schema_exists_file}
@@ -88,15 +88,15 @@ cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{nod
 
 
 
-echo "db_servicename = #{node["db_service"]}, SAAS_schema_user = #{product_schema_user}, SYS_password = #{node["db_syspassword"]} db_port=#{node["db_port"]} db_host=#{node["db_host"]} home=#{node["dbhome"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
+echo "db_servicename = #{node["db_service"]}, SAAS_schema_user = #{product_schema_name}, SYS_password = #{node["db_syspassword"]} db_port=#{node["db_port"]} db_host=#{node["db_host"]} home=#{node["dbhome"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
 export LD_LIBRARY_PATH=#{node["dbhome"]}/lib
 echo "running the script now" >> #{node["log_dir"]}/savedSearchDatasource.log
-echo "#{node["dbhome"]}/bin/sqlplus #{product_schema_user}/#{product_schema_name}@'#{node["database_ConnectString"]}'" >> #{node["log_dir"]}/savedSearchDatasource.log
+echo "#{node["dbhome"]}/bin/sqlplus #{product_schema_name}/#{product_schema_password}@'#{node["database_ConnectString"]}'" >> #{node["log_dir"]}/savedSearchDatasource.log
 echo "CWD:" >> #{node["log_dir"]}/savedSearchDatasource.log
 pwd >> #{node["log_dir"]}/savedSearchDatasource.log
 for file in init.sql
 do
-#{node["dbhome"]}/bin/sqlplus #{product_schema_user}/#{product_schema_password}@'#{node["database_ConnectString"]}' << eof_sql > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
+#{node["dbhome"]}/bin/sqlplus #{product_schema_name}/#{product_schema_password}@'#{node["database_ConnectString"]}' << eof_sql > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
 @$file
 eof_sql
 done
@@ -119,12 +119,12 @@ else
 	cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}/upgrade
 	
 	echo "Running upgrade script now" >> #{node["log_dir"]}/savedSearchDatasource.log
-	echo "#{node["dbhome"]}/bin/sqlplus #{product_schema_user}/#{product_schema_password}@'#{node["database_ConnectString"]}'" >> #{node["log_dir"]}/savedSearchDatasource.log
+	echo "#{node["dbhome"]}/bin/sqlplus #{product_schema_name}/#{product_schema_password}@'#{node["database_ConnectString"]}'" >> #{node["log_dir"]}/savedSearchDatasource.log
 	echo "CWD:" >> #{node["log_dir"]}/savedSearchDatasource.log
 	pwd >> #{node["log_dir"]}/savedSearchDatasource.log
 	for file in upgrade.sql
 		do
-			#{node["dbhome"]}/bin/sqlplus #{product_schema_user}/#{product_schema_password}@'#{node["database_ConnectString"]}' << eof_sql > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
+			#{node["dbhome"]}/bin/sqlplus #{product_schema_name}/#{product_schema_password}@'#{node["database_ConnectString"]}' << eof_sql > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
 			@$file
 eof_sql
 			done
