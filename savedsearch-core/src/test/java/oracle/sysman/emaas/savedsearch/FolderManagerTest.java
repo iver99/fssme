@@ -185,6 +185,135 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
+	@Test
+	public static void testUserSaveFolder() throws Exception
+	{
+		int folderid1 = 0;
+		int folderid2 = 0;
+		try {
+
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
+
+			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+			Folder folder = new FolderImpl();
+			folder.setName("FolderTestByUser");
+			folder.setDescription("TestFolderDescription");
+			folder.setUiHidden(false);
+			folder = objFolder.saveFolder(folder);
+			folderid1 = folder.getId();
+			AssertJUnit.assertFalse(folderid1 == 0);
+			AssertJUnit.assertNotNull(folder.getOwner());
+			// cross check the content of the folder being saves
+			folder = objFolder.getFolder(folderid1);
+			AssertJUnit.assertTrue("FolderTestByUser".equals(folder.getName()));
+			AssertJUnit.assertTrue("TestFolderDescription".equals(folder.getDescription()));
+			AssertJUnit.assertTrue(folder.isUiHidden() == false);
+			AssertJUnit.assertTrue(folder.isSystemFolder() == false);
+			AssertJUnit.assertNotNull(folder.getCreatedOn());
+			AssertJUnit.assertNotNull(folder.getLastModifiedOn());
+			AssertJUnit.assertEquals(folder.getCreatedOn(), folder.getLastModifiedOn());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		try {
+
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_USER_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
+
+			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+			Folder folder = new FolderImpl();
+			folder.setName("FolderTestByUser");
+			folder.setDescription("TestFolderDescription");
+			folder.setUiHidden(false);
+			folder = objFolder.saveFolder(folder);
+			folderid2 = folder.getId();
+			AssertJUnit.assertFalse(folderid2 == 0);
+			AssertJUnit.assertNotNull(folder.getOwner());
+			// cross check the content of the folder being saves
+			folder = objFolder.getFolder(folderid2);
+			AssertJUnit.assertTrue("FolderTestByUser".equals(folder.getName()));
+			AssertJUnit.assertTrue("TestFolderDescription".equals(folder.getDescription()));
+			AssertJUnit.assertTrue(folder.isUiHidden() == false);
+			AssertJUnit.assertTrue(folder.isSystemFolder() == false);
+			AssertJUnit.assertNotNull(folder.getCreatedOn());
+			AssertJUnit.assertNotNull(folder.getLastModifiedOn());
+			AssertJUnit.assertEquals(folder.getCreatedOn(), folder.getLastModifiedOn());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		try {
+
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
+			FolderManager fmgr = FolderManager.getInstance();
+			fmgr.deleteFolder(folderid2, false);
+
+		}
+		catch (EMAnalyticsFwkException e) {
+			AssertJUnit.assertEquals(new Integer(e.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		try {
+
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_USER_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
+			FolderManager fmgr = FolderManager.getInstance();
+			fmgr.deleteFolder(folderid1, false);
+		}
+		catch (EMAnalyticsFwkException e) {
+			AssertJUnit.assertEquals(new Integer(e.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		try {
+
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
+			FolderManager fmgr = FolderManager.getInstance();
+			fmgr.deleteFolder(folderid1, false);
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+		try {
+
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_USER_ID1), TestUtils
+					.getInternalTenantId(TENANT_ID_OPC1)));
+			FolderManager fmgr = FolderManager.getInstance();
+			fmgr.deleteFolder(folderid2, false);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+	}
+
 	/*@Test
 	public void testDeleteSystemFolder() throws Exception
 	{

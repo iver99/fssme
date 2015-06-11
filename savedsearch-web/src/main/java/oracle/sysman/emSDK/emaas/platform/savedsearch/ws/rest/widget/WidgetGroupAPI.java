@@ -1,9 +1,9 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.UriInfo;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TenantSubscriptionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,16 +76,15 @@ public class WidgetGroupAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllWidgets()
+	public Response getAllWidgetGroups(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantName,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
 	{
 		String message = null;
 		int statusCode = 200;
-		JSONArray jsonArray = new JSONArray();
-		List<Category> catList = new ArrayList<Category>();
 
-		CategoryManager catMan = CategoryManager.getInstance();
 		try {
-			catList = catMan.getAllCategories();
+			JSONArray jsonArray = new JSONArray();
+			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(tenantName);
 			for (Category category : catList) {
 				if (!"home".equalsIgnoreCase(category.getProviderAssetRoot())) {
 					JSONObject jsonWidgetGroup = EntityJsonUtil.getWidgetGroupJsonObj(uri.getBaseUri(), category);

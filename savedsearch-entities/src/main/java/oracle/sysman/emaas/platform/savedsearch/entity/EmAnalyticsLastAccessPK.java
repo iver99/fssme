@@ -52,7 +52,12 @@ public class EmAnalyticsLastAccessPK implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return super.hashCode();
+		final int prime = 31;
+		int hash = 17;
+		hash = hash * prime + (int) (objectId ^ objectId >>> 32);
+		hash = hash * prime + accessedBy.hashCode();
+		hash = hash * prime + (int) (objectType ^ objectType >>> 32);
+		return hash;
 	}
 
 	public void setAccessedBy(String accessedBy)

@@ -46,7 +46,12 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return super.hashCode();
+		final int prime = 31;
+		int hash = 17;
+		hash = hash * prime + (int) (categoryId ^ categoryId >>> 32);
+		hash = hash * prime + (name == null ? 0 : name.hashCode());
+		return hash;
+
 	}
 
 	public void setCategoryId(long categoryId)
