@@ -88,7 +88,7 @@ cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{nod
 
 
 
-
+echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/*******@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
 export LD_LIBRARY_PATH=#{node["dbhome"]}/lib
 echo "running the script now" >> #{node["log_dir"]}/savedSearchDatasource.log
 
@@ -119,7 +119,7 @@ else
 	cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}/upgrade
 	
 	echo "Running upgrade script now" >> #{node["log_dir"]}/savedSearchDatasource.log
-	
+	echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/*******@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/savedSearchDatasource.log	
 	echo "CWD:" >> #{node["log_dir"]}/savedSearchDatasource.log
 	pwd >> #{node["log_dir"]}/savedSearchDatasource.log
 	for file in upgrade.sql
