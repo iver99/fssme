@@ -27,7 +27,6 @@ allprojects {
 			password = "${artifactory_password}"  
 		} 
 	}  
-//	mavenCentral()  
 	}  
 }
 artifactoryPublish{
@@ -63,8 +62,8 @@ subprojects {
 } 
 
 configurations {
-        prebuild_log4j { transitive = false }
-        prebuild_tenant_sdk { transitive = false }
+  prebuild_log4j { transitive = false }
+  prebuild_tenant_sdk { transitive = false }
 	prebuild_toplink { transitive = false }
 	prebuild_servicemanager { transitive = false } 
 	prebuild_savedsearch { transitive = false }
@@ -73,7 +72,7 @@ configurations {
 	prebuild_jaxrs { transitive = false }
 	prebuild_testng { transitive = false }
 	prebuild_wlfullc { transitive = false }
-
+	compile.exclude group: "com.google.code.findbugs", module: "annotations"
 }
 
 dependencies {
