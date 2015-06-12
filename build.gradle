@@ -47,7 +47,7 @@ artifactory {
 	} 
 	resolve {  
 		repository {  
-			repoKey = 'repo'  
+			repoKey = 'emaas-virtual'  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 			maven = true  
