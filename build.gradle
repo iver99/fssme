@@ -116,7 +116,7 @@ dependencies {
 			'com.jayway.restassured:xml-path:1.9.0',
 			'com.jayway.restassured:rest-assured-common:2.3.1',
 			'com.jayway.restassured:rest-assured:2.3.0'
-	prebuild_wlfullc 'test:wlfullclient:2.6'
+			prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
