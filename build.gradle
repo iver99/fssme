@@ -1,4 +1,6 @@
-import java.util.logging.LogManager.Cleaner;  
+import java.util.logging.LogManager.Cleaner;
+import org.gradle.api.artifacts.Configuration.State  
+
 
 //ext.distDir = "${rootDir}/../../dist" 
 ext.distDir = "${rootDir}/dist"  
@@ -27,7 +29,28 @@ allprojects {
 			password = "${artifactory_password}"  
 		} 
 	}  
-	}  
+	} 
+	
+		configurations.all {
+        // Exclude findbugs annotations from all configurations.
+        // In the current world, this is being brought in
+        // by an improperly configured registry client.  We've
+        // attempted to exclude it there, but it occasionally still
+        // sneaks through when some other project that includes
+        // the registry client is included.  In that case,
+        // the registry client's pom is reconsulted without our
+        // exclusion advice, and it's back. This upsets the lawyers.
+        logger.debug "Processing Configuration: $it.name, $it.state"
+        if (it.state == Configuration.State.UNRESOLVED)
+        {
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+        }
+        else
+        {
+            logger.debug "Configuration $it.name state is $it.state so exclusion is not viable"
+        }
+	}
+	 
 }
 artifactoryPublish{
 	                skip = true
