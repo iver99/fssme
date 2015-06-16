@@ -1,4 +1,6 @@
-import java.util.logging.LogManager.Cleaner;  
+import java.util.logging.LogManager.Cleaner;
+import org.gradle.api.artifacts.Configuration.State  
+
 
 //ext.distDir = "${rootDir}/../../dist" 
 ext.distDir = "${rootDir}/dist"  
@@ -27,8 +29,28 @@ allprojects {
 			password = "${artifactory_password}"  
 		} 
 	}  
-//	mavenCentral()  
-	}  
+	} 
+	
+		configurations.all {
+        // Exclude findbugs annotations from all configurations.
+        // In the current world, this is being brought in
+        // by an improperly configured registry client.  We've
+        // attempted to exclude it there, but it occasionally still
+        // sneaks through when some other project that includes
+        // the registry client is included.  In that case,
+        // the registry client's pom is reconsulted without our
+        // exclusion advice, and it's back. This upsets the lawyers.
+        logger.debug "Processing Configuration: $it.name, $it.state"
+        if (it.state == Configuration.State.UNRESOLVED)
+        {
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+        }
+        else
+        {
+            logger.debug "Configuration $it.name state is $it.state so exclusion is not viable"
+        }
+	}
+	 
 }
 artifactoryPublish{
 	                skip = true
@@ -47,7 +69,7 @@ artifactory {
 	} 
 	resolve {  
 		repository {  
-			repoKey = 'repo'  
+			repoKey = 'emaas-virtual'  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 			maven = true  
@@ -63,8 +85,8 @@ subprojects {
 } 
 
 configurations {
-        prebuild_log4j { transitive = false }
-        prebuild_tenant_sdk { transitive = false }
+  prebuild_log4j { transitive = false }
+  prebuild_tenant_sdk { transitive = false }
 	prebuild_toplink { transitive = false }
 	prebuild_servicemanager { transitive = false } 
 	prebuild_savedsearch { transitive = false }
@@ -73,7 +95,7 @@ configurations {
 	prebuild_jaxrs { transitive = false }
 	prebuild_testng { transitive = false }
 	prebuild_wlfullc { transitive = false }
-
+	compile.exclude group: "com.google.code.findbugs", module: "annotations"
 }
 
 dependencies {
@@ -117,7 +139,7 @@ dependencies {
 			'com.jayway.restassured:xml-path:1.9.0',
 			'com.jayway.restassured:rest-assured-common:2.3.1',
 			'com.jayway.restassured:rest-assured:2.3.0'
-	prebuild_wlfullc 'test:wlfullclient:2.6'
+			prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
