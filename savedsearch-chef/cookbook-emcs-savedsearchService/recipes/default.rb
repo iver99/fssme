@@ -5,7 +5,9 @@
 #
 
 #Recipe to create schema
-include_recipe 'cookbook-emcs-savedsearchService::savedsearch_schema'
+#Removing following entry as per LCMRepManager Integration Guidelines.
+#include_recipe 'cookbook-emcs-savedsearchService::savedsearch_schema'
 
 #Recipe to create Datasource
 include_recipe 'cookbook-emcs-savedsearchService::savedsearch_eardeploy'
+
