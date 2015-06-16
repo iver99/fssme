@@ -84,6 +84,17 @@ echo "Apps Dir: #{node["apps_dir"]}" >> #{node["log_dir"]}/savedSearchDatasource
 echo "Service Name: #{node["SAAS_servicename"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
 echo "Version: #{node["SAAS_version"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
 echo "SQL Dir: #{node["sql_dir"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
+
+echo "Doing explicit privilege grants ====" >> #{node["log_dir"]}/savedSearchDatasource.log
+
+echo "#{node["dbhome"]}/bin/sqlplus #{node["sys_user"]}/#{node["db_syspassword"]}@'#{node["database_ConnectString"]}' as sysdba" >> #{node["log_dir"]}/savedSearchDatasource.log
+
+#{node["dbhome"]}/bin/sqlplus #{node["sys_user"]}/#{node["db_syspassword"]}@'#{node["database_ConnectString"]}' as sysdba << disp > #{node["log_dir"]}/savedSearchsql.txt 2>&1 >> #{node["log_dir"]}/savedSearchDatasource.log
+GRANT CREATE TRIGGER TO #{node["SAAS_schema_user"]};
+disp
+
+echo "==== Done explicit privilege grants" >> #{node["log_dir"]}/savedSearchDatasource.log
+
 cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}
 echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/*******@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
 export LD_LIBRARY_PATH=#{node["dbhome"]}/lib
