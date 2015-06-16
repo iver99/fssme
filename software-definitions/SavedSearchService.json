@@ -45,7 +45,7 @@
              "operation": "schema_deployment"
          },
         {
-              "name": "cookbook-emcs-savedsearchService::schema_onboard",
+              "name": "cookbook-emcs-savedsearchService::schema_on_board",
               "operation": "schema_on_boarding"
          }
     ],
