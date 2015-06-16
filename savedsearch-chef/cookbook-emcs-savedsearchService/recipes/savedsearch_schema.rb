@@ -75,8 +75,6 @@ echo "---------------------------- starting create schema--------------" >> #{no
 if [ ! -e #{schema_exists_file} ] ; then
 export ORACLE_HOME=#{node["dbhome"]}
 
-cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}
-
 #Download the sql files
 tar xzf #{node["sql_bundle"]}#{node["SAAS_version"]}.tgz
 
@@ -99,7 +97,6 @@ cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{nod
 echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/*******@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
 export LD_LIBRARY_PATH=#{node["dbhome"]}/lib
 echo "running the script now" >> #{node["log_dir"]}/savedSearchDatasource.log
-
 echo "CWD:" >> #{node["log_dir"]}/savedSearchDatasource.log
 pwd >> #{node["log_dir"]}/savedSearchDatasource.log
 for file in init.sql
