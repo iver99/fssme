@@ -47,10 +47,10 @@ template "#{node["log_dir"]}/wls_datasources_savedSearch.py" do
     source "wls_datasources.py.erb"
     action :create
     variables lazy {{
-        :weblogic_username => wls_usr,
-        :weblogic_password => wls_pwd,
-        :weblogic_host => wls_host,
-        :weblogic_port => wls_port,
+        :weblogic_username => node["wls_admin_user"],
+        :weblogic_password => node["wls_admin_password"],
+        :weblogic_host => node["hostname"],
+        :weblogic_port => node["wls_port"],
         :weblogic_servername => wls_server,
         :weblogic_datasource => wls_datasource,
         :weblogic_jndiname => wls_jndiname,
@@ -90,6 +90,7 @@ bash "create_servicemanger_properties_file"  do
     echo "characteristics=SAAS_deploymentUuid:#{node["SAAS_deploymentUuid"]}" >> servicemanager.properties
     EOH
 end
+:q!
 
 bash "deploy_ear" do
   code <<-EOH
