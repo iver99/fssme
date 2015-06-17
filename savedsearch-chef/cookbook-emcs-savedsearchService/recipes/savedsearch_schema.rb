@@ -91,6 +91,8 @@ GRANT CREATE TRIGGER TO #{node["SAAS_schema_user"]};
 disp
 
 echo "==== Done explicit privilege grants ====" >> #{node["log_dir"]}/savedSearchDatasource.log
+
+cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]} 
 echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/*******@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/savedSearchDatasource.log
 export LD_LIBRARY_PATH=#{node["dbhome"]}/lib
 echo "running the script now" >> #{node["log_dir"]}/savedSearchDatasource.log
