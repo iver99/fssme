@@ -39,7 +39,15 @@
                 "name": "internalTenantID",
                 "required": true
             }]
-        }
+        },
+	{
+             "name": "cookbook-emcs-savedsearchService::schema_deployment",
+             "operation": "schema_deployment"
+         },
+        {
+              "name": "cookbook-emcs-savedsearchService::schema_on_board",
+              "operation": "schema_on_boarding"
+         }
     ],
     "chefCookbook": {
         "href": "<cookbook>",
