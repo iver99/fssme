@@ -135,10 +135,10 @@ dependencies {
 			'com.sun.jersey.contribs:jersey-multipart:1.17.1',
 			'org.codehaus.groovy:groovy-all:2.2.1',
 			'org.apache.commons:commons-lang3:3.1',
-			'com.jayway.restassured:json-path:1.8.1',
-			'com.jayway.restassured:xml-path:1.9.0',
+			'com.jayway.restassured:json-path:2.3.1',
+			'com.jayway.restassured:xml-path:2.3.1',
 			'com.jayway.restassured:rest-assured-common:2.3.1',
-			'com.jayway.restassured:rest-assured:2.3.0'
+			'com.jayway.restassured:rest-assured:2.3.1'
 			prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 }
 
