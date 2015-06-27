@@ -191,8 +191,8 @@ dependencies {
     providedCompile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){transitive = false}
     providedCompile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){transitive = false}
 
-	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12'){transitive = false}
-	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12'){transitive = false}
+	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'){transitive = false}
+	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
 	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
 	
 	providedCompile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1'){transitive = false}

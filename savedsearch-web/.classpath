@@ -5,9 +5,9 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/savedsearch-ee"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-core-asl-1.9.12.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-core-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-jaxrs-1.9.2.jar"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-mapper-asl-1.9.12.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-mapper-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-xc-1.9.2.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jersey-client-1.17.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jersey-core-1.17.1.jar"/>
