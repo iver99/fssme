@@ -1,27 +1,44 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.common;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
+import oracle.sysman.qatool.uifwk.utils.Utils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.LogConfig;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.FileUtils;
-import oracle.sysman.qatool.uifwk.utils.Utils;
 public class CommonTest
 {
+	private static final String DOMAIN = "www.";
+	private static Logger logger = LogManager.getLogger(CommonTest.class);
 
-	private final String HOSTNAME;
-	private final String portno;
-	private final String serveruri;
-	private final String authToken;
-	 private final String tenantid;
-     private final String remoteuser;
-     private final String tenantid_2;
+	public static String getDomainName(String url) throws URISyntaxException
+	{
+		URI uri = new URI(url);
+		String domain = uri.getHost();
+		return domain.startsWith(DOMAIN) ? domain.substring(4) : domain;
+	}
 
-	
+	public static int getPort(String url) throws URISyntaxException
+	{
+		URI uri = new URI(url);
+		int port = uri.getPort();
+		return port;
+	}
+
+	private String HOSTNAME;
+	private String portno;
+	private String serveruri;
+	private String authToken;
+	private String tenantid;
+
+	private String remoteuser;
+
 	private static final String TESTENV_QA_TEST_PROP = "SSF.QA.TESTENV";
 
 	/**
@@ -31,57 +48,24 @@ public class CommonTest
 
 	public CommonTest()
 	{
-		Properties prop = new Properties();
-		InputStream input = null;
+		String url = "";
 		try {
-			System.setProperty(TESTENV_QA_TEST_PROP, "true");			
-			input =      this.getClass().getClassLoader().getResourceAsStream("/testenv.properties");
-			if(input==null)
-			 input =      this.getClass().getClassLoader().getResourceAsStream("testenv.properties");
-
-			prop.load(input);
-			System.out.println("---------------------------------------------------------------------");
-			System.out.println("The property values - Hostname: " + prop.getProperty("hostname") + " and Port: "
-					+ prop.getProperty("port"));
-			System.out.println("---------------------------------------------------------------------");
-			System.out.println("											");
+			url = QAToolUtil.getSavedSearchDeploymentDet();
+			HOSTNAME = CommonTest.getDomainName(url);
+			portno = CommonTest.getPort(url) + "";
+			authToken = Utils.getProperty("SAAS_AUTH_TOKEN");
+			tenantid = Utils.getProperty("TENANT_ID");
+			remoteuser = Utils.getProperty("SSO_USERNAME");
+			serveruri = "http://" + HOSTNAME + ":" + portno;
+			RestAssured.useRelaxedHTTPSValidation();
+			RestAssured.baseURI = serveruri;
+			RestAssured.basePath = "/savedsearch/v1";
+			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 		}
-		catch (IOException e) {
-
-			e.printStackTrace();
-		}
-		finally {
-			if (input != null) {
-				try {
-					input.close();
-				}
-				catch (IOException e) {
-					//ignore					
-				}
-			}
-		}
-		/*HOSTNAME = prop.getProperty("hostname");
-		portno = prop.getProperty("port");
-		authToken = prop.getProperty("authToken");*/
-		HOSTNAME=Utils.getProperty("EMCS_NODE1_HOSTNAME");
-		authToken=Utils.getProperty("SAAS_AUTH_TOKEN");
-		portno = "7001";
-	//	 authToken = Utils.getProperty("SAAS_AUTH_TOKEN");
-	        //tenantid = prop.getProperty("tenantid");
-	        tenantid = Utils.getProperty("TENANT_ID");
-	        tenantid_2 = prop.getProperty("tenantid_2");
-	        //remoteuser = prop.getProperty("RemoteUser");
-	        remoteuser = Utils.getProperty("SSO_USERNAME");
-		serveruri = "http://" + HOSTNAME + ":" + portno;
-		RestAssured.useRelaxedHTTPSValidation();
-		RestAssured.baseURI = serveruri;
-		RestAssured.basePath = "/savedsearch/v1";
-		RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
-		
-		try{
-		FileUtils.createOutputfile("/scratch/common", tenantid + "  " + remoteuser + " " +serveruri);
-		}catch(Exception e){
-			
+		catch (Exception e) {
+			System.out.println("an error occurred while retrving ssf deployment details" + " " + url + " " + portno
+					+ e.toString());
+			logger.error("an error occurred while retrving ssf deployment details" + " " + url + " " + portno + e.toString());
 		}
 
 	}
@@ -101,18 +85,18 @@ public class CommonTest
 		return portno;
 	}
 
+	public String getRemoteUser()
+	{
+		return remoteuser;
+	}
+
 	public String getServeruri()
 	{
 		return serveruri;
 	}
-	
+
 	public String getTenant()
 	{
-		return tenantid;				
-	}
-	
-	public String getRemoteUser()
-	{
-		return remoteuser;
+		return tenantid;
 	}
 }
