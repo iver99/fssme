@@ -99,10 +99,10 @@ public class QAToolUtil
 		return props;
 	}
 
-	public static void main(String h[])
+	/*public static void main(String h[])
 	{
 		System.out.println(QAToolUtil.getSchemaDeploymentDetails());
-	}
+	}*/
 
 	private static List<String> extractUrls(String value)
 	{
