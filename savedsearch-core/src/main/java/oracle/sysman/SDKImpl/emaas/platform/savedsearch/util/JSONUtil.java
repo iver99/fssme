@@ -11,7 +11,10 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLDecoder;
+import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 
@@ -26,6 +29,7 @@ import org.codehaus.jackson.map.ser.BeanSerializerFactory;
 import org.codehaus.jackson.map.ser.FilterProvider;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
+import org.codehaus.jackson.type.JavaType;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -73,6 +77,56 @@ public class JSONUtil
 	//		}
 	//	}
 
+	public static JavaType constructParametricType(ObjectMapper mapper, Class<?> parametrized, Class<?>... parameterClasses)
+	{
+		return mapper.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T fromJson(ObjectMapper mapper, String jsonString, JavaType javaType) throws IOException
+	{
+		if (JSONUtil.isEmpty(jsonString)) {
+			return null;
+		}
+
+		jsonString = URLDecoder.decode(jsonString, "UTF-8");
+		return (T) mapper.readValue(jsonString, javaType);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta) throws IOException
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		return (List<T>) JSONUtil.fromJson(mapper, jsonString, JSONUtil.constructParametricType(mapper, List.class, classMeta));
+	}
+
+	public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta, String field) throws IOException,
+			JSONException
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		String result = "";
+		JSONObject json1 = new JSONObject(jsonString);
+
+		try {
+			result = json1.getString(field);
+		}
+		catch (Exception e) {
+			return null;
+		}
+		return (List<T>) JSONUtil.fromJson(mapper, result, JSONUtil.constructParametricType(mapper, List.class, classMeta));
+	}
+
+	public static boolean isEmpty(String s)
+	{
+		if (s == null) {
+			return true;
+		}
+		if ("".equals(s.trim())) {
+			return true;
+		}
+		return false;
+	}
+
 	public static JSONObject ObjectToJSONObject(Object object) throws JSONException, EMAnalyticsFwkJsonException
 	{
 		return JSONUtil.ObjectToJSONObject(object, null);
@@ -80,7 +134,7 @@ public class JSONUtil
 	}
 
 	public static JSONObject ObjectToJSONObject(Object object, String[] excludedFields) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkJsonException
 	{
 
 		return new JSONObject(JSONUtil.ObjectToJSONString(object, excludedFields));
@@ -93,7 +147,7 @@ public class JSONUtil
 
 	/**
 	 * Convert Object to JSON string.
-	 *
+	 * 
 	 * @param object
 	 *            the object to convert
 	 * @param excludedFieldItems
