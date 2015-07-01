@@ -102,6 +102,7 @@ classes/
 CVS/
 deploy/
 dist/
+maven-home/
 nbproject/
 test-coverage/
 test-reports/
