@@ -34,6 +34,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	{
 		logger.notice("Post-starting registered application services");
 		try {
+			createEMF();
 			logger.info("Post-starting 'Service Registry'");
 			for (ApplicationServiceManager service : registeredServices) {
 				service.postStart(evt);
@@ -41,6 +42,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 			logger.debug("Post-started 'Service Registry'");
 		}
 		catch (Throwable t) {
+			closeEMF();
 			if (t instanceof VirtualMachineError) {
 				throw (VirtualMachineError) t;
 			}
@@ -108,9 +110,32 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 			throw new ApplicationException("some of the essential services failed to pre-stop");
 		}
 		finally {
+			closeEMF();
+		}
+	}
+	
+	/**
+	 * Important: now close EMF in pre-stop stage only
+	 */
+	private void closeEMF()
+	{
+		try {
 			logger.info("Pre-stopping service, attempting to close entityimanager factory");
 			PersistenceManager.getInstance().closeEntityManagerFactory();
 			logger.info("Pre-stopping service, entityimanager factory closed");
 		}
+		catch (Exception e) {
+			logger.error("Failed to stop entity manager factory", e);
+		}
+	}
+
+	/**
+	 * Important: now create EMF in post-start stage only
+	 */
+	private void createEMF()
+	{
+		logger.info("Post-starting service, attempting to create entityimanager factory");
+		PersistenceManager.getInstance().createEntityManagerFactory();
+		logger.info("Post-starting service, entityimanager factory created");
 	}
 }
