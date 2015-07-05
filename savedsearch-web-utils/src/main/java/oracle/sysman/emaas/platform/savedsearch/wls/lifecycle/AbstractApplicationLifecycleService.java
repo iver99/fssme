@@ -115,14 +115,16 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	}
 	
 	/**
-	 * Important: now close EMF in pre-stop stage only
+	 * Important: now close EMF in 
+	 * 1. pre-stop stage or 
+	 * 2. post-start stage when error occurs 
 	 */
 	private void closeEMF()
 	{
 		try {
-			logger.info("Pre-stopping service, attempting to close entityimanager factory");
+			logger.info("attempting to close entityimanager factory");
 			PersistenceManager.getInstance().closeEntityManagerFactory();
-			logger.info("Pre-stopping service, entityimanager factory closed");
+			logger.info("entityimanager factory closed");
 		}
 		catch (Exception e) {
 			logger.error("Failed to stop entity manager factory", e);
@@ -134,8 +136,8 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	 */
 	private void createEMF()
 	{
-		logger.info("Post-starting service, attempting to create entityimanager factory");
+		logger.info("attempting to create entityimanager factory");
 		PersistenceManager.getInstance().createEntityManagerFactory();
-		logger.info("Post-starting service, entityimanager factory created");
+		logger.info("entityimanager factory created");
 	}
 }
