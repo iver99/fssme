@@ -25,7 +25,7 @@
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/repo" }
+            url = "${artifactory_contextUrl}/emaas-virtual" }
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
@@ -33,7 +33,7 @@ buildscript {
 }
 repositories {
     maven {
-        url = "${artifactory_contextUrl}/repo"
+        url = "${artifactory_contextUrl}/emaas-virtual"
     }
 }
 apply plugin: 'TestInfraPlugin'
@@ -47,7 +47,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 repositories {
 	mavenLocal()
         maven {
-            url = "${artifactory_contextUrl}/repo" }
+            url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
     testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core-integ-tests', version: '1.0.1'){
@@ -87,9 +87,38 @@ task small_deploy_3n_block(type: EMTest) {
 
 
 
-     task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
-include "oracle/sysman/emaas/savedsearch/*"
-useRestAssured =true
+     task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){	
+		
+	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
+	include "oracle/sysman/emaas/savedsearch/JSONUtilTest.class"
+	include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"			
+	include "oracle/sysman/emaas/savedsearch/CategoryTest.class"
+	include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
+	include "oracle/sysman/emaas/savedsearch/searchParamTest.class"
+	include "oracle/sysman/emaas/savedsearch/searchTest.class"
+	include "oracle/sysman/emaas/savedsearch/CategoryManagerTest.class"
+	include "oracle/sysman/emaas/savedsearch/searchManagerTest.class"
+	include "oracle/sysman/emaas/savedsearch/VersionManagerTest.class"
+	include "oracle/sysman/emaas/savedsearch/ExceptionTest.class"
+	include "oracle/sysman/emaas/savedsearch/CategoryDetailsTest.class"
+	include "oracle/sysman/emaas/savedsearch/ImportTest.class"
+	include "oracle/sysman/emaas/savedsearch/MultitenentFolderTest.class"
+	include "oracle/sysman/emaas/savedsearch/MultitenentCategoryTest"
+	include "oracle/sysman/emaas/savedsearch/MultitenentSearchTest.class"
+	useRestAssured =true
+}
+   task DEVTest1(type:EMTest,dependsOn: DEVTest){	
+		
+
+	include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
+	useRestAssured =true
+}
+task DEVTest2(type:EMTest,dependsOn: DEVTest1){	
+		
+
+
+	include "oracle/sysman/emaas/savedsearch/Cleanup.class"
+	useRestAssured =true
 }
 task small_deploy_3n_cleanup(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
@@ -104,9 +133,9 @@ task small_deploy_3n_cleanup(type: EMTest) {
             }
         }
     }
- mustRunAfter ([small_deploy_3n_block,DEVTest])
+ mustRunAfter ([small_deploy_3n_block,DEVTest2])
 }
 
 
-task emcpssf_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
+task emcpssf_dev_test_3n (dependsOn: [DEVTest2, small_deploy_3n_cleanup])
 

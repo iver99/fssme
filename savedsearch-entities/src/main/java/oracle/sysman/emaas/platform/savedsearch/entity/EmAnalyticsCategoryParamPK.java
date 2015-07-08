@@ -2,19 +2,15 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
 /**
  * The primary key class for the EMS_ANALYTICS_CATEGORY_PARAMS database table.
  */
-@Embeddable
+
 public class EmAnalyticsCategoryParamPK implements Serializable
 {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "CATEGORY_ID", insertable = false, updatable = false, nullable = false)
 	private long categoryId;
 
 	private String name;
@@ -53,9 +49,9 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + (int) (categoryId ^ categoryId >>> 32);
-		hash = hash * prime + name.hashCode();
-
+		hash = hash * prime + (name == null ? 0 : name.hashCode());
 		return hash;
+
 	}
 
 	public void setCategoryId(long categoryId)

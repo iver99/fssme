@@ -1,4 +1,6 @@
-import java.util.logging.LogManager.Cleaner;  
+import java.util.logging.LogManager.Cleaner;
+import org.gradle.api.artifacts.Configuration.State  
+
 
 //ext.distDir = "${rootDir}/../../dist" 
 ext.distDir = "${rootDir}/dist"  
@@ -27,8 +29,28 @@ allprojects {
 			password = "${artifactory_password}"  
 		} 
 	}  
-//	mavenCentral()  
-	}  
+	} 
+	
+		configurations.all {
+        // Exclude findbugs annotations from all configurations.
+        // In the current world, this is being brought in
+        // by an improperly configured registry client.  We've
+        // attempted to exclude it there, but it occasionally still
+        // sneaks through when some other project that includes
+        // the registry client is included.  In that case,
+        // the registry client's pom is reconsulted without our
+        // exclusion advice, and it's back. This upsets the lawyers.
+        logger.debug "Processing Configuration: $it.name, $it.state"
+        if (it.state == Configuration.State.UNRESOLVED)
+        {
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+        }
+        else
+        {
+            logger.debug "Configuration $it.name state is $it.state so exclusion is not viable"
+        }
+	}
+	 
 }
 artifactoryPublish{
 	                skip = true
@@ -47,7 +69,7 @@ artifactory {
 	} 
 	resolve {  
 		repository {  
-			repoKey = 'repo'  
+			repoKey = 'emaas-virtual'  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 			maven = true  
@@ -63,8 +85,8 @@ subprojects {
 } 
 
 configurations {
-        prebuild_log4j { transitive = false }
-        prebuild_tenant_sdk { transitive = false }
+  prebuild_log4j { transitive = false }
+  prebuild_tenant_sdk { transitive = false }
 	prebuild_toplink { transitive = false }
 	prebuild_servicemanager { transitive = false } 
 	prebuild_savedsearch { transitive = false }
@@ -73,7 +95,7 @@ configurations {
 	prebuild_jaxrs { transitive = false }
 	prebuild_testng { transitive = false }
 	prebuild_wlfullc { transitive = false }
-
+	compile.exclude group: "com.google.code.findbugs", module: "annotations"
 }
 
 dependencies {
@@ -85,8 +107,8 @@ dependencies {
 	prebuild_tenant_sdk 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2'
         prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.5'
-	prebuild_servicemanager 'emaas.platform:registry-client:1.0.1',
-                                'emaas.platform:registry-lookup-client:1.0.1'
+	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.0.0+',
+                                'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 	prebuild_savedsearch    'com.oracle.adf:wls-api:12.1.2-0-0',
 				'com.oracle.jdbc:ojdbc6:12.1.0.1.0',
 				'javax.transaction:javax.transaction-api:1.2',
@@ -99,8 +121,8 @@ dependencies {
 	prebuild_apacheHttp 'org.apache.httpcomponents:httpclient:4.3.1',
 			    'org.apache.httpcomponents:httpcore:4.3',
 			    'org.apache.httpcomponents:httpmime:4.3.1'
-	prebuild_jaxrs  'org.codehaus.jackson:jackson-core-asl:1.9.12',
-			'org.codehaus.jackson:jackson-mapper-asl:1.9.12',
+	prebuild_jaxrs  'org.codehaus.jackson:jackson-core-asl:1.9.13',
+			'org.codehaus.jackson:jackson-mapper-asl:1.9.13',
 			'org.codehaus.jackson:jackson-jaxrs:1.9.2',
 			'org.codehaus.jackson:jackson-xc:1.9.2'	,		
 			'com.sun.jersey:jersey-core:1.17.1',
@@ -113,11 +135,11 @@ dependencies {
 			'com.sun.jersey.contribs:jersey-multipart:1.17.1',
 			'org.codehaus.groovy:groovy-all:2.2.1',
 			'org.apache.commons:commons-lang3:3.1',
-			'com.jayway.restassured:json-path:1.8.1',
-			'com.jayway.restassured:xml-path:1.9.0',
+			'com.jayway.restassured:json-path:2.3.1',
+			'com.jayway.restassured:xml-path:2.3.1',
 			'com.jayway.restassured:rest-assured-common:2.3.1',
-			'com.jayway.restassured:rest-assured:2.3.0'
-	prebuild_wlfullc 'test:wlfullclient:2.6'
+			'com.jayway.restassured:rest-assured:2.3.1'
+			prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
@@ -135,6 +157,8 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_testng
    from configurations.prebuild_wlfullc
    into "$afDir"
+   rename 'registry-lookup-client-1.0.0-(.*).jar', 'registry-lookup-client-1.0.0.jar'
+   rename 'registry-client-1.0.0-(.*).jar', 'registry-client-1.0.0.jar'
 }
 
 compileJava.dependsOn preBuildCompile
@@ -165,8 +189,8 @@ project(':savedsearch-web'){
 		compile project(':savedsearch-core')
 				
 		compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-    		compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '1.0.1') 
-		compile(group: 'emaas.platform', name: 'registry-client', version: '1.0.1') 
+    		compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+') 
+		compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+') 
 		ftpAntTask('org.apache.ant:ant-commons-net:1.8.4'){
 			module('commons-net:commons-net:1.4.1'){
 				dependencies 'oro:oro:2.0.8:jar'

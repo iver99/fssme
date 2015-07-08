@@ -7,7 +7,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 
 /**
  * Each test needs to inherit from this
- *
+ * 
  * @author miao
  */
 public abstract class BaseTest
@@ -15,6 +15,7 @@ public abstract class BaseTest
 	protected static PersistenceManager pm;
 	static {
 		System.setProperty(PersistenceManager.TESTENV_PROP, "true");
+		System.setProperty(PersistenceManager.TESTENV_HUDSON_PROP, "true");
 		DateUtil.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 }

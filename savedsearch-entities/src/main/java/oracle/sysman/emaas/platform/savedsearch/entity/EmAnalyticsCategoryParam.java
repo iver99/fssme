@@ -3,9 +3,11 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -17,33 +19,33 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  */
 @Entity
 @Multitenant
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "ssftenant.id", length = 32)
+@IdClass(EmAnalyticsCategoryParamPK.class)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_CATEGORY_PARAMS")
 public class EmAnalyticsCategoryParam implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private EmAnalyticsCategoryParamPK id;
+	@Id
+	@Column(name = "CATEGORY_ID", insertable = false, updatable = false, nullable = false)
+	private long categoryId;
+
+	@Id
+	private String name;
 
 	@Column(name = "PARAM_VALUE")
 	private String value;
 
-	//@Column(name="NAME")
-	//private String name;
-
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID")
+	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID"),
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmAnalyticsCategory emAnalyticsCategory;
 
 	public EmAnalyticsCategoryParam()
 	{
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -57,14 +59,19 @@ public class EmAnalyticsCategoryParam implements Serializable
 			return false;
 		}
 		EmAnalyticsCategoryParam other = (EmAnalyticsCategoryParam) obj;
-		if (id == null) {
-			if (other.id != null) {
+		if (categoryId != other.categoryId) {
+			return false;
+
+		}
+		if (name == null) {
+			if (other.name != null) {
 				return false;
 			}
 		}
-		else if (!id.equals(other.id)) {
+		else if (!name.equals(other.name)) {
 			return false;
 		}
+
 		if (value == null) {
 			if (other.value != null) {
 				return false;
@@ -75,6 +82,14 @@ public class EmAnalyticsCategoryParam implements Serializable
 		}
 		return true;
 	}
+
+	public long getCategoryId()
+	{
+		return categoryId;
+	}
+
+	//@Column(name="NAME")
+	//private String name;
 
 	/*public String getName() {
 		return this.name;
@@ -88,27 +103,39 @@ public class EmAnalyticsCategoryParam implements Serializable
 		return emAnalyticsCategory;
 	}
 
-	public EmAnalyticsCategoryParamPK getId()
+	public String getName()
 	{
-		return id;
+		return name;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 
 	public String getValue()
 	{
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (id == null ? 0 : id.hashCode());
+
+		result = prime * result + (int) (categoryId ^ categoryId >>> 32);
+		result = prime * result + (name == null ? 0 : name.hashCode());
 		result = prime * result + (value == null ? 0 : value.hashCode());
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+
+	public void setCategoryId(long categoryId)
+	{
+		this.categoryId = categoryId;
 	}
 
 	public void setEmAnalyticsCategory(EmAnalyticsCategory emAnalyticsCategory)
@@ -116,9 +143,9 @@ public class EmAnalyticsCategoryParam implements Serializable
 		this.emAnalyticsCategory = emAnalyticsCategory;
 	}
 
-	public void setId(EmAnalyticsCategoryParamPK id)
+	public void setName(String name)
 	{
-		this.id = id;
+		this.name = name;
 	}
 
 	public void setValue(String value)

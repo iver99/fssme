@@ -24,6 +24,8 @@ public class PersistenceManager
 	 */
 	public static final String TESTENV_PROP = "SSF.INTERNAL.TESTENV";
 
+	public static final String TESTENV_HUDSON_PROP = "SSF.INTERNAL.HUDSON.TESTENV";
+
 	/**
 	 * For the whole JVM life cycle, IS_TEST_ENV can only be set once
 	 */
@@ -32,8 +34,7 @@ public class PersistenceManager
 	private static final String PERSISTENCE_UNIT = "EmaasAnalyticsPublicModel";
 	private static final String TEST_PERSISTENCE_UNIT = "EmaasAnalyticsPublicModelTest";
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
-	private static final String TENANT_ID_STR = "ssftenant.id";
-	private static final String TENANT_USERID = "ssfuser.id";
+	private static final String TENANT_ID_STR = "tenant";
 
 	public static PersistenceManager getInstance()
 	{
@@ -68,8 +69,15 @@ public class PersistenceManager
 		}
 
 		if (IS_TEST_ENV) {
-			Properties props = loadProperties(CONNECTION_PROPS_FILE);
-			if (System.getenv("T_WORK") != null) {
+			Properties props = null;
+			String sresult = System.getProperty(TESTENV_HUDSON_PROP, "false");
+
+			boolean bResult = "true".equalsIgnoreCase(sresult);
+			if (bResult) {
+				props = loadProperties(CONNECTION_PROPS_FILE);
+			}
+
+			if (System.getenv("T_WORK") != null && !bResult) {
 				props = QAToolUtil.getDbProperties();
 			}
 			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);

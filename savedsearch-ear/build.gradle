@@ -5,7 +5,7 @@ configurations {
     appServer     
 }
 
-version = '1.0.0'
+version = project.ext.getServiceVersion("SavedSearchService")
 group = 'emaas/applications/savedsearch-framework'
 
 def artifactId = appName 
@@ -31,8 +31,8 @@ dependencies
 	earlib (project(':savedsearch-core')){transitive = false}
 	earlib (project(':savedsearch-entities')){transitive = false}
 	earlib (project(':savedsearch-web-utils')){transitive = false} 
-	earlib(group: 'emaas.platform', name: 'registry-lookup-client', version: '1.0.1') {transitive=false }
-	earlib(group: 'emaas.platform', name: 'registry-client', version: '1.0.1') {transitive=false }
+	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+') {transitive=false }
+	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+') {transitive=false }
         earlib(group: 'org.apache.zookeeper', name:'zookeeper', version:'3.4.6') {transitive=false }
         earlib(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {transitive=false }
         earlib(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1')
@@ -71,9 +71,7 @@ task appServerInit << {
 
 	dependencies 
 	{
-	        // we are pulling in wlfullclient from "http://artifactory.oraclecorp.com/artifactory/emaas-sandbox-local/" as a temp measure
-          	// once we get right set of JARs figured out - we will remove this
-        	appServer compile(group: 'test', name: 'wlfullclient', version: '2.6')
+		appServer (group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0')
 	} 
 	if (!project.hasProperty('serverHost')) { 
 		project.ext.serverHost = "$appServerconfig.serverName"; 

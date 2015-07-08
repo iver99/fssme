@@ -22,6 +22,7 @@ public class TestUtils
 	public static final String TENANT_ID1 = "1.User1";
 	public static final String TENANT_ID2 = "2.User2";
 	public static final String TENANT_ID3 = "3.User3";
+	public static final String TENANT_USER_ID1 = "1.User3";
 
 	public static Long getInternalTenantId(String id)
 	{

@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -29,7 +30,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  */
 @Entity
 @Multitenant
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "ssftenant.id", length = 32)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_FOLDERS")
 @NamedQueries({
 		@NamedQuery(name = "Folder.getSubFolder", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= "
@@ -95,7 +96,8 @@ public class EmAnalyticsFolder implements Serializable
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
 	@ManyToOne
-	@JoinColumn(name = "PARENT_ID")
+	@JoinColumns({ @JoinColumn(name = "PARENT_ID", referencedColumnName = "FOLDER_ID"),
+			@JoinColumn(name = "PARENT_ID", referencedColumnName = "FOLDER_ID", insertable = false, updatable = false) })
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
@@ -103,8 +105,8 @@ public class EmAnalyticsFolder implements Serializable
 	private Set<EmAnalyticsFolder> emAnalyticsFolders;
 
 	//bi-directional many-to-one association to EmAnalyticsSearch
-	//	@OneToMany(mappedBy = "emAnalyticsFolder", fetch = FetchType.EAGER)
-	//	private Set<EmAnalyticsSearch> emAnalyticsSearches;
+	@OneToMany(mappedBy = "emAnalyticsFolder", fetch = FetchType.LAZY)
+	private Set<EmAnalyticsSearch> emAnalyticsSearches;
 
 	public EmAnalyticsFolder()
 	{
