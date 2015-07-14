@@ -66,7 +66,6 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 						+ ") doesn't match schema version:(" + schemaVer.getMajorVersion() + "." + schemaVer.getMinorVersion()
 						+ ")";
 				logger.error(errMsg);
-				PersistenceManager.getInstance().closeEntityManagerFactory();
 				throw new RuntimeException(errMsg);
 			}
 		}

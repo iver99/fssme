@@ -282,9 +282,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		logger.info("Post-starting 'Service Registry' application service");
 		registerService();
 
-		logger.info("Post-starting service, attempting to create entityimanager factory");
-		PersistenceManager.getInstance().createEntityManagerFactory();
-		logger.info("Post-starting service, entityimanager factory created");
 	}
 
 	@Override
@@ -301,10 +298,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Pre-stopping service, attempting to close entityimanager factory");
-		PersistenceManager.getInstance().closeEntityManagerFactory();
-		logger.info("Pre-stopping service, entityimanager factory closed");
-
 		logger.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
 		logger.debug("Pre-stopped 'Service Regsitry'");
