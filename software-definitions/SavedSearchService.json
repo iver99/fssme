@@ -13,7 +13,7 @@
             "operation": "undeploy",
             "configurations": [{
                 "name": "applicationName",
-                "defaultValue": "emaas-applications-savedsearch-ear"
+                "defaultValue": "SavedSearchService"
             }]
         },
         {
@@ -21,7 +21,7 @@
             "operation": "start",
             "configurations": [{
                 "name": "applicationName",
-                "defaultValue": "emaas-applications-savedsearch-ear"
+                "defaultValue": "SavedSearchService"
             }]
         },
         {
@@ -29,7 +29,7 @@
             "operation": "stop",
             "configurations": [{
                 "name": "applicationName",
-                "defaultValue": "emaas-applications-savedsearch-ear"
+                "defaultValue": "SavedSearchService"
             }]
         },
         {
