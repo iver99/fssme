@@ -20,6 +20,8 @@ import javax.management.ObjectName;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import oracle.sysman.emaas.platform.savedsearch.utils.JMXUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,6 +50,8 @@ public class EMTargetInitializer implements ServletContextListener
 			if (mbs.isRegistered(emTargetRuntimeName)) {
 				mbs.unregisterMBean(emTargetRuntimeName);
 			}
+			JMXUtil.getInstance().unregisterMBeans();
+
 		}
 		catch (Exception e) {
 			logger.error("Unregister MBean for " + m_target_type + " failed.", e);
@@ -63,6 +67,7 @@ public class EMTargetInitializer implements ServletContextListener
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			EMTargetMXBeanImpl mxbean = new EMTargetMXBeanImpl(appName);
 			mbs.registerMBean(mxbean, emTargetRuntimeName);
+			JMXUtil.getInstance().registerMBeans();
 		}
 		catch (InstanceAlreadyExistsException e) {
 			logger.error("EMTargetMXBeanImpl already exists ", e);
