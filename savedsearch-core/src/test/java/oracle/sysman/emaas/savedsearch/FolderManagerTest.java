@@ -12,7 +12,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -644,6 +644,15 @@ public class FolderManagerTest extends BaseTest
 		finally {
 			TenantContext.clearContext();
 		}
+	}
+		
+	 @Test
+        public static void createreadFolderByTenantr() throws Exception
+        {
+		EmAnalyticsFolder  tmp = new EmAnalyticsFolder();
+		tmp.setFolderId(1);
+		tmp.setName("op");
+		 AssertJUnit.assertEquals("op", tmp.getName());	
 	}
 
 }

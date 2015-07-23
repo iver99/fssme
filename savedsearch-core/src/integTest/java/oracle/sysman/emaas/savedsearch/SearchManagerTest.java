@@ -128,6 +128,29 @@ public class SearchManagerTest extends BaseTest
 		return widget;
 	}
 
+	public static void incrementSeq()
+	{
+
+		long result = 0;
+
+		EntityManager em = null;
+		try {
+			final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+			em = emf.createEntityManager();
+			em.createNativeQuery("SELECT EMS_ANALYTICS_SEARCH_SEQ.NEXTVAL FROM DUAL").getSingleResult();
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
 	@BeforeClass
 	public void initTenantDetails()
 	{
@@ -620,7 +643,7 @@ public class SearchManagerTest extends BaseTest
 		SearchManager sm = SearchManager.getInstance();
 		Search search1 = SearchManagerTest.createTestSearch(sm, folder, cat, "Search Name " + System.currentTimeMillis());
 
-		SearchManagerTestMockup.incrementSeq();
+		SearchManagerTest.incrementSeq();
 
 		List<Search> searchList = new ArrayList<Search>();
 		searchList.add(search1);
