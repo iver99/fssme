@@ -3,6 +3,7 @@
      <lrg name="emcpssf_qa_test_3n" launcher="tests/suites/emcpssf_qa_test_3n.gradle" description="lrg for QATest">
          <pipelines>
              <pipeline name="PRODUCT"/>
+            <pipeline name="COMPONENT"/>
          </pipelines>
      </lrg>
 
@@ -10,6 +11,7 @@
      <lrg name="emcpssf_dev_test_3n" launcher="tests/suites/emcpssf_dev_test_3n.gradle" description="lrg for DEVTest">
              <pipelines>
              <pipeline name="PRODUCT"/>
+            <pipeline name="COMPONENT"/>
              </pipelines>
      </lrg>
 
