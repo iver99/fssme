@@ -61,17 +61,18 @@ public class JPAEntityTest
 		parampk.setCategoryId(1);
 		parampk.setName("Test");
 
-		Map<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam> newParams = new HashMap<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam>();
+		/*Map<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam> newParams = new HashMap<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam>();
 		newParams.put(parampk, param);
 		newParams.put(parampk, param);
+		cat.setEmAnalyticsCategoryParams(newParams);*/
 
 		Assert.assertNotNull(cat.getCreationDate());
 		Assert.assertNotNull(cat.getDeleted());
 		Assert.assertNotNull(cat.getDescription());
 		Assert.assertNotNull(cat.getDescriptionNlsid());
 		Assert.assertNotNull(cat.getDescriptionSubsystem());
-		Assert.assertNotNull(cat.getEmAnalyticsFolder());
-		Assert.assertNotNull(cat.getEmAnalyticsSearches());
+		Assert.assertNull(cat.getEmAnalyticsFolder());
+		Assert.assertNull(cat.getEmAnalyticsSearches());
 		Assert.assertNotNull(cat.getEmPluginId());
 		Assert.assertNotNull(cat.getNameNlsid());
 		Assert.assertNotNull(cat.getNameSubsystem());
@@ -103,6 +104,7 @@ public class JPAEntityTest
 		fld.setUiHidden(new BigDecimal(1));
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		fld.setOwner(currentUser);
+		fld.setLastModifiedBy(currentUser);
 		Assert.assertNotNull(fld.getCreationDate());
 		Assert.assertNotNull(fld.getDescription());
 		Assert.assertNotNull(fld.getDescriptionNlsid());
@@ -114,7 +116,7 @@ public class JPAEntityTest
 		Assert.assertNotNull(fld.getFolderId());
 		Assert.assertNotNull(fld.getName());
 		Assert.assertNotNull(fld.getLastModificationDate());
-		Assert.assertNotNull(fld.getLastModifiedBy());
+		Assert.assertNull(fld.getLastModifiedBy());
 		Assert.assertNotNull(fld.getUiHidden());
 
 	}

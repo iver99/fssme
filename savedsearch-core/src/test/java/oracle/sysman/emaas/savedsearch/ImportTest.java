@@ -108,6 +108,16 @@ public class ImportTest extends BaseTest
 			list.add(folder1);
 			List<FolderImpl> listobj = objFolder.saveMultipleFolders(list);
 			AssertJUnit.assertTrue(listobj.size() == 2);
+			list.clear();
+			for (Folder obj : listobj) {
+				folder1 = new FolderDetails();
+				folder1.setName(obj.getName());
+				folder1.setDescription(obj.getDescription());
+				folder1.setUiHidden(obj.isUiHidden());
+				folder1.setId(obj.getId());
+				list.add(folder1);
+			}
+			listobj = objFolder.saveMultipleFolders(list);
 
 			for (Folder obj : listobj) {
 				AssertJUnit.assertNotNull(obj.getLastModifiedOn());

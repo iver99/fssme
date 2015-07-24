@@ -13,6 +13,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
+
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -48,6 +49,8 @@ public class FolderManagerTest extends BaseTest
 			folder = objFolder.saveFolder(folder);
 			folderId = folder.getId();
 			AssertJUnit.assertFalse(folderId == 0);
+			Assert.assertNotNull(objFolder.savePath(folder));
+			Assert.assertNotNull(objFolder.getRootFolder());
 
 		}
 		catch (Exception e) {
@@ -132,6 +135,15 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
+	@Test
+	public static void createreadFolderByTenantr() throws Exception
+	{
+		EmAnalyticsFolder tmp = new EmAnalyticsFolder();
+		tmp.setFolderId(1);
+		tmp.setName("op");
+		AssertJUnit.assertEquals("op", tmp.getName());
+	}
+
 	@AfterClass
 	public static void DeleteFolder() throws Exception
 	{
@@ -184,6 +196,23 @@ public class FolderManagerTest extends BaseTest
 			TenantContext.clearContext();
 		}
 	}
+
+	/*@Test
+	public void testDeleteSystemFolder() throws Exception
+	{
+		TenantContext.setContext(TENANT_ID_OPC1);
+		FolderManager foldMan = FolderManager.getInstance();
+		try {
+			foldMan.deleteFolder(TA_FOLDER_ID, true);
+			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is deleted unexpectedly", false);
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_DELETE_FOLDER, emanfe.getErrorCode());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+	}*/
 
 	@Test
 	public static void testUserSaveFolder() throws Exception
@@ -313,23 +342,6 @@ public class FolderManagerTest extends BaseTest
 		}
 
 	}
-
-	/*@Test
-	public void testDeleteSystemFolder() throws Exception
-	{
-		TenantContext.setContext(TENANT_ID_OPC1);
-		FolderManager foldMan = FolderManager.getInstance();
-		try {
-			foldMan.deleteFolder(TA_FOLDER_ID, true);
-			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is deleted unexpectedly", false);
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_DELETE_FOLDER, emanfe.getErrorCode());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-	}*/
 
 	@Test
 	public void testDeleteInvalidFolderId() throws Exception
@@ -507,6 +519,31 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
+	/*@Test
+	public void testUpdateSystemFolder() throws EMAnalyticsFwkException
+	{
+		TenantContext.setContext(TENANT_ID_OPC1);
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		try {
+
+			Folder folder = objFolder.getFolder(TA_FOLDER_ID);
+			AssertJUnit.assertNotNull(folder);
+			folder.setName("My folder");
+			folder.setDescription("Database search");
+
+			// update the folder
+			objFolder.updateFolder(folder);
+			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is updated unexpectedly", false);
+		}
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_UPDATE_FOLDER, e.getErrorCode());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+	}*/
+
 	@Test
 	public void testGetSubFolder() throws Exception
 	{
@@ -559,31 +596,6 @@ public class FolderManagerTest extends BaseTest
 		}
 
 	}
-
-	/*@Test
-	public void testUpdateSystemFolder() throws EMAnalyticsFwkException
-	{
-		TenantContext.setContext(TENANT_ID_OPC1);
-		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-		try {
-
-			Folder folder = objFolder.getFolder(TA_FOLDER_ID);
-			AssertJUnit.assertNotNull(folder);
-			folder.setName("My folder");
-			folder.setDescription("Database search");
-
-			// update the folder
-			objFolder.updateFolder(folder);
-			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is updated unexpectedly", false);
-		}
-		catch (EMAnalyticsFwkException e) {
-			e.printStackTrace();
-			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_UPDATE_FOLDER, e.getErrorCode());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-	}*/
 
 	@Test
 	public void testInvalidParentFolder() throws Exception
@@ -644,15 +656,6 @@ public class FolderManagerTest extends BaseTest
 		finally {
 			TenantContext.clearContext();
 		}
-	}
-		
-	 @Test
-        public static void createreadFolderByTenantr() throws Exception
-        {
-		EmAnalyticsFolder  tmp = new EmAnalyticsFolder();
-		tmp.setFolderId(1);
-		tmp.setName("op");
-		 AssertJUnit.assertEquals("op", tmp.getName());	
 	}
 
 }
