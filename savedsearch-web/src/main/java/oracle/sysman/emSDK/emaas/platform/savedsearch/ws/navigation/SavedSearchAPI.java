@@ -32,7 +32,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Saved Search Service
- *
+ * 
  * @since 0.1
  */
 @Path("")
@@ -47,7 +47,7 @@ public class SavedSearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/categories</font><br>
 	 * The string "categories" in the URL signifies read operation on category.
-	 *
+	 * 
 	 * @since 0.1
 	 * @return Lists all the existed categories<br>
 	 *         Response Sample:<br>
@@ -132,7 +132,7 @@ public class SavedSearchAPI
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/entities?folderId=&lt;folder
 	 * Id&gt;</font><br>
 	 * The string "entities?folderId=&lt;folder Id&gt;" in the URL signifies read operation on search with given folder id<br>
-	 *
+	 * 
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id by which user wants to get the entity details
@@ -268,7 +268,7 @@ public class SavedSearchAPI
 	 * List all root folders<br>
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1</font><br>
-	 *
+	 * 
 	 * @since 0.1
 	 * @return Lists all the root folders<br>
 	 *         Response Sample:<br>
