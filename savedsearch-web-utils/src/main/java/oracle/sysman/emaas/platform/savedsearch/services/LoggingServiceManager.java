@@ -21,6 +21,7 @@ import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 import oracle.sysman.emaas.platform.savedsearch.wls.management.AppLoggingManageMXBean;
 
@@ -59,13 +60,14 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	{
 		URL url = LoggingServiceManager.class.getResource("/log4j2_ssf.xml");
 		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
-		logger.info("Log4j2 has been configured");
+		LogUtil.initializeLoggersUpdateTime();
+		logger.info("Dashboard log4j2 logging configuration has been initialized");
 
 		try {
 			registerMBean(MBEAN_NAME);
 		}
 		catch (InstanceAlreadyExistsException e) {
-			logger.error("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
+			logger.warn("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
 			try {
 				unregisterMBean(MBEAN_NAME);
 			}
@@ -117,7 +119,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	}
 
 	private void registerMBean(String name) throws InstanceAlreadyExistsException, MBeanRegistrationException,
-	NotCompliantMBeanException, MalformedObjectNameException
+			NotCompliantMBeanException, MalformedObjectNameException
 	{
 		ObjectName on = new ObjectName(name);
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
@@ -126,7 +128,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	}
 
 	private void unregisterMBean(String name) throws MBeanRegistrationException, InstanceNotFoundException,
-	MalformedObjectNameException
+			MalformedObjectNameException
 	{
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		mbs.unregisterMBean(new ObjectName(name));

@@ -106,6 +106,9 @@ public class TenantSubscriptionUtil
 
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
+		if (true) {
+			return Arrays.asList(new String[] { "APM", "ITAnalytics", "LoganAnalytics" });
+		}
 		if (tenant == null) {
 			return null;
 		}

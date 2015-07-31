@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -30,7 +31,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Category Services
- * 
+ *
  * @since 0.1
  */
 @Path("category")
@@ -187,7 +188,7 @@ public class CategoryAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category/&lt;id&gt;</font><br>
 	 * The string "/category/&lt;id&gt;" in the URL signifies read operation on category with given category Id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param categoryId
 	 *            The category Id which user want to read the details
@@ -247,6 +248,7 @@ public class CategoryAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCategory(@PathParam("id") int categoryId)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/category/{}", categoryId);
 		String message = null;
 		int statusCode = 200;
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -268,7 +270,7 @@ public class CategoryAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/category?name=&lt;name&gt;</font><br>
 	 * The string "/category?name=&lt;name&gt;" in the URL signifies read operation on category with given category name.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param name
 	 *            The name of category which users wants to get the details
@@ -327,6 +329,7 @@ public class CategoryAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCategoryByName(@QueryParam("name") String name)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/category?name={}", name);
 		String message = null;
 		int statusCode = 200;
 		if (name == null) {
@@ -347,8 +350,8 @@ public class CategoryAPI
 			message = e.getMessage();
 			_logger.error(
 					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
-							+ "An error occurredh while retrieving all category by name, statusCode:" + e.getStatusCode()
-							+ " ,err:" + e.getMessage(), e);
+					+ "An error occurredh while retrieving all category by name, statusCode:" + e.getStatusCode()
+					+ " ,err:" + e.getMessage(), e);
 
 		}
 
@@ -483,7 +486,7 @@ public class CategoryAPI
 	 * Each search object include following elements :<br>
 	 * id,name,description,category,folder,owner,guid,createdOn,lastModifiedOn,lastModifiedBy,
 	 * lastAccessDate,systemSearch,parameters,queryStr,locked,uiHidden,isWidget
-	 * 
+	 *
 	 * @since 0.1
 	 * @param uri
 	 * @param catId
@@ -572,6 +575,7 @@ public class CategoryAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSearchesByCategory(@PathParam("id") String categoryId, @HeaderParam("SSF_OOB") String oobSearch)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/category/{}/searches", categoryId);
 		SearchManager searchMan = SearchManager.getInstance();
 		CategoryManager catMan = CategoryManager.getInstance();
 		Search search;

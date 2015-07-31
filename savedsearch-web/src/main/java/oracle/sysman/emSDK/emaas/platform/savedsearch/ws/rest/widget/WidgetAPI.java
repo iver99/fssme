@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
@@ -27,7 +28,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Saved Search Service
- * 
+ *
  * @since 0.1
  */
 @Path("/widgets")
@@ -42,7 +43,7 @@ public class WidgetAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/widgets</font><br>
 	 * The string "widgets" in the URL signifies read operation on widget.
-	 * 
+	 *
 	 * @since 0.1
 	 * @return Lists all the existed widgets<br>
 	 *         Response Sample:<br>
@@ -89,6 +90,7 @@ public class WidgetAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllWidgets(@HeaderParam(value = "OAM_REMOTE_USER") String userTenant)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/widgets");
 		String message = null;
 		int statusCode = 200;
 

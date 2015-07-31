@@ -12,6 +12,8 @@ package oracle.sysman.emaas.platform.savedsearch.utils;
 
 import java.util.List;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogContext;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -26,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 public class RegistryLookupUtil
 {
 	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
+	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
@@ -33,6 +36,9 @@ public class RegistryLookupUtil
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		InteractionLogContext ilc = LogUtil.setInteractionLogThreadContext(tenantName, "ServiceManager:" + serviceName + "/"
+				+ version, LogUtil.InteractionLogDirection.OUT);
+		itrLogger.debug("Retrieved instance {}", info);
 		Link lk = null;
 		try {
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
@@ -60,11 +66,16 @@ public class RegistryLookupUtil
 					}
 				}
 			}
+			itrLogger.debug("Retrieved link {} for service \"{}\", version \"{}\", rel \"{}\"", lk, serviceName, version, rel);
 			return lk;
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return lk;
+		}
+		finally {
+			LogUtil.setInteractionLogThreadContext(ilc.getTenantId(), ilc.getServiceInvoked(), ilc.getDirection() == null ? null
+					: LogUtil.InteractionLogDirection.valueOf(ilc.getDirection()));
 		}
 	}
 }
