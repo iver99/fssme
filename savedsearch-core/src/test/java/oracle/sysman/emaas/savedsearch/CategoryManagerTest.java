@@ -58,6 +58,13 @@ public class CategoryManagerTest extends BaseTest
 		cat.setProviderAssetRoot("TestProviderAssetRoot");
 		cat = objCategory.saveCategory(cat);
 
+		try {
+			objCategory.editCategory(cat);
+		}
+		catch (Exception e) {
+
+		}
+
 		SearchManager objSearch = SearchManager.getInstance();
 
 		//create a new search inside the folder we created
