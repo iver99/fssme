@@ -1,11 +1,8 @@
 package oracle.sysman.emaas.savedsearch;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -64,49 +61,12 @@ public class SearchManagerTestMockup
 		}
 	}
 
-	public static void incrementSeq()
-	{
-		Connection conn = null;
-		Statement stmt = null;
-		String sql = "SELECT EMS_ANALYTICS_SEARCH_SEQ.NEXTVAL FROM DUAL";
-
-		try {
-			conn = SearchManagerTestMockup.createConnection();
-			stmt = conn.createStatement();
-			stmt.execute(sql);
-		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				}
-				catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				}
-				catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
 	private static Connection createConnection() throws ClassNotFoundException, SQLException
 	{
-		Properties pr = SearchManagerTestMockup.loadProperties(CONNECTION_PROPS_FILE);
-		if (System.getenv("T_WORK") != null) {
-			pr = QAToolUtil.getDbProperties();
-		}
+		Properties pr = new Properties();
+		//if (System.getenv("T_WORK") != null) {
+		pr = QAToolUtil.getDbProperties();
+		//}
 		Class.forName(pr.getProperty(QAToolUtil.JDBC_PARAM_DRIVER_VALUE));
 		String url = pr.getProperty(QAToolUtil.JDBC_PARAM_URL);
 		String user = pr.getProperty(QAToolUtil.JDBC_PARAM_USER);
@@ -114,7 +74,7 @@ public class SearchManagerTestMockup
 		return DriverManager.getConnection(url, user, password);
 	}
 
-	private static Properties loadProperties(String testPropsFile)
+	/*private static Properties loadProperties(String testPropsFile)
 	{
 		Properties connectionProps = new Properties();
 		InputStream input = null;
@@ -129,5 +89,5 @@ public class SearchManagerTestMockup
 		}
 		return connectionProps;
 
-	}
+	}*/
 }

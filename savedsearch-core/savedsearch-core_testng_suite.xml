@@ -21,7 +21,10 @@
 			<class name="oracle.sysman.emaas.savedsearch.MultitenentSearchTest" />
 			<class name="oracle.sysman.emaas.savedsearch.TenantDataLeakTest" />
 			<class name="oracle.sysman.emaas.savedsearch.SearchUserTest" /> 	
-			<class name="oracle.sysman.emaas.savedsearch.CategoryByUserTest" />
+			<class name="oracle.sysman.emaas.savedsearch.CategoryByUserTest" />			
+			<class name="oracle.sysman.emaas.savedsearch.DBConnectionManagerTest" />
+			<class name="oracle.sysman.emaas.savedsearch.FolderSetTest" />		
+			<class name="oracle.sysman.emaas.savedsearch.JPAEntityTest" />			
 			<class name="oracle.sysman.emaas.savedsearch.PersistenceManagerTest" />
 			<class name="oracle.sysman.emaas.savedsearch.Cleanup" />
 		</classes>

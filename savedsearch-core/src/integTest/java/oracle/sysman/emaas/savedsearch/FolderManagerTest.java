@@ -1,11 +1,14 @@
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -13,6 +16,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
@@ -205,6 +209,44 @@ public class FolderManagerTest extends BaseTest
 	}*/
 
 	@Test
+	public void entityClassTest()
+	{
+		EmAnalyticsFolder fld = new EmAnalyticsFolder();
+		Date utcNow = DateUtil.getCurrentUTCTime();
+		fld.setCreationDate(utcNow);
+		fld.setDescription("desc");
+		fld.setDescriptionNlsid("desc");
+		fld.setDescriptionSubsystem("desc");
+		fld.setEmAnalyticsCategories(null);
+		fld.setEmAnalyticsFolder(null);
+		fld.setEmAnalyticsFolders(null);
+		fld.setEmPluginId("null");
+		fld.setFolderId(1);
+		fld.setName("abc");
+		fld.setLastModificationDate(utcNow);
+		fld.setLastModifiedBy("admin");
+		fld.setUiHidden(new BigDecimal(1));
+
+		Assert.assertNotNull(fld.getCreationDate());
+		Assert.assertNotNull(fld.getDescription());
+		Assert.assertNotNull(fld.getDescriptionNlsid());
+		Assert.assertNotNull(fld.getDescriptionSubsystem());
+
+		Assert.assertNull(fld.getEmAnalyticsCategories());
+		Assert.assertNull(fld.getEmAnalyticsFolder());
+		Assert.assertNull(fld.getEmAnalyticsFolders());
+		Assert.assertNotNull(fld.getEmPluginId());
+
+		Assert.assertNotNull(fld.getFolderId());
+		Assert.assertNotNull(fld.getName());
+
+		Assert.assertNotNull(fld.getLastModificationDate());
+		Assert.assertNotNull(fld.getLastModifiedBy());
+		Assert.assertNotNull(fld.getUiHidden());
+
+	}
+
+	@Test
 	public void testDeleteInvalidFolderId() throws Exception
 	{
 		FolderManager foldMan = FolderManager.getInstance();
@@ -385,6 +427,31 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
+	/*@Test
+	public void testUpdateSystemFolder() throws EMAnalyticsFwkException
+	{
+		TenantContext.setContext(TENANT_ID_OPC1);
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		try {
+
+			Folder folder = objFolder.getFolder(TA_FOLDER_ID);
+			AssertJUnit.assertNotNull(folder);
+			folder.setName("My folder");
+			folder.setDescription("Database search");
+
+			// update the folder
+			objFolder.updateFolder(folder);
+			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is updated unexpectedly", false);
+		}
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_UPDATE_FOLDER, e.getErrorCode());
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+	}*/
+
 	@Test
 	public void testGetSubFolder() throws Exception
 	{
@@ -438,31 +505,6 @@ public class FolderManagerTest extends BaseTest
 		}
 
 	}
-
-	/*@Test
-	public void testUpdateSystemFolder() throws EMAnalyticsFwkException
-	{
-		TenantContext.setContext(TENANT_ID_OPC1);
-		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-		try {
-
-			Folder folder = objFolder.getFolder(TA_FOLDER_ID);
-			AssertJUnit.assertNotNull(folder);
-			folder.setName("My folder");
-			folder.setDescription("Database search");
-
-			// update the folder
-			objFolder.updateFolder(folder);
-			AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is updated unexpectedly", false);
-		}
-		catch (EMAnalyticsFwkException e) {
-			e.printStackTrace();
-			AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_UPDATE_FOLDER, e.getErrorCode());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-	}*/
 
 	@Test
 	public void testInvalidParentFolder() throws Exception

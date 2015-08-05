@@ -1047,7 +1047,7 @@ public class SearchManagerImpl extends SearchManager
 	 * (EMAnalyticsFwkException e) { folder =null; } return folder; }
 	 */
 
-	private void OrderBybuilder(StringBuilder query, String[] orderBy)
+	/*private void OrderBybuilder(StringBuilder query, String[] orderBy)
 	{
 		// incidentally the field names for EmAnalyticsSearch and SearchImpl is
 		// same , hence order by will work here
@@ -1062,7 +1062,7 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 
-	}
+	}*/
 
 	private void updateSearchLastAccess(EmAnalyticsSearch search, Date lastAccessDate)
 	{

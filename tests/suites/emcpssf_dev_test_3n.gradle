@@ -94,8 +94,8 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"			
 	include "oracle/sysman/emaas/savedsearch/CategoryTest.class"
 	include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
-	include "oracle/sysman/emaas/savedsearch/searchParamTest.class"
-	include "oracle/sysman/emaas/savedsearch/searchTest.class"
+	include "oracle/sysman/emaas/savedsearch/SearchParamTest.class"
+	include "oracle/sysman/emaas/savedsearch/SearchTest.class"
 	include "oracle/sysman/emaas/savedsearch/CategoryManagerTest.class"
 	include "oracle/sysman/emaas/savedsearch/searchManagerTest.class"
 	include "oracle/sysman/emaas/savedsearch/VersionManagerTest.class"
@@ -105,13 +105,17 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/savedsearch/MultitenentFolderTest.class"
 	include "oracle/sysman/emaas/savedsearch/MultitenentCategoryTest"
 	include "oracle/sysman/emaas/savedsearch/MultitenentSearchTest.class"
+        include "oracle/sysman/emaas/savedsearch/QAToolUtilTest.class"
+	include "oracle/sysman/emaas/savedsearch/DBConnectionManagerTest.class"	
 	useRestAssured =true
+
 }
    task DEVTest1(type:EMTest,dependsOn: DEVTest){	
 		
 
 	include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
 	useRestAssured =true
+	
 }
 task DEVTest2(type:EMTest,dependsOn: DEVTest1){	
 		
@@ -119,6 +123,7 @@ task DEVTest2(type:EMTest,dependsOn: DEVTest1){
 
 	include "oracle/sysman/emaas/savedsearch/Cleanup.class"
 	useRestAssured =true
+	
 }
 task small_deploy_3n_cleanup(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}

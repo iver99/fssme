@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -216,7 +217,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	/*@Test
+	@Test
 	public void testDeleteSystemSearch() throws Exception
 	{
 		try {
@@ -229,7 +230,7 @@ public class SearchTest extends BaseTest
 			Assert.assertEquals(EMAnalyticsFwkException.ERR_DELETE_SEARCH, e.getErrorCode(),
 					"unexpected error code: " + e.getErrorCode());
 		}
-	}*/
+	}
 
 	@Test
 	public void testDuplicate() throws Exception
@@ -322,6 +323,27 @@ public class SearchTest extends BaseTest
 			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 
+		boolean bResult = true;
+		try {
+			Search search = objSearch.getSearch(searchId);
+			AssertJUnit.assertNotNull(search);
+			//now set the some value
+			char[] chars = new char[100];
+			Arrays.fill(chars, 'a');
+			String s = new String(chars);
+
+			search.setName(s);
+			search.setDescription("testcase checking");
+
+			//now update the
+			Search s2 = objSearch.editSearch(search);
+
+		}
+		catch (Exception e) {
+
+			bResult = false;
+		}
+		Assert.assertTrue(bResult == false);
 	}
 
 	/*@Test
