@@ -208,12 +208,11 @@ dependencies {
 	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1'){transitive = false}
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
-        providedCompile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2')	
-
-
-
-
-
+        providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+') 
+        providedCompile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
+            exclude group: 'emaas.platform', module: 'registry-lookup-client'
+            exclude group: 'emaas.platform', module: 'registry-client'
+        }	
 
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
