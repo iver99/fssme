@@ -109,17 +109,12 @@ public class SearchManagerImpl extends SearchManager
 			throw eme;
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while getting the search object by ID: " + searchId, e);
-				throw new EMAnalyticsFwkException("Error while deleting the search object by ID: " + searchId,
-						EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { searchId }, e);
-			}
+
+			EmAnalyticsProcessingException.processSearchPersistantException(e, searchObj.getName());
+			_logger.error("Error while getting the search object by ID: " + searchId, e);
+			throw new EMAnalyticsFwkException("Error while deleting the search object by ID: " + searchId,
+					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { searchId }, e);
+
 		}
 		finally {
 			if (em != null) {

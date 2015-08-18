@@ -279,25 +279,13 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYICS_CATEGORY_U01")) {
-				throw new EMAnalyticsFwkException("Category name " + category.getName() + " already exist",
-						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
-			}
-			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_CATEGORY_FK1")) {
-				throw new EMAnalyticsFwkException("Default folder with id " + category.getDefaultFolderId() + " missing: "
-						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
-			}
-			else {
-				_logger.error("Error while saving the category: " + category.getName(), dmlce);
-				throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
-						EMAnalyticsFwkException.ERR_CREATE_CATEGORY, null, dmlce);
-			}
+			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId() == null ? -1
+					: category.getDefaultFolderId(), category.getName());
+
+			_logger.error("Error while saving the category: " + category.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_CATEGORY, null, dmlce);
+
 		}
 		catch (Exception e) {
 			_logger.error("Error while saving the category: " + category.getName(), e);

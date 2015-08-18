@@ -262,25 +262,11 @@ public class FolderManagerImpl extends FolderManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01")) {
-				throw new EMAnalyticsFwkException("Folder with name " + folder.getName() + " already exist",
-						EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[] { folder.getName() });
-			}
-			//			else if (dmlce.getCause()!=null && dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1")) {
-			//				throw new EMAnalyticsFwkException("Parent folder with id " + folder.getParentId() + " does not exist: ",
-			//						EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
-			//			}
-			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
-				throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
-						EMAnalyticsFwkException.ERR_CREATE_FOLDER, null);
-			}
+			EmAnalyticsProcessingException.processFolderPersistantException(dmlce, -1, -1, folder.getName());
+			_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null);
+
 		}
 		catch (Exception e) {
 
@@ -408,25 +394,11 @@ public class FolderManagerImpl extends FolderManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01")) {
-				throw new EMAnalyticsFwkException("Folder with name " + folder.getName() + " already exist",
-						EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[] { folder.getName() });
-			}
-			else if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1")) {
-				throw new EMAnalyticsFwkException("Parent folder with Id " + folder.getParentId() + " does not exist: ",
-						EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
-			}
-			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
-				throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
-						EMAnalyticsFwkException.ERR_CREATE_FOLDER, null);
-			}
+			EmAnalyticsProcessingException.processFolderPersistantException(dmlce, -1, folder.getParentId(), folder.getName());
+			_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null);
+
 		}
 		catch (Exception e) {
 
@@ -468,25 +440,11 @@ public class FolderManagerImpl extends FolderManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01")) {
-				throw new EMAnalyticsFwkException("Folder name " + folder.getName() + " already exist",
-						EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[] { folder.getName() });
-			}
-			else if (dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1")) {
-				throw new EMAnalyticsFwkException("Parent folder with Id " + folder.getParentId() + " missing: "
-						+ folder.getName(), EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
-			}
-			if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
-				throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
-						EMAnalyticsFwkException.ERR_CREATE_FOLDER, null, dmlce);
-			}
+			_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
+			EmAnalyticsProcessingException.processFolderPersistantException(dmlce, -1, folder.getParentId(), folder.getName());
+			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null, dmlce);
+
 		}
 		catch (Exception e) {
 
