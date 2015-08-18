@@ -103,12 +103,18 @@ public class SavedSearchAPI
 			message = jsonArray.toString();
 		}
 		catch (JSONException e) {
+			statusCode = 500;
+			message = e.getMessage();
 			_logger.error("Failed to get category JSON string (1), statusCode:" + "500" + " ,err:" + e.getMessage(), e);
 		}
 		catch (EMAnalyticsFwkException e) {
+			statusCode = e.getStatusCode();
+			message = e.getMessage();
 			_logger.error("Failed to get all categories, statusCode:" + e.getStatusCode() + " ,err:" + e.getMessage(), e);
 		}
 		catch (Exception e) {
+			statusCode = 500;
+			message = e.getMessage();
 			_logger.error("Unknow error when retrieving all categories, statusCode:" + "500" + " ,err:" + e.getMessage(), e);
 		}
 		return Response.status(statusCode).entity(message).build();

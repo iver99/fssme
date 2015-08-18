@@ -601,11 +601,13 @@ public class SearchAPI
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-
+			statusCode = e.getStatusCode();
+			message = e.getMessage();
 			_logger.error(e.getMessage(), e.getStatusCode());
 		}
 		catch (JSONException e) {
-
+			statusCode = 400;
+			message = e.getMessage();
 			_logger.error(e.getMessage() + " Status code :400", e);
 		}
 

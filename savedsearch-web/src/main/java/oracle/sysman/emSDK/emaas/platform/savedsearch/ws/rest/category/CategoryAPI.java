@@ -347,12 +347,15 @@ public class CategoryAPI
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-
+			statusCode = e.getStatusCode();
+			message = e.getMessage();
 			_logger.error("An error occurredh while retrieving all category by name, statusCode:" + e.getStatusCode() + " ,err:"
 					+ e.getMessage(), e);
 
 		}
 		catch (JSONException e) {
+			statusCode = 400;
+			message = e.getMessage();
 			_logger.error(
 					"An error occurred while retrieving all category by name, statusCode:" + "400" + " ,err:" + e.getMessage(), e);
 		}
