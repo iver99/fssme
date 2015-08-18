@@ -101,7 +101,7 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
 
 // include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
         useRestAssured=true
-
+ext.set("testType", "integration")
 }
 task small_deploy_3n_cleanup(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
@@ -120,3 +120,4 @@ task small_deploy_3n_cleanup(type: EMTest) {
 }
 
 task emcpssf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
+apply from: "../../codeCoverage/codeCoverage.gradle"

@@ -97,7 +97,7 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_NAME = "WIDGET_NAME";
 	public static final String NAME_WIDGET_DESCRIPTION = "WIDGET_DESCRIPTION";
 	public static final String NAME_WIDGET_ICON = "WIDGET_ICON";
-	public static final String NAME_WIDGET_HISTOGRAM = "WIDGET_HISTOGRAM";
+	public static final String NAME_WIDGET_VISUAL = "WIDGET_VISUAL";
 	public static final String NAME_WIDGET_OWNER = "WIDGET_OWNER";
 	public static final String NAME_WIDGET_CREATION_TIME = "WIDGET_CREATION_TIME";
 	public static final String NAME_WIDGET_SOURCE = "WIDGET_SOURCE";
@@ -342,8 +342,8 @@ public class EntityJsonUtil
 				if (NAME_WIDGET_ICON.equals(param.getName())) {
 					widgetObj.put(NAME_WIDGET_ICON, param.getValue());
 				}
-				else if (NAME_WIDGET_HISTOGRAM.equals(param.getName())) {
-					widgetObj.put(NAME_WIDGET_HISTOGRAM, param.getValue());
+				else if (NAME_WIDGET_VISUAL.equals(param.getName())) {
+					widgetObj.put(NAME_WIDGET_VISUAL, param.getValue());
 				}
 				else if (NAME_WIDGET_KOC_NAME.equals(param.getName())) {
 					widgetObj.put(NAME_WIDGET_KOC_NAME, param.getValue());
