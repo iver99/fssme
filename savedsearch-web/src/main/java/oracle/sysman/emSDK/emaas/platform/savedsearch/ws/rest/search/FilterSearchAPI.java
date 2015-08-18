@@ -14,7 +14,6 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
@@ -27,7 +26,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Find Searches by Category Name/Category Id/ Folder Id
- *
+ * 
  * @since 0.1
  */
 @Path("searches")
@@ -62,7 +61,7 @@ public class FilterSearchAPI
 	 * Note:<br>
 	 * <font color="red">If more than one query parameters are given, only the first one is applied and all the others are
 	 * ignored</font>
-	 *
+	 * 
 	 * @since 0.1
 	 * @param uri
 	 * @param catId
@@ -235,8 +234,8 @@ public class FilterSearchAPI
 						return getAllSearchByCategory(categId);
 					}
 					catch (EMAnalyticsFwkException e) {
-						message = e.getMessage();
-						return Response.status(e.getStatusCode()).entity(message).build();
+
+						return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 					}
 
 				}
@@ -270,9 +269,8 @@ public class FilterSearchAPI
 			searchList = searchMan.getSearchListByCategoryId(catId);
 		}
 		catch (EMAnalyticsFwkException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-			return Response.status(statusCode).entity(message).build();
+
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 
 		try {
@@ -283,14 +281,13 @@ public class FilterSearchAPI
 					jsonArray.put(jsonObj);
 				}
 				catch (JSONException e) {
-					message = e.getMessage();
-					statusCode = 500;
-					return Response.status(statusCode).entity(message).build();
+
+					return Response.status(500).entity(e.getMessage()).build();
 				}
 			}
 			message = jsonArray.toString();
 		}
-		catch (EMAnalyticsFwkJsonException e) {
+		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 			return Response.status(statusCode).entity(message).build();
@@ -336,10 +333,9 @@ public class FilterSearchAPI
 			}
 			message = jsonArray.toString();
 		}
-		catch (EMAnalyticsFwkJsonException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-			return Response.status(statusCode).entity(message).build();
+		catch (EMAnalyticsFwkException e) {
+
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 		return Response.status(statusCode).entity(message).build();
 	}

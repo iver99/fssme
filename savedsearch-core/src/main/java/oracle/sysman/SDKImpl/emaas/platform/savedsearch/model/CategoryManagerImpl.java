@@ -36,6 +36,7 @@ import javax.persistence.PersistenceException;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -110,23 +111,11 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else if (e.getCause() != null && e.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) { // handles the scenario trying to delete category associated with search
-				_logger.error("Error while deleting the category" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException("Error while deleting the category as it has associated searches",
-						EMAnalyticsFwkException.ERR_DELETE_CATEGORY, null);
-			}
-			else {
-				_logger.error("Error while deleting the category with id:" + categoryId, e);
+			EmAnalyticsProcessingException.processCategoryPersistantException(e, -1, null);
+			_logger.error("Error while deleting the category with id:" + categoryId, e);
+			throw new EMAnalyticsFwkException("Error occurred while deleting the category",
+					EMAnalyticsFwkException.ERR_DELETE_CATEGORY, null, e);
 
-				throw new EMAnalyticsFwkException("Error occurred while deleting the category",
-						EMAnalyticsFwkException.ERR_DELETE_CATEGORY, null, e);
-			}
 		}
 		finally {
 			if (em != null) {
@@ -153,25 +142,12 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause().getMessage().contains("ANALYICS_CATEGORY_U01")) {
-				throw new EMAnalyticsFwkException("Duplicate category name " + category.getName(),
-						EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME, new Object[] { category.getName() });
-			}
-			else if (dmlce.getCause().getMessage().contains("ANALYTICS_CATEGORY_FK1")) {
-				throw new EMAnalyticsFwkException("Default folder with Id " + category.getDefaultFolderId() + " missing: "
-						+ category.getName(), EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER, null);
-			}
-			else if (dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while updating the category: " + category.getName(), dmlce);
-				throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
-						EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, dmlce);
-			}
+			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId(),
+					category.getName());
+			_logger.error("Error while updating the category: " + category.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
+					EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, dmlce);
+
 		}
 		catch (Exception e) {
 			_logger.error("Error while updating the category name: ", e);
@@ -205,17 +181,11 @@ public class CategoryManagerImpl extends CategoryManager
 
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving all the categories", e);
-				throw new EMAnalyticsFwkException("Error while retrieving all the categories",
-						EMAnalyticsFwkException.ERR_GET_CATEGORIES, null, e);
-			}
+			EmAnalyticsProcessingException.processCategoryPersistantException(e, -1, null);
+			_logger.error("Error while retrieving all the categories", e);
+			throw new EMAnalyticsFwkException("Error while retrieving all the categories",
+					EMAnalyticsFwkException.ERR_GET_CATEGORIES, null, e);
+
 		}
 		return categories;
 	}
@@ -234,17 +204,11 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while getting the category object by ID: " + categoryId, e);
-				throw new EMAnalyticsFwkException("category object by ID: " + categoryId + " does not exist",
-						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID, new Object[] { categoryId }, e);
-			}
+			EmAnalyticsProcessingException.processCategoryPersistantException(e, -1, null);
+			_logger.error("Error while getting the category object by ID: " + categoryId, e);
+			throw new EMAnalyticsFwkException("category object by ID: " + categoryId + " does not exist",
+					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID, new Object[] { categoryId }, e);
+
 		}
 		finally {
 			if (em != null) {

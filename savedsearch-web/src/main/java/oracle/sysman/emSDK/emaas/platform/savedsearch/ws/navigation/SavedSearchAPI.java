@@ -16,7 +16,6 @@ import javax.ws.rs.core.UriInfo;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -104,24 +103,13 @@ public class SavedSearchAPI
 			message = jsonArray.toString();
 		}
 		catch (JSONException e) {
-			message = e.getMessage();
-			statusCode = 500;
-			_logger.error("Failed to get category JSON string (1), statusCode:" + statusCode + " ,err:" + message, e);
-		}
-		catch (EMAnalyticsFwkJsonException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-			_logger.error("Failed to get category JSON string (2), statusCode:" + statusCode + " ,err:" + message, e);
+			_logger.error("Failed to get category JSON string (1), statusCode:" + "500" + " ,err:" + e.getMessage(), e);
 		}
 		catch (EMAnalyticsFwkException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-			_logger.error("Failed to get all categories, statusCode:" + statusCode + " ,err:" + message, e);
+			_logger.error("Failed to get all categories, statusCode:" + e.getStatusCode() + " ,err:" + e.getMessage(), e);
 		}
 		catch (Exception e) {
-			message = e.getMessage();
-			statusCode = 500;
-			_logger.error("Unknow error when retrieving all categories, statusCode:" + statusCode + " ,err:" + message, e);
+			_logger.error("Unknow error when retrieving all categories, statusCode:" + "500" + " ,err:" + e.getMessage(), e);
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -251,11 +239,6 @@ public class SavedSearchAPI
 			catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			catch (EMAnalyticsFwkJsonException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-			}
 			return Response.status(200).entity(message).build();
 		}
 		else {
@@ -332,7 +315,7 @@ public class SavedSearchAPI
 	}
 
 	private String getFolderDetails(long id) throws EMAnalyticsFwkException, JSONException, UnsupportedEncodingException,
-			EMAnalyticsFwkJsonException
+			EMAnalyticsFwkException
 	{
 
 		String message = new String();

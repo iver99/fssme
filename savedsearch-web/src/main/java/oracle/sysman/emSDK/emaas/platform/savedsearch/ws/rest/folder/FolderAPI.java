@@ -16,7 +16,6 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
@@ -159,10 +158,7 @@ public class FolderAPI
 			statusCode = 404;
 			msg = e.getMessage();
 		}
-		catch (EMAnalyticsFwkJsonException e) {
-			msg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
+
 		return Response.status(statusCode).entity(msg).build();
 	}
 
@@ -339,10 +335,6 @@ public class FolderAPI
 			e.printStackTrace();
 			statusCode = 404;
 		}
-		catch (EMAnalyticsFwkJsonException e) {
-			msg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
 		return Response.status(statusCode).entity(msg).build();
 	}
 
@@ -416,10 +408,7 @@ public class FolderAPI
 			e.printStackTrace();
 			statusCode = 404;
 		}
-		catch (EMAnalyticsFwkJsonException e) {
-			msg = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
+
 		return Response.status(statusCode).entity(msg).build();
 	}
 

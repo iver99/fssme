@@ -16,7 +16,6 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
@@ -265,10 +264,6 @@ public class CategoryAPI
 			statusCode = 400;
 			message = e.getMessage();
 		}
-		catch (EMAnalyticsFwkJsonException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-		}
 		return Response.status(statusCode).entity(message).build();
 	}
 
@@ -352,18 +347,14 @@ public class CategoryAPI
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
+
+			_logger.error("An error occurredh while retrieving all category by name, statusCode:" + e.getStatusCode() + " ,err:"
+					+ e.getMessage(), e);
+
 		}
 		catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			statusCode = 400;
-			message = e.getMessage();
-		}
-		catch (EMAnalyticsFwkJsonException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
+			_logger.error(
+					"An error occurred while retrieving all category by name, statusCode:" + "400" + " ,err:" + e.getMessage(), e);
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -636,9 +627,8 @@ public class CategoryAPI
 			}
 		}
 		catch (EMAnalyticsFwkException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-			return Response.status(statusCode).entity(message).build();
+
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 
 		try {
@@ -649,17 +639,15 @@ public class CategoryAPI
 					jsonArray.put(jsonObj);
 				}
 				catch (JSONException e) {
-					message = e.getMessage();
-					statusCode = 500;
-					return Response.status(statusCode).entity(message).build();
+
+					return Response.status(500).entity(e.getMessage()).build();
 				}
 			}
 			message = jsonArray.toString();
 		}
-		catch (EMAnalyticsFwkJsonException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-			return Response.status(statusCode).entity(message).build();
+		catch (EMAnalyticsFwkException e) {
+
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 		return Response.status(statusCode).entity(message).build();
 

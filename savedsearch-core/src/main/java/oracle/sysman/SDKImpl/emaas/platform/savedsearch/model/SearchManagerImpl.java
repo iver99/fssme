@@ -15,6 +15,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceM
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
@@ -151,29 +152,11 @@ public class SearchManagerImpl extends SearchManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_U01")) {
-				throw new EMAnalyticsFwkException("Search name " + search.getName() + " already exist",
-						EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, new Object[] { search.getName() });
-			}
-			//			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK2")) {
-			//				throw new EMAnalyticsFwkException("Parent folder with id " + search.getFolderId() + " missing: "
-			//						+ search.getName(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER, null);
-			//			}
-			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			//			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK1")) {
-			//				throw new EMAnalyticsFwkException("Category with id " + search.getCategoryId() + " missing: " + search.getName(),
-			//						EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY, null);
-			//			}
-			else {
-				_logger.error("Persistence Error while updating the search: " + search.getName(), dmlce);
-				throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
-						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, dmlce);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, null);
+			_logger.error("Persistence Error while updating the search: " + search.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, dmlce);
+
 		}
 		catch (Exception e) {
 			_logger.error("Error while updating the search: " + search.getName(), e);
@@ -203,18 +186,11 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				String errMsg = "Error while getting the search object by ID: " + searchId;
-				_logger.error(errMsg, e);
-				throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID,
-						new Object[] { searchId }, e);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			String errMsg = "Error while getting the search object by ID: " + searchId;
+			_logger.error(errMsg, e);
+			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId }, e);
+
 		}
 		finally {
 			if (em != null) {
@@ -249,17 +225,11 @@ public class SearchManagerImpl extends SearchManager
 			return null;
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving the list of searches for the parent folder: " + folderId, e);
-				throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the parent folder: "
-						+ folderId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of searches for the parent folder: " + folderId, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the parent folder: " + folderId,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+
 		}
 		finally {
 			if (em != null) {
@@ -325,17 +295,11 @@ public class SearchManagerImpl extends SearchManager
 			return rtnobj;
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving the list of searches for the categoryD : " + categoryId, e);
-				throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the categoryId : "
-						+ categoryId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of searches for the categoryD : " + categoryId, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the categoryId : " + categoryId,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+
 		}
 		finally {
 			if (em != null) {
@@ -365,17 +329,11 @@ public class SearchManagerImpl extends SearchManager
 			return rtnobj;
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving the list of searches for the parent folder: " + folderId, e);
-				throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the parent folder: "
-						+ folderId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of searches for the parent folder: " + folderId, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the parent folder: " + folderId,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+
 		}
 		finally {
 			if (em != null) {
@@ -408,17 +366,11 @@ public class SearchManagerImpl extends SearchManager
 			throw e;
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving the list of searches ");
-				throw new EMAnalyticsFwkException("Error while retrieving the list of searches ",
-						EMAnalyticsFwkException.ERR_GENERIC, null, e);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of searches ");
+			throw new EMAnalyticsFwkException("Error while retrieving the list of searches ",
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+
 		}
 		finally {
 			if (em != null) {
@@ -447,17 +399,12 @@ public class SearchManagerImpl extends SearchManager
 			return rtnobj;
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving the list of searches for the categoryD : " + categoryId, e);
-				throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the categoryId : "
-						+ categoryId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+
+			_logger.error("Error while retrieving the list of searches for the categoryD : " + categoryId, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the categoryId : " + categoryId,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+
 		}
 		finally {
 			if (em != null) {
@@ -486,18 +433,11 @@ public class SearchManagerImpl extends SearchManager
 			return rtnobj;
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving the list of widgets for the categoryId : " + categoryId, e);
-				throw new EMAnalyticsFwkException(
-						"Error while retrieving the list of widgets for the categoryId : " + categoryId,
-						EMAnalyticsFwkException.ERR_GENERIC, null, e);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of widgets for the categoryId : " + categoryId, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of widgets for the categoryId : " + categoryId,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+
 		}
 		finally {
 			if (em != null) {
@@ -537,17 +477,11 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 		catch (Exception e) {
-			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			else {
-				_logger.error("Error while retrieving the list of searches ");
-				throw new EMAnalyticsFwkException("Error while retrieving the list of searches ",
-						EMAnalyticsFwkException.ERR_GENERIC, null, e);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of searches ");
+			throw new EMAnalyticsFwkException("Error while retrieving the list of searches ",
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+
 		}
 		finally {
 			if (em != null) {
@@ -831,29 +765,10 @@ public class SearchManagerImpl extends SearchManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_U01")) {
-				throw new EMAnalyticsFwkException("Search with this name already exist: " + search.getName(),
-						EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, new Object[] { search.getName() });
-			}
-			//			else if (dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_FK2")) {
-			//				throw new EMAnalyticsFwkException("Parent folder with id " + search.getFolderId() + " missing: "
-			//						+ search.getName(), EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER, null);
-			//			}
-			else if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("Cannot acquire data source")) {
-				_logger.error("Error while acquiring the data source" + dmlce.getMessage(), dmlce);
-				throw new EMAnalyticsFwkException(
-						"Error while connecting to data source, please check the data source details: ",
-						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
-			}
-			//			else if (dmlce.getCause().getMessage().contains("EM_ANALYTICS_SEARCH_FK1")) {
-			//				throw new EMAnalyticsFwkException("Category with id " + search.getCategoryId() + " missing: " + search.getName(),
-			//						EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY, null);
-			//			}
-			else {
-				_logger.error("Persistence error while saving the search: " + search.getName(), dmlce);
-				throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
-						EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, dmlce);
-			}
+			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, search.getName());
+			_logger.error("Persistence error while saving the search: " + search.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, dmlce);
 		}
 		catch (Exception e) {
 			_logger.error("Error while saving the search: " + search.getName(), e);

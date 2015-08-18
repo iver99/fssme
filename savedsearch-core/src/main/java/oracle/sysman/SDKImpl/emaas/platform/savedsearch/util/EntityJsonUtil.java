@@ -12,7 +12,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 import java.net.URI;
 import java.util.List;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
@@ -24,7 +24,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Create JSON string for each entity (search/folder/category) and return to user
- *
+ * 
  * @author miayu
  */
 public class EntityJsonUtil
@@ -110,50 +110,49 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for category
-	 *
+	 * 
 	 * @param baseUri
 	 * @param category
 	 * @return
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getFullCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-			EMAnalyticsFwkJsonException
+	public static JSONObject getFullCategoryJsonObj(URI baseUri, Category category) throws JSONException, EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, null, false);
 	}
 
 	/**
 	 * Return full JSON string for folder
-	 *
+	 * 
 	 * @param baseUri
 	 * @param folder
 	 * @return
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getFullFolderJsonObj(URI baseUri, Folder folder) throws JSONException, EMAnalyticsFwkJsonException
+	public static JSONObject getFullFolderJsonObj(URI baseUri, Folder folder) throws JSONException, EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getFolderJsonObj(baseUri, folder, new String[] { NAME_FOLDER_UIHIDDEN }, false, false);
 	}
 
 	/**
 	 * Return full JSON string for search
-	 *
+	 * 
 	 * @param baseUri
 	 * @param jsonObj
 	 * @return
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search) throws JSONException, EMAnalyticsFwkJsonException
+	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search) throws JSONException, EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getFullSearchJsonObj(baseUri, search, null);
 	}
 
 	/**
 	 * Return full JSON string for search
-	 *
+	 * 
 	 * @param baseUri
 	 * @param jsonObj
 	 * @param folderPathArray
@@ -163,7 +162,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
 				NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET }, folderPathArray, false);
@@ -171,7 +170,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for search
-	 *
+	 * 
 	 * @param baseUri
 	 * @param jsonObj
 	 * @param folderPathArray
@@ -181,7 +180,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray, boolean bResult)
-			throws JSONException, EMAnalyticsFwkJsonException
+			throws JSONException, EMAnalyticsFwkException
 	{
 		JSONObject obj = null;
 		String fields[] = new String[] { NAME_GUID, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET };
@@ -197,7 +196,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for category (without default folder and parameters)
-	 *
+	 * 
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -205,7 +204,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
@@ -213,21 +212,21 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for folder without folder=type
-	 *
+	 * 
 	 * @param baseUri
 	 * @param folder
 	 * @return
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder) throws JSONException, EMAnalyticsFwkJsonException
+	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder) throws JSONException, EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSimpleFolderJsonObj(baseUri, folder, false);
 	}
 
 	/**
 	 * Return simple JSON string for folder with or without type=folder
-	 *
+	 * 
 	 * @param baseUri
 	 * @param folder
 	 * @param includeType
@@ -236,7 +235,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder, boolean includeType) throws JSONException,
-			EMAnalyticsFwkJsonException
+			EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getFolderJsonObj(baseUri, folder, new String[] { NAME_OWNER, NAME_LASTMODIFIEDBY,
 				NAME_FOLDER_PARENTFOLDER, NAME_FOLDER_UIHIDDEN }, true, includeType);
@@ -244,21 +243,21 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 *
+	 * 
 	 * @param uri
 	 * @param jsonObj
 	 * @return
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search) throws JSONException, EMAnalyticsFwkJsonException
+	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search) throws JSONException, EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search, false);
 	}
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 *
+	 * 
 	 * @param uri
 	 * @param jsonObj
 	 * @param includeType
@@ -267,14 +266,14 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search, boolean includeType) throws JSONException,
-	EMAnalyticsFwkJsonException
+			EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search, null, includeType);
 	}
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 *
+	 * 
 	 * @param baseUri
 	 * @param search
 	 * @param folderPathArray
@@ -284,7 +283,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search, String[] folderPathArray, boolean includeType)
-			throws JSONException, EMAnalyticsFwkJsonException
+			throws JSONException, EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER, NAME_LASTMODIFIEDBY,
 				NAME_SEARCH_QUERYSTR, NAME_PARAMETERS, NAME_LASTACCESSDATE, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
@@ -293,7 +292,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for widget group
-	 *
+	 * 
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -315,7 +314,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for widget
-	 *
+	 * 
 	 * @param baseUri
 	 * @param search
 	 * @param category
@@ -387,7 +386,7 @@ public class EntityJsonUtil
 	}
 
 	private static JSONObject getCategoryJsonObj(URI baseUri, Category category, String[] excludedFields, boolean isSimple)
-			throws JSONException, EMAnalyticsFwkJsonException
+			throws JSONException, EMAnalyticsFwkException
 	{
 		JSONObject categoryObj = JSONUtil.ObjectToJSONObject(category, excludedFields);
 		if (baseUri != null && categoryObj != null) {
@@ -412,7 +411,7 @@ public class EntityJsonUtil
 	}
 
 	private static JSONObject getFolderJsonObj(URI baseUri, Folder folder, String[] excludedFields, boolean isSimple,
-			boolean includeType) throws JSONException, EMAnalyticsFwkJsonException
+			boolean includeType) throws JSONException, EMAnalyticsFwkException
 	{
 		JSONObject folderObj = JSONUtil.ObjectToJSONObject(folder, excludedFields);
 		if (baseUri != null && folderObj != null) {
@@ -442,7 +441,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string of search according to customization
-	 *
+	 * 
 	 * @param uri
 	 * @param jsonObj
 	 * @param excludedFields
@@ -454,7 +453,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	private static JSONObject getSearchJsonObj(URI baseUri, Search search, String[] excludedFields, String[] folderPathArray,
-			boolean includeType) throws JSONException, EMAnalyticsFwkJsonException
+			boolean includeType) throws JSONException, EMAnalyticsFwkException
 	{
 		JSONObject searchObj = JSONUtil.ObjectToJSONObject(search, excludedFields);
 		if (baseUri != null && searchObj != null) {
