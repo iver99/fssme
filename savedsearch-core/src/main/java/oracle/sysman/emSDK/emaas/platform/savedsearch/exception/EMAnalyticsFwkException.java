@@ -92,6 +92,8 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_VALID_TENANT_ID = 500112;
 
 	public static final int ERR_VALID_USER_NAME = 500113;
+
+	public static final int ERR_VALID_OAM_HEADER = 500114;
 	/**
 	 * Exception codes end
 	 */

@@ -112,7 +112,7 @@ public class UpdateSearchUtil
 			RestAssured.baseURI = endpoint;
 			Response res = RestAssured.given().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.DOMAIN_NAME, objTenent.getTenantId())
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, tenantid).when().get();
+					.header(UpdateUtilConstants.OAM_REMOTE_USER, tenantid).when().get();
 			if (res.getStatusCode() == 200) {
 				return true;
 			}

@@ -105,7 +105,7 @@ public class UpdateSearchTest extends BaseTest
 		Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 				.header(UpdateUtilConstants.SSF_DOMAIN_NAME, obj.getTenantId())
-				.header(UpdateUtilConstants.SSF_REMOTE_USER, TENANT_ID1).when().get("/category?name=" + name);
+				.header(UpdateUtilConstants.OAM_REMOTE_USER, TENANT_ID1).when().get("/category?name=" + name);
 		JsonPath jp = res.jsonPath();
 		return jp.get("id");
 
@@ -142,7 +142,7 @@ public class UpdateSearchTest extends BaseTest
 			Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 					.header(UpdateUtilConstants.SSF_DOMAIN_NAME, obj.getTenantId())
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+					.header(UpdateUtilConstants.OAM_REMOTE_USER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			Assert.assertTrue(res.getStatusCode() == 404);
 		}
@@ -153,7 +153,7 @@ public class UpdateSearchTest extends BaseTest
 			Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 					.header(UpdateUtilConstants.SSF_DOMAIN_NAME, objTenent.getTenantId())
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, TENANT_ID2).when().get("/search/" + jsonObj.getInt("id"));
+					.header(UpdateUtilConstants.OAM_REMOTE_USER, TENANT_ID2).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			System.out.println("deleteing searches::::" + res.getBody().asString());
 			Assert.assertTrue(listID.contains(jsonObj.getLong("id")));
@@ -166,8 +166,7 @@ public class UpdateSearchTest extends BaseTest
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
-				.header("X-USER-IDENTITY-DOMAIN-NAME", tenantimport).header("X-REMOTE-USER", TENANT_ID1).when()
-				.delete("/search/" + mySearchId);
+				.header(UpdateUtilConstants.OAM_REMOTE_USER, TENANT_ID1).when().delete("/search/" + mySearchId);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
 

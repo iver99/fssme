@@ -27,7 +27,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Saved Search Service
- *
+ * 
  * @since 0.1
  */
 @Path("/widgets")
@@ -42,7 +42,7 @@ public class WidgetAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/widgets</font><br>
 	 * The string "widgets" in the URL signifies read operation on widget.
-	 *
+	 * 
 	 * @since 0.1
 	 * @return Lists all the existed widgets<br>
 	 *         Response Sample:<br>
@@ -87,15 +87,14 @@ public class WidgetAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllWidgets(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantName,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
+	public Response getAllWidgets(@HeaderParam(value = "OAM_REMOTE_USER") String userTenant)
 	{
 		String message = null;
 		int statusCode = 200;
 
 		try {
 			JSONArray jsonArray = new JSONArray();
-			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(tenantName);
+			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(userTenant);
 			SearchManager searchMan = SearchManager.getInstance();
 			for (Category category : catList) {
 				List<Search> searchList = new ArrayList<Search>();

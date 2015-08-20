@@ -34,7 +34,7 @@ public class ImportSearchObject
 			res1 = RestAssured.given().contentType(ContentType.XML).header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 					.header(UpdateUtilConstants.DOMAIN_NAME, objTenent.getTenantId()).header(UpdateUtilConstants.SSF_OOB, "true")
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, tenantid).body(jsonString1).when()
+					.header(UpdateUtilConstants.OAM_REMOTE_USER, tenantid).body(jsonString1).when()
 					.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
 		}
 		else
@@ -42,7 +42,7 @@ public class ImportSearchObject
 		{
 			res1 = RestAssured.given().contentType(ContentType.XML).header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
 					.header(UpdateUtilConstants.DOMAIN_NAME, objTenent.getTenantId()).header(UpdateUtilConstants.SSF_OOB, "true")
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, tenantid).body(jsonString1).when()
+					.header(UpdateUtilConstants.OAM_REMOTE_USER, tenantid).body(jsonString1).when()
 					.post(UpdateUtilConstants.IMPORT_SEARCH_STR);
 		}
 

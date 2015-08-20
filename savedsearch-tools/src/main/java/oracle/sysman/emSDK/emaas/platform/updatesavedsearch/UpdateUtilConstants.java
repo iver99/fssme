@@ -4,7 +4,6 @@ public class UpdateUtilConstants
 {
 	public static final String BASE_PATH_STR = "/savedsearch/v1";
 	public static final String IMPORT_SEARCH_STR = "/importsearches";
-	public static final String DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 	public static final String WWW_STR = "www";
 	public static final String ID = "id";
 	public static final String NAME = "name";
@@ -38,9 +37,9 @@ public class UpdateUtilConstants
 	public static final String TENANT_TOKEN = "-tenantid";
 	public static final String SSF_HEADER = "ssfheadertest";
 	public static final String SSF_AUTHORIZATION = "Authorization";
-	public static final String SSF_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 	public static final String SSF_TEST_ENV = "SSF.TESTENV";
-	public static final String SSF_REMOTE_USER = "X-REMOTE-USER";
 	public static final String SSF_OOB = "SSF_OOB";
 	public static final String SSF_ORACLE = ".ORACLE";
+	public static final String OAM_REMOTE_USER = "OAM_REMOTE_USER";
+
 }

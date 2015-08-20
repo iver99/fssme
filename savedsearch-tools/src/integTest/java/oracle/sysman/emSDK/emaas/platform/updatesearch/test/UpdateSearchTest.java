@@ -168,8 +168,7 @@ public class UpdateSearchTest extends BaseTest
 	private boolean deleteSearch(int mySearchId)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN-NAME", R_TENANT_ID).header("X-REMOTE-USER", R_TENANT_USER).when()
-				.delete("/search/" + mySearchId);
+				.header("OAM_REMOTE_USER", R_TENANT_USER).when().delete("/search/" + mySearchId);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
 

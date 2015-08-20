@@ -24,7 +24,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Saved Search Service
- *
+ * 
  * @since 0.1
  */
 @Path("/widgetgroups")
@@ -39,7 +39,7 @@ public class WidgetGroupAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/widgetgroups</font><br>
 	 * The string "widgetgroups" in the URL signifies read operation on widget group.
-	 *
+	 * 
 	 * @since 0.1
 	 * @return Lists all the existed widget groups<br>
 	 *         Response Sample:<br>
@@ -76,15 +76,14 @@ public class WidgetGroupAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllWidgetGroups(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantName,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
+	public Response getAllWidgetGroups(@HeaderParam(value = "OAM_REMOTE_USER") String userTenant)
 	{
 		String message = null;
 		int statusCode = 200;
 
 		try {
 			JSONArray jsonArray = new JSONArray();
-			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(tenantName);
+			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(userTenant);
 			for (Category category : catList) {
 				if (!"home".equalsIgnoreCase(category.getProviderAssetRoot())) {
 					JSONObject jsonWidgetGroup = EntityJsonUtil.getWidgetGroupJsonObj(uri.getBaseUri(), category);
