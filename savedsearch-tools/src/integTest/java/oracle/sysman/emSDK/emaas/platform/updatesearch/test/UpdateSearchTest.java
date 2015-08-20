@@ -108,8 +108,7 @@ public class UpdateSearchTest extends BaseTest
 	public Integer getCategoryDetailsbyName(String name)
 	{
 		Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
-				.header(UpdateUtilConstants.SSF_DOMAIN_NAME, R_TENANT_ID)
-				.header(UpdateUtilConstants.SSF_REMOTE_USER, R_TENANT_USER).when().get("/category?name=" + name);
+				.header(UpdateUtilConstants.OAM_REMOTE_USER, R_TENANT_USER).when().get("/category?name=" + name);
 		JsonPath jp = res.jsonPath();
 		return jp.get("id");
 
@@ -145,8 +144,7 @@ public class UpdateSearchTest extends BaseTest
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
-					.header(UpdateUtilConstants.SSF_DOMAIN_NAME, obj.getTenantId())
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, R_TENANT_USER).when().get("/search/" + jsonObj.getInt("id"));
+					.header(UpdateUtilConstants.OAM_REMOTE_USER, R_TENANT_USER).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			Assert.assertTrue(res.getStatusCode() == 200);
 		}
