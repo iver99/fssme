@@ -510,6 +510,29 @@ public class FolderManagerTest extends BaseTest
 	}
 
 	@Test
+	public void testRootFolder() throws Exception
+	{
+		try {
+			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+					.get(QAToolUtil.TENANT_NAME).toString())));
+			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+
+			Folder obj = objFolder.getRootFolder();
+
+			Assert.assertNotNull(obj);
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			TenantContext.clearContext();
+		}
+
+	}
+
+	@Test
 	public void testUpdate() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();

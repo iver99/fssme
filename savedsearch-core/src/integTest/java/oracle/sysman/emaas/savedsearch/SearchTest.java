@@ -1,7 +1,9 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
@@ -11,6 +13,8 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.CategoryDetails;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
@@ -18,6 +22,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -411,6 +416,28 @@ public class SearchTest extends BaseTest
 	}
 
 	@Test
+	public void testGetSearchByName() throws Exception
+	{
+		Search search = SearchManager.getInstance().getSearchByName("WebLogic Servers with small Maximum Heap Size", 4);
+		Assert.assertNotNull(search);
+
+		search = SearchManager.getInstance().getSearchByName("WebLogic Servers with small Maximum Heap Size112", 4);
+		Assert.assertTrue(search == null);
+
+		List<Search> rtnobj = SearchManager.getInstance().getSystemSearchListByCategoryId(1);
+		Assert.assertNotNull(rtnobj);
+
+	}
+
+	//	@Test
+	//	public void testGetSearchCountByFolderId() throws Exception
+	//	{
+	//		SearchManager objSearch = SearchManager.getInstance();
+	//		//now get the count of the search inside this folder
+	//		AssertJUnit.assertEquals(2, objSearch.getSearchCountByFolderId(999));
+	//	}
+
+	@Test
 	public void testGetSearchListByFolderId() throws Exception
 	{
 
@@ -474,14 +501,6 @@ public class SearchTest extends BaseTest
 		}
 
 	}
-
-	//	@Test
-	//	public void testGetSearchCountByFolderId() throws Exception
-	//	{
-	//		SearchManager objSearch = SearchManager.getInstance();
-	//		//now get the count of the search inside this folder
-	//		AssertJUnit.assertEquals(2, objSearch.getSearchCountByFolderId(999));
-	//	}
 
 	@Test
 	public void testGetSearchListByLastAccessDate() throws Exception
@@ -620,6 +639,30 @@ public class SearchTest extends BaseTest
 
 	}
 
+	/*@Test
+	public void testModifyLastAccessDate() throws Exception
+	{
+		SearchManager searchMgr = SearchManager.getInstance();
+		try {
+			Search search9999 = searchMgr.getSearch(9999);
+			AssertJUnit.assertNotNull(search9999);
+			Date accessDate0 = search9999.getLastAccessDate();
+			AssertJUnit.assertNotNull(accessDate0);
+
+			searchMgr.modifyLastAccessDate(9999);
+
+			search9999 = searchMgr.getSearch(9999);
+			AssertJUnit.assertNotNull(search9999);
+			Date accessDate1 = search9999.getLastAccessDate();
+			AssertJUnit.assertNotNull(accessDate1);
+
+			AssertJUnit.assertTrue(accessDate1.compareTo(accessDate0) > 0);
+		}
+		catch (Exception e) {
+			AssertJUnit.assertTrue(e.getMessage(), false);
+		}
+	}*/
+
 	@Test
 	public void testInvalidDataForSave() throws Exception
 	{
@@ -663,30 +706,6 @@ public class SearchTest extends BaseTest
 		}
 
 	}
-
-	/*@Test
-	public void testModifyLastAccessDate() throws Exception
-	{
-		SearchManager searchMgr = SearchManager.getInstance();
-		try {
-			Search search9999 = searchMgr.getSearch(9999);
-			AssertJUnit.assertNotNull(search9999);
-			Date accessDate0 = search9999.getLastAccessDate();
-			AssertJUnit.assertNotNull(accessDate0);
-
-			searchMgr.modifyLastAccessDate(9999);
-
-			search9999 = searchMgr.getSearch(9999);
-			AssertJUnit.assertNotNull(search9999);
-			Date accessDate1 = search9999.getLastAccessDate();
-			AssertJUnit.assertNotNull(accessDate1);
-
-			AssertJUnit.assertTrue(accessDate1.compareTo(accessDate0) > 0);
-		}
-		catch (Exception e) {
-			AssertJUnit.assertTrue(e.getMessage(), false);
-		}
-	}*/
 
 	@Test
 	public void testSaveMultipleSearch() throws Exception
@@ -751,8 +770,8 @@ public class SearchTest extends BaseTest
 				objFolder.deleteFolder(fId, true);
 			}
 		}
-		// wil fix below issue in next transaction.
-		/*List<ImportSearchImpl> list2 = null;
+
+		List<ImportSearchImpl> list2 = null;
 		List<Search> listResult2 = null;
 
 		CategoryDetails catDetails = new CategoryDetails();
@@ -871,7 +890,7 @@ public class SearchTest extends BaseTest
 
 				}
 			}
-		}*/
+		}
 	}
 
 	@Test
