@@ -27,6 +27,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 
 import org.apache.logging.log4j.LogManager;
@@ -228,18 +229,12 @@ public class SearchAPI
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error(message, e);
-		}
-
-		catch (JSONException e) {
-			statusCode = 404;
-			message = e.getMessage();
-			_logger.error(message, e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error(message, e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -431,19 +426,12 @@ public class SearchAPI
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error(message, e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error(message, e);
-		}
-		catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			statusCode = 404;
-			message = e.getMessage();
-			_logger.error(message, e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 
 		return Response.status(statusCode).entity(message).build();
@@ -603,12 +591,8 @@ public class SearchAPI
 		catch (EMAnalyticsFwkException e) {
 			statusCode = e.getStatusCode();
 			message = e.getMessage();
-			_logger.error(e.getMessage(), e.getStatusCode());
-		}
-		catch (JSONException e) {
-			statusCode = 400;
-			message = e.getMessage();
-			_logger.error(e.getMessage() + " Status code :400", e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+					e.getStatusCode());
 		}
 
 		return Response.status(statusCode).entity(message).build();

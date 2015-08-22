@@ -358,7 +358,7 @@ public class FolderManagerImpl extends FolderManager
 		return importedList;
 	}
 
-	@Override
+	/*@Override
 	public Folder savePath(Folder folder) throws EMAnalyticsFwkException
 	{
 		String[] folderNames = folder.getName().split("/");
@@ -415,7 +415,7 @@ public class FolderManagerImpl extends FolderManager
 
 		}
 
-	}
+	}*/
 
 	@Override
 	public Folder updateFolder(Folder folder) throws EMAnalyticsFwkException

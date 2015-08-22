@@ -19,7 +19,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -37,6 +40,8 @@ public class FilterSearchAPI
 	UriInfo uri;
 
 	private final String search = "search";
+
+	private static final Logger _logger = LogManager.getLogger(FilterSearchAPI.class);
 
 	/**
 	 * List all the searches with given category Id/category name/folder Id<br>
@@ -276,14 +281,10 @@ public class FilterSearchAPI
 		try {
 			for (int i = 0; i < searchList.size(); i++) {
 				search = searchList.get(i);
-				try {
-					JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), search);
-					jsonArray.put(jsonObj);
-				}
-				catch (JSONException e) {
 
-					return Response.status(500).entity(e.getMessage()).build();
-				}
+				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), search);
+				jsonArray.put(jsonObj);
+
 			}
 			message = jsonArray.toString();
 		}
@@ -321,15 +322,10 @@ public class FilterSearchAPI
 		try {
 			for (int i = 0; i < searchList.size(); i++) {
 				search = searchList.get(i);
-				try {
-					JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), search);
-					jsonArray.put(jsonObj);
-				}
-				catch (JSONException e) {
-					message = e.getMessage();
-					statusCode = 500;
-					return Response.status(statusCode).entity(message).build();
-				}
+
+				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), search);
+				jsonArray.put(jsonObj);
+
 			}
 			message = jsonArray.toString();
 		}
@@ -356,16 +352,20 @@ public class FilterSearchAPI
 			message = jsonArray.toString(1);
 		}
 		catch (EMAnalyticsFwkException e) {
-			e.printStackTrace();
+
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to read folder/search object", e);
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 
 		}
 		catch (JSONException e) {
-			e.printStackTrace();
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to read folder/search object", e);
 			return Response.status(500).entity(e.getMessage()).build();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to read folder/search object", e);
 			return Response.status(500).entity(e.getMessage()).build();
 		}
 		return Response.status(200).entity(message).build();

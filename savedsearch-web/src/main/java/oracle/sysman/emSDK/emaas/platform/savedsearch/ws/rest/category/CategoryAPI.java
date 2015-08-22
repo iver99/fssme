@@ -20,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -258,12 +259,7 @@ public class CategoryAPI
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 		}
-		catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			statusCode = 400;
-			message = e.getMessage();
-		}
+
 		return Response.status(statusCode).entity(message).build();
 	}
 
@@ -349,16 +345,13 @@ public class CategoryAPI
 		catch (EMAnalyticsFwkException e) {
 			statusCode = e.getStatusCode();
 			message = e.getMessage();
-			_logger.error("An error occurredh while retrieving all category by name, statusCode:" + e.getStatusCode() + " ,err:"
-					+ e.getMessage(), e);
+			_logger.error(
+					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+							+ "An error occurredh while retrieving all category by name, statusCode:" + e.getStatusCode()
+							+ " ,err:" + e.getMessage(), e);
 
 		}
-		catch (JSONException e) {
-			statusCode = 400;
-			message = e.getMessage();
-			_logger.error(
-					"An error occurred while retrieving all category by name, statusCode:" + "400" + " ,err:" + e.getMessage(), e);
-		}
+
 		return Response.status(statusCode).entity(message).build();
 	}
 

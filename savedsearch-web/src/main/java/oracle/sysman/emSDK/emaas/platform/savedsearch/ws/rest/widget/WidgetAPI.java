@@ -17,17 +17,17 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TenantSubscriptionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Saved Search Service
- *
+ * 
  * @since 0.1
  */
 @Path("/widgets")
@@ -42,7 +42,7 @@ public class WidgetAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/widgets</font><br>
 	 * The string "widgets" in the URL signifies read operation on widget.
-	 *
+	 * 
 	 * @since 0.1
 	 * @return Lists all the existed widgets<br>
 	 *         Response Sample:<br>
@@ -109,20 +109,18 @@ public class WidgetAPI
 			}
 			message = jsonArray.toString();
 		}
-		catch (JSONException e) {
-			message = e.getMessage();
-			statusCode = 500;
-			_logger.error("Failed to get widget JSON string, statusCode:" + statusCode + " ,err:" + message, e);
-		}
+
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error("Failed to get all widgets, statusCode:" + statusCode + " ,err:" + message, e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Failed to get all widgets, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		catch (Exception e) {
 			message = e.getMessage();
 			statusCode = 500;
-			_logger.error("Unknow error when retrieving all widgets, statusCode:" + statusCode + " ,err:" + message, e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Unknow error when retrieving all widgets, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
 	}

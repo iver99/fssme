@@ -3,6 +3,7 @@ package oracle.sysman.emaas.savedsearch;
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -104,12 +105,18 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	/*@Test
+	@AfterClass
+	public void removeTenantDetails()
+	{
+		TenantContext.clearContext();
+	}
+
+	@Test
 	public void testDefaultFolder() throws Exception
 	{
-		TenantContext.setContext(TENANT_ID_OPC2);
+
 		CategoryManager catMan = CategoryManager.getInstance();
-		Assert.assertNotNull(catMan.getCategory("Log Analytics").getDefaultFolderId());
+		AssertJUnit.assertNotNull(catMan.getCategory("Log Analytics").getDefaultFolderId());
 		TenantContext.clearContext();
 	}
 
@@ -171,28 +178,7 @@ public class CategoryTest extends BaseTest
 
 		}
 		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
-
-	@Test
-	public void testEditCategory_DuplicateName() throws Exception
-	{
-
-		try {
-			CategoryManager obj = CategoryManagerImpl.getInstance();
-			Category category = obj.getCategory(categoryId);
-
-			AssertJUnit.assertNotNull(category);
-			// now set the some value
-			category.setName("Log Analytics");
-
-			obj.editCategory(category);
-
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME));
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -228,10 +214,25 @@ public class CategoryTest extends BaseTest
 		TenantContext.clearContext();
 	}*/
 
-	@AfterClass
-	public void removeTenantDetails()
+	@Test
+	public void testEditCategory_DuplicateName() throws Exception
 	{
-		TenantContext.clearContext();
+
+		try {
+			CategoryManager obj = CategoryManagerImpl.getInstance();
+			Category category = obj.getCategory(categoryId);
+
+			AssertJUnit.assertNotNull(category);
+			// now set the some value
+			category.setName("Log Analytics");
+
+			obj.editCategory(category);
+
+		}
+		catch (EMAnalyticsFwkException emanfe) {
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+					EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME));
+		}
 	}
 
 	@Test
@@ -302,5 +303,4 @@ public class CategoryTest extends BaseTest
 		}
 
 	}
-
 }

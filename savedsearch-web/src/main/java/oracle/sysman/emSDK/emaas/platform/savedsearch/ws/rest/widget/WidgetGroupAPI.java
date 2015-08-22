@@ -14,17 +14,17 @@ import javax.ws.rs.core.UriInfo;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TenantSubscriptionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Saved Search Service
- *
+ * 
  * @since 0.1
  */
 @Path("/widgetgroups")
@@ -39,7 +39,7 @@ public class WidgetGroupAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/widgetgroups</font><br>
 	 * The string "widgetgroups" in the URL signifies read operation on widget group.
-	 *
+	 * 
 	 * @since 0.1
 	 * @return Lists all the existed widget groups<br>
 	 *         Response Sample:<br>
@@ -93,20 +93,17 @@ public class WidgetGroupAPI
 			}
 			message = jsonArray.toString();
 		}
-		catch (JSONException e) {
-			message = e.getMessage();
-			statusCode = 500;
-			_logger.error("Failed to get widget group JSON string, statusCode:" + statusCode + " ,err:" + message, e);
-		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error("Failed to get all widget groups, statusCode:" + statusCode + " ,err:" + message, e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Failed to get all widget groups, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		catch (Exception e) {
 			message = e.getMessage();
 			statusCode = 500;
-			_logger.error("Unknow error when retrieving all widget groups, statusCode:" + statusCode + " ,err:" + message, e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Unknow error when retrieving all widget groups, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
 	}

@@ -47,7 +47,7 @@ public class HeadersUtil
 		HeadersUtil.validateTeant(request);
 		Long id = HeadersUtil.getInternalTenantId(request);
 		String user = HeadersUtil.getUserName(request);
-		return new TenantInfo(user, id);
+		return new TenantInfo(user, id, request.getHeader(HEADER_TENANT_ID));
 
 	}
 

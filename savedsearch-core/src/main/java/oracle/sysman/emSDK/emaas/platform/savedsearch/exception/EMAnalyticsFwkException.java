@@ -1,6 +1,5 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.exception;
 
-
 /* $Header: emcore/jsrc/sdkcore/SdkcoreEmanalyticsPublicModel/src/oracle/sysman/emSDK/core/emanalytics/api/EMAnalyticsFwkException.java /st_emgc_pt-13.1mstr/2 2014/02/03 02:51:00 saurgarg Exp $ */
 
 /* Copyright (c) 2013, 2014, Oracle and/or its affiliates. 
@@ -93,6 +92,8 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_VALID_TENANT_ID = 500112;
 
 	public static final int ERR_VALID_USER_NAME = 500113;
+
+	public static final int ERR_VALID_OAM_HEADER = 500114;
 
 	public static final int JSON_OBJECT_TO_JSON_EXCEPTION = 70040;
 

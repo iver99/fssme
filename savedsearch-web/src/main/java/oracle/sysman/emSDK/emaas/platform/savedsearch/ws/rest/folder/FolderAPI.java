@@ -18,8 +18,11 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -36,6 +39,8 @@ public class FolderAPI
 
 	@Context
 	private HttpHeaders headers;
+
+	private static final Logger _logger = LogManager.getLogger(FolderAPI.class);
 
 	/**
 	 * Create a folder<br>
@@ -147,18 +152,16 @@ public class FolderAPI
 		catch (EMAnalyticsFwkException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to create folder object", e);
+
 		}
 		catch (EMAnalyticsWSException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to create folder object", e);
 		}
-		catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			statusCode = 404;
-			msg = e.getMessage();
-		}
-
 		return Response.status(statusCode).entity(msg).build();
 	}
 
@@ -233,6 +236,8 @@ public class FolderAPI
 
 		}
 		catch (EMAnalyticsFwkException e) {
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to delete folder object", e);
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 		return Response.status(statusCode).build();
@@ -324,17 +329,17 @@ public class FolderAPI
 		catch (EMAnalyticsFwkException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to update folder object", e);
 
 		}
 		catch (EMAnalyticsWSException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to update folder object", e);
 		}
-		catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			statusCode = 404;
-		}
+
 		return Response.status(statusCode).entity(msg).build();
 	}
 
@@ -402,11 +407,8 @@ public class FolderAPI
 		catch (EMAnalyticsFwkException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
-		}
-		catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			statusCode = 404;
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to read folder object", e);
 		}
 
 		return Response.status(statusCode).entity(msg).build();

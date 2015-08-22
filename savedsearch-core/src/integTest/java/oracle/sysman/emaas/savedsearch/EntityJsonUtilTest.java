@@ -417,7 +417,7 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test
-	public void testGetWidgetGroupJsonObj() throws JSONException
+	public void testGetWidgetGroupJsonObj() throws EMAnalyticsFwkException
 	{
 		JSONObject widgetGroupObj = EntityJsonUtil.getWidgetGroupJsonObj(uri, category);
 		String output = widgetGroupObj.toString();
@@ -441,7 +441,7 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test
-	public void testGetWidgetJsonObj() throws JSONException
+	public void testGetWidgetJsonObj() throws EMAnalyticsFwkException
 	{
 		JSONObject widgetObj = EntityJsonUtil.getWidgetJsonObj(uri, widget, category);
 		String output = widgetObj.toString();
