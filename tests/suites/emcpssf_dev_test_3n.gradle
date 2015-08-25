@@ -50,7 +50,7 @@ repositories {
             url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core-integ-tests', version: '1.0.1'){
+    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core-integ-tests-sec', version: '1.0.11'){
 exclude('module':'groovy')
 }
 testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
