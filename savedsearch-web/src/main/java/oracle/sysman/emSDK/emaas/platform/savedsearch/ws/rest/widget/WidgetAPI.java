@@ -94,7 +94,8 @@ public class WidgetAPI
 
 		try {
 			JSONArray jsonArray = new JSONArray();
-			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(userTenant);
+			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(userTenant.substring(0,
+					userTenant.indexOf(".")));
 			SearchManager searchMan = SearchManager.getInstance();
 			for (Category category : catList) {
 				List<Search> searchList = new ArrayList<Search>();

@@ -16,6 +16,7 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="oracle.sysman.emaas.platform.savedsearch" level="INFO"/>
+		<Logger name="oracle.sysman.emSDK.emaas.platform.savedsearch" level="INFO"/>
 		<Root>
     		<AppenderRef ref="ASYNC"/>
     	</Root>

@@ -83,7 +83,8 @@ public class WidgetGroupAPI
 
 		try {
 			JSONArray jsonArray = new JSONArray();
-			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(userTenant);
+			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(userTenant.substring(0,
+					userTenant.indexOf(".")));
 			for (Category category : catList) {
 				if (!"home".equalsIgnoreCase(category.getProviderAssetRoot())) {
 					JSONObject jsonWidgetGroup = EntityJsonUtil.getWidgetGroupJsonObj(uri.getBaseUri(), category);
