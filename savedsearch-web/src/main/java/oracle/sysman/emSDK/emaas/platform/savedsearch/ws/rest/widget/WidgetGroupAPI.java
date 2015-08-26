@@ -76,12 +76,12 @@ public class WidgetGroupAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-<<<<<<< HEAD
-	public Response getAllWidgetGroups(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantName
-			)
-=======
+
+	
+			
+
 	public Response getAllWidgetGroups(@HeaderParam(value = "OAM_REMOTE_USER") String userTenant)
->>>>>>> emcpssf183_sb
+
 	{
 		String message = null;
 		int statusCode = 200;

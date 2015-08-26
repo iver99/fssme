@@ -1,6 +1,6 @@
 jar.archiveName='emcpssf_dev_test.jar'
 group = 'com.oracle.emaas.emcpssf'
-version = '1.0.11'
+version = '1.0.12'
 
 sourceSets {
     integTest {
@@ -12,11 +12,7 @@ sourceSets {
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-<<<<<<< HEAD
-    appendix = 'integ-tests-security'
-=======
-    appendix = 'integ-tests-sec'
->>>>>>> emcpssf183_sb
+   appendix = 'integ-tests-exception'
 }
 dependencies {
 	lrgConfig project(':savedsearch-entities'){ transitive = false }
