@@ -76,15 +76,20 @@ public class WidgetGroupAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+<<<<<<< HEAD
 	public Response getAllWidgetGroups(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantName
 			)
+=======
+	public Response getAllWidgetGroups(@HeaderParam(value = "OAM_REMOTE_USER") String userTenant)
+>>>>>>> emcpssf183_sb
 	{
 		String message = null;
 		int statusCode = 200;
 
 		try {
 			JSONArray jsonArray = new JSONArray();
-			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(tenantName);
+			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(userTenant.substring(0,
+					userTenant.indexOf(".")));
 			for (Category category : catList) {
 				if (!"home".equalsIgnoreCase(category.getProviderAssetRoot())) {
 					JSONObject jsonWidgetGroup = EntityJsonUtil.getWidgetGroupJsonObj(uri.getBaseUri(), category);

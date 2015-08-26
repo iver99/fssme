@@ -108,8 +108,7 @@ public class UpdateSearchTest extends BaseTest
 	public Integer getCategoryDetailsbyName(String name)
 	{
 		Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
-				.header(UpdateUtilConstants.SSF_DOMAIN_NAME, R_TENANT_ID)
-				.header(UpdateUtilConstants.SSF_REMOTE_USER, R_TENANT_USER).when().get("/category?name=" + name);
+				.header(UpdateUtilConstants.OAM_REMOTE_USER, R_TENANT_USER).when().get("/category?name=" + name);
 		JsonPath jp = res.jsonPath();
 		return jp.get("id");
 
@@ -145,8 +144,7 @@ public class UpdateSearchTest extends BaseTest
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header(UpdateUtilConstants.SSF_AUTHORIZATION, authToken)
-					.header(UpdateUtilConstants.SSF_DOMAIN_NAME, obj.getTenantId())
-					.header(UpdateUtilConstants.SSF_REMOTE_USER, R_TENANT_USER).when().get("/search/" + jsonObj.getInt("id"));
+					.header(UpdateUtilConstants.OAM_REMOTE_USER, R_TENANT_USER).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 			Assert.assertTrue(res.getStatusCode() == 200);
 		}
@@ -168,8 +166,7 @@ public class UpdateSearchTest extends BaseTest
 	private boolean deleteSearch(int mySearchId)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-USER-IDENTITY-DOMAIN-NAME", R_TENANT_ID).header("X-REMOTE-USER", R_TENANT_USER).when()
-				.delete("/search/" + mySearchId);
+				.header("OAM_REMOTE_USER", R_TENANT_USER).when().delete("/search/" + mySearchId);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
 

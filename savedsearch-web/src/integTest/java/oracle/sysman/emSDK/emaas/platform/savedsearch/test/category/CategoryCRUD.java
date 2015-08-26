@@ -23,7 +23,7 @@ public class CategoryCRUD
 
 	/**
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
-	 * executing test cases        .
+	 * executing test cases .
 	 */
 
 	static String HOSTNAME;
@@ -41,8 +41,7 @@ public class CategoryCRUD
 	public static void afterTest()
 	{
 		Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + folderid);
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + folderid);
 		System.out.println(res2.asString());
 		System.out.println("Status code is: " + res2.getStatusCode());
 		Assert.assertTrue(res2.getStatusCode() == 204);
@@ -54,8 +53,7 @@ public class CategoryCRUD
 
 		String jsonString = "{ \"name\":\"CustomCat\",\"description\":\"Folder for  searches\"}";
 		Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString).when().post("/folder");
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 		System.out.println(res.asString());
 		folderid = res.jsonPath().get("id");
 
@@ -63,8 +61,7 @@ public class CategoryCRUD
 				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
 				+ "</Category></CategorySet>";
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString1).when().post("/importcategories");
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -84,8 +81,8 @@ public class CategoryCRUD
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
-		TENANT_ID1 =ct.getTenant() + "."+ ct.getRemoteUser();
-		TENANT_ID_OPC1=ct.getTenant();
+		TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
+		TENANT_ID_OPC1 = ct.getTenant();
 		try {
 			CategoryCRUD.createinitObject();
 		}
@@ -108,8 +105,7 @@ public class CategoryCRUD
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category/0");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/0");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -137,8 +133,7 @@ public class CategoryCRUD
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category/" + catid);
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + catid);
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -182,8 +177,7 @@ public class CategoryCRUD
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category?name=" + catName);
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category?name=" + catName);
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is : " + res.getStatusCode());
@@ -229,8 +223,7 @@ public class CategoryCRUD
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category?name=");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category?name=");
 			System.out.println("											");
 			System.out.println("Status code is : " + res.getStatusCode());
 
@@ -238,8 +231,7 @@ public class CategoryCRUD
 			Assert.assertEquals(res.asString(), "please give category name");
 
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category?name");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category?name");
 			System.out.println("											");
 			System.out.println("Status code is : " + res.getStatusCode());
 
@@ -266,8 +258,7 @@ public class CategoryCRUD
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category?name=abc");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category?name=abc");
 			System.out.println("											");
 			System.out.println("Status code is : " + res.getStatusCode());
 
@@ -294,18 +285,16 @@ public class CategoryCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString1)
-					.when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
+					.post("/search");
 			JsonPath jp1 = res1.jsonPath();
 
 			System.out.println("------------------------------------------");
 			System.out.println("GET operation is in-progress to read  details");
 			System.out.println("											");
 
-			Response res = RestAssured.given().log().everything().header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).when().get("/category/" + catid + "/searches");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + catid + "/searches");
 			Assert.assertTrue(res.getStatusCode() == 200);
 			String output = res.getBody().asString();
 			JSONArray newJArray = new JSONArray(output);
@@ -314,8 +303,7 @@ public class CategoryCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("											");
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.delete("/search/" + jp1.get("id"));
 			Assert.assertTrue(res.getStatusCode() == 200);
 		}
@@ -333,8 +321,7 @@ public class CategoryCRUD
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category/abc/searches");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/abc/searches");
 			Assert.assertTrue(res.getStatusCode() == 400);
 			String output = res.getBody().asString();
 			Assert.assertEquals(output, "Id/count should be a positive number and not an alphanumeric");
@@ -347,8 +334,7 @@ public class CategoryCRUD
 			System.out.println("											");
 
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category/-1/searches");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/-1/searches");
 			Assert.assertTrue(res1.getStatusCode() == 400);
 			String output1 = res1.getBody().asString();
 			Assert.assertEquals(output1, "Id/count should be a positive number and not an alphanumeric");
@@ -361,8 +347,7 @@ public class CategoryCRUD
 			System.out.println("											");
 
 			Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category/4567890/searches");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/4567890/searches");
 			Assert.assertTrue(res2.getStatusCode() == 404);
 			String output2 = res2.getBody().asString();
 			Assert.assertEquals(output2, "Category object by ID: 4567890 does not exist");
@@ -387,8 +372,7 @@ public class CategoryCRUD
 			System.out.println("Using GET method to retrieve the list of categories");
 			System.out.println("											");
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/categories/");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/categories/");
 			JsonPath jp1 = res1.jsonPath();
 
 			System.out.println("Categories existed :" + jp1.get("name"));
@@ -418,8 +402,7 @@ public class CategoryCRUD
 			System.out
 					.println("This test is to validate the response & status with categoryName, categoryId & folderId combinations");
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.get("/searches?categoryId=" + catid + "&categoryname=" + catName + "&folderId=" + folderid);
 
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -445,8 +428,7 @@ public class CategoryCRUD
 					.println("Case1:This test is to validate the response and status when the searches by category with bad url");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryId");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
@@ -456,8 +438,7 @@ public class CategoryCRUD
 			System.out.println("Case2:This test is to validate the response and status when id is missing");
 			System.out.println("											");
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryId=");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=");
 
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 400);
@@ -467,8 +448,7 @@ public class CategoryCRUD
 			System.out.println("Case3:This test is to validate the response and status when name is missing");
 			System.out.println("											");
 			Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryName=");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryName=");
 
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 400);
@@ -492,8 +472,7 @@ public class CategoryCRUD
 			System.out
 					.println("This test is to validate the response when the search by category with category ID which is negative number");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryId=-1");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=-1");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
@@ -519,8 +498,7 @@ public class CategoryCRUD
 			System.out
 					.println("This test is to validate the response when the search by category with category ID which is not exist");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryId=4567890");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=4567890");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
@@ -545,8 +523,7 @@ public class CategoryCRUD
 			System.out
 					.println("This test is to validate the response when the searches by category with category name which is not exist");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryName=MyAnalytics");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryName=MyAnalytics");
 
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -572,8 +549,7 @@ public class CategoryCRUD
 			System.out
 					.println("This test is to validate the response when the search by category whose category name & id are not exist");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.get("/searches?categoryName=invalidCategory&categoryId=200000");
 
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -598,8 +574,7 @@ public class CategoryCRUD
 		try {
 			System.out.println("This test is to validate the response when the search by category(query case check)");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryname=Log Analytics");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryname=Log Analytics");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
@@ -625,8 +600,7 @@ public class CategoryCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to validate the response when the search by category");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryName=it analytics");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryName=it analytics");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
@@ -660,9 +634,8 @@ public class CategoryCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString1)
-					.when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
+					.post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
 			System.out.println("Search Id  :" + jp1.get("id"));
@@ -674,8 +647,7 @@ public class CategoryCRUD
 			System.out.println("==POST operation is completed for creation searches using the specified category");
 			System.out.println("											");
 			Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryId=" + catid);
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=" + catid);
 			JsonPath jp2 = res2.jsonPath();
 			List<String> a = new ArrayList<String>();
 			a = jp2.get("name");
@@ -696,8 +668,7 @@ public class CategoryCRUD
 			System.out.println("==Searches by category id is done");
 			System.out.println("Cleaning up the searches that are created in this scenario");
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.delete("/search/" + jp1.get("id"));
 			System.out.println(res3.asString());
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -730,9 +701,8 @@ public class CategoryCRUD
 					+ folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString1)
-					.when().post("/search");
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
+					.post("/search");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println("											");
 			System.out.println("Search Id  :" + jp1.get("id"));
@@ -747,8 +717,7 @@ public class CategoryCRUD
 			System.out.println("Searches by category name is in-progress using GET method");
 			System.out.println("											");
 			Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?categoryName=" + catName);
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryName=" + catName);
 			JsonPath jp2 = res2.jsonPath();
 			List<String> a = new ArrayList<String>();
 			a = jp2.get("name");
@@ -770,8 +739,7 @@ public class CategoryCRUD
 			System.out.println("==Searches by category name is done");
 			System.out.println("Cleaning up the searches that are created in this scenario");
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.delete("/search/" + jp1.get("id"));
 			System.out.println(res3.asString());
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -796,8 +764,7 @@ public class CategoryCRUD
 
 			System.out.println("This test is to validate the response & status with more query params");
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.get("/searches?categoryId&categoryname=Log Analytics&folderId=2");
 
 			System.out.println("Status code is: " + res1.getStatusCode());

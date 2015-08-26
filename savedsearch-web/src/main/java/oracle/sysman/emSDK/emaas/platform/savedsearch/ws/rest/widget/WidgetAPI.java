@@ -87,15 +87,15 @@ public class WidgetAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllWidgets(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantName,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
+	public Response getAllWidgets(@HeaderParam(value = "OAM_REMOTE_USER") String userTenant)
 	{
 		String message = null;
 		int statusCode = 200;
 
 		try {
 			JSONArray jsonArray = new JSONArray();
-			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(tenantName);
+			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(userTenant.substring(0,
+					userTenant.indexOf(".")));
 			SearchManager searchMan = SearchManager.getInstance();
 			for (Category category : catList) {
 				List<Search> searchList = new ArrayList<Search>();

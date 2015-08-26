@@ -94,11 +94,14 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_VALID_USER_NAME = 500113;
 
 	public static final int ERR_VALID_OAM_HEADER = 500114;
+<<<<<<< HEAD
 
 	public static final int JSON_OBJECT_TO_JSON_EXCEPTION = 70040;
 
 	public static final int JSON_JSON_TO_OBJECT = 70041;
 
+=======
+>>>>>>> emcpssf183_sb
 	/**
 	 * Exception codes end
 	 */

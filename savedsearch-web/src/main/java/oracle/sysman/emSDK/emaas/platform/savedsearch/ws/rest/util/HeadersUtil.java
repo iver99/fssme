@@ -30,30 +30,31 @@ import org.apache.logging.log4j.Logger;
  */
 public class HeadersUtil
 {
-	private static final String HEADER_TENANT_ID = "X-USER-IDENTITY-DOMAIN-NAME";
-	private static final String HEADER_REMORE_USER = "X-REMOTE-USER";
 
 	public static final String SSF_HEADER = "ssfheadertest";
 
-	private static final Logger _logger = LogManager.getLogger(HeadersUtil.class);
+	public static final String OAM_HEADER = "OAM_REMOTE_USER";
 
-	public static Long getTenantId(HttpServletRequest request) throws EMAnalyticsFwkException
-	{
-		return HeadersUtil.getInternalTenantId(request);
-	}
+	private static final Logger _logger = LogManager.getLogger(HeadersUtil.class);
 
 	public static TenantInfo getTenantInfo(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
-		HeadersUtil.validateTeant(request);
+		HeadersUtil.validateOAMHeader(request);
 		Long id = HeadersUtil.getInternalTenantId(request);
+<<<<<<< HEAD
 		String user = HeadersUtil.getUserName(request);
 		return new TenantInfo(user, id, request.getHeader(HEADER_TENANT_ID));
+=======
+		String userTenant = request.getHeader(OAM_HEADER);
+		String user = userTenant.substring(userTenant.indexOf(".") + 1, userTenant.length());
+		return new TenantInfo(user, id);
+>>>>>>> emcpssf183_sb
 
 	}
 
 	private static Long getInternalTenantId(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
-		String header = request.getHeader(HEADER_TENANT_ID);
+		String header = request.getHeader(OAM_HEADER);
 		Long internalId = null;
 		String testHeader = request.getHeader(SSF_HEADER);
 		Boolean isTestEnv = false;
@@ -69,19 +70,14 @@ public class HeadersUtil
 			}
 		}
 		else {
-
-			if (header == null) {
-				_logger.error("Please provide tenant name , it can not be null");
-				throw new EMAnalyticsFwkException("Please provide tenant name , it can not be null",
-						EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);
-			}
+			String tName = header.substring(0, header.indexOf("."));
 			try {
-				internalId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(header);
+				internalId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tName);
 				_logger.info("Internal tenant id =" + internalId);
 			}
 			catch (BasicServiceMalfunctionException e) {
 				_logger.error("Tenant Id " + header + " does not exist.");
-				throw new EMAnalyticsFwkException("Tenant Id " + header + " does not exist.",
+				throw new EMAnalyticsFwkException("Tenant Id " + tName + " does not exist.",
 						EMAnalyticsFwkException.ERR_VALID_TENANT_ID, null);
 			}
 
@@ -96,7 +92,7 @@ public class HeadersUtil
 		return internalId;
 	}
 
-	private static String getUserName(HttpServletRequest request) throws EMAnalyticsFwkException
+	/*private static String getUserName(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
 		String userTenant = null;
 		String userName = null;
@@ -127,49 +123,46 @@ public class HeadersUtil
 		}
 
 		return userName;
-	}
+	}*/
 
-	private static void validateTeant(HttpServletRequest request) throws EMAnalyticsFwkException
+	private static void validateOAMHeader(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
 		String userTenant = null;
 		String userName = null;
 
-		userTenant = request.getHeader(HEADER_REMORE_USER);
+		userTenant = request.getHeader(OAM_HEADER);
 		if (userTenant == null) {
-			_logger.error(HEADER_REMORE_USER + " header value missing.");
-			throw new EMAnalyticsFwkException(HEADER_REMORE_USER + " header value missing.",
-					EMAnalyticsFwkException.ERR_VALID_USER_NAME, null);
+			_logger.error(OAM_HEADER + " header value is missing.");
+			throw new EMAnalyticsFwkException(OAM_HEADER + " header value is missing.",
+					EMAnalyticsFwkException.ERR_VALID_OAM_HEADER, null);
 		}
 		int idx = userTenant.indexOf(".");
 		if (idx <= 0) {
 
-			_logger.error("Tenant name was  not provided , Please provide " + HEADER_REMORE_USER
-					+ " header value in following format <tenant_name>.<user_name>");
-			throw new EMAnalyticsFwkException("Tenant name was not provided ,Please provide " + HEADER_REMORE_USER
+			_logger.error(" Please provide " + OAM_HEADER + " header value in following format <tenant_name>.<user_name>");
+			throw new EMAnalyticsFwkException("Please provide " + OAM_HEADER
 					+ " header value in following format <tenant_name>.<user_name>", EMAnalyticsFwkException.ERR_VALID_USER_NAME,
 					null);
 		}
 
 		userName = userTenant.substring(0, idx);
 		if (userName == null || "".equalsIgnoreCase(userName.trim())) {
-			_logger.error("Tenant name was not provided , Please provide " + HEADER_REMORE_USER
+			_logger.error("Tenant name was not provided , Please provide " + OAM_HEADER
 					+ " header value in following format <tenant_name>.<user_name>");
-			throw new EMAnalyticsFwkException("User name was not provided , Please provide " + HEADER_REMORE_USER
+			throw new EMAnalyticsFwkException("Tenant name was not provided , Please provide " + OAM_HEADER
 					+ " header value in following format <tenant_name>.<user_name>", EMAnalyticsFwkException.ERR_VALID_USER_NAME,
 					null);
 		}
 
-		String header = request.getHeader(HEADER_TENANT_ID);
-		if (header == null) {
-			_logger.error("Please provide tenant name , it can not be null");
-			throw new EMAnalyticsFwkException("Please provide tenant name , it can not be null",
-					EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);
+		userName = userTenant.substring(idx + 1, userTenant.length());
+
+		if (userName == null || "".equalsIgnoreCase(userName.trim())) {
+			_logger.error("User name was not provided , Please provide " + OAM_HEADER
+					+ " header value in following format <tenant_name>.<user_name>");
+			throw new EMAnalyticsFwkException("User name was not provided , Please provide " + OAM_HEADER
+					+ " header value in following format <tenant_name>.<user_name>", EMAnalyticsFwkException.ERR_VALID_USER_NAME,
+					null);
 		}
-		if (!userName.equals(header)) {
-			_logger.error("Tenant name mismacth error : Please provide valid value for X-REMOTE-USER and  X-USER-IDENTITY-DOMAIN-NAME ");
-			throw new EMAnalyticsFwkException(
-					"Tenant name mismacth error : Please provide valid value for X-REMOTE-USER and  X-USER-IDENTITY-DOMAIN-NAME ",
-					EMAnalyticsFwkException.ERR_EMPTY_TENANT_ID, null);
-		}
+
 	}
 }
