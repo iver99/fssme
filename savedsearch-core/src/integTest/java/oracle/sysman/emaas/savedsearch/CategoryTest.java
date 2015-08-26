@@ -111,14 +111,14 @@ public class CategoryTest extends BaseTest
 		TenantContext.clearContext();
 	}
 
-	@Test
+	/*@Test
 	public void testDefaultFolder() throws Exception
 	{
 
 		CategoryManager catMan = CategoryManager.getInstance();
 		AssertJUnit.assertNull(catMan.getCategory("Log Analytics").getDefaultFolderId());
 
-	}
+	}*/
 
 	@Test
 	public void testDeleteCategoryInvalidId() throws Exception
@@ -214,7 +214,7 @@ public class CategoryTest extends BaseTest
 		TenantContext.clearContext();
 	}*/
 
-	@Test
+	/*@Test
 	public void testEditCategory_DuplicateName() throws Exception
 	{
 
@@ -233,7 +233,7 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
 					EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME));
 		}
-	}
+	}*/
 
 	@Test
 	public void testgetCategoryInvalidId() throws Exception

@@ -16,7 +16,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.Searc
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.SavedSearchApplication;
 
 import org.testng.Assert;
@@ -120,7 +119,7 @@ public class SavedSearchCommonTest
 		result = StringUtil.isEmpty("");
 		Assert.assertEquals(result, true);
 		Assert.assertEquals(QueryParameterConstant.USER_NAME, "userName");
-	}*/
+	}
 
 	@Test
 	public void testTenantInfo()
@@ -133,6 +132,6 @@ public class SavedSearchCommonTest
 		Assert.assertTrue(a.getTenantInternalId() == i);
 		Assert.assertTrue(a.gettenantName().equals("admin1"));
 
-	}
+	}*/
 
 }

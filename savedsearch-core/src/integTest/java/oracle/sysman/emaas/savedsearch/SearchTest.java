@@ -410,7 +410,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test
+	/*@Test
 	public void testGetSearchByName() throws Exception
 	{
 		Search search = SearchManager.getInstance().getSearchByName("WebLogic Servers with small Maximum Heap Size", 1);
@@ -422,7 +422,7 @@ public class SearchTest extends BaseTest
 		List<Search> rtnobj = SearchManager.getInstance().getSystemSearchListByCategoryId(1);
 		Assert.assertNotNull(rtnobj);
 
-	}
+	}*/
 
 	//	@Test
 	//	public void testGetSearchCountByFolderId() throws Exception
