@@ -44,6 +44,10 @@
              "name": "cookbook-emcs-savedsearchService::schema_deployment",
              "operation": "schema_deployment"
          },
+         {
+							"name": "cookbook-emcs-savedsearchService::schema_upgrade",
+							"operation": "schema_upgrade"
+         },
         {
               "name": "cookbook-emcs-savedsearchService::schema_on_board",
               "operation": "schema_on_boarding"

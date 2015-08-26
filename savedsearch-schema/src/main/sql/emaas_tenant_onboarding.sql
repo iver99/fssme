@@ -16,6 +16,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
+Rem 	sdhamdhe  8/26/2015     Made changes for LCM rep manager cut-over
 Rem    vinjoshi   1/23/1015 	Created
      
 WHENEVER SQLERROR EXIT ROLLBACK
@@ -46,10 +47,10 @@ DECLARE
     END;
 /
 
-@emaas_savesearch_seed_data.sql &TENANT_ID
-@emaas_savesearch_seed_data_la.sql  &TENANT_ID
-@emaas_savesearch_seed_data_ta.sql  &TENANT_ID
-@emaas_savesearch_seed_data_apm.sql  &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_la.sql  &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_apm.sql  &TENANT_ID
 
 
 /
