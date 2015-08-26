@@ -569,7 +569,7 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test
+	/*@Test
 	public void testUpdateSystemFolder() throws EMAnalyticsFwkException
 	{
 		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
@@ -594,6 +594,6 @@ public class FolderManagerTest extends BaseTest
 		finally {
 			TenantContext.clearContext();
 		}
-	}
+	}*/
 
 }

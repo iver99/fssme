@@ -76,8 +76,8 @@ public class WidgetGroupAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllWidgetGroups(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantName,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
+	public Response getAllWidgetGroups(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantName
+			)
 	{
 		String message = null;
 		int statusCode = 200;

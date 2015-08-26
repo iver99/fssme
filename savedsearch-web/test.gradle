@@ -1,4 +1,4 @@
-//jar.archiveName='emcpssf_qa_test.jar'
+jar.archiveName='emcpssf_qa_test.jar'
 group = 'com.oracle.emaas.emcpssf'
 version = '1.0.1'
 
@@ -11,7 +11,7 @@ sourceSets {
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-    appendix = 'integ-tests'
+    appendix = 'integ-tests-security'
 }
 dependencies {
 lrgConfig project(':savedsearch-web'){ transitive = false } 

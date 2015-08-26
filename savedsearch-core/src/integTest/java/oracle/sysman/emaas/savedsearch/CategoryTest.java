@@ -116,7 +116,7 @@ public class CategoryTest extends BaseTest
 	{
 
 		CategoryManager catMan = CategoryManager.getInstance();
-		AssertJUnit.assertNotNull(catMan.getCategory("Log Analytics").getDefaultFolderId());
+		AssertJUnit.assertNull(catMan.getCategory("Log Analytics").getDefaultFolderId());
 
 	}
 
