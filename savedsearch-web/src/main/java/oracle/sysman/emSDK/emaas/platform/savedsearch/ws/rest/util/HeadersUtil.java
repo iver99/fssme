@@ -40,10 +40,13 @@ public class HeadersUtil
 	public static TenantInfo getTenantInfo(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
 		HeadersUtil.validateOAMHeader(request);
-		Long id = HeadersUtil.getInternalTenantId(request);		
+		Long id = HeadersUtil.getInternalTenantId(request);
 		String userTenant = request.getHeader(OAM_HEADER);
 		String user = userTenant.substring(userTenant.indexOf(".") + 1, userTenant.length());
-		return new TenantInfo(user, id);
+		TenantInfo info = new TenantInfo(user, id);
+		info.settenantName(userTenant.substring(0, userTenant.indexOf(".")));
+		return info;
+
 	}
 
 	private static Long getInternalTenantId(HttpServletRequest request) throws EMAnalyticsFwkException
@@ -79,7 +82,7 @@ public class HeadersUtil
 				_logger.error("Internal Tenant Id is null.");
 				throw new EMAnalyticsFwkException("Internal Tenant Id is null.", EMAnalyticsFwkException.ERR_VALID_TENANT_ID,
 						null);
-		}
+			}
 
 		}
 

@@ -112,7 +112,7 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/savedsearch/TenantDataLeakTest.class"
 	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/SearchManagerTestMockup.class"
-	useRestAssured =true
+	 useRestAssured =true
 ext.set("testType", "unit")
 
 }
