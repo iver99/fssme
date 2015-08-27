@@ -51,8 +51,6 @@ DECLARE
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_la.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_apm.sql  &TENANT_ID
-
-
 /
 
 BEGIN
@@ -81,9 +79,16 @@ SET PROVIDER_NAME = 'EmcitasApplications' ,
     PROVIDER_VERSION ='0.1',
     PROVIDER_ASSET_ROOT ='assetRoot'		
     WHERE CATEGORY_ID = 3 AND TENANT_ID ='&TENANT_ID';
-    
-DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
+END;
+/
 
 COMMIT;
+/
+
+@&EMSAAS_SQL_ROOT/1.0.20/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
+/
+
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
 END;
 /
