@@ -79,7 +79,7 @@ public class TenantInfo
 		long id = m_tenantInternalId != null ? m_tenantInternalId : -1;
 		String uName = m_username != null && !m_username.isEmpty() ? m_username : "";
 
-		String result = String.format("[TenantName:" + tName + "][InternalTenantId:" + id + "[UserName:" + uName + "]")
+		String result = String.format("[TenantName:" + tName + "][InternalTenantId:" + id + "][UserName:" + uName + "]")
 				+ System.getProperty("line.separator");
 
 		return result;
