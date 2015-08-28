@@ -14,8 +14,6 @@ ruby_block "set_ENVs" do
   end
   action :create
 end
-#Recipe to create schema - this is completely re-entrant, run as many times
-include_recipe 'cookbook-emcs-savedsearchService::savedsearch_schema'
 
 #Block to create the servicemanager.properties file
 bash "create_servicemanger_properties_file"  do
