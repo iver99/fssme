@@ -11,13 +11,13 @@ Rem 2/23/2015	VINJOSHI	Created file
 Rem 8/26/2015	SDHAMDHE	Updated for LCM Rep manager cutover changes EMCPSSF-184
 Rem ----------------------------------------------------------------
 
-@&EMSAAS_SQL_ROOT/1.0.20/upgrade_impl_ddl.sql
+@&EMSAAS_SQL_ROOT/1.0.25/upgrade_impl_ddl.sql
 
 
 SET HEADING OFF
 SET FEEDBACK OFF
 SPOOL upgrade_impl_dml_tmp.sql
-SELECT DISTINCT '@&EMSAAS_SQL_ROOT/1.0.20/upgrade_impl_dml.sql ' || TENANT_ID  FROM EMS_ANALYTICS_FOLDERS ORDER BY '@&EMSAAS_SQL_ROOT/1.0.20/upgrade_impl_dml.sql ' || TENANT_ID ;
+SELECT DISTINCT '@&EMSAAS_SQL_ROOT/1.0.25/upgrade_impl_dml.sql ' || TENANT_ID  FROM EMS_ANALYTICS_FOLDERS ORDER BY '@&EMSAAS_SQL_ROOT/1.0.25/upgrade_impl_dml.sql ' || TENANT_ID ;
 SPOOL OFF
 
 SET HEADING ON
@@ -25,5 +25,5 @@ SET FEEDBACK ON
 
 WHENEVER SQLERROR EXIT ROLLBACK
 
-@&EMSAAS_SQL_ROOT/1.0.20/upgrade_impl_dml_tmp.sql
+@&EMSAAS_SQL_ROOT/1.0.25/upgrade_impl_dml_tmp.sql
 
