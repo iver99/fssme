@@ -13,10 +13,18 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.test.util;
 import java.util.Set;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.SearchParameterDetails;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.SavedSearchApplication;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.AppMappingCollection;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.AppMappingEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.DomainEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.DomainEntity.DomainKeyEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.DomainsEntity;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -27,7 +35,7 @@ import org.testng.annotations.Test;
 public class SavedSearchCommonTest
 {
 
-	/*@Test
+	@Test
 	public void testJsonUtil()
 	{
 		AppMappingCollection obj = new AppMappingCollection();
@@ -73,7 +81,7 @@ public class SavedSearchCommonTest
 		Assert.assertNotNull(obj3.getTotal());
 		Assert.assertNull(obj3.getItems());
 
-	}*/
+	}
 
 	@Test
 	public void testSavedSearchApplication()
@@ -111,7 +119,7 @@ public class SavedSearchCommonTest
 		Assert.assertTrue(t1.equals("test"));
 	}
 
-	/*@Test
+	@Test
 	public void testStringEmptyTest()
 	{
 		boolean result = StringUtil.isEmpty(null);
@@ -132,6 +140,6 @@ public class SavedSearchCommonTest
 		Assert.assertTrue(a.getTenantInternalId() == i);
 		Assert.assertTrue(a.gettenantName().equals("admin1"));
 
-	}*/
+	}
 
 }

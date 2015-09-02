@@ -897,7 +897,19 @@ public class SearchManagerImpl extends SearchManager
 			}
 			else {
 				if (search.getCategoryDetails() != null) {
-					category = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd((Category) search.getCategoryDetails(), em);
+
+					try {
+						category = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
+								.setParameter("categoryName", ((Category) search.getCategoryDetails()).getName())
+								.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+								.getSingleResult();
+					}
+					catch (NoResultException e) {
+
+						category = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd((Category) search.getCategoryDetails(), em);
+						em.persist(category);
+					}
+
 					// Category.getCategoryByName
 				}
 			}

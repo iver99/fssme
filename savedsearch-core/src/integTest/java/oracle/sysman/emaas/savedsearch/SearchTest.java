@@ -947,4 +947,14 @@ public class SearchTest extends BaseTest
 					EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
 		}
 	}
+
+	@Test
+	public void testSystemSearchList() throws Exception
+	{
+
+		SearchManager search = SearchManager.getInstance();
+		List<Search> lst = search.getSystemSearchListByCategoryId(1);
+		Assert.assertTrue(lst.size() > 0);
+
+	}
 }
