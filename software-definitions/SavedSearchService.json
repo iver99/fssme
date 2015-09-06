@@ -60,5 +60,6 @@
     "softwareImage": {
         "rel": "link\/gzip",
         "href": "<software>"
-    }
+    },
+    "microServices":["SavedSearch"]
 }
