@@ -33,8 +33,8 @@ public class WidgetAPITest
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
-		TENANT_ID1 =ct.getTenant() + "."+ ct.getRemoteUser();
-		TENANT_ID_OPC1=ct.getTenant();
+		TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
+		TENANT_ID_OPC1 = ct.getTenant();
 	}
 
 	/**
@@ -50,8 +50,7 @@ public class WidgetAPITest
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/widgets");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/widgets");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
