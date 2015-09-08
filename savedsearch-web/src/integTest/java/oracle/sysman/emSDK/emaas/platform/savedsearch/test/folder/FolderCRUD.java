@@ -115,7 +115,7 @@ public class FolderCRUD
 		}
 	}
 
-	@Test
+	/*@Test
 	public void checkBadResuest()
 	{
 		try {
@@ -164,7 +164,7 @@ public class FolderCRUD
 			Assert.fail(e.getLocalizedMessage());
 		}
 
-	}
+	}*/
 
 	@Test
 	/**
