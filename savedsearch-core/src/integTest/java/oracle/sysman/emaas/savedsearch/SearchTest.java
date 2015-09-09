@@ -954,7 +954,7 @@ public class SearchTest extends BaseTest
 
 		SearchManager search = SearchManager.getInstance();
 		List<Search> lst = search.getSystemSearchListByCategoryId(1);
-		Assert.assertTrue(lst.size() > 0);
+		Assert.assertNotNull(lst);
 
 	}
 }
