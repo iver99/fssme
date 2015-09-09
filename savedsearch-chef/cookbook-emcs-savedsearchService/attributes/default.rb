@@ -30,7 +30,7 @@ default["oracle_base"] = "#{node["run_dir"]}/oracle"
 default["SAAS_datasourcename"]="emaas_savesearch_ds"
 default["SAAS_jndiname"]="jdbc/emaas_savesearch_ds"
 default["sql_bundle"]="emaas-applications-savedsearch-schema-"
-default["sql_dir"]="emaas-applications-savedsearch-schema"
+default["sql_dir"]="sql"
 
 #if db connection parameters are to be obtained by db entity lookup, set is_db_lookup to true
 default["is_db_lookup"]="true"
@@ -62,6 +62,5 @@ default["SAAS_deploymentUuid"]="0"
 default["SAAS_Service_parent_dir"]="#{node["apps_dir"]}"
 default["SAAS_schema_archive_filename"]="#{node["sql_bundle"]}#{node["SAAS_version"]}.tgz"
 default["SAAS_schema_sql_root_dir"]="#{node["SAAS_Service_parent_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql/"
-
 default["SAAS_current_version"]="0.0.0"
 
