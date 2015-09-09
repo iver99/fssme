@@ -50,7 +50,7 @@ repositories {
             url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core-integ-tests', version: '1.0.1'){
+    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core-integ-tests', version: '1.0+'){
 exclude('module':'groovy')
 }
 testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
@@ -108,6 +108,7 @@ task small_deploy_3n_block(type: EMTest) {
         include "oracle/sysman/emaas/savedsearch/QAToolUtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/DBConnectionManagerTest.class"	
 	useRestAssured =true
+ext.set("testType", "unit")
 
 }
    task DEVTest1(type:EMTest,dependsOn: DEVTest){	
@@ -115,7 +116,7 @@ task small_deploy_3n_block(type: EMTest) {
 
 	include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
 	useRestAssured =true
-	
+	ext.set("testType", "unit")
 }
 task DEVTest2(type:EMTest,dependsOn: DEVTest1){	
 		
@@ -123,7 +124,7 @@ task DEVTest2(type:EMTest,dependsOn: DEVTest1){
 
 	include "oracle/sysman/emaas/savedsearch/Cleanup.class"
 	useRestAssured =true
-	
+	ext.set("testType", "unit")
 }
 task small_deploy_3n_cleanup(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
@@ -143,4 +144,5 @@ task small_deploy_3n_cleanup(type: EMTest) {
 
 
 task emcpssf_dev_test_3n (dependsOn: [DEVTest2, small_deploy_3n_cleanup])
+
 
