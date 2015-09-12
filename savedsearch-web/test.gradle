@@ -1,7 +1,7 @@
 //jar.archiveName='emcpssf_qa_test.jar'
 group = 'com.oracle.emaas.emcpssf'
-//version = '1.0.1'
-apply plugin: 'gavsetting'
+version = '1.0.12'
+//apply plugin: 'gavsetting'
 sourceSets {
     integTest {
         java.srcDir 'src/integTest/java'
@@ -11,7 +11,7 @@ sourceSets {
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-    appendix = 'integ-tests-exception21'
+    appendix = 'integ-tests-k3'
 }
 dependencies {
 lrgConfig project(':savedsearch-web'){ transitive = false } 

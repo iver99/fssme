@@ -61,7 +61,7 @@ public class SearchesCRUD
 	public static void createinitObject() throws Exception
 	{
 
-		String jsonString = "{ \"name\":\"set \",\"description\":\"Folder for  searches\"}";
+		String jsonString = "{ \"name\":\"set\",\"description\":\"Folder for  searches\"}";
 		Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 
 		.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
