@@ -11,7 +11,7 @@ sourceSets {
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-    appendix = 'integ-tests-exception'
+    appendix = 'integ-tests-exception21'
 }
 dependencies {
 lrgConfig project(':savedsearch-web'){ transitive = false } 
