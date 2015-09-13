@@ -68,56 +68,21 @@ task copyDependencies(type: Copy) {
     from configurations.lrgConfig
     into System.env.T_WORK
 }
-task small_deploy_3n_block(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_dev_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'setupEmaasSmallDeploy')
-                    }
-                }
-        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
-            }
-        }
-    }
-    useWebdriver = true
-    useRestAssured = true
-}
 
 
-     task QATest(type:EMTest,dependsOn: small_deploy_3n_block){
- include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
+     task QATest(type:EMTest){
+
+
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/folder/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/search/*"
+
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
+
 //useWebdriver = true
 
 // include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
         useRestAssured=true
 ext.set("testType", "integration")
 }
-task small_deploy_3n_cleanup(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'logCollectionAndPostCleanup')
-                    }
-                }
-            }
-        }
-    }
- mustRunAfter ([small_deploy_3n_block,QATest])
-}
 
-task emcpssf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
+task emcpssf_web_unit_test (dependsOn: QATest)
 

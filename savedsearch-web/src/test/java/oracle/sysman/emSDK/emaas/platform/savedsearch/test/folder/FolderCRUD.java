@@ -61,7 +61,7 @@ public class FolderCRUD
 			String jsonString = "{ \"name\":\"System_Folder_Edit\" }";
 
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
 					.put("/folder/1");
 			// JsonPath jp = res.jsonPath();
 			System.out.println(res.asString());
@@ -86,8 +86,8 @@ public class FolderCRUD
 				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
 				+ "</Category></CategorySet>";
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString1).when().post("/importcategories");
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1)
+				.body(jsonString1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -128,9 +128,9 @@ public class FolderCRUD
 
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1)
 
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=99999999999");
+					.when().get("/entities?folderId=99999999999");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -160,8 +160,8 @@ public class FolderCRUD
 			System.out.println("Using GET operation to get the details of the specified folderId");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/folder/333");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/folder/333");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -196,8 +196,7 @@ public class FolderCRUD
 			String jsonString = "{ \"name\":\"Custom_Folder\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -214,8 +213,7 @@ public class FolderCRUD
 			String jsonString2 = "{ \"name\":\"Custom_Folder\" }";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).body(jsonString2)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when().post("/folder");
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
 			System.out.println("											");
@@ -227,8 +225,8 @@ public class FolderCRUD
 			System.out.println("Verifying weather the folder created in a specified location or not with GET method");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + id);
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=" + id);
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -273,8 +271,7 @@ public class FolderCRUD
 			String jsonString1 = "{ \"name\":\"TestFolderParent\", \"description\":\"Folder for EMAAS searches\"}";
 			Response resp1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/folder");
 			JsonPath jpp1 = resp1.jsonPath();
 
 			Integer parentFolder = jpp1.getInt("id");
@@ -286,8 +283,7 @@ public class FolderCRUD
 					+ parentFolder.intValue() + "}}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -298,8 +294,7 @@ public class FolderCRUD
 			System.out.println("Verifying whether the folder created or not in a specified directory with GET method");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.get("/entities?folderId=" + parentFolder.intValue());
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
@@ -325,15 +320,14 @@ public class FolderCRUD
 			System.out.println("cleaning up the folder that is created above using DELETE method");
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.delete("/folder/" + jp1.get("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + jp1.get("id"));
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 204);
 			System.out.println("Delete parent folder ");
 			res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + parentFolder.intValue());
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.delete("/folder/" + parentFolder.intValue());
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 204);
@@ -357,8 +351,7 @@ public class FolderCRUD
 			String jsonString1 = "{ \"name\":\"TestFolderP\", \"description\":\"Folder for EMAAS searches\"}";
 			Response resp1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/folder");
 			JsonPath jpp1 = resp1.jsonPath();
 
 			Integer parentFolder = jpp1.getInt("id");
@@ -369,8 +362,7 @@ public class FolderCRUD
 			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":0}}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -381,8 +373,7 @@ public class FolderCRUD
 			System.out.println("Verifying whether the folder created or not in a specified directory with GET method");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.get("/entities?folderId=" + parentFolder.intValue());
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
@@ -408,15 +399,14 @@ public class FolderCRUD
 			System.out.println("cleaning up the folder that is created above using DELETE method");
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.delete("/folder/" + jp1.get("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + jp1.get("id"));
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 204);
 
 			res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + parentFolder.intValue());
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.delete("/folder/" + parentFolder.intValue());
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 204);
@@ -441,8 +431,7 @@ public class FolderCRUD
 			String jsonString = "{ \"name\":\" \",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -475,8 +464,8 @@ public class FolderCRUD
 			System.out.println("											");
 			int position = -1;
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + id.intValue());
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=" + id.intValue());
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -501,8 +490,7 @@ public class FolderCRUD
 
 					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 							.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-							.header("X-REMOTE-USER", TENANT_ID1).body(jsonString)
-							.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/folder/" + myfolderID);
+							.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/folder/" + myfolderID);
 					System.out.println("											");
 					System.out.println("Status code is: " + res1.getStatusCode());
 					System.out.println("											");
@@ -522,8 +510,7 @@ public class FolderCRUD
 					String jsonString1 = "{ \"description\":\"Folder for EMAAS searches_Edit\"}";
 					Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 							.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-							.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
-							.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/folder/" + myfolderID);
+							.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().put("/folder/" + myfolderID);
 					System.out.println("											");
 					System.out.println("Status code is: " + res2.getStatusCode());
 					System.out.println("											");
@@ -562,16 +549,14 @@ public class FolderCRUD
 			String jsonString1 = "{ \"name\":\"TestFolder_ParentId\", \"description\":\"Folder for EMAAS searches\"}";
 			Response res11 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/folder");
 			JsonPath jp11 = res11.jsonPath();
 			int pid = jp11.get("id");
 			String jsonString = "{ \"name\":\"TestFolder_ParentId\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":"
 					+ pid + "}}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -582,8 +567,8 @@ public class FolderCRUD
 			System.out.println("GET operation to select the folder to be edited is in progress");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + pid);
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=" + pid);
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -608,8 +593,8 @@ public class FolderCRUD
 
 					Response res_parentId = RestAssured.given().contentType(ContentType.JSON).log().everything()
 							.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-							.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_parentId)
-							.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/folder/" + myfolderID);
+							.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString_parentId).when()
+							.put("/folder/" + myfolderID);
 					JsonPath jp_parentId = res_parentId.jsonPath();
 					System.out.println("											");
 					System.out.println("Status code is: " + res_parentId.getStatusCode());
@@ -623,8 +608,7 @@ public class FolderCRUD
 
 			System.out.println("==Get operation to verify if the folderId has been changed");
 			res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.get("/entities?folderId=" + getRootId().intValue());
 			jp = res.jsonPath();
 			System.out.println("											");
@@ -652,15 +636,14 @@ public class FolderCRUD
 			System.out.println("cleaning up the folder that is created above using DELETE method");
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.delete("/folder/" + jp1.get("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + jp1.get("id"));
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 204);
 
 			res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + pid);
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.delete("/folder/" + pid);
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 204);
@@ -686,8 +669,7 @@ public class FolderCRUD
 			String jsonString1 = "{ \"name\":\"TestFolder_ParentId_Zero1\", \"description\":\"Folder for EMAAS searches\"}";
 			Response res11 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/folder");
 			JsonPath jp11 = res11.jsonPath();
 			int parentId = jp11.get("id");
 
@@ -698,8 +680,7 @@ public class FolderCRUD
 					+ parentId + "}}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -710,8 +691,8 @@ public class FolderCRUD
 			System.out.println("GET operation to select the folder to be edited is in progress");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + parentId);
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=" + parentId);
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -736,8 +717,8 @@ public class FolderCRUD
 
 					Response res_parentId = RestAssured.given().contentType(ContentType.JSON).log().everything()
 							.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-							.header("X-REMOTE-USER", TENANT_ID1).body(jsonString_parentId)
-							.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().put("/folder/" + myfolderID);
+							.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString_parentId).when()
+							.put("/folder/" + myfolderID);
 					JsonPath jp_parentId = res_parentId.jsonPath();
 					System.out.println("											");
 					System.out.println("Status code is: " + res_parentId.getStatusCode());
@@ -753,8 +734,8 @@ public class FolderCRUD
 
 			System.out.println("==Get operation to verify if the folderId has been changed");
 			res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + id.intValue());
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=" + id.intValue());
 			jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -781,15 +762,14 @@ public class FolderCRUD
 			System.out.println("cleaning up the folder that is created above using DELETE method");
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.delete("/folder/" + jp1.get("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + jp1.get("id"));
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 204);
 
 			res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + parentId);
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.delete("/folder/" + parentId);
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 204);
@@ -819,8 +799,7 @@ public class FolderCRUD
 			String jsonString = "{ \"name\":\"Custom_Folder_EditEmptyName\",\"description\":\"Folder for EMAAS searches\",}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println(jp1.get("id"));
@@ -830,8 +809,7 @@ public class FolderCRUD
 
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().put("/folder/" + jp1.get("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().put("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
 			System.out.println("											");
@@ -846,8 +824,7 @@ public class FolderCRUD
 			System.out.println("cleaning up the folder that is created above using DELETE method");
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.delete("/folder/" + jp1.get("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + jp1.get("id"));
 			System.out.println(res3.asString());
 			System.out.println("Status code is: " + res3.getStatusCode());
 			Assert.assertTrue(res3.getStatusCode() == 204);
@@ -872,8 +849,8 @@ public class FolderCRUD
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=0");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=0");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -903,8 +880,7 @@ public class FolderCRUD
 			String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":333333}}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -935,8 +911,8 @@ public class FolderCRUD
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=me");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=me");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -966,8 +942,8 @@ public class FolderCRUD
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -976,8 +952,8 @@ public class FolderCRUD
 			Assert.assertEquals(res.asString(), "Empty folderId");
 
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -986,8 +962,8 @@ public class FolderCRUD
 			Assert.assertEquals(res1.asString(), "Empty folderId");
 
 			Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -1018,8 +994,7 @@ public class FolderCRUD
 			String jsonString = "{\"parent\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\"}";
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
 			System.out.println("											");
@@ -1055,8 +1030,8 @@ public class FolderCRUD
 
 			int position = -1;
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + id.intValue());
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=" + id.intValue());
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -1081,8 +1056,7 @@ public class FolderCRUD
 					System.out.println("											");
 					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 							.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-							.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-							.delete("/folder/" + myfolderID);
+							.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + myfolderID);
 					System.out.println("											");
 					System.out.println("Status code is: " + res1.getStatusCode());
 					// System.out.println("											");
@@ -1112,8 +1086,8 @@ public class FolderCRUD
 			System.out.println("This test is to delete a non-exist folder with DELETE method");
 			System.out.println("											");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/3333333333");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.delete("/folder/3333333333");
 			System.out.println(res.asString());
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -1141,8 +1115,8 @@ public class FolderCRUD
 			System.out.println("GET operation to select the folder is in progress");
 			System.out.println("											");
 
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/1");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1)
+					.when().delete("/folder/1");
 			// JsonPath jp = res.jsonPath();
 			System.out.println(res.asString());
 			System.out.println("											");
@@ -1169,8 +1143,8 @@ public class FolderCRUD
 			System.out
 					.println("This test is to validate the response when the search by folder with folder ID which is negative number");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?folderId=-1");
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/searches?folderId=-1");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 400);
@@ -1202,8 +1176,7 @@ public class FolderCRUD
 			String jsonString1 = "{ \"name\":\"Folder_searches6\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/folder");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/folder");
 			JsonPath jp1 = res1.jsonPath();
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
@@ -1216,8 +1189,8 @@ public class FolderCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("Asserting the details of the folder");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/folder/" + jp1.get("id"));
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/folder/" + jp1.get("id"));
 			JsonPath jp0 = res.jsonPath();
 			Assert.assertEquals(jp0.get("name"), "Folder_searches6");
 			Assert.assertEquals(jp0.get("id"), jp1.get("id"));
@@ -1239,8 +1212,7 @@ public class FolderCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString2).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/search");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when().post("/search");
 			JsonPath jp2 = res2.jsonPath();
 
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -1255,8 +1227,8 @@ public class FolderCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("GET method is in-progress to list all the searches in the folderId: " + jp1.get("id"));
 			Response res10 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/searches?folderId=" + jp1.get("id"));
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/searches?folderId=" + jp1.get("id"));
 			JsonPath jp10 = res10.jsonPath();
 
 			System.out.println("											");
@@ -1275,8 +1247,7 @@ public class FolderCRUD
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample2\",\"type\":STRING,\"value\":\"my_value\"}]}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).body(jsonString3).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1)
-					.when().post("/search");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString3).when().post("/search");
 			JsonPath jp3 = res3.jsonPath();
 
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -1290,8 +1261,8 @@ public class FolderCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("GET method is in-progress to list all the searches in the folderId: " + jp1.get("id"));
 			Response res4 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/entities?folderId=" + jp1.get("id"));
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/entities?folderId=" + jp1.get("id"));
 			JsonPath jp4 = res4.jsonPath();
 
 			System.out.println("											");
@@ -1306,8 +1277,7 @@ public class FolderCRUD
 			System.out.println("											");
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.delete("/folder/" + jp1.get("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res5.getStatusCode());
 			System.out.println(res5.asString());
@@ -1320,16 +1290,14 @@ public class FolderCRUD
 			if (jp4.get("name[0]") == "Search_s2") {
 				Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 						.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-						.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-						.delete("/search/" + jp3.get("id"));
+						.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + jp3.get("id"));
 				System.out.println("											");
 				System.out.println("Status code is: " + res6.getStatusCode());
 				Assert.assertTrue(res6.getStatusCode() == 204);
 				System.out.println("											");
 				Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 						.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-						.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-						.delete("/search/" + jp2.get("id"));
+						.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + jp2.get("id"));
 				System.out.println("											");
 				System.out.println("Status code is: " + res7.getStatusCode());
 				Assert.assertTrue(res7.getStatusCode() == 204);
@@ -1338,15 +1306,13 @@ public class FolderCRUD
 
 				Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 						.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-						.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-						.delete("/search/" + jp2.get("id"));
+						.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + jp2.get("id"));
 				System.out.println("											");
 				System.out.println("Status code is: " + res7.getStatusCode());
 				Assert.assertTrue(res7.getStatusCode() == 204);
 				Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 						.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-						.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-						.delete("/search/" + jp3.get("id"));
+						.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + jp3.get("id"));
 				System.out.println("											");
 				System.out.println("Status code is: " + res6.getStatusCode());
 				Assert.assertTrue(res6.getStatusCode() == 204);
@@ -1356,8 +1322,7 @@ public class FolderCRUD
 			System.out.println("Delete the folder whose Id is: " + jp1.get("id"));
 			Response res8 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.delete("/folder/" + jp1.get("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res8.getStatusCode());
 			// System.out.println(res8.asString());
@@ -1367,8 +1332,7 @@ public class FolderCRUD
 			System.out.println("Delete the folder again whose Id is: " + jp1.get("id"));
 			Response res9 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER)
-					.header("X-REMOTE-USER", TENANT_ID1).header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when()
-					.delete("/folder/" + jp1.get("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + jp1.get("id"));
 			System.out.println("											");
 			System.out.println("Status code is: " + res9.getStatusCode());
 			System.out.println(res9.asString());
@@ -1387,8 +1351,8 @@ public class FolderCRUD
 	{
 
 		Response resroot = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header("X-REMOTE-USER", TENANT_ID1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("");
+				.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+				.get("");
 		JsonPath jpRoot = resroot.jsonPath();
 
 		List<Integer> id = jpRoot.get("id");
