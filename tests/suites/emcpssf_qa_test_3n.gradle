@@ -24,8 +24,11 @@
  */
 buildscript {
     repositories {
+	maven {
+        url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+    }
         maven {
-            url = "${artifactory_contextUrl}/emaas-virtual" }
+            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
@@ -33,7 +36,7 @@ buildscript {
 }
 repositories {
     maven {
-        url = "${artifactory_contextUrl}/emaas-virtual"
+        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
     }
 }
 apply plugin: 'TestInfraPlugin'
@@ -50,7 +53,7 @@ repositories {
             url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-web-integ-tests', version: '1.0+'){
+    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-web-integ-tests', version: '1.0.0+'){
 exclude('module':'groovy')
 }
  testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
@@ -61,13 +64,6 @@ restAssured.exclude module: 'groovy'
 }
 
 
-
-
-
-task copyDependencies(type: Copy) {
-    from configurations.lrgConfig
-    into System.env.T_WORK
-}
 task small_deploy_3n_block(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
     options.suiteXmlBuilder().suite('name': 'lrgemcpdf_dev_test_3n') {

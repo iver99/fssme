@@ -5,6 +5,9 @@ apply plugin: 'maven'
 apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
 group = 'com.oracle.emaas.emcpssf'
+apply plugin: 'artifactory'
+apply plugin: 'artifactory-publish'
+
 buildscript {
     repositories {
         maven {
@@ -26,16 +29,16 @@ repositories {
 
 publishing {
     publications {
-/*savedsearchCore(MavenPublication) {
+savedsearchCore(MavenPublication) {
             from components.java
         }
-*/
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
-                configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
                     def dependency = dependencies.appendNode('dependency')
                     dependency.appendNode('groupId', it.moduleGroup)
                     dependency.appendNode('artifactId', it.moduleName)
@@ -80,6 +83,8 @@ task runDEVTestSuite(type: Test){
 
 dependencies {
 	compile project(':savedsearch-entities'){transitive = false}
+        compile (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+'){transitive=false}
+
 	testRuntime(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
 	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){transitive = false}

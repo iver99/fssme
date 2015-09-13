@@ -2,7 +2,6 @@ import org.gradle.api.plugins.jetty.internal.Monitor
 
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
-apply plugin: 'maven'
 // Directory where the restful API doc is generated
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
@@ -75,12 +74,15 @@ sourceSets {
 
 publishing {
     publications {
+savedsearchWeb(MavenPublication) {
+            from components.java
+        }
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
-                configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
                     def dependency = dependencies.appendNode('dependency')
                     dependency.appendNode('groupId', it.moduleGroup)
                     dependency.appendNode('artifactId', it.moduleName)
@@ -180,7 +182,7 @@ sourceSets {
  }
 dependencies {
 	providedCompile project(':savedsearch-entities'){transitive = false}
-	providedCompile project(':savedsearch-core')  {transitive = false}
+	providedCompile (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+')  {transitive = false}
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){transitive = false}
 //	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0')
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17')
