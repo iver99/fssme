@@ -19,6 +19,32 @@ allprojects {
 	apply plugin: 'DevInfraPlugin' 
       	apply plugin: 'maven-publish'
 	apply plugin: 'TestInfraPlugin'
+
+
+ publishing {
+        if (project.hasProperty('publishJar') && Boolean.valueOf(project.publishJar)) {
+            publications {
+                'defJarPublication'(MavenPublication) {
+                    from project.components.java
+                    artifactId jar.baseName
+                    version project.version
+                    groupId project.publishGroup
+                    pom.withXml custPomDefinition
+                }
+            }
+        }
+    }
+    ext.custPomDefinition={}
+
+
+
+    ext.artifactory_publish_repoKey= hasProperty("ArtRepo") && ArtRepo != '' ? ArtRepo : 'emaas-sandbox-local'
+
+
+
+
+
+
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
@@ -52,30 +78,41 @@ allprojects {
 	}
 	 
 }
-artifactoryPublish{
+/*artifactoryPublish{
 	                skip = true
 	}
+*/
 
-artifactory { 
-	contextUrl = "${artifactory_contextUrl}" 
-	publish { 
-		repository { 
-			repoKey = 'emaas-sandbox-local'			
-			username = "${artifactory_user}" 
-			password = "${artifactory_password}" 
-			maven = true 
-			publishPom=true	
-		} 
-	} 
-	resolve {  
-		repository {  
-			repoKey = 'emaas-virtual'  
-			username = "${artifactory_user}"  
-			password = "${artifactory_password}"  
-			maven = true  
-		} 
-	}  
-} 
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"
+    publish {
+        repository {
+            repoKey = "${artifactory_publish_repoKey}"
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+        }
+        defaults {
+            if (project.hasProperty('publishJar') && Boolean.valueOf(project.publishJar)) {
+                publications('defJarPublication')
+            }
+        }
+    }
+    resolve {
+            repository {
+                repoKey = "${artifactory_repoKey}"
+                username = "${artifactory_user}"
+                password = "${artifactory_password}"
+                maven = true
+        }
+    }
+}
+ 
+
+
+
+
+
+ 
 
 
 subprojects { 
@@ -199,6 +236,8 @@ project(':savedsearch-web'){
 	}
 }
 
+
+
 buildscript {  
 	repositories {  
 		mavenLocal()  
@@ -233,7 +272,7 @@ publishing {
         if (project.tasks.findByName('lrgMetadataZip')) {
             // Publication for publishing lrg metadata
             lrgMetadata(MavenPublication) {
-                groupId 'com.oracle.emaas.emcpssf.test' // You may use "groupId project.group + '.test'", if your project.group value is 'com.oracle.emaas.emcpssf'
+                groupId 'com.oracle.emaas.emcpssf' // You may use "groupId project.group + '.test'", if your project.group value is 'com.oracle.emaas.emcpssf'
                 artifact lrgMetadataZip
                 setArtifactId(lrgMetadataZip.baseName)
             }
