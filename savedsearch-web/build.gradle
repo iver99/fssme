@@ -13,7 +13,7 @@ apply from: 'test.gradle'
 
 jar.archiveName='emcpssf_qa_test.jar'
 group = 'com.oracle.emaas.emcpssf'
-version = '1.0.1'
+//version = '1.0.1'
 
 
 buildscript {
@@ -24,7 +24,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-/*	classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'		*/
+	classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'		
         
 }  
 }
