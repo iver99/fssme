@@ -75,9 +75,9 @@ sourceSets {
 
 publishing {
     publications {
-/*	savedsearchWeb(MavenPublication) {
+	savedsearchWeb(MavenPublication) {
             from components.java
-        } */
+        } 
 
 
         integTest(MavenPublication) {
@@ -185,7 +185,8 @@ sourceSets {
  }
 dependencies {
 	providedCompile project(':savedsearch-entities'){transitive = false}
-	providedCompile project(':savedsearch-core')  {transitive = false}
+//	providedCompile project(':savedsearch-core'){transitive = false}
+	providedCompile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+')  {transitive = false}
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){transitive = false}
 //	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0')
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17')
