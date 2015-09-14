@@ -25,10 +25,10 @@ repositories {
 
 publishing {
     publications {
-/*savedsearchCore(MavenPublication) {
+savedsearchCore(MavenPublication) {
           from components.java
         } 
-*/
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
