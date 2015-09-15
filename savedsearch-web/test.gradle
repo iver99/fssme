@@ -11,7 +11,7 @@ sourceSets {
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-    appendix = 'integ-tests-k3'
+    appendix = 'integ-tests'
 }
 dependencies {
 lrgConfig project(':savedsearch-web'){ transitive = false } 
