@@ -5,24 +5,7 @@ apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
 apply plugin: 'artifactory-publish'
 
-buildscript {
-    repositories {
-        maven {
-            url = "${artifactory_contextUrl}/emaas-virtual"
-        }
-    }
-    dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-	
-     classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
-    }
-}
 
-repositories {
-    maven {
-        url = "${artifactory_contextUrl}/emaas-virtual"
-    }
-}
 project.publishGroup1='com.oracle.emaas.emcpssf.test';
 publishing {
     publications {
@@ -54,9 +37,11 @@ publishing {
     }
 }    
 
-/*artifactoryPublish{
-publications('savedsearchCore')
-}*/
+artifactoryPublish {
+        publications('integTest')
+}
+build.dependsOn integTestJar
+
 sourceSets {
                             test{
                                 java {
@@ -79,7 +64,7 @@ task runDEVTestSuite(type: Test){
 
 dependencies {
 	compile project(':savedsearch-entities'){transitive = false}
-        compile (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+'){transitive=false}
+	compile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+') {transitive = false}
 	testRuntime(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
 	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){transitive = false}

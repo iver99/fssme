@@ -1,5 +1,3 @@
-group = 'com.oracle.emaas.emcpssf'
-apply plugin: 'gavsetting'
 sourceSets {
     integTest {
         java.srcDir 'src/integTest/java'

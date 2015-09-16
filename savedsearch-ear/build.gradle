@@ -27,7 +27,6 @@ ear
 dependencies 
 {
 	deploy (project(path:':savedsearch-web', configuration:'archives')) {transitive = false}
-
 	earlib (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+'){transitive = false}
 	earlib (project(':savedsearch-entities')){transitive = false}
 	earlib (project(':savedsearch-web-utils')){transitive = false} 
