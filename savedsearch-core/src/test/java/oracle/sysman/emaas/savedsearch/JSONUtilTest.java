@@ -16,7 +16,7 @@ import java.util.List;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
@@ -92,7 +92,7 @@ public class JSONUtilTest extends BaseTest
 			Assert.assertTrue(output5.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
 
 		}
-		catch (EMAnalyticsFwkJsonException e) {
+		catch (EMAnalyticsFwkException e) {
 			Assert.assertTrue(false, "failed to convert due to: " + e.getMessage());
 		}
 		catch (JSONException e) {

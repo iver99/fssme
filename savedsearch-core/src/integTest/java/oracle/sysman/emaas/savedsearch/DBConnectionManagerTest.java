@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 /**
  * @author vinjoshi
  */
-public class DBConnectionManagerTest
+public class DBConnectionManagerTest extends BaseTest
 {
 
 	@Test

@@ -106,7 +106,8 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		name:       "${appName}-${version}",
+		targets:	'Server-6',
+		name:       "SavedSearchService-6",
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 
@@ -122,10 +123,10 @@ task appServerUndeploy{
 
 	doLast 
 	{ 
-		println "Undeploying ${appName}-${version} from ${t3URL}" 
+		println "Undeploying ${appName} from ${t3URL}" 
 
 		ant.wldeploy(action:'undeploy',  
-		name:       "${appName}-${version}",  
+		name:       "SavedSearchService-6",  
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 
@@ -133,6 +134,8 @@ task appServerUndeploy{
 		debug:      'true')
 	}
 }
+
+
 
 task appServerRedeploy{
 	dependsOn 'appServerInit' 

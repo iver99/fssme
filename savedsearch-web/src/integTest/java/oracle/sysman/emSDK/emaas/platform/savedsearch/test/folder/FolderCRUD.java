@@ -115,6 +115,57 @@ public class FolderCRUD
 		}
 	}
 
+	/*@Test
+	public void checkBadResuest()
+	{
+		try {
+
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, ".emcsadmin").when().get("/searches?folderId=-1");
+
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			System.out.println("------------------------------------------");
+
+			res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, "emcsadmin.").when().get("/searches?folderId=-1");
+
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			System.out.println("------------------------------------------");
+
+			res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.OAM_HEADER, "")
+					.when().get("/searches?folderId=-1");
+
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			System.out.println("------------------------------------------");
+
+			res = RestAssured.given().log().everything().header("Authorization", authToken).when().get("/searches?folderId=-1");
+
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			System.out.println("------------------------------------------");
+
+			res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, "emcsadmin").when().get("/searches?folderId=-1");
+
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			System.out.println("------------------------------------------");
+
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
+	}*/
+
 	@Test
 	/**
 	 * Folder Negative Case6:
@@ -1054,32 +1105,6 @@ public class FolderCRUD
 		}
 	}
 
-	@Test
-	/**
-	 * Folder Negative Case8: Delete a non-exist folder
-	 */
-	public void nonexistFolder_Delete()
-	{
-		try {
-			System.out.println("------------------------------------------");
-			System.out.println("This test is to delete a non-exist folder with DELETE method");
-			System.out.println("											");
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/3333333333");
-			System.out.println(res.asString());
-			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 404);
-			Assert.assertEquals(res.asString(), "Folder with Id 3333333333 does not exist");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
-
 	/*@Test
 	/**
 	 * Delete a system folder using DELETE method
@@ -1110,6 +1135,32 @@ public class FolderCRUD
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}*/
+
+	@Test
+	/**
+	 * Folder Negative Case8: Delete a non-exist folder
+	 */
+	public void nonexistFolder_Delete()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("This test is to delete a non-exist folder with DELETE method");
+			System.out.println("											");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/3333333333");
+			System.out.println(res.asString());
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 404);
+			Assert.assertEquals(res.asString(), "Folder with Id 3333333333 does not exist");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
 
 	/**
 	 * searches by folder with folder Id which is negative number

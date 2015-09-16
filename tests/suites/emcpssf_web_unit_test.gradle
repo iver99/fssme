@@ -48,7 +48,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  
 /* Your lrg specific code would come here */
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-web-integ-tests', version: '1.0+'){
+    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-web-integ-tests', version: '1.0.0+'){
 exclude('module':'groovy')
 }
  testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"

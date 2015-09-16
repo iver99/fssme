@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <SearchSet>
- 
+  <Search>
+       <Name>TestMultipleSearch2</Name> 
+     <SearchParameters>
+      <SearchParameter>
+       			<Name>Param1</Name> 
+                <Type>STRING</Type>         		
+       </SearchParameter>
+         <SearchParameter>
+       			<Name>Param2</Name> 
+                <Type>CLOB</Type>         		
+       </SearchParameter>
+     </SearchParameters>          
+     <CategoryId>1</CategoryId>            
+     <FolderId>1</FolderId>      
+  </Search>   
+   
    <Search>
-     <Name>MySearch</Name> 
+     <Name>TestMultipleSearch2</Name> 
      <SearchParameters>
        <SearchParameter>
        			<Name>Param1</Name> 
-                <Type>STRING</Type>
+                <Type>STRING</Type>         		
+       </SearchParameter>
+         <SearchParameter>
+       			<Name>Param2</Name> 
+                <Type>CLOB</Type>         		
        </SearchParameter>
      </SearchParameters>          
      <Category>
@@ -19,50 +38,89 @@
       <Name>SearchFolder</Name>
       <UiHidden>false</UiHidden>
     </Folder>    
-  </Search> 
+  </Search>  
   
-  
-  
-  
- <Search>
-     <Folder>
-      <Name>SearchFolder1</Name>
-      <UiHidden>false</UiHidden>
-    </Folder>      
-     <Name>MySearch2</Name> 
-     <SearchParameters>
-       <SearchParameter>
-   	<Name>Param1</Name> 
-        <Type>STRING</Type>
-       </SearchParameter>
-     </SearchParameters>     
-       <Category>
-       <Name>CatSearch</Name>
-       <ProviderName>MySearchProvider1</ProviderName>
-       <ProviderVersion>1.0</ProviderVersion>
-       <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
-     </Category>     
-  </Search> 
+  <Search>
 
-
-<Search>
-       <Folder>
-      <Name>SearchFolder3</Name>
-      <UiHidden>false</UiHidden>
-    </Folder>  
-     <Name>MySearch3</Name> 
+     <Name>TestMultipleSearch2</Name> 
      <SearchParameters>
-       <SearchParameter>
-   	<Name>Param1</Name> 
-        <Type>STRING</Type>
+      <SearchParameter>
+       			<Name>Param1</Name> 
+                <Type>STRING</Type>
+         		
        </SearchParameter>
-     </SearchParameters>     
+         <SearchParameter>
+       			<Name>Param2</Name> 
+                <Type>CLOB</Type>
+         		
+       </SearchParameter>
+     </SearchParameters>          
      <Category>
-       <Name>CatSearch1</Name>
-       <ProviderName>MySearchProvider1</ProviderName>
+       <Name>CatSearch</Name>
+       <ProviderName>MySearchProvider</ProviderName>
        <ProviderVersion>1.0</ProviderVersion>
        <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
      </Category>     
-  </Search> 
+     <Folder>
+      <Name>SearchFolder</Name>
+      <UiHidden>false</UiHidden>
+    </Folder>    
+  </Search>  
+  
+   <Search>
+
+     <Name>TestMultipleSearch2</Name> 
+     <SearchParameters>
+      <SearchParameter>
+       			<Name>Param1</Name> 
+                <Type>STRING</Type>
+         		
+       </SearchParameter>
+         <SearchParameter>
+       			<Name>Param2</Name> 
+                <Type>CLOB</Type>
+         		
+       </SearchParameter>
+     </SearchParameters>          
+     <Category>
+       <Name>CatSearch212</Name>
+       <ProviderName>MySearchProvider</ProviderName>
+       <ProviderVersion>1.0</ProviderVersion>
+       <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
+     </Category>     
+     <Folder>
+      <Name>SearchFolder345</Name>
+      <UiHidden>false</UiHidden>
+    </Folder>    
+  </Search>  
+  
+   
+ <Search>
+
+     <Name>TestMultipleSearch2</Name> 
+     <SearchParameters>
+      <SearchParameter>
+       			<Name>Param1</Name> 
+                <Type>STRING</Type>
+         		
+       </SearchParameter>
+         <SearchParameter>
+       			<Name>Param2</Name> 
+                <Type>CLOB</Type>
+         		
+       </SearchParameter>
+     </SearchParameters>          
+     <Category>
+       <Name>CatSearch212</Name>
+       <ProviderName>MySearchProvider</ProviderName>
+       <ProviderVersion>1.0</ProviderVersion>
+       <ProviderAssetRoot>assetRoot</ProviderAssetRoot>
+     </Category>     
+     <Folder>
+      <Name>SearchFolder345</Name>
+      <UiHidden>false</UiHidden>
+    </Folder>    
+  </Search>  
+  
   
 </SearchSet>  

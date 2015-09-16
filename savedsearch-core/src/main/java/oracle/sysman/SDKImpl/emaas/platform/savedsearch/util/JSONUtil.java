@@ -16,7 +16,7 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.util.List;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
@@ -127,20 +127,20 @@ public class JSONUtil
 		return false;
 	}
 
-	public static JSONObject ObjectToJSONObject(Object object) throws JSONException, EMAnalyticsFwkJsonException
+	public static JSONObject ObjectToJSONObject(Object object) throws JSONException, EMAnalyticsFwkException
 	{
 		return JSONUtil.ObjectToJSONObject(object, null);
 
 	}
 
 	public static JSONObject ObjectToJSONObject(Object object, String[] excludedFields) throws JSONException,
-			EMAnalyticsFwkJsonException
+			EMAnalyticsFwkException
 	{
 
 		return new JSONObject(JSONUtil.ObjectToJSONString(object, excludedFields));
 	}
 
-	public static String ObjectToJSONString(Object object) throws EMAnalyticsFwkJsonException
+	public static String ObjectToJSONString(Object object) throws EMAnalyticsFwkException
 	{
 		return JSONUtil.ObjectToJSONString(object, null);
 	}
@@ -155,7 +155,7 @@ public class JSONUtil
 	 * @return converted JSON string
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static String ObjectToJSONString(Object object, String[] excludedFieldItems) throws EMAnalyticsFwkJsonException
+	public static String ObjectToJSONString(Object object, String[] excludedFieldItems) throws EMAnalyticsFwkException
 	{
 		try {
 
@@ -183,8 +183,8 @@ public class JSONUtil
 			}
 		}
 		catch (Exception e) {
-			throw new EMAnalyticsFwkJsonException("Error converting to JSON string",
-					EMAnalyticsFwkJsonException.JSON_OBJECT_TO_JSON_EXCEPTION, e);
+			throw new EMAnalyticsFwkException("Error converting to JSON string",
+					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, e);
 		}
 
 	}
