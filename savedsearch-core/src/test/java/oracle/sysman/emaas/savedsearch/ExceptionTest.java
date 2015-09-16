@@ -11,7 +11,6 @@
 package oracle.sysman.emaas.savedsearch;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkJsonException;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
@@ -24,7 +23,7 @@ public class ExceptionTest
 	@Test
 	public void test_EMAnalyticsFwkJsonException()
 	{
-		EMAnalyticsFwkJsonException emjsonexception = new EMAnalyticsFwkJsonException("JSON Exception", 70040, new Exception());
+		EMAnalyticsFwkException emjsonexception = new EMAnalyticsFwkException("JSON Exception", 70040, null, new Exception());
 		AssertJUnit.assertEquals(500, emjsonexception.getStatusCode());
 	}
 

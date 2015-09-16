@@ -12,9 +12,8 @@ buildscript {
         }
     }
     dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-	
-     classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true	
+	classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+' 
     }
 }
 
@@ -26,10 +25,10 @@ repositories {
 
 publishing {
     publications {
-/*savedsearchCore(MavenPublication) {
-            from components.java
-        }
-*/
+savedsearchCore(MavenPublication) {
+          from components.java
+        } 
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath

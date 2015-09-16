@@ -43,7 +43,9 @@ public class HeadersUtil
 		Long id = HeadersUtil.getInternalTenantId(request);
 		String userTenant = request.getHeader(OAM_HEADER);
 		String user = userTenant.substring(userTenant.indexOf(".") + 1, userTenant.length());
-		return new TenantInfo(user, id);
+		TenantInfo info = new TenantInfo(user, id);
+		info.settenantName(userTenant.substring(0, userTenant.indexOf(".")));
+		return info;
 
 	}
 
