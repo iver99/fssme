@@ -10,12 +10,12 @@ ext.appName="${artifactPrefix}savedsearch-ear"
 ext.serviceName = "${artifactPrefix}savedsearch" 
 ext.serviceInstallPath = "/opt/ORCLemaas/Applications/${serviceName}/${projectVersion}" 
 ext.serviceDistDir = "${distDir}${serviceInstallPath}" 
+
 apply plugin: 'gavsetting'
 apply plugin: 'java' 
 apply plugin: 'TestInfraPlugin'
 allprojects {  
-	apply plugin: 'artifactory-publish'
-	apply plugin: 'artifactory' 
+	apply plugin: 'artifactory-publish' 
 	apply plugin: 'DevInfraPlugin' 
       	apply plugin: 'maven-publish'
 	apply plugin: 'TestInfraPlugin'
@@ -23,7 +23,8 @@ allprojects {
 
  publishing {
         if (project.hasProperty('publishJar') && Boolean.valueOf(project.publishJar)) {
-            publications {
+	publications {
+
                 'defJarPublication'(MavenPublication) {
                     from project.components.java
                     artifactId jar.baseName
@@ -32,6 +33,13 @@ allprojects {
                     pom.withXml custPomDefinition
                 }
             }
+
+
+
+
+
+
+
         }
     }
     ext.custPomDefinition={}
