@@ -1,6 +1,6 @@
 //jar.archiveName='emcpssf_qa_test.jar'
 group = 'com.oracle.emaas.emcpssf'
-//version = '1.0.1'
+//version = '1.0.12'
 apply plugin: 'gavsetting'
 sourceSets {
     integTest {

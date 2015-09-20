@@ -49,7 +49,7 @@ public class FolderManagerTest extends BaseTest
 			folder = objFolder.saveFolder(folder);
 			folderId = folder.getId();
 			AssertJUnit.assertFalse(folderId == 0);
-			Assert.assertNotNull(objFolder.savePath(folder));
+//			Assert.assertNotNull(objFolder.savePath(folder));
 			Assert.assertNotNull(objFolder.getRootFolder());
 
 		}

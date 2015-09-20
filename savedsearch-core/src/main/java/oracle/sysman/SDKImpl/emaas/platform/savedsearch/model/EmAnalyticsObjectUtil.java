@@ -324,11 +324,12 @@ class EmAnalyticsObjectUtil
 			if (folder.getParentId() != null) {
 				EmAnalyticsFolder parentFolderObj = null;
 
-				if (folder.getParentId() == 1) { //get root for folder for tenant-id
+				if (folder.getParentId() == 1) { //get root for folder for tenant-id  vb
 					try {
-						parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
+						parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
+						/*parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
 								.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
-								.getSingleResult();
+								.getSingleResult();*/
 					}
 					catch (NoResultException e) {
 						parentFolderObj = null;

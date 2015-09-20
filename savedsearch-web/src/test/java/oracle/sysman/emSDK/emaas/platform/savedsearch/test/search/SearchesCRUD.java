@@ -503,7 +503,7 @@ public class SearchesCRUD
 			System.out.println("											");
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
-			Assert.assertEquals(res2.asString(), "Search with this name already exist: Custom_Search");
+			Assert.assertEquals(res2.asString(), "Search name Custom_Search already exist");
 			System.out.println("    ");
 			System.out.println("GET operation is in-progress to assert the successful search creation");
 			System.out.println("											");

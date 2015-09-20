@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 /**
  * @author vinjoshi
  */
-public class TenantDataLeakTest
+public class TenantDataLeakTest extends BaseTest
 {
 	private static void closeConnection(Connection conn)
 	{
