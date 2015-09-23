@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-
+group='com.oracle.emaas.emcpssf'
 
 /* By default the group is set to the directory name, as 'lrg_branch' which is inconsistent name. Hence
  * Setting the group as 'com.oracle.emaas.emcpssf (as suggested by DevTools team)

@@ -64,7 +64,9 @@ task runDEVTestSuite(type: Test){
 
 dependencies {
 	compile project(':savedsearch-entities'){transitive = false}
-	compile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+') {transitive = false}
+//	compile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+') {transitive = false}
+//	compile project(':savedsearch-core'){transitive = false}
+
 	testRuntime(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
 	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){transitive = false}

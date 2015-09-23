@@ -1,7 +1,7 @@
 import org.gradle.api.plugins.jetty.internal.Monitor
 
 apply plugin: 'war'
-apply plugin: 'eclipse-wtp'
+//apply plugin: 'eclipse-wtp'
 // Directory where the restful API doc is generated
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
@@ -11,9 +11,9 @@ apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
 apply plugin: 'artifactory-publish'
 
+group='com.oracle.emaas.emcpssf'
+
 jar.archiveName='emcpssf_qa_test.jar'
-
-
 
 configurations {
 	restDoc
@@ -50,16 +50,12 @@ sourceSets {
 
 }
 
-project.publishGroup1='com.oracle.emaas.emcpssf.test';
-publishing {
-    publications {
-
+publishing.publications {
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
-            version project.version
-            groupId  project.publishGroup1
-
+            setGroupId('com.oracle.emaas.emcpssf.test')
 	    artifact integTestJar.archivePath
+
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
                 configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
@@ -70,22 +66,11 @@ publishing {
                 }
             }
         }
-    }
-    repositories {
-        maven {
-            url "${artifactory_contextUrl}/emaas-sandbox-local"
-            credentials {
-                username = "${artifactory_user}"
-                password =  "${artifactory_password}"
-            }
-        }
-    }
-}    
+}
 
-
-
-
-
+artifactoryPublish {
+	publications('integTest')
+}
 
 task runQATestSuite(type: Test){
         useTestNG(){
@@ -162,7 +147,7 @@ sourceSets {
  }
 dependencies {
 	providedCompile project(':savedsearch-entities'){transitive = false}
-	providedCompile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+') {transitive = false}
+	providedCompile project(':savedsearch-core'){transitive = false}
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){transitive = false}
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17')
 	providedCompile(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1') { transitive = false }
@@ -212,7 +197,5 @@ dependencies {
 			}
 		}
  }
-artifactoryPublish {
-	publications('integTest')
-}
+
 build.dependsOn integTestJar
