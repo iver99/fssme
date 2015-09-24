@@ -5,41 +5,37 @@ apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
 apply plugin: 'artifactory-publish'
 
+group='com.oracle.emaas.emcpssf'
 
-project.publishGroup1='com.oracle.emaas.emcpssf.test';
-publishing {
-    publications {
-        integTest(MavenPublication) {
-            setArtifactId(project.name + '-' + integTestJar.appendix)
-            artifact integTestJar.archivePath
-            
-	    version project.version
-            groupId  project.publishGroup1
- pom.withXml {
-                def dependencies = asNode().appendNode('dependencies')
-                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
-                    def dependency = dependencies.appendNode('dependency')
-                    dependency.appendNode('groupId', it.moduleGroup)
-                    dependency.appendNode('artifactId', it.moduleName)
-                    dependency.appendNode('version', it.moduleVersion)
-                }
+publishing.publications {
+    integTest(MavenPublication) {
+			setArtifactId(project.name + '-' + integTestJar.appendix)
+			setGroupId('com.oracle.emaas.emcpssf.test')
+			artifact integTestJar.archivePath
+			/*pom.withXml {
+            def dependencies = asNode().appendNode('dependencies')
+            configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                def dependency = dependencies.appendNode('dependency')
+                dependency.appendNode('groupId', it.moduleGroup)
+                dependency.appendNode('artifactId', it.moduleName)
+                dependency.appendNode('version', it.moduleVersion)
             }
-        }
+        }*/
     }
-    repositories {
-        maven {
-            url "${artifactory_contextUrl}/emaas-sandbox-local"
-            credentials {
-                username = "${artifactory_user}"
-                password =  "${artifactory_password}"
-            }
-        }
+    
+    thisJarPublication(MavenPublication) {
+			from project.components.java
+			artifactId jar.baseName
+			version project.version
+			setGroupId(group)
     }
-}    
+}
 
 artifactoryPublish {
-        publications('integTest')
+	publications('integTest')
+	publications('thisJarPublication')
 }
+
 build.dependsOn integTestJar
 
 sourceSets {
@@ -80,5 +76,3 @@ dependencies {
     compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
     compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
    }
-
-build.dependsOn integTestJar

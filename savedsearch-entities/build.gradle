@@ -3,10 +3,6 @@ apply plugin: 'eclipse'
 
 group='com.oracle.emaas.emcpssf'
 
-/* By default the group is set to the directory name, as 'lrg_branch' which is inconsistent name. Hence
- * Setting the group as 'com.oracle.emaas.emcpssf (as suggested by DevTools team)
- */
-
 jar {
 	from('src/main/java/META-INF')
 	{ 
@@ -25,3 +21,15 @@ dependencies {
 	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2') {transitive = false}
 }
 
+publishing.publications {
+    thisJarPublication(MavenPublication) {
+			from project.components.java
+			artifactId jar.baseName
+			version project.version
+			setGroupId(group)
+    }
+}
+
+artifactoryPublish {
+	publications('thisJarPublication')
+}
