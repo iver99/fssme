@@ -1,5 +1,5 @@
 //jar.archiveName='emcpssf_qa_test.jar'
-group = 'com.oracle.emaas.emcpssf'
+group = 'com.oracle.emaas.emcpssf.upgrade'
 //version = '1.0.12'
 apply plugin: 'gavsetting'
 sourceSets {

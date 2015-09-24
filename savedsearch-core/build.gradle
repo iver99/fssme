@@ -4,7 +4,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'maven'
 apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
-group = 'com.oracle.emaas.emcpssf'
+group = 'com.oracle.emaas.emcpssf.upgrade'
 buildscript {
     repositories {
         maven {
