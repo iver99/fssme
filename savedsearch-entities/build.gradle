@@ -1,8 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-group='com.oracle.emaas.emcpssf'
-
 jar {
 	from('src/main/java/META-INF')
 	{ 
@@ -24,9 +22,8 @@ dependencies {
 publishing.publications {
     thisJarPublication(MavenPublication) {
 			from project.components.java
-			artifactId jar.baseName
-			version project.version
-			setGroupId(group)
+      artifactId jar.baseName
+			setGroupId('com.oracle.emaas.emcpssf.test')
     }
 }
 

@@ -5,8 +5,6 @@ apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
 apply plugin: 'artifactory-publish'
 
-group='com.oracle.emaas.emcpssf'
-
 publishing.publications {
     integTest(MavenPublication) {
 			setArtifactId(project.name + '-' + integTestJar.appendix)
@@ -25,9 +23,8 @@ publishing.publications {
     
     thisJarPublication(MavenPublication) {
 			from project.components.java
-			artifactId jar.baseName
-			version project.version
-			setGroupId(group)
+      artifactId jar.baseName
+			setGroupId('com.oracle.emaas.emcpssf.test')
     }
 }
 
