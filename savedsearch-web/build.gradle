@@ -40,36 +40,31 @@ war {
 }
 
 sourceSets {
- 			 test {
-                                java {
-                                          srcDirs = ['src/test/java']
-                                }
-                                resources.srcDirs = ['src/test/java']
-                            }
-
-
+	test {
+		java {
+			srcDirs = ['src/test/java']
+		}
+		resources.srcDirs = ['src/test/java']
+	}
 }
 
 publishing.publications {
-        integTest(MavenPublication) {
-            setArtifactId(project.name + '-' + integTestJar.appendix)
-            setGroupId('com.oracle.emaas.emcpssf.test')
-	    artifact integTestJar.archivePath
-
-            pom.withXml {
-                def dependencies = asNode().appendNode('dependencies')
-                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
-                    def dependency = dependencies.appendNode('dependency')
-                    dependency.appendNode('groupId', it.moduleGroup)
-                    dependency.appendNode('artifactId', it.moduleName)
-                    dependency.appendNode('version', it.moduleVersion)
-                }
-            }
-        }
+	integTest(MavenPublication) {
+		setArtifactId(project.name + '-' + integTestJar.appendix)
+		setGroupId('com.oracle.emaas.emcpssf.test')
+		artifact integTestJar.archivePath
+	}
+		
+	thisJarPublication(MavenPublication) {
+		from project.components.java
+		artifactId jar.baseName
+		setGroupId('com.oracle.emaas.emcpssf.test')
+	}
 }
 
 artifactoryPublish {
 	publications('integTest')
+	publications('thisJarPublication')
 }
 
 task runQATestSuite(type: Test){
