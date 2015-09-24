@@ -49,7 +49,7 @@ public class QAToolUtil
 
 	public static final String ODS_HOSTNAME = "ODS_HOSTNAME";
 	public static final String ODS_PORT = "ODS_PORT";
-	public static final String ODS_SERVICE = "ODS_SERVICE";
+	public static final String ODS_SID = "ODS_SID";
 	public static final String NODE_NAME1 = "EMCS_NODE1_HOSTNAME";
 	public static final String NODE_NAME2 = "EMCS_NODE2_HOSTNAME";
 	public static final String NODE_NAME3 = "EMCS_NODE3_HOSTNAME";
@@ -68,7 +68,7 @@ public class QAToolUtil
 	{
 		Properties props = new Properties();
 		String url = JDBC_URL + Utils.getProperty(ODS_HOSTNAME) + ":" + Utils.getProperty(ODS_PORT) + ":"
-				+ Utils.getProperty(ODS_SERVICE);
+				+ Utils.getProperty(ODS_SID);
 		props.put(JDBC_PARAM_URL, url);
 		String schemaName = QAToolUtil.getSchemaDeploymentDetails();
 		props.put(JDBC_PARAM_USER, schemaName);
