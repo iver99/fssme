@@ -5,16 +5,28 @@ apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
 apply plugin: 'artifactory-publish'
 
+/*
+	NOTE: 
+		PUBLISHING ==> We use artifactoryPublish to publish artifacts, in publications block
+				we publish...
+					1. integTestJar (this is the JAR containing test code)
+					2. savedsearch-core jar itself
+				The "group" of both these JARs is NOT com.oracle.emaas.emcpssf - instead 
+				there's a "test" added to it - Hudson jobs prohibit publishing with root group & 
+				this allows for clear separation of artifacts. 
+		RESOLUTION ==> All JARs are produced & published via hudson (or otherwise) job, thus to resolve 
+									 jar version correctly, we use a variable (not managed by these gradle scripts) called
+									 REPO_BID - you will find we do NOT set version to these artifacts, this is intentional 
+									 this allows build jobs to set version & resolve later
+*/
 publishing.publications {
     integTest(MavenPublication) {
 			setArtifactId(project.name + '-' + integTestJar.appendix)
 			setGroupId('com.oracle.emaas.emcpssf.test')
 			artifact integTestJar.archivePath
     }
-    
     thisJarPublication(MavenPublication) {
 			from project.components.java
-      artifactId jar.baseName
 			setGroupId('com.oracle.emaas.emcpssf.test')
     }
 }
@@ -35,8 +47,6 @@ sourceSets {
 	}
 }
 
-
-
 task runDEVTestSuite(type: Test){
         useTestNG(){        
         useDefaultListeners = true
@@ -45,22 +55,18 @@ task runDEVTestSuite(type: Test){
         }
 }
 
-
 dependencies {
 	compile project(':savedsearch-entities'){transitive = false}
-//	compile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+') {transitive = false}
-//	compile project(':savedsearch-core'){transitive = false}
-
 	testRuntime(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
 	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){transitive = false}
-    compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){transitive = false}
+  compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){transitive = false}
 	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5'){transitive = false}
 	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2') {transitive = false}
 	compile(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2'){transitive = false}
-    compile(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){transitive = false}
-    compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'){transitive = false}
-    compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
-    compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
-    compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
-   }
+  compile(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){transitive = false}
+  compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'){transitive = false}
+  compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
+  compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
+  compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
+}

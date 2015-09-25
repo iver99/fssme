@@ -1,88 +1,56 @@
 import java.util.logging.LogManager.Cleaner;
 import org.gradle.api.artifacts.Configuration.State  
 
-
-//ext.distDir = "${rootDir}/../../dist" 
 ext.distDir = "${rootDir}/dist"  
 ext.artifactPrefix = 'emaas-applications-' 
-ext.projectVersion = '0.1-SNAPSHOT'  
+ext.projectVersion = '0.1-SNAPSHOT'
 ext.appName="${artifactPrefix}savedsearch-ear" 
 ext.serviceName = "${artifactPrefix}savedsearch" 
 ext.serviceInstallPath = "/opt/ORCLemaas/Applications/${serviceName}/${projectVersion}" 
 ext.serviceDistDir = "${distDir}${serviceInstallPath}" 
 
-apply plugin: 'gavsetting'
-apply plugin: 'java' 
-apply plugin: 'TestInfraPlugin'
 allprojects {  
-	apply plugin: 'artifactory-publish' 
+	apply plugin: 'java'
+	apply plugin: 'artifactory-publish'
 	apply plugin: 'DevInfraPlugin' 
-      	apply plugin: 'maven-publish'
+ 	apply plugin: 'maven-publish'
 	apply plugin: 'TestInfraPlugin'
-        apply plugin: 'gavsetting'
+	apply plugin: 'gavsetting'
 
- /* publishing {
-        if (project.hasProperty('publishJar') && Boolean.valueOf(project.publishJar)) {
-	publications {
-
-                'defJarPublication'(MavenPublication) {
-                    from project.components.java
-                    artifactId jar.baseName
-                    version project.version
-                    groupId project.publishGroup
-                    pom.withXml custPomDefinition
-                }
-            }
-        }
-    }
-    ext.custPomDefinition={} */
-
-
-
-    ext.artifactory_publish_repoKey= hasProperty("ArtRepo") && ArtRepo != '' ? ArtRepo : 'emaas-sandbox-local'
-
-
-
-
-
-
+  ext.artifactory_publish_repoKey= hasProperty("ArtRepo") && ArtRepo != '' ? ArtRepo : 'emaas-sandbox-local'
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
 		maven {  
 			url = "${artifactory_contextUrl}" + '/emaas-virtual'  
 			credentials {  
-			username = "${artifactory_user}"  
-			password = "${artifactory_password}"  
+				username = "${artifactory_user}"  
+				password = "${artifactory_password}"  
+			} 
 		} 
-	}  
 	} 
 	
-		configurations.all {
-        // Exclude findbugs annotations from all configurations.
-        // In the current world, this is being brought in
-        // by an improperly configured registry client.  We've
-        // attempted to exclude it there, but it occasionally still
-        // sneaks through when some other project that includes
-        // the registry client is included.  In that case,
-        // the registry client's pom is reconsulted without our
-        // exclusion advice, and it's back. This upsets the lawyers.
-        logger.debug "Processing Configuration: $it.name, $it.state"
-        if (it.state == Configuration.State.UNRESOLVED)
-        {
-            exclude group: 'com.google.code.findbugs', module: 'annotations'
-        }
-        else
-        {
-            logger.debug "Configuration $it.name state is $it.state so exclusion is not viable"
-        }
+	configurations.all {
+      // Exclude findbugs annotations from all configurations.
+      // In the current world, this is being brought in
+      // by an improperly configured registry client.  We've
+      // attempted to exclude it there, but it occasionally still
+      // sneaks through when some other project that includes
+      // the registry client is included.  In that case,
+      // the registry client's pom is reconsulted without our
+      // exclusion advice, and it's back. This upsets the lawyers.
+      logger.debug "Processing Configuration: $it.name, $it.state"
+      if (it.state == Configuration.State.UNRESOLVED)
+      {
+          exclude group: 'com.google.code.findbugs', module: 'annotations'
+      }
+      else
+      {
+          logger.debug "Configuration $it.name state is $it.state so exclusion is not viable"
+      }
 	}
 	 
 }
-/*artifactoryPublish{
-	                skip = true
-	}
-*/
 
 artifactory {
     contextUrl = "${artifactory_contextUrl}"
@@ -91,11 +59,6 @@ artifactory {
             repoKey = "${artifactory_publish_repoKey}"
             username = "${artifactory_user}"
             password = "${artifactory_password}"
-        }
-        defaults {
-            if (project.hasProperty('publishJar') && Boolean.valueOf(project.publishJar)) {
-//                publications('defJarPublication')
-            }
         }
     }
     resolve {
@@ -107,14 +70,6 @@ artifactory {
         }
     }
 }
- 
-
-
-
-
-
- 
-
 
 subprojects { 
 	apply plugin: 'java' 
@@ -136,9 +91,7 @@ configurations {
 	compile.exclude group: "com.google.code.findbugs", module: "annotations"
 }
 
-dependencies {
-		
-	
+dependencies {	
 	prebuild_log4j 'org.apache.logging.log4j:log4j-core:2.0.1',
                        'org.apache.logging.log4j:log4j-api:2.0.1',
 			'log4j:log4j:1.2.17'
@@ -150,7 +103,6 @@ dependencies {
 	prebuild_savedsearch    'com.oracle.adf:wls-api:12.1.2-0-0',
 				'com.oracle.jdbc:ojdbc6:12.1.0.1.0',
 				'javax.transaction:javax.transaction-api:1.2',
-			//	'javax:ejb:3.2.0',
 				'javax.servlet:servlet-api:2.5',
 				'javax.ws.rs:javax.ws.rs-api:2.0',
 				'commons-codec:commons-codec:1.6',
@@ -201,44 +153,6 @@ task preBuildCompile(type: Copy) {
 
 compileJava.dependsOn preBuildCompile
 
-project(':savedsearch-web'){
-	configurations {
-		ftpAntTask
-	}
-	javadoc {
-        	options {
-                  locale = 'en_US'
-                  encoding = 'UTF-8'
-                }
-        source = [sourceSets.main.allJava,fileTree(dir:'../savedsearch-web/src/test'),fileTree(dir:'../savedsearch-core/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../savedsearch-entities/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../savedsearch-web-utils/src',exclude:['**/*.MF','**/*.properties']),fileTree(dir:'../savedsearch-updateutil/src',exclude:['**/*.MF','**/*.properties'])]
-	}
-
-	task ftp<<{
-		ant{
-                	taskdef(name:'ftp',classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',classpath:configurations.ftpAntTask.asPath)
-                	ftp(server: ftpserver, userid: username, password: password, remotedir: remote_javadoc_dir){
-			fileset(dir:'build/docs')
-             		}	
-        	}
-	}
-	
-	dependencies{			
-		compile project(':savedsearch-entities')
-		compile project(':savedsearch-core')
-//		compile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+') 
-		compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-    		compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+') 
-		compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+') 
-		ftpAntTask('org.apache.ant:ant-commons-net:1.8.4'){
-			module('commons-net:commons-net:1.4.1'){
-				dependencies 'oro:oro:2.0.8:jar'
-			}
-		}
-	}
-}
-
-
-
 buildscript {  
 	repositories {  
 		mavenLocal()  
@@ -249,31 +163,23 @@ buildscript {
 			password = "${artifactory_password}"  
 			}  
 		} 
-	//	mavenCentral()  
 	}
 
 	dependencies {  
 		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
 		classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
 		classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-	        classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
-
+    classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
 	}  
 }
 
 
 publishing {
     publications {
-        // ... Your other publications here
-        /* Add the MavenPublication for publishing the lrgmetadata zip
-         * generated by the zipLrgMetadata task
-         * NOTE: Add only when the lrgMetadataZip task is availale
-         * For more details refer : https://confluence.oraclecorp.com/confluence/display/EMQA/How+to+create+LRG+in+EMaaS
-         */
         if (project.tasks.findByName('lrgMetadataZip')) {
             // Publication for publishing lrg metadata
             lrgMetadata(MavenPublication) {
-                groupId 'com.oracle.emaas.emcpssf.test' // You may use "groupId project.group + '.test'", if your project.group value is 'com.oracle.emaas.emcpssf'
+                groupId 'com.oracle.emaas.emcpssf.test' 
                 artifact lrgMetadataZip
                 setArtifactId(lrgMetadataZip.baseName)
             }
@@ -299,4 +205,4 @@ artifactoryPublish {
 
 // Apply code coverage gradle file. Defines jacoco and sonar properties.
 project.ext.set("source_cc", "${rootDir}/codeCoverage")
-apply from: "${project.ext.source_cc}/codeCoverage.gradle" 
+apply from: "${project.ext.source_cc}/codeCoverage.gradle"

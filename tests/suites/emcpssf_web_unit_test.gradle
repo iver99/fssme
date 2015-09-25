@@ -54,17 +54,23 @@ maven {
             url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
 
-
-
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${REPO_BID}"){
-exclude('module':'groovy')
-}
- testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
+	testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
+	
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy') }
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
 
-configurations{
-restAssured.exclude module: 'groovy'
-}
+	
+	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
+	testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
+	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
+  testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+  testConfig(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2'){ transitive = false }
+
+	configurations{
+		restAssured.exclude module: 'groovy'
+	}
 }
 
 
