@@ -78,6 +78,7 @@ subprojects {
 } 
 
 configurations {
+  testNG
   prebuild_log4j { transitive = false }
   prebuild_tenant_sdk { transitive = false }
 	prebuild_toplink { transitive = false }
@@ -120,16 +121,7 @@ dependencies {
 			'com.sun.jersey:jersey-server:1.17.1', 
 			'com.sun.jersey:jersey-servlet:1.17.1',
 			'org.codehaus.jettison:jettison:1.3.4'
-	prebuild_testng 'org.testng:testng:6.8.8',
-			'com.sun.jersey:jersey-client:1.17',
-			'com.sun.jersey.contribs:jersey-multipart:1.17.1',
-			'org.codehaus.groovy:groovy-all:2.2.1',
-			'org.apache.commons:commons-lang3:3.1',
-			'com.jayway.restassured:json-path:2.3.1',
-			'com.jayway.restassured:xml-path:2.3.1',
-			'com.jayway.restassured:rest-assured-common:2.3.1',
-			'com.jayway.restassured:rest-assured:2.3.1'
-			prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
+	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
@@ -144,7 +136,7 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_junit
    from configurations.prebuild_apacheHttp
    from configurations.prebuild_jaxrs
-   from configurations.prebuild_testng
+   from configurations.testNG
    from configurations.prebuild_wlfullc
    into "$afDir"
    rename 'registry-lookup-client-1.0.0-(.*).jar', 'registry-lookup-client-1.0.0.jar'
