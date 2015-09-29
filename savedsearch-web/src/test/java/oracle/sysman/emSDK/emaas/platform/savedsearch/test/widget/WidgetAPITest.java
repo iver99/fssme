@@ -63,4 +63,98 @@ public class WidgetAPITest
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
+
+	/**
+	 * widget api test for filtering widgets by widget group id
+	 */
+
+	@Test
+	public void getWidgetsByWidgetGroupId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("GET widgets by widget group id");
+			System.out.println("											");
+
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/widgets?widgetGroupId=1");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 200);
+			System.out.println(res.asString());
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/widgets?widgetGroup=1");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/widgets?widgetGroupId=xxx");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 400);
+			System.out.println(res.asString());
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	/**
+	 * widget screen shot api test
+	 */
+
+	@Test
+	public void getWidgetScreenshotByWidgetId()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("GET widget screen shot by widget id");
+			System.out.println("											");
+
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/widgets/2000/screenshot");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 200);
+			System.out.println(res.asString());
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			res = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.SSF_HEADER, TestConstant.SSF_HEADER).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/widgets/99999999/screenshot");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 404);
+			System.out.println(res.asString());
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
 }
