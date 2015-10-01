@@ -25,7 +25,7 @@
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/emaas-virtual" }
+            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
@@ -33,7 +33,7 @@ buildscript {
 }
 repositories {
     maven {
-        url = "${artifactory_contextUrl}/emaas-virtual"
+        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
     }
 }
 apply plugin: 'TestInfraPlugin'
@@ -44,29 +44,33 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  
  
 /* Your lrg specific code would come here */
+
 repositories {
-	mavenLocal()
-        maven {
-            url = "${artifactory_contextUrl}/emaas-virtual" }
+maven {
+        url = "${PUB_MAVEN_MY_MAVEN_REPO}"
     }
+
+        maven {
+            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
+    }
+
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-web-integ-tests', version: '1.0.0+'){
-exclude('module':'groovy')
-}
- testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
+	testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
+	
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy') }
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
 
-configurations{
-restAssured.exclude module: 'groovy'
-}
-}
+	
+	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
+	testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
+	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
+  testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+  testConfig(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2'){ transitive = false }
 
-
-
-
-
-task copyDependencies(type: Copy) {
-    from configurations.lrgConfig
-    into System.env.T_WORK
+	configurations{
+		restAssured.exclude module: 'groovy'
+	}
 }
 
 
@@ -77,9 +81,6 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
 
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
 
-//useWebdriver = true
-
-// include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
         useRestAssured=true
 ext.set("testType", "integration")
 }
