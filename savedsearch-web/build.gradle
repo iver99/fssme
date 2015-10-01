@@ -36,6 +36,9 @@ sourceSets {
 		}
 		resources.srcDirs = ['src/test/java']
 	}
+	main {
+		java.srcDir 'src/main/java'
+	}
 }
 
 /*
@@ -72,7 +75,7 @@ artifactoryPublish {
 }
 
 task jarMe(type: Jar) {
-	from project.components.java
+	from sourceSets.main.output
 	baseName = "${project.archivesBaseName}"
 }
 
