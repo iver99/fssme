@@ -27,6 +27,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 
+import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -353,6 +354,12 @@ public class SearchManagerTest extends BaseTest
 		sm.deleteSearch(search1.getId(), true);
 		cm.deleteCategory(cat.getId(), true);
 		fm.deleteFolder(folder.getId(), true);
+	}
+
+	@Test
+	public void testGetSystemSearchListByCaterogyId() throws EMAnalyticsFwkException
+	{
+		Assert.assertNotNull(SearchManager.getInstance().getSystemSearchListByCategoryId(1));
 	}
 
 	@Test

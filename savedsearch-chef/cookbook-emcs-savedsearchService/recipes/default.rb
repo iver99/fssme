@@ -14,8 +14,6 @@ ruby_block "set_ENVs" do
   end
   action :create
 end
-#Recipe to create schema - this is completely re-entrant, run as many times
-include_recipe 'cookbook-emcs-savedsearchService::savedsearch_schema'
 
 #Block to create the servicemanager.properties file
 bash "create_servicemanger_properties_file"  do
@@ -27,7 +25,7 @@ bash "create_servicemanger_properties_file"  do
     echo "serviceName=SavedSearch" >> servicemanager.properties
     echo "registryUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
     echo "serviceUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
-    echo "characteristics=SAAS_deploymentUuid:#{node["SAAS_deploymentUuid"]}" >> servicemanager.properties
+    echo "characteristics=_tenantAgnostic:true,SAAS_deploymentUuid:#{node["SAAS_deploymentUuid"]}" >> servicemanager.properties
     EOH
 end
 
@@ -51,6 +49,9 @@ end
 
 #common WLS recipe
 include_recipe 'cookbook-emcs-emsaas-weblogic::default'
+
+#Populate db details
+include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
 
 #common setup/start for a managed Server
 include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_setup'

@@ -167,6 +167,16 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			return this;
 		}
 
+                /**
+                 * @param characteristics
+                 * @return ServiceConfigBuilder
+                 */
+                public ServiceConfigBuilder characteristics(String characteristics)
+                {
+                        serviceConfigMap.put("characteristics", characteristics);
+                        return this;
+                }
+
 	}
 
 	enum UrlType
@@ -334,6 +344,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+                                        .characteristics(serviceProps.getProperty("characteristics"))
 					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 			logger.info("Initializing RegistrationManager");

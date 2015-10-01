@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
@@ -30,8 +32,8 @@ public class ImportTest
 	static String portno;
 	static String serveruri;
 	static String authToken;
-	static String TENANT_ID_OPC1 ;
-	static String TENANT_ID1 ;
+	static String TENANT_ID_OPC1;
+	static String TENANT_ID1;
 
 	private static final String FOLDER_XML = "Folder.xml";
 	private static final String CATEGORY_XML = "Category.xml";
@@ -186,8 +188,8 @@ public class ImportTest
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
-		TENANT_ID1 =ct.getTenant() + "."+ ct.getRemoteUser();
-		TENANT_ID_OPC1=ct.getTenant();
+		TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
+		TENANT_ID_OPC1 = ct.getTenant();
 	}
 
 	private static String getStringFromInputStream(InputStream is)
@@ -234,8 +236,7 @@ public class ImportTest
 
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -255,14 +256,14 @@ public class ImportTest
 	{
 		try {
 			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).body("")
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importcategories");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body("").when().post("/importcategories");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
 		}
+
 	}
 
 	@Test
@@ -273,8 +274,7 @@ public class ImportTest
 	{
 		try {
 			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).body("")
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importfolders");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body("").when().post("/importfolders");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
 		}
@@ -292,8 +292,7 @@ public class ImportTest
 		InputStream stream = ImportTest.getResourceAsStream(FOLDER_XML, ImportTest.class);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importfolders");
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importfolders");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -315,25 +314,98 @@ public class ImportTest
 		InputStream stream = ImportTest.getResourceAsStream(SEARCH_XML, ImportTest.class);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1).body(jsonString1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importsearches");
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importsearches");
+
+		Set<Integer> folderList1 = new HashSet<Integer>();
+		Set<Integer> searchList1 = new HashSet<Integer>();
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			System.out.println("deleteing folders and  searches::");
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1)
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/search/" + jsonObj.getInt("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
+
 			System.out.println("deleteing folders and  searches::::" + res.getBody().asString());
-			System.out.println("deleteing folders and  searches::::::::" + jp.getMap("folder").get("id"));
-			Assert.assertTrue(deleteSearch(jsonObj.getInt("id")) == true);
-			if ((int) jp.getMap("folder").get("id") > 1) {
-				Assert.assertTrue(deleteFolder((int) jp.getMap("folder").get("id")) == true);
+			if (res.getStatusCode() == 200) {
+				System.out.println("deleteing folders and  searches::::::::" + jp.getMap("folder").get("id"));
+				Assert.assertTrue(deleteSearch(jsonObj.getInt("id")) == true);
+
+				searchList1.add(jsonObj.getInt("id"));
+				if ((int) jp.getMap("folder").get("id") > 1) {
+
+					if (!folderList1.contains((int) jp.getMap("folder").get("id"))) {
+						folderList1.add((int) jp.getMap("folder").get("id"));
+					}
+				}
 			}
 			System.out.println("deleted folders and  searches");
 		}
 
+		Set<Integer> folderList = new HashSet<Integer>();
+		Set<Integer> slist = new HashSet<Integer>();
+		res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(-1, 1)).when().post("/importsearches");
+		arrfld = new JSONArray(res1.getBody().asString());
+		for (int index = 0; index < arrfld.length(); index++) {
+			JSONObject jsonObj = arrfld.getJSONObject(index);
+
+			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+			JsonPath jp = res1.jsonPath();
+			if ((int) jp.getMap("folder").get("id") > 1) {
+				folderList.add((int) jp.getMap("folder").get("id"));
+			}
+			slist.add(jsonObj.getInt("id"));
+			res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getInt("id"), 1)).when()
+					.post("/importsearches");
+			arrfld = new JSONArray(res1.getBody().asString());
+			jsonObj = arrfld.getJSONObject(index);
+			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+			jp = res1.jsonPath();
+			if ((int) jp.getMap("folder").get("id") > 1) {
+				folderList.add((int) jp.getMap("folder").get("id"));
+			}
+		}
+
+		res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(-1, 2)).when().post("/importsearches");
+		arrfld = new JSONArray(res1.getBody().asString());
+		for (int index = 0; index < arrfld.length(); index++) {
+			JSONObject jsonObj = arrfld.getJSONObject(index);
+
+			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+			JsonPath jp = res1.jsonPath();
+			if ((int) jp.getMap("folder").get("id") > 1) {
+				folderList.add((int) jp.getMap("folder").get("id"));
+			}
+
+			res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getInt("id"), 2)).when()
+					.post("/importsearches");
+			arrfld = new JSONArray(res1.getBody().asString());
+			jsonObj = arrfld.getJSONObject(index);
+			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+			jp = res1.jsonPath();
+			if ((int) jp.getMap("folder").get("id") > 1) {
+				folderList.add((int) jp.getMap("folder").get("id"));
+			}
+		}
+
+		for (Integer tmp : slist) {
+			if (tmp > 1) {
+				Assert.assertTrue(deleteSearch(tmp) == true);
+			}
+		}
+		for (Integer tmp : folderList) {
+			if (tmp > 1) {
+				Assert.assertTrue(deleteFolder(tmp) == true);
+			}
+		}
 	}
 
 	@Test
@@ -344,8 +416,7 @@ public class ImportTest
 	{
 		try {
 			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header("X-REMOTE-USER", TENANT_ID1).body("")
-					.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().post("/importsearches");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body("").when().post("/importsearches");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
 		}
@@ -354,11 +425,16 @@ public class ImportTest
 		}
 	}
 
+	@Test
+	public void testMultipleSearch()
+	{
+
+	}
+
 	private boolean deleteFolder(int myfolderID)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/folder/" + myfolderID);
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + myfolderID);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
 
@@ -367,18 +443,84 @@ public class ImportTest
 	private boolean deleteSearch(int mySearchId)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().delete("/search/" + mySearchId);
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + mySearchId);
 		System.out.println("											");
 		return res1.getStatusCode() == 204;
+
+	}
+
+	private String getSearchDef(long id, long option)
+	{
+
+		String xml = "";
+		if (option == 1) {
+			xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
+			xml = xml + "<SearchSet>";
+			xml = xml + "<Search>";
+			if (id != -1) {
+				xml = xml + "<Id>" + id + "</Id>";
+			}
+			xml = xml + "     <Name>Test_Multiplewe</Name> ";
+			xml = xml + "     <SearchParameters>";
+			xml = xml + "      <SearchParameter>";
+			xml = xml + "<Name>Param1</Name> ";
+			xml = xml + "<Type>STRING</Type>";
+
+			xml = xml + "       </SearchParameter>";
+			xml = xml + "         <SearchParameter>";
+			xml = xml + "      			<Name>Param2</Name> ";
+			xml = xml + "                <Type>CLOB</Type>";
+
+			xml = xml + "       </SearchParameter>";
+			xml = xml + "     </SearchParameters>          ";
+			xml = xml + "     <Category>";
+			xml = xml + "       <Name>Cat12_1</Name>";
+			xml = xml + "       <ProviderName>MySearchProvider</ProviderName>";
+			xml = xml + "       <ProviderVersion>1.0</ProviderVersion>";
+			xml = xml + "       <ProviderAssetRoot>assetRoot</ProviderAssetRoot>";
+			xml = xml + "     </Category>     ";
+			xml = xml + "     <Folder>";
+			xml = xml + "      <Name>fol123</Name>";
+			xml = xml + "      <UiHidden>false</UiHidden>";
+			xml = xml + "    </Folder>    ";
+			xml = xml + "  </Search>    ";
+			xml = xml + "</SearchSet>  ";
+		}
+
+		if (option == 2) {
+			xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
+			xml = xml + "<SearchSet>";
+			xml = xml + "<Search>";
+			if (id != -1) {
+				xml = xml + "<Id>" + id + "</Id>";
+			}
+			xml = xml + "     <Name>Test_Multiplewe</Name> ";
+			xml = xml + "     <SearchParameters>";
+			xml = xml + "      <SearchParameter>";
+			xml = xml + "<Name>Param1</Name> ";
+			xml = xml + "<Type>STRING</Type>";
+
+			xml = xml + "       </SearchParameter>";
+			xml = xml + "         <SearchParameter>";
+			xml = xml + "      			<Name>Param2</Name> ";
+			xml = xml + "                <Type>CLOB</Type>";
+
+			xml = xml + "       </SearchParameter>";
+			xml = xml + "     </SearchParameters>          ";
+			xml = xml + "     <CategoryId>1</CategoryId>";
+			xml = xml + "     <FolderId>1</FolderId>";
+			xml = xml + "  </Search>    ";
+			xml = xml + "</SearchSet>  ";
+		}
+
+		return xml;
 
 	}
 
 	private Boolean verifyCategory(int mycatID, String mycatName)
 	{
 		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/category/" + mycatID);
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + mycatID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {
 			System.out.println(res1.getStatusCode());
@@ -403,8 +545,7 @@ public class ImportTest
 	private boolean verifyFolder(int myfolderID, String myfolderName)
 	{
 		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header("X-REMOTE-USER", TENANT_ID1)
-				.header(TestConstant.HEADER_TENANT_ID, TENANT_ID_OPC1).when().get("/folder/" + myfolderID);
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/folder/" + myfolderID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {
 			System.out.println(res1.getStatusCode());

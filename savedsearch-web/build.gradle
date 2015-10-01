@@ -13,7 +13,7 @@ apply from: 'test.gradle'
 
 jar.archiveName='emcpssf_qa_test.jar'
 group = 'com.oracle.emaas.emcpssf'
-version = '1.0.1'
+//version = '1.0.1'
 
 
 buildscript {
@@ -24,7 +24,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-		
+	classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'		
         
 }  
 }
@@ -75,6 +75,11 @@ sourceSets {
 
 publishing {
     publications {
+	savedsearchWeb(MavenPublication) {
+            from components.java
+        } 
+
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
@@ -180,7 +185,8 @@ sourceSets {
  }
 dependencies {
 	providedCompile project(':savedsearch-entities'){transitive = false}
-	providedCompile project(':savedsearch-core')  {transitive = false}
+//	providedCompile project(':savedsearch-core'){transitive = false}
+	providedCompile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+')  {transitive = false}
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){transitive = false}
 //	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0')
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17')
@@ -208,12 +214,11 @@ dependencies {
 	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1'){transitive = false}
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
-        providedCompile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2')	
-
-
-
-
-
+        providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+') 
+        providedCompile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
+            exclude group: 'emaas.platform', module: 'registry-lookup-client'
+            exclude group: 'emaas.platform', module: 'registry-client'
+        }	
 
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'

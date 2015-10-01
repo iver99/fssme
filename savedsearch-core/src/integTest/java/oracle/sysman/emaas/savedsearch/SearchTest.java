@@ -1,9 +1,7 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
@@ -13,8 +11,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.CategoryDetails;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
@@ -22,7 +18,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -64,7 +59,6 @@ public class SearchTest extends BaseTest
 			//set the attribute for new folder
 			folder.setName("FolderTest");
 			folder.setDescription("testing purpose folder");
-			folder.setParentId(1);
 			folderId = objFolder.saveFolder(folder).getId();
 			AssertJUnit.assertFalse(folderId == 0);
 
@@ -157,7 +151,6 @@ public class SearchTest extends BaseTest
 			folder.setName("SearchPramTest23");
 			folder.setDescription("Test Parameter Description");
 			folder.setUiHidden(false);
-			folder.setParentId(1);
 			folder = objFolder.saveFolder(folder);
 			folderId = folder.getId();
 
@@ -218,20 +211,20 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	/*@Test
+	@Test
 	public void testDeleteSystemSearch() throws Exception
 	{
+		boolean bResult = false;
 		try {
 			SearchManager objSearch = SearchManagerImpl.getInstance();
 			objSearch.deleteSearch(TA_SEARCH_ID, true);
 			Assert.assertTrue(false, "A system search with id:" + TA_SEARCH_ID + " is deleted unexpectedly");
 		}
 		catch (EMAnalyticsFwkException e) {
-			e.printStackTrace();
-			Assert.assertEquals(EMAnalyticsFwkException.ERR_DELETE_SEARCH, e.getErrorCode(),
-					"unexpected error code: " + e.getErrorCode());
+			bResult = true;
 		}
-	}*/
+		Assert.assertEquals(bResult, true);
+	}
 
 	@Test
 	public void testDuplicate() throws Exception
@@ -246,7 +239,6 @@ public class SearchTest extends BaseTest
 			folder.setName("SearchPramTest23");
 			folder.setDescription("Test Parameter Description");
 			folder.setUiHidden(false);
-			folder.setParentId(1);
 			folder = objFolder.saveFolder(folder);
 			folderId = folder.getId();
 
@@ -322,13 +314,15 @@ public class SearchTest extends BaseTest
 		catch (Exception e) {
 			e.printStackTrace();
 			AssertJUnit.fail(e.getLocalizedMessage());
+
 		}
 
 	}
 
-	/*@Test
+	@Test
 	public void testEditSystemSearch() throws Exception
 	{
+		boolean bresult = false;
 		try {
 			SearchManager objSearch = SearchManager.getInstance();
 			Search search = objSearch.getSearch(TA_SEARCH_ID);
@@ -343,10 +337,10 @@ public class SearchTest extends BaseTest
 
 		}
 		catch (EMAnalyticsFwkException e) {
-			Assert.assertEquals(EMAnalyticsFwkException.ERR_UPDATE_SEARCH, e.getErrorCode(),
-					"unexpected error code: " + e.getErrorCode());
+			bresult = true;
 		}
-	}*/
+		Assert.assertEquals(bresult, true);
+	}
 
 	@Test
 	public void testGetInstance()
@@ -416,6 +410,28 @@ public class SearchTest extends BaseTest
 		}
 	}
 
+	/*@Test
+	public void testGetSearchByName() throws Exception
+	{
+		Search search = SearchManager.getInstance().getSearchByName("WebLogic Servers with small Maximum Heap Size", 1);
+		Assert.assertNotNull(search);
+
+		search = SearchManager.getInstance().getSearchByName("WebLogic Servers with small Maximum Heap Size112", 4);
+		Assert.assertTrue(search == null);
+
+		List<Search> rtnobj = SearchManager.getInstance().getSystemSearchListByCategoryId(1);
+		Assert.assertNotNull(rtnobj);
+
+	}*/
+
+	//	@Test
+	//	public void testGetSearchCountByFolderId() throws Exception
+	//	{
+	//		SearchManager objSearch = SearchManager.getInstance();
+	//		//now get the count of the search inside this folder
+	//		AssertJUnit.assertEquals(2, objSearch.getSearchCountByFolderId(999));
+	//	}
+
 	@Test
 	public void testGetSearchListByFolderId() throws Exception
 	{
@@ -433,7 +449,6 @@ public class SearchTest extends BaseTest
 			folder.setName("SearchP");
 			folder.setDescription("Test Parameter Description");
 			folder.setUiHidden(false);
-			folder.setParentId(1);
 			folder = objFolder.saveFolder(folder);
 			folderId = folder.getId();
 
@@ -482,14 +497,6 @@ public class SearchTest extends BaseTest
 
 	}
 
-	//	@Test
-	//	public void testGetSearchCountByFolderId() throws Exception
-	//	{
-	//		SearchManager objSearch = SearchManager.getInstance();
-	//		//now get the count of the search inside this folder
-	//		AssertJUnit.assertEquals(2, objSearch.getSearchCountByFolderId(999));
-	//	}
-
 	@Test
 	public void testGetSearchListByLastAccessDate() throws Exception
 	{
@@ -504,7 +511,6 @@ public class SearchTest extends BaseTest
 			folder.setName("SearchFolerLast");
 			folder.setDescription("Test Parameter Description");
 			folder.setUiHidden(false);
-			folder.setParentId(1);
 			folder = objFolder.saveFolder(folder);
 			int folderId = folder.getId();
 
@@ -628,6 +634,30 @@ public class SearchTest extends BaseTest
 
 	}
 
+	/*@Test
+	public void testModifyLastAccessDate() throws Exception
+	{
+		SearchManager searchMgr = SearchManager.getInstance();
+		try {
+			Search search9999 = searchMgr.getSearch(9999);
+			AssertJUnit.assertNotNull(search9999);
+			Date accessDate0 = search9999.getLastAccessDate();
+			AssertJUnit.assertNotNull(accessDate0);
+
+			searchMgr.modifyLastAccessDate(9999);
+
+			search9999 = searchMgr.getSearch(9999);
+			AssertJUnit.assertNotNull(search9999);
+			Date accessDate1 = search9999.getLastAccessDate();
+			AssertJUnit.assertNotNull(accessDate1);
+
+			AssertJUnit.assertTrue(accessDate1.compareTo(accessDate0) > 0);
+		}
+		catch (Exception e) {
+			AssertJUnit.assertTrue(e.getMessage(), false);
+		}
+	}*/
+
 	@Test
 	public void testInvalidDataForSave() throws Exception
 	{
@@ -672,30 +702,6 @@ public class SearchTest extends BaseTest
 
 	}
 
-	/*@Test
-	public void testModifyLastAccessDate() throws Exception
-	{
-		SearchManager searchMgr = SearchManager.getInstance();
-		try {
-			Search search9999 = searchMgr.getSearch(9999);
-			AssertJUnit.assertNotNull(search9999);
-			Date accessDate0 = search9999.getLastAccessDate();
-			AssertJUnit.assertNotNull(accessDate0);
-
-			searchMgr.modifyLastAccessDate(9999);
-
-			search9999 = searchMgr.getSearch(9999);
-			AssertJUnit.assertNotNull(search9999);
-			Date accessDate1 = search9999.getLastAccessDate();
-			AssertJUnit.assertNotNull(accessDate1);
-
-			AssertJUnit.assertTrue(accessDate1.compareTo(accessDate0) > 0);
-		}
-		catch (Exception e) {
-			AssertJUnit.assertTrue(e.getMessage(), false);
-		}
-	}*/
-
 	@Test
 	public void testSaveMultipleSearch() throws Exception
 	{
@@ -709,7 +715,7 @@ public class SearchTest extends BaseTest
 		folder1.setName("SearchPramTest23");
 		folder1.setDescription("Test Parameter Description");
 		folder1.setUiHidden(false);
-		folder1.setParentId(1);
+
 		folder1 = objFolder.saveFolder(folder1);
 		int fId = folder1.getId();
 
@@ -760,127 +766,126 @@ public class SearchTest extends BaseTest
 			}
 		}
 
-		List<ImportSearchImpl> list2 = null;
-		List<Search> listResult2 = null;
+		/*		List<ImportSearchImpl> list2 = null;
+				List<Search> listResult2 = null;
 
-		CategoryDetails catDetails = new CategoryDetails();
-		catDetails.setName("Demo Analytics For UT");
-		catDetails.setProviderName("DemoProviderName");
-		catDetails.setProviderVersion("DemoProviderVersion");
-		catDetails.setProviderDiscovery("DemoProviderDiscovery");
-		catDetails.setProviderAssetRoot("DemoProviderAssetRoot");
-		JAXBElement category = objectFac.createCategory(catDetails);
+				CategoryDetails catDetails = new CategoryDetails();
+				catDetails.setName("Demo Analytics For UT");
+				catDetails.setProviderName("DemoProviderName");
+				catDetails.setProviderVersion("DemoProviderVersion");
+				catDetails.setProviderDiscovery("DemoProviderDiscovery");
+				catDetails.setProviderAssetRoot("DemoProviderAssetRoot");
+				JAXBElement category = objectFac.createCategory(catDetails);
 
-		FolderDetails folderDetails = new FolderDetails();
-		folderDetails.setName("Demo Searches for UT");
-		folderDetails.setParentId(1);
-		JAXBElement folder = objectFac.createFolder(folderDetails);
+				FolderDetails folderDetails = new FolderDetails();
+				folderDetails.setName("Demo Searches for UT");
+				JAXBElement folder = objectFac.createFolder(folderDetails);
 
-		FolderDetails folderDetails1 = new FolderDetails();
-		folderDetails1.setName("Demo Searches for UT1");
-		folderDetails1.setParentId(1);
-		JAXBElement folder_2 = objectFac.createFolder(folderDetails1);
-		try {
-			list2 = new ArrayList<ImportSearchImpl>();
-			ImportSearchImpl search1 = new ImportSearchImpl();
-			search1.setFolderDet(folder);
-			search1.setCategoryDet(category);
-			search1.setName("ImportSearch1");
-			list2.add(search1);
-			ImportSearchImpl search2 = new ImportSearchImpl();
-			search2.setFolderDet(folder_2);
-			search2.setCategoryDet(category);
-			search2.setName("ImportSearch2");
-			list2.add(search2);
-			listResult2 = searchMgr.saveMultipleSearch(list2);
-			AssertJUnit.assertNotNull(listResult2);
-			AssertJUnit.assertEquals(2, listResult2.size());
+				FolderDetails folderDetails1 = new FolderDetails();
+				folderDetails1.setName("Demo Searches for UT1");
 
-		}
-		catch (Exception e) {
-			AssertJUnit.assertTrue("Failed to save multiple searches", false);
-		}
-		finally {
-			if (listResult2 != null) {
-				FolderManager fmgr = FolderManager.getInstance();
-				CategoryManager cMgr = CategoryManager.getInstance();
-				Set<Integer> catid = new HashSet<Integer>();
-				for (Search search : listResult2) {
-					searchMgr.deleteSearch(search.getId(), true);
-					fmgr.deleteFolder(search.getFolderId(), true);
-					catid.add(search.getCategoryId());
+				JAXBElement folder_2 = objectFac.createFolder(folderDetails1);
+				try {
+					list2 = new ArrayList<ImportSearchImpl>();
+					ImportSearchImpl search1 = new ImportSearchImpl();
+					search1.setFolderDet(folder);
+					search1.setCategoryDet(category);
+					search1.setName("ImportSearch1");
+					list2.add(search1);
+					ImportSearchImpl search2 = new ImportSearchImpl();
+					search2.setFolderDet(folder_2);
+					search2.setCategoryDet(category);
+					search2.setName("ImportSearch2");
+					list2.add(search2);
+					listResult2 = searchMgr.saveMultipleSearch(list2);
+					AssertJUnit.assertNotNull(listResult2);
+					AssertJUnit.assertEquals(2, listResult2.size());
 
 				}
-				for (Integer id : catid) {
-					cMgr.deleteCategory(id, true);
+				catch (Exception e) {
+					AssertJUnit.assertTrue("Failed to save multiple searches", false);
 				}
-			}
-		}
+				finally {
+					if (listResult2 != null) {
+						FolderManager fmgr = FolderManager.getInstance();
+						CategoryManager cMgr = CategoryManager.getInstance();
+						Set<Integer> catid = new HashSet<Integer>();
+						for (Search search : listResult2) {
+							searchMgr.deleteSearch(search.getId(), true);
+							fmgr.deleteFolder(search.getFolderId(), true);
+							catid.add(search.getCategoryId());
 
-		List<ImportSearchImpl> list3 = null;
-		List<Search> listResult3 = null;
+						}
+						for (Integer id : catid) {
+							cMgr.deleteCategory(id, true);
+						}
+					}
+				}
 
-		CategoryDetails catDetails2 = new CategoryDetails();
-		catDetails2.setName("Demo Analytics 2");
-		catDetails2.setProviderName("DemoProviderName2");
-		catDetails2.setProviderVersion("DemoProviderVersion2");
-		catDetails2.setProviderDiscovery("DemoProviderDiscovery2");
-		catDetails2.setProviderAssetRoot("DemoProviderAssetRoot2");
-		JAXBElement category2 = objectFac.createCategory(catDetails2);
+				List<ImportSearchImpl> list3 = null;
+				List<Search> listResult3 = null;
 
-		FolderDetails folderDetails2 = new FolderDetails();
-		folderDetails2.setName("Demo Searches 2");
-		folderDetails2.setParentId(1);
-		JAXBElement folder2 = objectFac.createFolder(folderDetails2);
+				CategoryDetails catDetails2 = new CategoryDetails();
+				catDetails2.setName("Demo Analytics 2");
+				catDetails2.setProviderName("DemoProviderName2");
+				catDetails2.setProviderVersion("DemoProviderVersion2");
+				catDetails2.setProviderDiscovery("DemoProviderDiscovery2");
+				catDetails2.setProviderAssetRoot("DemoProviderAssetRoot2");
+				JAXBElement category2 = objectFac.createCategory(catDetails2);
 
-		CategoryDetails catDetails3 = new CategoryDetails();
-		catDetails3.setName("Demo Analytics 3");
-		catDetails3.setProviderName("DemoProviderName3");
-		catDetails3.setProviderVersion("DemoProviderVersion3");
-		catDetails3.setProviderDiscovery("DemoProviderDiscovery3");
-		catDetails3.setProviderAssetRoot("DemoProviderAssetRoot3");
-		JAXBElement category3 = objectFac.createCategory(catDetails3);
+				FolderDetails folderDetails2 = new FolderDetails();
+				folderDetails2.setName("Demo Searches 2");
 
-		FolderDetails folderDetails3 = new FolderDetails();
-		folderDetails3.setName("Demo Searches 3");
-		folderDetails3.setParentId(1);
-		JAXBElement folder3 = objectFac.createFolder(folderDetails3);
-		try {
-			list3 = new ArrayList<ImportSearchImpl>();
-			ImportSearchImpl search1 = new ImportSearchImpl();
+				JAXBElement folder2 = objectFac.createFolder(folderDetails2);
 
-			search1.setFolderDet(folder2);
-			search1.setCategoryDet(category2);
-			search1.setName("ImportSearch1");
-			list3.add(search1);
+				CategoryDetails catDetails3 = new CategoryDetails();
+				catDetails3.setName("Demo Analytics 3");
+				catDetails3.setProviderName("DemoProviderName3");
+				catDetails3.setProviderVersion("DemoProviderVersion3");
+				catDetails3.setProviderDiscovery("DemoProviderDiscovery3");
+				catDetails3.setProviderAssetRoot("DemoProviderAssetRoot3");
+				JAXBElement category3 = objectFac.createCategory(catDetails3);
 
-			ImportSearchImpl search2 = new ImportSearchImpl();
-			search2.setFolderDet(folder3);
-			search2.setCategoryDet(category3);
-			search2.setName("ImportSearch2");
-			list3.add(search2);
-			listResult3 = searchMgr.saveMultipleSearch(list3);
-			AssertJUnit.assertNotNull(listResult3);
-			AssertJUnit.assertEquals(2, listResult3.size());
+				FolderDetails folderDetails3 = new FolderDetails();
+				folderDetails3.setName("Demo Searches 3");
 
-		}
-		catch (Exception e) {
-			AssertJUnit.assertTrue("Failed to save multiple searches", false);
-		}
-		finally {
-			if (listResult3 != null) {
-				CategoryManager catMgr = CategoryManager.getInstance();
-				FolderManager folderMgr = FolderManager.getInstance();
-				for (Search search : listResult3) {
-					int catId = search.getCategoryId();
-					int foldId = search.getFolderId();
-					searchMgr.deleteSearch(search.getId(), true);
-					catMgr.deleteCategory(catId, true);
-					folderMgr.deleteFolder(foldId, true);
+				JAXBElement folder3 = objectFac.createFolder(folderDetails3);
+				try {
+					list3 = new ArrayList<ImportSearchImpl>();
+					ImportSearchImpl search1 = new ImportSearchImpl();
+
+					search1.setFolderDet(folder2);
+					search1.setCategoryDet(category2);
+					search1.setName("ImportSearch1");
+					list3.add(search1);
+
+					ImportSearchImpl search2 = new ImportSearchImpl();
+					search2.setFolderDet(folder3);
+					search2.setCategoryDet(category3);
+					search2.setName("ImportSearch2");
+					list3.add(search2);
+					listResult3 = searchMgr.saveMultipleSearch(list3);
+					AssertJUnit.assertNotNull(listResult3);
+					AssertJUnit.assertEquals(2, listResult3.size());
 
 				}
-			}
-		}
+				catch (Exception e) {
+					AssertJUnit.assertTrue("Failed to save multiple searches", false);
+				}
+				finally {
+					if (listResult3 != null) {
+						CategoryManager catMgr = CategoryManager.getInstance();
+						FolderManager folderMgr = FolderManager.getInstance();
+						for (Search search : listResult3) {
+							int catId = search.getCategoryId();
+							int foldId = search.getFolderId();
+							searchMgr.deleteSearch(search.getId(), true);
+							catMgr.deleteCategory(catId, true);
+							folderMgr.deleteFolder(foldId, true);
+
+						}
+					}
+				}*/
 	}
 
 	@Test
@@ -899,7 +904,7 @@ public class SearchTest extends BaseTest
 			folder1.setName("S1");
 			folder1.setDescription("Test Parameter Description");
 			folder1.setUiHidden(false);
-			folder1.setParentId(1);
+
 			folder1 = objFolder.saveFolder(folder1);
 			fId = folder1.getId();
 
@@ -941,5 +946,15 @@ public class SearchTest extends BaseTest
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
 					EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
 		}
+	}
+
+	@Test
+	public void testSystemSearchList() throws Exception
+	{
+
+		SearchManager search = SearchManager.getInstance();
+		List<Search> lst = search.getSystemSearchListByCategoryId(1);
+		Assert.assertNotNull(lst);
+
 	}
 }

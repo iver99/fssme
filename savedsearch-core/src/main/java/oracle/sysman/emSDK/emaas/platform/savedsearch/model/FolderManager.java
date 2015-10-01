@@ -81,7 +81,7 @@ public abstract class FolderManager
 	 */
 	public abstract Folder saveFolder(Folder folder) throws EMAnalyticsFwkException;
 
-	public abstract Folder savePath(Folder objFld) throws EMAnalyticsFwkException;
+	//public abstract Folder savePath(Folder objFld) throws EMAnalyticsFwkException;
 
 	/**
 	 * Edits the folder into the system.

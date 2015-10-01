@@ -324,11 +324,12 @@ class EmAnalyticsObjectUtil
 			if (folder.getParentId() != null) {
 				EmAnalyticsFolder parentFolderObj = null;
 
-				if (folder.getParentId() == 1) { //get root for folder for tenant-id
+				if (folder.getParentId() == 1) { //get root for folder for tenant-id  vb
 					try {
-						parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
+						parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
+						/*parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
 								.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
-								.getSingleResult();
+								.getSingleResult();*/
 					}
 					catch (NoResultException e) {
 						parentFolderObj = null;
@@ -448,8 +449,8 @@ class EmAnalyticsObjectUtil
 		searchEntity.setOwner(currentUser);
 		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcNow);
-		boolean isSystemSearch = "ORACLE".equals(currentUser);
-		searchEntity.setSystemSearch(isSystemSearch ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
+		searchEntity.setSystemSearch(searchEntity.getSystemSearch() != null ? searchEntity.getSystemSearch()
+				: new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 
 		searchEntity.setSearchDisplayStr(search.getQueryStr());

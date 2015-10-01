@@ -1,7 +1,7 @@
 jar.archiveName='emcpssf_dev_test.jar'
 group = 'com.oracle.emaas.emcpssf'
-version = '1.0.1'
-
+//version = '1.0.12'
+apply plugin: 'gavsetting'
 sourceSets {
     integTest {
         java.srcDir 'src/integTest/java'
@@ -16,7 +16,7 @@ task integTestJar (type:Jar) {
 }
 dependencies {
 	lrgConfig project(':savedsearch-entities'){ transitive = false }
-        lrgConfig project(':savedsearch-core'){transitive=false}	
+        lrgConfig (group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+'){transitive=false}	
 lrgConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
 //	lrgConfig(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	lrgConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2'){ transitive = false }

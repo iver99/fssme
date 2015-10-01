@@ -16,12 +16,15 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
+Rem 	sdhamdhe  8/26/2015     Made changes for LCM rep manager cut-over
 Rem    vinjoshi   1/23/1015 	Created
      
 WHENEVER SQLERROR EXIT ROLLBACK
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
 DEFINE  TENANT_ID = '&1'
+DEFINE EMSAAS_SQL_ROOT = '&2'
+
 DECLARE	
       V_RootFolder EMS_ANALYTICS_FOLDERS%rowtype;
        Valid_Input NUMBER;
@@ -46,13 +49,10 @@ DECLARE
     END;
 /
 
-@emaas_savesearch_seed_data.sql &TENANT_ID
-@emaas_savesearch_seed_data_la.sql  &TENANT_ID
-@emaas_savesearch_seed_data_ta.sql  &TENANT_ID
-@emaas_savesearch_seed_data_apm.sql  &TENANT_ID
-
-
-/
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_la.sql  &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_apm.sql  &TENANT_ID
 
 BEGIN
 
@@ -80,9 +80,17 @@ SET PROVIDER_NAME = 'EmcitasApplications' ,
     PROVIDER_VERSION ='0.1',
     PROVIDER_ASSET_ROOT ='assetRoot'		
     WHERE CATEGORY_ID = 3 AND TENANT_ID ='&TENANT_ID';
-    
-DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
+END;
+/
 
 COMMIT;
+
+
+@&EMSAAS_SQL_ROOT/1.0.25/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.0.25/emaas_savesearch_seed_data_la.sql  &TENANT_ID
+
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
 END;
 /

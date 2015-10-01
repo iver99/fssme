@@ -24,6 +24,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
+import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -78,8 +79,48 @@ public class ImportTest extends BaseTest
 
 			for (Category obj : listobj) {
 				AssertJUnit.assertNotNull("Imported category has NULL creation date", obj.getCreatedOn());
+				catImpl.editCategory(obj);
 				catImpl.deleteCategory(obj.getId(), true);
 			}
+
+			Category category11 = catImpl.createNewCategory();
+			category11.setName("ImportCategory11");
+			category11.setDescription("CategoryTest");
+			category11.setProviderName("ProviderNameImportUT1");
+			category11.setProviderVersion("ProviderVersionImportUT1");
+			category11.setProviderDiscovery("ProviderDiscoveryImportUT1");
+			category11.setProviderAssetRoot("ProviderAssetRootImportUT1");
+
+			List<ImportCategoryImpl> listCat1 = new ArrayList<ImportCategoryImpl>();
+			ImportCategoryImpl tmp = ImportTest.createImportCategoryImpl(category11);
+			FolderDetails fd = new FolderDetails();
+			fd.setName("TestFld");
+			fd.setDescription("Testfd");
+			ObjectFactory objFactory = new ObjectFactory();
+			JAXBElement<FolderDetails> folderdet = objFactory.createFolder(fd);
+			tmp.setFolderDet(folderdet);
+			listCat1.add(tmp);
+			List<Category> test1 = ((CategoryManagerImpl) catImpl).saveMultipleCategories(listCat1);
+			Assert.assertNotNull(test1.get(0));
+			catImpl.deleteCategory(test1.get(0).getId(), true);
+
+			Category category12 = catImpl.createNewCategory();
+			category12.setName("Importcategory12");
+			category12.setDescription("CategoryTest");
+			category12.setProviderName("ProviderNameImportUT1");
+			category12.setProviderVersion("ProviderVersionImportUT1");
+			category12.setProviderDiscovery("ProviderDiscoveryImportUT1");
+			category12.setProviderAssetRoot("ProviderAssetRootImportUT1");
+			JAXBElement<Integer> folderid = objFactory.createCategoryId(1);
+
+			List<ImportCategoryImpl> listCat121 = new ArrayList<ImportCategoryImpl>();
+			ImportCategoryImpl tmp1 = ImportTest.createImportCategoryImpl(category12);
+
+			tmp1.setFolderDet(folderid);
+			listCat121.add(tmp1);
+			List<Category> test11 = ((CategoryManagerImpl) catImpl).saveMultipleCategories(listCat121);
+			Assert.assertNotNull(test11.get(0));
+			catImpl.deleteCategory(test11.get(0).getId(), true);
 		}
 		catch (Exception e) {
 			AssertJUnit.fail(e.getLocalizedMessage());
@@ -108,12 +149,20 @@ public class ImportTest extends BaseTest
 			list.add(folder1);
 			List<FolderImpl> listobj = objFolder.saveMultipleFolders(list);
 			AssertJUnit.assertTrue(listobj.size() == 2);
+			list.clear();
+			for (Folder obj : listobj) {
+				folder1 = new FolderDetails();
+				folder1.setName(obj.getName());
+				folder1.setDescription(obj.getDescription());
+				folder1.setUiHidden(obj.isUiHidden());
+				folder1.setId(obj.getId());
+				list.add(folder1);
+			}
+			listobj = objFolder.saveMultipleFolders(list);
 
 			for (Folder obj : listobj) {
 				AssertJUnit.assertNotNull(obj.getLastModifiedOn());
 				AssertJUnit.assertNotNull(obj.getCreatedOn());
-				AssertJUnit.assertEquals(obj.getCreatedOn(), obj.getLastModifiedOn());
-
 				objFolder.deleteFolder(obj.getId(), true);
 			}
 
@@ -251,6 +300,99 @@ public class ImportTest extends BaseTest
 				}
 			}
 			System.out.println("search importing finished");
+
+			for (Search objSearch1 : listobj) {
+				if (objSearch1.getName().equals("Import Dummy Search")) {
+					Search y1 = objSearch1;
+					ImportSearchImpl search11 = new ImportSearchImpl();
+					search11.setDescription(y1.getDescription());
+					search11.setName(y1.getName());
+					catId = objFactory.createCategoryId(y1.getCategoryId());
+					search11.setCategoryDet(catId);
+					fldId = objFactory.createFolderId(y1.getFolderId());
+					search11.setFolderDet(fldId);
+
+					ImportSearchImpl.SearchParameters param11 = search1.getSearchParameters();
+					if (param11 == null) {
+						param11 = new ImportSearchImpl.SearchParameters();
+						search11.setSearchParameters(param11);
+					}
+					SearchParameterDetails tmpDetails21 = new SearchParameterDetails();
+					tmpDetails21.setName("Param2");
+					tmpDetails21.setType(ParameterType.CLOB);
+					tmpDetails21.setValue("Value1234");
+					param11.getSearchParameter().add(tmpDetails2);
+					//search1.getSearchParameters().getSearchParameter().add(tmpDetails2);
+
+					List<ImportSearchImpl> list1 = new ArrayList<ImportSearchImpl>();
+					list1.add(search11);
+
+					List<Search> listobj1 = obj.saveMultipleSearch(list1);
+					AssertJUnit.assertEquals(listobj1.size(), 1);
+				}
+			}
+
+			for (Search objSearch1 : listobj) {
+				if (objSearch1.getName().equals("Import Dummy Search")) {
+					Search y1 = objSearch1;
+					ImportSearchImpl search11 = new ImportSearchImpl();
+					search11.setId(objSearch1.getId());
+					search11.setDescription(y1.getDescription());
+					search11.setName(y1.getName());
+					catId = objFactory.createCategoryId(y1.getCategoryId());
+					search11.setCategoryDet(catId);
+
+					/*CategoryDetails category1 = new CategoryDetails();
+					category1.setName("ImportCategoryName");
+					category1.setDescription("CategoryTest");
+					category1.setProviderName("ProviderNameTest");
+					category1.setProviderVersion("ProviderVersionTest");
+					category1.setProviderDiscovery("ProviderDiscoveryTest");
+					category1.setProviderAssetRoot("ProviderAssetRootTest");
+					//set the parameter for the category
+
+					Parameter sp11 = new Parameter();
+					sp11.setName("Param1");
+					sp11.setValue("ParamValue1");
+
+					Parameter sp21 = new Parameter();
+					sp21.setName("Param2");
+					sp21.setValue("ParamValue2");
+					CategoryDetails.Parameters op = new CategoryDetails.Parameters();
+
+					op.getParameter().add(sp11);
+					op.getParameter().add(sp21);
+					category1.setParameters(op);
+
+					JAXBElement<CategoryDetails> catdet11 = objFactory.createCategory(category1);
+					search11.setCategoryDet(catdet11);*/
+
+					FolderDetails folder1 = new FolderDetails();
+					folder1.setName("ImportFolderTest");
+					folder1.setDescription("testing purpose folder");
+
+					JAXBElement<FolderDetails> fol11 = objFactory.createFolder(folder1);
+
+					search11.setFolderDet(fol11);
+					ImportSearchImpl.SearchParameters param11 = search11.getSearchParameters();
+					if (param11 == null) {
+						param11 = new ImportSearchImpl.SearchParameters();
+						search11.setSearchParameters(param11);
+					}
+					SearchParameterDetails tmpDetails21 = new SearchParameterDetails();
+					tmpDetails21.setName("Param2");
+					tmpDetails21.setType(ParameterType.CLOB);
+					tmpDetails21.setValue("Value1234");
+					param11.getSearchParameter().add(tmpDetails2);
+					//search1.getSearchParameters().getSearchParameter().add(tmpDetails2);
+
+					List<ImportSearchImpl> list1 = new ArrayList<ImportSearchImpl>();
+					list1.add(search11);
+
+					List<Search> listobj1 = obj.saveMultipleSearch(list1);
+					AssertJUnit.assertEquals(listobj1.size(), 1);
+				}
+			}
 
 			//catImpl.deleteCategory(category.getId(), true);
 

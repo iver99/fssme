@@ -15,6 +15,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.HeadersUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Support across domain access CORS: Cross-Origin Resource Sharing Reference: http://enable-cors.org/ http://www.w3.org/TR/cors/
  * http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
@@ -25,6 +28,7 @@ public class SavedSearchCORSFilter implements Filter
 {
 
 	private static final String PARAM_NAME = "updateLastAccessTime";
+	private static final Logger _logger = LogManager.getLogger(SavedSearchCORSFilter.class);
 
 	@Override
 	public void destroy()
@@ -35,25 +39,25 @@ public class SavedSearchCORSFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
-	    HttpServletResponse hRes = (HttpServletResponse) response;
-	    HttpServletRequest hReq = (HttpServletRequest) request;
+		HttpServletResponse hRes = (HttpServletResponse) response;
+		HttpServletRequest hReq = (HttpServletRequest) request;
 
-	    // Only add CORS headers if the developer mode is enabled to add them
-	    if (new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
+		// Only add CORS headers if the developer mode is enabled to add them
+		if (new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
 
-		hRes.addHeader("Access-Control-Allow-Origin", "*");
-		if (hReq.getHeader("Origin") != null) {
+			hRes.addHeader("Access-Control-Allow-Origin", "*");
+			if (hReq.getHeader("Origin") != null) {
 
-			hRes.addHeader("Access-Control-Allow-Credentials", "true");
+				hRes.addHeader("Access-Control-Allow-Credentials", "true");
+			}
+			else {
+				// non-specific origin, cannot support cookies
+				//hRes.addHeader("Access-Control-Allow-Origin", "*");
+			}
+			hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
+			hRes.addHeader("Access-Control-Allow-Headers",
+					"Origin, X-Requested-With, Content-Type, Accept,  OAM_REMOTE_USER,   Authorization, x-sso-client");
 		}
-		else {
-			// non-specific origin, cannot support cookies
-			//hRes.addHeader("Access-Control-Allow-Origin", "*");
-		}
-		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
-		hRes.addHeader("Access-Control-Allow-Headers",
-				"Origin, X-Requested-With, Content-Type, Accept, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,   Authorization, x-sso-client");
-	    }
 
 		if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) request).getMethod())) {
 			try {
@@ -104,3 +108,17 @@ public class SavedSearchCORSFilter implements Filter
 
 	}
 }
+
+/*Enumeration headerNames = hReq.getHeaderNames();
+if (headerNames.hasMoreElements()) {
+
+	_logger.info("More elements");
+}
+else {
+	_logger.info("There is no more element");
+}
+while (headerNames.hasMoreElements()) {
+	Object elem = headerNames.nextElement();
+	String paramName = (String) elem;
+	_logger.info("Name=" + paramName);
+}*/
