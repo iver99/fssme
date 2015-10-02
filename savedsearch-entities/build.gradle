@@ -1,14 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-
-
-/* By default the group is set to the directory name, as 'lrg_branch' which is inconsistent name. Hence
- * Setting the group as 'com.oracle.emaas.emcpssf (as suggested by DevTools team)
- */
-group = 'com.oracle.emaas.emcpssf.upgrade'
-version = '1.0.1'
-
 jar {
 	from('src/main/java/META-INF')
 	{ 
@@ -26,14 +18,29 @@ dependencies {
 	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5'){transitive = false}
 	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2') {transitive = false}
 }
-publishing {
-    publications {
-        savedsearchEntities(MavenPublication) {
-            from components.java
-        }
+
+/*
+	NOTE: 
+		PUBLISHING ==> We use artifactoryPublish to publish artifacts, in publications block
+				we publish...
+					1. savedsearch-entties jar itself
+				The "group" of this JAR is NOT com.oracle.emaas.emcpssf - instead 
+				there's a "test" added to it - Hudson jobs prohibit publishing with root group & 
+				this allows for clear separation of artifacts. 
+		RESOLUTION ==> All JARs are produced & published via hudson (or otherwise) job, thus to resolve 
+									 jar version correctly, we use a variable (not managed by these gradle scripts) called
+									 REPO_BID - you will find we do NOT set version to these artifacts, this is intentional 
+									 this allows build jobs to set version & resolve later
+*/
+
+publishing.publications {
+    thisJarPublication(MavenPublication) {
+			from project.components.java
+      artifactId jar.baseName
+			setGroupId('com.oracle.emaas.emcpssf.test')
     }
 }
 
 artifactoryPublish {
-    publications('savedsearchEntities')
+	publications('thisJarPublication')
 }
