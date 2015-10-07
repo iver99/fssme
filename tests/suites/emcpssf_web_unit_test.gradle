@@ -60,7 +60,7 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy') }
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
-
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
 	
 	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
 	testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
