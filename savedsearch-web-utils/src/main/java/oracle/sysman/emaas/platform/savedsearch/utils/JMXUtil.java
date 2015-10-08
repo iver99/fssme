@@ -67,7 +67,7 @@ public class JMXUtil
 			server.registerMBean(savedSearchStatus, savedSearchStatusObjectName);
 		}
 
-		_logger.info("start MBeans!");
+		_logger.info("start MBeans...!");
 	}
 
 	public void unregisterMBeans() throws MalformedObjectNameException, MBeanRegistrationException, InstanceNotFoundException

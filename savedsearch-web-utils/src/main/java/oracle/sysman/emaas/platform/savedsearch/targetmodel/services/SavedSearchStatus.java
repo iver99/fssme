@@ -15,7 +15,7 @@ import oracle.sysman.emaas.platform.savedsearch.utils.GlobalStatus;
 /**
  * @author vinjoshi
  */
-public class SavedSearchStatus implements SavedSearchStatusBean
+public class SavedSearchStatus implements SavedSearchStatusMBean
 {
 
 	@Override
@@ -44,7 +44,7 @@ public class SavedSearchStatus implements SavedSearchStatusBean
 		}
 
 		else if (GlobalStatus.isSavedSearchUp()) {
-			return "SavedSearch is up running.";
+			return "SavedSearch is up and running.";
 		}
 		else {
 			return "SavedSearch is out of service.";
