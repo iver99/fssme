@@ -45,6 +45,6 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-api-2.0.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-core-2.0.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
-	<classpathentry kind="lib" path="SSF/dependencies/artifactory/em-qatool-os-webdriver-1.0.4.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/em-qatool-os-webdriver-1.0.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
