@@ -54,4 +54,5 @@ public class FolderSetTest
 		Assert.assertNotNull(a.getUsername());
 
 	}
+
 }

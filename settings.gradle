@@ -1,1 +1,1 @@
-include 'savedsearch-core', 'savedsearch-entities','savedsearch-web','savedsearch-web-utils','savedsearch-ear','savedsearch-schema','savedsearch-tools' 
+include 'savedsearch-core', 'savedsearch-entities','savedsearch-web','savedsearch-web-utils','savedsearch-ear','savedsearch-schema' 
