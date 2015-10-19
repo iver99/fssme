@@ -113,11 +113,9 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 			closeEMF();
 		}
 	}
-	
+
 	/**
-	 * Important: now close EMF in 
-	 * 1. pre-stop stage or 
-	 * 2. post-start stage when error occurs 
+	 * Important: now close EMF in 1. pre-stop stage or 2. post-start stage when error occurs
 	 */
 	private void closeEMF()
 	{

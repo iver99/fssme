@@ -7,6 +7,7 @@ import javax.management.Notification;
 import javax.management.NotificationListener;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.DBConnectionManager;
+import oracle.sysman.emaas.platform.savedsearch.utils.GlobalStatus;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 
 import org.apache.logging.log4j.LogManager;
@@ -64,11 +65,13 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		// update saved search service status
 		if (!isDBAvailable) {
 			rsm.makeServiceOutOfService();
+			GlobalStatus.setSavedSearchDownStatus();
 			logger.info("Saved search service is out of service because database is unavailable");
 		}
 		else {
 			try {
 				rsm.makeServiceUp();
+				GlobalStatus.setSavedSearchUpStatus();
 				logger.debug("Saved search service is up");
 			}
 			catch (Exception e) {
