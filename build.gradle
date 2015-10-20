@@ -16,8 +16,6 @@ allprojects {
  	apply plugin: 'maven-publish'
 	apply plugin: 'TestInfraPlugin'
 	apply plugin: 'gavsetting'
-
-  ext.artifactory_publish_repoKey= hasProperty("ArtRepo") && ArtRepo != '' ? ArtRepo : 'emaas-sandbox-local'
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
