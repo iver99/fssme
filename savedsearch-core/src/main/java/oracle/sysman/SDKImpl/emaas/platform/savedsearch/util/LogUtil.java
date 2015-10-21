@@ -83,15 +83,37 @@ public class LogUtil
 		/**
 		 * for all incoming service requests
 		 */
-		IN,
+		IN("IN"),
 		/**
 		 * for all outbound service request
 		 */
-		OUT,
+		OUT("OUT"),
 		/**
-		 * for scenarios that service request not specified
+		 * indicate that direction of service request is not available
 		 */
-		NA
+		NA("N/A");
+
+		public static InteractionLogDirection fromValue(String value)
+		{
+			for (InteractionLogDirection ild : InteractionLogDirection.values()) {
+				if (ild.getValue().equals(value)) {
+					return ild;
+				}
+			}
+			return NA;
+		}
+
+		private final String value;
+
+		private InteractionLogDirection(String value)
+		{
+			this.value = value;
+		}
+
+		public String getValue()
+		{
+			return value;
+		}
 	}
 
 	private static final Logger logger = LogManager.getLogger(LogUtil.class);
@@ -173,9 +195,6 @@ public class LogUtil
 	{
 		InteractionLogContext old = new InteractionLogContext(ThreadContext.get(LOG_PROP_TENANTID),
 				ThreadContext.get(INTERACTION_LOG_PROP_SERVICE_INVOKED), ThreadContext.get(INTERACTION_LOG_PROP_DIRECTION));
-		if (tenantId == null && serviceInvoked == null && direction == null) {
-			return old;
-		}
 		if (tenantId == null || tenantId.equals("")) {
 			logger.debug("Initialize interaction log context: tenantId is null or empty");
 			tenantId = LOG_VALUE_NA;
@@ -190,15 +209,7 @@ public class LogUtil
 		}
 		ThreadContext.put(LOG_PROP_TENANTID, tenantId);
 		ThreadContext.put(INTERACTION_LOG_PROP_SERVICE_INVOKED, serviceInvoked);
-		if (InteractionLogDirection.IN.equals(direction)) {
-			ThreadContext.put(INTERACTION_LOG_PROP_DIRECTION, "IN");
-		}
-		else if (InteractionLogDirection.OUT.equals(direction)) {
-			ThreadContext.put(INTERACTION_LOG_PROP_DIRECTION, "OUT");
-		}
-		else {
-			ThreadContext.put(INTERACTION_LOG_PROP_DIRECTION, "N/A");
-		}
+		ThreadContext.put(INTERACTION_LOG_PROP_DIRECTION, direction.getValue());
 		return old;
 	}
 

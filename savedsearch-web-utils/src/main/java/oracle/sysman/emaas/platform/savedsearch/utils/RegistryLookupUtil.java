@@ -14,6 +14,7 @@ import java.util.List;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogContext;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogDirection;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -74,8 +75,8 @@ public class RegistryLookupUtil
 			return lk;
 		}
 		finally {
-			LogUtil.setInteractionLogThreadContext(ilc.getTenantId(), ilc.getServiceInvoked(), ilc.getDirection() == null ? null
-					: LogUtil.InteractionLogDirection.valueOf(ilc.getDirection()));
+			LogUtil.setInteractionLogThreadContext(ilc.getTenantId(), ilc.getServiceInvoked(),
+					InteractionLogDirection.fromValue(ilc.getDirection()));
 		}
 	}
 }

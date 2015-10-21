@@ -44,6 +44,27 @@ public class LoggingConfigAPI
 {
 	private static final Logger logger = LogManager.getLogger(LoggingConfigAPI.class);
 
+	/**
+	 * Change the log4j2 logging level for ROOT logger<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/_logging/configs</font><br>
+	 * The string "_logging/configs" in the URL signifies update operation on logging level for ROOT logger
+	 *
+	 * @since 0.1
+	 * @param inputJson
+	 *            JSON string which contains new log4j2 logging level to be updated<br>
+	 *            Input Sample:<br>
+	 *            <font color="DarkCyan"> {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; "level": "DEBUG"<br>
+	 *            }</font><br>
+	 * @return returns the updated logging level for the logger<br>
+	 *         Response Sample:<br>
+	 *         <font color="DarkCyan"> {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "loggerName": "",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "currentLoggingLevel": "DEBUG",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastUpdatedEpoch": "1445408589707"<br>
+	 *         }</font><br>
+	 */
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -53,6 +74,31 @@ public class LoggingConfigAPI
 
 	}
 
+	/**
+	 * Change the log4j2 logging level for specific logger<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port
+	 * number&gt;/savedsearch/v1/_logging/configs/&lt;loggerName&gt;</font><br>
+	 * The string "_logging/configs/&lt;loggerName&gt;" in the URL signifies update operation on logging level for logger
+	 * specified by loggerName.
+	 *
+	 * @since 0.1
+	 * @param loggerName
+	 *            the name of a logger for which the logging level is to be updated.
+	 * @param inputJson
+	 *            JSON string which contains new log4j2 logging level to be updated<br>
+	 *            Input Sample:<br>
+	 *            <font color="DarkCyan"> {<br>
+	 *            &nbsp;&nbsp;&nbsp;&nbsp; "level": "DEBUG"<br>
+	 *            }</font><br>
+	 * @return returns the updated logging level for the logger<br>
+	 *         Response Sample:<br>
+	 *         <font color="DarkCyan"> {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "loggerName": "oracle.sysman.emaas.platform.savedsearch",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "currentLoggingLevel": "DEBUG",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; "lastUpdatedEpoch": "1445408589707"<br>
+	 *         }</font><br>
+	 */
 	@PUT
 	@Path("{loggerName}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -108,6 +154,51 @@ public class LoggingConfigAPI
 		}
 	}
 
+	/**
+	 * Retrieves the log4j2 logging level for all loggers<br>
+	 * <br>
+	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/_logging/configs</font><br>
+	 * The string "_logging/configs" in the URL signifies getting operation on logging level for all loggers
+	 *
+	 * @since 0.1
+	 * @return returns the logging level for all the loggers<br>
+	 *         Response Sample:<br>
+	 *         <font color="DarkCyan"> {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; total: 7,<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; items: [{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "loggerName":
+	 *         "oracle.sysman.emaas.platform.savedsearch.interaction.log",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "currentLoggingLevel": "INFO",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastUpdatedEpoch": "1445408589707"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; },{<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "loggerName": "oracle.sysman.emaas.platform.savedsearch.services",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "currentLoggingLevel": "INFO",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastUpdatedEpoch": "1445408589707"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }, {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "loggerName": "oracle.sysman.emaas.platform.savedsearch.utils",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "currentLoggingLevel": "INFO",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastUpdatedEpoch": "1445408589707"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }, {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "loggerName":
+	 *         "oracle.sysman.emaas.platform.savedsearch.wls.lifecycle",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "currentLoggingLevel": "INFO",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastUpdatedEpoch": "1445408589707"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }, {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "loggerName":
+	 *         "oracle.sysman.emaas.platform.savedsearch.wls.management",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "currentLoggingLevel": "INFO",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastUpdatedEpoch": "1445408589707"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }, {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "loggerName": "oracle.sysman.emaas.platform.savedsearch",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "currentLoggingLevel": "INFO",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastUpdatedEpoch": "1445408589707"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }, {<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "loggerName": "",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "currentLoggingLevel": "INFO",<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "lastUpdatedEpoch": "1445408589707"<br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp; }]<br>
+	 *         }</font><br>
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllLoggerLevels()
