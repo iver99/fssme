@@ -87,7 +87,11 @@ public class LogUtil
 		/**
 		 * for all outbound service request
 		 */
-		OUT
+		OUT,
+		/**
+		 * for scenarios that service request not specified
+		 */
+		NA
 	}
 
 	private static final Logger logger = LogManager.getLogger(LogUtil.class);
@@ -106,6 +110,7 @@ public class LogUtil
 	 */
 	public static void clearInteractionLogContext()
 	{
+		ThreadContext.remove(LOG_PROP_TENANTID);
 		ThreadContext.remove(INTERACTION_LOG_PROP_SERVICE_INVOKED);
 		ThreadContext.remove(INTERACTION_LOG_PROP_DIRECTION);
 	}
@@ -180,8 +185,8 @@ public class LogUtil
 			serviceInvoked = "Service invoked: N/A";
 		}
 		if (direction == null) {
-			logger.error("Failed to initialize interaction log context: direction is null");
-			return old;
+			logger.debug("Initialize interaction log context: direction is null");
+			direction = InteractionLogDirection.NA;
 		}
 		ThreadContext.put(LOG_PROP_TENANTID, tenantId);
 		ThreadContext.put(INTERACTION_LOG_PROP_SERVICE_INVOKED, serviceInvoked);
@@ -190,6 +195,9 @@ public class LogUtil
 		}
 		else if (InteractionLogDirection.OUT.equals(direction)) {
 			ThreadContext.put(INTERACTION_LOG_PROP_DIRECTION, "OUT");
+		}
+		else {
+			ThreadContext.put(INTERACTION_LOG_PROP_DIRECTION, "N/A");
 		}
 		return old;
 	}
