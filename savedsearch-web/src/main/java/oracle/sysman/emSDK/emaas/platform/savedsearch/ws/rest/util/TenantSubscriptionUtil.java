@@ -24,6 +24,7 @@ import javax.ws.rs.core.UriBuilder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.AppMappingCollection;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.AppMappingEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.DomainEntity;
@@ -76,6 +77,7 @@ public class TenantSubscriptionUtil
 	private static String SERVICE_PROVIDER_NAME_ITA = "EmcitasApplications";
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
 	private static String SERVICE_PROVIDER_NAME_LA = "LoganService";
+	private static final String PARAM_NAME_HIDDEN_IN_WIDGET_SELECTOR = "HIDDEN_IN_WIDGET_SELECTOR";
 
 	public static List<Category> getTenantSubscribedCategories(String tenant) throws EMAnalyticsFwkException
 	{
@@ -94,7 +96,10 @@ public class TenantSubscriptionUtil
 				providerToServiceMap.put(SERVICE_PROVIDER_NAME_ITA, SUBSCRIBED_SERVICE_NAME_ITA);
 				providerToServiceMap.put(SERVICE_PROVIDER_NAME_APM, SUBSCRIBED_SERVICE_NAME_APM);
 				for (Category cat : catList) {
-					if (subscribedServices.contains(providerToServiceMap.get(cat.getProviderName()))) {
+					//EMCPDF-997 If a widget group has special parameter HIDDEN_IN_WIDGET_SELECTOR=true,
+					//we do NOT show all widgets of this group inside widget selector
+					if (subscribedServices.contains(providerToServiceMap.get(cat.getProviderName()))
+							&& !TenantSubscriptionUtil.isCategoryHiddenInWidgetSelector(cat)) {
 						resultList.add(cat);
 					}
 				}
@@ -190,5 +195,20 @@ public class TenantSubscriptionUtil
 			logger.error(e);
 			return null;
 		}
+	}
+
+	private static boolean isCategoryHiddenInWidgetSelector(Category category)
+	{
+		boolean hiddenInWidgetSelector = false;
+		List<Parameter> params = category.getParameters();
+		if (params != null && params.size() > 0) {
+			for (Parameter param : params) {
+				if (PARAM_NAME_HIDDEN_IN_WIDGET_SELECTOR.equals(param.getName()) && "1".equals(param.getValue())) {
+					hiddenInWidgetSelector = true;
+					break;
+				}
+			}
+		}
+		return hiddenInWidgetSelector;
 	}
 }

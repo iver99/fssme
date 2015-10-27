@@ -19,6 +19,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TenantSubscriptionUtil;
 
@@ -36,6 +37,8 @@ import org.codehaus.jettison.json.JSONObject;
 public class WidgetAPI
 {
 	private static final Logger _logger = LogManager.getLogger(WidgetAPI.class);
+	private static final String PARAM_NAME_HIDDEN_IN_WIDGET_SELECTOR = "HIDDEN_IN_WIDGET_SELECTOR";
+
 	@Context
 	UriInfo uri;
 
@@ -150,9 +153,11 @@ public class WidgetAPI
 				List<Search> searchList = new ArrayList<Search>();
 				searchList = searchMan.getWidgetListByCategoryId(category.getId().longValue());
 				for (Search search : searchList) {
-					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), search, category);
-					if (jsonWidget != null) {
-						jsonArray.put(jsonWidget);
+					if (!isWidgetHiddenInWidgetSelector(search)) {
+						JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), search, category);
+						if (jsonWidget != null) {
+							jsonArray.put(jsonWidget);
+						}
 					}
 				}
 			}
@@ -238,5 +243,20 @@ public class WidgetAPI
 					+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
+	}
+
+	private boolean isWidgetHiddenInWidgetSelector(Search search)
+	{
+		boolean hiddenInWidgetSelector = false;
+		List<SearchParameter> params = search.getParameters();
+		if (params != null && params.size() > 0) {
+			for (SearchParameter param : params) {
+				if (PARAM_NAME_HIDDEN_IN_WIDGET_SELECTOR.equals(param.getName()) && "1".equals(param.getValue())) {
+					hiddenInWidgetSelector = true;
+					break;
+				}
+			}
+		}
+		return hiddenInWidgetSelector;
 	}
 }
