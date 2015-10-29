@@ -230,7 +230,7 @@ public class FolderAPI
 	@Path("{id: [0-9]*}")
 	public Response delete(@PathParam("id") long id)
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/folder{}", id);
+		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/folder/{}", id);
 		int statusCode = 204;
 		try {
 
