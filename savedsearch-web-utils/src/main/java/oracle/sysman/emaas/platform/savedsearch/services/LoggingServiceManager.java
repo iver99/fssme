@@ -61,7 +61,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 		URL url = LoggingServiceManager.class.getResource("/log4j2_ssf.xml");
 		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
 		LogUtil.initializeLoggersUpdateTime();
-		logger.info("Dashboard log4j2 logging configuration has been initialized");
+		logger.info("Saved search log4j2 logging configuration has been initialized");
 
 		try {
 			registerMBean(MBEAN_NAME);
