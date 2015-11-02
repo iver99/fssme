@@ -24,7 +24,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Create JSON string for each entity (search/folder/category) and return to user
- * 
+ *
  * @author miayu
  */
 public class EntityJsonUtil
@@ -104,13 +104,14 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_KOC_NAME = "WIDGET_KOC_NAME";
 	public static final String NAME_WIDGET_VIEWMODEL = "WIDGET_VIEWMODEL";
 	public static final String NAME_WIDGET_TEMPLATE = "WIDGET_TEMPLATE";
+	public static final String NAME_WIDGET_SUPPORT_TIME_CONTROL = "WIDGET_SUPPORT_TIME_CONTROL";
 	public static final String NAME_WIDGET_PROVIDER_NAME = "PROVIDER_NAME";
 	public static final String NAME_WIDGET_PROVIDER_VERSION = "PROVIDER_VERSION";
 	public static final String NAME_WIDGET_PROVIDER_ASSET_ROOT = "PROVIDER_ASSET_ROOT";
 
 	/**
 	 * Return full JSON string for category
-	 * 
+	 *
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -124,7 +125,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for folder
-	 * 
+	 *
 	 * @param baseUri
 	 * @param folder
 	 * @return
@@ -138,7 +139,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for search
-	 * 
+	 *
 	 * @param baseUri
 	 * @param jsonObj
 	 * @return
@@ -152,7 +153,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for search
-	 * 
+	 *
 	 * @param baseUri
 	 * @param jsonObj
 	 * @param folderPathArray
@@ -170,7 +171,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for search
-	 * 
+	 *
 	 * @param baseUri
 	 * @param jsonObj
 	 * @param folderPathArray
@@ -196,7 +197,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for category (without default folder and parameters)
-	 * 
+	 *
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -212,7 +213,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for folder without folder=type
-	 * 
+	 *
 	 * @param baseUri
 	 * @param folder
 	 * @return
@@ -226,7 +227,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for folder with or without type=folder
-	 * 
+	 *
 	 * @param baseUri
 	 * @param folder
 	 * @param includeType
@@ -243,7 +244,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 * 
+	 *
 	 * @param uri
 	 * @param jsonObj
 	 * @return
@@ -257,7 +258,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 * 
+	 *
 	 * @param uri
 	 * @param jsonObj
 	 * @param includeType
@@ -273,7 +274,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 * 
+	 *
 	 * @param baseUri
 	 * @param search
 	 * @param folderPathArray
@@ -292,7 +293,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for widget group
-	 * 
+	 *
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -320,7 +321,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for widget
-	 * 
+	 *
 	 * @param baseUri
 	 * @param search
 	 * @param category
@@ -369,7 +370,14 @@ public class EntityJsonUtil
 					else if (NAME_WIDGET_PROVIDER_ASSET_ROOT.equals(param.getName())) {
 						widgetObj.put(NAME_WIDGET_PROVIDER_ASSET_ROOT, param.getValue());
 					}
+					else if (NAME_WIDGET_SUPPORT_TIME_CONTROL.equals(param.getName())) {
+						widgetObj.put(NAME_WIDGET_SUPPORT_TIME_CONTROL, param.getValue());
+					}
 				}
+			}
+			//default value for NAME_WIDGET_SUPPORT_TIME_CTRONOL: default to support
+			if (!widgetObj.has(NAME_WIDGET_SUPPORT_TIME_CONTROL)) {
+				widgetObj.put(NAME_WIDGET_SUPPORT_TIME_CONTROL, "1");
 			}
 			//Get provider info from category if it doesn't exist in search parameters
 			if (!widgetObj.has(NAME_WIDGET_PROVIDER_NAME)) {
@@ -466,7 +474,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string of search according to customization
-	 * 
+	 *
 	 * @param uri
 	 * @param jsonObj
 	 * @param excludedFields
