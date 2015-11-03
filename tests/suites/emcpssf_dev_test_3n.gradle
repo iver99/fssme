@@ -31,7 +31,7 @@ buildscript {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
     }
 }
-
+apply from: 'setup.gradle'
 apply plugin: 'TestInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
@@ -67,29 +67,28 @@ dependencies {
 	}
 }
 
-task small_deploy_3n_block(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_dev_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'setupEmaasSmallDeploy')
-                    }
-                }
-        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
-            }
+task UndeploySSFAPI(type:Exec) {
+
+        commandLine 'gradle', '-p', getGitRoot()+'/savedsearch-ear/', 'appServerUndeploy'
+
+
+}
+
+
+task DeploySSFAPI(type:Exec,dependsOn: UndeploySSFAPI) {
+
+        commandLine 'gradle', '-p', getGitRoot()+'/savedsearch-ear/', 'appServerDeploy'
         }
-    }
-    useWebdriver = true
-    useRestAssured = true
+task PropsCopy(type: Copy,dependsOn: DeploySSFAPI) {
+   from '/net/slc07ctj/scratch/emaas/setuplogs/'
+   into '../../oracle/work/'
+    include '*.log'
 }
 
 
 
 
-
-     task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){	
+     task DEVTest(type:EMTest,dependsOn: PropsCopy){	
 		
 	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/JSONUtilTest.class"
@@ -133,23 +132,8 @@ task DEVTest2(type:EMTest,dependsOn: DEVTest1){
 	useRestAssured =true
 	ext.set("testType", "unit")
 }
-task small_deploy_3n_cleanup(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'logCollectionAndPostCleanup')
-                    }
-                }
-            }
-        }
-    }
- mustRunAfter ([small_deploy_3n_block,DEVTest2])
-}
 
 
-task emcpssf_dev_test_3n (dependsOn: [DEVTest2, small_deploy_3n_cleanup])
+task emcpssf_dev_test_3n (dependsOn: DEVTest2)
 
 
