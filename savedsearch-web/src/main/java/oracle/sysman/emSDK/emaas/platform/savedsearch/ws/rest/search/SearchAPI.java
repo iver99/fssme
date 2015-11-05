@@ -635,7 +635,7 @@ public class SearchAPI
 			}
 			if (StringUtil.isSpecialCharFound(name)) {
 				throw new EMAnalyticsWSException(
-						"The search name contains atleast one invalid character ('<' or '>'), please correct search name and retry",
+						"The search name contains at least one invalid character ('<' or '>'), please correct search name and retry",
 						EMAnalyticsWSException.JSON_INVALID_CHAR);
 			}
 
@@ -650,7 +650,7 @@ public class SearchAPI
 			desc = json.getString("description");
 			if (StringUtil.isSpecialCharFound(desc)) {
 				throw new EMAnalyticsWSException(
-						"The search description contains atleast one invalid character ('<' or '>'), please correct search description and retry",
+						"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
 						EMAnalyticsWSException.JSON_INVALID_CHAR);
 			}
 
@@ -767,7 +767,7 @@ public class SearchAPI
 			}
 			if (StringUtil.isSpecialCharFound(name)) {
 				throw new EMAnalyticsWSException(
-						"The search name contains atleast one invalid character ('<' or '>'), please correct search name and retry",
+						"The search name contains at least one invalid character ('<' or '>'), please correct search name and retry",
 						EMAnalyticsWSException.JSON_INVALID_CHAR);
 			}
 
@@ -779,7 +779,7 @@ public class SearchAPI
 		String desc = json.optString("description", searchObj.getDescription());
 		if (StringUtil.isSpecialCharFound(desc)) {
 			throw new EMAnalyticsWSException(
-					"The search description contains atleast one invalid character ('<' or '>'), please correct search description and retry",
+					"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
 					EMAnalyticsWSException.JSON_INVALID_CHAR);
 		}
 		searchObj.setDescription(json.optString("description", searchObj.getDescription()));
