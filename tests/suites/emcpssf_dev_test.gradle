@@ -134,6 +134,6 @@ task DEVTest2(type:EMTest,dependsOn: DEVTest1){
 }
 
 
-task emcpssf_dev_test_3n (dependsOn: DEVTest2)
+task emcpssf_dev_test (dependsOn: DEVTest2)
 
 

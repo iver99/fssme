@@ -110,5 +110,5 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
 ext.set("testType", "integration")
 }
 
-task emcpssf_qa_test_3n (dependsOn: QATest)
+task emcpssf_qa_test (dependsOn: QATest)
 
