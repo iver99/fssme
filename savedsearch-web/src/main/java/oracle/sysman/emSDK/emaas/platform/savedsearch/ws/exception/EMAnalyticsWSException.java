@@ -33,6 +33,8 @@ public class EMAnalyticsWSException extends Exception
 
 	public static final int JSON_TENANT_ID_MISSING = 70042;
 
+	public static final int JSON_INVALID_CHAR = 70045;
+
 	private int errorCode;
 	private int statusCode;
 	private Object[] errorParam;
@@ -148,6 +150,9 @@ public class EMAnalyticsWSException extends Exception
 				break;
 			case JSON_JSON_TO_OBJECT:
 				statusCode = 500;
+				break;
+			case JSON_INVALID_CHAR:
+				statusCode = 400;
 				break;
 
 		}

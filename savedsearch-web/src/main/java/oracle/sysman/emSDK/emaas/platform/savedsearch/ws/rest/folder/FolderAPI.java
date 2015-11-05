@@ -20,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -427,6 +428,11 @@ public class FolderAPI
 				throw new EMAnalyticsWSException("The name key for folder can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
 			}
+			if (StringUtil.isSpecialCharFound(name)) {
+				throw new EMAnalyticsWSException(
+						"The folder name contains at least one invalid character ('<' or '>'), please correct folder name and retry",
+						EMAnalyticsWSException.JSON_INVALID_CHAR);
+			}
 
 			objFld.setName(name);
 		}
@@ -435,6 +441,20 @@ public class FolderAPI
 					EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING, e);
 		}
 		// nullables !!
+		String desc = "";
+		try {
+			desc = folderObj.getString("description");
+			if (StringUtil.isSpecialCharFound(desc)) {
+				throw new EMAnalyticsWSException(
+						"The folder description contains at least one invalid character ('<' or '>'), please correct folder description and retry",
+						EMAnalyticsWSException.JSON_INVALID_CHAR);
+			}
+
+		}
+		catch (JSONException je) {
+			//ignore the description if not provided by user
+		}
+
 		objFld.setDescription(folderObj.optString("description", objFld.getDescription()));
 		objFld.setUiHidden(folderObj.optBoolean("uiHidden", objFld.isUiHidden()));
 		if (folderObj.has("parentFolder")) {
@@ -466,11 +486,23 @@ public class FolderAPI
 				throw new EMAnalyticsWSException("The name key for folder can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
 			}
+			if (StringUtil.isSpecialCharFound(name)) {
+				throw new EMAnalyticsWSException(
+						"The folder name contains at least one invalid character ('<' or '>'), please correct folder name and retry",
+						EMAnalyticsWSException.JSON_INVALID_CHAR);
+			}
 			folder.setName(name);
 		}
 		else {
 			folder.setName(folderObj.optString("name", folder.getName()));
 		}
+		String desc = folderObj.optString("description", folder.getDescription());
+		if (StringUtil.isSpecialCharFound(desc)) {
+			throw new EMAnalyticsWSException(
+					"The folder description contains at least one invalid character ('<' or '>'), please correct folder description and retry",
+					EMAnalyticsWSException.JSON_INVALID_CHAR);
+		}
+
 		folder.setDescription(folderObj.optString("description", folder.getDescription()));
 		folder.setUiHidden(folderObj.optBoolean("uiHidden", folder.isUiHidden()));
 		if (folderObj.has("parentFolder")) {

@@ -29,6 +29,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -632,11 +633,30 @@ public class SearchAPI
 				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			}
+			if (StringUtil.isSpecialCharFound(name)) {
+				throw new EMAnalyticsWSException(
+						"The search name contains at least one invalid character ('<' or '>'), please correct search name and retry",
+						EMAnalyticsWSException.JSON_INVALID_CHAR);
+			}
+
 			searchObj.setName(name);
 		}
 		catch (JSONException je) {
 			throw new EMAnalyticsWSException("The name key for search is missing in the input JSON Object",
 					EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING, je);
+		}
+		String desc = "";
+		try {
+			desc = json.getString("description");
+			if (StringUtil.isSpecialCharFound(desc)) {
+				throw new EMAnalyticsWSException(
+						"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
+						EMAnalyticsWSException.JSON_INVALID_CHAR);
+			}
+
+		}
+		catch (JSONException je) {
+			//ignore the description if not provided by user
 		}
 
 		try {
@@ -745,10 +765,22 @@ public class SearchAPI
 				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			}
+			if (StringUtil.isSpecialCharFound(name)) {
+				throw new EMAnalyticsWSException(
+						"The search name contains at least one invalid character ('<' or '>'), please correct search name and retry",
+						EMAnalyticsWSException.JSON_INVALID_CHAR);
+			}
+
 			searchObj.setName(name);
 		}
 		else {
 			searchObj.setName(json.optString("name", searchObj.getName()));
+		}
+		String desc = json.optString("description", searchObj.getDescription());
+		if (StringUtil.isSpecialCharFound(desc)) {
+			throw new EMAnalyticsWSException(
+					"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
+					EMAnalyticsWSException.JSON_INVALID_CHAR);
 		}
 		searchObj.setDescription(json.optString("description", searchObj.getDescription()));
 		if (update) {
