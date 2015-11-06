@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.folder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
@@ -107,6 +108,7 @@ public class FolderCRUD
 		TENANT_ID_OPC1 = ct.getTenant();
 
 		try {
+
 			FolderCRUD.importCategories();
 
 		}
@@ -872,6 +874,124 @@ public class FolderCRUD
 	}
 
 	@Test
+	public void folder_fieldCharValidation()
+	{
+		try {
+
+			String result = "abc<";
+
+			String description = "abc>";
+
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new folder");
+			int position = -1;
+			String jsonString = "{ \"name\":" + "\"" + result + "\"" + ",\"description\":\"" + "abc" + "\"}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
+					.post("/folder");
+			Assert.assertEquals(
+					"The folder name contains at least one invalid character ('<' or '>'), please correct folder name and retry",
+					res1.getBody().asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+
+			jsonString = "{ \"name\":" + "\"" + "ABC " + "\"" + ",\"description\":\"" + description + "\"}";
+			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
+			Assert.assertEquals(
+					"The folder description contains at least one invalid character ('<' or '>'), please correct folder description and retry",
+					res1.getBody().asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			jsonString = "{ \"name\":" + "\"" + result + "\"" + ",\"description\":\"" + "abc" + "\"}";
+
+			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/folder/" + 1);
+
+			Assert.assertEquals(
+					"The folder name contains at least one invalid character ('<' or '>'), please correct folder name and retry",
+					res1.getBody().asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+
+			jsonString = "{ \"name\":" + "\"" + "ABC " + "\"" + ",\"description\":\"" + description + "\"}";
+			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/folder/" + 1);
+			Assert.assertEquals(
+					"The folder description contains at least one invalid character ('<' or '>'), please correct folder description and retry",
+					res1.getBody().asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	public void folder_fieldValidationLength()
+	{
+		try {
+
+			int n = 65;
+			char[] chars = new char[n];
+			Arrays.fill(chars, 'c');
+			String result = new String(chars);
+			chars = new char[257];
+			Arrays.fill(chars, 'c');
+			String description = new String(chars);
+
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new folder");
+			int position = -1;
+			String jsonString = "{ \"name\":" + "\"" + result + "\"" + ",\"description\":\"" + "abc" + "\"}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
+					.post("/folder");
+			Assert.assertEquals("The maximum length of a name is 64 bytes.Please enter valid name.", res1.getBody().asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+
+			jsonString = "{ \"name\":" + "\"" + "ABC " + "\"" + ",\"description\":\"" + description + "\"}";
+			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
+			Assert.assertEquals("The maximum length of a description is 256 bytes.Please enter valid description.", res1
+					.getBody().asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+			jsonString = "{ \"name\":" + "\"" + result + "\"" + ",\"description\":\"" + "abc" + "\"}";
+
+			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/folder/" + 1);
+
+			Assert.assertEquals("The maximum length of a name is 64 bytes.Please enter valid name.", res1.getBody().asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+
+			jsonString = "{ \"name\":" + "\"" + "ABC " + "\"" + ",\"description\":\"" + description + "\"}";
+			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/folder/" + 1);
+			Assert.assertEquals("The maximum length of a description is 256 bytes.Please enter valid description.", res1
+					.getBody().asString());
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
 	/**
 	 * Folder: Invalid folderId:
 	 */
@@ -1010,6 +1130,37 @@ public class FolderCRUD
 		}
 	}
 
+	/*@Test
+	/**
+	 * Delete a system folder using DELETE method
+	 */
+	/*public void systemFolder_Delete()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("This test is to delete a system folder with DELETE method");
+			System.out.println("											");
+			System.out.println("GET operation to select the folder is in progress");
+			System.out.println("											");
+
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1)
+					.when().delete("/folder/1");
+			// JsonPath jp = res.jsonPath();
+			System.out.println(res.asString());
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 500);
+			Assert.assertEquals(res.asString(), "Folder with Id " + 1 + " is system folder and NOT allowed to delete");
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}*/
+
 	@Test
 	/**
 	 * Folder Negative Case4:
@@ -1104,37 +1255,6 @@ public class FolderCRUD
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
-
-	/*@Test
-	/**
-	 * Delete a system folder using DELETE method
-	 */
-	/*public void systemFolder_Delete()
-	{
-		try {
-			System.out.println("------------------------------------------");
-			System.out.println("This test is to delete a system folder with DELETE method");
-			System.out.println("											");
-			System.out.println("GET operation to select the folder is in progress");
-			System.out.println("											");
-
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1)
-					.when().delete("/folder/1");
-			// JsonPath jp = res.jsonPath();
-			System.out.println(res.asString());
-			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 500);
-			Assert.assertEquals(res.asString(), "Folder with Id " + 1 + " is system folder and NOT allowed to delete");
-
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}*/
 
 	@Test
 	/**
