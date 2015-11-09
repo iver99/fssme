@@ -50,6 +50,7 @@ public class VersionManager
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
+                        @SuppressWarnings("unchecked")
 			List<EmAnalyticsSchemaVer> vers = em.createNamedQuery("EmAnalyticsSchemaVer.findAll").getResultList();
 			if (vers != null && vers.size() == 1) {
 				EmAnalyticsSchemaVer ver = vers.get(0);

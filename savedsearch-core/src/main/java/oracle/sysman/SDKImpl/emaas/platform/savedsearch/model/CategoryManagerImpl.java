@@ -168,8 +168,8 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 
 			EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-
-			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
+			@SuppressWarnings("unchecked")
+                        List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			if (categories == null) {
 				categories = new ArrayList<Category>();

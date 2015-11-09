@@ -100,7 +100,8 @@ public class JSONUtil
 		return (List<T>) JSONUtil.fromJson(mapper, jsonString, JSONUtil.constructParametricType(mapper, List.class, classMeta));
 	}
 
-	public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta, String field) throws IOException,
+	@SuppressWarnings("unchecked")
+        public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta, String field) throws IOException,
 			JSONException
 	{
 		ObjectMapper mapper = new ObjectMapper();
@@ -174,12 +175,14 @@ public class JSONUtil
 				bbFactory.setFilterId(EXCLUDE_FILTER);
 				mapper.setSerializerFactory(bbFactory);
 				mapper.writeValue(generator, object);
-				return os.toString();
+				return ((ByteArrayOutputStream) os).toString("UTF-8");
+
 			}
 			else {
 				writer = mapper.writer();
 				writer.writeValue(os, object);
-				return os.toString();
+				return ((ByteArrayOutputStream) os).toString("UTF-8");
+
 			}
 		}
 		catch (Exception e) {
