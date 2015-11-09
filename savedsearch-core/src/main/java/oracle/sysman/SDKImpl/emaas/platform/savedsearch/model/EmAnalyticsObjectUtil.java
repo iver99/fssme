@@ -56,7 +56,8 @@ class EmAnalyticsObjectUtil
 		try {
 			EmAnalyticsFolder folderObj = folder;
 			String parentFolder = "parentFolder";
-			List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
+			@SuppressWarnings("unchecked")
+                        List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 
 			if (folderList.size() > 0) {

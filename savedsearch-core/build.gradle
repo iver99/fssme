@@ -19,6 +19,9 @@ apply plugin: 'artifactory-publish'
 									 REPO_BID - you will find we do NOT set version to these artifacts, this is intentional 
 									 this allows build jobs to set version & resolve later
 */
+ tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
 publishing.publications {
     integTest(MavenPublication) {
 			setArtifactId(project.name + '-' + integTestJar.appendix)

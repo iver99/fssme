@@ -100,7 +100,8 @@ public class JSONUtil
 		return (List<T>) JSONUtil.fromJson(mapper, jsonString, JSONUtil.constructParametricType(mapper, List.class, classMeta));
 	}
 
-	public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta, String field) throws IOException,
+	@SuppressWarnings("unchecked")
+        public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta, String field) throws IOException,
 			JSONException
 	{
 		ObjectMapper mapper = new ObjectMapper();
