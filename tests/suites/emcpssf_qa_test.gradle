@@ -73,15 +73,10 @@ dependencies {
 	}
 }
 
-task UndeploySSFAPI(type:Exec) {
-
-        commandLine 'gradle', '-p', getGitRoot()+'/savedsearch-ear/', 'appServerUndeploy'
 
 
-}
 
-
-task DeploySSFAPI(type:Exec,dependsOn: UndeploySSFAPI) {
+task DeploySSFAPI(type:Exec) {
 
         commandLine 'gradle', '-p', getGitRoot()+'/savedsearch-ear/', 'appServerDeploy'
         }
