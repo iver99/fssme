@@ -12,6 +12,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.folder.FolderAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportCategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportFolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportSearchSet;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.loggingconfig.LoggingConfigAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search.FilterSearchAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search.SearchAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget.WidgetAPI;
@@ -34,6 +35,7 @@ public class SavedSearchApplication extends Application
 		s.add(ImportSearchSet.class);
 		s.add(WidgetAPI.class);
 		s.add(WidgetGroupAPI.class);
+		s.add(LoggingConfigAPI.class);
 
 		return s;
 	}

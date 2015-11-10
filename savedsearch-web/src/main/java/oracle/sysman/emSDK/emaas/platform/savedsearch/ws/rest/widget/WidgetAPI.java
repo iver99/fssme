@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
@@ -96,6 +97,7 @@ public class WidgetAPI
 	public Response getAllWidgets(@Context UriInfo uri, @HeaderParam(value = "OAM_REMOTE_USER") String userTenant,
 			@QueryParam("widgetGroupId") String widgetGroupId)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/widgets");
 		String message = null;
 		int statusCode = 200;
 

@@ -66,7 +66,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		if (!isDBAvailable) {
 			rsm.makeServiceOutOfService();
 			GlobalStatus.setSavedSearchDownStatus();
-			logger.info("Saved search service is out of service because database is unavailable");
+			logger.error("Saved search service is out of service because database is unavailable");
 		}
 		else {
 			try {

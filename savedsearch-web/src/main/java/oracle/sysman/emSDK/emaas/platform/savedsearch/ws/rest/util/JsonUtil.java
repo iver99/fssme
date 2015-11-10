@@ -61,4 +61,17 @@ public class JsonUtil
 	{
 		return str == null || "".equals(str.toString());
 	}
+
+	/**
+	 * if object is null , return null if object is null collection, return "[]"
+	 */
+	public String toJson(Object object)
+	{
+		try {
+			return mapper.writeValueAsString(object);
+		}
+		catch (IOException e) {
+			return null;
+		}
+	}
 }
