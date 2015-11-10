@@ -252,7 +252,8 @@ public class SearchManagerImpl extends SearchManager
 			List<Search> rtnobj = new ArrayList<Search>();
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//			EmAnalyticsCategory category = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
-			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByCategory")
+			@SuppressWarnings("unchecked")
+                        List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByCategory")
 					.setParameter("categoryId", categoryId)
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
@@ -286,7 +287,8 @@ public class SearchManagerImpl extends SearchManager
 			List<Search> rtnobj = new ArrayList<Search>();
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
-			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByFolder")
+			@SuppressWarnings("unchecked")
+                        List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByFolder")
 					.setParameter("folderId", folderId)
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
@@ -312,6 +314,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
+        @SuppressWarnings("unchecked")
 	public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
 	{
 
@@ -321,7 +324,7 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			StringBuilder query = new StringBuilder(LASTACCESS_ORDERBY);
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			searchList = em.createQuery(query.toString())
+                        searchList = em.createQuery(query.toString())
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 					.setMaxResults(count).getResultList();
 
@@ -350,12 +353,13 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
+        @SuppressWarnings("unchecked")
 	public List<Search> getSystemSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		try {
 			List<Search> rtnobj = new ArrayList<Search>();
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+                        em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//			EmAnalyticsCategory category = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSystemSearchListByCategory")
 					.setParameter("categoryId", categoryId).getResultList();
@@ -384,12 +388,13 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
+        @SuppressWarnings("unchecked")
 	public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		try {
 			List<Search> rtnobj = new ArrayList<Search>();
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+                        em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getWidgetListByCategory")
 					.setParameter("categoryId", categoryId)
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
