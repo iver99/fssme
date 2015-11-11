@@ -77,10 +77,11 @@ public class TenantSubscriptionUtil
 	private static String SERVICE_PROVIDER_NAME_ITA = "EmcitasApplications";
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
 	private static String SERVICE_PROVIDER_NAME_LA = "LoganService";
-	private static final String PARAM_NAME_HIDDEN_IN_WIDGET_SELECTOR = "HIDDEN_IN_WIDGET_SELECTOR";
+	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
-	public static List<Category> getTenantSubscribedCategories(String tenant) throws EMAnalyticsFwkException
-	{
+	public static List<Category> getTenantSubscribedCategories(String tenant, boolean includeDashboardIneligible)
+			throws EMAnalyticsFwkException
+			{
 		List<Category> resultList = new ArrayList<Category>();
 		if (tenant == null) {
 			return resultList;
@@ -99,7 +100,7 @@ public class TenantSubscriptionUtil
 					//EMCPDF-997 If a widget group has special parameter HIDDEN_IN_WIDGET_SELECTOR=true,
 					//we do NOT show all widgets of this group inside widget selector
 					if (subscribedServices.contains(providerToServiceMap.get(cat.getProviderName()))
-							&& !TenantSubscriptionUtil.isCategoryHiddenInWidgetSelector(cat)) {
+							&& !TenantSubscriptionUtil.isCategoryHiddenInWidgetSelector(cat, includeDashboardIneligible)) {
 						resultList.add(cat);
 					}
 				}
@@ -107,7 +108,7 @@ public class TenantSubscriptionUtil
 		}
 
 		return resultList;
-	}
+			}
 
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
@@ -197,18 +198,21 @@ public class TenantSubscriptionUtil
 		}
 	}
 
-	private static boolean isCategoryHiddenInWidgetSelector(Category category)
+	private static boolean isCategoryHiddenInWidgetSelector(Category category, boolean includeDashboardIneligible)
 	{
 		boolean hiddenInWidgetSelector = false;
-		List<Parameter> params = category.getParameters();
-		if (params != null && params.size() > 0) {
-			for (Parameter param : params) {
-				if (PARAM_NAME_HIDDEN_IN_WIDGET_SELECTOR.equals(param.getName()) && "1".equals(param.getValue())) {
-					hiddenInWidgetSelector = true;
-					break;
+		if (!includeDashboardIneligible) {
+			List<Parameter> params = category.getParameters();
+			if (params != null && params.size() > 0) {
+				for (Parameter param : params) {
+					if (PARAM_NAME_DASHBOARD_INELIGIBLE.equals(param.getName()) && "1".equals(param.getValue())) {
+						hiddenInWidgetSelector = true;
+						break;
+					}
 				}
 			}
 		}
+
 		return hiddenInWidgetSelector;
 	}
 }

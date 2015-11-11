@@ -37,7 +37,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class WidgetAPI
 {
 	private static final Logger _logger = LogManager.getLogger(WidgetAPI.class);
-	private static final String PARAM_NAME_HIDDEN_IN_WIDGET_SELECTOR = "HIDDEN_IN_WIDGET_SELECTOR";
+	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
 	@Context
 	UriInfo uri;
@@ -51,6 +51,10 @@ public class WidgetAPI
 	 * Id&gt;</font><br>
 	 * The string "widgets?widgetGroupId=&lt;widget group Id&gt;" in the URL signifies read operation on widgets with given widget
 	 * group Id.<br>
+	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port
+	 * number&gt;/savedsearch/v1/widgets?includeDashboardIneligible=&lt;true or false&gt;</font><br>
+	 * The string "widgets?includeDashboardIneligible=&lt;true or false&gt;" in the URL signifies read operation on widgets,
+	 * includeDashboardIneligible specifies whether to return Dashboard Ineligible widgets or not.<br>
 	 *
 	 * @since 0.1
 	 * @return List of widgets<br>
@@ -97,44 +101,43 @@ public class WidgetAPI
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllWidgets(@Context UriInfo uri, @HeaderParam(value = "OAM_REMOTE_USER") String userTenant,
-			@QueryParam("widgetGroupId") String widgetGroupId)
+			@QueryParam("widgetGroupId") String widgetGroupId,
+			@QueryParam("includeDashboardIneligible") boolean includeDashboardIneligible)
 	{
 		String message = null;
 		int statusCode = 200;
 
 		try {
 			String query = uri.getRequestUri().getQuery();
-			int groupId = 0;
+			int groupId = widgetGroupId != null ? Integer.parseInt(widgetGroupId) : 0;
+			if (groupId < 0) {
+				throw new NumberFormatException();
+			}
+
 			if (query != null) {
-				String key = null;
-				String value = null;
 				String[] param = query.split("&");
-				if (param.length > 0) {
-					String firstParam = param[0];
-					String[] input = firstParam.split("=");
-					key = input[0];
-					if (!key.equals("widgetGroupId")) {
-						return Response.status(400).entity("Please give one and only one query parameter of widgetGroupId")
-								.build();
+				Response resp = null;
+				if (param.length >= 2) {
+					resp = checkQueryParam(param[0]);
+					if (resp != null) {
+						return resp;
 					}
-					else if (input.length >= 2) {
-						value = input[1];
-						if (value != null) {
-							groupId = Integer.parseInt(value);
-							if (groupId < 0) {
-								throw new NumberFormatException();
-							}
-						}
+					resp = checkQueryParam(param[1]);
+					if (resp != null) {
+						return resp;
 					}
-					else {
-						return Response.status(400).entity("Please give the value for " + input[0]).build();
+				}
+				else if (param.length > 0) {
+					resp = checkQueryParam(param[0]);
+					if (resp != null) {
+						return resp;
 					}
 				}
 			}
 
 			JSONArray jsonArray = new JSONArray();
-			List<Category> subscribedCatList = TenantSubscriptionUtil.getTenantSubscribedCategories(userTenant.substring(0,
-					userTenant.indexOf(".")));
+			List<Category> subscribedCatList = TenantSubscriptionUtil.getTenantSubscribedCategories(
+					userTenant.substring(0, userTenant.indexOf(".")), includeDashboardIneligible);
 			List<Category> catList = new ArrayList<Category>();
 			if (widgetGroupId != null) {
 				for (int i = 0; i < subscribedCatList.size(); i++) {
@@ -153,7 +156,7 @@ public class WidgetAPI
 				List<Search> searchList = new ArrayList<Search>();
 				searchList = searchMan.getWidgetListByCategoryId(category.getId().longValue());
 				for (Search search : searchList) {
-					if (!isWidgetHiddenInWidgetSelector(search)) {
+					if (!isWidgetHiddenInWidgetSelector(search, includeDashboardIneligible)) {
 						JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), search, category);
 						if (jsonWidget != null) {
 							jsonArray.put(jsonWidget);
@@ -245,15 +248,50 @@ public class WidgetAPI
 		return Response.status(statusCode).entity(message).build();
 	}
 
-	private boolean isWidgetHiddenInWidgetSelector(Search search)
+	private Response checkQueryParam(String param) throws NumberFormatException
+	{
+		final String PARAM_WIDGET_GROUP_ID = "widgetGroupId";
+		final String PARAM_INCLUDE_DSB_INELIGIBLE = "includeDashboardIneligible";
+		final String ERROR_MSG_INVALID_PARAM = "Please give query parameter by one of " + PARAM_WIDGET_GROUP_ID + ", "
+				+ PARAM_INCLUDE_DSB_INELIGIBLE;
+		String[] input = param.split("=");
+		String key = input[0];
+		if (!key.equals(PARAM_WIDGET_GROUP_ID) && !key.equals(PARAM_INCLUDE_DSB_INELIGIBLE)) {
+			return Response.status(400).entity(ERROR_MSG_INVALID_PARAM).build();
+		}
+		else {
+			if (input.length >= 2) {
+				String value = input[1];
+				if (value != null && PARAM_WIDGET_GROUP_ID.equals(key)) {
+					int groupId = Integer.parseInt(value);
+					if (groupId < 0) {
+						throw new NumberFormatException();
+					}
+				}
+				else if (value != null && PARAM_INCLUDE_DSB_INELIGIBLE.equals(key)) {
+					if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
+						return Response.status(400).entity("Please specify " + key + " true or false").build();
+					}
+				}
+			}
+			else {
+				return Response.status(400).entity("Please give the value for " + key).build();
+			}
+		}
+		return null;
+	}
+
+	private boolean isWidgetHiddenInWidgetSelector(Search search, boolean includeDashboardIneligible)
 	{
 		boolean hiddenInWidgetSelector = false;
-		List<SearchParameter> params = search.getParameters();
-		if (params != null && params.size() > 0) {
-			for (SearchParameter param : params) {
-				if (PARAM_NAME_HIDDEN_IN_WIDGET_SELECTOR.equals(param.getName()) && "1".equals(param.getValue())) {
-					hiddenInWidgetSelector = true;
-					break;
+		if (!includeDashboardIneligible) {
+			List<SearchParameter> params = search.getParameters();
+			if (params != null && params.size() > 0) {
+				for (SearchParameter param : params) {
+					if (PARAM_NAME_DASHBOARD_INELIGIBLE.equals(param.getName()) && "1".equals(param.getValue())) {
+						hiddenInWidgetSelector = true;
+						break;
+					}
 				}
 			}
 		}
