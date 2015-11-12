@@ -81,7 +81,7 @@ public class TenantSubscriptionUtil
 
 	public static List<Category> getTenantSubscribedCategories(String tenant, boolean includeDashboardIneligible)
 			throws EMAnalyticsFwkException
-			{
+	{
 		List<Category> resultList = new ArrayList<Category>();
 		if (tenant == null) {
 			return resultList;
@@ -97,7 +97,7 @@ public class TenantSubscriptionUtil
 				providerToServiceMap.put(SERVICE_PROVIDER_NAME_ITA, SUBSCRIBED_SERVICE_NAME_ITA);
 				providerToServiceMap.put(SERVICE_PROVIDER_NAME_APM, SUBSCRIBED_SERVICE_NAME_APM);
 				for (Category cat : catList) {
-					//EMCPDF-997 If a widget group has special parameter HIDDEN_IN_WIDGET_SELECTOR=true,
+					//EMCPDF-997 If a widget group has special parameter DASHBOARD_INELIGIBLE=true,
 					//we do NOT show all widgets of this group inside widget selector
 					if (subscribedServices.contains(providerToServiceMap.get(cat.getProviderName()))
 							&& !TenantSubscriptionUtil.isCategoryHiddenInWidgetSelector(cat, includeDashboardIneligible)) {
@@ -108,7 +108,7 @@ public class TenantSubscriptionUtil
 		}
 
 		return resultList;
-			}
+	}
 
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
