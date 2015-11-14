@@ -133,6 +133,7 @@ public class EntityJsonUtilTest extends BaseTest
 		SearchParameter wp4 = new SearchParameter();
 		SearchParameter wp5 = new SearchParameter();
 		SearchParameter wp6 = new SearchParameter();
+		SearchParameter wp7 = new SearchParameter();
 		wp1.setName("WIDGET_VIEWMODEL");
 		wp1.setType(ParameterType.STRING);
 		wp1.setValue("dependencies/widgets/iFrame/js/widget-iframe");
@@ -151,12 +152,16 @@ public class EntityJsonUtilTest extends BaseTest
 		wp6.setName("PROVIDER_ASSET_ROOT");
 		wp6.setType(ParameterType.STRING);
 		wp6.setValue("home");
+		wp7.setName("WIDGET_VISUAL");
+		wp7.setType(ParameterType.CLOB);
+		wp7.setValue("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAYKklEQVR4AdxSBRIDIQy8");
 		widgetParams.add(wp1);
 		widgetParams.add(wp2);
 		widgetParams.add(wp3);
 		widgetParams.add(wp4);
 		widgetParams.add(wp5);
 		widgetParams.add(wp6);
+		widgetParams.add(wp7);
 
 		widget.setParameters(widgetParams);
 	}
@@ -462,6 +467,7 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING14 = "\"PROVIDER_VERSION\":\"Provider version for UT\"";
 		final String VERIFY_STRING15 = "\"PROVIDER_NAME\":\"Provider name for UT\"";
 		final String VERIFY_STRING16 = "\"PROVIDER_ASSET_ROOT\":\"Provider asset root for UT\"";
+		final String VERIFY_STRING17 = "\"WIDGET_VISUAL\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAYKklEQVR4AdxSBRIDIQy8\"";
 
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
@@ -477,6 +483,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(VERIFY_STRING17), VERIFY_STRING17 + " is found NOT as expected");
 
 		widget.getParameters().remove(5);
 		widget.getParameters().remove(4);
@@ -490,5 +497,22 @@ public class EntityJsonUtilTest extends BaseTest
 		widget.getParameters().remove(2);
 		widgetObj = EntityJsonUtil.getWidgetJsonObj(uri, widget, category);
 		Assert.assertNull(widgetObj);
+	}
+	
+	@Test
+	public void testGetWidgetScreenshotObj() throws EMAnalyticsFwkException
+	{
+		JSONObject widgetScreenshotObj = EntityJsonUtil
+				.getWidgetScreenshotJsonObj("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACM...");
+		String output = widgetScreenshotObj.toString();
+
+		final String VERIFY_STRING1 = "\"screenShot\":\"data:image\\/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACM...\"";
+
+		Assert.assertNotNull(output);
+		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
+
+		widgetScreenshotObj = EntityJsonUtil.getWidgetScreenshotJsonObj(null);
+		output = widgetScreenshotObj.toString();
+		Assert.assertEquals(output, "{}");
 	}
 }
