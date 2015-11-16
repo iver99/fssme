@@ -25,4 +25,25 @@ public class StringUtil
 		}
 		return false;
 	}
+
+	public static boolean isSpecialCharFound(String value)
+	{
+
+		boolean specialCharFound = false;
+		if (value == null || value.trim().equalsIgnoreCase("")) {
+			return specialCharFound;
+		}
+		int sLen = value.length();
+		for (int i = 0; i < sLen && !specialCharFound; i++) {
+			char c = value.charAt(i);
+			switch (c) {
+				case '<':
+				case '>':
+					specialCharFound = true;
+			}
+		}
+
+		return specialCharFound;
+	}
+
 }

@@ -8,13 +8,14 @@ Rem    NAME
 Rem      emaas_savesearch_seed_data.sql 
 Rem
 Rem    DESCRIPTION
-Rem      EM Analytics framework seed data sql file
+Rem      Seed data for category and default folder
 Rem
 Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
 Rem    GUOCHEN     10/29/15 - Introduce WIDGET_SUPPORT_TIME_CONTROL for widgets
+Rem    miayu       10/28/15 - update category name from "Target Analytics" to "Data Explorer - Search"
 Rem
 
 DEFINE TENANT_ID ='&1'
@@ -50,11 +51,33 @@ BEGIN
     COMMIT;
     DBMS_OUTPUT.PUT_LINE('Update WIDGET_SUPPORT_TIME_CONTROL in Schema object: EMS_ANALYTICS_SEARCH_PARAMS successfully for tenant: &TENANT_ID');  
   END IF;
+
+EXCEPTION
+WHEN OTHERS THEN
+  ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('Failed to update EMS_ANALYTICS_SEARCH_PARAMS.WIDGET_SUPPORT_TIME_CONTROL for tenant &TENANT_ID due to '||SQLERRM);
+  RAISE;
+END;
+/
+
+
+DECLARE 
+  V_CATEGORY_NAME  EMS_ANALYTICS_CATEGORY.NAME%TYPE;
+BEGIN
+
+  SELECT NAME INTO V_CATEGORY_NAME FROM EMS_ANALYTICS_CATEGORY WHERE CATEGORY_ID=2 and TENANT_ID='&TENANT_ID';
+  IF (V_CATEGORY_NAME='Target Analytics') THEN
+    Update EMS_ANALYTICS_CATEGORY set NAME='Data Explorer - Search' where CATEGORY_ID=2 and TENANT_ID='&TENANT_ID';
+    commit;
+    DBMS_OUTPUT.PUT_LINE('Category name: [Target Analytics] has been changed to [Data Explorer - Search] successfully');  
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Category name: [Target Analytics] has been changed to [Data Explorer - Search]  before, no need to update again');  
+  END IF;
   
 EXCEPTION
 WHEN OTHERS THEN
   ROLLBACK;
-  DBMS_OUTPUT.PUT_LINE('Failed to update EMS_ANALYTICS_SEARCH_PARAMS.WIDGET_SUPPORT_TIME_CONTROL for tenant &TENANT_ID due to '||SQLERRM);   
+  DBMS_OUTPUT.PUT_LINE('Failed to update Category name: [Target Analytics] to [Data Explorer - Search] due to '||SQLERRM);   
   RAISE;  
 END;
 /

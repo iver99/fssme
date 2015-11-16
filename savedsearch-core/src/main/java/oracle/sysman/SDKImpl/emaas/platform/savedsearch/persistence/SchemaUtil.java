@@ -392,7 +392,7 @@ public class SchemaUtil
 			logger.error("an error occureed while getting schema name", e);
 			return null;
 		}
-		List<String> urls = new ArrayList();
+		List<String> urls = new ArrayList<String>();
 		urls.addAll(urlSet);
 		return urls;
 	}

@@ -1,4 +1,7 @@
 Rem
 Rem    DDL change during upgrade
 Rem    MODIFIED   (MM/DD/YY)
-Rem    GUOCHEN     10/29/2015 - created
+Rem    MIAYU       10/28/2015 - created, place holder now
+Rem
+Rem
+

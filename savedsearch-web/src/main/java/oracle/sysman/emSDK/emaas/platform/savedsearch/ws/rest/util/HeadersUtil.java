@@ -65,7 +65,7 @@ public class HeadersUtil
 		}
 		if (isTestEnv) {
 			try {
-				internalId = Long.parseLong(header);
+				internalId = Long.parseLong(header.substring(0, header.indexOf(".")));
 			}
 			catch (NumberFormatException e) {
 				internalId = null;

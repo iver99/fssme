@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
      <lrg-metadata>
-     <lrg name="emcpssf_qa_test_3n" launcher="tests/suites/emcpssf_qa_test_3n.gradle" description="lrg for QATest">
+     <lrg name="emcpssf_qa_test" launcher="tests/suites/emcpssf_qa_test.gradle" description="lrg for QATest">
          <pipelines>
             <pipeline name="COMPONENT"/>
          </pipelines>
@@ -11,7 +11,7 @@
          </pipelines>
      </lrg>
 
-     <lrg name="emcpssf_dev_test_3n" launcher="tests/suites/emcpssf_dev_test_3n.gradle" description="lrg for DEVTest">
+     <lrg name="emcpssf_dev_test" launcher="tests/suites/emcpssf_dev_test.gradle" description="lrg for DEVTest">
              <pipelines>
             <pipeline name="COMPONENT"/>
              </pipelines>

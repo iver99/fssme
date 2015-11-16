@@ -109,6 +109,7 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_PROVIDER_NAME = "PROVIDER_NAME";
 	public static final String NAME_WIDGET_PROVIDER_VERSION = "PROVIDER_VERSION";
 	public static final String NAME_WIDGET_PROVIDER_ASSET_ROOT = "PROVIDER_ASSET_ROOT";
+	public static final String NAME_WIDGET_SCREENSHOT = "screenShot";
 
 	/**
 	 * Return full JSON string for category
@@ -206,7 +207,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-			EMAnalyticsFwkException
+	EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
@@ -350,9 +351,6 @@ public class EntityJsonUtil
 					if (NAME_WIDGET_ICON.equals(param.getName())) {
 						widgetObj.put(NAME_WIDGET_ICON, param.getValue());
 					}
-					else if (NAME_WIDGET_VISUAL.equals(param.getName())) {
-						widgetObj.put(NAME_WIDGET_VISUAL, param.getValue());
-					}
 					else if (NAME_WIDGET_KOC_NAME.equals(param.getName())) {
 						widgetObj.put(NAME_WIDGET_KOC_NAME, param.getValue());
 					}
@@ -406,6 +404,26 @@ public class EntityJsonUtil
 					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
 		}
 		return null;
+	}
+
+	/**
+	 * Return simple JSON string for widget screen shot
+	 *
+	 * @param widgetScreenshot
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
+	{
+		JSONObject widgetScreenshotObj = new JSONObject();
+		try {
+			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
+		}
+		catch (JSONException ex) {
+			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
+					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
+		}
+		return widgetScreenshotObj;
 	}
 
 	private static JSONObject getCategoryJsonObj(URI baseUri, Category category, String[] excludedFields, boolean isSimple)
