@@ -5,6 +5,11 @@
             <pipeline name="COMPONENT"/>
          </pipelines>
      </lrg>
+<lrg name="emcpssf_qa_test_3n" launcher="tests/suites/emcpssf_qa_test_3n.gradle" description="product lrg for QATest">
+         <pipelines>
+            <pipeline name="PRODUCT"/>
+         </pipelines>
+     </lrg>
      <lrg name="emcpssf_web_unit_test" launcher="tests/suites/emcpssf_web_unit_test.gradle" description="lrg for QAUnitTest">
          <pipelines>
             <pipeline name="COMPONENT"/>
@@ -14,6 +19,11 @@
      <lrg name="emcpssf_dev_test" launcher="tests/suites/emcpssf_dev_test.gradle" description="lrg for DEVTest">
              <pipelines>
             <pipeline name="COMPONENT"/>
+             </pipelines>
+     </lrg>
+<lrg name="emcpssf_dev_test_3n" launcher="tests/suites/emcpssf_dev_test_3n.gradle" description="product lrg for DEVTest">
+             <pipelines>
+            <pipeline name="PRODUCT"/>
              </pipelines>
      </lrg>
 
