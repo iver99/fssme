@@ -218,7 +218,6 @@ public class SearchesCRUD
 		TENANT_ID_OPC1 = ct.getTenant();
 		try {
 
-			SearchesCRUD.SearchUtfTest();
 			SearchesCRUD.createinitObject();
 		}
 		catch (Exception e) {
@@ -227,7 +226,7 @@ public class SearchesCRUD
 	}
 
 	@Test
-	/**
+	/**-
 	 * Test to verify the flattened folder path details for a search
 	 */
 	public void flattenedFolderPath()
@@ -235,7 +234,7 @@ public class SearchesCRUD
 		try {
 			System.out.println("------------------------------------------");
 			System.out.println("Create a folder and a serch in it to see the hierarchy of folder path");
-			// int position = -1;			
+			// int position = 1;			
 			System.out.println("Creating a Folder");
 			String jsonString = "{ \"name\":\"Folder_cont5\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
@@ -628,7 +627,9 @@ public class SearchesCRUD
 			System.out.println("											");
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
-			Assert.assertEquals(res2.asString(), "Search name Custom_Search already exist");
+			Assert.assertEquals(res2.jsonPath().getString("message"), "Search name 'Custom_Search' already exist");
+			Assert.assertEquals(jp1.getInt("id"), res2.jsonPath().getInt("id"));
+			Assert.assertEquals(res1.jsonPath().getInt("errorCode"), 20021);
 			System.out.println("    ");
 			System.out.println("GET operation is in-progress to assert the successful search creation");
 			System.out.println("											");

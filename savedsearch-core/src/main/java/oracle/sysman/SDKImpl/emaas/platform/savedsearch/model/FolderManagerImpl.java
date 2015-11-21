@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
@@ -262,6 +263,7 @@ public class FolderManagerImpl extends FolderManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
+			processUniqueConstraints(folder, em, dmlce);
 			EmAnalyticsProcessingException.processFolderPersistantException(dmlce, -1, -1, folder.getName());
 			_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
@@ -441,6 +443,7 @@ public class FolderManagerImpl extends FolderManager
 		}
 		catch (PersistenceException dmlce) {
 			_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
+			processUniqueConstraints(folder, em, dmlce);
 			EmAnalyticsProcessingException.processFolderPersistantException(dmlce, -1, folder.getParentId(), folder.getName());
 			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null, dmlce);
@@ -580,6 +583,27 @@ public class FolderManagerImpl extends FolderManager
 		//
 		//        sb.append("]");
 		//        return sb.toString();
+
+	}
+
+	private void processUniqueConstraints(Folder folder, EntityManager em, PersistenceException dmlce)
+			throws EMAnalyticsFwkException
+	{
+
+		if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01")) {
+			EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
+			String parentFolder = "parentFolder";
+			EmAnalyticsFolder folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getSubFolderByName")
+					.setParameter(parentFolder, parentFolderObj).setParameter("foldername", folder.getName())
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
+
+			String result = EntityJsonUtil.getErrorJsonObject(folderObj.getFolderId(),
+					"The folder name '" + folderObj.getName() + "' already exist", EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME)
+					.toString();
+
+			throw new EMAnalyticsFwkException(result, EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME,
+					new Object[] { folderObj.getName() });
+		}
 
 	}
 

@@ -24,7 +24,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Create JSON string for each entity (search/folder/category) and return to user
- *
+ * 
  * @author miayu
  */
 public class EntityJsonUtil
@@ -108,10 +108,30 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_PROVIDER_VERSION = "PROVIDER_VERSION";
 	public static final String NAME_WIDGET_PROVIDER_ASSET_ROOT = "PROVIDER_ASSET_ROOT";
 	public static final String NAME_WIDGET_SCREENSHOT = "screenShot";
+	public static final String ERROR_MESSAGE = "message";
+	public static final String ERROR_CODE = "errorCode";
+
+	public static JSONObject getErrorJsonObject(long id, String message, long errorcode) throws EMAnalyticsFwkException
+	{
+		JSONObject errorObj = new JSONObject();
+		try {
+			errorObj.put(NAME_ID, id);
+			errorObj.put(ERROR_MESSAGE, message);
+			errorObj.put(ERROR_CODE, errorcode);
+
+		}
+		catch (JSONException e) {
+			throw new EMAnalyticsFwkException("Error converting to JSON string",
+					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, e);
+
+		}
+		return errorObj;
+
+	}
 
 	/**
 	 * Return full JSON string for category
-	 *
+	 * 
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -125,7 +145,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for folder
-	 *
+	 * 
 	 * @param baseUri
 	 * @param folder
 	 * @return
@@ -139,7 +159,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for search
-	 *
+	 * 
 	 * @param baseUri
 	 * @param jsonObj
 	 * @return
@@ -153,7 +173,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for search
-	 *
+	 * 
 	 * @param baseUri
 	 * @param jsonObj
 	 * @param folderPathArray
@@ -171,7 +191,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for search
-	 *
+	 * 
 	 * @param baseUri
 	 * @param jsonObj
 	 * @param folderPathArray
@@ -197,7 +217,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for category (without default folder and parameters)
-	 *
+	 * 
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -205,7 +225,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-	EMAnalyticsFwkException
+			EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
@@ -213,7 +233,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for folder without folder=type
-	 *
+	 * 
 	 * @param baseUri
 	 * @param folder
 	 * @return
@@ -227,7 +247,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for folder with or without type=folder
-	 *
+	 * 
 	 * @param baseUri
 	 * @param folder
 	 * @param includeType
@@ -244,7 +264,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 *
+	 * 
 	 * @param uri
 	 * @param jsonObj
 	 * @return
@@ -258,7 +278,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 *
+	 * 
 	 * @param uri
 	 * @param jsonObj
 	 * @param includeType
@@ -274,7 +294,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 *
+	 * 
 	 * @param baseUri
 	 * @param search
 	 * @param folderPathArray
@@ -293,7 +313,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for widget group
-	 *
+	 * 
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -321,7 +341,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for widget
-	 *
+	 * 
 	 * @param baseUri
 	 * @param search
 	 * @param category
@@ -396,7 +416,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for widget screen shot
-	 *
+	 * 
 	 * @param widgetScreenshot
 	 * @return
 	 * @throws JSONException
@@ -484,7 +504,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string of search according to customization
-	 *
+	 * 
 	 * @param uri
 	 * @param jsonObj
 	 * @param excludedFields
