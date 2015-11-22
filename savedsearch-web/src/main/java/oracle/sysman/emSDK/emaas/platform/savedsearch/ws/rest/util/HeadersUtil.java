@@ -53,9 +53,6 @@ public class HeadersUtil
 
 	private static Long getInternalTenantId(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
-		if (true) {
-			return 1l;
-		}
 		String header = request.getHeader(OAM_HEADER);
 		Long internalId = null;
 		String testHeader = request.getHeader(SSF_HEADER);
