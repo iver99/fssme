@@ -13,6 +13,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -20,11 +21,11 @@ import java.util.TimeZone;
  */
 public class DateUtil
 {
-	private static final SimpleDateFormat DATE_FORMATTER_ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+	private static final SimpleDateFormat DATE_FORMATTER_ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 
 	/**
 	 * Convert local time to UTC time and return
-	 *
+	 * 
 	 * @return
 	 */
 	public static Date getCurrentUTCTime()
@@ -38,7 +39,7 @@ public class DateUtil
 
 	/**
 	 * Get ISO8601 standard date formatter like 2014-10-21T06:11:20.334Z
-	 *
+	 * 
 	 * @return
 	 */
 	public static SimpleDateFormat getDateFormatter()
@@ -48,7 +49,7 @@ public class DateUtil
 
 	/**
 	 * Caution: Once this is set, it will cause impact globally, now this is used for UT only
-	 *
+	 * 
 	 * @param tz
 	 *            desire time zone which will cause impact to time output
 	 */

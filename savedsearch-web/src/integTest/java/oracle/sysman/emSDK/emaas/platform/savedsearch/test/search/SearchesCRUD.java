@@ -629,7 +629,7 @@ public class SearchesCRUD
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.jsonPath().getString("message"), "Search name 'Custom_Search' already exist");
 			Assert.assertEquals(jp1.getInt("id"), res2.jsonPath().getInt("id"));
-			Assert.assertEquals(res1.jsonPath().getInt("errorCode"), 20021);
+			Assert.assertEquals(res2.jsonPath().getInt("errorCode"), 20021);
 			System.out.println("    ");
 			System.out.println("GET operation is in-progress to assert the successful search creation");
 			System.out.println("											");
