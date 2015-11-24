@@ -20,7 +20,7 @@ allprojects {
 	repositories {  
 		mavenLocal()  
 		maven {  
-			url = "${artifactory_contextUrl}" + '/emaas-virtual'  
+			url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"  
 			credentials {  
 				username = "${artifactory_user}"  
 				password = "${artifactory_password}"  
@@ -146,8 +146,8 @@ compileJava.dependsOn preBuildCompile
 buildscript {  
 	repositories {  
 		mavenLocal()  
-		maven {  
-			url = "${artifactory_contextUrl}" + '/emaas-virtual' 
+		maven { 
+			url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" 
 			credentials {  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  

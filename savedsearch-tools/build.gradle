@@ -90,7 +90,7 @@ repositories {
     /* Looks into local maven repository for artifacts */
     mavenLocal()
     maven {
-        url = "${artifactory_contextUrl}/emaas-virtual"
+        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
     }
 }
 /*publishing {
@@ -111,7 +111,7 @@ repositories {
     }
     repositories {
         maven {
-            url "${artifactory_contextUrl}/emaas-sandbox-local"
+            url "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
             credentials {
                 username = "${artifactory_user}"
                 password =  "${artifactory_password}"
@@ -122,7 +122,7 @@ repositories {
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/emaas-virtual"
+            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
         }
     }
     dependencies {
