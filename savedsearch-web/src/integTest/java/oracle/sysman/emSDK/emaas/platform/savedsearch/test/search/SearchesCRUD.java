@@ -186,7 +186,8 @@ public class SearchesCRUD
 					+ 1
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType("application/json; charset=UTF-8").log().everything()
-					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
+
+			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
 					.post("/search");
 			System.out.println(res1.asString());
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -197,8 +198,11 @@ public class SearchesCRUD
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + jp2.get("id"));
 			Assert.assertTrue(res1.getStatusCode() == 204);
-
-			Assert.assertEquals(str, sName);
+			System.out.println("Equals :  " + str.equalsIgnoreCase(sName));
+			System.out.println("Equals :  " + str.equals(sName));
+			System.out.println("Equals :  " + result.equalsIgnoreCase(sName));
+			System.out.println("Equals :  " + result.equals(sName));
+			Assert.assertEquals(str, result);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
