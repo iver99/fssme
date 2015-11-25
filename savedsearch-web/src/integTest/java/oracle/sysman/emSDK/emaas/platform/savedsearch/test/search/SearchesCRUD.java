@@ -167,7 +167,8 @@ public class SearchesCRUD
 	{
 		try {
 
-			String result = new String("\u7537" + "\u6027" + "\u6027");
+			String result = new String("\u7537" + "\u6027" + "\u6027" + "\u6027" + "\u6027");
+			System.out.println("Result:::::::::::::" + result);
 
 			String sName = "";
 			String description = "abc";
@@ -194,14 +195,17 @@ public class SearchesCRUD
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			JsonPath jp2 = res1.jsonPath();
 			String str = jp2.get("name");
-
-			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + jp2.get("id"));
-			Assert.assertTrue(res1.getStatusCode() == 204);
+			System.out.println("Result:::::::::::::" + str);
+			/*res1 = RestAssured.given().contentType("application/json; charset=UTF-8").log().everything()
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.delete("/search/" + jp2.get("id"));
+			Assert.assertTrue(res1.getStatusCode() == 204);*/
 			System.out.println("Equals :  " + str.equalsIgnoreCase(sName));
 			System.out.println("Equals :  " + str.equals(sName));
 			System.out.println("Equals :  " + result.equalsIgnoreCase(sName));
 			System.out.println("Equals :  " + result.equals(sName));
+			System.out.println("Result:::::::::::::" + str.equals(result));
+			System.out.println("ResultId:::::::::::::" + jp2.get("id"));
 			Assert.assertEquals(str, result);
 		}
 		catch (Exception e) {
@@ -221,7 +225,7 @@ public class SearchesCRUD
 		TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
 		TENANT_ID_OPC1 = ct.getTenant();
 		try {
-
+			SearchesCRUD.SearchUtfTest();
 			SearchesCRUD.createinitObject();
 		}
 		catch (Exception e) {
