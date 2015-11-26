@@ -206,6 +206,10 @@ public class SearchesCRUD
 			System.out.println("Equals :  " + result.equals(sName));
 			System.out.println("Result:::::::::::::" + str.equals(result));
 			System.out.println("ResultId:::::::::::::" + jp2.get("id"));
+			String str1 = new String(jp2.getString("name").getBytes("UTF-8"), "UTF-8");
+			System.out.println("ResultId1:::::::::::::" + str1.equals(result));
+			System.out.println(result);
+			System.out.println(str1);
 			Assert.assertEquals(str, result);
 		}
 		catch (Exception e) {
