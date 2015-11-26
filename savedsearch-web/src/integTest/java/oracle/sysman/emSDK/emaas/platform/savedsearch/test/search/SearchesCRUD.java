@@ -1654,7 +1654,7 @@ public class SearchesCRUD
 	{
 		try {
 
-			String result = new String("\u7537" + "\u6027" + "\u6027" + "\u6027" + "\u6027");
+			String result = new String("\u7537" + "\u6027");
 			System.out.println("Result:::::::::::::" + result);
 
 			String sName = "";
@@ -1681,7 +1681,11 @@ public class SearchesCRUD
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			JsonPath jp2 = res1.jsonPath();
-			String str = jp2.get("name");
+			Response res4_1 = RestAssured.given().contentType("application/json; charset=UTF-8").log().everything()
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.get("/search/" + jp2.get("id"));
+
+			String str = res4_1.jsonPath().get("name");
 			System.out.println("Result:::::::::::::" + str);
 			/*res1 = RestAssured.given().contentType("application/json; charset=UTF-8").log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
