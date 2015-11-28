@@ -11,6 +11,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogDirection;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.HeadersUtil;
@@ -21,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Support across domain access CORS: Cross-Origin Resource Sharing Reference: http://enable-cors.org/ http://www.w3.org/TR/cors/
  * http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
- * 
+ *
  * @author miayu
  */
 public class SavedSearchCORSFilter implements Filter
@@ -37,7 +39,7 @@ public class SavedSearchCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
@@ -71,6 +73,8 @@ public class SavedSearchCORSFilter implements Filter
 			try {
 				TenantInfo info = HeadersUtil.getTenantInfo((HttpServletRequest) request);
 				TenantContext.setContext(info);
+				LogUtil.setInteractionLogThreadContext(info.gettenantName(),
+						((HttpServletRequest) request).getHeader("referer"), InteractionLogDirection.IN);
 				if (isParameterPresent(hReq))
 
 				{

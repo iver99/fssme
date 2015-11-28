@@ -12,6 +12,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
@@ -19,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdPro
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * @author vinjoshi
@@ -84,6 +86,8 @@ public class HeadersUtil
 						null);
 			}
 
+			// EMCSSF-168: opc tenant id is expected in logging messages
+			ThreadContext.put(LogUtil.LOG_PROP_TENANTID, header);
 		}
 
 		return internalId;

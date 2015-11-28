@@ -104,6 +104,8 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_KOC_NAME = "WIDGET_KOC_NAME";
 	public static final String NAME_WIDGET_VIEWMODEL = "WIDGET_VIEWMODEL";
 	public static final String NAME_WIDGET_TEMPLATE = "WIDGET_TEMPLATE";
+	public static final String NAME_WIDGET_SUPPORT_TIME_CONTROL = "WIDGET_SUPPORT_TIME_CONTROL";
+	public static final String NAME_WIDGET_LINKED_DASHBOARD = "WIDGET_LINKED_DASHBOARD";
 	public static final String NAME_WIDGET_PROVIDER_NAME = "PROVIDER_NAME";
 	public static final String NAME_WIDGET_PROVIDER_VERSION = "PROVIDER_VERSION";
 	public static final String NAME_WIDGET_PROVIDER_ASSET_ROOT = "PROVIDER_ASSET_ROOT";
@@ -367,7 +369,17 @@ public class EntityJsonUtil
 					else if (NAME_WIDGET_PROVIDER_ASSET_ROOT.equals(param.getName())) {
 						widgetObj.put(NAME_WIDGET_PROVIDER_ASSET_ROOT, param.getValue());
 					}
+					else if (NAME_WIDGET_SUPPORT_TIME_CONTROL.equals(param.getName())) {
+						widgetObj.put(NAME_WIDGET_SUPPORT_TIME_CONTROL, param.getValue());
+					}
+					else if (NAME_WIDGET_LINKED_DASHBOARD.equals(param.getName())) {
+						widgetObj.put(NAME_WIDGET_LINKED_DASHBOARD, param.getValue());
+					}
 				}
+			}
+			//default value for NAME_WIDGET_SUPPORT_TIME_CTRONOL: default to support
+			if (!widgetObj.has(NAME_WIDGET_SUPPORT_TIME_CONTROL)) {
+				widgetObj.put(NAME_WIDGET_SUPPORT_TIME_CONTROL, "1");
 			}
 			//Get provider info from category if it doesn't exist in search parameters
 			if (!widgetObj.has(NAME_WIDGET_PROVIDER_NAME)) {
