@@ -94,8 +94,9 @@ public class QAToolUtil
 	public static Properties getTenantDetails()
 	{
 		Properties props = new Properties();
-		props.put(TENANT_USER_NAME, Utils.getProperty("TENANT_ID_INTERNAL") + "." + Utils.getProperty("SSO_USERNAME"));
-		props.put(TENANT_NAME, Utils.getProperty("TENANT_ID_INTERNAL"));
+		String TENANT_ID_INTERNAL= "TENANT_ID_INTERNAL_"+Utils.getProperty("TENANT_ID");
+		props.put(TENANT_USER_NAME, Utils.getProperty(TENANT_ID_INTERNAL) + "." + Utils.getProperty("SSO_USERNAME"));
+		props.put(TENANT_NAME, Utils.getProperty(TENANT_ID_INTERNAL));
 		return props;
 	}
 

@@ -15,6 +15,7 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -32,7 +33,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Saved Search Service
- * 
+ *
  * @since 0.1
  */
 @Path("")
@@ -47,7 +48,7 @@ public class SavedSearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/categories</font><br>
 	 * The string "categories" in the URL signifies read operation on category.
-	 * 
+	 *
 	 * @since 0.1
 	 * @return Lists all the existed categories<br>
 	 *         Response Sample:<br>
@@ -89,6 +90,7 @@ public class SavedSearchAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllCategory()
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/categories");
 		String message = null;
 		int statusCode = 200;
 		JSONArray jsonArray = new JSONArray();
@@ -125,7 +127,7 @@ public class SavedSearchAPI
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/entities?folderId=&lt;folder
 	 * Id&gt;</font><br>
 	 * The string "entities?folderId=&lt;folder Id&gt;" in the URL signifies read operation on search with given folder id<br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param id
 	 *            The folder Id by which user wants to get the entity details
@@ -206,6 +208,7 @@ public class SavedSearchAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDetails(@QueryParam("folderId") String id)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/entities?folderId={}", id);
 		String message = null;
 		Long folderId = 0L;
 		/**
@@ -257,7 +260,7 @@ public class SavedSearchAPI
 	 * List all root folders<br>
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1</font><br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @return Lists all the root folders<br>
 	 *         Response Sample:<br>
@@ -298,7 +301,7 @@ public class SavedSearchAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRootFolders()
 	{
-
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1");
 		String message = "";
 		try {
 			message = getFolderDetails(0);

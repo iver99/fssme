@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -29,7 +30,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Find Searches by Category Name/Category Id/ Folder Id
- * 
+ *
  * @since 0.1
  */
 @Path("searches")
@@ -66,7 +67,7 @@ public class FilterSearchAPI
 	 * Note:<br>
 	 * <font color="red">If more than one query parameters are given, only the first one is applied and all the others are
 	 * ignored</font>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param uri
 	 * @param catId
@@ -181,6 +182,9 @@ public class FilterSearchAPI
 			@QueryParam("categoryName") String name, @QueryParam("lastAccessCount") String lastAccessCount,
 			@QueryParam("folderId") String foldId)
 	{
+		LogUtil.getInteractionLogger().info(
+				"Service calling to (GET) /savedsearch/v1/searches?categoryId={}&categoryName={}&lastAccessCount={}&folderId={}",
+				catId, name, lastAccessCount, foldId);
 		final String ERR_MSG = "Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount";
 		CategoryManager catMan = CategoryManager.getInstance();
 		int categId = 0;

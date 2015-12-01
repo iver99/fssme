@@ -10,6 +10,10 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+
+import org.apache.logging.log4j.ThreadContext;
+
 /**
  * @author vinjoshi
  *
@@ -44,6 +48,7 @@ public class TenantContext
 
 		}
 
+		ThreadContext.remove(LogUtil.LOG_PROP_TENANTID);
 	}
 
 	public static TenantInfo getContext()
