@@ -70,7 +70,7 @@ dependencies {
 
 
 
-task DeploySSFAPI(type:Exec) {
+task DeploySSFAPI(type:Exec,dependsOn:cleanUpDB) {
 
         commandLine 'gradle', '-p', getGitRoot()+'/savedsearch-ear/', 'appServerDeploy'
         }
@@ -83,7 +83,7 @@ task PropsCopy(type: Copy,dependsOn: DeploySSFAPI) {
 
 
 
-     task DEVTest(type:EMTest,dependsOn: [PropsCopy,cleanUpDB]){	
+     task DEVTest(type:EMTest,dependsOn:PropsCopy){	
 	sleep( 300000)
 	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/JSONUtilTest.class"
