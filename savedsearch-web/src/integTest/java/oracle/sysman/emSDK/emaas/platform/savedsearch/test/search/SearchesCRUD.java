@@ -113,99 +113,6 @@ public class SearchesCRUD
 
 	}
 
-	/*@Test
-	/**
-	 * Delete system Search
-	 */
-	/*public void systemSearch_delete()
-	{		try {
-			System.out.println("------------------------------------------");
-			System.out.println("This test is to delete a system search");
-			System.out.println("                                      ");
-			int position = -1;
-			int systemsearchId = -1;
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1)
-					.when().get("/searches?categoryId=1");
-			JsonPath jp = res.jsonPath();
-
-			List<Boolean> a = new ArrayList<Boolean>();
-			a = jp.get("systemSearch");
-			List<Integer> b = new ArrayList<Integer>();
-			b = jp.get("id");
-
-			for (int i = 0; i < a.size(); i++) {
-				System.out.println("array" + i + "is " + a.get(i));
-				if (a.get(i).toString().equals("true")) {
-					position = i;
-					System.out.println("Index is:" + position);
-					systemsearchId = b.get(position);
-					break;
-				}
-
-			}
-
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.delete("/search/" + systemsearchId);
-			System.out.println("Status code:" + res1.getStatusCode());
-			System.out.println(res1.asString());
-
-			Assert.assertTrue(res1.getStatusCode() == 500);
-			Assert.assertEquals(res1.asString(), "Search with Id: " + systemsearchId
-					+ " is system search and NOT allowed to delete");
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-
-		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}*/
-	@Test
-	public static void SearchUtfTest()
-	{
-		try {
-
-			String result = new String("\u7537" + "\u6027" + "\u6027");
-
-			String sName = "";
-			String description = "abc";
-			for (int i = 0; i < result.length(); i++) {
-				int cp = Character.codePointAt(result, i);
-				sName += Character.toString((char) cp);
-
-			}
-			System.out.println("------------------------------------------");//
-			String jsonString = "{\"name\":\""
-					+ result
-					+ "\""
-					+ ",\"category\":{\"id\":"
-					+ 1
-					+ "},\"folder\":{\"id\":"
-					+ 1
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
-			Response res1 = RestAssured.given().contentType("application/json; charset=UTF-8").log().everything()
-					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
-					.post("/search");
-			System.out.println(res1.asString());
-			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 201);
-			JsonPath jp2 = res1.jsonPath();
-			String str = jp2.get("name");
-
-			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + jp2.get("id"));
-			Assert.assertTrue(res1.getStatusCode() == 204);
-
-			Assert.assertEquals(str, sName);
-		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
-
-	}
-
 	@BeforeClass
 	public static void setUp()
 	{
@@ -218,7 +125,6 @@ public class SearchesCRUD
 		TENANT_ID_OPC1 = ct.getTenant();
 		try {
 
-			SearchesCRUD.SearchUtfTest();
 			SearchesCRUD.createinitObject();
 		}
 		catch (Exception e) {
@@ -227,7 +133,7 @@ public class SearchesCRUD
 	}
 
 	@Test
-	/**
+	/**-
 	 * Test to verify the flattened folder path details for a search
 	 */
 	public void flattenedFolderPath()
@@ -235,7 +141,7 @@ public class SearchesCRUD
 		try {
 			System.out.println("------------------------------------------");
 			System.out.println("Create a folder and a serch in it to see the hierarchy of folder path");
-			// int position = -1;			
+			// int position = 1;			
 			System.out.println("Creating a Folder");
 			String jsonString = "{ \"name\":\"Folder_cont5\",\"description\":\"Folder for EMAAS searches\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
@@ -628,7 +534,9 @@ public class SearchesCRUD
 			System.out.println("											");
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
-			Assert.assertEquals(res2.asString(), "Search name Custom_Search already exist");
+			Assert.assertEquals(res2.jsonPath().getString("message"), "Search name 'Custom_Search' already exist");
+			Assert.assertEquals(jp1.getInt("id"), res2.jsonPath().getInt("id"));
+			Assert.assertEquals(res2.jsonPath().getInt("errorCode"), 20021);
 			System.out.println("    ");
 			System.out.println("GET operation is in-progress to assert the successful search creation");
 			System.out.println("											");
@@ -1691,6 +1599,115 @@ public class SearchesCRUD
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
+
+	/*@Test
+	/**
+	 * Delete system Search
+	 */
+	/*public void systemSearch_delete()
+	{		try {
+			System.out.println("------------------------------------------");
+			System.out.println("This test is to delete a system search");
+			System.out.println("                                      ");
+			int position = -1;
+			int systemsearchId = -1;
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1)
+					.when().get("/searches?categoryId=1");
+			JsonPath jp = res.jsonPath();
+
+			List<Boolean> a = new ArrayList<Boolean>();
+			a = jp.get("systemSearch");
+			List<Integer> b = new ArrayList<Integer>();
+			b = jp.get("id");
+
+			for (int i = 0; i < a.size(); i++) {
+				System.out.println("array" + i + "is " + a.get(i));
+				if (a.get(i).toString().equals("true")) {
+					position = i;
+					System.out.println("Index is:" + position);
+					systemsearchId = b.get(position);
+					break;
+				}
+
+			}
+
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+					.delete("/search/" + systemsearchId);
+			System.out.println("Status code:" + res1.getStatusCode());
+			System.out.println(res1.asString());
+
+			Assert.assertTrue(res1.getStatusCode() == 500);
+			Assert.assertEquals(res1.asString(), "Search with Id: " + systemsearchId
+					+ " is system search and NOT allowed to delete");
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}*/
+	/*	@Test
+		public void SearchUtfTest()
+		{
+			try {
+
+				String result = new String("\u7537" + "\u6027");
+				System.out.println("Result:::::::::::::" + result);
+
+				String sName = "";
+				String description = "abc";
+				for (int i = 0; i < result.length(); i++) {
+					int cp = Character.codePointAt(result, i);
+					sName += Character.toString((char) cp);
+
+				}
+				System.out.println("------------------------------------------");//
+				String jsonString = "{\"name\":\""
+						+ result
+						+ "\""
+						+ ",\"category\":{\"id\":"
+						+ 1
+						+ "},\"folder\":{\"id\":"
+						+ 1
+						+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+				Response res1 = RestAssured.given().contentType("application/json; charset=UTF-8").log().everything()
+
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
+						.post("/search");
+				System.out.println(res1.asString());
+				System.out.println("Status code is: " + res1.getStatusCode());
+				Assert.assertTrue(res1.getStatusCode() == 201);
+				JsonPath jp2 = res1.jsonPath();
+				Response res4_1 = RestAssured.given().contentType("application/json; charset=UTF-8").log().everything()
+						.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+						.get("/search/" + jp2.get("id"));
+
+				String str = res4_1.jsonPath().get("name");
+				System.out.println("Result:::::::::::::" + str);
+				res1 = RestAssured.given().contentType("application/json; charset=UTF-8").log().everything()
+						.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+						.delete("/search/" + jp2.get("id"));
+				Assert.assertTrue(res1.getStatusCode() == 204);
+				System.out.println("Equals :  " + str.equalsIgnoreCase(sName));
+				System.out.println("Equals :  " + str.equals(sName));
+				System.out.println("Equals :  " + result.equalsIgnoreCase(sName));
+				System.out.println("Equals :  " + result.equals(sName));
+				System.out.println("Result:::::::::::::" + str.equals(result));
+				System.out.println("ResultId:::::::::::::" + jp2.get("id"));
+				String str1 = new String(jp2.getString("name").getBytes("UTF-8"), "UTF-8");
+				System.out.println("ResultId1:::::::::::::" + str1.equals(result));
+				System.out.println(result);
+				System.out.println(str1);
+				Assert.assertEquals(str, result);
+			}
+			catch (Exception e) {
+				Assert.fail(e.getLocalizedMessage());
+			}
+
+		}*/
 
 	@Test
 	/**

@@ -48,11 +48,6 @@ public class EmAnalyticsProcessingException
 			throw new EMAnalyticsFwkException("folder with Id " + folderId + " has category child",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null, ex);
 		}
-		else if (ex.getCause() != null && ex.getCause() != null && ex.getCause().getMessage().contains("ANALYTICS_FOLDERS_U01")) {
-			throw new EMAnalyticsFwkException("Folder with name " + name + " already exist",
-					EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME, new Object[] { name });
-		}
-
 		else if (ex.getCause() != null && ex.getCause().getMessage().contains("ANALYTICS_FOLDERS_FK1")) {
 			throw new EMAnalyticsFwkException("Parent folder with Id " + parentId + " does not exist: ",
 					EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT, null);
@@ -63,10 +58,7 @@ public class EmAnalyticsProcessingException
 	public static void processSearchPersistantException(Exception ex, String name) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsProcessingException.processDataSourceException(ex);
-		if (ex.getCause() != null && ex.getCause().getMessage().contains("ANALYTICS_SEARCH_U01")) {
-			throw new EMAnalyticsFwkException("Search name " + name + " already exist",
-					EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME, new Object[] { name });
-		}
+
 	}
 
 	private static void processDataSourceException(Exception ex) throws EMAnalyticsFwkException

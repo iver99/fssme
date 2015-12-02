@@ -50,7 +50,7 @@ public class SearchManagerImpl extends SearchManager
 
 	/**
 	 * Get SearchManagerImpl singleton instance.
-	 *
+	 * 
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
@@ -148,6 +148,7 @@ public class SearchManagerImpl extends SearchManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
+			processUniqueConstraints(search, em, dmlce);
 			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, null);
 			_logger.error("Persistence Error while updating the search: " + search.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
@@ -253,7 +254,7 @@ public class SearchManagerImpl extends SearchManager
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//			EmAnalyticsCategory category = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			@SuppressWarnings("unchecked")
-                        List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByCategory")
+			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByCategory")
 					.setParameter("categoryId", categoryId)
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
@@ -288,7 +289,7 @@ public class SearchManagerImpl extends SearchManager
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			@SuppressWarnings("unchecked")
-                        List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByFolder")
+			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByFolder")
 					.setParameter("folderId", folderId)
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			for (EmAnalyticsSearch searchObj : searchList) {
@@ -314,7 +315,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-        @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
 	{
 
@@ -324,7 +325,7 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			StringBuilder query = new StringBuilder(LASTACCESS_ORDERBY);
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-                        searchList = em.createQuery(query.toString())
+			searchList = em.createQuery(query.toString())
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 					.setMaxResults(count).getResultList();
 
@@ -353,13 +354,13 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-        @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public List<Search> getSystemSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		try {
 			List<Search> rtnobj = new ArrayList<Search>();
-                        em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//			EmAnalyticsCategory category = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSystemSearchListByCategory")
 					.setParameter("categoryId", categoryId).getResultList();
@@ -388,13 +389,13 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-        @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		try {
 			List<Search> rtnobj = new ArrayList<Search>();
-                        em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getWidgetListByCategory")
 					.setParameter("categoryId", categoryId)
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
@@ -755,6 +756,7 @@ public class SearchManagerImpl extends SearchManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
+			processUniqueConstraints(search, em, dmlce);
 			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, search.getName());
 			_logger.error("Persistence error while saving the search: " + search.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
@@ -1099,6 +1101,23 @@ public class SearchManagerImpl extends SearchManager
 			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId });
 		}
 		return search;
+	}
+
+	private void processUniqueConstraints(Search search, EntityManager em, PersistenceException dmlce)
+			throws EMAnalyticsFwkException
+	{
+
+		if (dmlce.getCause() != null && dmlce.getCause().getMessage().contains("ANALYTICS_SEARCH_U01")) {
+			EmAnalyticsSearch searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
+					.setParameter("folderId", search.getFolderId()).setParameter("searchName", search.getName())
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
+			String result = EntityJsonUtil.getErrorJsonObject(searchEntity.getId(),
+					"Search name '" + search.getName() + "' already exist", EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME)
+					.toString();
+			throw new EMAnalyticsFwkException(result, EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME,
+					new Object[] { search.getName() });
+		}
+
 	}
 
 	private void updateSearchLastAccess(EmAnalyticsSearch search, Date lastAccessDate)

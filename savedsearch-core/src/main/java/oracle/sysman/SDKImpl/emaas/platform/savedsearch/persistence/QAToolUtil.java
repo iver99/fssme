@@ -131,7 +131,7 @@ public class QAToolUtil
 			HttpURLConnection con = (HttpURLConnection) schema_dep_url.openConnection();
 			con.setRequestProperty(AUTHORIZATION, AUTH_STRING);
 			//int responseCode = con.getResponseCode();
-			inReader = new InputStreamReader(con.getInputStream());
+			inReader = new InputStreamReader(con.getInputStream(), "UTF-8");
 			in = new BufferedReader(inReader);
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
