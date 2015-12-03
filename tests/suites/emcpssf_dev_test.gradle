@@ -83,8 +83,11 @@ task PropsCopy(type: Copy,dependsOn: DeploySSFAPI) {
 
 
 
-     task DEVTest(type:EMTest,dependsOn: PropsCopy){	
-		
+     task DEVTest(type:EMTest,dependsOn:PropsCopy){	
+	sleep( 300000)
+	doFirst{
+	tasks.cleanUpDB.execute()
+}
 	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/JSONUtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"			

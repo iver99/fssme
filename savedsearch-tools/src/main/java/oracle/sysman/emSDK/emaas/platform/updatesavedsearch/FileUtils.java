@@ -1,13 +1,13 @@
 package oracle.sysman.emSDK.emaas.platform.updatesavedsearch;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class FileUtils
 {
@@ -15,24 +15,25 @@ public class FileUtils
 	public static void createOutputfile(String outputfile, String Data) throws IOException
 	{
 		File file = null;
-		FileWriter fw = null;
-		BufferedWriter bw = null;
+		FileOutputStream out = null;
+		OutputStreamWriter outputStreamWriter = null;
 		// if file doesnt exists, then create it
 		try {
 			file = new File(outputfile);
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-			fw = new FileWriter(file.getAbsoluteFile());
-			bw = new BufferedWriter(fw);
-			bw.write(Data);
+			out = new FileOutputStream(file.getAbsoluteFile());
+			outputStreamWriter = new OutputStreamWriter(out, "UTF-8");
+			outputStreamWriter.write(Data);
+
 		}
 		finally {
-			if (bw != null) {
-				bw.close();
+			if (outputStreamWriter != null) {
+				outputStreamWriter.close();
 			}
-			if (fw != null) {
-				fw.close();
+			if (out != null) {
+				out.close();
 			}
 		}
 	}

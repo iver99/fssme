@@ -94,8 +94,9 @@ public class QAToolUtil
 	public static Properties getTenantDetails()
 	{
 		Properties props = new Properties();
-		props.put(TENANT_USER_NAME, Utils.getProperty("TENANT_ID_INTERNAL") + "." + Utils.getProperty("SSO_USERNAME"));
-		props.put(TENANT_NAME, Utils.getProperty("TENANT_ID_INTERNAL"));
+		String TENANT_ID_INTERNAL= "TENANT_ID_INTERNAL_"+Utils.getProperty("TENANT_ID");
+		props.put(TENANT_USER_NAME, Utils.getProperty(TENANT_ID_INTERNAL) + "." + Utils.getProperty("SSO_USERNAME"));
+		props.put(TENANT_NAME, Utils.getProperty(TENANT_ID_INTERNAL));
 		return props;
 	}
 
@@ -130,7 +131,7 @@ public class QAToolUtil
 			HttpURLConnection con = (HttpURLConnection) schema_dep_url.openConnection();
 			con.setRequestProperty(AUTHORIZATION, AUTH_STRING);
 			//int responseCode = con.getResponseCode();
-			inReader = new InputStreamReader(con.getInputStream());
+			inReader = new InputStreamReader(con.getInputStream(), "UTF-8");
 			in = new BufferedReader(inReader);
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {

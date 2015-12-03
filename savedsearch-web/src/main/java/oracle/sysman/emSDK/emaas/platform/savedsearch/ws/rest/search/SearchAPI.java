@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
@@ -40,7 +41,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Search Services
- * 
+ *
  * @since 0.1
  */
 @Path("search")
@@ -57,7 +58,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search</font><br>
 	 * The string "search" in the URL signifies create operation on search.<br>
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            The search details <br>
@@ -217,6 +218,7 @@ public class SearchAPI
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createSearch(JSONObject inputJsonObj)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/search");
 
 		String message = "";
 		int statusCode = 201;
@@ -246,7 +248,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies delete operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The id of saved-search which user wants to delete
@@ -280,6 +282,7 @@ public class SearchAPI
 	@Path("{id: [0-9]*}")
 	public Response deleteSearch(@PathParam("id") long searchId)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/search/{}", searchId);
 		int statusCode = 204;
 
 		SearchManager sman = SearchManager.getInstance();
@@ -300,7 +303,7 @@ public class SearchAPI
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/search/&lt;id&gt;</font><br>
 	 * The string "search/&lt;id&gt;" in the URL signifies edit operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param inputJsonObj
 	 *            JSON string which contains all key value pairs that the user wants to edit.<br>
@@ -407,6 +410,7 @@ public class SearchAPI
 	public Response editSearch(JSONObject inputJsonObj, @HeaderParam("X_SSF_API_AUTH") String updateCategory,
 			@PathParam("id") long searchId)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}", searchId);
 		String message = null;
 		int statusCode = 200;
 		JSONObject jsonObj;
@@ -447,7 +451,7 @@ public class SearchAPI
 	 * number&gt;/savedsearch/v1/search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;</font><br>
 	 * The string "search/&lt;id&gt;?updateLastAccessTime=&lt;boolean value&gt;" in the URL signifies set last accesst time
 	 * operation on search with given id.
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchId
 	 *            The saved-search id to edit
@@ -485,6 +489,8 @@ public class SearchAPI
 	@Path("{id: [0-9]*}")
 	public Response editSearchAccessDate(@PathParam("id") long searchId, @QueryParam("updateLastAccessTime") boolean update)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}?updateLastAccessTime={}",
+				searchId, update);
 		String query = uri.getRequestUri().getQuery();
 		if (query == null) {
 			return Response.status(400).entity("Please specify updateLastAccessTime true or false").build();
@@ -511,7 +517,7 @@ public class SearchAPI
 	 * The string "search/&lt;id&gt;?flattenedFolderPath=&lt;boolean value&gt;" in the URL signifies get the search operation on
 	 * search with given id. <br>
 	 * If "flattenedFolderPath = true", the flattened folder hierarchy will be added to any search
-	 * 
+	 *
 	 * @since 0.1
 	 * @param searchid
 	 *            The id of saved-search which user wants to read
@@ -575,6 +581,8 @@ public class SearchAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSearch(@PathParam("id") long searchid, @QueryParam("flattenedFolderPath") boolean bPath)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}?flattenedFolderPath={}",
+				searchid, bPath);
 		String message = null;
 		int statusCode = 200;
 		JSONObject jsonObj;

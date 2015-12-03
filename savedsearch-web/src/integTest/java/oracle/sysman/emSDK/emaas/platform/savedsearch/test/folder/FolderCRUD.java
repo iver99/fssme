@@ -271,7 +271,10 @@ public class FolderCRUD
 			System.out.println("											");
 			System.out.println(res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 400);
-			Assert.assertEquals(res2.asString(), "Folder with name Custom_Folder already exist");
+			String message = res2.jsonPath().getString("message");
+			Assert.assertEquals(message, "The folder name 'Custom_Folder' already exist");
+			Assert.assertEquals(res1.jsonPath().getInt("id"), res2.jsonPath().getInt("id"));
+			Assert.assertEquals(res2.jsonPath().getInt("errorCode"), 30021);
 			System.out.println("    ");
 
 			System.out.println("Verifying weather the folder created in a specified location or not with GET method");

@@ -12,7 +12,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -199,6 +198,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_CATEGORIES = "/savedsearch/v1/categories";
 	private static final String NAV_WIDGETS = "/savedsearch/v1/widgets";
 	private static final String NAV_WIDGETGROUPS = "/savedsearch/v1/widgetgroups";
+	private static final String NAV_LOGCONFIGS = "/savedsearch/v1/_logging/configs";
 
 	private static final String STATIC_NAV = "static/savedsearch.navigation";
 	private static final String STATIC_SEARCH = "static/savedsearch.search";
@@ -209,6 +209,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String STATIC_CATEGORIES = "static/savedsearch.categories";
 	private static final String STATIC_WIDGETS = "static/savedsearch.widgets";
 	private static final String STATIC_WIDGETGROUPS = "static/savedsearch.widgetgroups";
+	private static final String REL_LOG_CONFIG = "log/configuration";
 
 	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceregistry");
@@ -365,6 +366,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_CATEGORIES).withHref(applicationUrl + NAV_CATEGORIES));
 				links.add(new Link().withRel(STATIC_WIDGETS).withHref(applicationUrl + NAV_WIDGETS));
 				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrl + NAV_WIDGETGROUPS));
+				links.add(new Link().withRel(REL_LOG_CONFIG).withHref(applicationUrl + NAV_LOGCONFIGS));
 			}
 			if (applicationUrlSSL != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
@@ -380,6 +382,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_CATEGORIES).withHref(applicationUrlSSL + NAV_CATEGORIES));
 				links.add(new Link().withRel(STATIC_WIDGETS).withHref(applicationUrlSSL + NAV_WIDGETS));
 				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
+				links.add(new Link().withRel(REL_LOG_CONFIG).withHref(applicationUrlSSL + NAV_LOGCONFIGS));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 
