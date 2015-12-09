@@ -16,5 +16,4 @@ dependencies {
 	testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
 	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
   testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
-  testConfig(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2'){ transitive = false }
 }
