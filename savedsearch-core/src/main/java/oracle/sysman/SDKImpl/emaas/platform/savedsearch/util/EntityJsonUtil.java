@@ -18,6 +18,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.MessageFormatMessage;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -29,6 +32,8 @@ import org.codehaus.jettison.json.JSONObject;
  */
 public class EntityJsonUtil
 {
+	private static final Logger logger = LogManager.getLogger(EntityJsonUtil.class);
+
 	public static final String NAME_ID = "id";
 
 	public static final String NAME_GUID = "guid";
@@ -106,6 +111,8 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_TEMPLATE = "WIDGET_TEMPLATE";
 	public static final String NAME_WIDGET_SUPPORT_TIME_CONTROL = "WIDGET_SUPPORT_TIME_CONTROL";
 	public static final String NAME_WIDGET_LINKED_DASHBOARD = "WIDGET_LINKED_DASHBOARD";
+	public static final String NAME_WIDGET_DEFAULT_WIDTH = "WIDGET_DEFAULT_WIDTH";
+	public static final String NAME_WIDGET_DEFAULT_HEIGHT = "WIDGET_DEFAULT_HEIGHT";
 	public static final String NAME_WIDGET_PROVIDER_NAME = "PROVIDER_NAME";
 	public static final String NAME_WIDGET_PROVIDER_VERSION = "PROVIDER_VERSION";
 	public static final String NAME_WIDGET_PROVIDER_ASSET_ROOT = "PROVIDER_ASSET_ROOT";
@@ -130,6 +137,8 @@ public class EntityJsonUtil
 		return errorObj;
 
 	}
+
+	private static final Integer MAX_DASHBOARD_TILE_WIDTH = 8;
 
 	/**
 	 * Return full JSON string for category
@@ -395,6 +404,12 @@ public class EntityJsonUtil
 					else if (NAME_WIDGET_LINKED_DASHBOARD.equals(param.getName())) {
 						widgetObj.put(NAME_WIDGET_LINKED_DASHBOARD, param.getValue());
 					}
+					else if (NAME_WIDGET_DEFAULT_WIDTH.equals(param.getName())) {
+						EntityJsonUtil.getWidgetJsonObjForDefaultWidth(search, widgetObj, param);
+					}
+					else if (NAME_WIDGET_DEFAULT_HEIGHT.equals(param.getName())) {
+						EntityJsonUtil.getWidgetJsonObjForDefaultHeight(search, widgetObj, param);
+					}
 				}
 			}
 			//default value for NAME_WIDGET_SUPPORT_TIME_CTRONOL: default to support
@@ -573,5 +588,44 @@ public class EntityJsonUtil
 					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
 		}
 		return searchObj;
+	}
+
+	private static void getWidgetJsonObjForDefaultHeight(Search search, JSONObject widgetObj, SearchParameter param)
+			throws JSONException
+	{
+		try {
+			int height = Integer.parseInt(param.getValue());
+			if (height < 1) {
+				logger.warn("Widget (id={}) has the default height {}<1, use height=1", search.getId(), height);
+				height = 1;
+			}
+			widgetObj.put(NAME_WIDGET_DEFAULT_HEIGHT, height);
+		}
+		catch (NumberFormatException e) {
+			logger.error(new MessageFormatMessage("Invalid widget default height \"{}\" for widget id={}", param.getValue(),
+					search.getId()), e);
+		}
+	}
+
+	private static void getWidgetJsonObjForDefaultWidth(Search search, JSONObject widgetObj, SearchParameter param)
+			throws JSONException
+	{
+		try {
+			int width = Integer.parseInt(param.getValue());
+			if (width < 1) {
+				logger.warn("Widget (id={}) has the default width {}<1, use width=1", search.getId(), width);
+				width = 1;
+			}
+			if (width > MAX_DASHBOARD_TILE_WIDTH) {
+				logger.warn("Widget (id={}) has the default width {}>{}, use width={}", search.getId(), width,
+						MAX_DASHBOARD_TILE_WIDTH, MAX_DASHBOARD_TILE_WIDTH);
+				width = MAX_DASHBOARD_TILE_WIDTH;
+			}
+			widgetObj.put(NAME_WIDGET_DEFAULT_WIDTH, width);
+		}
+		catch (NumberFormatException e) {
+			logger.error(new MessageFormatMessage("Invalid widget default width \"{}\" for widget id={}", param.getValue(),
+					search.getId()), e);
+		}
 	}
 }
