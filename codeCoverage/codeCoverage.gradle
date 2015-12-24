@@ -333,26 +333,25 @@ else {
     // Tasks and settings applied to all projects in the build.
     //
     allprojects {
- // Set Sonar properties common to all projects in the build
-sonarProperties {
-        property "sonar.junit.reportsPath", "${buildDir}/test-results"
-        property "sonar.language", "java"
-        property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.jacoco.reportPath", "${buildDir}/jacoco/test.exec"
-        property "sonar.jacoco.itReportPath" , "${buildDir}/jacoco/integTest.exec"
-        property "sonar.sourceEncoding", "UTF-8"
+
+        // Set Sonar properties common to all projects in the build
+        sonarRunner {
+            sonarProperties {
+                property "sonar.junit.reportsPath", "${buildDir}/test-results"
+                property "sonar.language", "java"
+                property "sonar.java.coveragePlugin", "jacoco"
+                property "sonar.jacoco.reportPath", "${buildDir}/jacoco/test.exec"
+                property "sonar.jacoco.itReportPath" , "${buildDir}/jacoco/integTest.exec"
+                property "sonar.sourceEncoding", "UTF-8"
         //property "sonar.exclusions", "**/IntervalTimeUnit.java,**/ImportCategorySet.java"
-property "sonar.exclusions","src/main/java/oracle/sysman/emaas/platform/savedsearch/services/ApplicationLifecycleService.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/services/AvailabilityServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/services/LoggingServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/services/RegistryServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/services/VersionValidationServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/wls/lifecycle/AbstractApplicationLifecycleService.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/wls/lifecycle/ApplicationServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/wls/management/AppLoggingManageMXBean.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/wls/management/IAppLoggingManageMXBean.java"
+		property "sonar.exclusions","src/main/java/oracle/sysman/emaas/platform/savedsearch/services/ApplicationLifecycleService.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/services/AvailabilityServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/services/LoggingServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/services/RegistryServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/services/VersionValidationServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/wls/lifecycle/AbstractApplicationLifecycleService.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/wls/lifecycle/ApplicationServiceManager.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/wls/management/AppLoggingManageMXBean.java,src/main/java/oracle/sysman/emaas/platform/savedsearch/wls/management/IAppLoggingManageMXBean.java"
+		
+		project(':savedsearch-entities') {
+			sonarRunner { skipProject = true }
+			jacoco { enabled = false }
+		}
 
-project(':savedsearch-entities') {
-sonarRunner { skipProject = true }
-jacoco { enabled = false }}
-
-
-//project(':savedsearch-tools') {
-//sonarRunner { skipProject = true }
-//jacoco { enabled = false }}
-      }       
+        }
     }
 
     apply plugin: 'jacoco'
