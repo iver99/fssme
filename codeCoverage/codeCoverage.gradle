@@ -278,9 +278,9 @@ sonarRunner { skipProject = true }
 jacoco { enabled = false }}
 
 
-project(':savedsearch-tools') {
-sonarRunner { skipProject = true }
-jacoco { enabled = false }}
+//project(':savedsearch-tools') {
+//sonarRunner { skipProject = true }
+//jacoco { enabled = false }}
       }
     }
 
