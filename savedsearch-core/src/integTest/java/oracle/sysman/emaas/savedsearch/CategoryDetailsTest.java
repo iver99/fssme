@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 public class CategoryDetailsTest
 {
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testCategoryDetails()
 	{
 

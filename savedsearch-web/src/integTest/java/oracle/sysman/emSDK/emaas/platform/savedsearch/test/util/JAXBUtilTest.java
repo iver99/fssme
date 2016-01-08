@@ -11,7 +11,7 @@ public class JAXBUtilTest
 {
 	static final JAXBUtil jaxb = new JAXBUtil();
 
-	@Test(expectedExceptions = { Exception.class, JAXBException.class })
+	@Test(expectedExceptions = { Exception.class, JAXBException.class },groups = {"s1"})
 	public void getJAXBContext() throws Exception, JAXBException
 	{
 
