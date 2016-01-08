@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 public class JPAEntityTest
 {
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testEntityCategory() throws Exception
 	{
 		EmAnalyticsCategory cat = new EmAnalyticsCategory();
@@ -84,7 +84,7 @@ public class JPAEntityTest
 
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testEntityFolder() throws Exception
 	{
 

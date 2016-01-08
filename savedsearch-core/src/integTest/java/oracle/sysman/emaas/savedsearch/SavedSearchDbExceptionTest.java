@@ -121,7 +121,7 @@ public class SavedSearchDbExceptionTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testCrudDelete() throws Exception
 	{
 		boolean bResult = false;

@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 public class PersistenceManagerTest extends BaseTest
 {
-	@Test
+	@Test (groups = {"s1"})
 	public void testAll()
 	{
 		PersistenceManager pm = PersistenceManager.getInstance();

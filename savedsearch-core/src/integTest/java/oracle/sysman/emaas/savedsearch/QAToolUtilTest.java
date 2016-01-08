@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 public class QAToolUtilTest
 {
 
-	@Test
+	@Test 
 	public void testDbProperties() throws Exception
 	{
 		Properties props = QAToolUtil.getDbProperties();

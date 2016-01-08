@@ -130,7 +130,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testBigQueryStr() throws Exception
 	{
 		//test big query str (length>4000)
@@ -197,7 +197,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testDeleteInvalidSearchId() throws Exception
 	{
 		SearchManager sman = SearchManager.getInstance();
@@ -211,7 +211,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testDeleteSystemSearch() throws Exception
 	{
 		boolean bResult = false;
@@ -226,7 +226,7 @@ public class SearchTest extends BaseTest
 		Assert.assertEquals(bResult, true);
 	}
 
-	@Test
+	@Test 
 	public void testDuplicate() throws Exception
 	{
 		int folderId = 0;
@@ -319,7 +319,7 @@ public class SearchTest extends BaseTest
 
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testEditSystemSearch() throws Exception
 	{
 		boolean bresult = false;
@@ -342,7 +342,7 @@ public class SearchTest extends BaseTest
 		Assert.assertEquals(bresult, true);
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetInstance()
 	{
 		try {
@@ -357,7 +357,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetSearch() throws Exception
 	{
 
@@ -398,7 +398,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetSearchByInvalidFolderId() throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();
@@ -432,7 +432,7 @@ public class SearchTest extends BaseTest
 	//		AssertJUnit.assertEquals(2, objSearch.getSearchCountByFolderId(999));
 	//	}
 
-	@Test
+	@Test 
 	public void testGetSearchListByFolderId() throws Exception
 	{
 
@@ -497,7 +497,7 @@ public class SearchTest extends BaseTest
 
 	}
 
-	@Test
+	@Test 
 	public void testGetSearchListByLastAccessDate() throws Exception
 	{
 		SearchManager searchMgr = SearchManager.getInstance();
@@ -590,7 +590,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testInvalidDataForEdit() throws Exception
 	{
 		SearchManager objSearch = SearchManager.getInstance();
@@ -658,7 +658,7 @@ public class SearchTest extends BaseTest
 		}
 	}*/
 
-	@Test
+	@Test 
 	public void testInvalidDataForSave() throws Exception
 	{
 		SearchManager objSearch = SearchManager.getInstance();
@@ -888,7 +888,7 @@ public class SearchTest extends BaseTest
 				}*/
 	}
 
-	@Test
+	@Test 
 	public void testSaveSearch() throws Exception
 	{
 		//saveSearch() has been tested in initialization(), here only test search with invalid data
@@ -935,7 +935,7 @@ public class SearchTest extends BaseTest
 
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testSearchNotExist() throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();
@@ -948,7 +948,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testSystemSearchList() throws Exception
 	{
 

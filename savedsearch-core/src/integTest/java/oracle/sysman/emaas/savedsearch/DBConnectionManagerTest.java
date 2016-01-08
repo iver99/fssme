@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 public class DBConnectionManagerTest extends BaseTest
 {
 
-	@Test
+	@Test 
 	public void testDbConnection() throws Exception
 	{
 

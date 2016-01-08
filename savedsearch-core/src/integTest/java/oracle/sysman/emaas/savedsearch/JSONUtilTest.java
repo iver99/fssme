@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 
 public class JSONUtilTest extends BaseTest
 {
-	@Test
+	@Test (groups = {"s1"})
 	public void testObjectToJSONObject()
 	{
 		SearchImpl search = new SearchImpl();

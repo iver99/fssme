@@ -150,7 +150,7 @@ public class SearchParamTest extends BaseTest
 		}
 	}
 
-	@Test
+	 @Test 
 	public void testSearchparamCRUD() throws Exception
 	{
 		try {

@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 public class VersionManagerTest extends BaseTest
 {
-	@Test
+	@Test 
 	public void testGetSchemaVesrion()
 	{
 		VersionManager vm = VersionManager.getInstance();
