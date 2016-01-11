@@ -192,7 +192,7 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void entityClassTest()
 	{
 		EmAnalyticsFolder fld = new EmAnalyticsFolder();
@@ -268,7 +268,7 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testDeletFolder_withCategory()
 	{
 		try {
@@ -315,7 +315,7 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testDuplicate() throws Exception
 	{
 		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
@@ -359,7 +359,7 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetFolder() throws Exception
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
@@ -388,7 +388,7 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testGetInvalidFolderId() throws Exception
 	{
 		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
@@ -430,7 +430,7 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
-	@Test
+	@Test 
 	public void testGetSubFolder() throws Exception
 	{
 		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
@@ -484,7 +484,7 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
-	@Test
+	@Test 
 	public void testInvalidParentFolder() throws Exception
 	{
 
@@ -509,7 +509,7 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testRootFolder() throws Exception
 	{
 		try {
@@ -532,7 +532,7 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testUpdate() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();

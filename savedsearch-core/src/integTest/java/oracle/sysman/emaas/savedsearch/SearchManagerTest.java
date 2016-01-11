@@ -208,7 +208,7 @@ public class SearchManagerTest extends BaseTest
 				+ searchCount + " searches is " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
-	@Test
+	@Test 
 	public void testCRUDOnSearchLastAccess() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
@@ -239,7 +239,7 @@ public class SearchManagerTest extends BaseTest
 		fm.deleteFolder(folder.getId(), true);
 	}
 
-	@Test
+	@Test 
 	public void testGetSearchByName() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
@@ -269,7 +269,7 @@ public class SearchManagerTest extends BaseTest
 		fm.deleteFolder(folder.getId(), true);
 	}
 
-	@Test
+	@Test 
 	public void testGetSearchByName_noresult()
 	{
 		SearchManager sm = SearchManager.getInstance();
@@ -284,7 +284,7 @@ public class SearchManagerTest extends BaseTest
 
 	}
 
-	@Test
+	@Test 
 	public void testGetSearchListByCategoryId() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
@@ -319,7 +319,7 @@ public class SearchManagerTest extends BaseTest
 		fm.deleteFolder(folder.getId(), true);
 	}
 
-	@Test
+	@Test 
 	public void testGetSearchListByFolderId() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
@@ -354,7 +354,7 @@ public class SearchManagerTest extends BaseTest
 		fm.deleteFolder(folder.getId(), true);
 	}
 
-	@Test
+	@Test 
 	public void testGetSearchListByLastAccessDate() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();

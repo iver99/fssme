@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 public class SavedSearchCommonTest
 {
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testJsonUtil()
 	{
 		AppMappingCollection obj = new AppMappingCollection();
@@ -83,7 +83,7 @@ public class SavedSearchCommonTest
 
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testSavedSearchApplication()
 	{
 		SavedSearchApplication test = new SavedSearchApplication();
@@ -91,7 +91,7 @@ public class SavedSearchCommonTest
 		Assert.assertNotNull(s);
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testSearchParameterDetails() throws EMAnalyticsFwkException
 	{
 		SearchParameterDetails t1 = new SearchParameterDetails();
@@ -119,7 +119,7 @@ public class SavedSearchCommonTest
 		Assert.assertTrue(t1.equals("test"));
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testStringEmptyTest()
 	{
 		boolean result = StringUtil.isEmpty(null);
@@ -129,7 +129,7 @@ public class SavedSearchCommonTest
 		Assert.assertEquals(QueryParameterConstant.USER_NAME, "userName");
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testTenantInfo()
 	{
 		long i = 1;

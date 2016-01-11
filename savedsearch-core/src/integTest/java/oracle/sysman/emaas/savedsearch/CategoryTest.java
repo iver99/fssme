@@ -120,7 +120,7 @@ public class CategoryTest extends BaseTest
 
 	}*/
 
-	@Test
+	@Test 
 	public void testDeleteCategoryInvalidId() throws Exception
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -134,7 +134,7 @@ public class CategoryTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testEditCategory() throws Exception
 	{
 
@@ -235,7 +235,7 @@ public class CategoryTest extends BaseTest
 		}
 	}*/
 
-	@Test
+        @Test 
 	public void testgetCategoryInvalidId() throws Exception
 	{
 
@@ -251,7 +251,7 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testgetCategoryInvalidName() throws Exception
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -265,7 +265,7 @@ public class CategoryTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testInvalidData() throws Exception
 	{
 
@@ -283,7 +283,7 @@ public class CategoryTest extends BaseTest
 		}
 	}
 
-	@Test
+	@Test 
 	public void testSaveCategory_DuplicateName() throws Exception
 	{
 

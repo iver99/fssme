@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class FolderSetTest
 {
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testObjectSet()
 	{
 		FolderSet t = new FolderSet();

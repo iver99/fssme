@@ -29,10 +29,26 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
     }
 }
 apply from: 'setup.gradle'
 apply plugin: 'TestInfraPlugin'
+// Uncomment below line once EMDI-6096 is fixed
+// apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"omctf_commontasks")
+/** Start of WA for EMDI-6096 */
+def getAbsoluteFilePath(artifactNameToSearch) {
+    absPath=""
+    buildscript.configurations.classpath.resolve().each {
+        String absolutePath=it.getAbsolutePath();
+        if(absolutePath.contains(artifactNameToSearch)){
+            absPath=absolutePath
+        }
+    }
+    return absPath
+}
+apply from: getAbsoluteFilePath("omctf_commontasks")
+/** End of WA for EMDI-6096 */
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -48,12 +64,9 @@ maven {
             url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
 dependencies {
-	testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
-
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
-
 	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
 	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2'){ transitive = false }
 	testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2'){ transitive = false }
@@ -67,31 +80,7 @@ dependencies {
 	}
 }
 
-task small_deploy_3n_block(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpssf_dev_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'setupEmaasSmallDeploy')
-                    }
-                }
-            }
-        }
-    }
-    useWebdriver = true
-    useRestAssured = true
-}
-
-
-
-
-
-
-
-
-     task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){	
+task DEVTest(type:EMTest,dependsOn: omcSetup){	
 		
 	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/JSONUtilTest.class"
@@ -117,41 +106,20 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/savedsearch/SearchManagerTestMockup.class"
 	include "oracle/sysman/emaas/savedsearch/SavedSearchDbExceptionTest.class"
 	useRestAssured =true
-ext.set("testType", "unit")
-
+	ext.set("testType", "unit")
 }
-   task DEVTest1(type:EMTest,dependsOn: DEVTest){	
-		
 
+task DEVTest1(type:EMTest,dependsOn: DEVTest){	
 	include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
 	useRestAssured =true
 	ext.set("testType", "unit")
 }
+
 task DEVTest2(type:EMTest,dependsOn: DEVTest1){	
-		
-
-
 	include "oracle/sysman/emaas/savedsearch/Cleanup.class"
 	useRestAssured =true
 	ext.set("testType", "unit")
 }
-task small_deploy_3n_cleanup(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpssf_dev_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'logCollectionAndPostCleanup')
-                    }
-                }
-            }
-        }
-    }
- mustRunAfter ([small_deploy_3n_block,DEVTest2])
-}
 
-
-task emcpssf_dev_test_3n (dependsOn: [DEVTest2,small_deploy_3n_cleanup])
-
-
+omcTeardown.mustRunAfter(DEVTest2)
+task emcpssf_dev_test_3n (dependsOn: [DEVTest2,omcTeardown])

@@ -60,7 +60,7 @@ public class TenantDataLeakTest extends BaseTest
 		return DriverManager.getConnection(url, user, password);
 	}
 
-	@Test
+	@Test 
 	public void tenantLeakTest()
 	{
 		long id = 6666;

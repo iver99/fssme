@@ -12,22 +12,22 @@ public class ImportExceptionTest {
 	static final ImportException ie2 = new ImportException("test message", th);
 	static final ImportException ie3 = new ImportException(th);
 
-	@Test
+	@Test (groups = {"s1"})
 	public void ImportException() {
 		Assert.assertNull(ie.getMessage());
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void ImportExceptionString() {
 		Assert.assertEquals(ie1.getMessage(), "test message");
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void ImportExceptionStringThrowable() {
 		Assert.assertEquals(ie2.getCause(), th);
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void ImportExceptionThrowable() {
 		Assert.assertEquals(ie3.getCause(),th);
 	}
