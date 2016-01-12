@@ -1,4 +1,4 @@
-import java.util.logging.LogManager.Cleaner;
+
 import org.gradle.api.artifacts.Configuration.State  
 
 ext.distDir = "${rootDir}/dist"  
@@ -8,7 +8,9 @@ ext.appName="${artifactPrefix}savedsearch-ear"
 ext.serviceName = "${artifactPrefix}savedsearch" 
 ext.serviceInstallPath = "/opt/ORCLemaas/Applications/${serviceName}/${projectVersion}" 
 ext.serviceDistDir = "${distDir}${serviceInstallPath}" 
-
+ext.failedTestCount = 0
+def disBuildTests = System.getenv("DISABLE_BUILD_TESTS")
+ext.disableBuildTests = (disBuildTests == null ? false : disBuildTests.toBoolean())
 allprojects {  
 	apply plugin: 'java'
 	apply plugin: 'artifactory-publish'
@@ -48,7 +50,45 @@ allprojects {
       }
 	}
 	 
-}
+task s1tests(type: Test) {
+        useTestNG() {
+            ignoreFailures = true
+            includeGroups 's1'
+        }
+        afterSuite { TestDescriptor desc, TestResult testResult ->
+            logger.debug "Suite Name: ${desc.name}"
+            logger.debug "Parent: ${desc.parent}"
+            if (desc.parent == null)
+            {
+                // When at the suite completion for a task, add in failures
+                project.rootProject.failedTestCount += testResult.failedCount
+            }
+            logger.debug "Failures: ${testResult.failedCount} / ${project.rootProject.failedTestCount}"
+        }
+    }
+    s1tests.enabled = !project.rootProject.disableBuildTests
+ 
+    // Run s2 test group - the second stage unit test group
+    // Tests in this group are more complex and may take a longer time to run
+    task s2tests(type: Test) {
+        useTestNG() {
+            ignoreFailures = true
+            includeGroups 's2'
+        }
+        afterSuite { TestDescriptor desc, TestResult testResult ->
+            logger.debug "Suite Name: ${desc.name}"
+            logger.debug "Parent: ${desc.parent}"
+            if (desc.parent == null)
+            {
+                // When at the suite completion for a task, add in failures
+                project.rootProject.failedTestCount += testResult.failedCount
+            }
+            logger.debug "Failures: ${testResult.failedCount} / ${project.rootProject.failedTestCount}"
+        }
+    }
+    s2tests.enabled = !project.rootProject.disableBuildTests
+} // end of allprojects closure
+ 
 
 artifactory {
     contextUrl = "${artifactory_contextUrl}"
@@ -68,6 +108,31 @@ artifactory {
         }
     }
 }
+task runS1Tests(type: Exec) {
+    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args 'do_lrg', '-Plrgs=emcpssf_dev_test'
+    if (project.hasProperty('BuildID')) {
+        args "-PREPO_BID=${BuildID}"
+    }
+    finalizedBy "print_results"
+}
+ 
+
+
+
+runS1Tests.enabled = !project.disableBuildTests
+ task runS2Tests(type: Exec) {
+    executable project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args 'do_lrg', '-Plrgs=emcpssf_web_unit_test'
+    if (project.hasProperty('BuildID')) {
+        args "-PREPO_BID=${BuildID}"
+    }
+    finalizedBy "print_results"
+} 
+
+runS2Tests.enabled = !project.disableBuildTests
+runS2Tests.mustRunAfter(runS1Tests)
+
 
 subprojects { 
 	apply plugin: 'java' 

@@ -166,7 +166,7 @@ public class EntityJsonUtilTest extends BaseTest
 		widget.setParameters(widgetParams);
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetFullCategoryObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{
 		JSONObject fullCategoryObj = EntityJsonUtil.getFullCategoryJsonObj(uri, category);
@@ -202,7 +202,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetFullFolderObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{
 		JSONObject fullFolderObj = EntityJsonUtil.getFullFolderJsonObj(uri, folder);
@@ -284,7 +284,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(VERIFY_STRING14), VERIFY_STRING14 + " is found unexpected");
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetSimpleCategoryObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
 			URISyntaxException
 	{
@@ -323,7 +323,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetSimpleFolderJsonObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
 			URISyntaxException
 	{
@@ -421,7 +421,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(VERIFY_STRING15), VERIFY_STRING15 + " is found unexpected");
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetWidgetGroupJsonObj() throws EMAnalyticsFwkException
 	{
 		JSONObject widgetGroupObj = EntityJsonUtil.getWidgetGroupJsonObj(uri, category);
@@ -445,7 +445,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is NOT found as expected");
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetWidgetJsonObj() throws EMAnalyticsFwkException
 	{
 		JSONObject widgetObj = EntityJsonUtil.getWidgetJsonObj(uri, widget, category);
@@ -499,7 +499,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertNull(widgetObj);
 	}
 	
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetWidgetScreenshotObj() throws EMAnalyticsFwkException
 	{
 		JSONObject widgetScreenshotObj = EntityJsonUtil

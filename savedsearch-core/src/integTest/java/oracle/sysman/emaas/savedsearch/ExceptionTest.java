@@ -20,14 +20,14 @@ import org.testng.annotations.Test;
  */
 public class ExceptionTest
 {
-	@Test
+	@Test (groups = {"s1"})
 	public void test_EMAnalyticsFwkJsonException()
 	{
 		EMAnalyticsFwkException emjsonexception = new EMAnalyticsFwkException("JSON Exception", 70040, null, new Exception());
 		AssertJUnit.assertEquals(500, emjsonexception.getStatusCode());
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testConstructor_EMAnalyticsFwkException()
 	{
 		//EMAnalyticsFwkException emexception = new EMAnalyticsFwkException(30022, new Exception());
@@ -36,7 +36,7 @@ public class ExceptionTest
 
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testStatusCode_EMAnalyticsFwkException()
 
 	{

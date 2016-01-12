@@ -44,9 +44,9 @@ build.dependsOn integTestJar
 sourceSets {
 	test{
 		java {
-			srcDirs = ['src/test/java']
+			srcDirs = ['src/integTest/java']
 		}
-		resources.srcDirs = ['src/test/java']
+		resources.srcDirs = ['src/integTest/java']
 	}
 }
 
@@ -57,6 +57,16 @@ task runDEVTestSuite(type: Test){
         suites file('savedsearch-core_testng_suite.xml')
         }
 }
+
+test {
+        useTestNG()
+        {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+        }
+}
+
 
 dependencies {
 	compile project(':savedsearch-entities'){transitive = false}
@@ -71,4 +81,5 @@ dependencies {
   compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
   compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
   compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
+compile configurations.testNG
 }

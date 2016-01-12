@@ -30,6 +30,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
     }
 }
 repositories {
@@ -39,6 +40,21 @@ repositories {
 }
 apply from: 'setup.gradle'
 apply plugin: 'TestInfraPlugin'
+// Uncomment below line once EMDI-6096 is fixed
+// apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"omctf_commontasks")
+/** Start of WA for EMDI-6096 */
+def getAbsoluteFilePath(artifactNameToSearch) {
+    absPath=""
+    buildscript.configurations.classpath.resolve().each {
+        String absolutePath=it.getAbsolutePath();
+        if(absolutePath.contains(artifactNameToSearch)){
+            absPath=absolutePath
+        }
+    }
+    return absPath
+}
+apply from: getAbsoluteFilePath("omctf_commontasks")
+/** End of WA for EMDI-6096 */
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* ************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -54,8 +70,6 @@ maven {
             url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
 dependencies {
-	testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
-	
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy') }
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
@@ -72,65 +86,22 @@ dependencies {
 	}
 }
 
-task small_deploy_3n_block(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpssf_qa_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'setupEmaasSmallDeploy')
-                    }
-                }
-            }
-        }
-    }
-    useWebdriver = true
-    useRestAssured = true
-}
-
-
-
-
-
-
-     task QATest(type:EMTest,dependsOn: small_deploy_3n_block){
- include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/folder/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/search/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
-//useWebdriver = true
-
-// include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
+task QATest(type:EMTest,dependsOn: omcSetup){
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/folder/*"
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/*"
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/search/*"
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
+	//useWebdriver = true
+	// include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
         useRestAssured=true
-ext.set("testType", "integration")
+	ext.set("testType", "integration")
 }
 
-
-task small_deploy_3n_cleanup(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpssf_qa_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'logCollectionAndPostCleanup')
-                    }
-                }
-            }
-        }
-    }
- mustRunAfter ([small_deploy_3n_block,QATest])
-}
-
-
-
-
-
-task emcpssf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
+omcTeardown.mustRunAfter(QATest)
+task emcpssf_qa_test_3n (dependsOn: [QATest, omcTeardown])
 
