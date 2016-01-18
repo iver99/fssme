@@ -15,6 +15,7 @@ Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
 Rem    GUOCHEN     12/22/15 - Created
+Rem    JNAN        01/15/2016 - update category name from "Data Explorer - Search" to "Data Explorer"
 Rem
 
 DEFINE TENANT_ID ='&1'
@@ -50,5 +51,27 @@ WHEN OTHERS THEN
   ROLLBACK;
   DBMS_OUTPUT.PUT_LINE('Failed to update WIDGET_LINKED_DASHBOARD on SEARCH_ID: 3024 and 3026 due to '||SQLERRM);
   RAISE;
+END;
+/
+
+
+DECLARE 
+  V_CATEGORY_NAME  EMS_ANALYTICS_CATEGORY.NAME%TYPE;
+BEGIN
+
+  SELECT NAME INTO V_CATEGORY_NAME FROM EMS_ANALYTICS_CATEGORY WHERE CATEGORY_ID=2 and TENANT_ID='&TENANT_ID';
+  IF (V_CATEGORY_NAME='Data Explorer - Search') THEN
+    Update EMS_ANALYTICS_CATEGORY set NAME='Data Explorer' where CATEGORY_ID=2 and TENANT_ID='&TENANT_ID';
+    commit;
+    DBMS_OUTPUT.PUT_LINE('Category name: [Data Explorer - Search] has been changed to [Data Explorer] successfully');  
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Category name: [Data Explorer - Search] has been changed to [Data Explorer]  before, no need to update again');  
+  END IF;
+  
+EXCEPTION
+WHEN OTHERS THEN
+  ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('Failed to update Category name: [Data Explorer - Search] to [Data Explorer] due to '||SQLERRM);   
+  RAISE;  
 END;
 /
