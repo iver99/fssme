@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 public class XSDErrorUtilTest
 {
 
-	@Test
+	@Test (groups = {"s1"})
 	public void getErrorMessage()
 	{
 

@@ -30,7 +30,8 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-    }
+	classpath group:"com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "1.0+", transitive: true      
+	}
 }
 repositories {
     maven {
@@ -39,6 +40,7 @@ repositories {
 }
 apply from: 'setup.gradle'
 apply plugin: 'TestInfraPlugin'
+apply plugin: 'DevInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* ************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -54,8 +56,6 @@ maven {
             url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
 dependencies {
-	testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
-	
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy') }
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
@@ -76,9 +76,9 @@ dependencies {
 
 
 task DeploySSFAPI(type:Exec) {
-
-        commandLine 'gradle', '-p', getGitRoot()+'/savedsearch-ear/', 'appServerDeploy'
-        }
+    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args '-p',  project.properties['emdi.GIT_VIEW_ROOT'] +'/savedsearch-ear/', 'appServerDeploy'
+}
 task PropsCopy(type: Copy,dependsOn: DeploySSFAPI) {
    from '/net/slc07ctj/scratch/emaas/setuplogs/'
    into '../../oracle/work/'

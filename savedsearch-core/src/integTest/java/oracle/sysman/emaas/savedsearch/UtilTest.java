@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 public class UtilTest extends BaseTest
 {
-	@Test
+	@Test (groups = {"s1"})
 	public void testDateUtil()
 	{
 		TimeZone localTZ = TimeZone.getDefault();
