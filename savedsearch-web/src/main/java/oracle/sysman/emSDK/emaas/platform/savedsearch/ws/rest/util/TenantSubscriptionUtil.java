@@ -13,13 +13,21 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource.Builder;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -32,14 +40,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.DomainsE
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 /**
  * @author aduan
@@ -70,14 +70,39 @@ public class TenantSubscriptionUtil
 	}
 
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
-	private static String SUBSCRIBED_SERVICE_NAME_APM = "APM";
-	private static String SUBSCRIBED_SERVICE_NAME_ITA = "ITAnalytics";
-	private static String SUBSCRIBED_SERVICE_NAME_LA = "LogAnalytics";
+	private static final String SUBSCRIBED_SERVICE_NAME_APM = "APM";
+	private static final String SUBSCRIBED_SERVICE_NAME_ITA = "ITAnalytics";
+	private static final String SUBSCRIBED_SERVICE_NAME_LA = "LogAnalytics";
 	private static String SERVICE_PROVIDER_NAME_APM = "ApmUI";
 	private static String SERVICE_PROVIDER_NAME_ITA = "EmcitasApplications";
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
 	private static String SERVICE_PROVIDER_NAME_LA = "LoganService";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
+
+	private static Map<String, String> serviceToProviderMap = new Hashtable<String, String>();
+
+	static {
+		serviceToProviderMap.put(SUBSCRIBED_SERVICE_NAME_LA, SERVICE_PROVIDER_NAME_LA);
+		serviceToProviderMap.put(SUBSCRIBED_SERVICE_NAME_ITA, SERVICE_PROVIDER_NAME_TA);
+		serviceToProviderMap.put(SUBSCRIBED_SERVICE_NAME_ITA, SERVICE_PROVIDER_NAME_ITA);
+		serviceToProviderMap.put(SUBSCRIBED_SERVICE_NAME_APM, SERVICE_PROVIDER_NAME_APM);
+	}
+
+	public static List<String> getProviderNameFromServiceName(String providerName)
+	{
+		if (providerName == null) {
+			return null;
+		}
+		switch (providerName) {
+			case SUBSCRIBED_SERVICE_NAME_LA:
+				return Arrays.asList(SERVICE_PROVIDER_NAME_LA);
+			case SUBSCRIBED_SERVICE_NAME_ITA:
+				return Arrays.asList(SERVICE_PROVIDER_NAME_TA, SERVICE_PROVIDER_NAME_ITA);
+			case SUBSCRIBED_SERVICE_NAME_APM:
+				return Arrays.asList(SERVICE_PROVIDER_NAME_APM);
+		}
+		return null;
+	}
 
 	public static List<Category> getTenantSubscribedCategories(String tenant, boolean includeDashboardIneligible)
 			throws EMAnalyticsFwkException
@@ -91,15 +116,10 @@ public class TenantSubscriptionUtil
 		if (catList != null && catList.size() > 0) {
 			List<String> subscribedServices = TenantSubscriptionUtil.getTenantSubscribedServices(tenant);
 			if (subscribedServices != null && subscribedServices.size() > 0) {
-				Map<String, String> providerToServiceMap = new HashMap<String, String>();
-				providerToServiceMap.put(SERVICE_PROVIDER_NAME_LA, SUBSCRIBED_SERVICE_NAME_LA);
-				providerToServiceMap.put(SERVICE_PROVIDER_NAME_TA, SUBSCRIBED_SERVICE_NAME_ITA);
-				providerToServiceMap.put(SERVICE_PROVIDER_NAME_ITA, SUBSCRIBED_SERVICE_NAME_ITA);
-				providerToServiceMap.put(SERVICE_PROVIDER_NAME_APM, SUBSCRIBED_SERVICE_NAME_APM);
 				for (Category cat : catList) {
 					//EMCPDF-997 If a widget group has special parameter DASHBOARD_INELIGIBLE=true,
 					//we do NOT show all widgets of this group inside widget selector
-					if (subscribedServices.contains(providerToServiceMap.get(cat.getProviderName()))
+					if (subscribedServices.contains(serviceToProviderMap.get(cat.getProviderName()))
 							&& !TenantSubscriptionUtil.isCategoryHiddenInWidgetSelector(cat, includeDashboardIneligible)) {
 						resultList.add(cat);
 					}
@@ -130,8 +150,8 @@ public class TenantSubscriptionUtil
 		try {
 			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
-				logger.warn("Checking tenant (" + tenant
-						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
+				logger.warn(
+						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
 				return null;
 			}
 			String tenantAppUrl = null;
@@ -146,8 +166,8 @@ public class TenantSubscriptionUtil
 				return null;
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			logger.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
-					+ appMappingUrl);
+			logger.info(
+					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
 			String appMappingJson = rc.get(appMappingUrl);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
@@ -187,8 +207,8 @@ public class TenantSubscriptionUtil
 			if (apps == null || "".equals(apps)) {
 				return null;
 			}
-			List<String> origAppsList = Arrays.asList(apps
-					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+			List<String> origAppsList = Arrays
+					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
 			return origAppsList;
 
 		}
