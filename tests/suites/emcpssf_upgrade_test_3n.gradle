@@ -38,10 +38,11 @@ dependencies {
 //Add data population(pre-upgrade) tests or tasks here
 //task omcUpgradeDataPopulation (type: EMTest,overwrite: true) {
 task pre_upgrade (type: EMTest, dependsOn: omcSetup){
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
   
-    useWebdriver = true
+    //useWebdriver = true
     useRestAssured = true
     
    
@@ -51,12 +52,14 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
 
 
 task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup]){
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
 
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
+
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
  
  
-    useWebdriver = true
+    //useWebdriver = true
     useRestAssured = true
 }
 post_upgrade.mustRunAfter pre_upgrade
