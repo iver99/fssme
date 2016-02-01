@@ -1,4 +1,4 @@
-                                          
+                               
 buildscript {
     repositories {
         maven {  
@@ -8,9 +8,9 @@ buildscript {
             url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
         }                                                                  
     }                                                                      
-    dependencies {                                                         
-        classpath group: "com.oracle.emaas.emdi", name: "TestInfraPlugin", version: "${testinfraVersion}", transitive: true
-        classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true     
+    dependencies { 
+         classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
+         classpath group: "com.oracle.emaas.emdi", name: "TestInfraPlugin", version: "${testinfraVersion}", transitive: true
         classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"                
         classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}"              
     }                                                                                                                         
@@ -18,7 +18,8 @@ buildscript {
 apply plugin: 'DevInfraPlugin'                                                                                                
 apply plugin: 'TestInfraPlugin'                                                                                               
 apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")                             
-import com.oracle.emdi.gradle.testinfra.tasks.EMTest                                                                          
+import com.oracle.emdi.gradle.testinfra.tasks.EMTest     
+                                                                     
 repositories {
     maven {  
         url = "${PUB_MAVEN_MY_MAVEN_REPO}"
@@ -27,28 +28,44 @@ repositories {
         url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
     }                                                                  
 }                                                                      
+/******* ExtraProperties declaration ******/
 
-/***** Overriding the Upgrade DataPopulation/DataValidation tasks *****/
-task omcUpgradeDataPopulation (type: EMTest,overwrite: true) {
-    println "Customizing the UpgradeDataPopulation" 
+dependencies {
+    testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-upgrade-tests-integ-tests', version: "${REPO_BID}"
+    testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-uitest-integ-tests', version: "${REPO_BID}" 
+}
+
+//Add data population(pre-upgrade) tests or tasks here
+//task omcUpgradeDataPopulation (type: EMTest,overwrite: true) {
+task pre_upgrade (type: EMTest, dependsOn: omcSetup){
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
+  
     useWebdriver = true
     useRestAssured = true
-    doLast {
-        println "Done with overridden omcUpgradeDataPopulation"
-    }
-    // Above is an example, please place your actual task definition for data population
-}
-task omcUpgradeDataValidation (type: EMTest, overwrite: true) {
-    println "Overriding the UpgradeDataValidation"
     
-    }
+   
+}
+
+//Add data validation(post-upgrade) tests or tasks here
+
+
+task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup]){
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
+
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
+ 
+ 
     useWebdriver = true
     useRestAssured = true
-    doLast {
-        println "Done with overridden omcUpgradeDataValidation"
-    }
-    // Above is an example, please place your actual task definition for data validation
-omcTeardown.mustRunAfter(omcUpgradeDataValidation)
-task emaas_small_upgrade_3n (dependsOn: ['omcSetup']) {
-    apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
 }
+post_upgrade.mustRunAfter pre_upgrade
+omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
+
+   
+    // Above is an example, please place your actual task definition for data validation
+
+task emcpdf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown])
+
+
+   
