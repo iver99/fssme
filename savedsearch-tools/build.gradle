@@ -39,14 +39,11 @@ dependencies {
         compile(group: 'log4j', name: 'log4j', version: '1.2.16'){transitive = false}
     compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+'){transitive = false}
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+'){transitive = false}
-        compile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
-        compile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
-        compile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1'){transitive = false}
         compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
-        compile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1'){transitive = false}
-        compile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
-	compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
-
+        
+	compile configurations.restAssured
+	compile configurations.testNG
+	compile configurations.webdriver
 }
 
 
