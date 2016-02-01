@@ -14,20 +14,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TenantSubscriptionUtil;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TenantSubscriptionUtil;
 
 /**
  * Saved Search Service
@@ -83,7 +82,7 @@ public class WidgetAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "PROVIDER_ASSET_ROOT": "home"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
-	 * <br>
+	 *         <br>
 	 *         Response Code:<br>
 	 *         <table border="1">
 	 *         <tr>
@@ -142,31 +141,30 @@ public class WidgetAPI
 			}
 
 			JSONArray jsonArray = new JSONArray();
-			List<Category> subscribedCatList = TenantSubscriptionUtil.getTenantSubscribedCategories(
-					userTenant.substring(0, userTenant.indexOf(".")), includeDashboardIneligible);
-			List<Category> catList = new ArrayList<Category>();
-			if (widgetGroupId != null) {
-				for (int i = 0; i < subscribedCatList.size(); i++) {
-					if (subscribedCatList.get(i).getId().intValue() == groupId) {
-						catList.add(subscribedCatList.get(i));
-						break;
+
+			List<String> subscribedApps = TenantSubscriptionUtil
+					.getTenantSubscribedServices(TenantContext.getContext().gettenantName());
+			List<String> providers = new ArrayList<String>();
+			if (subscribedApps != null) {
+				for (String app : subscribedApps) {
+					List<String> providerList = TenantSubscriptionUtil.getProviderNameFromServiceName(app);
+					if (providerList != null) {
+						providers.addAll(providerList);
 					}
 				}
+				_logger.debug("Query all widgets, get subscribed provider names: {}", providers.toArray());
 			}
 			else {
-				catList = subscribedCatList;
+				_logger.debug("Query all widgets, get subscribed APPs");
 			}
 
-			SearchManager searchMan = SearchManager.getInstance();
-			for (Category category : catList) {
-				List<Search> searchList = new ArrayList<Search>();
-				searchList = searchMan.getWidgetListByCategoryId(category.getId().longValue());
-				for (Search search : searchList) {
-					if (!isWidgetHiddenInWidgetSelector(search, includeDashboardIneligible)) {
-						JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), search, category);
-						if (jsonWidget != null) {
-							jsonArray.put(jsonWidget);
-						}
+			List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible,
+					providers, widgetGroupId);
+			if (widgetList != null) {
+				for (Widget widget : widgetList) {
+					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), widget, widget.getCategory());
+					if (jsonWidget != null) {
+						jsonArray.put(jsonWidget);
 					}
 				}
 			}
@@ -205,7 +203,7 @@ public class WidgetAPI
 	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "WIDGET_VISUAL":
 	 *         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAz3UlE..." }</font><br>
-	 * <br>
+	 *         <br>
 	 *         Response Code:<br>
 	 *         <table border="1">
 	 *         <tr>
@@ -248,8 +246,10 @@ public class WidgetAPI
 		catch (Exception e) {
 			message = e.getMessage();
 			statusCode = 500;
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
-					+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message, e);
+			_logger.error(
+					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+							+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message,
+					e);
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -287,11 +287,11 @@ public class WidgetAPI
 		return null;
 	}
 
-	private boolean isWidgetHiddenInWidgetSelector(Search search, boolean includeDashboardIneligible)
+	private boolean isWidgetHiddenInWidgetSelector(Widget widget, boolean includeDashboardIneligible)
 	{
 		boolean hiddenInWidgetSelector = false;
 		if (!includeDashboardIneligible) {
-			List<SearchParameter> params = search.getParameters();
+			List<SearchParameter> params = widget.getParameters();
 			if (params != null && params.size() > 0) {
 				for (SearchParameter param : params) {
 					if (PARAM_NAME_DASHBOARD_INELIGIBLE.equals(param.getName()) && "1".equals(param.getValue())) {

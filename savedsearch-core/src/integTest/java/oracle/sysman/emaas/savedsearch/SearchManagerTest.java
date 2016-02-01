@@ -7,6 +7,11 @@ import java.util.Random;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import org.testng.AssertJUnit;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
@@ -19,19 +24,16 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
-
-import org.testng.AssertJUnit;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 public class SearchManagerTest extends BaseTest
 {
@@ -162,9 +164,9 @@ public class SearchManagerTest extends BaseTest
 	public void initTenantDetails()
 	{
 
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_NAME).toString())));
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 
 	}
 
@@ -193,8 +195,8 @@ public class SearchManagerTest extends BaseTest
 		final int folderCount = 10000;//change this to your desired count
 		final int searchCount = 1000000;//change this to your desired count
 		long start = System.currentTimeMillis();
-		System.out.println("Start to create " + categoryCount + " categories, " + folderCount + " folders and " + searchCount
-				+ " searches");
+		System.out.println(
+				"Start to create " + categoryCount + " categories, " + folderCount + " folders and " + searchCount + " searches");
 		for (int i = 0; i < categoryCount; i++) {
 			Category cat = SearchManagerTest.createTestCategory(cm, null, "CategoryTest " + i);
 			for (int j = 0; j < folderCount / categoryCount; j++) {
@@ -204,11 +206,11 @@ public class SearchManagerTest extends BaseTest
 				}
 			}
 		}
-		System.out.println("Total time to create " + categoryCount + " categories, " + folderCount + " folders and "
-				+ searchCount + " searches is " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+		System.out.println("Total time to create " + categoryCount + " categories, " + folderCount + " folders and " + searchCount
+				+ " searches is " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
-	@Test 
+	@Test
 	public void testCRUDOnSearchLastAccess() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
@@ -239,7 +241,7 @@ public class SearchManagerTest extends BaseTest
 		fm.deleteFolder(folder.getId(), true);
 	}
 
-	@Test 
+	@Test
 	public void testGetSearchByName() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
@@ -269,7 +271,7 @@ public class SearchManagerTest extends BaseTest
 		fm.deleteFolder(folder.getId(), true);
 	}
 
-	@Test 
+	@Test
 	public void testGetSearchByName_noresult()
 	{
 		SearchManager sm = SearchManager.getInstance();
@@ -284,7 +286,7 @@ public class SearchManagerTest extends BaseTest
 
 	}
 
-	@Test 
+	@Test
 	public void testGetSearchListByCategoryId() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
@@ -319,7 +321,7 @@ public class SearchManagerTest extends BaseTest
 		fm.deleteFolder(folder.getId(), true);
 	}
 
-	@Test 
+	@Test
 	public void testGetSearchListByFolderId() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
@@ -354,7 +356,7 @@ public class SearchManagerTest extends BaseTest
 		fm.deleteFolder(folder.getId(), true);
 	}
 
-	@Test 
+	@Test
 	public void testGetSearchListByLastAccessDate() throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
@@ -435,7 +437,137 @@ public class SearchManagerTest extends BaseTest
 		cm.deleteCategory(cat.getId(), true);
 		fm.deleteFolder(folder.getId(), true);
 	}
-	
+
+	@Test
+	public void testGetWidgetListByProviderNames() throws EMAnalyticsFwkException
+	{
+		FolderManagerImpl fm = FolderManagerImpl.getInstance();
+		Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest" + System.currentTimeMillis());
+
+		CategoryManager cm = CategoryManagerImpl.getInstance();
+		Category cat1 = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest1" + System.currentTimeMillis());
+		Category cat2 = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest2" + System.currentTimeMillis());
+
+		SearchManager sm = SearchManager.getInstance();
+		List<Widget> queried = null;
+		List<String> providers = new ArrayList<String>();
+		providers.add(cat1.getProviderName());
+		// query and get original size
+		queried = sm.getWidgetListByProviderNames(true, providers, null);
+		int origAmount = queried.size();
+
+		Search widget1 = SearchManagerTest.createTestWidget(sm, folder, cat1, "Widget1 Name " + System.currentTimeMillis(), null);
+		Search widget2 = SearchManagerTest.createTestWidget(sm, folder, cat1, "Widget2 Name " + System.currentTimeMillis(), null);
+		Search widget3 = SearchManagerTest.createTestWidget(sm, folder, cat2, "Widget3 Name " + System.currentTimeMillis(), null);
+
+		try {
+			queried = sm.getWidgetListByProviderNames(true, providers, null);
+		}
+		catch (EMAnalyticsFwkException e) {
+			AssertJUnit.fail();
+		}
+
+		AssertJUnit.assertNotNull(queried);
+		if (queried != null) {
+			AssertJUnit.assertEquals(origAmount + 3, queried.size());
+		}
+
+		Widget savedWidget1 = null;
+		Widget savedWidget2 = null;
+		Widget savedWidget3 = null;
+		if (queried != null) {
+			for (Widget widget : queried) {
+				if (widget1.getId().equals(widget.getId())) {
+					savedWidget1 = widget;
+				}
+				else if (widget2.getId().equals(widget.getId())) {
+					savedWidget2 = widget;
+				}
+				else if (widget3.getId().equals(widget.getId())) {
+					savedWidget3 = widget;
+				}
+			}
+		}
+		assertSearchEquals(widget1, savedWidget1);
+		assertSearchEquals(widget2, savedWidget2);
+		assertSearchEquals(widget3, savedWidget3);
+		AssertJUnit.assertEquals(cat1.getId(), savedWidget1.getCategory().getId());
+		AssertJUnit.assertEquals(cat1.getId(), savedWidget2.getCategory().getId());
+		AssertJUnit.assertEquals(cat2.getId(), savedWidget3.getCategory().getId());
+
+		// widgetGroupId specified
+		savedWidget1 = null;
+		savedWidget2 = null;
+		savedWidget3 = null;
+		try {
+			queried = sm.getWidgetListByProviderNames(false, providers, String.valueOf(cat1.getId()));
+			for (Widget widget : queried) {
+				if (widget1.getId().equals(widget.getId())) {
+					savedWidget1 = widget;
+				}
+				if (widget2.getId().equals(widget.getId())) {
+					savedWidget2 = widget;
+				}
+				if (widget3.getId().equals(widget.getId())) {
+					AssertJUnit.fail("Failure: widgets from other widgetGroups are not expected!");
+				}
+			}
+		}
+		catch (EMAnalyticsFwkException e) {
+			AssertJUnit.fail();
+		}
+		assertSearchEquals(widget1, savedWidget1);
+		assertSearchEquals(widget2, savedWidget2);
+
+		// not include dashboard ineligible widgets
+		SearchParameter wp1 = new SearchParameter();
+		wp1.setName(SearchManager.SEARCH_PARAM_DASHBOARD_INELIGIBLE);
+		wp1.setType(ParameterType.STRING);
+		wp1.setValue("1");
+		widget2.getParameters().add(wp1);
+		sm.editSearch(widget2);
+		savedWidget1 = null;
+
+		// not include category ineligible widgets
+		Parameter pm = new Parameter();
+		pm.setName(SearchManager.SEARCH_PARAM_DASHBOARD_INELIGIBLE);
+		pm.setType(ParameterType.STRING);
+		pm.setValue("1");
+		if (cat2.getParameters() == null) {
+			cat2.setParameters(new ArrayList<Parameter>());
+		}
+		cat2.getParameters().add(pm);
+		cm.editCategory(cat2);
+
+		try {
+			queried = sm.getWidgetListByProviderNames(false, providers, null);
+			for (Widget widget : queried) {
+				if (widget1.getId().equals(widget.getId())) {
+					savedWidget1 = widget;
+				}
+				if (widget2.getId().equals(widget.getId())) {
+					AssertJUnit.fail("Failure: inegiligible widgets are not expected!");
+				}
+				if (widget3.getId().equals(widget.getId())) {
+					AssertJUnit.fail("Failure: widgets from inegiligible categories are not expected!");
+				}
+			}
+		}
+		catch (EMAnalyticsFwkException e) {
+			AssertJUnit.fail();
+		}
+		assertSearchEquals(widget1, savedWidget1);
+
+		// not include ineligible widgets from categories
+
+		sm.deleteSearch(widget1.getId(), true);
+		sm.deleteSearch(widget2.getId(), true);
+		sm.deleteSearch(widget3.getId(), true);
+		cm.deleteCategory(cat1.getId(), true);
+		cm.deleteCategory(cat2.getId(), true);
+		fm.deleteFolder(folder.getId(), true);
+	}
+
 	@Test
 	public void testGetWidgetScreenshotById() throws EMAnalyticsFwkException
 	{
@@ -447,8 +579,8 @@ public class SearchManagerTest extends BaseTest
 
 		SearchManager sm = SearchManager.getInstance();
 		String screenshot = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAYKklEQVR4AdxSBRIDIQy8";
-		Search widget1 = SearchManagerTest.createTestWidget(sm, folder, cat,
-				"WidgetWithScreenshot " + System.currentTimeMillis(), screenshot);
+		Search widget1 = SearchManagerTest.createTestWidget(sm, folder, cat, "WidgetWithScreenshot " + System.currentTimeMillis(),
+				screenshot);
 		Search widget2 = SearchManagerTest.createTestWidget(sm, folder, cat,
 				"WidgetWithoutScreenshot " + System.currentTimeMillis(), null);
 

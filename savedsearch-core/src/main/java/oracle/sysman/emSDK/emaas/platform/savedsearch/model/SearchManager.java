@@ -17,6 +17,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
  */
 public abstract class SearchManager
 {
+	public static final String SEARCH_PARAM_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
+
 	/**
 	 * Returns an instance of the manager.
 	 *
@@ -116,6 +118,19 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException;
+
+	/**
+	 * Returns the list of widgets belonging to the categories specified by provider names
+	 *
+	 * @param includeDashboardIneligible
+	 *            specifies whether to return Dashboard Ineligible widgets or not.
+	 * @param providerNames
+	 *            provider names
+	 * @return list of widgets
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract List<Widget> getWidgetListByProviderNames(boolean includeDashboardIneligible, List<String> providerNames,
+			String widgetGroupId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the screenshot of the widget by given id.
