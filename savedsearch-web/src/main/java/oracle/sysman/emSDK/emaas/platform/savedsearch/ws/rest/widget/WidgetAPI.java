@@ -155,7 +155,7 @@ public class WidgetAPI
 				_logger.debug("Query all widgets, get subscribed provider names: {}", providers.toArray());
 			}
 			else {
-				_logger.debug("Query all widgets, get subscribed APPs");
+				_logger.debug("Query all widgets, get empty(null) subscribed APPs");
 			}
 
 			List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible,
