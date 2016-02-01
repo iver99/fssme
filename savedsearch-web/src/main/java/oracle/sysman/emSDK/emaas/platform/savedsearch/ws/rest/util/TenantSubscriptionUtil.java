@@ -79,13 +79,13 @@ public class TenantSubscriptionUtil
 	private static String SERVICE_PROVIDER_NAME_LA = "LoganService";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
-	private static Map<String, String> serviceToProviderMap = new Hashtable<String, String>();
+	private static Map<String, String> providerToServiceMap = new Hashtable<String, String>();
 
 	static {
-		serviceToProviderMap.put(SUBSCRIBED_SERVICE_NAME_LA, SERVICE_PROVIDER_NAME_LA);
-		serviceToProviderMap.put(SUBSCRIBED_SERVICE_NAME_ITA, SERVICE_PROVIDER_NAME_TA);
-		serviceToProviderMap.put(SUBSCRIBED_SERVICE_NAME_ITA, SERVICE_PROVIDER_NAME_ITA);
-		serviceToProviderMap.put(SUBSCRIBED_SERVICE_NAME_APM, SERVICE_PROVIDER_NAME_APM);
+		providerToServiceMap.put(SERVICE_PROVIDER_NAME_LA, SUBSCRIBED_SERVICE_NAME_LA);
+		providerToServiceMap.put(SERVICE_PROVIDER_NAME_TA, SUBSCRIBED_SERVICE_NAME_ITA);
+		providerToServiceMap.put(SERVICE_PROVIDER_NAME_ITA, SUBSCRIBED_SERVICE_NAME_ITA);
+		providerToServiceMap.put(SERVICE_PROVIDER_NAME_APM, SUBSCRIBED_SERVICE_NAME_APM);
 	}
 
 	public static List<String> getProviderNameFromServiceName(String providerName)
@@ -119,7 +119,7 @@ public class TenantSubscriptionUtil
 				for (Category cat : catList) {
 					//EMCPDF-997 If a widget group has special parameter DASHBOARD_INELIGIBLE=true,
 					//we do NOT show all widgets of this group inside widget selector
-					if (subscribedServices.contains(serviceToProviderMap.get(cat.getProviderName()))
+					if (subscribedServices.contains(providerToServiceMap.get(cat.getProviderName()))
 							&& !TenantSubscriptionUtil.isCategoryHiddenInWidgetSelector(cat, includeDashboardIneligible)) {
 						resultList.add(cat);
 					}
