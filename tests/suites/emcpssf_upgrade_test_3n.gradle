@@ -29,33 +29,37 @@ repositories {
     }                                                                  
 }                                                                      
 /******* ExtraProperties declaration ******/
+//Update the testConfig configuration to specify where is the test jar.
+apply from: 'setup.gradle'
+
 
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy') }
-    testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
+           testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests',version: "${REPO_BID}"
+           testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-upgrade-tests-integ-tests', version: "${REPO_BID}" 
+}
 
-    testConfig group: 'com.oracle.emaas.emcpssf.test', name:'savedsearch-upgrade-tests-integ-tests', version: "${REPO_BID}"
-    //testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-uitest-integ-tests', version: "${REPO_BID}"
 
-   testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
-	testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
-	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-  testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+   //testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
+	//testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
+	//testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
+ //testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
 
 	configurations{
 		restAssured.exclude module: 'groovy'
 	}
  
-}
+
 
 //Add data population(pre-upgrade) tests or tasks here
 //task omcUpgradeDataPopulation (type: EMTest,overwrite: true) {
 task pre_upgrade (type: EMTest, dependsOn: omcSetup){
+options.suiteXmlBuilder().suite('name': 'PreUpg') {
+    test('name': 'Pre_upg') {
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
 //include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
   
-    //useWebdriver = true
+    useWebdriver = true
     useRestAssured = true
     
    
@@ -65,6 +69,8 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
 
 
 task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup]){
+    options.suiteXmlBuilder().suite('name': 'PostUpg') {
+      test('name': 'post_upg') {
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
 
 //include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
@@ -72,7 +78,7 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
 //include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
  
  
-    //useWebdriver = true
+    useWebdriver = true
     useRestAssured = true
 }
 post_upgrade.mustRunAfter pre_upgrade
@@ -81,7 +87,7 @@ omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
    
     // Above is an example, please place your actual task definition for data validation
 
-task emcpdf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown])
+task emcpssf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown])
 
 
    
