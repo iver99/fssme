@@ -58,7 +58,8 @@ options.suiteXmlBuilder().suite('name': 'PreUpg') {
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
 //include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
-  
+   }
+ }
     useWebdriver = true
     useRestAssured = true
     
@@ -76,11 +77,16 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
 //include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
 
 //include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
- 
+    }
+ }
+
  
     useWebdriver = true
     useRestAssured = true
+    
+  
 }
+
 post_upgrade.mustRunAfter pre_upgrade
 omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
 
