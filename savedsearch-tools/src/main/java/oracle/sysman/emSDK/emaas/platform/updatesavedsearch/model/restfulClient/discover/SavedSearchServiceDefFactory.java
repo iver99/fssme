@@ -19,7 +19,7 @@ public class SavedSearchServiceDefFactory
 	public static final String REGISTRY_URLS = "registryUrls";
 	public static final String SERVICE_URLS = "serviceUrls";
 	public static final String SERVICE_NAME_SAVEDSEARCH = "SavedSearch";
-	public static final String SERVICE_VERSION_SAVEDSEARCH = "0.1";
+	public static final String SERVICE_VERSION_SAVEDSEARCH = "1.0+";
 	private static Logger _logger = UpdateSavedSearchLog.getLogger(SavedSearchServiceDefFactory.class);
 
 	/*   public static IServiceDefinition getSavedSearchServiceDefV1(){
