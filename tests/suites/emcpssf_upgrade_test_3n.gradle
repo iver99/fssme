@@ -93,7 +93,9 @@ omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
    
     // Above is an example, please place your actual task definition for data validation
 
-task emcpssf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown])
+task emcpssf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown]){
+apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
+}
 
 
    
