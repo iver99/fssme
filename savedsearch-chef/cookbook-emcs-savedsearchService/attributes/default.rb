@@ -18,7 +18,7 @@ default["app_dir"] = "#{node["apps_dir"]}"
 default["jdk_dir"] = "#{node["infra_dir"]}/java"
 default["java_home"] = "#{node["jdk_dir"]}/jdk1.7.0_51"
 
-default["SAAS_API_version"] = "0.1"
+default["SAAS_API_version"] = "1.0"
 
 default["file_domain_create"] = "#{node["log_dir"]}/savedSearchCreateDomain.py"
 
