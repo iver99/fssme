@@ -36,6 +36,9 @@ public class EmAnalyticsCategoryParam implements Serializable
 	@Column(name = "PARAM_VALUE")
 	private String value;
 
+	@Column(name = "TENANT_ID", insertable = false, updatable = false)
+	private Long tenantId;
+
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne(optional = false)
 	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID"),
@@ -88,9 +91,6 @@ public class EmAnalyticsCategoryParam implements Serializable
 		return categoryId;
 	}
 
-	//@Column(name="NAME")
-	//private String name;
-
 	/*public String getName() {
 		return this.name;
 	}
@@ -108,14 +108,25 @@ public class EmAnalyticsCategoryParam implements Serializable
 		return name;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	//@Column(name="NAME")
+	//private String name;
+
+	/**
+	 * @return the tenantId
 	 */
+	public Long getTenantId()
+	{
+		return tenantId;
+	}
 
 	public String getValue()
 	{
 		return value;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 
 	@Override
 	public int hashCode()
@@ -129,14 +140,14 @@ public class EmAnalyticsCategoryParam implements Serializable
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-
 	public void setCategoryId(long categoryId)
 	{
 		this.categoryId = categoryId;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 
 	public void setEmAnalyticsCategory(EmAnalyticsCategory emAnalyticsCategory)
 	{
@@ -146,6 +157,15 @@ public class EmAnalyticsCategoryParam implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 
 	public void setValue(String value)

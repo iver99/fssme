@@ -47,6 +47,7 @@ public class SearchManagerImpl extends SearchManager
 	private static final String FILTER_BY_CATEGORY = "and e.emAnalyticsCategory = :category ";
 	private static final String SEARCH_ENT_PREFIX = "e.";
 	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 and e.owner in ('ORACLE',:userName) order by e.lastAccess.accessDate DESC ";
+
 	private static final String WIDGET_LIST_BY_PROVIDERS_1 = "SELECT e.* FROM EMS_ANALYTICS_SEARCH e " + "where ";
 	private static final String WIDGET_LIST_BY_PROVIDERS_2 = "e.CATEGORY_ID=#widgetGroupId AND ";
 	private static final String WIDGET_LIST_BY_PROVIDERS_3 = "e.CATEGORY_ID in (select c.CATEGORY_ID from EMS_ANALYTICS_CATEGORY c where c.TENANT_ID=#tenantId AND c.PROVIDER_NAME in (";
@@ -62,6 +63,22 @@ public class SearchManagerImpl extends SearchManager
 	private static final String WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_4 = ") AND (cm.PARAM_VALUE IS NULL OR cm.PARAM_VALUE <> '1')) "
 			+ "AND e.deleted =0 AND e.IS_WIDGET = 1 AND e.TENANT_ID=#tenantId AND (e.owner=#userName OR e.SYSTEM_SEARCH =1) "
 			+ "AND (pm.PARAM_VALUE_STR IS NULL OR pm.PARAM_VALUE_STR <> '1')";
+
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_1 = "SELECT e FROM EmAnalyticsSearch e " + "where ";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_2 = "e.emAnalyticsCategory.categoryId=:widgetGroupId AND ";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_3 = "e.emAnalyticsCategory.categoryId in (select c.categoryId from EmAnalyticsCategory c where c.tenantId=:tenantId AND c.providerName in (";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_4 = "))  "
+			+ "AND e.deleted =0 AND e.isWidget = 1 AND e.tenant=:tenantId AND (e.owner=:userName OR e.systemSearch =1)";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_1 = "SELECT e FROM EmAnalyticsSearch e LEFT JOIN EmAnalyticsSearchParam pm "
+			+ "ON pm.searchId = e.id AND pm.name = 'DASHBOARD_INELIGIBLE' where e.tenant=:tenantId AND ";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_2 = "e.emAnalyticsCategory.categoryId=:widgetGroupId AND ";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_3 = "e.emAnalyticsCategory.categoryId in "
+			+ "(select c.categoryId from EmAnalyticsCategory c LEFT JOIN EmAnalyticsCategoryParam cm "
+			+ "on cm.categoryId = c.categoryId AND cm.name = 'DASHBOARD_INELIGIBLE' AND cm.tenantId = c.tenantId "
+			+ "where c.providerName in (";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_4 = ") AND (cm.value IS NULL OR cm.value <> '1')) "
+			+ "AND e.deleted =0 AND e.isWidget = 1 AND e.tenant=:tenantId AND (e.owner=:userName OR e.systemSearch =1) "
+			+ "AND (pm.paramValueStr IS NULL OR pm.paramValueStr <> '1')";
 
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
@@ -446,6 +463,86 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Widget> getWidgetListByProviderNames(boolean includeDashboardIneligible, List<String> providerNames,
+			String widgetGroupId) throws EMAnalyticsFwkException
+	{
+		if (providerNames == null || providerNames.isEmpty()) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		if (includeDashboardIneligible) {
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_1);
+			if (widgetGroupId != null) {
+				sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_2);
+			}
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_3);
+		}
+		else {
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_1);
+			if (widgetGroupId != null) {
+				sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_2);
+			}
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_3);
+		}
+		for (int i = 0; i < providerNames.size(); i++) {
+			if (i != 0) {
+				sb.append(",");
+			}
+			sb.append("'");
+			sb.append(providerNames.get(i));
+			sb.append("'");
+		}
+		if (includeDashboardIneligible) {
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_4);
+		}
+		else {
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_4);
+		}
+		EntityManager em = null;
+		try {
+			List<Widget> rtnobj = new ArrayList<Widget>();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			em.getTransaction().begin();
+			em.flush();
+			em.getTransaction().commit();
+			String sql = sb.toString();
+			long start = System.currentTimeMillis();
+			Query query = em.createQuery(sql).setHint("eclipselink.left-join-fetch", "e.emAnalyticsCategory")
+					//.setHint("eclipselink.left-join-fetch", "e.emAnalyticsSearchParams")
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+					.setParameter("tenantId", TenantContext.getContext().getTenantInternalId());
+			if (widgetGroupId != null) {
+				query.setParameter("widgetGroupId", Long.valueOf(widgetGroupId));
+			}
+			List<EmAnalyticsSearch> searchList = query.getResultList();
+			_logger.debug("Querying to get all widgets takes " + (System.currentTimeMillis() - start) + " ms");
+			System.out.println("Querying to get all widgets takes " + (System.currentTimeMillis() - start) + " ms");
+			for (EmAnalyticsSearch searchObj : searchList) {
+				//				em.refresh(searchObj);
+				rtnobj.add(createWidgetObject(searchObj, false));
+			}
+
+			return rtnobj;
+		}
+		catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of widgets for providerNames : " + providerNames, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of widgets for providerNames : " + providerNames,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager#getWidgetListByProviderNames(java.lang.String[])
+	 */
+	//	@Override
+	@SuppressWarnings("unchecked")
+	public List<Widget> getWidgetListByProviderNames_NativeSQL(boolean includeDashboardIneligible, List<String> providerNames,
 			String widgetGroupId) throws EMAnalyticsFwkException
 	{
 		if (providerNames == null || providerNames.isEmpty()) {

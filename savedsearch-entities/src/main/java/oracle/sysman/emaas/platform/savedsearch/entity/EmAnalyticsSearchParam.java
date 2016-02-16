@@ -51,6 +51,10 @@ public class EmAnalyticsSearchParam implements Serializable
 	@Column(name = "PARAM_VALUE_STR")
 	private String paramValueStr;
 
+	@Id
+	@Column(name = "TENANT_ID", insertable = false, updatable = false)
+	private Long tenantId;
+
 	@ManyToOne(optional = false)
 	@JoinColumns({ @JoinColumn(name = "SEARCH_ID", referencedColumnName = "SEARCH_ID"),
 			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
@@ -127,8 +131,6 @@ public class EmAnalyticsSearchParam implements Serializable
 		return emAnalyticsSearch;
 	}
 
-	//bi-directional many-to-one association to EmAnalyticsSearch
-
 	public String getName()
 	{
 		return name;
@@ -139,9 +141,7 @@ public class EmAnalyticsSearchParam implements Serializable
 		return paramAttributes;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	//bi-directional many-to-one association to EmAnalyticsSearch
 
 	public BigDecimal getParamType()
 	{
@@ -153,6 +153,10 @@ public class EmAnalyticsSearchParam implements Serializable
 		return paramValueClob;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+
 	@Lob
 	@Basic(fetch = FetchType.EAGER)
 	public String getParamValueStr()
@@ -163,6 +167,14 @@ public class EmAnalyticsSearchParam implements Serializable
 	public long getSearchId()
 	{
 		return searchId;
+	}
+
+	/**
+	 * @return the tenantId
+	 */
+	public Long getTenantId()
+	{
+		return tenantId;
 	}
 
 	@Override
@@ -215,6 +227,15 @@ public class EmAnalyticsSearchParam implements Serializable
 	public void setSearchId(long searchId)
 	{
 		this.searchId = searchId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 
 }

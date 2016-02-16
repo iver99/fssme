@@ -75,6 +75,9 @@ public class EmAnalyticsCategory implements Serializable
 	@Column(name = "OWNER")
 	private String owner;
 
+	@Column(name = "TENANT_ID", insertable = false, updatable = false)
+	private Long tenantId;
+
 	//bi-directional many-to-one association to EmAnalyticsFolder
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "DEFAULT_FOLDER_ID", referencedColumnName = "FOLDER_ID"),
@@ -96,8 +99,6 @@ public class EmAnalyticsCategory implements Serializable
 	@Column(name = "PROVIDER_ASSET_ROOT")
 	private String providerAssetRoot;
 
-	//bi-directional many-to-one association to EmAnalyticsCategoryParam
-
 	@OneToMany(mappedBy = "emAnalyticsCategory", cascade = CascadeType.ALL)
 	@PrivateOwned
 	private Set<EmAnalyticsCategoryParam> emAnalyticsCategoryParams;
@@ -105,6 +106,8 @@ public class EmAnalyticsCategory implements Serializable
 	//bi-directional many-to-one association to EmAnalyticsSearch
 	@OneToMany(mappedBy = "emAnalyticsCategory")
 	private Set<EmAnalyticsSearch> emAnalyticsSearches;
+
+	//bi-directional many-to-one association to EmAnalyticsCategoryParam
 
 	public EmAnalyticsCategory()
 	{
@@ -203,6 +206,14 @@ public class EmAnalyticsCategory implements Serializable
 		return providerVersion;
 	}
 
+	/**
+	 * @return the tenantId
+	 */
+	public Long getTenantId()
+	{
+		return tenantId;
+	}
+
 	public void setCategoryId(long categoryId)
 	{
 		this.categoryId = categoryId;
@@ -291,6 +302,15 @@ public class EmAnalyticsCategory implements Serializable
 	public void setProviderVersion(String providerVersion)
 	{
 		this.providerVersion = providerVersion;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 
 }
