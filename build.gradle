@@ -162,8 +162,8 @@ dependencies {
 	prebuild_tenant_sdk 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2'
         prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.5'
-	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.0.0+',
-                                'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
+	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.+',
+                                'com.oracle.emaas.emcpsm:registry-lookup-client:1.+'
 	prebuild_savedsearch    'com.oracle.adf:wls-api:12.1.2-0-0',
 				'com.oracle.jdbc:ojdbc6:12.1.0.1.0',
 				'javax.transaction:javax.transaction-api:1.2',
@@ -202,8 +202,8 @@ task preBuildCompile(type: Copy) {
    from configurations.testNG
    from configurations.prebuild_wlfullc
    into "$afDir"
-   rename 'registry-lookup-client-1.0.0-(.*).jar', 'registry-lookup-client-1.0.0.jar'
-   rename 'registry-client-1.0.0-(.*).jar', 'registry-client-1.0.0.jar'
+   rename 'registry-lookup-client-1.\d+.\d+-(.*).jar', 'registry-lookup-client-1.x.jar'
+   rename 'registry-client-1.\d+.\d+-(.*).jar', 'registry-client-1.x.jar'
 }
 
 compileJava.dependsOn preBuildCompile
