@@ -30,7 +30,7 @@ repositories {
 }                                                                      
 /******* ExtraProperties declaration ******/
 //Update the testConfig configuration to specify where is the test jar.
-//apply from: 'setup.gradle'
+apply from: 'setup.gradle'
 
 
 dependencies {
@@ -52,13 +52,12 @@ dependencies {
 
 //Add data population(pre-upgrade) tests or tasks here
 //task omcUpgradeDataPopulation (type: EMTest,overwrite: true) {
-
 task pre_upgrade (type: EMTest, dependsOn: omcSetup){
 options.suiteXmlBuilder().suite('name': 'PreUpg') {
     test('name': 'Pre_upg') {
-       classes([:]) {
-            'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD')
-    }
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
    }
  }
     useWebdriver = true
@@ -73,10 +72,11 @@ options.suiteXmlBuilder().suite('name': 'PreUpg') {
 task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup]){
     options.suiteXmlBuilder().suite('name': 'PostUpg') {
       test('name': 'post_upg') {
-           classes([:]) {
-                'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.folder.FolderCRUD')
-        } 
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
 
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
+
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
     }
  }
 
@@ -93,9 +93,7 @@ omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
    
     // Above is an example, please place your actual task definition for data validation
 
-task emcpssf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown]){
-apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
-}
+task emcpssf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown])
 
 
    
