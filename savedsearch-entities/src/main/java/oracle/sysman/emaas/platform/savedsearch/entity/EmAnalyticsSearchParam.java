@@ -23,7 +23,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  */
 
 @Entity
-@Multitenant
+@Multitenant(includeCriteria = false)
 @IdClass(EmAnalyticsSearchParamPK.class)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_SEARCH_PARAMS")
