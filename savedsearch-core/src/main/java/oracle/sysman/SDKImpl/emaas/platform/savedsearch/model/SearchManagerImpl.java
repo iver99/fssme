@@ -490,8 +490,7 @@ public class SearchManagerImpl extends SearchManager
 			em.getTransaction().commit();
 			String sql = sb.toString();
 			long start = System.currentTimeMillis();
-			Query query = em.createQuery(sql).setHint("eclipselink.left-join-fetch", "e.emAnalyticsCategory")
-					.setHint("eclipselink.left-join-fetch", "e.emAnalyticsSearchParams")
+			Query query = em.createQuery(sql).setHint("eclipselink.left-join-fetch", "e.emAnalyticsSearchParams")
 					.setHint("eclipselink.join-fetch", "e.emAnalyticsCategory")
 					.setHint("eclipselink.left-join-fetch", "e.emAnalyticsCategory.emAnalyticsCategoryParams")
 					.setHint("eclipselink.join-fetch", "e.emAnalyticsFolder")
