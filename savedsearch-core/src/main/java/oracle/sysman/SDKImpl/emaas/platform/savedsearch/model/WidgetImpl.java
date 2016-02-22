@@ -10,14 +10,18 @@
 
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.io.Serializable;
+
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 
 /**
  * @author guochen
  */
-public class WidgetImpl extends SearchImpl implements Widget
+public class WidgetImpl extends SearchImpl implements Widget, Serializable
 {
+	private static final long serialVersionUID = 1665209922931959641L;
+
 	private Category category;
 
 	/* (non-Javadoc)

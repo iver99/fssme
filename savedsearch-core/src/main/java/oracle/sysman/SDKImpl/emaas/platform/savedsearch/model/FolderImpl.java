@@ -1,5 +1,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.io.Serializable;
+
 /* $Header: emcore/jsrc/sdkcore/SdkcoreEmanalyticsPublicModel/src/oracle/sysman/sdkImpl/core/emanalytics/impl/FolderImpl.java /st_emgc_pt-13.1mstr/2 2014/02/03 02:51:00 saurgarg Exp $ */
 
 import java.util.Date;
@@ -12,8 +14,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 @XmlRootElement
 @XmlType(propOrder = { "id", "name", "description", "parentId", "createdOn", "owner", "lastModifiedOn", "systemFolder",
 		"uiHidden", "lastModifiedBy" })
-public class FolderImpl implements Folder
+public class FolderImpl implements Folder, Serializable
 {
+	private static final long serialVersionUID = 8581284618417733855L;
+
 	protected Integer id;
 	protected String name;
 	protected String description;

@@ -80,6 +80,7 @@ dependencies {
   compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'){transitive = false}
   compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
   compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
+  compile(group: 'coherence', name: 'coherence', version: '12.1.2') {transitive=false}
 compile configurations.testNG
 compile configurations.webdriver
 compile configurations.restAssured

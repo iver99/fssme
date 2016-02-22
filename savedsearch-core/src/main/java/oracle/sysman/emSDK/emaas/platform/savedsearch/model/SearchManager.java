@@ -133,6 +133,19 @@ public abstract class SearchManager
 			String widgetGroupId) throws EMAnalyticsFwkException;
 
 	/**
+	 * Returns the list of widgets belonging to the categories specified by provider names
+	 *
+	 * @param includeDashboardIneligible
+	 *            specifies whether to return Dashboard Ineligible widgets or not.
+	 * @param providerNames
+	 *            provider names
+	 * @return list of widgets
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract List<Widget> getWidgetListByProviderNamesRefreshableCache(boolean includeDashboardIneligible,
+			List<String> providerNames, String widgetGroupId) throws EMAnalyticsFwkException;
+
+	/**
 	 * Returns the screenshot of the widget by given id.
 	 *
 	 * @param widgetId
