@@ -75,3 +75,40 @@ WHEN OTHERS THEN
   RAISE;  
 END;
 /
+
+DECLARE
+  V_COUNT number;
+BEGIN
+
+SELECT COUNT(1) INTO V_COUNT from EMS_ANALYTICS_CATEGORY where TENANT_ID='&TENANT_ID' AND PROVIDER_VERSION='0.1';
+IF (V_COUNT>0) THEN
+  UPDATE EMS_ANALYTICS_CATEGORY SET PROVIDER_VERSION='1.0' WHERE TENANT_ID='&TENANT_ID';--set all to 1.0 including ta version from 1.0.5 to 1.0
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Provider version of category has been upgraded from 0.1 to 1.0 for tenant: &TENANT_ID successfully! Upgraded records: '||V_COUNT);
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Provider version of category  has been upgraded from 0.1 to 1.0 for tenant: &TENANT_ID before, no need to upgrade again');
+END IF;
+
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to upgrade version from 0.1 to 1.0 for tenant: &TENANT_ID due to '||SQLERRM);
+    RAISE;
+END;
+/
+
+DECLARE
+  V_COUNT number;
+BEGIN
+
+  UPDATE EMS_ANALYTICS_SEARCH_PARAMS SET PARAM_VALUE_STR='1.0' WHERE TENANT_ID='&TENANT_ID' and NAME='PROVIDER_VERSION';--set all to 1.0 including ta version from 1.0.5 to 1.0
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Provider version of widget  has been upgraded from 0.1 to 1.0 for tenant: &TENANT_ID successfully! Upgraded records: '||V_COUNT);
+
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to upgrade version of widget from 0.1 to 1.0 for tenant: &TENANT_ID due to '||SQLERRM);
+    RAISE;
+END;
+/
