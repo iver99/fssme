@@ -1,6 +1,5 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -21,12 +20,14 @@ import org.codehaus.jettison.json.JSONObject;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.WidgetCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TenantSubscriptionUtil;
 
 /**
  * Saved Search Service
@@ -142,26 +143,10 @@ public class WidgetAPI
 
 			JSONArray jsonArray = new JSONArray();
 
-			List<String> subscribedApps = TenantSubscriptionUtil
-					.getTenantSubscribedServices(TenantContext.getContext().gettenantName());
-			List<String> providers = new ArrayList<String>();
-			if (subscribedApps != null) {
-				for (String app : subscribedApps) {
-					List<String> providerList = TenantSubscriptionUtil.getProviderNameFromServiceName(app);
-					if (providerList != null) {
-						providers.addAll(providerList);
-					}
-				}
-				_logger.debug("Query all widgets, get subscribed provider names: {}", providers.toArray());
-			}
-			else {
-				_logger.debug("Query all widgets, get empty(null) subscribed APPs");
-			}
-
-			List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible,
-					providers, widgetGroupId);
+			List<Widget> widgetList = getAllWidgetsFromCache(widgetGroupId, includeDashboardIneligible);
 			if (widgetList != null) {
 				for (Widget widget : widgetList) {
+					_logger.info("Debugging: widget unique id is {}", widget.getId());
 					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), widget, widget.getCategory());
 					if (jsonWidget != null) {
 						jsonArray.put(jsonWidget);
@@ -287,20 +272,60 @@ public class WidgetAPI
 		return null;
 	}
 
-	private boolean isWidgetHiddenInWidgetSelector(Widget widget, boolean includeDashboardIneligible)
+	private List<Widget> getAllWidgetsFromCache(String widgetGroupId, boolean includeDashboardIneligible)
+			throws EMAnalyticsFwkException
 	{
-		boolean hiddenInWidgetSelector = false;
-		if (!includeDashboardIneligible) {
-			List<SearchParameter> params = widget.getParameters();
-			if (params != null && params.size() > 0) {
-				for (SearchParameter param : params) {
-					if (PARAM_NAME_DASHBOARD_INELIGIBLE.equals(param.getName()) && "1".equals(param.getValue())) {
-						hiddenInWidgetSelector = true;
-						break;
-					}
+		// introduce cache for listing widget for dashboard
+		WidgetCacheManager wcm = WidgetCacheManager.getInstance();
+		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId(),
+				TenantContext.getContext().gettenantName());
+
+		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
+			try {
+				List<Widget> wgtList = wcm.getWigetListFromCache(cacheTenant);
+				if (wgtList != null) {
+					_logger.debug("Retrieved all widget list from cache");
+					return wgtList;
 				}
 			}
+			catch (Exception e) {
+				_logger.error(e.getLocalizedMessage(), e);
+			}
 		}
-		return hiddenInWidgetSelector;
+		else {
+			_logger.debug("Not get from cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,
+					widgetGroupId);
+		}
+		List<String> providers = TenantSubscriptionUtil
+				.getTenantSubscribedServiceProviders(TenantContext.getContext().gettenantName());
+		List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible, providers,
+				widgetGroupId);
+
+		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
+			_logger.debug("Storing widget list to cache");
+			wcm.storeWidgetListToCache(cacheTenant, widgetList);
+		}
+		else {
+			_logger.debug("Not store to cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,
+					widgetGroupId);
+		}
+		return widgetList;
 	}
+
+	//	private boolean isWidgetHiddenInWidgetSelector(Widget widget, boolean includeDashboardIneligible)
+	//	{
+	//		boolean hiddenInWidgetSelector = false;
+	//		if (!includeDashboardIneligible) {
+	//			List<SearchParameter> params = widget.getParameters();
+	//			if (params != null && params.size() > 0) {
+	//				for (SearchParameter param : params) {
+	//					if (PARAM_NAME_DASHBOARD_INELIGIBLE.equals(param.getName()) && "1".equals(param.getValue())) {
+	//						hiddenInWidgetSelector = true;
+	//						break;
+	//					}
+	//				}
+	//			}
+	//		}
+	//		return hiddenInWidgetSelector;
+	//	}
 }

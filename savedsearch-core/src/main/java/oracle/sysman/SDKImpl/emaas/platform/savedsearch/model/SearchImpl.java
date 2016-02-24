@@ -1,6 +1,5 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -15,7 +14,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 @XmlType(propOrder = { "id", "name", "description", "guid", "folderId", "categoryId", "owner", "createdOn", "lastModifiedOn",
 		"lastAccessDate", "lastModifiedBy", "metadata", "queryStr", "systemSearch", "locked", "isWidget", "uiHidden",
 		"parameters" })
-public class SearchImpl extends SearchSummaryImpl implements Search, Serializable
+public class SearchImpl extends SearchSummaryImpl implements Search
 {
 	private static final long serialVersionUID = -4486286542760671627L;
 

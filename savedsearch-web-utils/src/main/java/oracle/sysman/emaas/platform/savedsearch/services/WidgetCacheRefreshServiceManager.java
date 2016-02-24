@@ -28,7 +28,7 @@ import weblogic.management.timer.Timer;
  */
 public class WidgetCacheRefreshServiceManager implements ApplicationServiceManager, NotificationListener
 {
-	private static final long PERIOD = Timer.ONE_SECOND * 2;
+	private static final long PERIOD = Timer.ONE_SECOND * 4;
 
 	private final Logger logger = LogManager.getLogger(WidgetCacheRefreshServiceManager.class);
 	private Timer timer;
@@ -49,8 +49,13 @@ public class WidgetCacheRefreshServiceManager implements ApplicationServiceManag
 	@Override
 	public void handleNotification(Notification notification, Object handback)
 	{
-		logger.info("Timer for saved search service widget cache refreshing is triggered. Try to refresh refreshable cache");
-		WidgetCacheManager.getInstance().reloadRefreshableCaches();
+		logger.debug("Timer for saved search service widget cache refreshing is triggered. Try to refresh refreshable cache");
+		try {
+			WidgetCacheManager.getInstance().reloadRefreshableCaches();
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
 	}
 
 	/* (non-Javadoc)

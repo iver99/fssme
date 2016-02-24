@@ -8,34 +8,25 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json;
+package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json;
 
 import java.util.List;
-
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
 
 /**
  * @author aduan
  */
-public class DomainsEntity
+public class AppMappingCollection
 {
-	/*public static void main(String args[])
-	{
-		Date date = new Date(1426609840472L);
-		System.out.println(date);
-	}*/
-
 	private int total;
-	private List<DomainEntity> items;
-
 	private int count;
+	private List<AppMappingEntity> items;
 
 	public int getCount()
 	{
 		return count;
 	}
 
-	public List<DomainEntity> getItems()
+	public List<AppMappingEntity> getItems()
 	{
 		return items;
 	}
@@ -50,7 +41,7 @@ public class DomainsEntity
 		this.count = count;
 	}
 
-	public void setItems(List<DomainEntity> items)
+	public void setItems(List<AppMappingEntity> items)
 	{
 		this.items = items;
 	}

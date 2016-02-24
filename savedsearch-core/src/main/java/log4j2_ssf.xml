@@ -105,6 +105,8 @@
 		<Logger name="oracle.sysman.emaas.platform.savedsearch.wls.management" level="INFO">
     		<AppenderRef ref="ASYNC_STARTUP_SHUTDOWN_LOG"/>
 		</Logger>
+		<Logger name="oracle.sysman.SDKImpl.emaas.platform.savedsearch" level="INFO"/>
+		<Logger name="oracle.sysman.emSDK.emaas.platform.savedsearch" level="INFO"/>
 		<Logger name="oracle.sysman.emaas.platform.savedsearch" level="INFO"/>
 		<Root>
     		<AppenderRef ref="ASYNC_MAIN_LOG"/>

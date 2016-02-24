@@ -19,10 +19,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceM
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -527,39 +523,6 @@ public class SearchManagerImpl extends SearchManager
 				em.close();
 			}
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager#getWidgetListByProviderNamesRefreshableCache(boolean, java.util.List, java.lang.String)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Widget> getWidgetListByProviderNamesRefreshableCache(boolean includeDashboardIneligible,
-			List<String> providerNames, String widgetGroupId) throws EMAnalyticsFwkException
-	{
-		// introduce cache for listing widget for dashboard
-		CacheManager cm = CacheManager.getInstance();
-		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId());
-		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
-			try {
-				List<Widget> wgtList = (List<Widget>) cm.getCacheable(cacheTenant, CacheManager.CACHES_WIDGET_REFRESHABLE_CACHE,
-						new Keys(providerNames.toArray()));
-				if (wgtList != null) {
-					_logger.debug("Retrieved all widget list from cache");
-					return wgtList;
-				}
-			}
-			catch (Exception e) {
-				_logger.error(e.getLocalizedMessage(), e);
-			}
-		}
-		List<Widget> widgetList = getWidgetListByProviderNames(includeDashboardIneligible, providerNames, widgetGroupId);
-
-		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
-			cm.putCacheable(cacheTenant, CacheManager.CACHES_WIDGET_REFRESHABLE_CACHE, new Keys(providerNames.toArray()),
-					widgetList);
-		}
-		return null;
 	}
 
 	@Override
@@ -1143,7 +1106,7 @@ public class SearchManagerImpl extends SearchManager
 				}
 			}
 		}
-	
+
 	}*/
 
 	private EmAnalyticsCategory getEmAnalyticsCategoryBySearch(ImportSearchImpl search, EntityManager em)

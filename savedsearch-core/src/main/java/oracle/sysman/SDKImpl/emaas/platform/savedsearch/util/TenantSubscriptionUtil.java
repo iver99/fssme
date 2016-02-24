@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
+package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource.Builder;
@@ -130,6 +131,25 @@ public class TenantSubscriptionUtil
 		return resultList;
 	}
 
+	public static List<String> getTenantSubscribedServiceProviders(String tenant)
+	{
+		List<String> subscribedApps = TenantSubscriptionUtil.getTenantSubscribedServices(tenant);
+		if (subscribedApps == null) {
+			logger.debug("Get empty(null) subscribed APPs");
+			return null;
+		}
+		List<String> providers = new ArrayList<String>();
+		for (String app : subscribedApps) {
+			List<String> providerList = TenantSubscriptionUtil.getProviderNameFromServiceName(app);
+			if (providerList != null) {
+				providers.addAll(providerList);
+			}
+		}
+		logger.debug("Get subscribed provider names: {} for tenant {}",
+				StringUtil.arrayToCommaDelimitedString(providers.toArray()), tenant);
+		return providers;
+	}
+
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
 		if (tenant == null) {
@@ -146,9 +166,10 @@ public class TenantSubscriptionUtil
 		RestClient rc = new RestClient();
 		String domainsResponse = rc.get(domainHref);
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
-		JsonUtil ju = JsonUtil.buildNormalMapper();
+		//		JsonUtil ju = JsonUtil.buildNormalMapper();
+		ObjectMapper mapper = JSONUtil.buildNormalMapper();
 		try {
-			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
+			DomainsEntity de = JSONUtil.fromJson(mapper, domainsResponse, DomainsEntity.class);//ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
 				logger.warn(
 						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
@@ -173,7 +194,7 @@ public class TenantSubscriptionUtil
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return null;
 			}
-			AppMappingCollection amec = ju.fromJson(appMappingJson, AppMappingCollection.class);
+			AppMappingCollection amec = JSONUtil.fromJson(mapper, appMappingJson, AppMappingCollection.class);//.fromJsonToList(appMappingJson, AppMappingCollection.class);
 			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
 				logger.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
 				return null;

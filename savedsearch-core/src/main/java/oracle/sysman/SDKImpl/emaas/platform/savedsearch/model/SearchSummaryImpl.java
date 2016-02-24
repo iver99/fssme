@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlTransient;
@@ -7,8 +8,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSummary;
 
 @XmlTransient
-public class SearchSummaryImpl implements SearchSummary
+public class SearchSummaryImpl implements SearchSummary, Serializable
 {
+	private static final long serialVersionUID = 1578561229141793173L;
+
 	protected String guid;
 	protected Integer id;
 	protected String name;

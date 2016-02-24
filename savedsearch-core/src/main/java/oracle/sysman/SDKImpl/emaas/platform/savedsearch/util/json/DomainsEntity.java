@@ -8,11 +8,9 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json;
+package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json;
 
 import java.util.List;
-
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
 
 /**
  * @author aduan
