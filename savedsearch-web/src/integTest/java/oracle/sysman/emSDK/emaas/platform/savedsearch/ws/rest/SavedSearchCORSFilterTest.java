@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest;
 
+
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -27,7 +28,7 @@ public class SavedSearchCORSFilterTest {
         savedSearchCORSFilter.destroy();
     }
 
-    @Test(groups={"s2"})t
+    @Test(groups={"s2"})
     public void testDoFilter() throws Exception {
         ServletRequest request = new HttpServletRequest() {
             @Override
@@ -476,8 +477,6 @@ public class SavedSearchCORSFilterTest {
                         return  true;
                     }
                 };
-
-
             }
         };
 
@@ -488,7 +487,7 @@ public class SavedSearchCORSFilterTest {
     }
 
 
-    @Test
+    @Test(groups={"s1"})
     public void testInit() throws Exception {
         FilterConfig filterConfig = new FilterConfig() {
             @Override
