@@ -25,10 +25,13 @@ public class CacheManager
 {
 	private static final Logger logger = LogManager.getLogger(CacheManager.class);
 
+	public static final String CACHES_LOOKUP_CACHE = "lookupCache";
 	public static final String CACHES_WIDGET_CACHE = "widgetCache";
 	public static final String CACHES_ETERNAL_CACHE = "eternalCache";
 
-	public static final String LOOKUP_CACHE_KEY_ALL_WIDGET_APPS = "subscribedApps";
+	public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
+	public static final String LOOKUP_CACHE_KEY_INTERNAL_LINK = "internalLink";
+	public static final String LOOKUP_CACHE_KEY_ALL_WIDGET_APPS = "allWidgetsApps";
 
 	private static CacheManager instance;
 
@@ -47,6 +50,7 @@ public class CacheManager
 	{
 		keyGen = new DefaultKeyGenerator();
 		CacheFactory.ensureCluster();
+		getCache(CacheManager.CACHES_LOOKUP_CACHE);
 		getCache(CacheManager.CACHES_WIDGET_CACHE);
 		getCache(CacheManager.CACHES_ETERNAL_CACHE);
 		logger.info("Completed coherence cache manager initialization.");
@@ -179,6 +183,11 @@ public class CacheManager
 		cache.remove(key);
 		logger.debug("Cacheable with key={} and value={} is removed from cache {}", key, obj, cacheName);
 		return obj;
+	}
+
+	public Object removeCacheable(Tenant tenant, String cacheName, String key)
+	{
+		return removeCacheable(tenant, cacheName, new Keys(key));
 	}
 
 	public void setKeyGenerator(KeyGenerator keyGenerator)

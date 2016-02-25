@@ -34,6 +34,8 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingColl
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -150,11 +152,29 @@ public class TenantSubscriptionUtil
 		return providers;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
 		if (tenant == null) {
 			return null;
 		}
+
+		CacheManager cm = CacheManager.getInstance();
+		Tenant cacheTenant = new Tenant(tenant);
+		List<String> cachedApps = null;
+		try {
+			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+		}
+		catch (Exception e) {
+			logger.error("error to retrieve subscribed services from cache", e);
+		}
+		if (cachedApps != null) {
+			logger.debug("retrieved subscribed apps for tenant {} from cache: {}", tenant,
+					StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()));
+			return cachedApps;
+		}
+
 		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenant);
 		if (domainLink == null || StringUtil.isEmpty(domainLink.getHref())) {
 			logger.warn("Checking tenant (" + tenant
@@ -173,6 +193,7 @@ public class TenantSubscriptionUtil
 			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
 				logger.warn(
 						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			String tenantAppUrl = null;
@@ -184,6 +205,7 @@ public class TenantSubscriptionUtil
 			}
 			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
 				logger.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
@@ -192,11 +214,13 @@ public class TenantSubscriptionUtil
 			String appMappingJson = rc.get(appMappingUrl);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			AppMappingCollection amec = JSONUtil.fromJson(mapper, appMappingJson, AppMappingCollection.class);//.fromJsonToList(appMappingJson, AppMappingCollection.class);
 			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
 				logger.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			AppMappingEntity ame = null;
@@ -215,6 +239,7 @@ public class TenantSubscriptionUtil
 			if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
 				logger.error("Checking tenant (" + tenant
 						+ ") subscriptions. Failed to get an application mapping for the specified tenant");
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			String apps = null;
@@ -226,10 +251,13 @@ public class TenantSubscriptionUtil
 			}
 			logger.info("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
 			if (apps == null || "".equals(apps)) {
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			List<String> origAppsList = Arrays
 					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+			cm.putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
+					origAppsList);
 			return origAppsList;
 
 		}
