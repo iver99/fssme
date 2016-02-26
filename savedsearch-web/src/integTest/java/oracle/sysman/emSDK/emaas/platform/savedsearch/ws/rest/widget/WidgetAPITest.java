@@ -192,7 +192,7 @@ public class WidgetAPITest {
                 TenantSubscriptionUtil.getTenantSubscribedCategories(anyString,anyBoolean);
                 result = list;
             }
-        };        ;
+        };
         new MockUp<CategoryManagerImpl>(){
             @Mock
             public List<Category> getAllCategories() throws EMAnalyticsFwkException
