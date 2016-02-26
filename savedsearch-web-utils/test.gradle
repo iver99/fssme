@@ -1,0 +1,22 @@
+sourceSets {
+    integTest {
+        java.srcDir 'src/integTest/java'
+        compileClasspath = configurations.testNG+configurations.restAssured+configurations.testConfig
+    }
+}
+
+task integTestJar (type:Jar) {
+    from sourceSets.integTest.output
+    appendix = 'integ-tests'
+}
+
+dependencies {
+	testConfig project(':savedsearch-web-utils'){ transitive = false }
+
+ 	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
+	testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
+	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
+    testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+    testConfig(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
+    testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+}

@@ -1,12 +1,21 @@
 apply plugin: 'java' 
-//apply plugin: 'eclipse' 
+//apply plugin: 'eclipse'
+apply from: 'test.gradle'
 
 jar {
         from('src/main/java') {
                 include '**/*.xml'
         }
 }
- 
+sourceSets {
+    test{
+        java {
+            srcDirs = ['src/integTest/java']
+        }
+        resources.srcDirs = ['src/integTest/java']
+    }
+}
+
 dependencies {    
 //	compile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+') 
   	compile project(':savedsearch-core')
@@ -15,4 +24,6 @@ dependencies {
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+')
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+')
+    testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+
 } 
