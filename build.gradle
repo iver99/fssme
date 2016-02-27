@@ -1,5 +1,10 @@
-
+apply plugin: 'DevInfraPlugin'
 import org.gradle.api.artifacts.Configuration.State  
+ ext.regClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
+    ext.registryClientResolver = 'com.oracle.emaas.emcpsm:registry-client:'+ regClientVer
+
+    ext.regClientLookupVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
+    ext.regClientLookupResolver = 'com.oracle.emaas.emcpsm:registry-lookup-client:' + regClientLookupVer
 
 ext.distDir = "${rootDir}/dist"  
 ext.artifactPrefix = 'emaas-applications-' 
@@ -162,8 +167,8 @@ dependencies {
 	prebuild_tenant_sdk 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2'
         prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.5'
-	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.+',
-                                'com.oracle.emaas.emcpsm:registry-lookup-client:1.+'
+	prebuild_servicemanager "${registryClientResolver}",
+                                "${regClientLookupResolver}"
 	prebuild_savedsearch    'com.oracle.adf:wls-api:12.1.2-0-0',
 				'com.oracle.jdbc:ojdbc6:12.1.0.1.0',
 				'javax.transaction:javax.transaction-api:1.2',
