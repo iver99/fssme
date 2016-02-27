@@ -70,24 +70,6 @@ dependencies {
 	}
 }
 
-task DeploySSFAPI(type:Exec) {
-    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
-    args '-p',  project.properties['emdi.GIT_VIEW_ROOT'] +'/savedsearch-ear/', 'appServerDeploy'
-}
-
-
-
-
-
-task PropsCopy(type: Copy,dependsOn: DeploySSFAPI) {
-   from '/net/slc07ctj/scratch/emga/emaas_endtoend_deploy/setuplogs/'
-   into '../../oracle/work/'
-    include '*.log'
-}
-
-
-
-
      task DEVTest(type:EMTest,dependsOn:PropsCopy){	
 	sleep( 300000)
 	doFirst{
