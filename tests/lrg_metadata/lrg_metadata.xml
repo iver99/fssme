@@ -27,12 +27,5 @@
              </pipelines>
      </lrg>
 
-<lrg name="emcpssf_upgrade_test_3n" launcher="tests/suites/emcpssf_upgrade_test_3n.gradle" description="product lrg for upgradeTest">
-             <pipelines>
-            <pipeline name="PRODUCT"/>
-             </pipelines>
-     </lrg>
-
-
  </lrg-metadata>
  
