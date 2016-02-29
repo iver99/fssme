@@ -1,14 +1,10 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
-import org.eclipse.persistence.jpa.jpql.parser.AbsExpression;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
-
-import static org.testng.Assert.*;
 
 /**
  * @author qianqi

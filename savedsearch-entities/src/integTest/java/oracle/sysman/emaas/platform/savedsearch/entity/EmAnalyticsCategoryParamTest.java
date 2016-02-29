@@ -4,8 +4,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
-
 /**
  * @author qianqi
  * @since 16-2-17.

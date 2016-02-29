@@ -1,18 +1,12 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
-import com.sun.xml.internal.ws.message.ByteArrayAttachment;
-import com.sun.xml.internal.ws.policy.AssertionSet;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.collections.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
-
-import static org.testng.Assert.*;
 
 /**
  * @author qianqi
@@ -101,7 +95,7 @@ public class EmAnalyticsSearchTest {
         emAnalyticsSearch.setEmAnalyticsSearchParams(null);
         Assert.assertNotNull(emAnalyticsSearch.getEmAnalyticsSearchParams());
 
-        HashSet<EmAnalyticsSearchParam> emAnalyticsSearches = new HashSet<EmAnalyticsSearchParam>();
+        HashSet<EmAnalyticsSearchParam> emAnalyticsSearches = new HashSet<>();
         emAnalyticsSearch.setEmAnalyticsSearchParams(emAnalyticsSearches);
         Assert.assertEquals(emAnalyticsSearches,emAnalyticsSearch.getEmAnalyticsSearchParams());
     }

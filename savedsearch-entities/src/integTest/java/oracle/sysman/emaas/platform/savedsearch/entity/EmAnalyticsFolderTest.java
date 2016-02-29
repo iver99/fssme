@@ -5,12 +5,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
-import java.util.AbstractCollection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.testng.Assert.*;
 
 /**
  * @author qianqi

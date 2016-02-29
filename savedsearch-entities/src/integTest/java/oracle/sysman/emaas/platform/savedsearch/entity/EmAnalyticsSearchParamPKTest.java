@@ -1,11 +1,8 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
 
 /**
  * @author qianqi
