@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import weblogic.application.ApplicationLifecycleEvent;
+import weblogic.application.DeploymentOperationType;
+
+import java.net.URL;
 
 /**
  * @author qianqi
@@ -37,26 +40,15 @@ public class LoggingServiceManagerTest {
     @Test
     public void testPostStart() throws Exception {
         loggingServiceManager = new LoggingServiceManager();
-        loggingServiceManager.postStart(new ApplicationLifecycleEvent(null));
+        loggingServiceManager.postStart(new ApplicationLifecycleEvent(null,null,false));
+        // cover  InstanceAlreadyExistsException
+        loggingServiceManager.postStart(new ApplicationLifecycleEvent(null,null,false));
     }
-
-//    @Test
-//    public void testPostStart_InstanceAlreadyExistsException() throws Exception {
-//        loggingServiceManager = new LoggingServiceManager();
-//        new Expectations(){
-//            {
-//                logUtil.initializeLoggersUpdateTime();
-//                result = new InstanceAlreadyExistsException();
-//            }
-//        };
-//
-//        loggingServiceManager.postStart(new ApplicationLifecycleEvent(null));
-//    }
 
     @Test
     public void testPostStop() throws Exception {
         loggingServiceManager = new LoggingServiceManager();
-        loggingServiceManager.postStop(new ApplicationLifecycleEvent(null));
+        loggingServiceManager.postStop(new ApplicationLifecycleEvent(null,null,false));
     }
 
     @Test
@@ -76,10 +68,10 @@ public class LoggingServiceManagerTest {
         };
 
         loggingServiceManager = new LoggingServiceManager();
-        loggingServiceManager.preStop(new ApplicationLifecycleEvent(null));
+        loggingServiceManager.preStop(new ApplicationLifecycleEvent(null,null,false));
 
         Deencapsulation.setField(loggingServiceManager, "tempMBeanExists", true);
-        loggingServiceManager.preStop(new ApplicationLifecycleEvent(null));
+        loggingServiceManager.preStop(new ApplicationLifecycleEvent(null,null,false));
 
     }
 

@@ -25,5 +25,13 @@ dependencies {
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+')
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+')
     testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-
-} 
+	compile configurations.testNG
+}
+ test {
+        useTestNG()
+        {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+        }
+}

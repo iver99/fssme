@@ -27,17 +27,7 @@ war {
 
 }
 
-sourceSets {
-	test {
-		java {
-			srcDirs = ['src/test/java']
-		}
-		resources.srcDirs = ['src/test/java']
-	}
-	main {
-		java.srcDir 'src/main/java'
-	}
-}
+
 
 /*
 	NOTE: 
