@@ -13,6 +13,7 @@ import static org.testng.Assert.*;
  * @author qianqi
  * @since 16-2-17.
  */
+@Test (groups = {"s1"})
 public class EmAnalyticsLastAccessTest {
     private EmAnalyticsLastAccess emAnalyticsLastAccess;
     private EmAnalyticsLastAccess emAnalyticsLastAccess1;

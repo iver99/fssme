@@ -16,6 +16,7 @@ import static org.testng.Assert.*;
  * @author qianqi
  * @since 16-2-18.
  */
+@Test (groups = {"s1"})
 public class EmAnalyticsFolderTest {
     private EmAnalyticsFolder emAnalyticsFolder;
 

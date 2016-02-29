@@ -10,6 +10,7 @@ import static org.testng.Assert.*;
  * @author qianqi
  * @since 16-2-17.
  */
+@Test (groups = {"s1"})
 public class EmAnalyticsCategoryParamTest {
 
     private EmAnalyticsCategoryParam emAnalyticsCategoryParam;
@@ -22,7 +23,6 @@ public class EmAnalyticsCategoryParamTest {
         emAnalyticsCategoryParam.setValue("value1");
     }
 
-    @Test (groups = {"s1"})
     public void testEquals() throws Exception {
         Assert.assertTrue(emAnalyticsCategoryParam.equals(emAnalyticsCategoryParam));
 

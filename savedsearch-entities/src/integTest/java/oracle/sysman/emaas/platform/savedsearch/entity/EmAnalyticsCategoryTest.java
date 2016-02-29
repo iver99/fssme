@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.collections.CollectionUtils;
 
@@ -14,6 +15,7 @@ import java.util.Set;
  * @author qianqi
  * @since 16-2-18.
  */
+@Test (groups = {"s1"})
 public class EmAnalyticsCategoryTest {
 
     private EmAnalyticsCategory emAnalyticsCategory;
