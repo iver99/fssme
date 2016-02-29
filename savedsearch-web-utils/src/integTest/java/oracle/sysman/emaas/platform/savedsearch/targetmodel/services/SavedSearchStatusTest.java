@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
  * @author qianqi
  * @since 16-2-24.
  */
+@Test(groups = {"s2"})
 public class SavedSearchStatusTest {
     SavedSearchStatus savedSearchStatus;
 

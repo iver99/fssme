@@ -154,23 +154,12 @@ public class RegistryServiceManagerTest {
     public void testRegisterService_S(@Mocked RegistryLookupUtil registryLookupUtil, @Mocked PropertyReader propertyReader) throws Exception {
         new Expectations(RegistryServiceManager.class) {
             {
-//                , @Mocked final Properties properties, @Mocked final LogManager logManager, @Mocked final Logger logger, @Mocked final Link link
                 Deencapsulation.invoke(RegistryServiceManager.class, "getApplicationUrl", RegistryServiceManager.UrlType.HTTP);
                 result = "http";
                 Deencapsulation.invoke(RegistryServiceManager.class, "getApplicationUrl", RegistryServiceManager.UrlType.HTTPS);
                 result = "https";
                 RegistryLookupUtil.getServiceInternalLink(anyString,anyString,anyString,null);
                 result = new Link();
-//
-//                LogManager.getLogger(anyString);
-//                result = logger;
-//                properties.putAll((Map)any);
-//                result = null;
-
-//                link.withRel(anyString);
-//                result = new Link();
-//                link.withHref(anyString);
-//                result = new Link();
             }
         };
 
