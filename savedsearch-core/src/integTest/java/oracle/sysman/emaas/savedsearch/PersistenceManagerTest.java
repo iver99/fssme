@@ -12,16 +12,9 @@ import javax.persistence.Persistence;
 
 public class PersistenceManagerTest extends BaseTest
 {
-	@Test (groups = {"s2"})
-	public void testAll(@Mocked final Persistence persistence, @Mocked final EntityManagerFactoryImpl entityManagerFactory)
+	@Test (groups = {"s2"},expectedExceptions = RuntimeException.class,expectedExceptionsMessageRegExp ="Failed to get EntityManagerFactory, which is closed!" )
+	public void testAll(@Mocked final Persistence persistence)
 	{
-
-		new Expectations(){
-			{
-				entityManagerFactory.isOpen();
-                result = true;
-			}
-		};
 
 		PersistenceManager pm = PersistenceManager.getInstance();
 		Assert.assertNotNull(pm, "Got NULL PersistenceManager instance");

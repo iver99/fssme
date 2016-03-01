@@ -18,8 +18,6 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * @author qianqi
@@ -108,7 +106,7 @@ public class RegistryServiceManagerTest {
     }
 
     @Test
-    public void testRegisterService(@Mocked final InitialContext initialContext, @Mocked final MBeanServer mBeanServer, @Mocked InstanceNotFoundException e) throws Exception {
+    public void testRegisterService(@Mocked final InitialContext initialContext, @Mocked final MBeanServer mBeanServer, @Mocked InstanceNotFoundException e, @Mocked PropertyReader propertyReader)  throws Exception {
         new Expectations(){
             {
                 initialContext.lookup(anyString);
@@ -123,13 +121,11 @@ public class RegistryServiceManagerTest {
     }
 
     @Test
-    public void testRegisterService_ServiceInternalLinkNotNull(@Mocked final InfoManager infoManager, @Mocked final InstanceInfo instanceInfo, @Mocked final RegistrationManager registrationManager, @Mocked final InitialContext initialContext, @Mocked final MBeanServer mBeanServer, @Mocked RegistryLookupUtil registryLookupUtil, @Mocked PropertyReader propertyReader, @Mocked final Properties properties) throws Exception {
+    public void testRegisterService_ServiceInternalLinkNotNull(@Mocked final InfoManager infoManager, @Mocked final InstanceInfo instanceInfo, @Mocked final RegistrationManager registrationManager, @Mocked final InitialContext initialContext, @Mocked final MBeanServer mBeanServer, @Mocked RegistryLookupUtil registryLookupUtil, @Mocked PropertyReader propertyReader) throws Exception {
         new Expectations(RegistryServiceManager.class) {
             {
                 RegistrationManager.getInstance();
                 result = registrationManager;
-                registrationManager.initComponent((Properties)any);
-                result = null;
 
                 Deencapsulation.invoke(RegistryServiceManager.class, "getApplicationUrl", RegistryServiceManager.UrlType.HTTP);
                 result = "http";
@@ -137,12 +133,6 @@ public class RegistryServiceManagerTest {
                 result = "https";
                 RegistryLookupUtil.getServiceInternalLink(anyString,anyString,anyString,null);
                 result = new Link();
-
-                InfoManager.getInstance();
-                result = infoManager;
-                infoManager.getInfo();
-                result = instanceInfo;
-                instanceInfo.setLinks((List<Link>)any);
             }
         };
 
