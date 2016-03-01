@@ -1,9 +1,12 @@
 package oracle.sysman.emaas.savedsearch;
 
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -15,18 +18,38 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
+import oracle.sysman.qatool.uifwk.utils.Utils;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Properties;
+@Test(groups = "s2")
 public class CategoryManagerTest extends BaseTest
 {
 	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
-	@BeforeClass
+    @Mocked
+    QAToolUtil qaToolUtil;
+
+    @Mocked
+    PersistenceManager persistenceManager;
+
+    @BeforeMethod
 	public void initTenantDetails()
 	{
+        new Expectations(){{
+
+            final  Properties props = new Properties();
+            props.put(QAToolUtil.TENANT_USER_NAME, "TENANT_USER_NAME");
+            props.put(QAToolUtil.TENANT_NAME, "TENANT_NAME");
+
+            QAToolUtil.getTenantDetails();
+            result = props;
+
+        }};
 		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
 				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
 				.get(QAToolUtil.TENANT_NAME).toString())));

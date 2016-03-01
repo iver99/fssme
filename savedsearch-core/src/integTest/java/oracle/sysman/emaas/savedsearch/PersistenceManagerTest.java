@@ -1,17 +1,25 @@
 package oracle.sysman.emaas.savedsearch;
 
-import javax.persistence.EntityManagerFactory;
-
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-
+import org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl;
+import org.eclipse.persistence.internal.jpa.EntityManagerImpl;
+import org.eclipse.persistence.internal.jpa.parsing.StringFunctionNode;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import java.util.HashMap;
+
 public class PersistenceManagerTest extends BaseTest
 {
-	@Test (groups = {"s1"})
-	public void testAll()
+	@Test (groups = {"s2"})
+	public void testAll(@Mocked final Persistence persistence, @Mocked final EntityManagerFactoryImpl entityManager)
 	{
+
+
 		PersistenceManager pm = PersistenceManager.getInstance();
 		Assert.assertNotNull(pm, "Got NULL PersistenceManager instance");
 

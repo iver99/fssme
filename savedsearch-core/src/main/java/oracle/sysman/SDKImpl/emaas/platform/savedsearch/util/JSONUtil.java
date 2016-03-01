@@ -154,7 +154,7 @@ public class JSONUtil
 	 * @param excludedFieldItems
 	 *            fields that will NOT be converted into JSON string
 	 * @return converted JSON string
-	 * @throws EMAnalyticsFwkJsonException
+	 * @throws EMAnalyticsFwkException
 	 */
 	public static String ObjectToJSONString(Object object, String[] excludedFieldItems) throws EMAnalyticsFwkException
 	{
