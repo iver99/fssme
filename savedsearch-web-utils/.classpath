@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-client-1.0.0.jar"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-lookup-client-1.0.0.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-client-1.x.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-lookup-client-1.x.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/wlfullclient-12.1.2-0-0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/savedsearch-core"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
