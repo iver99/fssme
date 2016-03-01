@@ -49,7 +49,7 @@ public class EMTargetInitializerTest {
     @Test
     public void testPostStart_Exception(@Mocked final MBeanServer mbs,@Mocked final Exception e) throws Exception {
         emTargetInitializer = new EMTargetInitializer();
-        emTargetInitializer.postStart(new ApplicationLifecycleEvent(null));
+        emTargetInitializer.postStart(new ApplicationLifecycleEvent(null,null,false));
     }
 
     @Test
@@ -66,10 +66,10 @@ public class EMTargetInitializerTest {
         emTargetInitializer = new EMTargetInitializer();
 
         //none exception
-        emTargetInitializer.postStart(new ApplicationLifecycleEvent(null));
+        emTargetInitializer.postStart(new ApplicationLifecycleEvent(null,null,false));
 
         //InstanceAlreadyExistsException
-        emTargetInitializer.postStart(new ApplicationLifecycleEvent(null));
+        emTargetInitializer.postStart(new ApplicationLifecycleEvent(null,null,false));
 
     }
 

@@ -33,7 +33,7 @@ public class VersionValidationServiceManagerTest {
 
         versionValidationServiceManager = new VersionValidationServiceManager();
         try {
-            versionValidationServiceManager.postStart(new ApplicationLifecycleEvent(null));
+            versionValidationServiceManager.postStart(new ApplicationLifecycleEvent(null,null,false));
         }
         catch (Exception e){
             //catch the exception that postStart throws when failed to startup
@@ -57,7 +57,7 @@ public class VersionValidationServiceManagerTest {
 
         versionValidationServiceManager = new VersionValidationServiceManager();
         try {
-            versionValidationServiceManager.postStart(new ApplicationLifecycleEvent(null));
+            versionValidationServiceManager.postStart(new ApplicationLifecycleEvent(null,null,false));
         }
         catch (Exception e){
             //catch the exception that postStart throws when failed to startup
@@ -67,18 +67,18 @@ public class VersionValidationServiceManagerTest {
     @Test
     public void testPostStop() throws Exception {
         versionValidationServiceManager = new VersionValidationServiceManager();
-        versionValidationServiceManager.postStop(new ApplicationLifecycleEvent(null));
+        versionValidationServiceManager.postStop(new ApplicationLifecycleEvent(null,null,false));
     }
 
     @Test
     public void testPreStart() throws Exception {
         versionValidationServiceManager = new VersionValidationServiceManager();
-        versionValidationServiceManager.preStart(new ApplicationLifecycleEvent(null));
+        versionValidationServiceManager.preStart(new ApplicationLifecycleEvent(null,null,false));
     }
 
     @Test
     public void testPreStop() throws Exception {
         versionValidationServiceManager = new VersionValidationServiceManager();
-        versionValidationServiceManager.preStop(new ApplicationLifecycleEvent(null));
+        versionValidationServiceManager.preStop(new ApplicationLifecycleEvent(null,null,false));
     }
 }
