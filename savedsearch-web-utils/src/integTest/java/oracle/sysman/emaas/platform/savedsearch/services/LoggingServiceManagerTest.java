@@ -1,6 +1,5 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
-import com.sun.jmx.mbeanserver.JmxMBeanServer;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -10,9 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import weblogic.application.ApplicationLifecycleEvent;
-import weblogic.application.DeploymentOperationType;
-
-import java.net.URL;
 
 /**
  * @author qianqi
@@ -58,12 +54,11 @@ public class LoggingServiceManagerTest {
     }
 
     @Test
-    public void testPreStop(@Mocked final JmxMBeanServer jmxMBeanServer) throws Exception {
+    public void testPreStop() throws Exception {
         new Expectations() {
             {
-            //   MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); returns instance is of JmxMBeanServer
                 logger.info(anyString);
-                times = 4;
+                minTimes = 2;
             }
         };
 
