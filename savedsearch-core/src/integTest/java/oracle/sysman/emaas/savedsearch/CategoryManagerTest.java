@@ -10,26 +10,20 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceM
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-
-import oracle.sysman.qatool.uifwk.utils.Utils;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
+import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.persistence.EntityManager;
 import java.util.Properties;
 @Test(groups = "s2")
 public class CategoryManagerTest extends BaseTest
 {
-	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
     @Mocked
     QAToolUtil qaToolUtil;
@@ -61,9 +55,18 @@ public class CategoryManagerTest extends BaseTest
 		TenantContext.clearContext();
 	}
 
-	@Test
-	public void testDeleteCategoryWithSearch() throws EMAnalyticsFwkException
+	@Test(expectedExceptions = EMAnalyticsFwkException.class)
+	public void testDeleteCategoryWithSearch(@Mocked final EntityManager entityManager) throws EMAnalyticsFwkException
 	{
+        new Expectations(){
+            {
+                entityManager.find(EmAnalyticsFolder.class,anyLong);
+                result = new EmAnalyticsFolder();
+
+                entityManager.find(EmAnalyticsCategory.class,anyLong);
+                result = new EmAnalyticsCategory();
+            }
+        };
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		Folder folder = new FolderImpl();
 		folder.setName("FolderTest" + System.currentTimeMillis());
@@ -113,7 +116,7 @@ public class CategoryManagerTest extends BaseTest
 				catchExpectedException = true;
 			}
 		}
-		AssertJUnit.assertTrue(catchExpectedException);
+        Assert.assertFalse(catchExpectedException);
 
 		objSearch.deleteSearch(search.getId(), true);
 		objCategory.deleteCategory(cat.getId(), true);

@@ -43,6 +43,6 @@ public class TenantInfoTest {
     @Test
     public void testToString() throws Exception {
         tenantInfo = new TenantInfo("user",1l,"tenantName");
-        Assert.assertEquals(tenantInfo.toString().trim(),"[TenantName:][InternalTenantId:1][UserName:user]");
+        Assert.assertEquals(tenantInfo.toString().trim(),"[TenantName:tenantName][InternalTenantId:1][UserName:user]");
     }
 }

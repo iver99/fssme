@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.savedsearch;
 
+import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl;
@@ -12,9 +13,15 @@ import javax.persistence.Persistence;
 public class PersistenceManagerTest extends BaseTest
 {
 	@Test (groups = {"s2"})
-	public void testAll(@Mocked final Persistence persistence, @Mocked final EntityManagerFactoryImpl entityManager)
+	public void testAll(@Mocked final Persistence persistence, @Mocked final EntityManagerFactoryImpl entityManagerFactory)
 	{
 
+		new Expectations(){
+			{
+				entityManagerFactory.isOpen();
+                result = true;
+			}
+		};
 
 		PersistenceManager pm = PersistenceManager.getInstance();
 		Assert.assertNotNull(pm, "Got NULL PersistenceManager instance");
