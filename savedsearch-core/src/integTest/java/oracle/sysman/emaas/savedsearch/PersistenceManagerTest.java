@@ -1,17 +1,13 @@
 package oracle.sysman.emaas.savedsearch;
 
-import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl;
-import org.eclipse.persistence.internal.jpa.EntityManagerImpl;
-import org.eclipse.persistence.internal.jpa.parsing.StringFunctionNode;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.util.HashMap;
 
 public class PersistenceManagerTest extends BaseTest
 {
