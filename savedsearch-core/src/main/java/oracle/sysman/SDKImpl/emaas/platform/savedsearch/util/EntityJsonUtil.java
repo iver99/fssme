@@ -111,6 +111,7 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_TEMPLATE = "WIDGET_TEMPLATE";
 	public static final String NAME_WIDGET_SUPPORT_TIME_CONTROL = "WIDGET_SUPPORT_TIME_CONTROL";
 	public static final String NAME_WIDGET_LINKED_DASHBOARD = "WIDGET_LINKED_DASHBOARD";
+	public static final String NAME_WIDGET_SCREENSHOT_HREF = "WIDGET_SCREENSHOT_HREF";
 	public static final String NAME_WIDGET_DEFAULT_WIDTH = "WIDGET_DEFAULT_WIDTH";
 	public static final String NAME_WIDGET_DEFAULT_HEIGHT = "WIDGET_DEFAULT_HEIGHT";
 	public static final String NAME_WIDGET_PROVIDER_NAME = "PROVIDER_NAME";
@@ -362,7 +363,8 @@ public class EntityJsonUtil
 	 * @return
 	 * @throws JSONException
 	 */
-	public static JSONObject getWidgetJsonObj(URI baseUri, Search search, Category category) throws EMAnalyticsFwkException
+	public static JSONObject getWidgetJsonObj(URI baseUri, Search search, Category category, String screenshotUrl)
+			throws EMAnalyticsFwkException
 	{
 		JSONObject widgetObj = new JSONObject();
 		try {
@@ -377,6 +379,7 @@ public class EntityJsonUtil
 			widgetObj.put(NAME_WIDGET_CREATION_TIME, createdOn);
 			widgetObj.put(NAME_WIDGET_SOURCE, 1);
 			widgetObj.put(NAME_WIDGET_GROUP_NAME, category.getName());
+			widgetObj.put(NAME_WIDGET_SCREENSHOT_HREF, screenshotUrl);
 			List<SearchParameter> paramList = search.getParameters();
 			if (paramList != null && paramList.size() > 0) {
 				for (SearchParameter param : paramList) {
@@ -444,25 +447,25 @@ public class EntityJsonUtil
 		return null;
 	}
 
-	/**
-	 * Return simple JSON string for widget screen shot
-	 *
-	 * @param widgetScreenshot
-	 * @return
-	 * @throws JSONException
-	 */
-	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
-	{
-		JSONObject widgetScreenshotObj = new JSONObject();
-		try {
-			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
-		}
-		catch (JSONException ex) {
-			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
-					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
-		}
-		return widgetScreenshotObj;
-	}
+	//	/**
+	//	 * Return simple JSON string for widget screen shot
+	//	 *
+	//	 * @param widgetScreenshot
+	//	 * @return
+	//	 * @throws JSONException
+	//	 */
+	//	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
+	//	{
+	//		JSONObject widgetScreenshotObj = new JSONObject();
+	//		try {
+	//			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
+	//		}
+	//		catch (JSONException ex) {
+	//			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
+	//					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
+	//		}
+	//		return widgetScreenshotObj;
+	//	}
 
 	private static JSONObject getCategoryJsonObj(URI baseUri, Category category, String[] excludedFields, boolean isSimple)
 			throws EMAnalyticsFwkException

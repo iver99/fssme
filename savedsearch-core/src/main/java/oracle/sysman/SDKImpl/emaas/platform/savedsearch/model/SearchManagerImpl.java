@@ -19,6 +19,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceM
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -526,7 +527,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public String getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
+	public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
 	{
 		String screenshot = null;
 		Search search = getSearch(widgetId, true);
@@ -539,7 +540,11 @@ public class SearchManagerImpl extends SearchManager
 				}
 			}
 		}
-		return screenshot;
+		if (screenshot == null) {
+			screenshot = SearchManager.BLANK_SCREENSHOT;
+		}
+		ScreenshotData ssd = new ScreenshotData(screenshot, search.getCreatedOn(), search.getLastModifiedOn());
+		return ssd;
 	}
 
 	@Override
@@ -1106,7 +1111,7 @@ public class SearchManagerImpl extends SearchManager
 				}
 			}
 		}
-
+	
 	}*/
 
 	private EmAnalyticsCategory getEmAnalyticsCategoryBySearch(ImportSearchImpl search, EntityManager em)

@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -8,9 +10,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.logging.log4j.LogManager;
@@ -20,14 +26,20 @@ import org.codehaus.jettison.json.JSONObject;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.WidgetCacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotCacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
 /**
  * Saved Search Service
@@ -39,6 +51,10 @@ public class WidgetAPI
 {
 	private static final Logger _logger = LogManager.getLogger(WidgetAPI.class);
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
+
+	public static final String WIDGET_API_SERVICENAME = "SavedSearch";
+	public static final String WIDGET_API_VERSION = "1.0+";
+	private static final String WIDGET_API_STATIC_REL = "static/savedsearch.widgets";
 
 	@Context
 	UriInfo uri;
@@ -145,9 +161,13 @@ public class WidgetAPI
 
 			List<Widget> widgetList = getAllWidgetsFromCache(widgetGroupId, includeDashboardIneligible);
 			if (widgetList != null) {
+				String widgetAPIUrl = getWidgetAPIUrl(TenantContext.getContext().gettenantName());
 				for (Widget widget : widgetList) {
 					_logger.info("Debugging: widget unique id is {}", widget.getId());
-					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), widget, widget.getCategory());
+					String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl,
+							Long.valueOf(widget.getId()), widget.getCreatedOn(), widget.getLastModifiedOn());
+					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), widget, widget.getCategory(),
+							ssUrl);
 					if (jsonWidget != null) {
 						jsonArray.put(jsonWidget);
 					}
@@ -209,18 +229,80 @@ public class WidgetAPI
 	 *         </table>
 	 */
 	@GET
-	@Path("{id: [1-9][0-9]*}/screenshot")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getWidgetScreenshotById(@PathParam("id") long widgetId)
+	@Path("{id: [1-9][0-9]*}/screenshot/{serviceVersion}/images/{fileName}")
+	//	@Produces(MediaType.APPLICATION_JSON)
+	public Response getWidgetScreenshotById(@PathParam("id") long widgetId, @PathParam("serviceVersion") String serviceVersion,
+			@PathParam("fileName") String fileName)
 	{
 		String message = null;
 		int statusCode = 200;
 
+		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
+		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId(),
+				TenantContext.getContext().gettenantName());
+		CacheControl cc = new CacheControl();
+		cc.setMaxAge(2592000);
+		try {
+			final ScreenshotElement se = scm.getScreenshotFromCache(cacheTenant, widgetId, fileName);
+			if (se != null) {
+				if (fileName.equals(se.getFileName())) {
+					_logger.debug("Retrieved cached screenshot for widgetid={}, serviceVersion={}, fileName={}", widgetId,
+							serviceVersion, fileName);
+					return Response.ok(new StreamingOutput() {
+						/* (non-Javadoc)
+						 * @see javax.ws.rs.core.StreamingOutput#write(java.io.OutputStream)
+						 */
+						@Override
+						public void write(OutputStream os) throws IOException, WebApplicationException
+						{
+							se.getBuffer().writeTo(os);
+							os.flush();
+							os.close();
+						}
+
+					}).cacheControl(cc).type("image/png").build();
+				}
+				else { // invalid screenshot file name
+					_logger.error(
+							"The requested screenshot is in cache, but file name {} for tenant={}, widget id={} does not match the cached file name",
+							fileName, cacheTenant.getTenantName(), widgetId, se.getFileName());
+					return Response.status(Status.NOT_FOUND).build();
+				}
+			}
+		}
+		catch (Exception e) {
+			_logger.error(e);
+		}
+
 		try {
 			SearchManager searchMan = SearchManager.getInstance();
-			String widgetScreenshot = searchMan.getWidgetScreenshotById(widgetId);
-			JSONObject jsonObj = EntityJsonUtil.getWidgetScreenshotJsonObj(widgetScreenshot);
-			message = jsonObj.toString();
+			ScreenshotData ss = searchMan.getWidgetScreenshotById(widgetId);
+			if (ss == null || ss.getScreenshot() == null) { // searchManagerImpl ensures an non-null return value. put check for later possible checks
+				_logger.error("Does not retrieved base64 screenshot data. return 404 then");
+				return Response.status(Status.NOT_FOUND).build();
+			}
+
+			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, widgetId, ss);
+			if (se == null || se.getBuffer() == null) {
+				_logger.error("Does not retrieved base64 screenshot data after store to cache. return 404 then");
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			_logger.debug("Retrieved screenshot data from persistence layer, stored to cache, and build response now.");
+			return Response.ok(new StreamingOutput() {
+				/* (non-Javadoc)
+				 * @see javax.ws.rs.core.StreamingOutput#write(java.io.OutputStream)
+				 */
+				@Override
+				public void write(OutputStream os) throws IOException, WebApplicationException
+				{
+					se.getBuffer().writeTo(os);
+					os.flush();
+					os.close();
+				}
+
+			}).cacheControl(cc).type("image/png").build();
+			//			JSONObject jsonObj = EntityJsonUtil.getWidgetScreenshotJsonObj(widgetScreenshot);
+			//			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -236,7 +318,7 @@ public class WidgetAPI
 							+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message,
 					e);
 		}
-		return Response.status(statusCode).entity(message).build();
+		return Response.status(statusCode).entity(message).type(MediaType.APPLICATION_JSON).build();
 	}
 
 	private Response checkQueryParam(String param) throws NumberFormatException
@@ -310,6 +392,13 @@ public class WidgetAPI
 					widgetGroupId);
 		}
 		return widgetList;
+	}
+
+	private String getWidgetAPIUrl(String tenantName)
+	{
+		Link lnk = RegistryLookupUtil.getServiceExternalLink(WIDGET_API_SERVICENAME, WIDGET_API_VERSION, WIDGET_API_STATIC_REL,
+				tenantName);
+		return lnk == null ? null : lnk.getHref();
 	}
 
 	//	private boolean isWidgetHiddenInWidgetSelector(Widget widget, boolean includeDashboardIneligible)

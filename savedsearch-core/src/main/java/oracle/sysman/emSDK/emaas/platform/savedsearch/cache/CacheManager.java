@@ -27,9 +27,11 @@ public class CacheManager
 
 	public static final String CACHES_LOOKUP_CACHE = "lookupCache";
 	public static final String CACHES_WIDGET_CACHE = "widgetCache";
+	public static final String CACHES_SCREENSHOT_CACHE = "screenshotCache";
 	public static final String CACHES_ETERNAL_CACHE = "eternalCache";
 
 	public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
+	public static final String LOOKUP_CACHE_KEY_EXTERNAL_LINK = "externalLink";
 	public static final String LOOKUP_CACHE_KEY_INTERNAL_LINK = "internalLink";
 	public static final String LOOKUP_CACHE_KEY_ALL_WIDGET_APPS = "allWidgetsApps";
 

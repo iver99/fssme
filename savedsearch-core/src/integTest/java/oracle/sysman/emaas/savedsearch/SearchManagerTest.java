@@ -18,6 +18,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -585,10 +586,10 @@ public class SearchManagerTest extends BaseTest
 				"WidgetWithoutScreenshot " + System.currentTimeMillis(), null);
 
 		try {
-			String screnshotForWidget1 = sm.getWidgetScreenshotById(widget1.getId().longValue());
-			String screnshotForWidget2 = sm.getWidgetScreenshotById(widget2.getId().longValue());
-			AssertJUnit.assertEquals(screnshotForWidget1, screenshot);
-			AssertJUnit.assertNull(screnshotForWidget2);
+			ScreenshotData screnshotForWidget1 = sm.getWidgetScreenshotById(widget1.getId().longValue());
+			ScreenshotData screnshotForWidget2 = sm.getWidgetScreenshotById(widget2.getId().longValue());
+			AssertJUnit.assertEquals(screnshotForWidget1.getScreenshot(), screenshot);
+			AssertJUnit.assertEquals(screnshotForWidget2.getScreenshot(), SearchManager.BLANK_SCREENSHOT);
 		}
 		catch (EMAnalyticsFwkException e) {
 			AssertJUnit.fail();
