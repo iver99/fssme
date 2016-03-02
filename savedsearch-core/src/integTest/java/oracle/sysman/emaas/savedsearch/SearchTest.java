@@ -3,8 +3,10 @@ package oracle.sysman.emaas.savedsearch;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Persistence;
 import javax.xml.bind.JAXBElement;
 
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
@@ -393,7 +395,7 @@ public class SearchTest extends BaseTest
 	}
 
 	@Test (groups = {"s1"})
-	public void testGetSearchByInvalidFolderId() throws Exception
+	public void testGetSearchByInvalidFolderId(@Mocked final Persistence persistence) throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();
 		try {

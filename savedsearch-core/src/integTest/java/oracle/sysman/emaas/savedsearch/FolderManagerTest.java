@@ -14,6 +14,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import javax.persistence.Persistence;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -355,7 +356,7 @@ public class FolderManagerTest extends BaseTest
 	}
 
 	@Test (groups = {"s1"},expectedExceptions = EMAnalyticsFwkException.class,expectedExceptionsMessageRegExp = "Folder with the Id 0 does not exist")
-	public void testGetFolder() throws Exception
+	public void testGetFolder(@Mocked final Persistence persistenc) throws Exception
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		Folder folder = objFolder.getFolder(folderId);

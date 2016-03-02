@@ -56,8 +56,7 @@ public class CategoryManagerTest extends BaseTest
 	}
 
 	@Test(expectedExceptions = EMAnalyticsFwkException.class)
-	public void testDeleteCategoryWithSearch(@Mocked final EntityManager entityManager) throws EMAnalyticsFwkException
-	{
+	public void testDeleteCategoryWithSearch(@Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
         new Expectations(){
             {
                 entityManager.find(EmAnalyticsFolder.class,anyLong);
