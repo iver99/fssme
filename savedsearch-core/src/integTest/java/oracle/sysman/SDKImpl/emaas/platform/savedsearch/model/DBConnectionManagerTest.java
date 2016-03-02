@@ -5,6 +5,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl;
+import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -31,11 +32,19 @@ public class DBConnectionManagerTest {
         new Expectations(){
             {
                 Deencapsulation.invoke(anyPersistence,"createEntityManagerFactory",anyString,withAny(new HashMap()));
-                result = new EntityManagerFactoryImpl(new String("EmaasAnalyticsPublicModelTest"),new HashMap(),new ArrayList());
+                result = new EntityManagerFactoryImpl(new String("EmaasAnalyticsPublicTest"),new HashMap(),new ArrayList());
             }
         };
-        PersistenceManager.getInstance();
-
         dbConenctionManager.isDatabaseConnectionAvailable();
+    }
+
+    @Test
+    public void testPersistenceManager(@Mocked final Persistence anyPersistence)
+    {
+        long testTenant = 3L;
+        PersistenceManager pm = PersistenceManager.getInstance();
+        Assert.assertNotNull(pm.getEntityManagerFactory());
+        pm.closeEntityManagerFactory();
+
     }
 }
