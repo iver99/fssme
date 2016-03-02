@@ -11,7 +11,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -252,7 +251,7 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	@Test (groups = {"s1"},expectedExceptions = NullPointerException.class)
+	@Test (groups = {""},expectedExceptions = NullPointerException.class)
 	public void testgetCategoryInvalidName(@Mocked final CategoryManagerImpl categoryManager) throws Exception
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
