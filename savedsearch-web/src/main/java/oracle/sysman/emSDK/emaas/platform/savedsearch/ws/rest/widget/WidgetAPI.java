@@ -53,7 +53,7 @@ public class WidgetAPI
 
 	public static final String WIDGET_API_SERVICENAME = "SavedSearch";
 	public static final String WIDGET_API_VERSION = "1.0+";
-	private static final String WIDGET_API_STATIC_REL = "static/savedsearch.widgets";
+	private static final String WIDGET_API_STATIC_REL = "sso.static/savedsearch.widgets";
 
 	@Context
 	UriInfo uri;

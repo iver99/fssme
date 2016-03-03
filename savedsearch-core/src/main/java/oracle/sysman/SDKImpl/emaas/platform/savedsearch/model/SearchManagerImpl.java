@@ -24,6 +24,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceM
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
@@ -560,8 +561,9 @@ public class SearchManagerImpl extends SearchManager
 				}
 			}
 		}
-		if (screenshot == null) {
-			screenshot = SearchManager.BLANK_SCREENSHOT;
+		if (StringUtil.isEmpty(screenshot)) {
+			_logger.debug("Screenshot for widget with id={} is null or empty. Use default widget screenshot instead", widgetId);
+			screenshot = SearchManager.DEFAULT_WIDGET_SCREENSHOT;
 		}
 		ScreenshotData ssd = new ScreenshotData(screenshot, search.getCreatedOn(), search.getLastModifiedOn());
 		return ssd;
@@ -1131,7 +1133,7 @@ public class SearchManagerImpl extends SearchManager
 				}
 			}
 		}
-	
+
 	}*/
 
 	private EmAnalyticsCategory getEmAnalyticsCategoryBySearch(ImportSearchImpl search, EntityManager em)

@@ -589,7 +589,7 @@ public class SearchManagerTest extends BaseTest
 			ScreenshotData screnshotForWidget1 = sm.getWidgetScreenshotById(widget1.getId().longValue());
 			ScreenshotData screnshotForWidget2 = sm.getWidgetScreenshotById(widget2.getId().longValue());
 			AssertJUnit.assertEquals(screnshotForWidget1.getScreenshot(), screenshot);
-			AssertJUnit.assertEquals(screnshotForWidget2.getScreenshot(), SearchManager.BLANK_SCREENSHOT);
+			AssertJUnit.assertEquals(screnshotForWidget2.getScreenshot(), SearchManager.DEFAULT_WIDGET_SCREENSHOT);
 		}
 		catch (EMAnalyticsFwkException e) {
 			AssertJUnit.fail();
