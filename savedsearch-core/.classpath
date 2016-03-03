@@ -37,5 +37,6 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-client-1.0.0.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jersey-core-1.17.1.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/eclipselink-2.4.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

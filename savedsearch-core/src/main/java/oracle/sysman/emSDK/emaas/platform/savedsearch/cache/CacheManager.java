@@ -35,11 +35,7 @@ public class CacheManager
 	public static final String LOOKUP_CACHE_KEY_INTERNAL_LINK = "internalLink";
 	public static final String LOOKUP_CACHE_KEY_ALL_WIDGET_APPS = "allWidgetsApps";
 
-	private static CacheManager instance;
-
-	static {
-		instance = new CacheManager();
-	}
+	private static CacheManager instance = new CacheManager();
 
 	public static CacheManager getInstance()
 	{

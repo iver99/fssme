@@ -50,7 +50,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 public class WidgetAPI
 {
 	private static final Logger _logger = LogManager.getLogger(WidgetAPI.class);
-	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
 	public static final String WIDGET_API_SERVICENAME = "SavedSearch";
 	public static final String WIDGET_API_VERSION = "1.0+";
@@ -125,7 +124,9 @@ public class WidgetAPI
 			@QueryParam("widgetGroupId") String widgetGroupId,
 			@QueryParam("includeDashboardIneligible") boolean includeDashboardIneligible)
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/widgets");
+		LogUtil.getInteractionLogger().info(
+				"Service calling to (GET) /savedsearch/v1/widgets?widgetGroupId={}&includeDashboardIneligible={}", widgetGroupId,
+				includeDashboardIneligible);
 		String message = null;
 		int statusCode = 200;
 
@@ -163,7 +164,6 @@ public class WidgetAPI
 			if (widgetList != null) {
 				String widgetAPIUrl = getWidgetAPIUrl(TenantContext.getContext().gettenantName());
 				for (Widget widget : widgetList) {
-					_logger.info("Debugging: widget unique id is {}", widget.getId());
 					String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl,
 							Long.valueOf(widget.getId()), widget.getCreatedOn(), widget.getLastModifiedOn());
 					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), widget, widget.getCategory(),
@@ -380,6 +380,8 @@ public class WidgetAPI
 		}
 		List<String> providers = TenantSubscriptionUtil
 				.getTenantSubscribedServiceProviders(TenantContext.getContext().gettenantName());
+		_logger.debug("Retrieved subscribed providers {} for tenant {}",
+				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
 		List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible, providers,
 				widgetGroupId);
 

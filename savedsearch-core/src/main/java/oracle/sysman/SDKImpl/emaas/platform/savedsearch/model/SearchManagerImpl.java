@@ -14,6 +14,11 @@ import javax.persistence.Query;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
+import org.eclipse.persistence.jpa.JpaEntityManager;
+import org.eclipse.persistence.queries.DatabaseQuery;
+import org.eclipse.persistence.sessions.DatabaseRecord;
+import org.eclipse.persistence.sessions.Session;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
@@ -490,9 +495,10 @@ public class SearchManagerImpl extends SearchManager
 			em.getTransaction().begin();
 			em.flush();
 			em.getTransaction().commit();
-			String sql = sb.toString();
+			String jql = sb.toString();
+			_logger.debug("The JQL to query all widget is {}", jql);
 			long start = System.currentTimeMillis();
-			Query query = em.createQuery(sql).setHint("eclipselink.left-join-fetch", "e.emAnalyticsSearchParams")
+			Query query = em.createQuery(jql).setHint("eclipselink.left-join-fetch", "e.emAnalyticsSearchParams")
 					.setHint("eclipselink.join-fetch", "e.emAnalyticsCategory")
 					.setHint("eclipselink.left-join-fetch", "e.emAnalyticsCategory.emAnalyticsCategoryParams")
 					.setHint("eclipselink.join-fetch", "e.emAnalyticsFolder")
@@ -503,8 +509,22 @@ public class SearchManagerImpl extends SearchManager
 			if (widgetGroupId != null) {
 				query.setParameter("widgetGroupId", Long.valueOf(widgetGroupId));
 			}
+			if (_logger.isDebugEnabled()) {
+				try {
+					Session session = em.unwrap(JpaEntityManager.class).getActiveSession();
+					DatabaseQuery databaseQuery = ((EJBQueryImpl) query).getDatabaseQuery();
+					databaseQuery.prepareCall(session, new DatabaseRecord());
+					String sqlString = databaseQuery.getSQLString();
+					//				String sqlString = databaseQuery.getTranslatedSQLString(session, new DatabaseRecord());
+					_logger.debug("The SQL statement to retrieve all widget is: [{}]", sqlString);
+				}
+				catch (Exception e) {
+					_logger.error("Error when printing debug sql: ", e);
+				}
+			}
 			List<EmAnalyticsSearch> searchList = query.getResultList();
-			_logger.debug("Querying to get all widgets takes " + (System.currentTimeMillis() - start) + " ms");
+			_logger.debug("Querying to get all widgets takes {} ms, and retrieved {} widgets", System.currentTimeMillis() - start,
+					searchList == null ? 0 : searchList.size());
 			for (EmAnalyticsSearch searchObj : searchList) {
 				//				em.refresh(searchObj);
 				rtnobj.add(createWidgetObject(searchObj, false));

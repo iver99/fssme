@@ -54,9 +54,10 @@ public class WidgetCacheManager
 	{
 		CacheManager cm = CacheManager.getInstance();
 		List<Widget> wgtList = (List<Widget>) cm.getCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE,
-				cacheTenant.getTenantName());
+				TenantContext.getContext().getUsername());
 		if (wgtList != null) {
-			Object generatedKeys = new DefaultKeyGenerator().generate(cacheTenant, new Keys(cacheTenant.getTenantName()));
+			Object generatedKeys = new DefaultKeyGenerator().generate(cacheTenant,
+					new Keys(TenantContext.getContext().getUsername()));
 			cachedKeys.add(generatedKeys);
 			logger.debug("After getting the wiget list, update the cached keys");
 		}
@@ -81,11 +82,15 @@ public class WidgetCacheManager
 					try {
 						logger.debug("Reload to refresh cache for tenant {} and keys {}", dk.getTenant(),
 								StringUtil.arrayToCommaDelimitedString(dk.getParams()));
-						TenantInfo ti = new TenantInfo(null, dk.getTenant().getTenantId());
+						String userName = (String) dk.getParams()[0];
+						TenantInfo ti = new TenantInfo(userName, dk.getTenant().getTenantId());
 						ti.settenantName(dk.getTenant().getTenantName());
 						TenantContext.setContext(ti);
 						List<String> providers = TenantSubscriptionUtil
 								.getTenantSubscribedServiceProviders(TenantContext.getContext().gettenantName());
+						logger.debug("Retrieved subscribed providers {} for tenant {}",
+								StringUtil.arrayToCommaDelimitedString(providers.toArray()),
+								TenantContext.getContext().gettenantName());
 						List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(false, providers,
 								null);
 
@@ -109,18 +114,19 @@ public class WidgetCacheManager
 	@SuppressWarnings("unchecked")
 	public List<Widget> storeWidgetListToCache(Tenant cacheTenant, List<Widget> widgetList)
 	{
-		Object generatedKeys = new DefaultKeyGenerator().generate(cacheTenant, new Keys(cacheTenant.getTenantName()));
+		String userName = TenantContext.getContext().getUsername();
+		Object generatedKeys = new DefaultKeyGenerator().generate(cacheTenant, new Keys(userName));
 		CacheManager cm = CacheManager.getInstance();
 		if (widgetList == null || widgetList.isEmpty()) {
 			logger.debug("Ignore to saving empty/null widget list to cache, and remove (if exists) from cache");
-			cm.removeCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE, new Keys(cacheTenant.getTenantName()));
+			cm.removeCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE, new Keys(userName));
 			if (cachedKeys.contains(generatedKeys)) {
 				cachedKeys.remove(generatedKeys);
 			}
 			return widgetList;
 		}
-		List<Widget> wgtList = (List<Widget>) cm.putCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE,
-				new Keys(cacheTenant.getTenantName()), widgetList);
+		List<Widget> wgtList = (List<Widget>) cm.putCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE, new Keys(userName),
+				widgetList);
 		cachedKeys.add(generatedKeys);
 		return wgtList;
 	}
