@@ -157,8 +157,8 @@ dependencies {
 	providedCompile project(':savedsearch-entities'){transitive = false}
 	providedCompile project(':savedsearch-core'){transitive = false}
 	providedCompile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-  providedCompile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+') 
-	providedCompile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+') 
+  providedCompile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+') 
+	providedCompile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+') 
 
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){transitive = false}
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17')
@@ -185,7 +185,7 @@ dependencies {
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
 	
 
-  providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+') 
+  providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.+') 
   providedCompile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
       exclude group: 'emaas.platform', module: 'registry-lookup-client'
       exclude group: 'emaas.platform', module: 'registry-client'

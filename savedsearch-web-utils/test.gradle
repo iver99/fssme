@@ -19,4 +19,5 @@ dependencies {
     testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
     testConfig(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
     testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+	testConfig(group: 'weblogic.server', name: 'merged', version: '12.1.2.0.0'){ transitive = false }
 }
