@@ -47,6 +47,7 @@ public class WidgetCacheManager
 	{
 		cachedKeys = new HashSet<Object>();
 		logger.info("Completed initializing widget cache manager");
+		CacheManager.getInstance();
 	}
 
 	@SuppressWarnings("unchecked")
