@@ -883,12 +883,293 @@ public class SearchManagerImplTest {
     }
 
     @Test
-    public void testSaveMultipleSearch1() throws Exception {
+    public void testSaveMultipleSearch_searchGetIdLT0(@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,@Mocked EmAnalyticsObjectUtil eABU,@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
+        List<ImportSearchImpl> importSearchList = new ArrayList<>();
+        importSearchList.add(importSearchImpl);
+        importSearchList.add(importSearchImpl);
 
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                TenantContext.getContext();
+                result = tenantInfo;
+                importSearchImpl.getSearch();
+                result = search;
+                importSearchImpl.getFolderDetails();
+                result = new Object();
+                importSearchImpl.getCategoryDetails();
+                result = new Object();
+                search.getId();
+                result = 1L;
+                EmAnalyticsObjectUtil.getSearchById(anyLong,entityManager);
+                result = emAnalyticsSearch;
+                emAnalyticsSearch.getSystemSearch();
+                result = new BigDecimal(1333);
+            }
+        };
+        searchManager.saveMultipleSearch(importSearchList);
     }
 
     @Test
-    public void testSaveSearch() throws Exception {
+    public void testSaveMultipleSearch_searchGetIdST0(@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,@Mocked EmAnalyticsObjectUtil eABU,@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
+        List<ImportSearchImpl> importSearchList = new ArrayList<>();
+        importSearchList.add(importSearchImpl);
+        importSearchList.add(importSearchImpl);
 
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                TenantContext.getContext();
+                result = tenantInfo;
+                importSearchImpl.getSearch();
+                result = search;
+                importSearchImpl.getFolderDetails();
+                result = new Object();
+                importSearchImpl.getCategoryDetails();
+                result = new Object();
+                search.getId();
+                result = null;
+//                EmAnalyticsObjectUtil.getSearchById(anyLong,entityManager);
+//                result = emAnalyticsSearch;
+//                emAnalyticsSearch.getSystemSearch();
+//                result = new BigDecimal(1333);
+            }
+        };
+        searchManager.saveMultipleSearch(importSearchList);
+    }
+
+    @Test
+    public void testSaveMultipleSearch_searchGetIdST0_objInteger(@Mocked final Query query, @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
+        List<ImportSearchImpl> importSearchList = new ArrayList<>();
+        importSearchList.add(importSearchImpl);
+        importSearchList.add(importSearchImpl);
+
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                TenantContext.getContext();
+                result = tenantInfo;
+                importSearchImpl.getSearch();
+                result = search;
+                importSearchImpl.getFolderDetails();
+                result = new Integer(11);
+                importSearchImpl.getCategoryDetails();
+                result = new Object();
+                search.getId();
+                result = null;
+                entityManager.createNamedQuery(anyString);
+                result = query;
+                query.setParameter(anyString,anyLong);
+                result = query;
+                query.setParameter(anyString,anyString);
+                TenantContext.getContext();
+                result = tenantInfo;
+                tenantInfo.getUsername();
+                result = "userName";
+                query.getSingleResult();
+                result = emAnalyticsSearch;
+            }
+        };
+        searchManager.saveMultipleSearch(importSearchList);
+    }
+
+    @Test
+    public void testSaveMultipleSearch_searchGetIdST0_objInteger_noResultException(@Mocked final Query query, @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
+        List<ImportSearchImpl> importSearchList = new ArrayList<>();
+        importSearchList.add(importSearchImpl);
+        importSearchList.add(importSearchImpl);
+
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                TenantContext.getContext();
+                result = tenantInfo;
+                importSearchImpl.getSearch();
+                result = search;
+                importSearchImpl.getFolderDetails();
+                result = new Integer(11);
+                importSearchImpl.getCategoryDetails();
+                result = new Object();
+                search.getId();
+                result = null;
+                entityManager.createNamedQuery(anyString);
+                result = query;
+                query.setParameter(anyString,anyLong);
+                result = query;
+                query.setParameter(anyString,anyString);
+                TenantContext.getContext();
+                result = tenantInfo;
+                tenantInfo.getUsername();
+                result = "userName";
+                query.getSingleResult();
+                result = new NoResultException();
+            }
+        };
+        searchManager.saveMultipleSearch(importSearchList);
+    }
+
+    @Test
+    public void testSaveMultipleSearch_searchGetIdST0_cateObjNull(@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
+        List<ImportSearchImpl> importSearchList = new ArrayList<>();
+        importSearchList.add(importSearchImpl);
+        importSearchList.add(importSearchImpl);
+
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                TenantContext.getContext();
+                result = tenantInfo;
+                importSearchImpl.getSearch();
+                result = search;
+                importSearchImpl.getFolderDetails();
+                result = new Object();
+                importSearchImpl.getCategoryDetails();
+                result = null;
+                search.getId();
+                result = null;
+            }
+        };
+        searchManager.saveMultipleSearch(importSearchList);
+    }
+
+    @Test
+    public void testSaveMultipleSearch_searchGetIdST0_cateObjInteger(@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
+        List<ImportSearchImpl> importSearchList = new ArrayList<>();
+        importSearchList.add(importSearchImpl);
+        importSearchList.add(importSearchImpl);
+
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                TenantContext.getContext();
+                result = tenantInfo;
+                importSearchImpl.getSearch();
+                result = search;
+                importSearchImpl.getFolderDetails();
+                result = new Object();
+                importSearchImpl.getCategoryDetails();
+                result = new Integer(11);
+                search.getId();
+                result = null;
+            }
+        };
+        searchManager.saveMultipleSearch(importSearchList);
+    }
+
+    @Test
+    public void testSaveMultipleSearch_searchGetIdST0_objFolderImpl_cateObjCategoryImpl(@Mocked final Query query, @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
+        List<ImportSearchImpl> importSearchList = new ArrayList<>();
+        importSearchList.add(importSearchImpl);
+        importSearchList.add(importSearchImpl);
+
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                TenantContext.getContext();
+                result = tenantInfo;
+                importSearchImpl.getSearch();
+                result = search;
+                importSearchImpl.getFolderDetails();
+                result = new FolderImpl();
+                importSearchImpl.getCategoryDetails();
+                result = new CategoryImpl();
+                search.getId();
+                result = null;
+                entityManager.createNamedQuery(anyString);
+                result = query;
+                query.setParameter(anyString,anyLong);
+                result = query;
+                query.setParameter(anyString,anyString);
+                TenantContext.getContext();
+                result = tenantInfo;
+                tenantInfo.getUsername();
+                result = "userName";
+                query.getSingleResult();
+                result = new NoResultException();
+            }
+        };
+        searchManager.saveMultipleSearch(importSearchList);
+    }
+
+
+    @Test
+    public void testSaveSearch(@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd((Search)any,entityManager);
+                result = emAnalyticsSearch;
+            }
+        };
+        searchManager.saveSearch(new SearchImpl());
+    }
+
+    @Test
+    public void testSaveSearch_EMAnalyticsFwkException(@Mocked final PersistenceManager persistenceManager) throws Exception {
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = new EMAnalyticsFwkException(new Throwable());
+            }
+        };
+        try {
+            searchManager.saveSearch(new SearchImpl());
+        }catch (Exception e){
+
+        }
+    }
+
+    @Test
+    public void testSaveSearch_PersistenceException(@Mocked final PersistenceManager persistenceManager) throws Exception {
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = new PersistenceException();
+            }
+        };
+        try {
+            searchManager.saveSearch(new SearchImpl());
+        }catch (Exception e){
+
+        }
+    }
+
+    @Test
+    public void testSaveSearch_Exception(@Mocked final PersistenceManager persistenceManager) throws Exception {
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = new Exception();
+            }
+        };
+        try {
+            searchManager.saveSearch(new SearchImpl());
+        }catch (Exception e){
+
+        }
     }
 }
