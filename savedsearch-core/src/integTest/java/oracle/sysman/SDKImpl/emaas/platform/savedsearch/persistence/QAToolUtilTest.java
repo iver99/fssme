@@ -2,6 +2,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import mockit.StrictExpectations;
 import oracle.sysman.qatool.uifwk.utils.Utils;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -37,7 +38,7 @@ public class QAToolUtilTest {
     Logger logger;
     @Test
     public void testGetDbProperties() throws Exception {
-        new Expectations(){
+        new StrictExpectations(){
             {
                 Utils.getProperty(anyString);
                 result = "http://slc08twq.us.oracle.com";
