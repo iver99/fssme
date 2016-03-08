@@ -55,8 +55,8 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
 
 	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
-	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2'){ transitive = false }
-	testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2'){ transitive = false }
+	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
+	testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5'){ transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2') { transitive = false }
 	testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2'){ transitive = false }
@@ -64,61 +64,39 @@ dependencies {
  	testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'){transitive = false}
   	testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
   	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
-
+	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 	configurations {
 		restAssured.exclude module: "groovy"
 	}
 }
 
-     task DEVTest(type:EMTest,dependsOn:PropsCopy){	
-	sleep( 300000)
-	doFirst{
-	tasks.cleanUpDB.execute()
-}
-	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
-	include "oracle/sysman/emaas/savedsearch/JSONUtilTest.class"
-	include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"			
-	include "oracle/sysman/emaas/savedsearch/CategoryTest.class"
-	include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
-	include "oracle/sysman/emaas/savedsearch/SearchParamTest.class"
-	include "oracle/sysman/emaas/savedsearch/SearchTest.class"
-	include "oracle/sysman/emaas/savedsearch/CategoryManagerTest.class"
-	include "oracle/sysman/emaas/savedsearch/searchManagerTest.class"
-	include "oracle/sysman/emaas/savedsearch/VersionManagerTest.class"
-	include "oracle/sysman/emaas/savedsearch/ExceptionTest.class"
-	include "oracle/sysman/emaas/savedsearch/CategoryDetailsTest.class"
-	include "oracle/sysman/emaas/savedsearch/ImportTest.class"
-	include "oracle/sysman/emaas/savedsearch/MultitenentFolderTest.class"
-	include "oracle/sysman/emaas/savedsearch/MultitenentCategoryTest"
-	include "oracle/sysman/emaas/savedsearch/MultitenentSearchTest.class"
-        include "oracle/sysman/emaas/savedsearch/QAToolUtilTest.class"
-	include "oracle/sysman/emaas/savedsearch/DBConnectionManagerTest.class"	
-	include "oracle/sysman/emaas/savedsearch/FolderSetTest.class"
-	include "oracle/sysman/emaas/savedsearch/TenantDataLeakTest.class"
-	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
-	include "oracle/sysman/emaas/savedsearch/SearchManagerTestMockup.class"
-	include "oracle/sysman/emaas/savedsearch/SavedSearchDbExceptionTest.class"
+     task DEVTest(type:EMTest){	
+
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryManagerImplTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/QueryParameterConstantTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/TenantInfoTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/exception/EMAnalyticsFwkExceptionTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/EmAnalyticsObjectUtilTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/exception/EmAnalyticsProcessingExceptionTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/FolderDetailsTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/ImportCategoryImplTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/ImportSearchImplTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/LogUtilTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/ParameterDetailsTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtilTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/SchemaVersionTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/SearchPaurameterDetailsTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/DBConnectionManagerTest.class"
+
 	useRestAssured =true
 ext.set("testType", "unit")
 
 }
-   task DEVTest1(type:EMTest,dependsOn: DEVTest){	
-		
-
-	include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
-	useRestAssured =true
-	ext.set("testType", "unit")
-}
-task DEVTest2(type:EMTest,dependsOn: DEVTest1){	
-		
+ 
 
 
-	include "oracle/sysman/emaas/savedsearch/Cleanup.class"
-	useRestAssured =true
-	ext.set("testType", "unit")
-}
 
-
-task emcpssf_dev_test (dependsOn: DEVTest2)
+task emcpssf_dev_test (dependsOn: DEVTest)
 
 
