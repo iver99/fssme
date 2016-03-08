@@ -3,12 +3,18 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
+
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -22,6 +28,14 @@ import java.util.Map;
 public class LogUtilTest {
 
     LogUtil logUtil= new LogUtil();
+
+	@BeforeMethod
+	public void beforeMethod() throws URISyntaxException
+	{
+		URL url = LogUtilTest.class.getResource("/log4j2_ssf.xml");
+		Configurator.initialize("root", LogUtilTest.class.getClassLoader(), url.toURI());
+	}
+
     @Test
     public void testClearInteractionLogContext() throws Exception {
         LogUtil.clearInteractionLogContext();
