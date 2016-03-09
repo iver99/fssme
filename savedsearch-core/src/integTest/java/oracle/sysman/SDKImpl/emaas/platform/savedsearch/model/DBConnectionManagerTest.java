@@ -1,19 +1,15 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
-import mockit.Deencapsulation;
-import mockit.Expectations;
-import mockit.MockUp;
-import mockit.Mocked;
+import mockit.*;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl;
-import org.eclipse.persistence.internal.sessions.DatabaseSessionImpl;
-import org.testng.annotations.BeforeTest;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.math.BigDecimal;
 
 /**
  * Created by xidai on 3/2/2016.
@@ -22,7 +18,7 @@ import java.util.HashMap;
 public class DBConnectionManagerTest {
     private DBConnectionManager dbConenctionManager = DBConnectionManager.getInstance();
 
-    @BeforeTest
+    @BeforeMethod
     private void setUp() throws Exception
     {
         System.setProperty("SSF.INTERNAL.HUDSON.TESTENV","true");
@@ -30,26 +26,27 @@ public class DBConnectionManagerTest {
     }
 
     @Test
-    public void testIsDatabaseConnectionAvailable(@Mocked final Persistence anyPersistence) throws Exception {
+    public void testIsDatabaseConnectionAvailable(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManagerFactoryImpl entityManagerFactoryImpl, @Mocked final EntityManager entityManager) throws Exception {
+
+        final Query query = new MockUp<Query>(){
+            @Mock
+            Object getSingleResult(){
+              return new BigDecimal(1);
+            };
+        }.getMockInstance();
+
         new Expectations(){
             {
-                Deencapsulation.invoke(anyPersistence,"createEntityManagerFactory",anyString,withAny(new HashMap()));
-                result = new EntityManagerFactoryImpl(new String("EmaasAnalyticsPublicModelTest"),new HashMap(),new ArrayList());
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManagerFactory();
+                result = entityManagerFactoryImpl;
+                entityManagerFactoryImpl.createEntityManager();
+                result = entityManager;
+                entityManager.createNativeQuery(anyString);
+                result = query;
             }
         };
-        PersistenceManager.getInstance();
-        new MockUp<PersistenceManager>(){
-            public EntityManagerFactory getEntityManagerFactory()
-            {
-                return new EntityManagerFactoryImpl(new DatabaseSessionImpl());
-            }
-        };
-//        new MockUp<Persistence>(){
-//            public EntityManagerFactory getEntityManagerFactory()
-//            {
-//                return new EntityManagerFactoryImpl(new DatabaseSessionImpl());
-//            }
-//        };
-        dbConenctionManager.isDatabaseConnectionAvailable();
+        Assert.assertTrue(dbConenctionManager.isDatabaseConnectionAvailable());
     }
 }

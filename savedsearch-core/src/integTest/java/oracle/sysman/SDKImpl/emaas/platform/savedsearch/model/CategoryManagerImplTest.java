@@ -9,14 +9,13 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
-import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
 import org.eclipse.persistence.internal.jpa.EntityManagerImpl;
-import org.eclipse.persistence.queries.DatabaseQuery;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +33,7 @@ public class CategoryManagerImplTest {
     PersistenceManager persistenceManager;
     @Mocked
     EntityManagerImpl entityManager;
-    @Mocked
-    TenantInfo tenantInfo;
+
     @Mocked
     EmAnalyticsObjectUtil emAnalyticsObjectUtil;
     @Mocked
@@ -45,11 +43,13 @@ public class CategoryManagerImplTest {
     @Mocked
     Category category;
     @Mocked
-    EJBQueryImpl ejbQuery;
-    @Mocked
-    DatabaseQuery databaseQuery;
+    Query query;
     @Mocked
     TenantContext tenantContext;
+    @Mocked
+    TenantInfo tenantInfo;
+    @Mocked
+    ImportCategoryImpl importCategory;
 
 
     @BeforeMethod
@@ -244,7 +244,7 @@ public class CategoryManagerImplTest {
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
                 entityManager.createNamedQuery("Category.getAllCategory");
-                result = ejbQuery;
+                result = query;
             }
         };
         try {
@@ -289,17 +289,113 @@ public class CategoryManagerImplTest {
     }
 
     @Test
+    public void testGetCategory3th() throws Exception {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                result = entityManager;
+                EmAnalyticsObjectUtil.getCategoryById(anyLong,withAny(entityManager));
+
+            }
+        };
+        try {
+            categoryManager.getCategory(10L);
+        }catch(EMAnalyticsFwkException e){
+            Assert.assertTrue(true);
+        }
+    }
+
+    @Test
     public void testGetCategory1() throws Exception {
 
     }
 
     @Test
     public void testSaveCategory() throws Exception {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                result = entityManager;
+                entityManager.getTransaction();
+                result = entityTransaction;
+                entityTransaction.begin();
+                EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(withAny(category),withAny(entityManager));
+                result = emAnalyticsCategory;
+                entityManager.persist(withAny(emAnalyticsCategory));
+                entityManager.getTransaction();
+                result = entityTransaction;
+                entityTransaction.commit();
+                entityManager.close();
+            }
+        };
+        categoryManager.saveCategory(new CategoryImpl());
 
     }
+
+
+    @Test
+    public void testSaveCategory2nd() throws Exception {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                result = entityManager;
+                entityManager.getTransaction();
+                result = entityTransaction;
+                entityTransaction.begin();
+                EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(withAny(category),withAny(entityManager));
+                result =  new EMAnalyticsFwkException(new Throwable());
+                entityManager.close();
+            }
+        };
+        try {
+            categoryManager.saveCategory(new CategoryImpl());
+        }catch(EMAnalyticsFwkException e){
+            Assert.assertTrue(true);
+        }
+    }
+
 
     @Test
     public void testSaveMultipleCategories() throws Exception {
 
+        final List<ImportCategoryImpl> list = new ArrayList<>();
+        final ImportCategoryImpl importCategory = new ImportCategoryImpl();
+        importCategory.setId(10);
+        list.add(importCategory);
+        final CategoryImpl categoryinput = new CategoryImpl();
+        categoryinput.setId(10);
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                result = entityManager;
+                entityManager.getTransaction();
+                result = entityTransaction;
+                entityTransaction.begin();
+                importCategory.getCategoryDetails();
+                result = categoryinput;
+                EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(withAny(category),withAny(entityManager));
+                result =   emAnalyticsCategory;
+                entityManager.merge(withAny(emAnalyticsCategory));
+                importCategory.setId(anyInt);
+                entityManager.getTransaction();
+                result = entityTransaction;
+                entityTransaction.commit();
+                entityManager.close();
+            }
+        };
+        CategoryManagerImpl categoryManager =  (CategoryManagerImpl)CategoryManagerImpl.getInstance();
+        categoryManager.saveMultipleCategories(list);
+    }
+
+    @Test
+    public void testSaveMultipleCategories2nd() throws Exception {
     }
 }
