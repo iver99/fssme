@@ -88,6 +88,7 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/SchemaVersionTest.
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/SearchPaurameterDetailsTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/DBConnectionManagerTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderManagerImplTest.java"
 
 	useRestAssured =true
 ext.set("testType", "unit")
