@@ -1,14 +1,16 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
-import mockit.*;
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
 import org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.math.BigDecimal;
 
 /**
@@ -26,14 +28,7 @@ public class DBConnectionManagerTest {
     }
 
     @Test
-    public void testIsDatabaseConnectionAvailable(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManagerFactoryImpl entityManagerFactoryImpl, @Mocked final EntityManager entityManager) throws Exception {
-
-        final Query query = new MockUp<Query>(){
-            @Mock
-            Object getSingleResult(){
-              return new BigDecimal(1);
-            };
-        }.getMockInstance();
+    public void testIsDatabaseConnectionAvailable(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManagerFactoryImpl entityManagerFactoryImpl, @Mocked final EntityManager entityManager, @Mocked final EJBQueryImpl ejbQuery) throws Exception {
 
         new Expectations(){
             {
@@ -44,7 +39,9 @@ public class DBConnectionManagerTest {
                 entityManagerFactoryImpl.createEntityManager();
                 result = entityManager;
                 entityManager.createNativeQuery(anyString);
-                result = query;
+                result = ejbQuery;
+                ejbQuery.getSingleResult();
+                result = new BigDecimal(1);
             }
         };
         Assert.assertTrue(dbConenctionManager.isDatabaseConnectionAvailable());
