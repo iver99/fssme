@@ -8,6 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by xidai on 2/26/2016.
  */
+@Test(groups={"s1"})
 public class DomainEntityTest {
     private DomainEntity domainEntity = new DomainEntity();
     @Test

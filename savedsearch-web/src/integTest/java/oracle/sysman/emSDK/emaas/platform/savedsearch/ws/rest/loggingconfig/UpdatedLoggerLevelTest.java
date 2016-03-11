@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 /**
  * Created by xidai on 2/19/2016.
  */
+@Test(groups={"s1"})
 public class UpdatedLoggerLevelTest {
     private UpdatedLoggerLevel updatedLoggerLevel = new UpdatedLoggerLevel();
     @Test

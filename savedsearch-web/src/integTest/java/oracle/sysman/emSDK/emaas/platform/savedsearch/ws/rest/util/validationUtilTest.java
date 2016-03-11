@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 /**
  * Created by xidai on 2/26/2016.
  */
+@Test(groups={"s1"})
 public class validationUtilTest {
     private validationUtil validationUtil = new validationUtil();
 

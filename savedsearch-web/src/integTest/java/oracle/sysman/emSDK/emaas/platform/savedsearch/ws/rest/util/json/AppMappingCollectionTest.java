@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Created by xidai on 2/26/2016.
  */
+@Test(groups={"s1"})
 public class AppMappingCollectionTest {
     private AppMappingCollection appMappingCollection = new AppMappingCollection();
     @Test
