@@ -17,7 +17,7 @@ import java.math.BigDecimal;
  * Created by xidai on 3/2/2016.
  */
 @Test(groups = {"s2"})
-public class DBConnectionManagerTest {
+public class DBConnectionManagerTestS2 {
     private DBConnectionManager dbConenctionManager = DBConnectionManager.getInstance();
 
     @BeforeMethod

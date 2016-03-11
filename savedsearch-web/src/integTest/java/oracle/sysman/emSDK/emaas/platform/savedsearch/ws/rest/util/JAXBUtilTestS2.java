@@ -17,7 +17,7 @@ import java.io.Reader;
  * Created by xidai on 2/26/2016.
  */
 @Test(groups={"s2"})
-public class JAXBUtilTest {
+public class JAXBUtilTestS2 {
     private JAXBUtil jaxbUtil;
     @Mocked
     Reader reader;
