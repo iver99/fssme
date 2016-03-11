@@ -162,7 +162,7 @@ public class ImportSearchSetTest {
                 anyJaxbutil.getJAXBContext(ObjectFactory.class);
                 result = JAXBContext.newInstance();
                 Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(stream),withAny(JAXBContext.newInstance()));
-                result = new SearchSet();
+                result =  new ImportException();
             }
         };
         new MockUp<SearchSet>(){
@@ -190,6 +190,12 @@ public class ImportSearchSetTest {
             }
         };
 
+        new MockUp<Throwable>(){
+            @Mock
+            public void printStackTrace(){
+            }
+
+        };
         new MockUp<SearchManagerImpl>(){
             @Mock
             public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList, boolean isOobSearch) throws Exception
@@ -200,6 +206,7 @@ public class ImportSearchSetTest {
             }
 
         };
+
         Assert.assertNotNull(importSearchSet.importSearches(xml,"SSF_OOB"));
 
     }

@@ -1,6 +1,8 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -875,11 +877,26 @@ public class SearchManagerImplTest {
                 result =null;
             }
         };
+        new MockUp<Throwable>()
+        {
+            @Mock
+            public void printStackTrace(){
+
+            }
+        };
+        new MockUp<Exception>()
+        {
+            @Mock
+            public void printStackTrace(){
+
+            }
+        };
         try {
             searchManager.saveMultipleSearch(importSearchList);
         }catch (Exception e){
 
         }
+
     }
 
     @Test

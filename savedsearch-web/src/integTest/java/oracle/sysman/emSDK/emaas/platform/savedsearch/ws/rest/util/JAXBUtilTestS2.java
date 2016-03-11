@@ -1,6 +1,8 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 
 import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.Mocked;
 import org.eclipse.persistence.jaxb.xmlmodel.ObjectFactory;
 import org.testng.Assert;
@@ -53,6 +55,12 @@ public class JAXBUtilTestS2 {
                 result = new UnmarshalException(new Throwable());
             }
         };
+        new MockUp<Throwable>(){
+            @Mock
+            public void printStackTrace(){
+            }
+
+        };
         try {
             JAXBUtil.unmarshal(reader, inputStream, jaxbContext);
         }catch(Exception e){
@@ -66,6 +74,12 @@ public class JAXBUtilTestS2 {
                 SchemaFactory.newInstance(anyString);
                 result = new JAXBException(new Throwable());
             }
+        };
+        new MockUp<Throwable>(){
+            @Mock
+            public void printStackTrace(){
+            }
+
         };
         try {
             JAXBUtil.unmarshal(reader, inputStream, jaxbContext);

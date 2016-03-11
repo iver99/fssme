@@ -320,6 +320,7 @@ public class FilterSearchAPITest {
             @Mock
             public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException
             {
+
                 if(true){throw new EMAnalyticsFwkException(new Throwable());}
                 return path;
             }
@@ -344,6 +345,12 @@ public class FilterSearchAPITest {
             public String getQuery() {
                 return "lastAccessCount=11";
             }
+        };
+        new MockUp<Throwable>(){
+            @Mock
+            public void printStackTrace(){
+            }
+
         };
 
         Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));

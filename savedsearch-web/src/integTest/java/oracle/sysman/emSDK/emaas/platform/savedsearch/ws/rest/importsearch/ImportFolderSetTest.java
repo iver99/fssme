@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by xidai on 2/29/2016.
  */
-@Test(groups={"s2"})
+@Test(groups={})
 public class ImportFolderSetTest {
     private  ImportFolderSet importFolderSet = new ImportFolderSet();
     private String xml = "[{\"id\":121,\"name\":\"Category123\",\"providerName\":\"Log Analytics\",\"prividerVersion\":\"1.0\",\"providerDiscovery\":\"discovery\",\"providerAssetRoot\":\"asset\"}]";
@@ -67,7 +67,7 @@ public class ImportFolderSetTest {
 
     }
     @Test
-    public void testImportsFolders2nd(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+    public void testImportsFolders2nd(@Mocked final JAXBUtil anyJaxbutil, @Mocked final Exception exception) throws Exception {
         URL url = ImportCategorySetTest.class.getResource("./folder.xsd");
         final  InputStream stream = url.openStream();
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
@@ -83,9 +83,8 @@ public class ImportFolderSetTest {
         new Expectations(){
             {
                 anyJaxbutil.getJAXBContext(ObjectFactory.class);
-                result = JAXBContext.newInstance();
-                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(stream),withAny(JAXBContext.newInstance()));
-                result = new FolderSet();
+                result = exception;
+                exception.printStackTrace();
             }
         };
         new MockUp<FolderManagerImpl>(){

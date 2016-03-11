@@ -16,7 +16,7 @@ public class validationUtilTest {
         try {
             oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil.validateLength("name", "value", 1);
         }catch(EMAnalyticsWSException e){
-            e.printStackTrace();
+
         }
     }
 }
