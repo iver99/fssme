@@ -18,6 +18,7 @@ import java.util.List;
 /**
  * Created by xidai on 3/7/2016.
  */
+@Test(groups={"s2"})
 
 public class EmAnalyticsObjectUtilTest {
     private  EmAnalyticsObjectUtil emAnalyticsObjectUtil;

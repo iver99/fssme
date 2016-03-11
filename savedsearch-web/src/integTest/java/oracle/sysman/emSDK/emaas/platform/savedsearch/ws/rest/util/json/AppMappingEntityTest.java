@@ -8,6 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by xidai on 2/24/2016.
  */
+@Test(groups={"s2"})
 public class AppMappingEntityTest {
     private AppMappingEntity appMappingEntity = new AppMappingEntity();
     @Test

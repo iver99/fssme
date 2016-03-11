@@ -18,7 +18,7 @@ import java.net.URL;
  * Created by xidai on 3/4/2016.
  */
 @Test(groups={"s2"})
-public class QAToolUtilTest {
+public class QAToolUtilTestS2 {
     private  QAToolUtil qaToolUtil =new QAToolUtil();
     @Mocked
     Utils utils;

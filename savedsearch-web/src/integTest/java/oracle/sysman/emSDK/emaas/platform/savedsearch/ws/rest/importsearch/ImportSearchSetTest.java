@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Created by xidai on 2/29/2016.
  */
+@Test(groups="s2")
 public class ImportSearchSetTest {
     private ImportSearchSet importSearchSet =new ImportSearchSet();
     private String xml = "[{\"id\":121,\"name\":\"Category123\",\"providerName\":\"Log Analytics\",\"prividerVersion\":\"1.0\",\"providerDiscovery\":\"discovery\",\"providerAssetRoot\":\"asset\"}]";
@@ -161,7 +162,7 @@ public class ImportSearchSetTest {
                 anyJaxbutil.getJAXBContext(ObjectFactory.class);
                 result = JAXBContext.newInstance();
                 Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(stream),withAny(JAXBContext.newInstance()));
-                result = new SearchSet();
+                result =  new ImportException();
             }
         };
         new MockUp<SearchSet>(){
@@ -189,6 +190,12 @@ public class ImportSearchSetTest {
             }
         };
 
+        new MockUp<Throwable>(){
+            @Mock
+            public void printStackTrace(){
+            }
+
+        };
         new MockUp<SearchManagerImpl>(){
             @Mock
             public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList, boolean isOobSearch) throws Exception
@@ -199,6 +206,7 @@ public class ImportSearchSetTest {
             }
 
         };
+
         Assert.assertNotNull(importSearchSet.importSearches(xml,"SSF_OOB"));
 
     }
