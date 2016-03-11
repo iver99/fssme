@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Created by xidai on 2/29/2016.
  */
+@Test(groups="s2")
 public class ImportSearchSetTest {
     private ImportSearchSet importSearchSet =new ImportSearchSet();
     private String xml = "[{\"id\":121,\"name\":\"Category123\",\"providerName\":\"Log Analytics\",\"prividerVersion\":\"1.0\",\"providerDiscovery\":\"discovery\",\"providerAssetRoot\":\"asset\"}]";

@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * Created by xidai on 2/24/2016.
  */
+@Test(groups={"s2"})
 public class FilterSearchAPITest {
     private FilterSearchAPI filterSearchAPI = new FilterSearchAPI();
     @BeforeMethod
