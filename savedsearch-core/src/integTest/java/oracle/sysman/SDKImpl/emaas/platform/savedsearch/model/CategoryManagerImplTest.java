@@ -4,6 +4,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -15,6 +16,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,8 @@ public class CategoryManagerImplTest {
     TenantInfo tenantInfo;
     @Mocked
     ImportCategoryImpl importCategory;
+    @Mocked
+    EmAnalyticsProcessingException emAnalyticsProcessingException;
 
 
     @BeforeMethod
@@ -308,10 +312,44 @@ public class CategoryManagerImplTest {
     }
 
     @Test
-    public void testGetCategory1() throws Exception {
-
+    public void testGetCategoryByName() throws Exception {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                TenantContext.getContext();
+                result = tenantInfo;
+                entityManager.createNamedQuery(anyString);
+                result = query;
+                query.setParameter(anyString,anyString);
+                result = query;
+                query.getSingleResult();
+                result = emAnalyticsCategory;
+            }
+        };
+        categoryManager.getCategory("");
     }
 
+    @Test(expectedExceptions = Exception.class)
+    public void testGetCategoryByName2nd() throws Exception {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                TenantContext.getContext();
+                result = tenantInfo;
+                entityManager.createNamedQuery(anyString);
+                result = query;
+                query.setParameter(anyString,anyString);
+                result = query;
+                query.getSingleResult();
+                result = new Exception();
+            }
+        };
+        categoryManager.getCategory("");
+    }
     @Test
     public void testSaveCategory() throws Exception {
         new Expectations(){
@@ -358,6 +396,27 @@ public class CategoryManagerImplTest {
         }catch(EMAnalyticsFwkException e){
             Assert.assertTrue(true);
         }
+    }
+
+    @Test(expectedExceptions = EMAnalyticsFwkException.class)
+    public void testSaveCategory3th() throws Exception {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                result = entityManager;
+                entityManager.getTransaction();
+                result = entityTransaction;
+                entityTransaction.begin();
+                EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(withAny(category),withAny(entityManager));
+                result =  new PersistenceException(new Throwable());
+                entityManager.close();
+                EmAnalyticsProcessingException.processCategoryPersistantException(withAny(new Exception()),anyLong,anyString);
+            }
+        };
+            categoryManager.saveCategory(new CategoryImpl());
+
     }
 
 
