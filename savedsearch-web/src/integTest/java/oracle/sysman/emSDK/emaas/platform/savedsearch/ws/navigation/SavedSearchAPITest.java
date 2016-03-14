@@ -39,8 +39,6 @@ public class SavedSearchAPITest {
     @Mocked
     EmAnalyticsFolder emAnalyticsFolder;
     @Mocked
-    EmAnalyticsObjectUtil emAnalyticsObjectUtil;
-    @Mocked
     FolderManager folderManager;
     @Mocked
     SearchManager searchManager;
