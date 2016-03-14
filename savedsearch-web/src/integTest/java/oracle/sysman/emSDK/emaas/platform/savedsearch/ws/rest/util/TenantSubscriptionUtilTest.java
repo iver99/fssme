@@ -5,6 +5,8 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.AppMappingCollection;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.AppMappingEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.DomainEntity;
@@ -42,8 +44,6 @@ public class TenantSubscriptionUtilTest {
     @Mocked
     WebResource webSource;
     @Mocked
-    JsonUtil jsonUtil;
-    @Mocked
     DomainsEntity domainsEntity;
     @Mocked
     DomainEntity domainEntity;
@@ -51,10 +51,58 @@ public class TenantSubscriptionUtilTest {
     AppMappingCollection appMappingCollection;
     @Mocked
     AppMappingEntity appMappingEntity;
+    @Mocked
+    CategoryManager categoryManager;
+    @Mocked
+    Category category;
+    @Mocked
+    TenantSubscriptionUtil.RestClient restClient;
+    @Mocked
+    JsonUtil jsonUtil;
+    @Mocked
+    AppMappingEntity.AppMappingValue appMappingValue;
 
     @Test
     public void testGetTenantSubscribedCategories() throws Exception {
-
+        final List<Category> categories = new ArrayList<>();
+        categories.add(category);
+        final List<DomainEntity> domainEntities = new ArrayList<>();
+        domainEntities.add(domainEntity);
+        final List<AppMappingEntity> appMappingEntities = new ArrayList<>();
+        appMappingEntities.add(appMappingEntity);
+        final List<AppMappingEntity.AppMappingValue> appMappingValues = new ArrayList<>();
+        appMappingValues.add(appMappingValue);
+        new Expectations(){
+            {
+                CategoryManager.getInstance();
+                result = categoryManager;
+                categoryManager.getAllCategories();
+                result = categories;
+                restClient.get(anyString);
+                result = "url";
+                JsonUtil.buildNormalMapper();
+                result = jsonUtil;
+                jsonUtil.fromJson(anyString,DomainsEntity.class);
+                result = domainsEntity;
+                domainsEntity.getItems();
+                result = domainEntities;
+                domainEntity.getDomainName();
+                result = "TenantApplicationMapping";
+                domainEntity.getCanonicalUrl();
+                result = "url";
+                jsonUtil.fromJson(anyString, AppMappingCollection.class);
+                result = appMappingCollection;
+                appMappingCollection.getItems();
+                result =appMappingEntities;
+                appMappingEntity.getValues();
+                result = appMappingValues;
+                appMappingValue.getOpcTenantId();
+                result = "";
+                appMappingValue.getApplicationNames();
+                result ="name";
+            }
+        };
+        TenantSubscriptionUtil.getTenantSubscribedCategories("",true);
     }
 
     @Test

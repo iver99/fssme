@@ -5,12 +5,15 @@ import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.*;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.persistence.EntityManager;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriBuilder;
@@ -25,8 +28,24 @@ import java.util.List;
 @Test (groups = {"s2"})
 public class SavedSearchAPITest {
     private SavedSearchAPI savedSearchAPI = new SavedSearchAPI();
-
-
+    @Mocked
+    PersistenceManager persistenceManager;
+    @Mocked
+    EntityManager entityManager;
+    @Mocked
+    TenantContext tenantContext;
+    @Mocked
+    TenantInfo tenantInfo;
+    @Mocked
+    EmAnalyticsFolder emAnalyticsFolder;
+    @Mocked
+    EmAnalyticsObjectUtil emAnalyticsObjectUtil;
+    @Mocked
+    FolderManager folderManager;
+    @Mocked
+    SearchManager searchManager;
+    @Mocked
+    Folder folder;
     @BeforeMethod
     public void setUp() throws Exception {
 
@@ -179,12 +198,35 @@ public class SavedSearchAPITest {
         Assert.assertNotNull(savedSearchAPI.getAllCategory());
     }
 
-    @Test (groups = {"s1"})
+    @Test (groups = {"s2"})
     public void testGetDetails() throws Exception {
         Assert.assertNotNull(savedSearchAPI.getDetails(""));
         Assert.assertNotNull(savedSearchAPI.getDetails(null));
         Assert.assertNotNull(savedSearchAPI.getDetails("id"));
 
+        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+    }
+
+
+    @Test (groups = {"s2"})
+    public void testGetDetails2nd() throws Exception {
+        Assert.assertNotNull(savedSearchAPI.getDetails(""));
+        Assert.assertNotNull(savedSearchAPI.getDetails(null));
+        Assert.assertNotNull(savedSearchAPI.getDetails("id"));
+        final List<Folder> folderList = new ArrayList<>();
+        folderList.add(folder);
+        new Expectations(){
+            {
+                FolderManager.getInstance();
+                result =folderManager;
+                SearchManager.getInstance();
+                result =searchManager;
+                folderManager.getFolder(anyLong);
+                folderManager.getSubFolders(anyLong);
+                result = folderList;
+            }
+        };
+        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
     }
 
     @Test (groups = {"s2"})
