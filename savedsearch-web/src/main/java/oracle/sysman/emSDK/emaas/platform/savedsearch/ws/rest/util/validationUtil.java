@@ -10,9 +10,9 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 
-import java.io.UnsupportedEncodingException;
-
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author vinjoshi
