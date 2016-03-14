@@ -13,6 +13,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -58,6 +59,28 @@ public class SearchManagerImplTest {
         };
         searchManager.deleteSearch(1234,true);
         searchManager.deleteSearch(1234,false);
+    }
+
+    @Test
+    public void testDeleteSearch_mocked2(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final EmAnalyticsSearch emAnalyticsSearch) throws Exception {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo)any);
+                result = entityManager;
+                EmAnalyticsObjectUtil.getSearchByIdForDelete(anyLong,entityManager);
+                result = emAnalyticsSearch;
+                emAnalyticsSearch.getSystemSearch();
+                result = new BigDecimal(1);
+
+            }
+        };
+        try {
+            searchManager.deleteSearch(1234,true);
+        }catch (Exception e){
+            Assert.assertTrue(true);
+        }
     }
 
     @Test
