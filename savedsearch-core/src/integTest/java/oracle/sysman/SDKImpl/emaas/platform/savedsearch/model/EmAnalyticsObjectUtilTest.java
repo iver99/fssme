@@ -24,7 +24,6 @@ import java.util.List;
 @Test(groups={"s2"})
 
 public class EmAnalyticsObjectUtilTest {
-    private  EmAnalyticsObjectUtil emAnalyticsObjectUtil;
     @Mocked
     PersistenceManager persistenceManager;
     @Mocked
