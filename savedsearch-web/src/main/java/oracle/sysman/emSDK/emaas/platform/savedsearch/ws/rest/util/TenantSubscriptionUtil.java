@@ -76,12 +76,12 @@ public class TenantSubscriptionUtil
 	private static String SERVICE_PROVIDER_NAME_APM = "ApmUI";
 	private static String SERVICE_PROVIDER_NAME_ITA = "EmcitasApplications";
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
-	private static String SERVICE_PROVIDER_NAME_LA = "LoganService";
+	private static String SERVICE_PROVIDER_NAME_LA = "LogAnalyticsUI";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
 	public static List<Category> getTenantSubscribedCategories(String tenant, boolean includeDashboardIneligible)
 			throws EMAnalyticsFwkException
-	{
+			{
 		List<Category> resultList = new ArrayList<Category>();
 		if (tenant == null) {
 			return resultList;
@@ -108,7 +108,7 @@ public class TenantSubscriptionUtil
 		}
 
 		return resultList;
-	}
+			}
 
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
