@@ -9,6 +9,7 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-jaxrs-1.9.2.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-mapper-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-xc-1.9.2.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/javax.ws.rs-api-2.0.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jersey-client-1.17.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jersey-core-1.17.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jersey-json-1.17.1.jar"/>
@@ -19,7 +20,6 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/json-path-2.3.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/rest-assured-2.3.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/testng-6.8.8.jar"/>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/wlfullclient-12.1.2-0-0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/savedsearch-core"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/commons-codec-1.6.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/commons-lang3-3.1.jar"/>
@@ -29,6 +29,7 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/httpcore-4.3.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/httpmime-4.3.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/servlet-api-2.5.jar"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
 		<attributes>
@@ -47,5 +48,7 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/coherence-12.1.2.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/em-qatool-os-webdriver-2.0.0.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jmockit-1.19.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/eclipselink-2.4.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

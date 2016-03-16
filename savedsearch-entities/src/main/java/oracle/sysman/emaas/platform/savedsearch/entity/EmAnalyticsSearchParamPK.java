@@ -31,7 +31,8 @@ public class EmAnalyticsSearchParamPK implements Serializable
 			return false;
 		}
 		EmAnalyticsSearchParamPK castOther = (EmAnalyticsSearchParamPK) other;
-		return searchId == castOther.searchId && name.equals(castOther.name) && tenantId == castOther.tenantId;
+		return searchId == castOther.searchId && name.equals(castOther.name)
+				&& (tenantId == null ? castOther.tenantId == null : tenantId.equals(castOther.tenantId));
 
 	}
 

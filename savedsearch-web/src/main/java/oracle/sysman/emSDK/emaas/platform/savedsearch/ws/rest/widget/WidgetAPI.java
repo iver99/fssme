@@ -149,22 +149,7 @@ public class WidgetAPI
 				}
 			}
 
-			//			JSONArray jsonArray = new JSONArray();
-
 			message = getAllWidgetsFromCache(widgetGroupId, includeDashboardIneligible);
-			//			if (widgetList != null) {
-			//				String widgetAPIUrl = getWidgetAPIUrl(TenantContext.getContext().gettenantName());
-			//				for (Widget widget : widgetList) {
-			//					String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl,
-			//							Long.valueOf(widget.getId()), widget.getCreatedOn(), widget.getLastModifiedOn());
-			//					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), widget, widget.getCategory(),
-			//							ssUrl);
-			//					if (jsonWidget != null) {
-			//						jsonArray.put(jsonWidget);
-			//					}
-			//				}
-			//			}
-			//			message = jsonArray.toString();
 		}
 
 		catch (NumberFormatException e) {

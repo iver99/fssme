@@ -12,8 +12,6 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json;
 
 import java.util.List;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
-
 /**
  * @author aduan
  */
