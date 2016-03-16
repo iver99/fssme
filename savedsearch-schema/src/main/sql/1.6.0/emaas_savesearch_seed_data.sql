@@ -25,10 +25,10 @@ DECLARE
   V_PROVIDER_NAME  EMS_ANALYTICS_CATEGORY.PROVIDER_NAME%TYPE;
 BEGIN
 
-  SELECT PROVIDER_NAME INTO V_PROVIDER_NAME FROM EMS_ANALYTICS_CATEGORY WHERE CATEGORY_ID=1 and TENANT_ID='&TENANT_ID';
+  SELECT PROVIDER_NAME INTO V_PROVIDER_NAME FROM EMS_ANALYTICS_CATEGORY WHERE CATEGORY_ID=1 AND TENANT_ID='&TENANT_ID';
   IF (V_PROVIDER_NAME='LoganService') THEN
-    Update EMS_ANALYTICS_CATEGORY set PROVIDER_NAME='LogAnalyticsUI' where CATEGORY_ID=1 and TENANT_ID='&TENANT_ID';
-    commit;
+    UPDATE EMS_ANALYTICS_CATEGORY SET PROVIDER_NAME='LogAnalyticsUI' WHERE CATEGORY_ID=1 AND TENANT_ID='&TENANT_ID';
+    COMMIT;
     DBMS_OUTPUT.PUT_LINE('Category provider name: [LoganService] has been changed to [LogAnalyticsUI] successfully');  
   ELSE
     DBMS_OUTPUT.PUT_LINE('Category provider name: [LoganService] has been changed to [LogAnalyticsUI] before, no need to update again');  
@@ -42,16 +42,23 @@ WHEN OTHERS THEN
 END;
 /
 
+DECLARE
+  V_COUNT number;
 BEGIN
 
-  UPDATE EMS_ANALYTICS_SEARCH_PARAMS SET PARAM_VALUE_STR='LogAnalyticsUI' WHERE TENANT_ID='&TENANT_ID' and NAME='PROVIDER_NAME' and SEARCH_ID in (SELECT SEARCH_ID FROM EMS_ANALYTICS_SEARCH WHERE CATEGORY_ID = 1);
+SELECT COUNT(1) INTO V_COUNT FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE TENANT_ID='&TENANT_ID' AND NAME='PROVIDER_NAME' AND PARAM_VALUE_STR='LoganService';
+IF (V_COUNT>0) THEN
+  UPDATE EMS_ANALYTICS_SEARCH_PARAMS SET PARAM_VALUE_STR='LogAnalyticsUI' WHERE TENANT_ID='&TENANT_ID' AND NAME='PROVIDER_NAME' AND PARAM_VALUE_STR='LoganService';
   COMMIT;
-  DBMS_OUTPUT.PUT_LINE('Provider name of Log Analytics widgets has been updated from [LoganService] to [LogAnalyticsUI] successfully for tenant: &TENANT_ID');
+  DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics widgets has been upgraded from [LoganService] to [LogAnalyticsUI] successfully for tenant: &TENANT_ID ! Upgraded records: '||V_COUNT);
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics widgets has been upgraded from [LoganService] to [LogAnalyticsUI] for tenant: &TENANT_ID before, no need to upgrade again');
+END IF;
 
 EXCEPTION
   WHEN OTHERS THEN
     ROLLBACK;
-    DBMS_OUTPUT.PUT_LINE('Failed to update provider name of Log Analytics widgets from [LoganService] to [LogAnalyticsUI] for tenant: &TENANT_ID due to '||SQLERRM);
+    DBMS_OUTPUT.PUT_LINE('Failed to upgrade provider name of LogAnalytics widgets from [LoganService] to [LogAnalyticsUI] for tenant: &TENANT_ID due to '||SQLERRM);
     RAISE;
 END;
 /
