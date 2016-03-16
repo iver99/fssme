@@ -363,7 +363,7 @@ public class EntityJsonUtil
 	 * @return
 	 * @throws JSONException
 	 */
-	public static JSONObject getWidgetJsonObj(URI baseUri, Search search, Category category, String screenshotUrl)
+	public static JSONObject getWidgetJsonObj(Search search, Category category, String screenshotUrl)
 			throws EMAnalyticsFwkException
 	{
 		JSONObject widgetObj = new JSONObject();

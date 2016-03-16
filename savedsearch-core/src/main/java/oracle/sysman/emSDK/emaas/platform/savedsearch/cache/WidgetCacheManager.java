@@ -23,6 +23,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
 /**
  * @author guochen
@@ -30,11 +31,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 public class WidgetCacheManager
 {
 	private static final Logger logger = LogManager.getLogger(WidgetCacheManager.class);
-	private static WidgetCacheManager instance;
-
-	static {
-		instance = new WidgetCacheManager();
-	}
+	private static WidgetCacheManager instance = new WidgetCacheManager();
 
 	public static WidgetCacheManager getInstance()
 	{
@@ -50,11 +47,10 @@ public class WidgetCacheManager
 		CacheManager.getInstance();
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Widget> getWigetListFromCache(Tenant cacheTenant) throws Exception
+	public String getWigetListFromCache(Tenant cacheTenant) throws Exception
 	{
 		CacheManager cm = CacheManager.getInstance();
-		List<Widget> wgtList = (List<Widget>) cm.getCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE,
+		String wgtList = (String) cm.getCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE,
 				TenantContext.getContext().getUsername());
 		if (wgtList != null) {
 			Object generatedKeys = new DefaultKeyGenerator().generate(cacheTenant,
@@ -94,8 +90,10 @@ public class WidgetCacheManager
 								TenantContext.getContext().gettenantName());
 						List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(false, providers,
 								null);
-
-						storeWidgetListToCache(dk.getTenant(), widgetList);
+						String message = WidgetManager.getInstance().getWidgetJsonStringFromWidgetList(widgetList);
+						storeWidgetListToCache(dk.getTenant(), message);
+						logger.debug("Completed to reload refreshable cache for tenant {} and keys {}", dk.getTenant(),
+								StringUtil.arrayToCommaDelimitedString(dk.getParams()));
 					}
 					catch (Exception e) {
 						logger.error(e);
@@ -112,8 +110,7 @@ public class WidgetCacheManager
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Widget> storeWidgetListToCache(Tenant cacheTenant, List<Widget> widgetList)
+	public String storeWidgetListToCache(Tenant cacheTenant, String widgetList)
 	{
 		String userName = TenantContext.getContext().getUsername();
 		Object generatedKeys = new DefaultKeyGenerator().generate(cacheTenant, new Keys(userName));
@@ -126,8 +123,7 @@ public class WidgetCacheManager
 			}
 			return widgetList;
 		}
-		List<Widget> wgtList = (List<Widget>) cm.putCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE, new Keys(userName),
-				widgetList);
+		String wgtList = (String) cm.putCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE, new Keys(userName), widgetList);
 		cachedKeys.add(generatedKeys);
 		return wgtList;
 	}

@@ -36,9 +36,8 @@
       <scheme-name>widget-cache-scheme</scheme-name>
       <eviction-policy>LRU</eviction-policy>
       <high-units>32000</high-units>
-      <low-units>10</low-units>
       <unit-calculator>FIXED</unit-calculator>
-      <expiry-delay>6s</expiry-delay>
+      <expiry-delay>20s</expiry-delay>
       <pre-load>true</pre-load>
     </local-scheme>
     <local-scheme>

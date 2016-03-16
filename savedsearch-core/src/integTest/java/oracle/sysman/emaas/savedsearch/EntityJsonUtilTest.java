@@ -449,7 +449,7 @@ public class EntityJsonUtilTest extends BaseTest
 	@Test(groups = { "s1" })
 	public void testGetWidgetJsonObj() throws EMAnalyticsFwkException
 	{
-		JSONObject widgetObj = EntityJsonUtil.getWidgetJsonObj(uri, widget, category, null);
+		JSONObject widgetObj = EntityJsonUtil.getWidgetJsonObj(widget, category, null);
 		String output = widgetObj.toString();
 
 		final String VERIFY_STRING1 = "\"WIDGET_UNIQUE_ID\":10001";
@@ -489,14 +489,14 @@ public class EntityJsonUtilTest extends BaseTest
 		widget.getParameters().remove(5);
 		widget.getParameters().remove(4);
 		widget.getParameters().remove(3);
-		widgetObj = EntityJsonUtil.getWidgetJsonObj(uri, widget, category, null);
+		widgetObj = EntityJsonUtil.getWidgetJsonObj(widget, category, null);
 		Assert.assertNotNull(widgetObj);
 		output = widgetObj.toString();
 		Assert.assertTrue(output.contains(VERIFY_STRING14), VERIFY_STRING14 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING15), VERIFY_STRING15 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING16), VERIFY_STRING16 + " is NOT found as expected");
 		widget.getParameters().remove(2);
-		widgetObj = EntityJsonUtil.getWidgetJsonObj(uri, widget, category, null);
+		widgetObj = EntityJsonUtil.getWidgetJsonObj(widget, category, null);
 		Assert.assertNull(widgetObj);
 	}
 

@@ -21,12 +21,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
@@ -34,12 +30,11 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.WidgetCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
 /**
  * Saved Search Service
@@ -50,10 +45,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 public class WidgetAPI
 {
 	private static final Logger _logger = LogManager.getLogger(WidgetAPI.class);
-
-	public static final String WIDGET_API_SERVICENAME = "SavedSearch";
-	public static final String WIDGET_API_VERSION = "1.0+";
-	private static final String WIDGET_API_STATIC_REL = "sso.static/savedsearch.widgets";
 
 	@Context
 	UriInfo uri;
@@ -158,22 +149,22 @@ public class WidgetAPI
 				}
 			}
 
-			JSONArray jsonArray = new JSONArray();
+			//			JSONArray jsonArray = new JSONArray();
 
-			List<Widget> widgetList = getAllWidgetsFromCache(widgetGroupId, includeDashboardIneligible);
-			if (widgetList != null) {
-				String widgetAPIUrl = getWidgetAPIUrl(TenantContext.getContext().gettenantName());
-				for (Widget widget : widgetList) {
-					String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl,
-							Long.valueOf(widget.getId()), widget.getCreatedOn(), widget.getLastModifiedOn());
-					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), widget, widget.getCategory(),
-							ssUrl);
-					if (jsonWidget != null) {
-						jsonArray.put(jsonWidget);
-					}
-				}
-			}
-			message = jsonArray.toString();
+			message = getAllWidgetsFromCache(widgetGroupId, includeDashboardIneligible);
+			//			if (widgetList != null) {
+			//				String widgetAPIUrl = getWidgetAPIUrl(TenantContext.getContext().gettenantName());
+			//				for (Widget widget : widgetList) {
+			//					String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl,
+			//							Long.valueOf(widget.getId()), widget.getCreatedOn(), widget.getLastModifiedOn());
+			//					JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), widget, widget.getCategory(),
+			//							ssUrl);
+			//					if (jsonWidget != null) {
+			//						jsonArray.put(jsonWidget);
+			//					}
+			//				}
+			//			}
+			//			message = jsonArray.toString();
 		}
 
 		catch (NumberFormatException e) {
@@ -230,7 +221,6 @@ public class WidgetAPI
 	 */
 	@GET
 	@Path("{id: [1-9][0-9]*}/screenshot/{serviceVersion}/images/{fileName}")
-	//	@Produces(MediaType.APPLICATION_JSON)
 	public Response getWidgetScreenshotById(@PathParam("id") long widgetId, @PathParam("serviceVersion") String serviceVersion,
 			@PathParam("fileName") String fileName)
 	{
@@ -301,8 +291,6 @@ public class WidgetAPI
 				}
 
 			}).cacheControl(cc).type("image/png").build();
-			//			JSONObject jsonObj = EntityJsonUtil.getWidgetScreenshotJsonObj(widgetScreenshot);
-			//			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -354,8 +342,7 @@ public class WidgetAPI
 		return null;
 	}
 
-	private List<Widget> getAllWidgetsFromCache(String widgetGroupId, boolean includeDashboardIneligible)
-			throws EMAnalyticsFwkException
+	private String getAllWidgetsFromCache(String widgetGroupId, boolean includeDashboardIneligible) throws EMAnalyticsFwkException
 	{
 		// introduce cache for listing widget for dashboard
 		WidgetCacheManager wcm = WidgetCacheManager.getInstance();
@@ -364,10 +351,10 @@ public class WidgetAPI
 
 		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
 			try {
-				List<Widget> wgtList = wcm.getWigetListFromCache(cacheTenant);
-				if (wgtList != null) {
+				String msg = wcm.getWigetListFromCache(cacheTenant);
+				if (!StringUtil.isEmpty(msg)) {
 					_logger.debug("Retrieved all widget list from cache");
-					return wgtList;
+					return msg;
 				}
 			}
 			catch (Exception e) {
@@ -384,23 +371,17 @@ public class WidgetAPI
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
 		List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible, providers,
 				widgetGroupId);
+		String message = WidgetManager.getInstance().getWidgetJsonStringFromWidgetList(widgetList);
 
 		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
 			_logger.debug("Storing widget list to cache");
-			wcm.storeWidgetListToCache(cacheTenant, widgetList);
+			wcm.storeWidgetListToCache(cacheTenant, message);
 		}
 		else {
 			_logger.debug("Not store to cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,
 					widgetGroupId);
 		}
-		return widgetList;
-	}
-
-	private String getWidgetAPIUrl(String tenantName)
-	{
-		Link lnk = RegistryLookupUtil.getServiceExternalLink(WIDGET_API_SERVICENAME, WIDGET_API_VERSION, WIDGET_API_STATIC_REL,
-				tenantName);
-		return lnk == null ? null : lnk.getHref();
+		return message;
 	}
 
 	//	private boolean isWidgetHiddenInWidgetSelector(Widget widget, boolean includeDashboardIneligible)

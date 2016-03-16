@@ -28,7 +28,7 @@ import weblogic.management.timer.Timer;
  */
 public class WidgetCacheRefreshServiceManager implements ApplicationServiceManager, NotificationListener
 {
-	private static final long PERIOD = Timer.ONE_SECOND * 4;
+	private static final long PERIOD = Timer.ONE_SECOND * 10;
 
 	private final Logger logger = LogManager.getLogger(WidgetCacheRefreshServiceManager.class);
 	private Timer timer;
