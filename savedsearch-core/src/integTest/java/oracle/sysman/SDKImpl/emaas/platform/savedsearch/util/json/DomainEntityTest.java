@@ -1,4 +1,4 @@
-package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json;
+package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
