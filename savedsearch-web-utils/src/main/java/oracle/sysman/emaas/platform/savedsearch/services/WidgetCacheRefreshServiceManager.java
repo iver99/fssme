@@ -28,11 +28,14 @@ import weblogic.management.timer.Timer;
  */
 public class WidgetCacheRefreshServiceManager implements ApplicationServiceManager, NotificationListener
 {
-	private static final long PERIOD = Timer.ONE_SECOND * 4;
+	private static final long REFRESH_INTERVAL = Timer.ONE_SECOND * 4;
+	private static final long CLEARALL_INTERVAL = Timer.ONE_HOUR * 2;
+	private static final long REFRESH_TIMES_BEFORE_CLEARALL = CLEARALL_INTERVAL / REFRESH_INTERVAL;
 
 	private final Logger logger = LogManager.getLogger(WidgetCacheRefreshServiceManager.class);
 	private Timer timer;
 	private Integer notificationId;
+	private long refreshTimesBeforeClear = 0;
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager#getName()
@@ -49,9 +52,14 @@ public class WidgetCacheRefreshServiceManager implements ApplicationServiceManag
 	@Override
 	public void handleNotification(Notification notification, Object handback)
 	{
-		logger.debug("Timer for saved search service widget cache refreshing is triggered. Try to refresh refreshable cache");
+		logger.debug(
+				"Timer for saved search service widget cache refreshing is triggered. Try to refresh refreshable cache or clear cached keys");
 		try {
 			WidgetCacheManager.getInstance().reloadRefreshableCaches();
+			if (refreshTimesBeforeClear++ >= REFRESH_TIMES_BEFORE_CLEARALL) {
+				refreshTimesBeforeClear = 0;
+				WidgetCacheManager.getInstance().clearCachedKeys();
+			}
 		}
 		catch (Exception e) {
 			logger.error(e);
@@ -67,8 +75,8 @@ public class WidgetCacheRefreshServiceManager implements ApplicationServiceManag
 		timer = new Timer();
 		timer.addNotificationListener(this, null, null);
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
-		notificationId = timer.addNotification("SavedSearchServiceWidgetCacheRefreshTimer", null, this, timerTriggerAt, PERIOD,
-				0);
+		notificationId = timer.addNotification("SavedSearchServiceWidgetCacheRefreshTimer", null, this, timerTriggerAt,
+				REFRESH_INTERVAL, 0);
 		timer.start();
 		logger.info("Timer for saved search service widget cache refreshing started. notificationId={}", notificationId);
 		WidgetCacheManager.getInstance();

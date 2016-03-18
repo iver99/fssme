@@ -493,9 +493,9 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			List<Widget> rtnobj = new ArrayList<Widget>();
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			em.getTransaction().begin();
-			em.flush();
-			em.getTransaction().commit();
+			//			em.getTransaction().begin();
+			//			em.flush();
+			//			em.getTransaction().commit();
 			String jql = sb.toString();
 			_logger.debug("The JQL to query all widget is {}", jql);
 			long start = System.currentTimeMillis();
@@ -1133,7 +1133,7 @@ public class SearchManagerImpl extends SearchManager
 				}
 			}
 		}
-
+	
 	}*/
 
 	private EmAnalyticsCategory getEmAnalyticsCategoryBySearch(ImportSearchImpl search, EntityManager em)

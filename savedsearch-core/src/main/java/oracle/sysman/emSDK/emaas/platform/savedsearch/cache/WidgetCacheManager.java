@@ -38,13 +38,19 @@ public class WidgetCacheManager
 		return instance;
 	}
 
-	private final Set<Object> cachedKeys;
+	private Set<Object> cachedKeys;
 
 	private WidgetCacheManager()
 	{
 		cachedKeys = new HashSet<Object>();
 		logger.info("Completed initializing widget cache manager");
 		CacheManager.getInstance();
+	}
+
+	public void clearCachedKeys()
+	{
+		cachedKeys = new HashSet<Object>();
+		logger.debug("Cached keys for widget cache manager have been cleared");
 	}
 
 	public String getWigetListFromCache(Tenant cacheTenant) throws Exception

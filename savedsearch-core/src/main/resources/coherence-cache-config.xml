@@ -37,7 +37,7 @@
       <eviction-policy>LRU</eviction-policy>
       <high-units>32000</high-units>
       <unit-calculator>FIXED</unit-calculator>
-      <expiry-delay>20s</expiry-delay>
+      <expiry-delay>10s</expiry-delay>
       <pre-load>true</pre-load>
     </local-scheme>
     <local-scheme>
