@@ -1,4 +1,4 @@
-package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
+package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
 
 import com.sun.jersey.api.client.Client;
@@ -45,7 +46,9 @@ public class TenantSubscriptionUtilTest
 	@Mocked
 	WebResource webSource;
 	@Mocked
-	JsonUtil jsonUtil;
+	JSONUtil jsonUtil;
+	@Mocked
+	ObjectMapper mapper;
 	@Mocked
 	DomainsEntity domainsEntity;
 	@Mocked
@@ -93,7 +96,7 @@ public class TenantSubscriptionUtilTest
 				result = builder;
 				builder.get(String.class);
 				result = "uri.uri";
-				jsonUtil.fromJson(anyString, DomainsEntity.class);
+				JSONUtil.fromJson(mapper, anyString, DomainsEntity.class);
 				result = domainsEntity;
 				domainsEntity.getItems();
 				result = list;
@@ -101,7 +104,7 @@ public class TenantSubscriptionUtilTest
 				result = "TenantApplicationMapping";
 				domainEntity.getCanonicalUrl();
 				result = "httyp://";
-				jsonUtil.fromJson(anyString, AppMappingCollection.class);
+				JSONUtil.fromJson(mapper, anyString, AppMappingCollection.class);
 				result = appMappingCollection;
 				appMappingCollection.getItems();
 				result = amecList;

@@ -26,6 +26,7 @@ public class CacheManager
 	private static final Logger logger = LogManager.getLogger(CacheManager.class);
 
 	public static final String CACHES_LOOKUP_CACHE = "lookupCache";
+	public static final String CACHES_SUBSCRIPTION_CACHE = "subscriptionCache";
 	public static final String CACHES_WIDGET_CACHE = "widgetCache";
 	public static final String CACHES_SCREENSHOT_CACHE = "screenshotCache";
 	public static final String CACHES_ETERNAL_CACHE = "eternalCache";

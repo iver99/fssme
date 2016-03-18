@@ -315,7 +315,8 @@ public class RegistryLookupUtil
 
 				if (lk != null) {
 					CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-							new Keys(serviceName, version, rel, prefixMatch), new CachedLink(lk));
+							new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch),
+							new CachedLink(lk));
 					return lk;
 				}
 
@@ -331,17 +332,22 @@ public class RegistryLookupUtil
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
 						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-								new Keys(serviceName, version, rel, prefixMatch), new CachedLink(lk));
+								new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch),
+								new CachedLink(lk));
 						return lk;
 					}
 				}
 			}
-			return lk;
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
-			return lk;
 		}
+		if (lk != null) {
+			CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch),
+					new CachedLink(lk));
+		}
+		return lk;
 	}
 
 }

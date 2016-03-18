@@ -116,8 +116,8 @@ public class TenantSubscriptionUtil
 		}
 		CategoryManager catMan = CategoryManager.getInstance();
 		List<Category> catList = catMan.getAllCategories();
+		List<String> subscribedServices = TenantSubscriptionUtil.getTenantSubscribedServices(tenant);
 		if (catList != null && catList.size() > 0) {
-			List<String> subscribedServices = TenantSubscriptionUtil.getTenantSubscribedServices(tenant);
 			if (subscribedServices != null && subscribedServices.size() > 0) {
 				for (Category cat : catList) {
 					//EMCPDF-997 If a widget group has special parameter DASHBOARD_INELIGIBLE=true,
@@ -163,7 +163,7 @@ public class TenantSubscriptionUtil
 		Tenant cacheTenant = new Tenant(tenant);
 		List<String> cachedApps = null;
 		try {
-			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 		}
 		catch (Exception e) {
@@ -193,7 +193,8 @@ public class TenantSubscriptionUtil
 			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
 				logger.warn(
 						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
+						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			String tenantAppUrl = null;
@@ -205,7 +206,8 @@ public class TenantSubscriptionUtil
 			}
 			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
 				logger.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
+						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
@@ -214,13 +216,15 @@ public class TenantSubscriptionUtil
 			String appMappingJson = rc.get(appMappingUrl);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
+						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			AppMappingCollection amec = JSONUtil.fromJson(mapper, appMappingJson, AppMappingCollection.class);//.fromJsonToList(appMappingJson, AppMappingCollection.class);
 			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
 				logger.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
+						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			AppMappingEntity ame = null;
@@ -239,7 +243,8 @@ public class TenantSubscriptionUtil
 			if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
 				logger.error("Checking tenant (" + tenant
 						+ ") subscriptions. Failed to get an application mapping for the specified tenant");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
+						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			String apps = null;
@@ -251,12 +256,13 @@ public class TenantSubscriptionUtil
 			}
 			logger.info("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
 			if (apps == null || "".equals(apps)) {
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
+						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
 			List<String> origAppsList = Arrays
 					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
-			cm.putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
+			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
 					origAppsList);
 			return origAppsList;
 
