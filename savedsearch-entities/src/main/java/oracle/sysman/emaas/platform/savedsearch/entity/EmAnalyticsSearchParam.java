@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Multitenant;
@@ -27,6 +29,9 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @IdClass(EmAnalyticsSearchParamPK.class)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_SEARCH_PARAMS")
+@NamedQueries({
+	@NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
+})
 public class EmAnalyticsSearchParam implements Serializable
 {
 	private static final long serialVersionUID = 1L;

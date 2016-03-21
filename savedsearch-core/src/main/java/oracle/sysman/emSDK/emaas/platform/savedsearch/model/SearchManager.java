@@ -138,5 +138,13 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Search saveSearch(Search search) throws EMAnalyticsFwkException;
-
+	
+	/**
+	 * get the parameter value of a saved search by parameter name
+	 * @param searchId
+	 * @param paramName
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract String getSearchParamByName(long searchId, String paramName) throws EMAnalyticsFwkException;
 }
