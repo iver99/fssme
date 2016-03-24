@@ -165,6 +165,7 @@ test {
 dependencies {
 	providedCompile project(':savedsearch-entities'){transitive = false}
 	providedCompile project(':savedsearch-core'){transitive = false}
+	providedCompile project(':savedsearch-web-utils'){transitive = false}
 	providedCompile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
   providedCompile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+') 
 	providedCompile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+') 
