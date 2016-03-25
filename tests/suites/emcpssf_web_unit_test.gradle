@@ -59,12 +59,24 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
-	
+	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
+	 testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17'){ transitive = false }
+        testConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
+        testConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){transitive = false}
 	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
 	testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
 	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-  testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
-
+  	testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+	testConfig(group: 'com.sun.jersey', name: 'jersey-servlet', version: '1.17.1')
+	testConfig('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
+	 testConfig(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
+      exclude group: 'emaas.platform', module: 'registry-lookup-client'
+      exclude group: 'emaas.platform', module: 'registry-client'
+  
+	}
+	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+')
+	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+')	 
 	configurations{
 		restAssured.exclude module: 'groovy'
 	}
@@ -73,10 +85,36 @@ dependencies {
 
      task QATest(type:EMTest){
 
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/json/AppMappingCollectionTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/json/AppMappingEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/category/CategoryAPITest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/json/DomainEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/json/DomainsEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/exception/EMAnalyticsWSExceptionTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/search/FilterSearchAPITest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/folder/FolderAPITest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/HeadersUtilTest.class"
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/ImportCategorySetTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/exception/ImportExceptionTest.class"
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/ImportFolderSetTest.class"
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/ImportSearchSetTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/JsonUtilTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/loggingconfig/LoggingConfigAPITest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/loggingconfig/LoggingItemsTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/loggingconfig/LoggingItemTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/RegistryLookupUtilTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/RemoveHeaderTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/navigation/SavedSearchAPITest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/SavedSearchApplicationTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/SavedSearchCORSFilterTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/search/SearchAPITest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/TenantSubscriptionUtilTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/loggingconfig/UpdatedLoggerLevelTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/validationUtilTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPITest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGroupAPITest.class"
 
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
 
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
 
         useRestAssured=true
 ext.set("testType", "integration")

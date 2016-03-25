@@ -1,28 +1,24 @@
 package oracle.sysman.emaas.savedsearch;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
-
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import javax.persistence.Persistence;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class FolderManagerTest extends BaseTest
 {
@@ -359,18 +355,12 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test (groups = {"s1"})
-	public void testGetFolder() throws Exception
+	@Test (groups = {"s1"},expectedExceptions = EMAnalyticsFwkException.class,expectedExceptionsMessageRegExp = "Folder with the Id 0 does not exist")
+	public void testGetFolder(@Mocked final Persistence persistenc) throws Exception
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-		try {
-			Folder folder = objFolder.getFolder(folderId);
-			AssertJUnit.assertNotNull(folder);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		Folder folder = objFolder.getFolder(folderId);
+		AssertJUnit.assertNotNull(folder);
 	}
 
 	@Test
@@ -509,10 +499,9 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
-	@Test (groups = {"s1"})
-	public void testRootFolder() throws Exception
+	@Test (groups = {"s1"},expectedExceptions = NullPointerException.class)
+	public void testRootFolder(@Mocked final QAToolUtil qaToolUtil) throws Exception
 	{
-		try {
 			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
 					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
 					.get(QAToolUtil.TENANT_NAME).toString())));
@@ -522,22 +511,14 @@ public class FolderManagerTest extends BaseTest
 
 			Assert.assertNotNull(obj);
 
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally {
-			TenantContext.clearContext();
-		}
+//			TenantContext.clearContext();
 
 	}
 
-	@Test (groups = {"s1"})
-	public void testUpdate() throws EMAnalyticsFwkException
+	@Test (groups = {"s1"},expectedExceptions = NullPointerException.class)
+	public void testUpdate(@Mocked final QAToolUtil qaToolUtil) throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-		try {
-
 			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
 					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
 					.get(QAToolUtil.TENANT_NAME).toString())));
@@ -559,14 +540,6 @@ public class FolderManagerTest extends BaseTest
 			AssertJUnit.assertNotNull(folder.getCreatedOn());
 			AssertJUnit.assertNotNull(folder.getLastModifiedOn());
 			AssertJUnit.assertFalse(folder.getCreatedOn().equals(folder.getLastModifiedOn()));
-
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally {
-			TenantContext.clearContext();
-		}
 	}
 
 	/*@Test

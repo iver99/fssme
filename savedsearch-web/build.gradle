@@ -1,5 +1,3 @@
-import org.gradle.api.plugins.jetty.internal.Monitor
-
 apply plugin: 'war'
 apply from: 'test.gradle'
 
@@ -29,17 +27,7 @@ war {
 
 }
 
-sourceSets {
-	test {
-		java {
-			srcDirs = ['src/test/java']
-		}
-		resources.srcDirs = ['src/test/java']
-	}
-	main {
-		java.srcDir 'src/main/java'
-	}
-}
+
 
 /*
 	NOTE: 
@@ -163,6 +151,9 @@ test {
 
  
 dependencies {
+	testCompile('com.sun.jersey:jersey-servlet:1.17.1') { transitive = false }
+	testCompile('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
+	testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 	providedCompile project(':savedsearch-entities'){transitive = false}
 	providedCompile project(':savedsearch-core'){transitive = false}
 	providedCompile project(':savedsearch-web-utils'){transitive = false}
