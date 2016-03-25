@@ -132,6 +132,7 @@ public class OdsDataServiceImpl implements OdsDataService {
 		StringBuffer sb = new StringBuffer();
 		sb.append("{");
 		sb.append("\"entityType\":\"").append(ENTITY_TYPE_NAME).append("\",");
+		sb.append("\"displayName\":\"").append(ENTITY_TYPE_DIS_NAME).append("\",");
 		sb.append("\"facts\":[");
 		sb.append("{");
 		sb.append("\"factType\":\"").append(FACT_TYPE_NAME).append("\",");
