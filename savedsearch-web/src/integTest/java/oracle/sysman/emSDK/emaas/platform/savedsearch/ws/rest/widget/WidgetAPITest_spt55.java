@@ -5,9 +5,6 @@ import com.sun.jersey.server.impl.application.WebApplicationContext;
 import com.sun.jersey.server.impl.application.WebApplicationImpl;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerResponse;
-import com.sun.jersey.spi.container.ContainerResponseWriter;
-import com.sun.jersey.spi.container.WebApplication;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import com.tangosol.util.Binary;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -22,18 +19,13 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.Screensho
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
-import org.testng.annotations.ExpectedExceptions;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.UriInfo;
-import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.testng.Assert.*;
 
 /**
  * Created by QIQIAN on 2016/3/28.
