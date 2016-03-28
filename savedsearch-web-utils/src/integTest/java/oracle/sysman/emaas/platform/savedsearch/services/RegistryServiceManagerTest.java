@@ -136,7 +136,7 @@ public class RegistryServiceManagerTest
 	}
 
 	@Test
-	public void testRegisterService_S(@Mocked RegistryLookupUtil registryLookupUtil, @Mocked PropertyReader propertyReader)
+	public void testRegisterService_S(/*@Mocked RegistryLookupUtil registryLookupUtil,*/ @Mocked PropertyReader propertyReader)
 			throws Exception
 	{
 		new Expectations(RegistryServiceManager.class) {
@@ -145,8 +145,8 @@ public class RegistryServiceManagerTest
 				result = "http";
 				Deencapsulation.invoke(RegistryServiceManager.class, "getApplicationUrl", RegistryServiceManager.UrlType.HTTPS);
 				result = "https";
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
-				result = new Link();
+				//RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
+				//result = new Link();
 			}
 		};
 
@@ -158,7 +158,7 @@ public class RegistryServiceManagerTest
 	public void testRegisterService_ServiceInternalLinkNotNull(@Mocked final InfoManager infoManager,
 			@Mocked final InstanceInfo instanceInfo, @Mocked final RegistrationManager registrationManager,
 			@Mocked final InitialContext initialContext, @Mocked final MBeanServer mBeanServer,
-			@Mocked RegistryLookupUtil registryLookupUtil, @Mocked PropertyReader propertyReader) throws Exception
+			/*@Mocked RegistryLookupUtil registryLookupUtil,*/ @Mocked PropertyReader propertyReader) throws Exception
 	{
 		new Expectations(RegistryServiceManager.class) {
 			{
@@ -169,8 +169,8 @@ public class RegistryServiceManagerTest
 				result = "http";
 				Deencapsulation.invoke(RegistryServiceManager.class, "getApplicationUrl", RegistryServiceManager.UrlType.HTTPS);
 				result = "https";
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
-				result = new Link();
+				//RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
+				//result = new Link();
 			}
 		};
 
