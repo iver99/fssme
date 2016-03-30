@@ -26,10 +26,10 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.WidgetCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.widget.WidgetCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -334,22 +334,22 @@ public class WidgetAPI
 		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId(),
 				TenantContext.getContext().gettenantName());
 
-		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
-			try {
-				String msg = wcm.getWigetListFromCache(cacheTenant);
-				if (!StringUtil.isEmpty(msg)) {
-					_logger.debug("Retrieved all widget list from cache");
-					return msg;
-				}
-			}
-			catch (Exception e) {
-				_logger.error(e.getLocalizedMessage(), e);
+		//		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
+		try {
+			String msg = wcm.getWigetListFromCache(cacheTenant, widgetGroupId, includeDashboardIneligible);
+			if (!StringUtil.isEmpty(msg)) {
+				_logger.debug("Retrieved all widget list from cache");
+				return msg;
 			}
 		}
-		else {
-			_logger.debug("Not get from cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,
-					widgetGroupId);
+		catch (Exception e) {
+			_logger.error(e.getLocalizedMessage(), e);
 		}
+		//		}
+		//		else {
+		//			_logger.debug("Not get from cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,
+		//					widgetGroupId);
+		//		}
 		List<String> providers = TenantSubscriptionUtil
 				.getTenantSubscribedServiceProviders(TenantContext.getContext().gettenantName());
 		_logger.debug("Retrieved subscribed providers {} for tenant {}",
@@ -360,7 +360,7 @@ public class WidgetAPI
 
 		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
 			_logger.debug("Storing widget list to cache");
-			wcm.storeWidgetListToCache(cacheTenant, message);
+			wcm.storeWidgetListToCache(cacheTenant, message, widgetGroupId, includeDashboardIneligible);
 		}
 		else {
 			_logger.debug("Not store to cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,

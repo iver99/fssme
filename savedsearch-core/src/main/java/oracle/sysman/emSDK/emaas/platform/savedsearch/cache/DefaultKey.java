@@ -25,8 +25,6 @@ public class DefaultKey implements Serializable
 
 	private final Object[] params;
 
-	private final int hashCode;
-
 	/**
 	 * Create a new {@link DefaultKey} instance.
 	 *
@@ -41,7 +39,7 @@ public class DefaultKey implements Serializable
 		}
 		params = new Object[keys.length];
 		System.arraycopy(keys, 0, params, 0, keys.length);
-		hashCode = (tenant == null ? 0 : tenant.hashCode() * 31) + Arrays.deepHashCode(params);
+
 	}
 
 	@Override
@@ -68,9 +66,9 @@ public class DefaultKey implements Serializable
 	}
 
 	@Override
-	public final int hashCode()
+	public int hashCode()
 	{
-		return hashCode;
+		return (tenant == null ? 0 : tenant.hashCode() * 31) + Arrays.deepHashCode(params);
 	}
 
 	@Override

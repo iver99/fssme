@@ -175,102 +175,102 @@ public class TenantSubscriptionUtil
 			return cachedApps;
 		}
 
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenant);
-		if (domainLink == null || StringUtil.isEmpty(domainLink.getHref())) {
-			logger.warn("Checking tenant (" + tenant
-					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
-			return null;
-		}
-		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
-		String domainHref = domainLink.getHref();
-		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref);
-		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
-		//		JsonUtil ju = JsonUtil.buildNormalMapper();
-		ObjectMapper mapper = JSONUtil.buildNormalMapper();
 		try {
-			DomainsEntity de = JSONUtil.fromJson(mapper, domainsResponse, DomainsEntity.class);//ju.fromJson(domainsResponse, DomainsEntity.class);
-			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
-				logger.warn(
-						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
+			List<String> origAppsList = TenantSubscriptionUtil.internalGetTenantSubscribedServices(tenant);
+			if (origAppsList == null) {
 				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
 						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 				return null;
 			}
-			String tenantAppUrl = null;
-			for (DomainEntity domain : de.getItems()) {
-				if ("TenantApplicationMapping".equals(domain.getDomainName())) {
-					tenantAppUrl = domain.getCanonicalUrl();
-					break;
-				}
+			else {
+				cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
+						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS, origAppsList);
+				return origAppsList;
 			}
-			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
-				logger.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-				return null;
-			}
-			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			logger.info(
-					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl);
-			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
-			if (appMappingJson == null || "".equals(appMappingJson)) {
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-				return null;
-			}
-			AppMappingCollection amec = JSONUtil.fromJson(mapper, appMappingJson, AppMappingCollection.class);//.fromJsonToList(appMappingJson, AppMappingCollection.class);
-			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
-				logger.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-				return null;
-			}
-			AppMappingEntity ame = null;
-			for (AppMappingEntity entity : amec.getItems()) {
-				if (entity.getValues() == null) {
-					continue;
-				}
-				for (AppMappingEntity.AppMappingValue amv : entity.getValues()) {
-					if (tenant.equals(amv.getOpcTenantId())) {
-						ame = entity;
-						break;
-					}
-
-				}
-			}
-			if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
-				logger.error("Checking tenant (" + tenant
-						+ ") subscriptions. Failed to get an application mapping for the specified tenant");
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-				return null;
-			}
-			String apps = null;
-			for (AppMappingEntity.AppMappingValue amv : ame.getValues()) {
-				if (tenant.equals(amv.getOpcTenantId())) {
-					apps = amv.getApplicationNames();
-					break;
-				}
-			}
-			logger.info("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
-			if (apps == null || "".equals(apps)) {
-				cm.removeCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE,
-						CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-				return null;
-			}
-			List<String> origAppsList = Arrays
-					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
-			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIPTION_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
-					origAppsList);
-			return origAppsList;
-
 		}
 		catch (IOException e) {
 			logger.error(e);
 			return null;
 		}
+	}
+
+	public static List<String> internalGetTenantSubscribedServices(String tenantName) throws IOException
+	{
+		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenantName);
+		if (domainLink == null || StringUtil.isEmpty(domainLink.getHref())) {
+			logger.warn("Checking tenant (" + tenantName
+					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
+			return null;
+		}
+		logger.info("Checking tenant (" + tenantName + ") subscriptions. The entity naming href is " + domainLink.getHref());
+		String domainHref = domainLink.getHref();
+		RestClient rc = new RestClient();
+		String domainsResponse = rc.get(domainHref);
+		logger.info("Checking tenant (" + tenantName + ") subscriptions. Domains list response is " + domainsResponse);
+		//		JsonUtil ju = JsonUtil.buildNormalMapper();
+		ObjectMapper mapper = JSONUtil.buildNormalMapper();
+		DomainsEntity de = JSONUtil.fromJson(mapper, domainsResponse, DomainsEntity.class);//ju.fromJson(domainsResponse, DomainsEntity.class);
+		if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
+			logger.warn(
+					"Checking tenant (" + tenantName + ") subscriptions: null/empty domains entity or domains item retrieved.");
+			return null;
+		}
+		String tenantAppUrl = null;
+		for (DomainEntity domain : de.getItems()) {
+			if ("TenantApplicationMapping".equals(domain.getDomainName())) {
+				tenantAppUrl = domain.getCanonicalUrl();
+				break;
+			}
+		}
+		if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
+			logger.warn("Checking tenant (" + tenantName + ") subscriptions. 'TenantApplicationMapping' not found");
+			return null;
+		}
+		String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenantName;
+		logger.info(
+				"Checking tenant (" + tenantName + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
+		String appMappingJson = rc.get(appMappingUrl);
+		logger.info("Checking tenant (" + tenantName + ") subscriptions. application lookup response json is " + appMappingJson);
+		if (appMappingJson == null || "".equals(appMappingJson)) {
+			return null;
+		}
+		AppMappingCollection amec = JSONUtil.fromJson(mapper, appMappingJson, AppMappingCollection.class);//.fromJsonToList(appMappingJson, AppMappingCollection.class);
+		if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
+			logger.error("Checking tenant (" + tenantName + ") subscriptions. Empty application mapping items are retrieved");
+			return null;
+		}
+		AppMappingEntity ame = null;
+		for (AppMappingEntity entity : amec.getItems()) {
+			if (entity.getValues() == null) {
+				continue;
+			}
+			for (AppMappingEntity.AppMappingValue amv : entity.getValues()) {
+				if (tenantName.equals(amv.getOpcTenantId())) {
+					ame = entity;
+					break;
+				}
+
+			}
+		}
+		if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
+			logger.error("Checking tenant (" + tenantName
+					+ ") subscriptions. Failed to get an application mapping for the specified tenant");
+			return null;
+		}
+		String apps = null;
+		for (AppMappingEntity.AppMappingValue amv : ame.getValues()) {
+			if (tenantName.equals(amv.getOpcTenantId())) {
+				apps = amv.getApplicationNames();
+				break;
+			}
+		}
+		logger.info("Checking tenant (" + tenantName + ") subscriptions. applications for the tenant are " + apps);
+		if (apps == null || "".equals(apps)) {
+			return null;
+		}
+		List<String> origAppsList = Arrays
+				.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+		return origAppsList;
 	}
 
 	private static boolean isCategoryHiddenInWidgetSelector(Category category, boolean includeDashboardIneligible)

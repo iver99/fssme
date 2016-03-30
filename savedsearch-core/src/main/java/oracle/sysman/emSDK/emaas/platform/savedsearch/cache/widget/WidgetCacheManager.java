@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emSDK.emaas.platform.savedsearch.cache;
+package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.widget;
 
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +19,9 @@ import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
@@ -53,14 +56,15 @@ public class WidgetCacheManager
 		logger.debug("Cached keys for widget cache manager have been cleared");
 	}
 
-	public String getWigetListFromCache(Tenant cacheTenant) throws Exception
+	public String getWigetListFromCache(Tenant cacheTenant, String widgetGroupId, boolean includeDashboardIneligible)
+			throws Exception
 	{
 		CacheManager cm = CacheManager.getInstance();
 		String wgtList = (String) cm.getCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE,
-				TenantContext.getContext().getUsername());
+				new Keys(TenantContext.getContext().getUsername(), widgetGroupId, includeDashboardIneligible));
 		if (wgtList != null) {
-			Object generatedKeys = new DefaultKeyGenerator().generate(cacheTenant,
-					new Keys(TenantContext.getContext().getUsername()));
+			Object generatedKeys = new WidgetKeyGenerator().generate(cacheTenant, widgetGroupId, includeDashboardIneligible,
+					TenantContext.getContext().getUsername());
 			cachedKeys.add(generatedKeys);
 			logger.debug("After getting the wiget list, update the cached keys");
 		}
@@ -80,12 +84,12 @@ public class WidgetCacheManager
 		TenantInfo oldti = TenantContext.getContext();
 		try {
 			for (Object key : cachedKeys) {
-				if (key instanceof DefaultKey) {
-					DefaultKey dk = (DefaultKey) key;
+				if (key instanceof RefreshableWidgetKeys) {
+					RefreshableWidgetKeys dk = (RefreshableWidgetKeys) key;
 					try {
 						logger.debug("Reload to refresh cache for tenant {} and keys {}", dk.getTenant(),
 								StringUtil.arrayToCommaDelimitedString(dk.getParams()));
-						String userName = (String) dk.getParams()[0];
+						String userName = dk.getUserName();
 						TenantInfo ti = new TenantInfo(userName, dk.getTenant().getTenantId());
 						ti.settenantName(dk.getTenant().getTenantName());
 						TenantContext.setContext(ti);
@@ -94,10 +98,12 @@ public class WidgetCacheManager
 						logger.debug("Retrieved subscribed providers {} for tenant {}",
 								StringUtil.arrayToCommaDelimitedString(providers.toArray()),
 								TenantContext.getContext().gettenantName());
-						List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(false, providers,
-								null);
+						Boolean includeDashboardIneligible = dk.getIncludeDashboardIneligible();
+						String widgetGroupId = dk.getWidgetGroupId();
+						List<Widget> widgetList = SearchManager.getInstance()
+								.getWidgetListByProviderNames(includeDashboardIneligible, providers, widgetGroupId);
 						String message = WidgetManager.getInstance().getWidgetJsonStringFromWidgetList(widgetList);
-						storeWidgetListToCache(dk.getTenant(), message);
+						storeWidgetListToCache(dk.getTenant(), message, widgetGroupId, includeDashboardIneligible);
 						logger.debug("Completed to reload refreshable cache for tenant {} and keys {}", dk.getTenant(),
 								StringUtil.arrayToCommaDelimitedString(dk.getParams()));
 					}
@@ -116,20 +122,24 @@ public class WidgetCacheManager
 		}
 	}
 
-	public String storeWidgetListToCache(Tenant cacheTenant, String widgetList)
+	public String storeWidgetListToCache(Tenant cacheTenant, String widgetList, String widgetGroupId,
+			Boolean includeDashboardIneligible)
 	{
 		String userName = TenantContext.getContext().getUsername();
-		Object generatedKeys = new DefaultKeyGenerator().generate(cacheTenant, new Keys(userName));
+		Object generatedKeys = new WidgetKeyGenerator().generate(cacheTenant, widgetGroupId, includeDashboardIneligible,
+				TenantContext.getContext().getUsername());
 		CacheManager cm = CacheManager.getInstance();
 		if (widgetList == null || widgetList.isEmpty()) {
 			logger.debug("Ignore to saving empty/null widget list to cache, and remove (if exists) from cache");
-			cm.removeCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE, new Keys(userName));
+			cm.removeCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE,
+					new Keys(userName, widgetGroupId, includeDashboardIneligible));
 			if (cachedKeys.contains(generatedKeys)) {
 				cachedKeys.remove(generatedKeys);
 			}
 			return widgetList;
 		}
-		String wgtList = (String) cm.putCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE, new Keys(userName), widgetList);
+		String wgtList = (String) cm.putCacheable(cacheTenant, CacheManager.CACHES_WIDGET_CACHE,
+				new Keys(userName, widgetGroupId, includeDashboardIneligible), widgetList);
 		cachedKeys.add(generatedKeys);
 		return wgtList;
 	}

@@ -42,7 +42,7 @@
       <high-units>3200</high-units>
       <low-units>10</low-units>
       <unit-calculator>FIXED</unit-calculator>
-      <expiry-delay>60s</expiry-delay>
+      <expiry-delay>90s</expiry-delay>
       <pre-load>true</pre-load>
     </local-scheme>
     <local-scheme>

@@ -18,7 +18,7 @@ import javax.management.NotificationListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.widget.WidgetCacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.subscribed.SubscribedAppCacheManager;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.management.timer.Timer;
@@ -26,10 +26,10 @@ import weblogic.management.timer.Timer;
 /**
  * @author guochen
  */
-public class WidgetCacheRefreshServiceManager implements ApplicationServiceManager, NotificationListener
+public class SubscribedAppCacheRefreshServcieManager implements ApplicationServiceManager, NotificationListener
 {
-	private static final long REFRESH_INTERVAL = Timer.ONE_SECOND * 4;
-	private static final long CLEARALL_INTERVAL = Timer.ONE_HOUR * 2;
+	private static final long REFRESH_INTERVAL = Timer.ONE_SECOND * 60;
+	private static final long CLEARALL_INTERVAL = Timer.ONE_WEEK;
 	private static final long REFRESH_TIMES_BEFORE_CLEARALL = CLEARALL_INTERVAL / REFRESH_INTERVAL;
 
 	private final Logger logger = LogManager.getLogger(WidgetCacheRefreshServiceManager.class);
@@ -43,7 +43,7 @@ public class WidgetCacheRefreshServiceManager implements ApplicationServiceManag
 	@Override
 	public String getName()
 	{
-		return "Saved Search Widget Cache Refresh Service";
+		return "Saved Search Subscribed Apps Cache Refresh Service";
 	}
 
 	/* (non-Javadoc)
@@ -53,12 +53,12 @@ public class WidgetCacheRefreshServiceManager implements ApplicationServiceManag
 	public void handleNotification(Notification notification, Object handback)
 	{
 		logger.debug(
-				"Timer for saved search service widget cache refreshing is triggered. Try to refresh refreshable cache or clear cached keys");
+				"Timer for saved search service subscribed apps cache refreshing is triggered. Try to refresh refreshable cache or clear cached keys");
 		try {
-			WidgetCacheManager.getInstance().reloadRefreshableCaches();
+			SubscribedAppCacheManager.getInstance().reloadRefreshableCaches();
 			if (refreshTimesBeforeClear++ >= REFRESH_TIMES_BEFORE_CLEARALL) {
 				refreshTimesBeforeClear = 0;
-				WidgetCacheManager.getInstance().clearCachedKeys();
+				SubscribedAppCacheManager.getInstance().clearCachedKeys();
 			}
 		}
 		catch (Exception e) {
@@ -75,11 +75,11 @@ public class WidgetCacheRefreshServiceManager implements ApplicationServiceManag
 		timer = new Timer();
 		timer.addNotificationListener(this, null, null);
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
-		notificationId = timer.addNotification("SavedSearchServiceWidgetCacheRefreshTimer", null, this, timerTriggerAt,
+		notificationId = timer.addNotification("SavedSearchServiceSubscribedAppsCacheRefreshTimer", null, this, timerTriggerAt,
 				REFRESH_INTERVAL, 0);
 		timer.start();
-		logger.info("Timer for saved search service widget cache refreshing started. notificationId={}", notificationId);
-		WidgetCacheManager.getInstance();
+		logger.info("Timer for saved search service subscribed apps cache refreshing started. notificationId={}", notificationId);
+		SubscribedAppCacheManager.getInstance();
 	}
 
 	/* (non-Javadoc)
@@ -105,7 +105,8 @@ public class WidgetCacheRefreshServiceManager implements ApplicationServiceManag
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
 		if (timer != null) {
-			logger.info("Timer for saved search service widget cache refreshing stops. notificationId={}", notificationId);
+			logger.info("Timer for saved search service subscribed apps cache refreshing stops. notificationId={}",
+					notificationId);
 			timer.stop();
 		}
 	}
