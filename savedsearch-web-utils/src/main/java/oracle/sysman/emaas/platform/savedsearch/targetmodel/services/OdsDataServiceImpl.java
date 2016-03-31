@@ -83,7 +83,7 @@ public class OdsDataServiceImpl implements OdsDataService {
 			}catch (Exception e) {
 				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
 			}
-		}catch(Exception e) {
+		} catch(Exception e) {
 			throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
 		}
 		

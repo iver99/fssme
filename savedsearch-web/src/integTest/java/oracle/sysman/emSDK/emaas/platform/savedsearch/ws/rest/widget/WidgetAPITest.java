@@ -1,6 +1,14 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
-import mockit.*;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
@@ -10,16 +18,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TenantSubscriptionUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by xidai on 2/26/2016.
@@ -29,110 +31,7 @@ public class WidgetAPITest {
     private WidgetAPI widgetAPI = new WidgetAPI();
     @BeforeMethod
     public void setUp() throws Exception {
-        UriInfo uri = new UriInfo() {
-            @Override
-            public String getPath() {
-                return null;
-            }
-
-            @Override
-            public String getPath(boolean b) {
-                return null;
-            }
-
-            @Override
-            public List<PathSegment> getPathSegments() {
-                return null;
-            }
-
-            @Override
-            public List<PathSegment> getPathSegments(boolean b) {
-                return null;
-            }
-
-            @Override
-            public URI getRequestUri() {
-
-                URI uril = null;
-                try{
-                    uril = new URI("");
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                return uril;
-            }
-
-            @Override
-            public UriBuilder getRequestUriBuilder() {
-                return null;
-            }
-
-            @Override
-            public URI getAbsolutePath() {
-                return null;
-            }
-
-            @Override
-            public UriBuilder getAbsolutePathBuilder() {
-                return null;
-            }
-
-            @Override
-            public URI getBaseUri() {
-                return null;
-            }
-
-            @Override
-            public UriBuilder getBaseUriBuilder() {
-                return null;
-            }
-
-            @Override
-            public MultivaluedMap<String, String> getPathParameters() {
-                return null;
-            }
-
-            @Override
-            public MultivaluedMap<String, String> getPathParameters(boolean b) {
-                return null;
-            }
-
-            @Override
-            public MultivaluedMap<String, String> getQueryParameters() {
-                return null;
-            }
-
-            @Override
-            public MultivaluedMap<String, String> getQueryParameters(boolean b) {
-                return null;
-            }
-
-            @Override
-            public List<String> getMatchedURIs() {
-                return null;
-            }
-
-            @Override
-            public List<String> getMatchedURIs(boolean b) {
-                return null;
-            }
-
-            @Override
-            public List<Object> getMatchedResources() {
-                return null;
-            }
-
-            @Override
-            public URI resolve(URI uri) {
-                return null;
-            }
-
-            @Override
-            public URI relativize(URI uri) {
-                return null;
-            }
-        };
-        Deencapsulation.setField(widgetAPI, "uri", uri);
+        Deencapsulation.setField(widgetAPI, "uri", TestHelper.mockUriInfo());
     }
 
     @Test
