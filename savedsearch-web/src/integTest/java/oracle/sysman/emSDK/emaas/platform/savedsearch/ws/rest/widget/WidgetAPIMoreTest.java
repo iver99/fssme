@@ -31,7 +31,7 @@ import java.util.List;
  * Created by QIQIAN on 2016/3/28.
  */
 @Test(groups = {"s1"})
-public class WidgetAPITest_spt55 {
+public class WidgetAPIMoreTest {
 
     WidgetAPI widgetAPI;
     @Test
