@@ -710,8 +710,8 @@ public class SearchManagerImplTest
 			}
 		};
 		searchManager.getWidgetListByProviderNames(false, Arrays.asList("LoganService"), null);
-		searchManager.getWidgetListByProviderNames(true, Arrays.asList("LoganService"), "2");
-
+		searchManager.getWidgetListByProviderNames(true, Arrays.asList("LoganService","LoganService"), "22");
+		searchManager.getWidgetListByProviderNames(false, Arrays.asList("LoganService","LoganService"), "22");
 		new Expectations() {
 			{
 				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
@@ -724,6 +724,12 @@ public class SearchManagerImplTest
 		catch (Exception e) {
 
 		}
+	}
+
+	@Test
+	public void testGetWidgetListByProviderNames_emptyNames() throws EMAnalyticsFwkException
+	{
+		searchManager.getWidgetListByProviderNames(false,null, null);
 	}
 
 	@Test
@@ -1234,6 +1240,53 @@ public class SearchManagerImplTest
 				importSearchImpl.getCategoryDetails();
 				result = new CategoryImpl();
 				search.getId();
+				result = null;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, anyLong);
+				result = query;
+				query.setParameter(anyString, anyString);
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getUsername();
+				result = "userName";
+				query.getSingleResult();
+				result = new NoResultException();
+			}
+		};
+		searchManager.saveMultipleSearch(importSearchList);
+	}
+
+	@Test
+	public void testSaveMultipleSearch_searchGetIdST0_objFolderImpl_cateObjCategoryImpl_getFolderIdNull_getCategoryIdNull(@Mocked final Query query,
+																						@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
+																						@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+																						@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
+																						@Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	{
+		List<ImportSearchImpl> importSearchList = new ArrayList<>();
+		importSearchList.add(importSearchImpl);
+		importSearchList.add(importSearchImpl);
+
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				TenantContext.getContext();
+				result = tenantInfo;
+				importSearchImpl.getSearch();
+				result = search;
+				importSearchImpl.getFolderDetails();
+				result = new FolderImpl();
+				importSearchImpl.getCategoryDetails();
+				result = new CategoryImpl();
+				search.getId();
+				result = null;
+				search.getFolderId();
+				result = null;
+				search.getCategoryId();
 				result = null;
 				entityManager.createNamedQuery(anyString);
 				result = query;
