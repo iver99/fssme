@@ -1,11 +1,21 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.ws.rs.core.UriInfo;
+
+import org.testng.annotations.Test;
+
 import com.sun.jersey.core.header.InBoundHeaders;
 import com.sun.jersey.server.impl.application.WebApplicationContext;
 import com.sun.jersey.server.impl.application.WebApplicationImpl;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerResponse;
 import com.tangosol.util.Binary;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
@@ -13,526 +23,558 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.WidgetCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.widget.WidgetCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
-import org.testng.annotations.Test;
-
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
 /**
  * Created by QIQIAN on 2016/3/28.
  */
-@Test(groups = {"s1"})
-public class WidgetAPIMoreTest {
+@Test(groups = { "s1" })
+public class WidgetAPIMoreTest
+{
 
-    WidgetAPI widgetAPI;
-    @Test
-    public void testGetAllWidgets() throws Exception {
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(new WebApplicationContext(new WebApplicationImpl(),new ContainerRequest(new WebApplicationImpl(), "method",null,null,new InBoundHeaders(),null),new ContainerResponse(new WebApplicationImpl(),null, null)),"userTenant","widgetGroupId",true);
-    }
+	WidgetAPI widgetAPI;
 
-    @Test(groups = {"s2"})
-    public void testGetAllWidgets_groupIdLessThen0(@Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=123&includeDashboardIneligible=true";
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","-123",true);
-    }
+	@Test(groups = { "s2" })
+	public void testCheckQueryParam_groupIdLessThen0(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=-123&includeDashboardIneligible=true";
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+	}
 
-    @Test(groups = {"s2"})
-    public void testGetAllWidgets_groupIdLargerThen0(@Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=123&includeDashboardIneligible=true";
-                WidgetCacheManager.getInstance();
-                result = widgetCacheManager;
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","123",true);
-    }
+	@Test(groups = { "s2" })
+	public void testCheckQueryParam_inputLengthLessThen2(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId&includeDashboardIneligible=true";
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+	}
 
-    @Test(groups = {"s2"})
-    public void testGetAllWidgets_EMAnalyticsFwkException(@Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = new EMAnalyticsFwkException(new Throwable());
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","123",true);
-    }
+	@Test(groups = { "s2" })
+	public void testCheckQueryParam_inputLengthLessThen2_keyNotCorrect(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
+			throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "includeDashboardIneligiblexx=true";
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+	}
 
-    @Test(groups = {"s2"})
-    public void testGetAllWidgets_groupIdLargerThen0_paramLessThen2(@Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=123";
-                WidgetCacheManager.getInstance();
-                result = widgetCacheManager;
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","123",true);
-    }
+	@Test(groups = { "s2" })
+	public void testCheckQueryParam_key1NotCorrect(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupIdxx=123&includeDashboardIneligible=true";
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+	}
 
-    @Test(groups = {"s2"})
-    public void testCheckQueryParam_key1NotCorrect(@Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupIdxx=123&includeDashboardIneligible=true";
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","123",true);
-    }
+	@Test(groups = { "s2" })
+	public void testCheckQueryParam_key2NotCorrect(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123&includeDashboardIneligiblexx=true";
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+	}
 
-    @Test(groups = {"s2"})
-    public void testCheckQueryParam_key2NotCorrect(@Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=123&includeDashboardIneligiblexx=true";
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","123",true);
-    }
+	@Test
+	public void testGetAllWidgets() throws Exception
+	{
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(new WebApplicationContext(new WebApplicationImpl(),
+				new ContainerRequest(new WebApplicationImpl(), "method", null, null, new InBoundHeaders(), null),
+				new ContainerResponse(new WebApplicationImpl(), null, null)), "userTenant", "widgetGroupId", true);
+	}
 
-    @Test(groups = {"s2"})
-    public void testCheckQueryParam_groupIdLessThen0(@Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=-123&includeDashboardIneligible=true";
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","123",true);
-    }
+	@Test(groups = { "s2" })
+	public void testGetAllWidgets_EMAnalyticsFwkException(@Mocked final WidgetCacheManager widgetCacheManager,
+			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = new EMAnalyticsFwkException(new Throwable());
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+	}
 
-    @Test(groups = {"s2"})
-    public void testCheckQueryParam_inputLengthLessThen2(@Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId&includeDashboardIneligible=true";
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","123",true);
-    }
+	@Test(groups = { "s2" })
+	public void testGetAllWidgets_groupIdLargerThen0(@Mocked final WidgetCacheManager widgetCacheManager,
+			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123&includeDashboardIneligible=true";
+				WidgetCacheManager.getInstance();
+				result = widgetCacheManager;
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+	}
 
-    @Test(groups = {"s2"})
-    public void testCheckQueryParam_inputLengthLessThen2_keyNotCorrect(@Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "includeDashboardIneligiblexx=true";
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","123",true);
-    }
+	@Test(groups = { "s2" })
+	public void testGetAllWidgets_groupIdLargerThen0_paramLessThen2(@Mocked final WidgetCacheManager widgetCacheManager,
+			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123";
+				WidgetCacheManager.getInstance();
+				result = widgetCacheManager;
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+	}
 
-    @Test(groups = {"s2"})
-    public void testGetWidgetScreenshotById(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                            @Mocked final ScreenshotCacheManager screenshotCacheManager) throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
+	@Test(groups = { "s2" })
+	public void testGetAllWidgets_groupIdLessThen0(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123&includeDashboardIneligible=true";
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "-123", true);
+	}
 
-                ScreenshotCacheManager.getInstance();
-                result = screenshotCacheManager;
-                screenshotCacheManager.getScreenshotFromCache((Tenant)any,anyLong,anyString);
-                result = new ScreenshotElement("fileName",new Binary());
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getWidgetScreenshotById(1234L,"serviceVersion","fileName");
-        widgetAPI.getWidgetScreenshotById(1234L,"serviceVersion","fileName2");
-    }
+	@Test(groups = { "s2" })
+	public void testGetAllWidgetsFromCache_getWigetListFromCache_Exception_widgetGroupIdNotNull(
+			@Mocked WidgetManager widgetManager, @Mocked final WidgetManagerImpl widgetManagerImpl,
+			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl,
+			@Mocked TenantSubscriptionUtil tenantSubscriptionUtil, @Mocked TenantContext tenantContext,
+			@Mocked final TenantInfo tenantInfo, @Mocked final WidgetCacheManager widgetCacheManager,
+			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		final List<String> providers = new ArrayList<>();
+		providers.add("providerQQ");
+		providers.add("providerPP");
+		final List<Widget> widgetList = new ArrayList<>();
+		widgetList.add(new WidgetImpl());
+		widgetList.add(new WidgetImpl());
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123&includeDashboardIneligible=true";
+				WidgetCacheManager.getInstance();
+				result = widgetCacheManager;
+				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
+				result = new Exception();
 
-    @Test(groups = {"s2"})
-    public void testGetWidgetScreenshotById_Exception(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                   @Mocked final ScreenshotCacheManager screenshotCacheManager,
-                                                   @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
 
-                ScreenshotCacheManager.getInstance();
-                result = screenshotCacheManager;
-                screenshotCacheManager.getScreenshotFromCache((Tenant)any,anyLong,anyString);
-                result = new Exception();
+				TenantSubscriptionUtil.getTenantSubscribedServiceProviders(anyString);
+				result = providers;
 
-                SearchManager.getInstance();
-                result = searchManagerImpl;
-                searchManagerImpl.getWidgetScreenshotById(anyLong);
-                result = new ScreenshotData("screenShot",new Date(),new Date());
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getWidgetScreenshotById(1234L,"serviceVersion","fileName");
-    }
+				SearchManager.getInstance();
+				result = searchManagerImpl;
+				searchManagerImpl.getWidgetListByProviderNames(anyBoolean, providers, anyString);
 
-    @Test(groups = {"s2"})
-    public void testGetWidgetScreenshotById_seNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                   @Mocked final ScreenshotCacheManager screenshotCacheManager,
-                                                   @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
+				WidgetManager.getInstance();
+				result = widgetManagerImpl;
 
-                ScreenshotCacheManager.getInstance();
-                result = screenshotCacheManager;
-                screenshotCacheManager.getScreenshotFromCache((Tenant)any,anyLong,anyString);
-                result = null;
+				widgetCacheManager.storeWidgetListToCache((Tenant) any, anyString, null, false);
 
-                SearchManager.getInstance();
-                result = searchManagerImpl;
-                searchManagerImpl.getWidgetScreenshotById(anyLong);
-                result = new ScreenshotData("screenShot",new Date(),new Date());
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getWidgetScreenshotById(1234L,"serviceVersion","fileName");
-    }
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
+	}
 
-    @Test(groups = {"s2"})
-    public void testGetWidgetScreenshotById_seNull_ssNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                   @Mocked final ScreenshotCacheManager screenshotCacheManager,
-                                                   @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
+	@Test(groups = { "s2" })
+	public void testGetAllWidgetsFromCache_widgetGroupIdNotNull(@Mocked WidgetManager widgetManager,
+			@Mocked final WidgetManagerImpl widgetManagerImpl, @Mocked SearchManager searchManager,
+			@Mocked final SearchManagerImpl searchManagerImpl, @Mocked TenantSubscriptionUtil tenantSubscriptionUtil,
+			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+			@Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo, @Mocked final URI uri)
+					throws Exception
+	{
+		final List<String> providers = new ArrayList<>();
+		providers.add("providerQQ");
+		providers.add("providerPP");
+		final List<Widget> widgetList = new ArrayList<>();
+		widgetList.add(new WidgetImpl());
+		widgetList.add(new WidgetImpl());
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123&includeDashboardIneligible=true";
+				WidgetCacheManager.getInstance();
+				result = widgetCacheManager;
 
-                ScreenshotCacheManager.getInstance();
-                result = screenshotCacheManager;
-                screenshotCacheManager.getScreenshotFromCache((Tenant)any,anyLong,anyString);
-                result = null;
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
 
-                SearchManager.getInstance();
-                result = searchManagerImpl;
-                searchManagerImpl.getWidgetScreenshotById(anyLong);
-                result = null;
+				TenantSubscriptionUtil.getTenantSubscribedServiceProviders(anyString);
+				result = providers;
 
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getWidgetScreenshotById(1234L,"serviceVersion","fileName");
-    }
+				SearchManager.getInstance();
+				result = searchManagerImpl;
+				searchManagerImpl.getWidgetListByProviderNames(anyBoolean, providers, anyString);
 
-    @Test(groups = {"s2"})
-    public void testGetWidgetScreenshotById_B64seNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                   @Mocked final ScreenshotCacheManager screenshotCacheManager,
-                                                   @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
+				WidgetManager.getInstance();
+				result = widgetManagerImpl;
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", false);
+	}
 
-                ScreenshotCacheManager.getInstance();
-                result = screenshotCacheManager;
-                screenshotCacheManager.getScreenshotFromCache((Tenant)any,anyLong,anyString);
-                result = null;
-                screenshotCacheManager.storeBase64ScreenshotToCache((Tenant)any,anyLong,(ScreenshotData)any);
-                result = null;
+	@Test(groups = { "s2" })
+	public void testGetAllWidgetsFromCache_widgetGroupIdNull(@Mocked TenantContext tenantContext,
+			@Mocked final TenantInfo tenantInfo, @Mocked final WidgetCacheManager widgetCacheManager,
+			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123&includeDashboardIneligible=true";
+				WidgetCacheManager.getInstance();
+				result = widgetCacheManager;
 
-                SearchManager.getInstance();
-                result = searchManagerImpl;
-                searchManagerImpl.getWidgetScreenshotById(anyLong);
-                result = new ScreenshotData("screenShot",new Date(),new Date());
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getWidgetScreenshotById(1234L,"serviceVersion","fileName");
-    }
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
+	}
 
-    @Test(groups = {"s2"})
-    public void testGetWidgetScreenshotById_seNull_EMAnalyticsFwkException(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                      @Mocked final ScreenshotCacheManager screenshotCacheManager,
-                                                      @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
+	@Test(groups = { "s2" })
+	public void testGetAllWidgetsFromCache_widgetGroupIdNull_getWigetListFromCache_Exception(@Mocked TenantContext tenantContext,
+			@Mocked final TenantInfo tenantInfo, @Mocked final WidgetCacheManager widgetCacheManager,
+			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123&includeDashboardIneligible=true";
+				WidgetCacheManager.getInstance();
+				result = widgetCacheManager;
+				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
+				result = new Exception();
 
-                ScreenshotCacheManager.getInstance();
-                result = screenshotCacheManager;
-                screenshotCacheManager.getScreenshotFromCache((Tenant)any,anyLong,anyString);
-                result = null;
-                screenshotCacheManager.storeBase64ScreenshotToCache((Tenant)any,anyLong,(ScreenshotData)any);
-                result = new EMAnalyticsFwkException(new Throwable());
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
+	}
 
-                SearchManager.getInstance();
-                result = searchManagerImpl;
-                searchManagerImpl.getWidgetScreenshotById(anyLong);
-                result = new ScreenshotData("screenShot",new Date(),new Date());
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getWidgetScreenshotById(1234L,"serviceVersion","fileName");
-    }
+	@Test(groups = { "s2" })
+	public void testGetAllWidgetsFromCache_widgetGroupIdNull_msgNotEmpty(@Mocked TenantContext tenantContext,
+			@Mocked final TenantInfo tenantInfo, @Mocked final WidgetCacheManager widgetCacheManager,
+			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	{
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123&includeDashboardIneligible=true";
+				WidgetCacheManager.getInstance();
+				result = widgetCacheManager;
+				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
+				result = "hahaha";
 
-    @Test(groups = {"s2"})
-    public void testGetWidgetScreenshotById_seNull_Exception(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                                           @Mocked final ScreenshotCacheManager screenshotCacheManager,
-                                                                           @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
+	}
 
-                ScreenshotCacheManager.getInstance();
-                result = screenshotCacheManager;
-                screenshotCacheManager.getScreenshotFromCache((Tenant)any,anyLong,anyString);
-                result = null;
-                screenshotCacheManager.storeBase64ScreenshotToCache((Tenant)any,anyLong,(ScreenshotData)any);
-                result = new Exception();
+	@Test(groups = { "s2" })
+	public void testGetWidgetScreenshotById(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+			@Mocked final ScreenshotCacheManager screenshotCacheManager) throws Exception
+	{
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
 
-                SearchManager.getInstance();
-                result = searchManagerImpl;
-                searchManagerImpl.getWidgetScreenshotById(anyLong);
-                result = new ScreenshotData("screenShot",new Date(),new Date());
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getWidgetScreenshotById(1234L,"serviceVersion","fileName");
-    }
+				ScreenshotCacheManager.getInstance();
+				result = screenshotCacheManager;
+				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				result = new ScreenshotElement("fileName", new Binary());
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName2");
+	}
 
-    @Test(groups = {"s2"})
-    public void testGetAllWidgetsFromCache_widgetGroupIdNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                              @Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=123&includeDashboardIneligible=true";
-                WidgetCacheManager.getInstance();
-                result = widgetCacheManager;
+	@Test(groups = { "s2" })
+	public void testGetWidgetScreenshotById_B64seNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+			@Mocked final ScreenshotCacheManager screenshotCacheManager, @Mocked SearchManager searchManager,
+			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+	{
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
 
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant",null,false);
-    }
+				ScreenshotCacheManager.getInstance();
+				result = screenshotCacheManager;
+				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				result = null;
+				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
+				result = null;
 
-    @Test(groups = {"s2"})
-    public void testGetAllWidgetsFromCache_widgetGroupIdNull_msgNotEmpty(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                           @Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=123&includeDashboardIneligible=true";
-                WidgetCacheManager.getInstance();
-                result = widgetCacheManager;
-                widgetCacheManager.getWigetListFromCache((Tenant)any);
-                result = "hahaha";
+				SearchManager.getInstance();
+				result = searchManagerImpl;
+				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				result = new ScreenshotData("screenShot", new Date(), new Date());
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+	}
 
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant",null,false);
-    }
+	@Test(groups = { "s2" })
+	public void testGetWidgetScreenshotById_Exception(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+			@Mocked final ScreenshotCacheManager screenshotCacheManager, @Mocked SearchManager searchManager,
+			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+	{
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
 
-    @Test(groups = {"s2"})
-    public void testGetAllWidgetsFromCache_widgetGroupIdNull_getWigetListFromCache_Exception(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                       @Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo,@Mocked final URI uri) throws Exception {
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=123&includeDashboardIneligible=true";
-                WidgetCacheManager.getInstance();
-                result = widgetCacheManager;
-                widgetCacheManager.getWigetListFromCache((Tenant)any);
-                result = new Exception();
+				ScreenshotCacheManager.getInstance();
+				result = screenshotCacheManager;
+				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				result = new Exception();
 
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant",null,false);
-    }
+				SearchManager.getInstance();
+				result = searchManagerImpl;
+				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				result = new ScreenshotData("screenShot", new Date(), new Date());
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+	}
 
-    @Test(groups = {"s2"})
-    public void testGetAllWidgetsFromCache_getWigetListFromCache_Exception_widgetGroupIdNotNull(@Mocked WidgetManager widgetManager,@Mocked final WidgetManagerImpl widgetManagerImpl,
-                                                                @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl,
-                                                                @Mocked TenantSubscriptionUtil tenantSubscriptionUtil,
-                                                                @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                                @Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception {
-        final List<String> providers = new ArrayList<>();
-        providers.add("providerQQ");
-        providers.add("providerPP");
-        final List<Widget> widgetList = new ArrayList<>();
-        widgetList.add(new WidgetImpl());
-        widgetList.add(new WidgetImpl());
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=123&includeDashboardIneligible=true";
-                WidgetCacheManager.getInstance();
-                result = widgetCacheManager;
-                widgetCacheManager.getWigetListFromCache((Tenant)any);
-                result = new Exception();
+	@Test(groups = { "s2" })
+	public void testGetWidgetScreenshotById_seNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+			@Mocked final ScreenshotCacheManager screenshotCacheManager, @Mocked SearchManager searchManager,
+			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+	{
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
 
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
+				ScreenshotCacheManager.getInstance();
+				result = screenshotCacheManager;
+				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				result = null;
 
-                TenantSubscriptionUtil.getTenantSubscribedServiceProviders(anyString);
-                result = providers;
+				SearchManager.getInstance();
+				result = searchManagerImpl;
+				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				result = new ScreenshotData("screenShot", new Date(), new Date());
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+	}
 
-                SearchManager.getInstance();
-                result = searchManagerImpl;
-                searchManagerImpl.getWidgetListByProviderNames(anyBoolean,providers,anyString);
+	@Test(groups = { "s2" })
+	public void testGetWidgetScreenshotById_seNull_EMAnalyticsFwkException(@Mocked TenantContext tenantContext,
+			@Mocked final TenantInfo tenantInfo, @Mocked final ScreenshotCacheManager screenshotCacheManager,
+			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+	{
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
 
-                WidgetManager.getInstance();
-                result = widgetManagerImpl;
+				ScreenshotCacheManager.getInstance();
+				result = screenshotCacheManager;
+				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				result = null;
+				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
+				result = new EMAnalyticsFwkException(new Throwable());
 
-                widgetCacheManager.storeWidgetListToCache((Tenant)any,anyString);
+				SearchManager.getInstance();
+				result = searchManagerImpl;
+				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				result = new ScreenshotData("screenShot", new Date(), new Date());
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+	}
 
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant",null,false);
-    }
+	@Test(groups = { "s2" })
+	public void testGetWidgetScreenshotById_seNull_Exception(@Mocked TenantContext tenantContext,
+			@Mocked final TenantInfo tenantInfo, @Mocked final ScreenshotCacheManager screenshotCacheManager,
+			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+	{
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
 
-    @Test(groups = {"s2"})
-    public void testGetAllWidgetsFromCache_widgetGroupIdNotNull(@Mocked WidgetManager widgetManager,@Mocked final WidgetManagerImpl widgetManagerImpl,
-                                                                @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl,
-                                                                @Mocked TenantSubscriptionUtil tenantSubscriptionUtil,
-                                                                @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                                @Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception {
-        final List<String> providers = new ArrayList<>();
-        providers.add("providerQQ");
-        providers.add("providerPP");
-        final List<Widget> widgetList = new ArrayList<>();
-        widgetList.add(new WidgetImpl());
-        widgetList.add(new WidgetImpl());
-        new Expectations(){
-            {
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "widgetGroupId=123&includeDashboardIneligible=true";
-                WidgetCacheManager.getInstance();
-                result = widgetCacheManager;
+				ScreenshotCacheManager.getInstance();
+				result = screenshotCacheManager;
+				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				result = null;
+				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
+				result = new Exception();
 
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getTenantInternalId();
-                result = 1234L;
-                tenantInfo.gettenantName();
-                result = "tenantName";
+				SearchManager.getInstance();
+				result = searchManagerImpl;
+				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				result = new ScreenshotData("screenShot", new Date(), new Date());
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+	}
 
-                TenantSubscriptionUtil.getTenantSubscribedServiceProviders(anyString);
-                result = providers;
+	@Test(groups = { "s2" })
+	public void testGetWidgetScreenshotById_seNull_ssNull(@Mocked TenantContext tenantContext,
+			@Mocked final TenantInfo tenantInfo, @Mocked final ScreenshotCacheManager screenshotCacheManager,
+			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+	{
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getTenantInternalId();
+				result = 1234L;
+				tenantInfo.gettenantName();
+				result = "tenantName";
 
-                SearchManager.getInstance();
-                result = searchManagerImpl;
-                searchManagerImpl.getWidgetListByProviderNames(anyBoolean,providers,anyString);
+				ScreenshotCacheManager.getInstance();
+				result = screenshotCacheManager;
+				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				result = null;
 
-                WidgetManager.getInstance();
-                result = widgetManagerImpl;
-            }
-        };
-        widgetAPI = new WidgetAPI();
-        widgetAPI.getAllWidgets(uriInfo,"userTenant","123",false);
-    }
+				SearchManager.getInstance();
+				result = searchManagerImpl;
+				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				result = null;
+
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+	}
 
 }

@@ -113,7 +113,7 @@ public class WidgetCacheManager
 				}
 				else {
 					logger.debug("Unfortunately, the cached key isn't of type DefaultKey, it's type is {}",
-							key.getClass().getName());
+							key == null ? null : key.getClass().getName());
 				}
 			}
 		}
