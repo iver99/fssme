@@ -34,14 +34,20 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
 class EmAnalyticsObjectUtil
 {
+	@SuppressWarnings("unchecked")
 	public static String getSearchParamByName(long searchId, String paramName, EntityManager em) {
-		EmAnalyticsSearchParam param = (EmAnalyticsSearchParam) em
+		List<EmAnalyticsSearchParam> paramList = (List<EmAnalyticsSearchParam>) em
 				.createNamedQuery("SearchParam.getParamByName")
 				.setParameter("searchId", searchId)
-				.setParameter("name", paramName).getSingleResult();
-		return ParameterType.STRING.getIntValue() == param.getParamType().intValue()
-				? param.getParamValueStr() 
-				: param.getParamValueClob();
+				.setParameter("name", paramName).getResultList();
+		if(!paramList.isEmpty()) {
+			EmAnalyticsSearchParam param = paramList.get(0);
+			return ParameterType.STRING.getIntValue() == param.getParamType().intValue()
+					? param.getParamValueStr() 
+					: param.getParamValueClob();
+		} else {
+			return null;
+		}
 	}
 
 	public static boolean canDeleteFolder(long folderId, EntityManager em) throws EMAnalyticsFwkException

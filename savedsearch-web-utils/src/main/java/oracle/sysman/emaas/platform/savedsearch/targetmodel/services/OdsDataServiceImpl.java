@@ -58,6 +58,10 @@ public class OdsDataServiceImpl implements OdsDataService {
 		SearchManager sman = SearchManager.getInstance();
 		String meid = sman.getSearchParamByName(searchId, ENTITY_ID);
 		
+		// no ods entity need to be deleted
+		if(meid == null)
+			return;
+		
 		// send the meid to ODS for deleting
 		StringBuffer baseUrl = new StringBuffer();
 		baseUrl.append(retriveEndpoint(tenantName, REL_DATA_RESOURCE, DATA_MES)).append(HTTP_DELIMITER).append(meid);
