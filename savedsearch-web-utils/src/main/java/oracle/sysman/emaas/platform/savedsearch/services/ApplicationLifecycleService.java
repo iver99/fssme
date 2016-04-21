@@ -12,8 +12,6 @@ public class ApplicationLifecycleService extends AbstractApplicationLifecycleSer
 		addApplicationServiceManager(rsm);
 		addApplicationServiceManager(new AvailabilityServiceManager(rsm));
 		addApplicationServiceManager(new EMTargetInitializer());
-		addApplicationServiceManager(new WidgetCacheRefreshServiceManager());
-		addApplicationServiceManager(new SubscribedAppCacheRefreshServcieManager());
 	}
 
 }
