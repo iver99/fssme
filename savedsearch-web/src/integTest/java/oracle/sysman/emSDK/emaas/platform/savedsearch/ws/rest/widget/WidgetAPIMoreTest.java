@@ -14,7 +14,6 @@ import com.sun.jersey.server.impl.application.WebApplicationContext;
 import com.sun.jersey.server.impl.application.WebApplicationImpl;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerResponse;
-import com.tangosol.util.Binary;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -22,11 +21,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.widget.WidgetCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -129,8 +124,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_EMAnalyticsFwkException(@Mocked final WidgetCacheManager widgetCacheManager,
-			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testGetAllWidgets_EMAnalyticsFwkException(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
 	{
 		new Expectations() {
 			{
@@ -145,8 +139,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_groupIdLargerThen0(@Mocked final WidgetCacheManager widgetCacheManager,
-			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testGetAllWidgets_groupIdLargerThen(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
 	{
 		new Expectations() {
 			{
@@ -154,8 +147,6 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				WidgetCacheManager.getInstance();
-				result = widgetCacheManager;
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -163,8 +154,8 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_groupIdLargerThen0_paramLessThen2(@Mocked final WidgetCacheManager widgetCacheManager,
-			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testGetAllWidgets_groupIdLargerThen0_paramLessThen2(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
+			throws Exception
 	{
 		new Expectations() {
 			{
@@ -172,8 +163,6 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123";
-				WidgetCacheManager.getInstance();
-				result = widgetCacheManager;
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -200,8 +189,7 @@ public class WidgetAPIMoreTest
 			@Mocked WidgetManager widgetManager, @Mocked final WidgetManagerImpl widgetManagerImpl,
 			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl,
 			@Mocked TenantSubscriptionUtil tenantSubscriptionUtil, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final WidgetCacheManager widgetCacheManager,
-			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
 	{
 		final List<String> providers = new ArrayList<>();
 		providers.add("providerQQ");
@@ -215,10 +203,10 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				WidgetCacheManager.getInstance();
-				result = widgetCacheManager;
-				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
-				result = new Exception();
+				//				WidgetCacheManager.getInstance();
+				//				result = widgetCacheManager;
+				//				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
+				//				result = new Exception();
 
 				TenantContext.getContext();
 				result = tenantInfo;
@@ -237,7 +225,7 @@ public class WidgetAPIMoreTest
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
 
-				widgetCacheManager.storeWidgetListToCache((Tenant) any, anyString, null, false);
+				//				widgetCacheManager.storeWidgetListToCache((Tenant) any, anyString, null, false);
 
 			}
 		};
@@ -249,9 +237,8 @@ public class WidgetAPIMoreTest
 	public void testGetAllWidgetsFromCache_widgetGroupIdNotNull(@Mocked WidgetManager widgetManager,
 			@Mocked final WidgetManagerImpl widgetManagerImpl, @Mocked SearchManager searchManager,
 			@Mocked final SearchManagerImpl searchManagerImpl, @Mocked TenantSubscriptionUtil tenantSubscriptionUtil,
-			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked final WidgetCacheManager widgetCacheManager, @Mocked final UriInfo uriInfo, @Mocked final URI uri)
-					throws Exception
+			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo,
+			@Mocked final URI uri) throws Exception
 	{
 		final List<String> providers = new ArrayList<>();
 		providers.add("providerQQ");
@@ -265,8 +252,8 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				WidgetCacheManager.getInstance();
-				result = widgetCacheManager;
+				//				WidgetCacheManager.getInstance();
+				//				result = widgetCacheManager;
 
 				TenantContext.getContext();
 				result = tenantInfo;
@@ -292,8 +279,7 @@ public class WidgetAPIMoreTest
 
 	@Test(groups = { "s2" })
 	public void testGetAllWidgetsFromCache_widgetGroupIdNull(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final WidgetCacheManager widgetCacheManager,
-			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
 	{
 		new Expectations() {
 			{
@@ -301,8 +287,8 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				WidgetCacheManager.getInstance();
-				result = widgetCacheManager;
+				//				WidgetCacheManager.getInstance();
+				//				result = widgetCacheManager;
 
 				TenantContext.getContext();
 				result = tenantInfo;
@@ -318,8 +304,7 @@ public class WidgetAPIMoreTest
 
 	@Test(groups = { "s2" })
 	public void testGetAllWidgetsFromCache_widgetGroupIdNull_getWigetListFromCache_Exception(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final WidgetCacheManager widgetCacheManager,
-			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
 	{
 		new Expectations() {
 			{
@@ -327,10 +312,10 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				WidgetCacheManager.getInstance();
-				result = widgetCacheManager;
-				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
-				result = new Exception();
+				//				WidgetCacheManager.getInstance();
+				//				result = widgetCacheManager;
+				//				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
+				//				result = new Exception();
 
 				TenantContext.getContext();
 				result = tenantInfo;
@@ -346,8 +331,7 @@ public class WidgetAPIMoreTest
 
 	@Test(groups = { "s2" })
 	public void testGetAllWidgetsFromCache_widgetGroupIdNull_msgNotEmpty(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final WidgetCacheManager widgetCacheManager,
-			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
 	{
 		new Expectations() {
 			{
@@ -355,10 +339,10 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				WidgetCacheManager.getInstance();
-				result = widgetCacheManager;
-				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
-				result = "hahaha";
+				//				WidgetCacheManager.getInstance();
+				//				result = widgetCacheManager;
+				//				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
+				//				result = "hahaha";
 
 				TenantContext.getContext();
 				result = tenantInfo;
@@ -373,8 +357,8 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetWidgetScreenshotById(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked final ScreenshotCacheManager screenshotCacheManager) throws Exception
+	public void testGetWidgetScreenshotById(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo)
+			throws Exception
 	{
 		new Expectations() {
 			{
@@ -385,10 +369,10 @@ public class WidgetAPIMoreTest
 				tenantInfo.gettenantName();
 				result = "tenantName";
 
-				ScreenshotCacheManager.getInstance();
-				result = screenshotCacheManager;
-				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				result = new ScreenshotElement("fileName", new Binary());
+				//				ScreenshotCacheManager.getInstance();
+				//				result = screenshotCacheManager;
+				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				//				result = new ScreenshotElement("fileName", new Binary());
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -398,8 +382,7 @@ public class WidgetAPIMoreTest
 
 	@Test(groups = { "s2" })
 	public void testGetWidgetScreenshotById_B64seNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked final ScreenshotCacheManager screenshotCacheManager, @Mocked SearchManager searchManager,
-			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
 	{
 		new Expectations() {
 			{
@@ -410,12 +393,12 @@ public class WidgetAPIMoreTest
 				tenantInfo.gettenantName();
 				result = "tenantName";
 
-				ScreenshotCacheManager.getInstance();
-				result = screenshotCacheManager;
-				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				result = null;
-				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
-				result = null;
+				//				ScreenshotCacheManager.getInstance();
+				//				result = screenshotCacheManager;
+				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				//				result = null;
+				//				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
+				//				result = null;
 
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -429,8 +412,7 @@ public class WidgetAPIMoreTest
 
 	@Test(groups = { "s2" })
 	public void testGetWidgetScreenshotById_Exception(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked final ScreenshotCacheManager screenshotCacheManager, @Mocked SearchManager searchManager,
-			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
 	{
 		new Expectations() {
 			{
@@ -441,10 +423,10 @@ public class WidgetAPIMoreTest
 				tenantInfo.gettenantName();
 				result = "tenantName";
 
-				ScreenshotCacheManager.getInstance();
-				result = screenshotCacheManager;
-				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				result = new Exception();
+				//				ScreenshotCacheManager.getInstance();
+				//				result = screenshotCacheManager;
+				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				//				result = new Exception();
 
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -458,8 +440,7 @@ public class WidgetAPIMoreTest
 
 	@Test(groups = { "s2" })
 	public void testGetWidgetScreenshotById_seNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked final ScreenshotCacheManager screenshotCacheManager, @Mocked SearchManager searchManager,
-			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
 	{
 		new Expectations() {
 			{
@@ -470,10 +451,10 @@ public class WidgetAPIMoreTest
 				tenantInfo.gettenantName();
 				result = "tenantName";
 
-				ScreenshotCacheManager.getInstance();
-				result = screenshotCacheManager;
-				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				result = null;
+				//				ScreenshotCacheManager.getInstance();
+				//				result = screenshotCacheManager;
+				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				//				result = null;
 
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -487,8 +468,8 @@ public class WidgetAPIMoreTest
 
 	@Test(groups = { "s2" })
 	public void testGetWidgetScreenshotById_seNull_EMAnalyticsFwkException(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final ScreenshotCacheManager screenshotCacheManager,
-			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+			@Mocked final TenantInfo tenantInfo, @Mocked SearchManager searchManager,
+			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
 	{
 		new Expectations() {
 			{
@@ -499,12 +480,12 @@ public class WidgetAPIMoreTest
 				tenantInfo.gettenantName();
 				result = "tenantName";
 
-				ScreenshotCacheManager.getInstance();
-				result = screenshotCacheManager;
-				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				result = null;
-				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
-				result = new EMAnalyticsFwkException(new Throwable());
+				//				ScreenshotCacheManager.getInstance();
+				//				result = screenshotCacheManager;
+				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				//				result = null;
+				//				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
+				//				result = new EMAnalyticsFwkException(new Throwable());
 
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -518,8 +499,8 @@ public class WidgetAPIMoreTest
 
 	@Test(groups = { "s2" })
 	public void testGetWidgetScreenshotById_seNull_Exception(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final ScreenshotCacheManager screenshotCacheManager,
-			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+			@Mocked final TenantInfo tenantInfo, @Mocked SearchManager searchManager,
+			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
 	{
 		new Expectations() {
 			{
@@ -530,12 +511,12 @@ public class WidgetAPIMoreTest
 				tenantInfo.gettenantName();
 				result = "tenantName";
 
-				ScreenshotCacheManager.getInstance();
-				result = screenshotCacheManager;
-				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				result = null;
-				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
-				result = new Exception();
+				//				ScreenshotCacheManager.getInstance();
+				//				result = screenshotCacheManager;
+				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				//				result = null;
+				//				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
+				//				result = new Exception();
 
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -549,8 +530,8 @@ public class WidgetAPIMoreTest
 
 	@Test(groups = { "s2" })
 	public void testGetWidgetScreenshotById_seNull_ssNull(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final ScreenshotCacheManager screenshotCacheManager,
-			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
+			@Mocked final TenantInfo tenantInfo, @Mocked SearchManager searchManager,
+			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
 	{
 		new Expectations() {
 			{
@@ -561,10 +542,10 @@ public class WidgetAPIMoreTest
 				tenantInfo.gettenantName();
 				result = "tenantName";
 
-				ScreenshotCacheManager.getInstance();
-				result = screenshotCacheManager;
-				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				result = null;
+				//				ScreenshotCacheManager.getInstance();
+				//				result = screenshotCacheManager;
+				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
+				//				result = null;
 
 				SearchManager.getInstance();
 				result = searchManagerImpl;

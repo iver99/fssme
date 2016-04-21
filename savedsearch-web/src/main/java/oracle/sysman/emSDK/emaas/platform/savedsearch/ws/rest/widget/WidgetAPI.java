@@ -22,14 +22,12 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.sun.jersey.core.util.Base64;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.widget.WidgetCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -45,6 +43,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 public class WidgetAPI
 {
 	private static final Logger _logger = LogManager.getLogger(WidgetAPI.class);
+
+	private static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
+
+	private static final String SCREENSHOT_BASE64_JPG_PREFIX = "data:image/jpeg;base64,";
 
 	@Context
 	UriInfo uri;
@@ -212,56 +214,17 @@ public class WidgetAPI
 		String message = null;
 		int statusCode = 200;
 
-		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
-		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId(),
-				TenantContext.getContext().gettenantName());
 		CacheControl cc = new CacheControl();
 		cc.setMaxAge(2592000);
-		try {
-			final ScreenshotElement se = scm.getScreenshotFromCache(cacheTenant, widgetId, fileName);
-			if (se != null) {
-				if (fileName.equals(se.getFileName())) {
-					_logger.debug("Retrieved cached screenshot for widgetid={}, serviceVersion={}, fileName={}", widgetId,
-							serviceVersion, fileName);
-					return Response.ok(new StreamingOutput() {
-						/* (non-Javadoc)
-						 * @see javax.ws.rs.core.StreamingOutput#write(java.io.OutputStream)
-						 */
-						@Override
-						public void write(OutputStream os) throws IOException, WebApplicationException
-						{
-							se.getBuffer().writeTo(os);
-							os.flush();
-							os.close();
-						}
-
-					}).cacheControl(cc).type("image/png").build();
-				}
-				else { // invalid screenshot file name
-					_logger.error(
-							"The requested screenshot is in cache, but file name {} for tenant={}, widget id={} does not match the cached file name",
-							fileName, cacheTenant.getTenantName(), widgetId, se.getFileName());
-					return Response.status(Status.NOT_FOUND).build();
-				}
-			}
-		}
-		catch (Exception e) {
-			_logger.error(e);
-		}
 
 		try {
 			SearchManager searchMan = SearchManager.getInstance();
-			ScreenshotData ss = searchMan.getWidgetScreenshotById(widgetId);
+			final ScreenshotData ss = searchMan.getWidgetScreenshotById(widgetId);
 			if (ss == null || ss.getScreenshot() == null) { // searchManagerImpl ensures an non-null return value. put check for later possible checks
 				_logger.error("Does not retrieved base64 screenshot data. return 404 then");
 				return Response.status(Status.NOT_FOUND).build();
 			}
 
-			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, widgetId, ss);
-			if (se == null || se.getBuffer() == null) {
-				_logger.error("Does not retrieved base64 screenshot data after store to cache. return 404 then");
-				return Response.status(Status.NOT_FOUND).build();
-			}
 			_logger.debug("Retrieved screenshot data from persistence layer, stored to cache, and build response now.");
 			return Response.ok(new StreamingOutput() {
 				/* (non-Javadoc)
@@ -270,7 +233,15 @@ public class WidgetAPI
 				@Override
 				public void write(OutputStream os) throws IOException, WebApplicationException
 				{
-					se.getBuffer().writeTo(os);
+
+					byte[] decoded = null;
+					if (ss.getScreenshot().startsWith(SCREENSHOT_BASE64_PNG_PREFIX)) {
+						decoded = Base64.decode(ss.getScreenshot().substring(SCREENSHOT_BASE64_PNG_PREFIX.length()));
+					}
+					else if (ss.getScreenshot().startsWith(SCREENSHOT_BASE64_JPG_PREFIX)) {
+						decoded = Base64.decode(ss.getScreenshot().substring(SCREENSHOT_BASE64_JPG_PREFIX.length()));
+					}
+					os.write(decoded);
 					os.flush();
 					os.close();
 				}
@@ -327,29 +298,9 @@ public class WidgetAPI
 		return null;
 	}
 
-	private String getAllWidgetsFromCache(String widgetGroupId, boolean includeDashboardIneligible) throws EMAnalyticsFwkException
+	private String getAllWidgetsFromCache(String widgetGroupId, boolean includeDashboardIneligible)
+			throws EMAnalyticsFwkException, IOException
 	{
-		// introduce cache for listing widget for dashboard
-		WidgetCacheManager wcm = WidgetCacheManager.getInstance();
-		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId(),
-				TenantContext.getContext().gettenantName());
-
-		//		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
-		try {
-			String msg = wcm.getWigetListFromCache(cacheTenant, widgetGroupId, includeDashboardIneligible);
-			if (!StringUtil.isEmpty(msg)) {
-				_logger.debug("Retrieved all widget list from cache");
-				return msg;
-			}
-		}
-		catch (Exception e) {
-			_logger.error(e.getLocalizedMessage(), e);
-		}
-		//		}
-		//		else {
-		//			_logger.debug("Not get from cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,
-		//					widgetGroupId);
-		//		}
 		List<String> providers = TenantSubscriptionUtil
 				.getTenantSubscribedServiceProviders(TenantContext.getContext().gettenantName());
 		_logger.debug("Retrieved subscribed providers {} for tenant {}",
@@ -360,7 +311,6 @@ public class WidgetAPI
 
 		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
 			_logger.debug("Storing widget list to cache");
-			wcm.storeWidgetListToCache(cacheTenant, message, widgetGroupId, includeDashboardIneligible);
 		}
 		else {
 			_logger.debug("Not store to cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,

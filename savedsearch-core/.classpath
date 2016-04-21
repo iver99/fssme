@@ -28,7 +28,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="SSF/dependencies/artifactory/coherence-12.1.2.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/em-qatool-os-webdriver-2.0.0-20160217074955.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/json-path-2.3.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jersey-client-1.17.jar"/>
