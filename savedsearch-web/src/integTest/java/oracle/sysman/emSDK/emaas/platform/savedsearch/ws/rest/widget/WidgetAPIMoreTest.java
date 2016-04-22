@@ -203,15 +203,9 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				//				WidgetCacheManager.getInstance();
-				//				result = widgetCacheManager;
-				//				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
-				//				result = new Exception();
 
 				TenantContext.getContext();
 				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
 				tenantInfo.gettenantName();
 				result = "tenantName";
 
@@ -224,8 +218,6 @@ public class WidgetAPIMoreTest
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
-
-				//				widgetCacheManager.storeWidgetListToCache((Tenant) any, anyString, null, false);
 
 			}
 		};
@@ -252,13 +244,9 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				//				WidgetCacheManager.getInstance();
-				//				result = widgetCacheManager;
 
 				TenantContext.getContext();
 				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
 				tenantInfo.gettenantName();
 				result = "tenantName";
 
@@ -287,13 +275,9 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				//				WidgetCacheManager.getInstance();
-				//				result = widgetCacheManager;
 
 				TenantContext.getContext();
 				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
 				tenantInfo.gettenantName();
 				result = "tenantName";
 			}
@@ -312,15 +296,9 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				//				WidgetCacheManager.getInstance();
-				//				result = widgetCacheManager;
-				//				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
-				//				result = new Exception();
 
 				TenantContext.getContext();
 				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
 				tenantInfo.gettenantName();
 				result = "tenantName";
 			}
@@ -339,15 +317,9 @@ public class WidgetAPIMoreTest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=123&includeDashboardIneligible=true";
-				//				WidgetCacheManager.getInstance();
-				//				result = widgetCacheManager;
-				//				widgetCacheManager.getWigetListFromCache((Tenant) any, null, false);
-				//				result = "hahaha";
 
 				TenantContext.getContext();
 				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
 				tenantInfo.gettenantName();
 				result = "tenantName";
 			}
@@ -357,22 +329,15 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetWidgetScreenshotById(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo)
-			throws Exception
+	public void testGetWidgetScreenshotById(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+			@Mocked final SearchManager searchManager) throws Exception
 	{
 		new Expectations() {
 			{
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-
-				//				ScreenshotCacheManager.getInstance();
-				//				result = screenshotCacheManager;
-				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				//				result = new ScreenshotElement("fileName", new Binary());
+				SearchManager.getInstance();
+				result = searchManager;
+				searchManager.getWidgetScreenshotById(anyLong);
+				result = new ScreenshotData("data:image/jpeg;base64,test", new Date(), new Date());
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -386,20 +351,6 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-
-				//				ScreenshotCacheManager.getInstance();
-				//				result = screenshotCacheManager;
-				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				//				result = null;
-				//				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
-				//				result = null;
-
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -416,18 +367,6 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-
-				//				ScreenshotCacheManager.getInstance();
-				//				result = screenshotCacheManager;
-				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				//				result = new Exception();
-
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -444,18 +383,6 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-
-				//				ScreenshotCacheManager.getInstance();
-				//				result = screenshotCacheManager;
-				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				//				result = null;
-
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -473,20 +400,6 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-
-				//				ScreenshotCacheManager.getInstance();
-				//				result = screenshotCacheManager;
-				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				//				result = null;
-				//				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
-				//				result = new EMAnalyticsFwkException(new Throwable());
-
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -504,20 +417,6 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-
-				//				ScreenshotCacheManager.getInstance();
-				//				result = screenshotCacheManager;
-				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				//				result = null;
-				//				screenshotCacheManager.storeBase64ScreenshotToCache((Tenant) any, anyLong, (ScreenshotData) any);
-				//				result = new Exception();
-
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -535,18 +434,6 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.getTenantInternalId();
-				result = 1234L;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-
-				//				ScreenshotCacheManager.getInstance();
-				//				result = screenshotCacheManager;
-				//				screenshotCacheManager.getScreenshotFromCache((Tenant) any, anyLong, anyString);
-				//				result = null;
-
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
