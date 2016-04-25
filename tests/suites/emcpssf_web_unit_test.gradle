@@ -117,9 +117,14 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGro
 
 
 
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/JAXBUtilTestS2.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPIMoreTest.class"
+
+
         useRestAssured=true
 ext.set("testType", "integration")
 }
+
 
 task emcpssf_web_unit_test (dependsOn: QATest)
 

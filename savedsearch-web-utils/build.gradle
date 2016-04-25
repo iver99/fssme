@@ -1,5 +1,6 @@
 apply plugin: 'java' 
 //apply plugin: 'eclipse' 
+apply from: 'test.gradle'
 
 jar {
         from('src/main/java') {
@@ -15,6 +16,25 @@ sourceSets {
 		resources.srcDirs = ['src/integTest/java']
 	}
 }
+publishing.publications {
+    integTest(MavenPublication) {
+                        setArtifactId(project.name + '-' + integTestJar.appendix)
+                        setGroupId('com.oracle.emaas.emcpssf.test')
+                        artifact integTestJar.archivePath
+    }
+    thisJarPublication(MavenPublication) {
+                        from project.components.java
+                        setGroupId('com.oracle.emaas.emcpssf.test')
+    }
+}
+
+artifactoryPublish {
+        publications('integTest')
+        publications('thisJarPublication')
+}
+
+
+
 dependencies {    
 //	compile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+') 
   	compile project(':savedsearch-core')
@@ -33,3 +53,5 @@ test {
                 includeGroups 's1' ,'s2'
         }
 }
+build.dependsOn integTestJar
+
