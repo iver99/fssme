@@ -20,8 +20,8 @@ public class CategoryTest extends BaseTest
 
 	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
-	@Mocked
-    PersistenceManager persistenceManager;
+	//@Mocked
+    //PersistenceManager persistenceManager;
 
 	@AfterClass
 	public static void testDelete()
@@ -105,11 +105,11 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	@AfterClass
+	/*@AfterClass
 	public void removeTenantDetails()
 	{
 		TenantContext.clearContext();
-	}
+	}*/
 
 	/*@Test
 	public void testDefaultFolder() throws Exception
@@ -251,8 +251,8 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	@Test (groups = {""},expectedExceptions = NullPointerException.class)
-	public void testgetCategoryInvalidName(@Mocked final CategoryManagerImpl categoryManager) throws Exception
+	@Test
+	public void testgetCategoryInvalidName() throws Exception
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
