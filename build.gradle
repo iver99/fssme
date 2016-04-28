@@ -115,7 +115,7 @@ artifactory {
 }
 task runS1Tests(type: Exec) {
     executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
-    args 'do_lrg', '-Plrgs=emcpssf_dev_test'
+    args 'do_lrg', '-Plrgs=emcpssf_l0_test'
     if (project.hasProperty('BuildID')) {
         args "-PREPO_BID=${BuildID}"
     }
