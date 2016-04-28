@@ -131,6 +131,9 @@ ext.set("testType", "unit")
 
 
 
-task emcpssf_dev_test (dependsOn: WebUtilTest)
+task emcpssf_l1_test (dependsOn: WebUtilTest)
 
+if (new File("codeCoverage.gradle").exists()) {
+apply from: "../../codeCoverage/codeCoverage.gradle"
+}
 
