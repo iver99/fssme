@@ -40,6 +40,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 public class WidgetAPITest
 {
 	private final WidgetAPI widgetAPI = new WidgetAPI();
+	Date now = new Date();
 
 	@BeforeMethod
 	public void setUp() throws Exception
@@ -404,7 +405,7 @@ public class WidgetAPITest
 			@Mock
 			public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
 			{
-				return new ScreenshotData("10", new Date(), new Date());
+				return new ScreenshotData("10", now, now);
 			}
 		};
 		widgetAPI.getWidgetScreenshotById(10L, "1.0", "test.png");

@@ -15,27 +15,26 @@ import static org.testng.Assert.*;
 @Test(groups = {"s1"})
 public class ScreenshotDataTest {
     ScreenshotData screenshotData;
+    Date now = new Date();
 
     @BeforeMethod
     public void setUp() throws Exception {
         String screenshot = "screenshotxx";
-        Date creationDate = new Date();
-        Date modificationDate = new Date();
+        Date creationDate = now;
+        Date modificationDate = now;
         screenshotData = new ScreenshotData(screenshot,creationDate,modificationDate);
     }
 
     @Test
     public void testGetCreationDate() throws Exception {
-        Date creationDate = new Date();
-        screenshotData.setCreationDate(creationDate);
-        Assert.assertEquals(screenshotData.getCreationDate(),creationDate);
+        screenshotData.setCreationDate(now);
+        Assert.assertEquals(screenshotData.getCreationDate(), now);
     }
 
     @Test
     public void testGetModificationDate() throws Exception {
-        Date modificationDate = new Date();
-        screenshotData.setModificationDate(modificationDate);
-        Assert.assertEquals(screenshotData.getModificationDate(),modificationDate);
+        screenshotData.setModificationDate(now);
+        Assert.assertEquals(screenshotData.getModificationDate(), now);
     }
 
     @Test

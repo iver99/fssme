@@ -37,6 +37,7 @@ public class WidgetAPIMoreTest
 {
 
 	WidgetAPI widgetAPI;
+	Date now = new Date();
 
 	@Test(groups = { "s2" })
 	public void testCheckQueryParam_groupIdLessThen0(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
@@ -337,7 +338,7 @@ public class WidgetAPIMoreTest
 				SearchManager.getInstance();
 				result = searchManager;
 				searchManager.getWidgetScreenshotById(anyLong);
-				result = new ScreenshotData("data:image/jpeg;base64,test", new Date(), new Date());
+				result = new ScreenshotData("data:image/jpeg;base64,test", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -354,7 +355,7 @@ public class WidgetAPIMoreTest
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
-				result = new ScreenshotData("screenShot", new Date(), new Date());
+				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -370,7 +371,7 @@ public class WidgetAPIMoreTest
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
-				result = new ScreenshotData("screenShot", new Date(), new Date());
+				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -386,7 +387,7 @@ public class WidgetAPIMoreTest
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
-				result = new ScreenshotData("screenShot", new Date(), new Date());
+				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -403,7 +404,7 @@ public class WidgetAPIMoreTest
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
-				result = new ScreenshotData("screenShot", new Date(), new Date());
+				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -420,7 +421,7 @@ public class WidgetAPIMoreTest
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
-				result = new ScreenshotData("screenShot", new Date(), new Date());
+				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
