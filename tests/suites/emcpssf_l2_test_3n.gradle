@@ -40,9 +40,9 @@ buildscript {
 apply from: 'setup.gradle'
 apply plugin: 'DevInfraPlugin'
 apply plugin: 'TestInfraPlugin'
-apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"omctf_commontasks")
-//apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")
-//apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
+
+apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")
+apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -138,4 +138,4 @@ task QATest(type:EMTest,dependsOn: DEVTest2){
 
 
 omcTeardown.mustRunAfter(QATest)
-task emcpssf_l2_test_3n (dependsOn: [DEVTest2,omcTeardown])
+task emcpssf_l2_test_3n (dependsOn: [QATest,omcTeardown])
