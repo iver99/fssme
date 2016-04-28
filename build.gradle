@@ -126,12 +126,24 @@ task runS1Tests(type: Exec) {
 
 
 runS1Tests.enabled = !project.disableBuildTests
+
+//run S2 as S1 as another workaround now
+task runS2Tests(type: Exec) {
+    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args 'do_lrg', '-Plrgs=emcpssf_l0_test'
+    if (project.hasProperty('BuildID')) {
+        args "-PREPO_BID=${BuildID}"
+    }
+    finalizedBy "print_results"
+}
+
+/* this workaround doesn't work in hudson job hit "Execution failed for task ':runS2Tests'.> execCommand == null!"
  task runS2Tests(type: Exec) {
 doLast {
         println "runS2Tests is not ready yet."
    }
 } 
-
+*/
 runS2Tests.enabled = !project.disableBuildTests
 runS2Tests.mustRunAfter(runS1Tests)
 
