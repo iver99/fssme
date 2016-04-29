@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
      <lrg-metadata>
-   <lrg name="emcpssf_l2_test_3n" launcher="tests/suites/emcpssf_l2_test_3n.gradle" description="product lrg for l2 Test">
+   <lrg name="emcpssf_test_3n" launcher="tests/suites/emcpssf_test_3n.gradle" description=" lrg for CI Test">
          <pipelines>
             <pipeline name="PRODUCT"/>
 	     <pipeline name="STAGE"/>
