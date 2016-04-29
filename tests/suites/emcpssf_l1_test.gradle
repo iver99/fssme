@@ -96,7 +96,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderManagerImp
 
 
 include "oracle/sysman/emaas/savedsearch/CategoryTest.class"
-include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
+//include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
 include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
 //include "oracle/sysman/emaas/savedsearch/SearchTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryManagerImplTest.class"
