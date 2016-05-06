@@ -170,7 +170,8 @@ public class OdsDataServiceImpl implements OdsDataService {
 		sb.append("\"name\":\"count\",");
 		sb.append("\"isKey\":false,");
 		sb.append("\"displayName\":\"Result Count\",");
-		sb.append("\"type\":\"NUM\"");
+		sb.append("\"type\":\"NUM\",");
+		sb.append("\"typeFormat\":\"0\"");
 		sb.append("},");
 		sb.append("{");
 		sb.append("\"name\":\"sourceURL\",");
