@@ -7,6 +7,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
 import org.eclipse.persistence.internal.jpa.EntityManagerImpl;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -17,6 +18,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -56,6 +58,8 @@ public class CategoryManagerImplTest {
     Folder folder;
     @Mocked
     Exception exception;
+    @Mocked
+    EmAnalyticsCategoryParam emAnalyticsCategoryParam;
     @BeforeMethod
     public void setUp() throws Exception {
          categoryManager = CategoryManagerImpl.getInstance();
@@ -176,6 +180,8 @@ public class CategoryManagerImplTest {
     }
     @Test
     public void testEditCategory() throws Exception {
+        final HashSet<EmAnalyticsCategoryParam> emAnalyticsCategoryParams = new HashSet<>();
+        emAnalyticsCategoryParams.add(emAnalyticsCategoryParam);
         new Expectations(){
             {
                 PersistenceManager.getInstance();
@@ -192,6 +198,8 @@ public class CategoryManagerImplTest {
                 result = entityTransaction;
                 entityTransaction.commit();
                 entityManager.close();
+                emAnalyticsCategory.getEmAnalyticsCategoryParams();
+                result = emAnalyticsCategoryParams;
             }
         };
     categoryManager.editCategory(new CategoryImpl());
@@ -413,22 +421,7 @@ public class CategoryManagerImplTest {
                 EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(withAny(category),withAny(entityManager));
                 result =  new PersistenceException(new Throwable());
                 entityManager.close();
-                EmAnalyticsProcessingException.processCategoryPersistantException(withAny(exception
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                ),anyLong,anyString);
+                EmAnalyticsProcessingException.processCategoryPersistantException(withAny(exception),anyLong,anyString);
             }
         };
             categoryManager.saveCategory(new CategoryImpl());

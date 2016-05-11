@@ -1269,4 +1269,27 @@ public class SearchManagerImpl extends SearchManager
 
 	}
 
+	@Override
+	public String getSearchParamByName(long searchId, String paramName)
+			throws EMAnalyticsFwkException {
+		_logger.debug("get param value by searchId: " + searchId + ", param name: " + paramName);
+		EntityManager em = null;
+		String paramValue = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			paramValue = EmAnalyticsObjectUtil.getSearchParamByName(searchId, paramName, em);
+		} catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			String errorMessage = "Error while retrieving the value of search parameter for the searchId: "
+					+ searchId + ", parameter name: " + paramName;
+			_logger.error(errorMessage, e);
+			throw new EMAnalyticsFwkException(errorMessage, EMAnalyticsFwkException.ERR_GENERIC, null, e);
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		return paramValue;
+	}
+
 }

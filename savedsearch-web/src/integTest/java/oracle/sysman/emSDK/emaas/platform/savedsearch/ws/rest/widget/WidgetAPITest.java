@@ -157,18 +157,6 @@ public class WidgetAPITest
 			{
 				return null;
 			}
-
-			@Override
-			public URI relativize(URI uri)
-			{
-				return null;
-			}
-
-			@Override
-			public URI resolve(URI uri)
-			{
-				return null;
-			}
 		};
 		Deencapsulation.setField(widgetAPI, "uri", uri);
 	}
