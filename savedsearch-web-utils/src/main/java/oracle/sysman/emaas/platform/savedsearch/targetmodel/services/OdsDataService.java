@@ -6,7 +6,7 @@ public interface OdsDataService {
 	public final static String ENTITY_FLAG = "ODS_ENTITY";
 	public final static String ENTITY_ID = "meId";
 	public final static String ENTITY_CLASS = "meClass";
-	public final static String ENTITY_TYPE_NAME = "usr_SSEntityType";
+	public final static String ENTITY_TYPE_NAME = "omc_saved_search";
 	public final static String ENTITY_TYPE_DIS_NAME = "Saved Search";
 	public final static String FACT_TYPE_NAME = "ResultFact::DATA";
 	public final static String FACT_DISPLAY_NAME = "ResultFact";
