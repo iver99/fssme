@@ -1,6 +1,6 @@
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-Rem    MIAYU    02/26/2016 - place holder
+Rem    MIAYU    04/22/2016 - created
 Rem
 
 DEFINE TENANT_ID = '&1'
@@ -9,7 +9,8 @@ DEFINE TENANT_ID = '&1'
 
 --update OOB Folder, since OOB folder can be referenced by search and category, don't use delete from ...
 
-@&EMSAAS_SQL_ROOT/1.7.0/emaas_savesearch_seed_data.sql '&TENANT_ID'
+@&EMSAAS_SQL_ROOT/1.7.1/emaas_savesearch_seed_data_ita.sql '&TENANT_ID'
+@&EMSAAS_SQL_ROOT/1.7.1/emaas_savesearch_seed_data_ta.sql '&TENANT_ID'
 
 commit;
 

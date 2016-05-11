@@ -1,5 +1,6 @@
 apply plugin: 'java' 
 //apply plugin: 'eclipse' 
+apply from: 'test.gradle'
 
 jar {
         from('src/main/java') {
@@ -7,6 +8,33 @@ jar {
         }
 }
  
+sourceSets {
+	test{
+		java {
+			srcDirs = ['src/integTest/java']
+		}
+		resources.srcDirs = ['src/integTest/java']
+	}
+}
+publishing.publications {
+    integTest(MavenPublication) {
+                        setArtifactId(project.name + '-' + integTestJar.appendix)
+                        setGroupId('com.oracle.emaas.emcpssf.test')
+                        artifact integTestJar.archivePath
+    }
+    thisJarPublication(MavenPublication) {
+                        from project.components.java
+                        setGroupId('com.oracle.emaas.emcpssf.test')
+    }
+}
+
+artifactoryPublish {
+        publications('integTest')
+        publications('thisJarPublication')
+}
+
+
+
 dependencies {    
 //	compile(group: 'com.oracle.emaas.emcpssf', name: 'savedsearch-core', version: '1.0.0+') 
   	compile project(':savedsearch-core')
@@ -15,4 +43,15 @@ dependencies {
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+')
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+')
+testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 } 
+test {
+        useTestNG()
+        {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+        }
+}
+build.dependsOn integTestJar
+

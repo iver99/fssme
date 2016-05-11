@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -9,25 +10,29 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TenantSubscriptionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
+
+import com.sun.jersey.core.util.Base64;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
 /**
  * Saved Search Service
@@ -38,7 +43,10 @@ import org.codehaus.jettison.json.JSONObject;
 public class WidgetAPI
 {
 	private static final Logger _logger = LogManager.getLogger(WidgetAPI.class);
-	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
+
+	private static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
+
+	private static final String SCREENSHOT_BASE64_JPG_PREFIX = "data:image/jpeg;base64,";
 
 	@Context
 	UriInfo uri;
@@ -83,7 +91,7 @@ public class WidgetAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "PROVIDER_ASSET_ROOT": "home"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
-	 * <br>
+	 *         <br>
 	 *         Response Code:<br>
 	 *         <table border="1">
 	 *         <tr>
@@ -109,7 +117,9 @@ public class WidgetAPI
 			@QueryParam("widgetGroupId") String widgetGroupId,
 			@QueryParam("includeDashboardIneligible") boolean includeDashboardIneligible)
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/widgets");
+		LogUtil.getInteractionLogger().info(
+				"Service calling to (GET) /savedsearch/v1/widgets?widgetGroupId={}&includeDashboardIneligible={}", widgetGroupId,
+				includeDashboardIneligible);
 		String message = null;
 		int statusCode = 200;
 
@@ -141,36 +151,7 @@ public class WidgetAPI
 				}
 			}
 
-			JSONArray jsonArray = new JSONArray();
-			List<Category> subscribedCatList = TenantSubscriptionUtil.getTenantSubscribedCategories(
-					userTenant.substring(0, userTenant.indexOf(".")), includeDashboardIneligible);
-			List<Category> catList = new ArrayList<Category>();
-			if (widgetGroupId != null) {
-				for (int i = 0; i < subscribedCatList.size(); i++) {
-					if (subscribedCatList.get(i).getId().intValue() == groupId) {
-						catList.add(subscribedCatList.get(i));
-						break;
-					}
-				}
-			}
-			else {
-				catList = subscribedCatList;
-			}
-
-			SearchManager searchMan = SearchManager.getInstance();
-			for (Category category : catList) {
-				List<Search> searchList = new ArrayList<Search>();
-				searchList = searchMan.getWidgetListByCategoryId(category.getId().longValue());
-				for (Search search : searchList) {
-					if (!isWidgetHiddenInWidgetSelector(search, includeDashboardIneligible)) {
-						JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(uri.getBaseUri(), search, category);
-						if (jsonWidget != null) {
-							jsonArray.put(jsonWidget);
-						}
-					}
-				}
-			}
-			message = jsonArray.toString();
+			message = getAllWidgetsFromCache(widgetGroupId, includeDashboardIneligible);
 		}
 
 		catch (NumberFormatException e) {
@@ -205,7 +186,7 @@ public class WidgetAPI
 	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "WIDGET_VISUAL":
 	 *         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAz3UlE..." }</font><br>
-	 * <br>
+	 *         <br>
 	 *         Response Code:<br>
 	 *         <table border="1">
 	 *         <tr>
@@ -226,18 +207,46 @@ public class WidgetAPI
 	 *         </table>
 	 */
 	@GET
-	@Path("{id: [1-9][0-9]*}/screenshot")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getWidgetScreenshotById(@PathParam("id") long widgetId)
+	@Path("{id: [1-9][0-9]*}/screenshot/{serviceVersion}/images/{fileName}")
+	public Response getWidgetScreenshotById(@PathParam("id") long widgetId, @PathParam("serviceVersion") String serviceVersion,
+			@PathParam("fileName") String fileName)
 	{
 		String message = null;
 		int statusCode = 200;
 
+		CacheControl cc = new CacheControl();
+		cc.setMaxAge(2592000);
+
 		try {
 			SearchManager searchMan = SearchManager.getInstance();
-			String widgetScreenshot = searchMan.getWidgetScreenshotById(widgetId);
-			JSONObject jsonObj = EntityJsonUtil.getWidgetScreenshotJsonObj(widgetScreenshot);
-			message = jsonObj.toString();
+			final ScreenshotData ss = searchMan.getWidgetScreenshotById(widgetId);
+			if (ss == null || ss.getScreenshot() == null) { // searchManagerImpl ensures an non-null return value. put check for later possible checks
+				_logger.error("Does not retrieved base64 screenshot data. return 404 then");
+				return Response.status(Status.NOT_FOUND).build();
+			}
+
+			_logger.debug("Retrieved screenshot data from persistence layer, stored to cache, and build response now.");
+			return Response.ok(new StreamingOutput() {
+				/* (non-Javadoc)
+				 * @see javax.ws.rs.core.StreamingOutput#write(java.io.OutputStream)
+				 */
+				@Override
+				public void write(OutputStream os) throws IOException, WebApplicationException
+				{
+
+					byte[] decoded = null;
+					if (ss.getScreenshot().startsWith(SCREENSHOT_BASE64_PNG_PREFIX)) {
+						decoded = Base64.decode(ss.getScreenshot().substring(SCREENSHOT_BASE64_PNG_PREFIX.length()));
+					}
+					else if (ss.getScreenshot().startsWith(SCREENSHOT_BASE64_JPG_PREFIX)) {
+						decoded = Base64.decode(ss.getScreenshot().substring(SCREENSHOT_BASE64_JPG_PREFIX.length()));
+					}
+					os.write(decoded);
+					os.flush();
+					os.close();
+				}
+
+			}).cacheControl(cc).type("image/png").build();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -248,10 +257,12 @@ public class WidgetAPI
 		catch (Exception e) {
 			message = e.getMessage();
 			statusCode = 500;
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
-					+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message, e);
+			_logger.error(
+					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+							+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message,
+					e);
 		}
-		return Response.status(statusCode).entity(message).build();
+		return Response.status(statusCode).entity(message).type(MediaType.APPLICATION_JSON).build();
 	}
 
 	private Response checkQueryParam(String param) throws NumberFormatException
@@ -287,20 +298,41 @@ public class WidgetAPI
 		return null;
 	}
 
-	private boolean isWidgetHiddenInWidgetSelector(Search search, boolean includeDashboardIneligible)
+	private String getAllWidgetsFromCache(String widgetGroupId, boolean includeDashboardIneligible)
+			throws EMAnalyticsFwkException, IOException
 	{
-		boolean hiddenInWidgetSelector = false;
-		if (!includeDashboardIneligible) {
-			List<SearchParameter> params = search.getParameters();
-			if (params != null && params.size() > 0) {
-				for (SearchParameter param : params) {
-					if (PARAM_NAME_DASHBOARD_INELIGIBLE.equals(param.getName()) && "1".equals(param.getValue())) {
-						hiddenInWidgetSelector = true;
-						break;
-					}
-				}
-			}
+		List<String> providers = TenantSubscriptionUtil
+				.getTenantSubscribedServiceProviders(TenantContext.getContext().gettenantName());
+		_logger.debug("Retrieved subscribed providers {} for tenant {}",
+				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
+		List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible, providers,
+				widgetGroupId);
+		String message = WidgetManager.getInstance().getWidgetJsonStringFromWidgetList(widgetList);
+
+		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
+			_logger.debug("Storing widget list to cache");
 		}
-		return hiddenInWidgetSelector;
+		else {
+			_logger.debug("Not store to cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,
+					widgetGroupId);
+		}
+		return message;
 	}
+
+	//	private boolean isWidgetHiddenInWidgetSelector(Widget widget, boolean includeDashboardIneligible)
+	//	{
+	//		boolean hiddenInWidgetSelector = false;
+	//		if (!includeDashboardIneligible) {
+	//			List<SearchParameter> params = widget.getParameters();
+	//			if (params != null && params.size() > 0) {
+	//				for (SearchParameter param : params) {
+	//					if (PARAM_NAME_DASHBOARD_INELIGIBLE.equals(param.getName()) && "1".equals(param.getValue())) {
+	//						hiddenInWidgetSelector = true;
+	//						break;
+	//					}
+	//				}
+	//			}
+	//		}
+	//		return hiddenInWidgetSelector;
+	//	}
 }

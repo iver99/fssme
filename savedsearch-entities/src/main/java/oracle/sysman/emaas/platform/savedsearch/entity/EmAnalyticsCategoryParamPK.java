@@ -15,6 +15,8 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 
 	private String name;
 
+	private Long tenantId;
+
 	public EmAnalyticsCategoryParamPK()
 	{
 	}
@@ -29,7 +31,7 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 			return false;
 		}
 		EmAnalyticsCategoryParamPK castOther = (EmAnalyticsCategoryParamPK) other;
-		return categoryId == castOther.categoryId && name.equals(castOther.name);
+		return categoryId == castOther.categoryId && name.equals(castOther.name) && tenantId == castOther.tenantId;
 
 	}
 
@@ -43,6 +45,14 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 		return name;
 	}
 
+	/**
+	 * @return the tenantId
+	 */
+	public Long getTenantId()
+	{
+		return tenantId;
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -50,6 +60,7 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 		int hash = 17;
 		hash = hash * prime + (int) (categoryId ^ categoryId >>> 32);
 		hash = hash * prime + (name == null ? 0 : name.hashCode());
+		hash = hash * prime + (int) (tenantId ^ tenantId >>> 32);
 		return hash;
 
 	}
@@ -62,5 +73,14 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 }

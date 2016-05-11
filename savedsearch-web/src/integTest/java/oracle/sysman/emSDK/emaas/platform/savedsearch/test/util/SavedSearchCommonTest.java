@@ -14,17 +14,17 @@ import java.util.Set;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.SearchParameterDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingCollection;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity.DomainKeyEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.SavedSearchApplication;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.AppMappingCollection;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.AppMappingEntity;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.DomainEntity;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.DomainEntity.DomainKeyEntity;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.json.DomainsEntity;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

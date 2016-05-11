@@ -11,6 +11,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.loggingconfig;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -128,7 +129,7 @@ public class LoggingConfigAPI
 			for (LoggerConfig lc : loggers.values()) {
 				if (lc.getName().equalsIgnoreCase(loggerName)) {
 					lc.setLevel(level);
-					Calendar cal = Calendar.getInstance();
+					Calendar cal = Calendar.getInstance(Locale.US);
 					long localNow = System.currentTimeMillis();
 					long offset = cal.getTimeZone().getOffset(localNow);
 					Long timestamp = localNow - offset;

@@ -1,10 +1,14 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlType;
 
 @XmlType(propOrder = { "name", "value", "type" })
-public class Parameter
+public class Parameter implements Serializable
 {
+	private static final long serialVersionUID = 527730391145665376L;
+
 	private String name;
 	private String value;
 	private ParameterType type;
@@ -23,7 +27,7 @@ public class Parameter
 
 	/**
 	 * Returns the parameter name.
-	 * 
+	 *
 	 * @return parameter name
 	 */
 	public String getName()
@@ -33,7 +37,7 @@ public class Parameter
 
 	/**
 	 * Returns the parameter type.
-	 * 
+	 *
 	 * @see ParameterType
 	 * @return parameter type
 	 */
@@ -44,7 +48,7 @@ public class Parameter
 
 	/**
 	 * Returns the value of the parameter (<code>null</code> if it has no value).
-	 * 
+	 *
 	 * @return value for the parameter
 	 */
 	public String getValue()
@@ -54,7 +58,7 @@ public class Parameter
 
 	/**
 	 * Sets the name for the parameter.
-	 * 
+	 *
 	 * @param name
 	 *            parameter name
 	 */
@@ -65,7 +69,7 @@ public class Parameter
 
 	/**
 	 * Sets the type of parameter.
-	 * 
+	 *
 	 * @see ParameterType
 	 * @param type
 	 *            parameter type
@@ -77,7 +81,7 @@ public class Parameter
 
 	/**
 	 * Sets the value for the parameter (<code>null</code> if it has no value).
-	 * 
+	 *
 	 * @param value
 	 *            value for the parameter
 	 */

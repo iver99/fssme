@@ -10,11 +10,22 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
+import org.eclipse.persistence.jpa.JpaEntityManager;
+import org.eclipse.persistence.queries.DatabaseQuery;
+import org.eclipse.persistence.sessions.DatabaseRecord;
+import org.eclipse.persistence.sessions.Session;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -24,15 +35,13 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class SearchManagerImpl extends SearchManager
 {
@@ -46,11 +55,27 @@ public class SearchManagerImpl extends SearchManager
 	private static final String SEARCH_ENT_PREFIX = "e.";
 	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 and e.owner in ('ORACLE',:userName) order by e.lastAccess.accessDate DESC ";
 
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_1 = "SELECT e FROM EmAnalyticsSearch e " + "where ";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_2 = "e.emAnalyticsCategory.categoryId=:widgetGroupId AND ";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_3 = "e.emAnalyticsCategory.categoryId in (select c.categoryId from EmAnalyticsCategory c where c.providerName in (";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_4 = "))  "
+			+ "AND e.deleted=0 AND e.isWidget=1 AND e.tenant=:tenantId AND (e.owner=:userName OR e.systemSearch =1)";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_1 = "SELECT e FROM EmAnalyticsSearch e LEFT JOIN EmAnalyticsSearchParam pm "
+			+ "ON pm.searchId=e.id AND pm.tenantId=:tenantId AND pm.name = 'DASHBOARD_INELIGIBLE' where e.tenant=:tenantId AND ";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_2 = "e.emAnalyticsCategory.categoryId=:widgetGroupId AND ";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_3 = "e.emAnalyticsCategory.categoryId in "
+			+ "(select c.categoryId from EmAnalyticsCategory c LEFT JOIN EmAnalyticsCategoryParam cm "
+			+ "on cm.categoryId=c.categoryId AND cm.name='DASHBOARD_INELIGIBLE' AND cm.tenantId=:tenantId "
+			+ "where c.providerName in (";
+	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_4 = ") AND (cm.value IS NULL OR cm.value<>'1')) "
+			+ "AND e.deleted=0 AND e.isWidget=1 AND e.tenant=:tenantId AND (e.owner=:userName OR e.systemSearch =1) "
+			+ "AND (pm.paramValueStr IS NULL OR pm.paramValueStr<>'1')";
+
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
 	/**
 	 * Get SearchManagerImpl singleton instance.
-	 * 
+	 *
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
@@ -133,9 +158,11 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
-			if (searchEntity != null && searchEntity.getSystemSearch() != null && searchEntity.getSystemSearch().intValue() == 1) {
-				throw new EMAnalyticsFwkException("Search with Id: " + searchEntity.getId()
-						+ " is system search and NOT allowed to edit", EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);
+			if (searchEntity != null && searchEntity.getSystemSearch() != null
+					&& searchEntity.getSystemSearch().intValue() == 1) {
+				throw new EMAnalyticsFwkException(
+						"Search with Id: " + searchEntity.getId() + " is system search and NOT allowed to edit",
+						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);
 			}
 			em.getTransaction().begin();
 			em.merge(searchEntity);
@@ -326,8 +353,8 @@ public class SearchManagerImpl extends SearchManager
 			StringBuilder query = new StringBuilder(LASTACCESS_ORDERBY);
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			searchList = em.createQuery(query.toString())
-					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
-					.setMaxResults(count).getResultList();
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).setMaxResults(count)
+					.getResultList();
 
 			for (EmAnalyticsSearch searchObj : searchList) {
 				rtnobj.add(createSearchObject(searchObj, null));
@@ -340,8 +367,8 @@ public class SearchManagerImpl extends SearchManager
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
 			_logger.error("Error while retrieving the list of searches ");
-			throw new EMAnalyticsFwkException("Error while retrieving the list of searches ",
-					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of searches ", EMAnalyticsFwkException.ERR_GENERIC,
+					null, e);
 
 		}
 		finally {
@@ -421,8 +448,107 @@ public class SearchManagerImpl extends SearchManager
 
 	}
 
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager#getWidgetListByProviderNames(java.lang.String[])
+	 */
 	@Override
-	public String getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
+	@SuppressWarnings("unchecked")
+	public List<Widget> getWidgetListByProviderNames(boolean includeDashboardIneligible, List<String> providerNames,
+			String widgetGroupId) throws EMAnalyticsFwkException
+	{
+		if (providerNames == null || providerNames.isEmpty()) {
+			return null;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		if (includeDashboardIneligible) {
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_1);
+			if (widgetGroupId != null) {
+				sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_2);
+			}
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_3);
+		}
+		else {
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_1);
+			if (widgetGroupId != null) {
+				sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_2);
+			}
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_3);
+		}
+		for (int i = 0; i < providerNames.size(); i++) {
+			if (i != 0) {
+				sb.append(",");
+			}
+			sb.append("'");
+			sb.append(providerNames.get(i));
+			sb.append("'");
+		}
+		if (includeDashboardIneligible) {
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_4);
+		}
+		else {
+			sb.append(JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_4);
+		}
+		EntityManager em = null;
+		try {
+			List<Widget> rtnobj = new ArrayList<Widget>();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			//			em.getTransaction().begin();
+			//			em.flush();
+			//			em.getTransaction().commit();
+			String jql = sb.toString();
+			_logger.debug("The JQL to query all widget is {}", jql);
+			long start = System.currentTimeMillis();
+			Query query = em.createQuery(jql).setHint("eclipselink.left-join-fetch", "e.emAnalyticsSearchParams")
+					.setHint("eclipselink.join-fetch", "e.emAnalyticsCategory")
+					.setHint("eclipselink.left-join-fetch", "e.emAnalyticsCategory.emAnalyticsCategoryParams")
+					.setHint("eclipselink.join-fetch", "e.emAnalyticsFolder")
+					.setHint("eclipselink.left-join-fetch", "e.lastAccess")
+					.setHint("eclipselink.left-join-fetch", "e.lastAccess.emAnalyticsSearch")
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+					.setParameter("tenantId", TenantContext.getContext().getTenantInternalId());
+			if (widgetGroupId != null) {
+				query.setParameter("widgetGroupId", Long.valueOf(widgetGroupId));
+			}
+			if (_logger.isDebugEnabled()) {
+				try {
+					Session session = em.unwrap(JpaEntityManager.class).getActiveSession();
+					DatabaseQuery databaseQuery = ((EJBQueryImpl) query).getDatabaseQuery();
+					databaseQuery.prepareCall(session, new DatabaseRecord());
+					String sqlString = databaseQuery.getSQLString();
+					//				String sqlString = databaseQuery.getTranslatedSQLString(session, new DatabaseRecord());
+					_logger.debug("The SQL statement to retrieve all widget is: [{}]", sqlString);
+				}
+				catch (Exception e) {
+					_logger.error("Error when printing debug sql: ", e);
+				}
+			}
+			List<EmAnalyticsSearch> searchList = query.getResultList();
+			_logger.debug("Querying to get all widgets takes {} ms, and retrieved {} widgets", System.currentTimeMillis() - start,
+					searchList == null ? 0 : searchList.size());
+			for (EmAnalyticsSearch searchObj : searchList) {
+				//				em.refresh(searchObj);
+				rtnobj.add(createWidgetObject(searchObj, false));
+			}
+
+			return rtnobj;
+		}
+		catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of widgets for providerNames : " + providerNames, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of widgets for providerNames : " + providerNames,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	@Override
+	public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
 	{
 		String screenshot = null;
 		Search search = getSearch(widgetId, true);
@@ -435,7 +561,12 @@ public class SearchManagerImpl extends SearchManager
 				}
 			}
 		}
-		return screenshot;
+		if (StringUtil.isEmpty(screenshot)) {
+			_logger.debug("Screenshot for widget with id={} is null or empty. Use default widget screenshot instead", widgetId);
+			screenshot = SearchManager.DEFAULT_WIDGET_SCREENSHOT;
+		}
+		ScreenshotData ssd = new ScreenshotData(screenshot, search.getCreatedOn(), search.getLastModifiedOn());
+		return ssd;
 	}
 
 	@Override
@@ -470,8 +601,8 @@ public class SearchManagerImpl extends SearchManager
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
 			_logger.error("Error while retrieving the list of searches ");
-			throw new EMAnalyticsFwkException("Error while retrieving the list of searches ",
-					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of searches ", EMAnalyticsFwkException.ERR_GENERIC,
+					null, e);
 
 		}
 		finally {
@@ -618,8 +749,8 @@ public class SearchManagerImpl extends SearchManager
 								continue;
 							}
 							if (cateObj instanceof Integer) {
-								EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getCategoryById(
-										((Integer) cateObj).longValue(), em);
+								EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil
+										.getCategoryById(((Integer) cateObj).longValue(), em);
 								if (categoryObj != null) {
 									search.setCategoryId((Integer) cateObj);
 								}
@@ -644,11 +775,11 @@ public class SearchManagerImpl extends SearchManager
 							if (cateObj != null) {
 								if (cateObj instanceof CategoryImpl) {
 									try {
-										categoryObj = (EmAnalyticsCategory) em
-												.createNamedQuery("Category.getCategoryByName")
+										categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
 												.setParameter("categoryName", ((Category) cateObj).getName())
 												.setParameter(QueryParameterConstant.USER_NAME,
-														TenantContext.getContext().getUsername()).getSingleResult();
+														TenantContext.getContext().getUsername())
+												.getSingleResult();
 									}
 									catch (NoResultException e) {
 
@@ -666,12 +797,12 @@ public class SearchManagerImpl extends SearchManager
 								if (search.getFolderId() != null) {
 									try {
 
-										searchEntity = (EmAnalyticsSearch) em
-												.createNamedQuery("Search.getSearchByName")
+										searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
 												.setParameter("folderId", search.getFolderId())
 												.setParameter("searchName", search.getName())
 												.setParameter(QueryParameterConstant.USER_NAME,
-														TenantContext.getContext().getUsername()).getSingleResult();
+														TenantContext.getContext().getUsername())
+												.getSingleResult();
 									}
 									catch (NoResultException e) {
 
@@ -837,8 +968,8 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setFolderId((int) searchObj.getEmAnalyticsFolder().getFolderId());
 
 			rtnObj.setUiHidden(searchObj.getUiHidden() != null && searchObj.getUiHidden().intValue() == 1 ? true : false);
-			rtnObj.setSystemSearch(searchObj.getSystemSearch() != null && searchObj.getSystemSearch().intValue() == 1 ? true
-					: false);
+			rtnObj.setSystemSearch(
+					searchObj.getSystemSearch() != null && searchObj.getSystemSearch().intValue() == 1 ? true : false);
 			rtnObj.setLastAccessDate(searchObj.getAccessDate());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
 
@@ -885,11 +1016,11 @@ public class SearchManagerImpl extends SearchManager
 		}
 	}
 
-	private Search createWidgetObject(EmAnalyticsSearch searchObj, boolean loadScreenshot) throws EMAnalyticsFwkException
+	private Widget createWidgetObject(EmAnalyticsSearch searchObj, boolean loadScreenshot) throws EMAnalyticsFwkException
 	{
-		SearchImpl rtnObj = null;
+		WidgetImpl rtnObj = null;
 		try {
-			rtnObj = (SearchImpl) createNewSearch();
+			rtnObj = new WidgetImpl();
 			rtnObj.setId((int) searchObj.getId());
 
 			// TODO : Handle the internationalization via MGMT_MESSAGES
@@ -957,6 +1088,9 @@ public class SearchManagerImpl extends SearchManager
 			}
 			rtnObj.setParameters(searchParams);
 
+			Category category = CategoryManagerImpl.createCategoryObject(searchObj.getEmAnalyticsCategory(), null);
+			rtnObj.setCategory(category);
+
 			return rtnObj;
 		}
 		catch (Exception e) {
@@ -965,6 +1099,42 @@ public class SearchManagerImpl extends SearchManager
 					null, e);
 		}
 	}
+
+	/*
+	 * private EmAnalyticsFolder
+	 * getEmAnalyticsFolderByCategory(ImportCategoryImpl category ,
+	 * EntityManager em) { EmAnalyticsFolder folder =null; try {
+	 * if(category.getDefaultFolderId()!=null) folder
+	 * =em.find(EmAnalyticsFolder.class , new
+	 * Long(category.getDefaultFolderId())); else {
+	 * if(category.getFolderDetails()!=null){
+	 *
+	 *
+	 * try { folder = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(
+	 * (Folder)category.getFolderDetails(),em); folder =(EmAnalyticsFolder)
+	 * em.createNamedQuery("Folder.getRootFolderByName").
+	 * setParameter("foldername", folder.getName()). getSingleResult();
+	 *
+	 * }catch(NoResultException e){ folder=null; } } } } catch
+	 * (EMAnalyticsFwkException e) { folder =null; } return folder; }
+	 */
+
+	/*private void OrderBybuilder(StringBuilder query, String[] orderBy)
+	{
+		// incidentally the field names for EmAnalyticsSearch and SearchImpl is
+		// same , hence order by will work here
+		if (orderBy != null && orderBy.length != 0 && orderBy[0].length() != 0) {
+			if (orderBy[0] != null) {
+				query.append(" ORDER BY " + SEARCH_ENT_PREFIX + orderBy[0].replaceAll("-", " "));
+			}
+			for (int i = 1; i < orderBy.length; i++) {
+				if (orderBy[i] != null) {
+					query.append("," + SEARCH_ENT_PREFIX + orderBy[i].replaceAll("-", " "));
+				}
+			}
+		}
+	
+	}*/
 
 	private EmAnalyticsCategory getEmAnalyticsCategoryBySearch(ImportSearchImpl search, EntityManager em)
 	{
@@ -1028,42 +1198,6 @@ public class SearchManagerImpl extends SearchManager
 		return folder;
 	}
 
-	/*
-	 * private EmAnalyticsFolder
-	 * getEmAnalyticsFolderByCategory(ImportCategoryImpl category ,
-	 * EntityManager em) { EmAnalyticsFolder folder =null; try {
-	 * if(category.getDefaultFolderId()!=null) folder
-	 * =em.find(EmAnalyticsFolder.class , new
-	 * Long(category.getDefaultFolderId())); else {
-	 * if(category.getFolderDetails()!=null){
-	 *
-	 *
-	 * try { folder = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(
-	 * (Folder)category.getFolderDetails(),em); folder =(EmAnalyticsFolder)
-	 * em.createNamedQuery("Folder.getRootFolderByName").
-	 * setParameter("foldername", folder.getName()). getSingleResult();
-	 *
-	 * }catch(NoResultException e){ folder=null; } } } } catch
-	 * (EMAnalyticsFwkException e) { folder =null; } return folder; }
-	 */
-
-	/*private void OrderBybuilder(StringBuilder query, String[] orderBy)
-	{
-		// incidentally the field names for EmAnalyticsSearch and SearchImpl is
-		// same , hence order by will work here
-		if (orderBy != null && orderBy.length != 0 && orderBy[0].length() != 0) {
-			if (orderBy[0] != null) {
-				query.append(" ORDER BY " + SEARCH_ENT_PREFIX + orderBy[0].replaceAll("-", " "));
-			}
-			for (int i = 1; i < orderBy.length; i++) {
-				if (orderBy[i] != null) {
-					query.append("," + SEARCH_ENT_PREFIX + orderBy[i].replaceAll("-", " "));
-				}
-			}
-		}
-
-	}*/
-
 	private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException
 	{
 		_logger.info("Retrieving search with id: " + searchId);
@@ -1086,7 +1220,8 @@ public class SearchManagerImpl extends SearchManager
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
 			String errMsg = "Error while getting the search object by ID: " + searchId;
 			_logger.error(errMsg, e);
-			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId }, e);
+			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId },
+					e);
 
 		}
 		finally {

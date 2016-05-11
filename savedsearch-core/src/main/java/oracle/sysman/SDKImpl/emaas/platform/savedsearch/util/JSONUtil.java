@@ -16,10 +16,9 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.util.List;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -32,6 +31,8 @@ import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 import org.codehaus.jackson.type.JavaType;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 
 public class JSONUtil
 {
@@ -77,9 +78,31 @@ public class JSONUtil
 	//		}
 	//	}
 
+	public static ObjectMapper buildNormalMapper()
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		//set inclusion attribute
+		mapper.setSerializationInclusion(Inclusion.ALWAYS);
+		//ignore those exist in json but not in java
+		mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		//forbid the deserialize int for Enum order()
+		mapper.configure(DeserializationConfig.Feature.FAIL_ON_NUMBERS_FOR_ENUMS, true);
+		return mapper;
+	}
+
 	public static JavaType constructParametricType(ObjectMapper mapper, Class<?> parametrized, Class<?>... parameterClasses)
 	{
 		return mapper.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+	}
+
+	public static <T> T fromJson(ObjectMapper mapper, String jsonString, Class<T> classMeta) throws IOException
+	{
+		if (JSONUtil.isEmpty(jsonString)) {
+			return null;
+		}
+
+		jsonString = URLDecoder.decode(jsonString, "UTF-8");
+		return mapper.readValue(jsonString, classMeta);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -101,8 +124,8 @@ public class JSONUtil
 	}
 
 	@SuppressWarnings("unchecked")
-        public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta, String field) throws IOException,
-			JSONException
+	public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta, String field)
+			throws IOException, JSONException
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		String result = "";
@@ -134,8 +157,8 @@ public class JSONUtil
 
 	}
 
-	public static JSONObject ObjectToJSONObject(Object object, String[] excludedFields) throws JSONException,
-			EMAnalyticsFwkException
+	public static JSONObject ObjectToJSONObject(Object object, String[] excludedFields)
+			throws JSONException, EMAnalyticsFwkException
 	{
 
 		return new JSONObject(JSONUtil.ObjectToJSONString(object, excludedFields));
@@ -148,13 +171,13 @@ public class JSONUtil
 
 	/**
 	 * Convert Object to JSON string.
-	 * 
+	 *
 	 * @param object
 	 *            the object to convert
 	 * @param excludedFieldItems
 	 *            fields that will NOT be converted into JSON string
 	 * @return converted JSON string
-	 * @throws EMAnalyticsFwkJsonException
+	 * @throws EMAnalyticsFwkException
 	 */
 	public static String ObjectToJSONString(Object object, String[] excludedFieldItems) throws EMAnalyticsFwkException
 	{

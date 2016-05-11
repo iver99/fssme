@@ -22,7 +22,7 @@ public class XSDErrorUtilTest
 				.getErrorMessage("cvc-complex-type.2.4.b").trim());
 		Assert.assertEquals("Please specify correct field value for the element.".trim().replaceAll(" ", "") + "\n"
 				+ "  Please specify correct field value for the element.".replaceAll(" ", ""),
-				XSDErrorUtil.getErrorMessage("cvc-datatype-valid.1.2.1").trim().replaceAll(" ", "").replaceAll("/n", ""));
+				XSDErrorUtil.getErrorMessage("cvc-datatype-valid.1.2.1").trim().replaceAll(" ", "").replaceAll("\r", ""));
 		Assert.assertEquals("The value '' of element '' is not valid.", XSDErrorUtil.getErrorMessage("cvc-type.3.1.3").trim());
 
 	}

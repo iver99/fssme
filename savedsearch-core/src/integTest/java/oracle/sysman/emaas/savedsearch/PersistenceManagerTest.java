@@ -1,17 +1,19 @@
 package oracle.sysman.emaas.savedsearch;
 
-import javax.persistence.EntityManagerFactory;
-
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 public class PersistenceManagerTest extends BaseTest
 {
-	@Test (groups = {"s1"})
-	public void testAll()
+	@Test (groups = {"s2"},expectedExceptions = RuntimeException.class,expectedExceptionsMessageRegExp ="Failed to get EntityManagerFactory, which is closed!" )
+	public void testAll(@Mocked final Persistence persistence,@Mocked EntityManagerFactory entityManagerFactory)
 	{
+
 		PersistenceManager pm = PersistenceManager.getInstance();
 		Assert.assertNotNull(pm, "Got NULL PersistenceManager instance");
 
@@ -23,8 +25,7 @@ public class PersistenceManagerTest extends BaseTest
 		try {
 			emf = pm.getEntityManagerFactory();
 			Assert.fail("EntityManagerFactory should NOT be got after it is closed by PersistenceManager.closeEntityManagerFactory()");
-		}
-		catch (Exception e) {
+		}catch (Exception e) {
 			//expected here
 		}
 

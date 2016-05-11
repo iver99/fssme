@@ -1,27 +1,27 @@
 package oracle.sysman.emaas.savedsearch;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryTest extends BaseTest
 {
 	private static Integer categoryId;
 
 	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
+
+	//@Mocked
+    //PersistenceManager persistenceManager;
 
 	@AfterClass
 	public static void testDelete()
@@ -105,11 +105,11 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	@AfterClass
+	/*@AfterClass
 	public void removeTenantDetails()
 	{
 		TenantContext.clearContext();
-	}
+	}*/
 
 	/*@Test
 	public void testDefaultFolder() throws Exception
@@ -251,7 +251,7 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	@Test (groups = {"s1"})
+	@Test
 	public void testgetCategoryInvalidName() throws Exception
 	{
 		CategoryManager catMan = CategoryManager.getInstance();

@@ -5,8 +5,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+
+import org.testng.Assert;
+import org.testng.AssertJUnit;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -17,12 +29,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
-
-import org.testng.Assert;
-import org.testng.AssertJUnit;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 public class FolderManagerTest extends BaseTest
 {
@@ -44,8 +50,8 @@ public class FolderManagerTest extends BaseTest
 		long folderId1 = 0;
 		try {
 
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC2)));
+			TenantContext.setContext(
+					new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils.getInternalTenantId(TENANT_ID_OPC2)));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
 			folder.setName("FolderTestopc");
@@ -65,8 +71,8 @@ public class FolderManagerTest extends BaseTest
 
 		try {
 
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC3)));
+			TenantContext.setContext(
+					new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils.getInternalTenantId(TENANT_ID_OPC3)));
 
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
@@ -87,8 +93,8 @@ public class FolderManagerTest extends BaseTest
 
 		Folder folder = null;
 		try {
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC2)));
+			TenantContext.setContext(
+					new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils.getInternalTenantId(TENANT_ID_OPC2)));
 
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			folder = objFolder.getFolder(folderId1);
@@ -102,8 +108,8 @@ public class FolderManagerTest extends BaseTest
 		}
 
 		try {
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC3)));
+			TenantContext.setContext(
+					new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils.getInternalTenantId(TENANT_ID_OPC3)));
 
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			folder = objFolder.getFolder(folderId);
@@ -119,8 +125,8 @@ public class FolderManagerTest extends BaseTest
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
 		try {
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC3)));
+			TenantContext.setContext(
+					new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils.getInternalTenantId(TENANT_ID_OPC3)));
 			objFolder.deleteFolder(folderId1, true);
 		}
 		finally {
@@ -128,8 +134,8 @@ public class FolderManagerTest extends BaseTest
 		}
 
 		try {
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils
-					.getInternalTenantId(TENANT_ID_OPC2)));
+			TenantContext.setContext(
+					new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils.getInternalTenantId(TENANT_ID_OPC2)));
 			objFolder.deleteFolder(folderId, true);
 		}
 		finally {
@@ -143,9 +149,9 @@ public class FolderManagerTest extends BaseTest
 	{
 
 		try {
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_NAME).toString())));
+			TenantContext.setContext(new TenantInfo(
+					TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+					TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			objFolder.deleteFolder(folderId, true);
 		}
@@ -162,9 +168,9 @@ public class FolderManagerTest extends BaseTest
 	{
 		try {
 
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_NAME).toString())));
+			TenantContext.setContext(new TenantInfo(
+					TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+					TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = new FolderImpl();
 			folder.setName("FolderTest");
@@ -192,7 +198,7 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test (groups = {"s1"})
+	@Test(groups = { "s1" })
 	public void entityClassTest()
 	{
 		EmAnalyticsFolder fld = new EmAnalyticsFolder();
@@ -234,15 +240,15 @@ public class FolderManagerTest extends BaseTest
 	public void testDeleteInvalidFolderId() throws Exception
 	{
 		FolderManager foldMan = FolderManager.getInstance();
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_NAME).toString())));
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 		try {
 			foldMan.deleteFolder(987656788498L, true);
 		}
 		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
+					new Integer(EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
 		}
 		finally {
 			TenantContext.clearContext();
@@ -252,9 +258,9 @@ public class FolderManagerTest extends BaseTest
 	public void testDeleteSystemFolder() throws Exception
 	{
 
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_NAME).toString())));
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 		FolderManager foldMan = FolderManager.getInstance();
 		try {
 			foldMan.deleteFolder(TA_FOLDER_ID, true);
@@ -268,14 +274,14 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test 
+	@Test
 	public void testDeletFolder_withCategory()
 	{
 		try {
 			//create the category with the folder
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_NAME).toString())));
+			TenantContext.setContext(new TenantInfo(
+					TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+					TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 			CategoryManager catMan = CategoryManager.getInstance();
 			Category category = catMan.createNewCategory();
 			category.setName("TestCategoryWithFolder");
@@ -294,8 +300,8 @@ public class FolderManagerTest extends BaseTest
 				foldMan.deleteFolder(folderId, true);
 			}
 			catch (EMAnalyticsFwkException emanfe) {
-				AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-						EMAnalyticsFwkException.ERR_DELETE_FOLDER));
+				AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
+						new Integer(EMAnalyticsFwkException.ERR_DELETE_FOLDER));
 			}
 		}
 		catch (Exception e) {
@@ -315,12 +321,12 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test 
+	@Test
 	public void testDuplicate() throws Exception
 	{
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_NAME).toString())));
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		try {
 			// create one folder
@@ -345,8 +351,8 @@ public class FolderManagerTest extends BaseTest
 				objFolder.saveFolder(fi2);
 			}
 			catch (EMAnalyticsFwkException emanfe) {
-				AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-						EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME));
+				AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
+						new Integer(EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME));
 			}
 
 		}
@@ -359,18 +365,20 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test (groups = {"s1"})
-	public void testGetFolder() throws Exception
+	@Test(groups = "s2", expectedExceptions = EMAnalyticsFwkException.class, expectedExceptionsMessageRegExp = "Folder with the Id 0 does not exist")
+	public void testGetFolder(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager)
+			throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-		try {
-			Folder folder = objFolder.getFolder(folderId);
-			AssertJUnit.assertNotNull(folder);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		new Expectations(objFolder) {
+			{
+				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
+				result = entityManager;
+				entityManager.find((Class) any, any);
+				result = null;
+			}
+		};
+		objFolder.getFolder(0);
 	}
 
 	@Test
@@ -388,19 +396,19 @@ public class FolderManagerTest extends BaseTest
 		}
 	}
 
-	@Test 
+	@Test
 	public void testGetInvalidFolderId() throws Exception
 	{
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_NAME).toString())));
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 		FolderManager foldMan = FolderManager.getInstance();
 		try {
 			foldMan.getFolder(987656788498L);
 		}
 		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
+					new Integer(EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
 		}
 		finally {
 			TenantContext.clearContext();
@@ -411,9 +419,9 @@ public class FolderManagerTest extends BaseTest
 	public void testGetpathforFolderId() throws Exception
 	{
 		try {
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_NAME).toString())));
+			TenantContext.setContext(new TenantInfo(
+					TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+					TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
 			String[] path = objFolder.getPathForFolderId(folderId);
@@ -430,12 +438,12 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
-	@Test 
+	@Test
 	public void testGetSubFolder() throws Exception
 	{
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_NAME).toString())));
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		List<Folder> folderList = new ArrayList<Folder>();
 		try {
@@ -484,14 +492,14 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
-	@Test 
+	@Test
 	public void testInvalidParentFolder() throws Exception
 	{
 
 		FolderManager fman = FolderManager.getInstance();
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_NAME).toString())));
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 		Folder folder = fman.createNewFolder();
 		folder.setName("harsh kumar");
 		folder.setParentId(987876788);
@@ -500,8 +508,8 @@ public class FolderManagerTest extends BaseTest
 
 		}
 		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT));
+			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
+					new Integer(EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT));
 		}
 		finally {
 			TenantContext.clearContext();
@@ -509,64 +517,65 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
-	@Test (groups = {"s1"})
+	/*@Test
 	public void testRootFolder() throws Exception
 	{
-		try {
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_NAME).toString())));
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 
-			Folder obj = objFolder.getRootFolder();
+		Folder obj = objFolder.getRootFolder();
 
-			Assert.assertNotNull(obj);
+		Assert.assertNotNull(obj);
 
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally {
-			TenantContext.clearContext();
-		}
+		//			TenantContext.clearContext();
 
+	}*/
+
+	@Test(groups = { "s2" })
+	public void testRootFolder_S2(@Mocked final TenantContext tenantContext, @Mocked final PersistenceManager persistenceManager,
+			@Mocked final EntityManager entityManager, @Mocked final EmAnalyticsFolder emAnalyticsFolder) throws Exception
+	{
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = new TenantInfo("emcsadmin1", 1L);
+				PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+				result = entityManager;
+				entityManager.createNamedQuery(anyString).setParameter(anyString, anyString).getSingleResult();
+				result = null;
+			}
+		};
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		objFolder.getRootFolder();
 	}
 
-	@Test (groups = {"s1"})
-	public void testUpdate() throws EMAnalyticsFwkException
+	@Test(groups = { "s1" }, expectedExceptions = NullPointerException.class)
+	public void testUpdate(@Mocked final QAToolUtil qaToolUtil) throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-		try {
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+		Folder folder = objFolder.getFolder(folderId);
+		AssertJUnit.assertNotNull(folder);
+		folder.setName("My folder");
+		folder.setDescription("Database search");
 
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_NAME).toString())));
-			Folder folder = objFolder.getFolder(folderId);
-			AssertJUnit.assertNotNull(folder);
-			folder.setName("My folder");
-			folder.setDescription("Database search");
+		// update the folder
+		objFolder.updateFolder(folder);
 
-			// update the folder
-			objFolder.updateFolder(folder);
+		// cross check the content of update
+		folder = objFolder.getFolder(folderId);
+		AssertJUnit.assertNotNull(folder);
 
-			// cross check the content of update
-			folder = objFolder.getFolder(folderId);
-			AssertJUnit.assertNotNull(folder);
+		AssertJUnit.assertEquals("My folder", folder.getName());
+		AssertJUnit.assertEquals("Database search", folder.getDescription());
 
-			AssertJUnit.assertEquals("My folder", folder.getName());
-			AssertJUnit.assertEquals("Database search", folder.getDescription());
-
-			AssertJUnit.assertNotNull(folder.getCreatedOn());
-			AssertJUnit.assertNotNull(folder.getLastModifiedOn());
-			AssertJUnit.assertFalse(folder.getCreatedOn().equals(folder.getLastModifiedOn()));
-
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally {
-			TenantContext.clearContext();
-		}
+		AssertJUnit.assertNotNull(folder.getCreatedOn());
+		AssertJUnit.assertNotNull(folder.getLastModifiedOn());
+		AssertJUnit.assertFalse(folder.getCreatedOn().equals(folder.getLastModifiedOn()));
 	}
 
 	/*@Test
@@ -597,3 +606,4 @@ public class FolderManagerTest extends BaseTest
 	}*/
 
 }
+
