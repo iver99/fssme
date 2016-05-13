@@ -18,8 +18,6 @@ import java.util.ArrayList;
  */
 public class OdsCURD {
     static String HOSTNAME;
-    static String portno;
-    static String serveruri;
     static String authToken;
     static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC0;
     static String TENANT_ID1 = TestConstant.TENANT_ID0;
@@ -30,8 +28,6 @@ public class OdsCURD {
     {
         CommonTest ct = new CommonTest();
         HOSTNAME = ct.getHOSTNAME();
-        portno = ct.getPortno();
-        serveruri = ct.getServeruri();
         authToken = ct.getAuthToken();
         TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
         TENANT_ID_OPC1 = ct.getTenant();
@@ -103,10 +99,11 @@ public class OdsCURD {
     public void createEntityForExsitingSystemSearch(){
         //create an ods entity for existing system search
         Response createForExistingSearchResponse = getResponseForCreateOdsForExistingSearch(2023L);
-        System.out.println(createForExistingSearchResponse.getStatusLine());
-        Assert.assertTrue(createForExistingSearchResponse.getStatusCode()== 200);
+        System.out.println(createForExistingSearchResponse.getBody().asString());
+        Assert.assertTrue(createForExistingSearchResponse.getStatusCode()== 200
+                ||createForExistingSearchResponse.getBody().asString()
+                    .startsWith("Exist Entity ID"));
     }
-
 
     private Response getResponseForCreateOdsForExistingSearch(Long searchId) {
         return RestAssured.given().contentType(ContentType.JSON).log().everything()
@@ -122,5 +119,4 @@ public class OdsCURD {
                 .body(jsonForCreateSavedSearch).when()
                 .post("/search");
     }
-
 }
