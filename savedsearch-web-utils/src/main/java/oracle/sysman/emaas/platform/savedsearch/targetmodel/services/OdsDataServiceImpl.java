@@ -41,12 +41,27 @@ public class OdsDataServiceImpl implements OdsDataService {
 		// send to ODS
 		String baseUrl = retriveEndpoint(tenantName, REL_DATA_RESOURCE, DATA_MES);
 		String meId = null;
+		// see if there is already an ODS entity created
 		try {
-			String result = RestRequestUtil.restPost(baseUrl, tenantName, odsEntity);
+			String result = 
+					RestRequestUtil.restGet(baseUrl+"?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId, tenantName);
 			JSONObject jsonObj = new JSONObject(result);
-			meId = jsonObj.getString(ENTITY_ID);
+			if (jsonObj.getInt("count") > 0) {
+				JSONObject entity = (JSONObject) jsonObj.getJSONArray("items").get(0);
+				meId = entity.getString(ENTITY_ID);
+			}
 		} catch (Exception e) {
-			throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
+			// do nothing
+		}
+		// no existing ODS entity then create one
+		if (meId == null || meId.isEmpty()) {
+			try {
+				String result = RestRequestUtil.restPost(baseUrl, tenantName, odsEntity);
+				JSONObject jsonObj = new JSONObject(result);
+				meId = jsonObj.getString(ENTITY_ID);
+			} catch (Exception e) {
+				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
+			}
 		}
 		
 		return meId;

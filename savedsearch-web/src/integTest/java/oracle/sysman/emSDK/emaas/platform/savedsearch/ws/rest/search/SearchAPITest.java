@@ -980,7 +980,7 @@ public class SearchAPITest {
             }
             
             @Mock
-            public Search editSearch(Search search) throws EMAnalyticsFwkException,EMAnalyticsWSException {
+            public Search editSearch(Search search, boolean canEditSysSearch) throws EMAnalyticsFwkException,EMAnalyticsWSException {
             	return new SearchImpl();
             }
         };

@@ -47,6 +47,7 @@ public abstract class SearchManager
 
 	/**
 	 * Edits an existing search entity in the analytics sub-system.
+	 * Don't allow edit system search by default.
 	 *
 	 * @param search
 	 *            search to be modified
@@ -54,6 +55,15 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Search editSearch(Search search) throws EMAnalyticsFwkException;
+	
+	/**
+	 * 
+	 * @param search
+	 * @param canEditSysSearch
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Search editSearch(Search search, boolean canEditSysSearch) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the search object identified by the given identifier.

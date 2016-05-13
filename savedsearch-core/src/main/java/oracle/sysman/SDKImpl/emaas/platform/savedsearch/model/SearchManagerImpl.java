@@ -149,9 +149,15 @@ public class SearchManagerImpl extends SearchManager
 
 		}
 	}
+	
+	
+	@Override
+	public Search editSearch(Search search) throws EMAnalyticsFwkException {
+		return editSearch(search, false);
+	}
 
 	@Override
-	public Search editSearch(Search search) throws EMAnalyticsFwkException
+	public Search editSearch(Search search, boolean canEditSysSearch) throws EMAnalyticsFwkException
 	{
 		_logger.info("Editing search with id : " + search.getId());
 		EntityManager em = null;
@@ -159,7 +165,7 @@ public class SearchManagerImpl extends SearchManager
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
 			if (searchEntity != null && searchEntity.getSystemSearch() != null
-					&& searchEntity.getSystemSearch().intValue() == 1) {
+					&& searchEntity.getSystemSearch().intValue() == 1 && !canEditSysSearch) {
 				throw new EMAnalyticsFwkException(
 						"Search with Id: " + searchEntity.getId() + " is system search and NOT allowed to edit",
 						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);

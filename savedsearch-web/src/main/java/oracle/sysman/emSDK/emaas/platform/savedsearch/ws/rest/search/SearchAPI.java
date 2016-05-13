@@ -505,7 +505,7 @@ public class SearchAPI
 				try {
 					String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName(), tenantName);
 					savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
-					savedSearch = sman.editSearch(savedSearch);
+					savedSearch = sman.editSearch(savedSearch, true);
 					JSONObject jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch);
 					message = jsonObj.toString();
 				} catch (EMAnalyticsFwkException e) {
