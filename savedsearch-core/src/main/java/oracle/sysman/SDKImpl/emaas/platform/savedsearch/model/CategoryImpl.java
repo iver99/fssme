@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +15,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 @XmlRootElement
 @XmlType(propOrder = { "id", "name", "description", "owner", "createdOn", "defaultFolderId", "providerName", "providerVersion",
 		"providerDiscovery", "providerAssetRoot", "parameters" })
-public class CategoryImpl implements Category
+public class CategoryImpl implements Category, Serializable
 {
+	private static final long serialVersionUID = 7141983180171753348L;
+
 	private Integer id;
 	private String name;
 	private String description;

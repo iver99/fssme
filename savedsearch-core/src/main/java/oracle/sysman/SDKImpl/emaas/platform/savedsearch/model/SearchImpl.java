@@ -16,6 +16,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 		"parameters" })
 public class SearchImpl extends SearchSummaryImpl implements Search
 {
+	private static final long serialVersionUID = -4486286542760671627L;
 
 	protected List<SearchParameter> parameters;
 	protected String metadata;

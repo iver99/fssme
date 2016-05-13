@@ -15,6 +15,8 @@ public class EmAnalyticsSearchParamPK implements Serializable
 
 	private String name;
 
+	private Long tenantId;
+
 	public EmAnalyticsSearchParamPK()
 	{
 	}
@@ -29,7 +31,8 @@ public class EmAnalyticsSearchParamPK implements Serializable
 			return false;
 		}
 		EmAnalyticsSearchParamPK castOther = (EmAnalyticsSearchParamPK) other;
-		return searchId == castOther.searchId && name.equals(castOther.name);
+		return searchId == castOther.searchId && name.equals(castOther.name)
+				&& (tenantId == null ? castOther.tenantId == null : tenantId.equals(castOther.tenantId));
 
 	}
 
@@ -43,6 +46,14 @@ public class EmAnalyticsSearchParamPK implements Serializable
 		return searchId;
 	}
 
+	/**
+	 * @return the tenantId
+	 */
+	public Long getTenantId()
+	{
+		return tenantId;
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -50,6 +61,7 @@ public class EmAnalyticsSearchParamPK implements Serializable
 		int hash = 17;
 		hash = hash * prime + (int) (searchId ^ searchId >>> 32);
 		hash = hash * prime + (name == null ? 0 : name.hashCode());
+		hash = hash * prime + (int) (tenantId ^ tenantId >>> 32);
 		return hash;
 	}
 
@@ -61,5 +73,14 @@ public class EmAnalyticsSearchParamPK implements Serializable
 	public void setSearchId(long searchId)
 	{
 		this.searchId = searchId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 }

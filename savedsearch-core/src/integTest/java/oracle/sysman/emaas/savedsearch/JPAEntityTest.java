@@ -12,8 +12,9 @@ package oracle.sysman.emaas.savedsearch;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
@@ -22,16 +23,13 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParamPK;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 /**
  * @author vinjoshi
  */
 public class JPAEntityTest
 {
 
-	@Test (groups = {"s1"})
+	@Test(groups = { "s1" })
 	public void testEntityCategory() throws Exception
 	{
 		EmAnalyticsCategory cat = new EmAnalyticsCategory();
@@ -60,6 +58,7 @@ public class JPAEntityTest
 		EmAnalyticsCategoryParamPK parampk = new EmAnalyticsCategoryParamPK();
 		parampk.setCategoryId(1);
 		parampk.setName("Test");
+		parampk.setTenantId(1L);
 
 		/*Map<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam> newParams = new HashMap<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam>();
 		newParams.put(parampk, param);
@@ -84,7 +83,7 @@ public class JPAEntityTest
 
 	}
 
-	@Test (groups = {"s1"})
+	@Test(groups = { "s1" })
 	public void testEntityFolder() throws Exception
 	{
 

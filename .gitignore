@@ -30,6 +30,7 @@
 *.gem
 *.gz
 *.iso
+*.iml
 *.jar
 *.launch
 *.lck
@@ -64,6 +65,7 @@
 .svn
 .target
 .texlipse
+.idea
 
 create_plugin*.log
 DIFFS.txt
