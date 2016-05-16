@@ -231,19 +231,21 @@ public class SearchAPI
 			Search savedSearch = sman.saveSearch(searchObj);
 			
 			// see if an ODS entity needs to be create
-			for (SearchParameter param : searchObj.getParameters()) {
-				if (OdsDataService.ENTITY_FLAG.equalsIgnoreCase(param.getName())
-						&& "TRUE".equalsIgnoreCase(param.getValue())) {
-					OdsDataService ods = OdsDataServiceImpl.getInstance();
-					String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName(), tenantName);
+			if(searchObj != null && searchObj.getParameters() != null) {
+				for (SearchParameter param : searchObj.getParameters()) {
+					if (OdsDataService.ENTITY_FLAG.equalsIgnoreCase(param.getName())
+							&& "TRUE".equalsIgnoreCase(param.getValue())) {
+						OdsDataService ods = OdsDataServiceImpl.getInstance();
+						String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName(), tenantName);
+							
+						// add ODS Entity ID as one of search parameters of the saved search
+						savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
 						
-					// add ODS Entity ID as one of search parameters of the saved search
-					savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
-					
-					// store the whole saved search again
-					// TODO provide new API to add a search parameter solely
-					savedSearch = sman.editSearch(savedSearch);
-					break;
+						// store the whole saved search again
+						// TODO provide new API to add a search parameter solely
+						savedSearch = sman.editSearch(savedSearch);
+						break;
+					}
 				}
 			}
 			
