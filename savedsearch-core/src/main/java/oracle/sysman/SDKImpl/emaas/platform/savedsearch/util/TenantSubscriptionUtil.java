@@ -75,7 +75,7 @@ public class TenantSubscriptionUtil
 	private static final String SUBSCRIBED_SERVICE_NAME_ITA = "ITAnalytics";
 	private static final String SUBSCRIBED_SERVICE_NAME_LA = "LogAnalytics";
 	private static String SERVICE_PROVIDER_NAME_APM = "ApmUI";
-	private static String SERVICE_PROVIDER_NAME_ITA = "EmcitasApplications";
+	private static String SERVICE_PROVIDER_NAME_ITA = "emcitas-ui-apps";
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
 	private static String SERVICE_PROVIDER_NAME_LA = "LoganService";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";

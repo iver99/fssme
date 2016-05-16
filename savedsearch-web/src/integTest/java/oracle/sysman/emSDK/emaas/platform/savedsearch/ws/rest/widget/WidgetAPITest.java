@@ -221,7 +221,7 @@ public class WidgetAPITest
 			{
 				oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil
 						.getTenantSubscribedServiceProviders(anyString);
-				result = Arrays.asList("LoganService", "EmcitasApplications", "TargetAnalytics", "ApmUI");
+				result = Arrays.asList("LoganService", "emcitas-ui-apps", "TargetAnalytics", "ApmUI");
 			}
 		};
 		//		new MockUp<CategoryManagerImpl>() {
@@ -286,7 +286,7 @@ public class WidgetAPITest
 			{
 				oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil
 						.getTenantSubscribedServiceProviders(anyString);
-				result = Arrays.asList("LoganService", "EmcitasApplications", "TargetAnalytics", "ApmUI");
+				result = Arrays.asList("LoganService", "emcitas-ui-apps", "TargetAnalytics", "ApmUI");
 			}
 		};
 		//		new MockUp<CategoryManagerImpl>() {
@@ -351,7 +351,7 @@ public class WidgetAPITest
 			{
 				oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil
 						.getTenantSubscribedServiceProviders(anyString);
-				result = Arrays.asList("LoganService", "EmcitasApplications", "TargetAnalytics", "ApmUI");
+				result = Arrays.asList("LoganService", "emcitas-ui-apps", "TargetAnalytics", "ApmUI");
 			}
 		};
 		//		new MockUp<CategoryManagerImpl>() {
