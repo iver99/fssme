@@ -3,11 +3,10 @@ Rem Upgrade from 1.0.0 (this first version with multiple tenancy support) to lat
 Rem Note:
 Rem   Upgrade from any version below 1.0.0 is not supported any more.
 Rem
-Rem 3/15/2016	ADUAN	    created
+Rem 04/22/2016	MIAYU	    created
 Rem ----------------------------------------------------------------
 
 @&EMSAAS_SQL_ROOT/1.7.5/upgrade_impl_ddl.sql
-
 
 SET HEADING OFF
 SET FEEDBACK OFF
