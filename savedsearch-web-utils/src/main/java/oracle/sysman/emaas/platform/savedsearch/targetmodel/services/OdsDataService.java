@@ -12,11 +12,11 @@ public interface OdsDataService {
 	public final static String FACT_DISPLAY_NAME = "ResultFact";
 	
 	public final static String HTTP_DELIMITER = "/";
-	public final static String SERVICE_NAME = "targetmodel-service-shard#0";
-	public final static String VERSION = "1.0+";
-	public final static String REL_DATA_RESOURCE = "data";
+	public final static String SERVICE_NAME = "TargetModelManagement";
+	public final static String VERSION = "1.1";
+	public final static String REL_DATA_RESOURCE = "serviceapi/tm-data";
 	public final static String DATA_MES = "mes";
-	public final static String REL_METADATA_RESOURCE = "metadata";
+	public final static String REL_METADATA_RESOURCE = "serviceapi/tm-metadata";
 	public final static String METADATA_METYPES = "metypes";
 	
 	/**

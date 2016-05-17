@@ -117,7 +117,7 @@ public class OdsDataServiceImpl implements OdsDataService {
 	 * @return http://host:port/targetmodel/api/v1/rel/resource
 	 */
 	private String retriveEndpoint(String tenantName, String rel, String resource) {
-		Link link = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, rel, tenantName);
+		Link link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, tenantName);
 		StringBuffer mesUrl = new StringBuffer();
 		mesUrl.append(link.getHref()).append(HTTP_DELIMITER).append(resource);
 		return mesUrl.toString();
