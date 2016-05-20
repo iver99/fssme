@@ -1,19 +1,15 @@
 package oracle.sysman.emaas.platform.savedsearch.targetmodel.services;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
 import org.codehaus.jettison.json.JSONObject;
 
 public class OdsDataServiceImpl implements OdsDataService {
 	private static final OdsDataServiceImpl instance = new OdsDataServiceImpl();
-	private static final Map<String, String> cache = new ConcurrentHashMap<String, String>();
 	
 	public static OdsDataServiceImpl getInstance() {
 		return instance;
@@ -22,21 +18,8 @@ public class OdsDataServiceImpl implements OdsDataService {
 	
 	@Override
 	public String createOdsEntity(String searchId, String searchName, String tenantName) throws EMAnalyticsFwkException {
-		// get entity type
-		String meClass = getMeClassFromCache();
-		if (meClass == null) {
-			try {
-				String entityType = createOdsEntityType(generateOdsEntityTypeJson(), tenantName);
-				JSONObject json = new JSONObject(entityType);
-				meClass = json.getString(ENTITY_CLASS);
-			} catch(Exception e) {
-				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
-			}
-			putMeClassToCache(meClass);
-		}
-		
 		// get ODS entity
-		String odsEntity = generateOdsEntityJson(searchId, searchName, meClass);
+		String odsEntity = generateOdsEntityJson(searchId, searchName, ENTITY_CLASS);
 		
 		// send to ODS
 		String baseUrl = retriveEndpoint(tenantName, REL_DATA_RESOURCE, DATA_MES);
@@ -123,14 +106,6 @@ public class OdsDataServiceImpl implements OdsDataService {
 		return mesUrl.toString();
 	}
 	
-	private String getMeClassFromCache() {
-		return cache.get(ENTITY_CLASS);
-	}
-	
-	private void putMeClassToCache(String meClass) {
-		cache.put(ENTITY_CLASS, meClass);
-	}
-	
 	static private String generateOdsEntityJson(String searchId, String searchName,String meClass) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("{");
@@ -147,81 +122,4 @@ public class OdsDataServiceImpl implements OdsDataService {
 		return "UTC";
 	}
 
-	static private String generateOdsEntityTypeJson() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("{");
-		sb.append("\"entityType\":\"").append(ENTITY_TYPE_NAME).append("\",");
-		sb.append("\"displayName\":\"").append(ENTITY_TYPE_DIS_NAME).append("\",");
-		sb.append("\"facts\":[");
-		sb.append("{");
-		sb.append("\"factType\":\"").append(FACT_TYPE_NAME).append("\",");
-		sb.append("\"displayName\":\"").append(FACT_DISPLAY_NAME).append("\",");
-		sb.append("\"fields\":[");
-		sb.append("{");
-		sb.append("\"name\":\"ruleRef\",");
-		sb.append("\"isKey\":true,");
-		sb.append("\"displayName\":\"Rule Reference\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"column1\",");
-		sb.append("\"isKey\":true,");
-		sb.append("\"displayName\":\"Column 1\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"column2\",");
-		sb.append("\"isKey\":true,");
-		sb.append("\"displayName\":\"Column 2\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"column3\",");
-		sb.append("\"isKey\":true,");
-		sb.append("\"displayName\":\"Column 3\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"count\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Result Count\",");
-		sb.append("\"type\":\"NUM\",");
-		sb.append("\"typeFormat\":\"0\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"sourceURL\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Event Source URL\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"status\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Status\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"statusMessage\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Status Message\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"execTime\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Execution Time\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"evalTimeWindow\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Evaluation Time Window\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("}");
-		sb.append("]");
-		sb.append("}");
-		sb.append("]");
-		sb.append("}");
-		return sb.toString();
-	}
 }
