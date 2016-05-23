@@ -20,7 +20,7 @@ public class OdsDataServiceTest {
 			@Mocked final RestRequestUtil restRequestUtil) throws Exception {
 		new Expectations() {
 			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, anyString);
 				result = link;
 				link.getHref();
 				result = "http://xxx";
@@ -38,7 +38,7 @@ public class OdsDataServiceTest {
 			@Mocked final Link link, @Mocked final RestRequestUtil restRequestUtil) throws Exception {
 		new Expectations() {
 			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, anyString);
 				result = link;
 				link.getHref();
 				result = "http://xxx";
@@ -56,7 +56,7 @@ public class OdsDataServiceTest {
 			@Mocked final RestRequestUtil restRequestUtil) throws Exception {
 		new Expectations() {
 			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, anyString);
 				result = link;
 				link.getHref();
 				result = "http://xxx";
