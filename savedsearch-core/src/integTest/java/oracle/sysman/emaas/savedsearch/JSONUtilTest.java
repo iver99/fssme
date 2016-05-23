@@ -99,4 +99,11 @@ public class JSONUtilTest extends BaseTest
 			Assert.assertTrue(false, "failed to convert due to: " + e.getMessage());
 		}
 	}
+
+	@Test(groups = {"s1"})
+	public void testIsEmpty() throws Exception {
+		Assert.assertTrue(JSONUtil.isEmpty(""));
+		Assert.assertTrue(JSONUtil.isEmpty(null));
+		Assert.assertFalse(JSONUtil.isEmpty("str"));
+	}
 }

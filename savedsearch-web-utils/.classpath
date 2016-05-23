@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/integTest/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-client-1.x.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/registry-lookup-client-1.x.jar"/>
@@ -19,5 +20,7 @@
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-api-2.0.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/log4j-core-2.0.1.jar"/>
 	<classpathentry kind="var" path="SSF/dependencies/artifactory/jackson-mapper-asl-1.9.13.jar"/>
+	<classpathentry kind="var" path="SSF/dependencies/artifactory/jmockit-1.19.jar"/>
+	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

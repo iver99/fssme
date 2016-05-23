@@ -12,19 +12,18 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.savedsearch.property.PropertyReader;
-import oracle.sysman.emaas.platform.savedsearch.utils.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import weblogic.application.ApplicationLifecycleEvent;
 
 public class RegistryServiceManager implements ApplicationServiceManager
@@ -53,6 +52,16 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		public ServiceConfigBuilder canonicalEndpoints(String canonicalEndpoints)
 		{
 			serviceConfigMap.put("canonicalEndpoints", canonicalEndpoints);
+			return this;
+		}
+
+		/**
+		 * @param characteristics
+		 * @return ServiceConfigBuilder
+		 */
+		public ServiceConfigBuilder characteristics(String characteristics)
+		{
+			serviceConfigMap.put("characteristics", characteristics);
 			return this;
 		}
 
@@ -166,16 +175,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			return this;
 		}
 
-                /**
-                 * @param characteristics
-                 * @return ServiceConfigBuilder
-                 */
-                public ServiceConfigBuilder characteristics(String characteristics)
-                {
-                        serviceConfigMap.put("characteristics", characteristics);
-                        return this;
-                }
-
 	}
 
 	enum UrlType
@@ -211,9 +210,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String STATIC_WIDGETGROUPS = "static/savedsearch.widgetgroups";
 	private static final String REL_LOG_CONFIG = "log/configuration";
 
-	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
-			+ ".serviceregistry");
-
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
 	static {
@@ -247,6 +243,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			ctx.close();
 		}
 	}
+
+	private final Logger logger = LogManager
+			.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM + ".serviceregistry");
 
 	private Boolean registrationComplete = null;
 
@@ -345,8 +344,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-                                        .characteristics(serviceProps.getProperty("characteristics"))
-					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+					.characteristics(serviceProps.getProperty("characteristics")).leaseRenewalInterval(3000, TimeUnit.SECONDS)
+					.serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 			logger.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
@@ -395,7 +394,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 		catch (Exception e) {
 			setRegistrationComplete(Boolean.FALSE);
-			logger.error("Errors occurrs in registration. Service manager might be down. Daved search service registration is not complete.");
+			logger.error(
+					"Errors occurrs in registration. Service manager might be down. Daved search service registration is not complete.");
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		return registrationComplete;

@@ -2,8 +2,8 @@ package oracle.sysman.emSDK.emaas.platform.updatesavedsearch;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,7 +53,7 @@ public class FileUtils
 	public static String readFile(InputStream is) throws IOException
 	{
 		StringBuilder stringBuilder = new StringBuilder();
-		InputStreamReader isReader = new InputStreamReader(is);
+		InputStreamReader isReader = new InputStreamReader(is, "UTF-8");
 		BufferedReader bufferedReader = new BufferedReader(isReader);
 		try {
 			String line;
@@ -89,12 +89,13 @@ public class FileUtils
 
 	public static String readFile(String filePath) throws IOException
 	{
-		BufferedReader reader = null;
-		FileReader fReader = null;
+		InputStream in = null;
+		InputStreamReader reader = null;
 		StringBuffer fileData = new StringBuffer();
 		try {
-			fReader = new FileReader(filePath);
-			reader = new BufferedReader(fReader);
+			in = new FileInputStream(filePath);
+			reader = new InputStreamReader(in, "UTF-8");
+
 			char[] buf = new char[1024];
 			int numRead = 0;
 			if (reader != null) {
@@ -108,8 +109,8 @@ public class FileUtils
 			if (reader != null) {
 				reader.close();
 			}
-			if (fReader != null) {
-				fReader.close();
+			if (in != null) {
+				in.close();
 			}
 		}
 		return fileData.toString();

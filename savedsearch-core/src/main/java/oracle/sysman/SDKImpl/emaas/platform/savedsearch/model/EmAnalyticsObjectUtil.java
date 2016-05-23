@@ -40,7 +40,7 @@ class EmAnalyticsObjectUtil
 		EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 		int count = ((Number) em.createNamedQuery("Search.getSearchCountByFolder").setParameter("folder", folder)
 				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult())
-				.intValue();
+						.intValue();
 
 		if (count > 0) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with searches",
@@ -48,7 +48,8 @@ class EmAnalyticsObjectUtil
 		}
 
 		if (em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder)
-				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList().size() > 0) {
+				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList()
+				.size() > 0) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with categories",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
@@ -57,7 +58,7 @@ class EmAnalyticsObjectUtil
 			EmAnalyticsFolder folderObj = folder;
 			String parentFolder = "parentFolder";
 			@SuppressWarnings("unchecked")
-                        List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
+			List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 
 			if (folderList.size() > 0) {
@@ -78,9 +79,8 @@ class EmAnalyticsObjectUtil
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null) {
-				if (cateObj.getDeleted() == 0
-						&& (cateObj.getOwner().equals("ORACLE") || cateObj.getOwner().equals(
-								TenantContext.getContext().getUsername()))) {
+				if (cateObj.getDeleted() == 0 && (cateObj.getOwner().equals("ORACLE")
+						|| cateObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 					return cateObj;
 				}
@@ -104,9 +104,8 @@ class EmAnalyticsObjectUtil
 		try {
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
-			if (cateObj != null
-					&& (cateObj.getOwner().equals("ORACLE") || cateObj.getOwner()
-							.equals(TenantContext.getContext().getUsername()))) {
+			if (cateObj != null && (cateObj.getOwner().equals("ORACLE")
+					|| cateObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 				return cateObj;
 			}
@@ -193,12 +192,14 @@ class EmAnalyticsObjectUtil
 
 		// param handling !!
 		List<Parameter> params = category.getParameters();
+		Long tenantId = TenantContext.getContext().getTenantInternalId();
 		Map<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam> newParams = new HashMap<EmAnalyticsCategoryParamPK, EmAnalyticsCategoryParam>();
 		for (Parameter param : params) {
 			EmAnalyticsCategoryParam newCatParam = new EmAnalyticsCategoryParam();
 			EmAnalyticsCategoryParamPK newPK = new EmAnalyticsCategoryParamPK();
 			newPK.setCategoryId(category.getId());
 			newPK.setName(param.getName());
+			newPK.setTenantId(tenantId);
 			newCatParam.setCategoryId(category.getId());
 			newCatParam.setName(param.getName());
 			newCatParam.setEmAnalyticsCategory(categoryEntity);
@@ -211,8 +212,8 @@ class EmAnalyticsObjectUtil
 		Iterator<EmAnalyticsCategoryParam> it = existingParams.iterator();
 		while (it.hasNext()) {
 			EmAnalyticsCategoryParam catParam = it.next();
-			if (!newParams.containsKey(catParam.getCategoryId()) || newParams.containsKey(catParam.getCategoryId())
-					&& !newParams.containsValue(catParam)) {
+			if (!newParams.containsKey(catParam.getCategoryId())
+					|| newParams.containsKey(catParam.getCategoryId()) && !newParams.containsValue(catParam)) {
 				it.remove();
 			}
 		}
@@ -450,8 +451,8 @@ class EmAnalyticsObjectUtil
 		searchEntity.setOwner(currentUser);
 		searchEntity.setLastModifiedBy(currentUser);
 		searchEntity.setLastModificationDate(utcNow);
-		searchEntity.setSystemSearch(searchEntity.getSystemSearch() != null ? searchEntity.getSystemSearch()
-				: new java.math.BigDecimal(0));
+		searchEntity.setSystemSearch(
+				searchEntity.getSystemSearch() != null ? searchEntity.getSystemSearch() : new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
@@ -464,12 +465,14 @@ class EmAnalyticsObjectUtil
 		// Params handling !!
 		Set<EmAnalyticsSearchParam> existingParams = Collections.synchronizedSet(searchEntity.getEmAnalyticsSearchParams());
 		Map<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam> newParams = new HashMap<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam>();
+		Long tenantId = TenantContext.getContext().getTenantInternalId();
 		if (params != null) {
 			for (SearchParameter param : params) {
 				EmAnalyticsSearchParam newSearchParam = new EmAnalyticsSearchParam();
 				EmAnalyticsSearchParamPK newPK = new EmAnalyticsSearchParamPK();
 				newPK.setSearchId(search.getId());
 				newPK.setName(param.getName());
+				newPK.setTenantId(tenantId);
 				newSearchParam.setSearchId(search.getId());
 				newSearchParam.setName(param.getName());
 				newSearchParam.setEmAnalyticsSearch(searchEntity);
@@ -489,8 +492,8 @@ class EmAnalyticsObjectUtil
 		Iterator<EmAnalyticsSearchParam> it = existingParams.iterator();
 		while (it.hasNext()) {
 			EmAnalyticsSearchParam searchParam = it.next();
-			if (!newParams.containsKey(searchParam.getSearchId()) || newParams.containsKey(searchParam.getSearchId())
-					&& !newParams.containsValue(searchParam)) {
+			if (!newParams.containsKey(searchParam.getSearchId())
+					|| newParams.containsKey(searchParam.getSearchId()) && !newParams.containsValue(searchParam)) {
 				it.remove();
 			}
 		}
@@ -509,10 +512,8 @@ class EmAnalyticsObjectUtil
 		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
-			if (folderObj != null
-					&& folderObj.getDeleted() == 0
-					&& (folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+			if (folderObj != null && folderObj.getDeleted() == 0 && (folderObj.getSystemFolder().intValue() == 1
+					|| folderObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -537,9 +538,8 @@ class EmAnalyticsObjectUtil
 		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
-			if (folderObj != null
-					&& (folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+			if (folderObj != null && (folderObj.getSystemFolder().intValue() == 1
+					|| folderObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -583,9 +583,8 @@ class EmAnalyticsObjectUtil
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null) {
-				if (searchObj.getDeleted() == 0
-						&& (searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-								TenantContext.getContext().getUsername()))) {
+				if (searchObj.getDeleted() == 0 && (searchObj.getSystemSearch().intValue() == 1
+						|| searchObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 					return searchObj;
 				}
@@ -647,9 +646,8 @@ class EmAnalyticsObjectUtil
 		try {
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
-			if (searchObj != null
-					&& (searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+			if (searchObj != null && (searchObj.getSystemSearch().intValue() == 1
+					|| searchObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
 				return searchObj;
 			}
 			else {

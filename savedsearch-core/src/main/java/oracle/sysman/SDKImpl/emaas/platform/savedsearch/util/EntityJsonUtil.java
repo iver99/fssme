@@ -12,12 +12,6 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 import java.net.URI;
 import java.util.List;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.MessageFormatMessage;
@@ -25,9 +19,15 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+
 /**
  * Create JSON string for each entity (search/folder/category) and return to user
- * 
+ *
  * @author miayu
  */
 public class EntityJsonUtil
@@ -111,6 +111,7 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_TEMPLATE = "WIDGET_TEMPLATE";
 	public static final String NAME_WIDGET_SUPPORT_TIME_CONTROL = "WIDGET_SUPPORT_TIME_CONTROL";
 	public static final String NAME_WIDGET_LINKED_DASHBOARD = "WIDGET_LINKED_DASHBOARD";
+	public static final String NAME_WIDGET_SCREENSHOT_HREF = "WIDGET_SCREENSHOT_HREF";
 	public static final String NAME_WIDGET_DEFAULT_WIDTH = "WIDGET_DEFAULT_WIDTH";
 	public static final String NAME_WIDGET_DEFAULT_HEIGHT = "WIDGET_DEFAULT_HEIGHT";
 	public static final String NAME_WIDGET_PROVIDER_NAME = "PROVIDER_NAME";
@@ -119,6 +120,8 @@ public class EntityJsonUtil
 	public static final String NAME_WIDGET_SCREENSHOT = "screenShot";
 	public static final String ERROR_MESSAGE = "message";
 	public static final String ERROR_CODE = "errorCode";
+
+	private static final Integer MAX_DASHBOARD_TILE_WIDTH = 8;
 
 	public static JSONObject getErrorJsonObject(long id, String message, long errorcode) throws EMAnalyticsFwkException
 	{
@@ -138,11 +141,9 @@ public class EntityJsonUtil
 
 	}
 
-	private static final Integer MAX_DASHBOARD_TILE_WIDTH = 8;
-
 	/**
 	 * Return full JSON string for category
-	 * 
+	 *
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -156,7 +157,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for folder
-	 * 
+	 *
 	 * @param baseUri
 	 * @param folder
 	 * @return
@@ -170,7 +171,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for search
-	 * 
+	 *
 	 * @param baseUri
 	 * @param jsonObj
 	 * @return
@@ -184,7 +185,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return full JSON string for search
-	 * 
+	 *
 	 * @param baseUri
 	 * @param jsonObj
 	 * @param folderPathArray
@@ -196,13 +197,14 @@ public class EntityJsonUtil
 	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray)
 			throws EMAnalyticsFwkException
 	{
-		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
-				NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET }, folderPathArray, false);
+		return EntityJsonUtil.getSearchJsonObj(baseUri, search,
+				new String[] { NAME_GUID, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET }, folderPathArray,
+				false);
 	}
 
 	/**
 	 * Return full JSON string for search
-	 * 
+	 *
 	 * @param baseUri
 	 * @param jsonObj
 	 * @param folderPathArray
@@ -228,23 +230,23 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for category (without default folder and parameters)
-	 * 
+	 *
 	 * @param baseUri
 	 * @param category
 	 * @return
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-			EMAnalyticsFwkException
+	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category)
+			throws JSONException, EMAnalyticsFwkException
 	{
-		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
-				NAME_PARAMETERS }, true);
+		return EntityJsonUtil.getCategoryJsonObj(baseUri, category,
+				new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER, NAME_PARAMETERS }, true);
 	}
 
 	/**
 	 * Return simple JSON string for folder without folder=type
-	 * 
+	 *
 	 * @param baseUri
 	 * @param folder
 	 * @return
@@ -258,7 +260,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for folder with or without type=folder
-	 * 
+	 *
 	 * @param baseUri
 	 * @param folder
 	 * @param includeType
@@ -269,13 +271,14 @@ public class EntityJsonUtil
 	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder, boolean includeType)
 			throws EMAnalyticsFwkException
 	{
-		return EntityJsonUtil.getFolderJsonObj(baseUri, folder, new String[] { NAME_OWNER, NAME_LASTMODIFIEDBY,
-				NAME_FOLDER_PARENTFOLDER, NAME_FOLDER_UIHIDDEN }, true, includeType);
+		return EntityJsonUtil.getFolderJsonObj(baseUri, folder,
+				new String[] { NAME_OWNER, NAME_LASTMODIFIEDBY, NAME_FOLDER_PARENTFOLDER, NAME_FOLDER_UIHIDDEN }, true,
+				includeType);
 	}
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 * 
+	 *
 	 * @param uri
 	 * @param jsonObj
 	 * @return
@@ -289,7 +292,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 * 
+	 *
 	 * @param uri
 	 * @param jsonObj
 	 * @param includeType
@@ -305,7 +308,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string for search without queryStr and parameters
-	 * 
+	 *
 	 * @param baseUri
 	 * @param search
 	 * @param folderPathArray
@@ -317,14 +320,15 @@ public class EntityJsonUtil
 	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search, String[] folderPathArray, boolean includeType)
 			throws EMAnalyticsFwkException
 	{
-		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER, NAME_LASTMODIFIEDBY,
-				NAME_SEARCH_QUERYSTR, NAME_PARAMETERS, NAME_LASTACCESSDATE, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
-				NAME_SEARCH_IS_WIDGET }, folderPathArray, includeType);
+		return EntityJsonUtil.getSearchJsonObj(baseUri, search,
+				new String[] { NAME_GUID, NAME_OWNER, NAME_LASTMODIFIEDBY, NAME_SEARCH_QUERYSTR, NAME_PARAMETERS,
+						NAME_LASTACCESSDATE, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET },
+				folderPathArray, includeType);
 	}
 
 	/**
 	 * Return simple JSON string for widget group
-	 * 
+	 *
 	 * @param baseUri
 	 * @param category
 	 * @return
@@ -352,14 +356,15 @@ public class EntityJsonUtil
 
 	/**
 	 * Return simple JSON string for widget
-	 * 
+	 *
 	 * @param baseUri
 	 * @param search
 	 * @param category
 	 * @return
 	 * @throws JSONException
 	 */
-	public static JSONObject getWidgetJsonObj(URI baseUri, Search search, Category category) throws EMAnalyticsFwkException
+	public static JSONObject getWidgetJsonObj(Search search, Category category, String screenshotUrl)
+			throws EMAnalyticsFwkException
 	{
 		JSONObject widgetObj = new JSONObject();
 		try {
@@ -374,6 +379,7 @@ public class EntityJsonUtil
 			widgetObj.put(NAME_WIDGET_CREATION_TIME, createdOn);
 			widgetObj.put(NAME_WIDGET_SOURCE, 1);
 			widgetObj.put(NAME_WIDGET_GROUP_NAME, category.getName());
+			widgetObj.put(NAME_WIDGET_SCREENSHOT_HREF, screenshotUrl);
 			List<SearchParameter> paramList = search.getParameters();
 			if (paramList != null && paramList.size() > 0) {
 				for (SearchParameter param : paramList) {
@@ -428,9 +434,9 @@ public class EntityJsonUtil
 			}
 
 			//Check if it is a valid widget, if not then return null
-			if (widgetObj.has(NAME_WIDGET_KOC_NAME) && widgetObj.has(NAME_WIDGET_VIEWMODEL)
-					&& widgetObj.has(NAME_WIDGET_TEMPLATE) && widgetObj.has(NAME_WIDGET_PROVIDER_NAME)
-					&& widgetObj.has(NAME_WIDGET_PROVIDER_VERSION) && widgetObj.has(NAME_WIDGET_PROVIDER_ASSET_ROOT)) {
+			if (widgetObj.has(NAME_WIDGET_KOC_NAME) && widgetObj.has(NAME_WIDGET_VIEWMODEL) && widgetObj.has(NAME_WIDGET_TEMPLATE)
+					&& widgetObj.has(NAME_WIDGET_PROVIDER_NAME) && widgetObj.has(NAME_WIDGET_PROVIDER_VERSION)
+					&& widgetObj.has(NAME_WIDGET_PROVIDER_ASSET_ROOT)) {
 				return widgetObj;
 			}
 		}
@@ -441,25 +447,25 @@ public class EntityJsonUtil
 		return null;
 	}
 
-	/**
-	 * Return simple JSON string for widget screen shot
-	 * 
-	 * @param widgetScreenshot
-	 * @return
-	 * @throws JSONException
-	 */
-	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
-	{
-		JSONObject widgetScreenshotObj = new JSONObject();
-		try {
-			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
-		}
-		catch (JSONException ex) {
-			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
-					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
-		}
-		return widgetScreenshotObj;
-	}
+	//	/**
+	//	 * Return simple JSON string for widget screen shot
+	//	 *
+	//	 * @param widgetScreenshot
+	//	 * @return
+	//	 * @throws JSONException
+	//	 */
+	//	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
+	//	{
+	//		JSONObject widgetScreenshotObj = new JSONObject();
+	//		try {
+	//			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
+	//		}
+	//		catch (JSONException ex) {
+	//			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
+	//					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
+	//		}
+	//		return widgetScreenshotObj;
+	//	}
 
 	private static JSONObject getCategoryJsonObj(URI baseUri, Category category, String[] excludedFields, boolean isSimple)
 			throws EMAnalyticsFwkException
@@ -531,7 +537,7 @@ public class EntityJsonUtil
 
 	/**
 	 * Return JSON string of search according to customization
-	 * 
+	 *
 	 * @param uri
 	 * @param jsonObj
 	 * @param excludedFields

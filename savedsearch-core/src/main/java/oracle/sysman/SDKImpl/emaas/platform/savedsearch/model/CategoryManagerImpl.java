@@ -33,6 +33,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -47,15 +50,86 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class CategoryManagerImpl extends CategoryManager
 {
 	// Logger
 	private static final Logger _logger = LogManager.getLogger(CategoryManagerImpl.class);
 
 	private static final CategoryManagerImpl _instance = new CategoryManagerImpl();
+
+	public static Category createCategoryObject(EmAnalyticsCategory category, Category categoryObj) throws Exception
+	{
+		CategoryImpl rtnObj = null;
+		try {
+
+			if (categoryObj != null) {
+				// populate the current object
+				rtnObj = (CategoryImpl) categoryObj;
+			}
+			else {
+				rtnObj = new CategoryImpl();
+			}
+			rtnObj.setId((int) category.getCategoryId());
+			if (category.getEmAnalyticsFolder() != null) {
+				Long id = category.getEmAnalyticsFolder().getFolderId();
+				rtnObj.setDefaultFolderId(id == 0 ? null : (int) id.intValue());
+			}
+			else {
+				rtnObj.setDefaultFolderId(null);
+			}
+			// TODO : Abhinav Handle the internationalization via MGMT_MESSAGES
+			// handling name here
+			String nlsid = category.getNameNlsid();
+			String subsystem = category.getNameSubsystem();
+			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
+				rtnObj.setName(category.getName());
+			}
+			else {
+				// here the code should come !! get localized stuff from
+				// MGMT_MESSAGES
+				rtnObj.setName(category.getName());
+			}
+
+			nlsid = category.getDescriptionNlsid();
+			subsystem = category.getDescriptionSubsystem();
+			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
+				rtnObj.setDescription(category.getDescription());
+			}
+			else {
+				// here the code should come !! get localized stuff from
+				// MGMT_MESSAGES
+				rtnObj.setDescription(category.getDescription());
+			}
+
+			rtnObj.setOwner(category.getOwner());
+			rtnObj.setCreatedOn(category.getCreationDate());
+			rtnObj.setProviderName(category.getProviderName());
+			rtnObj.setProviderVersion(category.getProviderVersion());
+			rtnObj.setProviderDiscovery(category.getProviderDiscovery());
+			rtnObj.setProviderAssetRoot(category.getProviderAssetRoot());
+
+			// handle params
+
+			Set<EmAnalyticsCategoryParam> params = category.getEmAnalyticsCategoryParams();
+			if (params != null && params.size() > 0) {
+				List<Parameter> categoryParams = new ArrayList<Parameter>();
+				for (EmAnalyticsCategoryParam paramObj : params) {
+					Parameter param = new Parameter();
+					param.setName(paramObj.getName());
+					param.setType(ParameterType.STRING);
+					param.setValue(paramObj.getValue());
+					categoryParams.add(param);
+				}
+				rtnObj.setParameters(categoryParams);
+			}
+
+			return rtnObj;
+		}
+		catch (Exception e) {
+			_logger.error("Error while creating the category object", e);
+			throw e;
+		}
+	}
 
 	public static CategoryManager getInstance()
 	{
@@ -135,7 +209,7 @@ public class CategoryManagerImpl extends CategoryManager
 			em.getTransaction().begin();
 			em.merge(categoryEntity);
 			em.getTransaction().commit();
-			return createCategoryObject(categoryEntity, null);
+			return CategoryManagerImpl.createCategoryObject(categoryEntity, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
 			_logger.error("Category with name " + category.getName() + " was saved but could not bve retrieved back", eme);
@@ -169,13 +243,13 @@ public class CategoryManagerImpl extends CategoryManager
 
 			EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			@SuppressWarnings("unchecked")
-                        List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
+			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			if (categories == null) {
 				categories = new ArrayList<Category>();
 			}
 			for (EmAnalyticsCategory categoriesObj : emcategories) {
-				Category category = createCategoryObject(categoriesObj, null);
+				Category category = CategoryManagerImpl.createCategoryObject(categoriesObj, null);
 				categories.add(category);
 			}
 
@@ -200,7 +274,7 @@ public class CategoryManagerImpl extends CategoryManager
 			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			if (categoryObj != null) {
 				em.refresh(categoryObj);
-				category = createCategoryObject(categoryObj, null);
+				category = CategoryManagerImpl.createCategoryObject(categoryObj, null);
 			}
 		}
 		catch (Exception e) {
@@ -238,7 +312,7 @@ public class CategoryManagerImpl extends CategoryManager
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
 
 			if (categoryObj != null) {
-				category = createCategoryObject(categoryObj, null);
+				category = CategoryManagerImpl.createCategoryObject(categoryObj, null);
 			}
 		}
 		catch (Exception e) {
@@ -272,15 +346,15 @@ public class CategoryManagerImpl extends CategoryManager
 			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
 			em.persist(categoryObj);
 			em.getTransaction().commit();
-			return createCategoryObject(categoryObj, null);
+			return CategoryManagerImpl.createCategoryObject(categoryObj, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
 			_logger.error("category with name " + category.getName() + " was saved but could not be retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId() == null ? -1
-					: category.getDefaultFolderId(), category.getName());
+			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce,
+					category.getDefaultFolderId() == null ? -1 : category.getDefaultFolderId(), category.getName());
 
 			_logger.error("Error while saving the category: " + category.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
@@ -321,7 +395,7 @@ public class CategoryManagerImpl extends CategoryManager
 						EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
 						em.merge(emCategory);
 						categorytmp.setId((int) emCategory.getCategoryId());
-						importedList.add(createCategoryObject(emCategory, null));
+						importedList.add(CategoryManagerImpl.createCategoryObject(emCategory, null));
 					}
 					else {
 						EmAnalyticsCategory categoryObj = null;
@@ -331,7 +405,7 @@ public class CategoryManagerImpl extends CategoryManager
 									.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 									.getSingleResult();
 							categorytmp.setId((int) categoryObj.getCategoryId());
-							importedList.add(createCategoryObject(categoryObj, null));
+							importedList.add(CategoryManagerImpl.createCategoryObject(categoryObj, null));
 						}
 						catch (NoResultException e) {
 							categoryObj = null;
@@ -346,8 +420,8 @@ public class CategoryManagerImpl extends CategoryManager
 										if (folder.getParentId() == null || folder.getParentId() == 0) {
 											folder.setParentId(1);
 										}
-										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(folder.getParentId()
-												.longValue(), em);
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil
+												.getFolderById(folder.getParentId().longValue(), em);
 
 										if (tmpfld == null) {
 											EmAnalyticsFolder fld = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
@@ -359,8 +433,8 @@ public class CategoryManagerImpl extends CategoryManager
 										}
 									}
 									else if (obj instanceof Integer) {
-										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(
-												((Integer) obj).longValue(), em);
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil
+												.getFolderById(((Integer) obj).longValue(), em);
 										if (tmpfld != null) {
 											category.setDefaultFolderId((Integer) obj);
 										}
@@ -374,7 +448,7 @@ public class CategoryManagerImpl extends CategoryManager
 							EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
 							em.persist(emCategory);
 							categorytmp.setId((int) emCategory.getCategoryId());
-							importedList.add(createCategoryObject(emCategory, null));
+							importedList.add(CategoryManagerImpl.createCategoryObject(emCategory, null));
 						}
 					}
 				}
@@ -405,80 +479,6 @@ public class CategoryManagerImpl extends CategoryManager
 
 		}
 		return importedList;
-	}
-
-	private Category createCategoryObject(EmAnalyticsCategory category, Category categoryObj) throws Exception
-	{
-		CategoryImpl rtnObj = null;
-		try {
-
-			if (categoryObj != null) {
-				// populate the current object
-				rtnObj = (CategoryImpl) categoryObj;
-			}
-			else {
-				rtnObj = new CategoryImpl();
-			}
-			rtnObj.setId((int) category.getCategoryId());
-			if (category.getEmAnalyticsFolder() != null) {
-				Long id = category.getEmAnalyticsFolder().getFolderId();
-				rtnObj.setDefaultFolderId(id == 0 ? null : (int) id.intValue());
-			}
-			else {
-				rtnObj.setDefaultFolderId(null);
-			}
-			// TODO : Abhinav Handle the internationalization via MGMT_MESSAGES
-			// handling name here
-			String nlsid = category.getNameNlsid();
-			String subsystem = category.getNameSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setName(category.getName());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setName(category.getName());
-			}
-
-			nlsid = category.getDescriptionNlsid();
-			subsystem = category.getDescriptionSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setDescription(category.getDescription());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setDescription(category.getDescription());
-			}
-
-			rtnObj.setOwner(category.getOwner());
-			rtnObj.setCreatedOn(category.getCreationDate());
-			rtnObj.setProviderName(category.getProviderName());
-			rtnObj.setProviderVersion(category.getProviderVersion());
-			rtnObj.setProviderDiscovery(category.getProviderDiscovery());
-			rtnObj.setProviderAssetRoot(category.getProviderAssetRoot());
-
-			// handle params
-
-			Set<EmAnalyticsCategoryParam> params = category.getEmAnalyticsCategoryParams();
-			if (params != null && params.size() > 0) {
-				List<Parameter> categoryParams = new ArrayList<Parameter>();
-				for (EmAnalyticsCategoryParam paramObj : params) {
-					Parameter param = new Parameter();
-					param.setName(paramObj.getName());
-					param.setType(ParameterType.STRING);
-					param.setValue(paramObj.getValue());
-					categoryParams.add(param);
-				}
-				rtnObj.setParameters(categoryParams);
-			}
-
-			return rtnObj;
-		}
-		catch (Exception e) {
-			_logger.error("Error while creating the category object", e);
-			throw e;
-		}
 	}
 
 }

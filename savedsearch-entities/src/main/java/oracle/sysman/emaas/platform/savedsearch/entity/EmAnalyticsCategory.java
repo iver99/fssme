@@ -96,8 +96,6 @@ public class EmAnalyticsCategory implements Serializable
 	@Column(name = "PROVIDER_ASSET_ROOT")
 	private String providerAssetRoot;
 
-	//bi-directional many-to-one association to EmAnalyticsCategoryParam
-
 	@OneToMany(mappedBy = "emAnalyticsCategory", cascade = CascadeType.ALL)
 	@PrivateOwned
 	private Set<EmAnalyticsCategoryParam> emAnalyticsCategoryParams;
@@ -105,6 +103,8 @@ public class EmAnalyticsCategory implements Serializable
 	//bi-directional many-to-one association to EmAnalyticsSearch
 	@OneToMany(mappedBy = "emAnalyticsCategory")
 	private Set<EmAnalyticsSearch> emAnalyticsSearches;
+
+	//bi-directional many-to-one association to EmAnalyticsCategoryParam
 
 	public EmAnalyticsCategory()
 	{
