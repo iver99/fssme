@@ -130,7 +130,7 @@ runS1Tests.enabled = !project.disableBuildTests
 //run S2 as S1 as another workaround now
 task runS2Tests(type: Exec) {
     executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
-    args 'do_lrg', '-Plrgs=emcpssf_l0_test'
+    args 'do_lrg', '-Plrgs=emcpssf_l1_test'
     if (project.hasProperty('BuildID')) {
         args "-PREPO_BID=${BuildID}"
     }
