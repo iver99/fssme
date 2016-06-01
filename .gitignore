@@ -66,6 +66,8 @@
 .target
 .texlipse
 .idea
+.project
+.classpath
 
 create_plugin*.log
 DIFFS.txt
