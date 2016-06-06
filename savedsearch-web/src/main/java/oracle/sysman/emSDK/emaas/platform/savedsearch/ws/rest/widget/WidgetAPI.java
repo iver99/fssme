@@ -151,7 +151,7 @@ public class WidgetAPI
 				}
 			}
 
-			message = getAllWidgetsFromCache(widgetGroupId, includeDashboardIneligible);
+			message = getAllWidgetsJson(widgetGroupId, includeDashboardIneligible);
 		}
 
 		catch (NumberFormatException e) {
@@ -298,7 +298,7 @@ public class WidgetAPI
 		return null;
 	}
 
-	private String getAllWidgetsFromCache(String widgetGroupId, boolean includeDashboardIneligible)
+	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible)
 			throws EMAnalyticsFwkException, IOException
 	{
 		List<String> providers = TenantSubscriptionUtil
@@ -309,13 +309,6 @@ public class WidgetAPI
 				widgetGroupId);
 		String message = WidgetManager.getInstance().getWidgetJsonStringFromWidgetList(widgetList);
 
-		if (!includeDashboardIneligible && StringUtil.isEmpty(widgetGroupId)) {
-			_logger.debug("Storing widget list to cache");
-		}
-		else {
-			_logger.debug("Not store to cache for includeDashboardIneligible={}, widgetGroupId={}", includeDashboardIneligible,
-					widgetGroupId);
-		}
 		return message;
 	}
 

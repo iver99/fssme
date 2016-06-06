@@ -149,9 +149,15 @@ public class SearchManagerImpl extends SearchManager
 
 		}
 	}
+	
+	
+	@Override
+	public Search editSearch(Search search) throws EMAnalyticsFwkException {
+		return editSearch(search, false);
+	}
 
 	@Override
-	public Search editSearch(Search search) throws EMAnalyticsFwkException
+	public Search editSearch(Search search, boolean canEditSysSearch) throws EMAnalyticsFwkException
 	{
 		_logger.info("Editing search with id : " + search.getId());
 		EntityManager em = null;
@@ -159,7 +165,7 @@ public class SearchManagerImpl extends SearchManager
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
 			if (searchEntity != null && searchEntity.getSystemSearch() != null
-					&& searchEntity.getSystemSearch().intValue() == 1) {
+					&& searchEntity.getSystemSearch().intValue() == 1 && !canEditSysSearch) {
 				throw new EMAnalyticsFwkException(
 						"Search with Id: " + searchEntity.getId() + " is system search and NOT allowed to edit",
 						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);
@@ -1267,6 +1273,29 @@ public class SearchManagerImpl extends SearchManager
 			search.setAccessDate(lastAccessDate);
 		}
 
+	}
+
+	@Override
+	public String getSearchParamByName(long searchId, String paramName)
+			throws EMAnalyticsFwkException {
+		_logger.debug("get param value by searchId: " + searchId + ", param name: " + paramName);
+		EntityManager em = null;
+		String paramValue = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			paramValue = EmAnalyticsObjectUtil.getSearchParamByName(searchId, paramName, em);
+		} catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			String errorMessage = "Error while retrieving the value of search parameter for the searchId: "
+					+ searchId + ", parameter name: " + paramName;
+			_logger.error(errorMessage, e);
+			throw new EMAnalyticsFwkException(errorMessage, EMAnalyticsFwkException.ERR_GENERIC, null, e);
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		return paramValue;
 	}
 
 }

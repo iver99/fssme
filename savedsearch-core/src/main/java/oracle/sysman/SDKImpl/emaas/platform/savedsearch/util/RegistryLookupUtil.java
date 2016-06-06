@@ -38,7 +38,12 @@ public class RegistryLookupUtil
 
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, false);
+	}
+	
+	public static Link getServiceInternalHttpLink(String serviceName, String version, String rel, String tenantName)
+	{
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
 	}
 
 	private static List<Link> getLinksWithProtocol(String protocol, List<Link> links)
@@ -245,7 +250,7 @@ public class RegistryLookupUtil
 	}
 
 	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
-			String tenantName)
+			String tenantName, boolean httpOnly)
 	{
 		logger.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
@@ -259,18 +264,20 @@ public class RegistryLookupUtil
 			if (result != null && result.size() > 0) {
 
 				//find https link first
-				for (InstanceInfo internalInstance : result) {
-					List<Link> links = null;
-					if (prefixMatch) {
-						links = internalInstance.getLinksWithRelPrefixWithProtocol(rel, "https");
-					}
-					else {
-						links = internalInstance.getLinksWithProtocol(rel, "https");
-					}
+				if(!httpOnly) {
+					for (InstanceInfo internalInstance : result) {
+						List<Link> links = null;
+						if (prefixMatch) {
+							links = internalInstance.getLinksWithRelPrefixWithProtocol(rel, "https");
+						}
+						else {
+							links = internalInstance.getLinksWithProtocol(rel, "https");
+						}
 
-					if (links != null && links.size() > 0) {
-						lk = links.get(0);
-						break;
+						if (links != null && links.size() > 0) {
+							lk = links.get(0);
+							break;
+						}
 					}
 				}
 
@@ -296,8 +303,6 @@ public class RegistryLookupUtil
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
-		}
-		if (lk != null) {
 		}
 		return lk;
 	}

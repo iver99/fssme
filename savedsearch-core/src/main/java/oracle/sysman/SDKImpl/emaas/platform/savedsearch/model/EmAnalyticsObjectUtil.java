@@ -1,6 +1,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,6 +35,21 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
 class EmAnalyticsObjectUtil
 {
+	@SuppressWarnings("unchecked")
+	public static String getSearchParamByName(long searchId, String paramName, EntityManager em) {
+		List<EmAnalyticsSearchParam> paramList = (List<EmAnalyticsSearchParam>) em
+				.createNamedQuery("SearchParam.getParamByName")
+				.setParameter("searchId", searchId)
+				.setParameter("name", paramName).getResultList();
+		if(!paramList.isEmpty()) {
+			EmAnalyticsSearchParam param = paramList.get(0);
+			return ParameterType.STRING.getIntValue() == param.getParamType().intValue()
+					? param.getParamValueStr() 
+					: param.getParamValueClob();
+		} else {
+			return null;
+		}
+	}
 
 	public static boolean canDeleteFolder(long folderId, EntityManager em) throws EMAnalyticsFwkException
 	{
@@ -488,7 +504,16 @@ class EmAnalyticsObjectUtil
 				newParams.put(newPK, newSearchParam);
 			}
 		}
-
+		
+		// return error if the ODS entity id is missed
+		// not in old -> false;
+		// in old and in new -> false;
+		// in old but not in new -> true;
+		if(containODSEntityId(existingParams) && !containODSEntityId(newParams.values())) {
+			throw new EMAnalyticsFwkException("Can not delete ODS Entity without deleting Saved Search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_GENERIC, null);
+		}
+		
 		Iterator<EmAnalyticsSearchParam> it = existingParams.iterator();
 		while (it.hasNext()) {
 			EmAnalyticsSearchParam searchParam = it.next();
@@ -507,7 +532,6 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsFolder folderObj = null;
-		Object op = null;
 
 		try {
 
@@ -533,7 +557,6 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsFolder folderObj = null;
-		Object op = null;
 
 		try {
 
@@ -661,4 +684,12 @@ class EmAnalyticsObjectUtil
 		return searchObj;
 	}
 
+	private static boolean containODSEntityId(Collection<EmAnalyticsSearchParam> params) {
+		for(EmAnalyticsSearchParam param : params) {
+			if("meId".equals(param.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

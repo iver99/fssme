@@ -140,6 +140,47 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
+	public void testGetAllWidgets_getWigetListFromCache_Exception_widgetGroupIdNotNull(@Mocked WidgetManager widgetManager,
+			@Mocked final WidgetManagerImpl widgetManagerImpl, @Mocked SearchManager searchManager,
+			@Mocked final SearchManagerImpl searchManagerImpl, @Mocked TenantSubscriptionUtil tenantSubscriptionUtil,
+			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo,
+			@Mocked final URI uri) throws Exception
+	{
+		final List<String> providers = new ArrayList<>();
+		providers.add("providerQQ");
+		providers.add("providerPP");
+		final List<Widget> widgetList = new ArrayList<>();
+		widgetList.add(new WidgetImpl());
+		widgetList.add(new WidgetImpl());
+		new Expectations() {
+			{
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=123&includeDashboardIneligible=true";
+
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.gettenantName();
+				result = "tenantName";
+
+				TenantSubscriptionUtil.getTenantSubscribedServiceProviders(anyString);
+				result = providers;
+
+				SearchManager.getInstance();
+				result = searchManagerImpl;
+				searchManagerImpl.getWidgetListByProviderNames(anyBoolean, providers, anyString);
+
+				WidgetManager.getInstance();
+				result = widgetManagerImpl;
+
+			}
+		};
+		widgetAPI = new WidgetAPI();
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
+	}
+
+	@Test(groups = { "s2" })
 	public void testGetAllWidgets_groupIdLargerThen(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
 	{
 		new Expectations() {
@@ -186,48 +227,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgetsFromCache_getWigetListFromCache_Exception_widgetGroupIdNotNull(
-			@Mocked WidgetManager widgetManager, @Mocked final WidgetManagerImpl widgetManagerImpl,
-			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl,
-			@Mocked TenantSubscriptionUtil tenantSubscriptionUtil, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
-	{
-		final List<String> providers = new ArrayList<>();
-		providers.add("providerQQ");
-		providers.add("providerPP");
-		final List<Widget> widgetList = new ArrayList<>();
-		widgetList.add(new WidgetImpl());
-		widgetList.add(new WidgetImpl());
-		new Expectations() {
-			{
-				uriInfo.getRequestUri();
-				result = uri;
-				uri.getQuery();
-				result = "widgetGroupId=123&includeDashboardIneligible=true";
-
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-
-				TenantSubscriptionUtil.getTenantSubscribedServiceProviders(anyString);
-				result = providers;
-
-				SearchManager.getInstance();
-				result = searchManagerImpl;
-				searchManagerImpl.getWidgetListByProviderNames(anyBoolean, providers, anyString);
-
-				WidgetManager.getInstance();
-				result = widgetManagerImpl;
-
-			}
-		};
-		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetAllWidgetsFromCache_widgetGroupIdNotNull(@Mocked WidgetManager widgetManager,
+	public void testGetAllWidgets_widgetGroupIdNotNull(@Mocked WidgetManager widgetManager,
 			@Mocked final WidgetManagerImpl widgetManagerImpl, @Mocked SearchManager searchManager,
 			@Mocked final SearchManagerImpl searchManagerImpl, @Mocked TenantSubscriptionUtil tenantSubscriptionUtil,
 			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo,
@@ -267,8 +267,8 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgetsFromCache_widgetGroupIdNull(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testGetAllWidgets_widgetGroupIdNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
 	{
 		new Expectations() {
 			{
@@ -287,47 +287,49 @@ public class WidgetAPIMoreTest
 		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
 	}
 
-	@Test(groups = { "s2" })
-	public void testGetAllWidgetsFromCache_widgetGroupIdNull_getWigetListFromCache_Exception(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
-	{
-		new Expectations() {
-			{
-				uriInfo.getRequestUri();
-				result = uri;
-				uri.getQuery();
-				result = "widgetGroupId=123&includeDashboardIneligible=true";
+	// comment out duplicated case
+	//	@Test(groups = { "s2" })
+	//	public void testGetAllWidgets_widgetGroupIdNull_getWigetListFromCache_Exception(@Mocked TenantContext tenantContext,
+	//			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	//	{
+	//		new Expectations() {
+	//			{
+	//				uriInfo.getRequestUri();
+	//				result = uri;
+	//				uri.getQuery();
+	//				result = "widgetGroupId=123&includeDashboardIneligible=true";
+	//
+	//				TenantContext.getContext();
+	//				result = tenantInfo;
+	//				tenantInfo.gettenantName();
+	//				result = "tenantName";
+	//			}
+	//		};
+	//		widgetAPI = new WidgetAPI();
+	//		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
+	//	}
 
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-			}
-		};
-		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetAllWidgetsFromCache_widgetGroupIdNull_msgNotEmpty(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
-	{
-		new Expectations() {
-			{
-				uriInfo.getRequestUri();
-				result = uri;
-				uri.getQuery();
-				result = "widgetGroupId=123&includeDashboardIneligible=true";
-
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.gettenantName();
-				result = "tenantName";
-			}
-		};
-		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
-	}
+	// comment out duplicated case
+	//	@Test(groups = { "s2" })
+	//	public void testGetAllWidgets_widgetGroupIdNull_msgNotEmpty(@Mocked TenantContext tenantContext,
+	//			@Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	//	{
+	//		new Expectations() {
+	//			{
+	//				uriInfo.getRequestUri();
+	//				result = uri;
+	//				uri.getQuery();
+	//				result = "widgetGroupId=123&includeDashboardIneligible=true";
+	//
+	//				TenantContext.getContext();
+	//				result = tenantInfo;
+	//				tenantInfo.gettenantName();
+	//				result = "tenantName";
+	//			}
+	//		};
+	//		widgetAPI = new WidgetAPI();
+	//		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
+	//	}
 
 	@Test(groups = { "s2" })
 	public void testGetWidgetScreenshotById(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,

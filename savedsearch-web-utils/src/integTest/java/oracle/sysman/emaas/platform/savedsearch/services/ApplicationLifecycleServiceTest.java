@@ -1,6 +1,9 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
 import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -22,5 +25,16 @@ public class ApplicationLifecycleServiceTest {
 //
 //        List<ApplicationServiceManager> registeredServices =  Deencapsulation.getField(applicationLifecycleService,"registeredServices");
 //        Assert.assertEquals(registeredServices.size(),4);
+    }
+
+    @Test(groups = {"s2"})
+    public void testConstructor(@Mocked final AbstractApplicationLifecycleService applicationLifecycleService1) throws Exception {
+        new Expectations(){
+            {
+                withAny(applicationLifecycleService1).addApplicationServiceManager((ApplicationServiceManager)any);
+            }
+        };
+                new ApplicationLifecycleService();
+
     }
 }
