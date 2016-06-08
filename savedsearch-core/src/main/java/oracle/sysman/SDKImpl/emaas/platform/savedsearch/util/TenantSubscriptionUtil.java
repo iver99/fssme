@@ -21,6 +21,20 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingCollection;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -29,18 +43,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingCollection;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 
 /**
  * @author aduan
@@ -149,9 +151,29 @@ public class TenantSubscriptionUtil
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), tenant);
 		return providers;
 	}
-
+	@SuppressWarnings("unchecked")
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
+		// try to load from subscribeCache
+		CacheManager cm = CacheManager.getInstance();
+		Tenant cacheTenant = new Tenant(tenant);
+		List<String> cachedApps;
+		try {
+			cachedApps = (List<String>) cm.getCacheable(cacheTenant,
+					CacheManager.CACHES_SUBSCRIBE_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+		} catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
+		if (cachedApps != null) {
+			logger.debug(
+					"retrieved subscribed apps for tenant {} from subscribe cache: "
+							+ StringUtil.arrayToCommaDelimitedString(cachedApps
+									.toArray()), tenant);
+			return cachedApps;
+		}
+		
 		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenant);
 		if (domainLink == null || StringUtil.isEmpty(domainLink.getHref())) {
 			logger.warn("Checking tenant (" + tenant
@@ -226,6 +248,11 @@ public class TenantSubscriptionUtil
 			}
 			List<String> origAppsList = Arrays
 					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+			//put into cache
+			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
+					origAppsList);
+			logger.debug("Store subscribed apps for tenant {} to subscribe cache: "
+					+ StringUtil.arrayToCommaDelimitedString(origAppsList.toArray()), tenant);
 			return origAppsList;
 
 		}
