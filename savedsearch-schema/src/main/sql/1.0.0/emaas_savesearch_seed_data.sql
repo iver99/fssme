@@ -114,7 +114,7 @@ var TENANT_ID					NUMBER;
  exec :SYSTEM_FOLDER			:=  1;
  exec :EM_PLUGIN_ID				:=  'oracle.sysman.core';
  exec :UI_HIDDEN				:=  0;
- exec :TENANT_ID				:=  '&TENANT_ID'
+ exec :TENANT_ID				:=  '&TENANT_ID';
 
  Insert into
 EMS_ANALYTICS_FOLDERS
