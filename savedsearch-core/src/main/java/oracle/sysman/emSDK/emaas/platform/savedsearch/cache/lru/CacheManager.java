@@ -19,7 +19,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.ICacheFetchFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.KeyGenerator;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emaas.platform.dashboards.core.cache.lru.CacheFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
