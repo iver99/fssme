@@ -7,20 +7,13 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
-import org.testng.annotations.Test;
-
-import com.sun.jersey.core.header.InBoundHeaders;
-import com.sun.jersey.server.impl.application.WebApplicationContext;
-import com.sun.jersey.server.impl.application.WebApplicationImpl;
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerResponse;
-
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
@@ -28,6 +21,14 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
+
+import org.testng.annotations.Test;
+
+import com.sun.jersey.core.header.InBoundHeaders;
+import com.sun.jersey.server.impl.application.WebApplicationContext;
+import com.sun.jersey.server.impl.application.WebApplicationImpl;
+import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerResponse;
 
 /**
  * Created by QIQIAN on 2016/3/28.
@@ -354,6 +355,7 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -370,6 +372,7 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -386,6 +389,7 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -403,6 +407,7 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -420,6 +425,7 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
@@ -437,6 +443,7 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById(anyLong);
