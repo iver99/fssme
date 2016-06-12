@@ -25,8 +25,8 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingColl
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;

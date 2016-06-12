@@ -8,17 +8,15 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
+package oracle.sysman.emSDK.emaas.platform.savedsearch.cache;
 
 
 import java.util.ResourceBundle;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.DefaultKeyGenerator;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.ICacheFetchFactory;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.KeyGenerator;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheFactory;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheUnit;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.Element;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

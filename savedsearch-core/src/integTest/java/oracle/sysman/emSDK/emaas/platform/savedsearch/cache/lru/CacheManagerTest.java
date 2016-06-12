@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
 
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.ICacheFetchFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;

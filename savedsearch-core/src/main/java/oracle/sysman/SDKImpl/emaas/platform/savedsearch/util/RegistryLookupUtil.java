@@ -14,10 +14,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CachedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;

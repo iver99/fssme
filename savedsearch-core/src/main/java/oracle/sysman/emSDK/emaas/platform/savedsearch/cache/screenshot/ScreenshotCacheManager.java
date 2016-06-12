@@ -13,9 +13,9 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot;
 import java.util.Date;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
