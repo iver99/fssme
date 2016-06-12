@@ -1,6 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot;
 
-public class DashboardManager {
+public class ScreenshotConstant {
 
 	
 	public static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";

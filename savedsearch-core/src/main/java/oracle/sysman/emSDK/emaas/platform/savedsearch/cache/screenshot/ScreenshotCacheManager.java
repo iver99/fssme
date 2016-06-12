@@ -73,11 +73,11 @@ public class ScreenshotCacheManager
 		}
 		String fileName = ScreenshotPathGenerator.getInstance().generateFileName(widgetId, creation, modification);
 		byte[] decoded = null;
-		if (screenshot.startsWith(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX)) {
-			decoded = Base64.decode(screenshot.substring(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX.length()));
+		if (screenshot.startsWith(ScreenshotConstant.SCREENSHOT_BASE64_PNG_PREFIX)) {
+			decoded = Base64.decode(screenshot.substring(ScreenshotConstant.SCREENSHOT_BASE64_PNG_PREFIX.length()));
 		}
-		else if (screenshot.startsWith(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX)) {
-			decoded = Base64.decode(screenshot.substring(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
+		else if (screenshot.startsWith(ScreenshotConstant.SCREENSHOT_BASE64_JPG_PREFIX)) {
+			decoded = Base64.decode(screenshot.substring(ScreenshotConstant.SCREENSHOT_BASE64_JPG_PREFIX.length()));
 		}
 		else {
 			logger.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
