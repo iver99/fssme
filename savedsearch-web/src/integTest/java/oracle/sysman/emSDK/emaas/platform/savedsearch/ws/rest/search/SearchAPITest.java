@@ -1,26 +1,30 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import mockit.Mock;
 import mockit.MockUp;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.*;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchSummaryImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
+import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by xidai on 2/24/2016.
@@ -30,114 +34,9 @@ public class SearchAPITest {
     private SearchAPI api = new SearchAPI();
     @BeforeMethod
     public void setUp() throws Exception {
-
-        UriInfo uri = new UriInfo() {
-            @Override
-            public String getPath() {
-                return null;
-            }
-
-            @Override
-            public String getPath(boolean decode) {
-                return null;
-            }
-
-            @Override
-            public List<PathSegment> getPathSegments() {
-                return null;
-            }
-
-            @Override
-            public List<PathSegment> getPathSegments(boolean decode) {
-                return null;
-            }
-
-            @Override
-            public URI getRequestUri(){
-                URI uril = null;
-                try{
-                    uril = new URI("");
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                return uril;
-            }
-
-            @Override
-            public UriBuilder getRequestUriBuilder() {
-                return null;
-            }
-
-            @Override
-            public URI getAbsolutePath() {
-                return null;
-            }
-
-            @Override
-            public UriBuilder getAbsolutePathBuilder() {
-                return null;
-            }
-
-            @Override
-            public URI getBaseUri() {
-                return null;
-            }
-
-            @Override
-            public UriBuilder getBaseUriBuilder() {
-                return null;
-            }
-
-
-            @Override
-            public MultivaluedMap<String, String> getPathParameters() {
-                return null;
-            }
-
-            @Override
-            public MultivaluedMap<String, String> getPathParameters(boolean decode) {
-                return null;
-            }
-
-            @Override
-            public MultivaluedMap<String, String> getQueryParameters() {
-                return null;
-            }
-
-            @Override
-            public MultivaluedMap<String, String> getQueryParameters(boolean decode) {
-                return null;
-            }
-
-            @Override
-            public List<String> getMatchedURIs() {
-                return null;
-            }
-
-            @Override
-            public List<String> getMatchedURIs(boolean decode) {
-                return null;
-            }
-
-            @Override
-            public List<Object> getMatchedResources() {
-                return null;
-            }
-
-            @Override
-            public URI resolve(URI uri) {
-                return null;
-            }
-
-            @Override
-            public URI relativize(URI uri) {
-                return null;
-            }
-        };
-
-        api.uri = uri;
-
+        api.uri = TestHelper.mockUriInfo();
     }
+    
     @Test
     public void testCreateSearch() throws Exception {
         JSONObject inputJson = new JSONObject();
@@ -169,7 +68,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch2nd() throws Exception {
@@ -205,7 +104,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch3th() throws Exception {
@@ -241,7 +140,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch5th() throws Exception {
@@ -274,7 +173,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch6th() throws Exception {
@@ -307,7 +206,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch4th() throws Exception {
@@ -343,7 +242,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch7th() throws Exception {
@@ -377,7 +276,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch8th() throws Exception {
@@ -411,7 +310,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch9th() throws Exception {
@@ -444,7 +343,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch10th() throws Exception {
@@ -477,7 +376,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch11th() throws Exception {
@@ -511,7 +410,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
     @Test
     public void testCreateSearch12th() throws Exception {
@@ -544,8 +443,59 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson);
+        api.createSearch(inputJson, "tenant");
     }
+    
+    /**
+     * test create ods entity
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testCreateSearch13th() throws Exception {
+        JSONObject category = new JSONObject();
+        category.put("id","999");
+        JSONObject folder = new JSONObject();
+        folder.put("id","999");
+        JSONObject p = new JSONObject();
+        p.put("name","ODS_ENTITY");
+        p.put("type","STRING");
+        p.put("value","TRUE");
+        JSONArray parameter = new JSONArray();
+        parameter.put(p);
+        
+        JSONObject inputJson = new JSONObject();
+        inputJson.put("name","Demo Search");
+        inputJson.put("category",category);
+        inputJson.put("folder",folder);
+        inputJson.put("parameters",parameter);
+        new MockUp<SearchManagerImpl>(){
+            @Mock
+            public Search saveSearch(Search search) throws EMAnalyticsFwkException,EMAnalyticsWSException
+            {
+            	SearchImpl searchImpl = new SearchImpl();
+            	searchImpl.setId(999);
+            	searchImpl.setName("Saved Search");
+            	searchImpl.setParameters(new ArrayList<SearchParameter>());
+                return searchImpl;
+            }
+            
+            @Mock
+            public Search editSearch(Search search) throws EMAnalyticsFwkException,EMAnalyticsWSException {
+            	return new SearchImpl();
+            }
+        };
+        new MockUp<OdsDataServiceImpl>(){
+            @Mock
+            public String createOdsEntity(String searchId, String searchName, String tenant) throws EMAnalyticsFwkException
+            {
+            	return "odsentitymeid";
+            }
+        };
+        
+        api.createSearch(inputJson, "tenant");
+    }
+    
     @Test
     public void testDeleteSearch() throws Exception {
         new MockUp<SearchManagerImpl>(){
@@ -555,7 +505,14 @@ public class SearchAPITest {
 
             }
         };
-        Assert.assertNotNull(api.deleteSearch(100L));
+        new MockUp<OdsDataServiceImpl>(){
+            @Mock
+            public void deleteOdsEntity(long searchId, String tenant) throws EMAnalyticsFwkException
+            {
+
+            }
+        };
+        Assert.assertNotNull(api.deleteSearch(100L, "tenant"));
 
     }
     @Test
@@ -569,7 +526,14 @@ public class SearchAPITest {
                 }
             }
         };
-        Assert.assertNotNull(api.deleteSearch(100L));
+        new MockUp<OdsDataServiceImpl>(){
+            @Mock
+            public void deleteOdsEntity(long searchId, String tenant) throws EMAnalyticsFwkException
+            {
+
+            }
+        };
+        Assert.assertNotNull(api.deleteSearch(100L, "tenant"));
 
     }
     @Test
@@ -996,5 +960,39 @@ public class SearchAPITest {
     @Test
     public void testUpdateLastAccessTime() throws Exception {
 
+    }
+    
+    /**
+     * test createOdsEntity
+     * @throws Exception
+     */
+    @Test
+    public void testCreateOdsEntity() throws Exception{
+    	new MockUp<SearchManagerImpl>(){
+            @Mock
+            public Search getSearch(long searchId) throws EMAnalyticsFwkException
+            {
+            	SearchImpl searchImpl = new SearchImpl();
+            	searchImpl.setId(999);
+            	searchImpl.setName("Saved Search");
+            	searchImpl.setParameters(new ArrayList<SearchParameter>());
+                return searchImpl;
+            }
+            
+            @Mock
+            public Search editSearch(Search search, boolean canEditSysSearch) throws EMAnalyticsFwkException,EMAnalyticsWSException {
+            	return new SearchImpl();
+            }
+        };
+        
+        new MockUp<OdsDataServiceImpl>(){
+            @Mock
+            public String createOdsEntity(String searchId, String searchName, String tenant) throws EMAnalyticsFwkException
+            {
+            	return "odsentitymeid";
+            }
+        };
+    	
+    	Assert.assertNotNull(api.createOdsEntity(999L, "tenantName"));
     }
 }

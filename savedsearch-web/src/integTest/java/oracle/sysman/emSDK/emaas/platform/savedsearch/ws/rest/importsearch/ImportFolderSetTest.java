@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by xidai on 2/29/2016.
  */
-@Test(groups={})
+@Test(groups={"s2"})
 public class ImportFolderSetTest {
     private  ImportFolderSet importFolderSet = new ImportFolderSet();
     private String xml = "[{\"id\":121,\"name\":\"Category123\",\"providerName\":\"Log Analytics\",\"prividerVersion\":\"1.0\",\"providerDiscovery\":\"discovery\",\"providerAssetRoot\":\"asset\"}]";
