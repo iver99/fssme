@@ -1,27 +1,45 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil;
+import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
+import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The Search Services
@@ -200,7 +218,7 @@ public class SearchAPI
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createSearch(JSONObject inputJsonObj)
+	public Response createSearch(JSONObject inputJsonObj, @HeaderParam(value = "OAM_REMOTE_USER") String tenantName)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/search");
 
@@ -211,6 +229,26 @@ public class SearchAPI
 		try {
 			Search searchObj = createSearchObjectForAdd(inputJsonObj);
 			Search savedSearch = sman.saveSearch(searchObj);
+			
+			// see if an ODS entity needs to be create
+			if(searchObj != null && searchObj.getParameters() != null) {
+				for (SearchParameter param : searchObj.getParameters()) {
+					if (OdsDataService.ENTITY_FLAG.equalsIgnoreCase(param.getName())
+							&& "TRUE".equalsIgnoreCase(param.getValue())) {
+						OdsDataService ods = OdsDataServiceImpl.getInstance();
+						String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName(), tenantName);
+							
+						// add ODS Entity ID as one of search parameters of the saved search
+						savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
+						
+						// store the whole saved search again
+						// TODO provide new API to add a search parameter solely
+						savedSearch = sman.editSearch(savedSearch);
+						break;
+					}
+				}
+			}
+			
 			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch);
 			message = jsonObj.toString();
 		}
@@ -225,6 +263,14 @@ public class SearchAPI
 			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
+	}
+
+	private SearchParameter generateOdsEntitySearchParam(String meId) {
+		SearchParameter newParam = new SearchParameter();
+		newParam.setName(OdsDataService.ENTITY_ID);
+		newParam.setValue(meId);
+		newParam.setType(ParameterType.STRING);
+		return newParam;
 	}
 
 	/**
@@ -264,19 +310,20 @@ public class SearchAPI
 	 */
 	@DELETE
 	@Path("{id: [0-9]*}")
-	public Response deleteSearch(@PathParam("id") long searchId)
+	public Response deleteSearch(@PathParam("id") long searchId, @HeaderParam(value = "OAM_REMOTE_USER") String tenantName)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/search/{}", searchId);
 		int statusCode = 204;
-
+		
+		OdsDataService odsService = OdsDataServiceImpl.getInstance();
 		SearchManager sman = SearchManager.getInstance();
+		
 		try {
+			odsService.deleteOdsEntity(searchId, tenantName);
 			sman.deleteSearch(searchId, false);
-
 		}
 		catch (EMAnalyticsFwkException e) {
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-
 		}
 
 		return Response.status(statusCode).build();
@@ -426,6 +473,52 @@ public class SearchAPI
 
 		return Response.status(statusCode).entity(message).build();
 
+	}
+	
+	@PUT
+	@Path("{id: [0-9]*}/odsentity")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createOdsEntity(@PathParam("id") long searchId, @HeaderParam(value = "OAM_REMOTE_USER") String tenantName) {
+		String message = null;
+		int statusCode = 200;
+		SearchManager sman = SearchManager.getInstance();
+		Search savedSearch = null;
+		
+		try {
+			savedSearch = sman.getSearch(searchId);
+		} catch (EMAnalyticsFwkException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+		}
+		
+		if(savedSearch != null) {
+			for (SearchParameter param : savedSearch.getParameters()) {
+				if(OdsDataService.ENTITY_ID.equalsIgnoreCase(param.getName())) {
+					statusCode = 400;
+					message = "Exist Entity ID: " + param.getValue();
+					_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message);
+				}
+			}
+			
+			if(statusCode != 400) {
+				OdsDataService ods = OdsDataServiceImpl.getInstance();
+				try {
+					String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName(), tenantName);
+					savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
+					savedSearch = sman.editSearch(savedSearch, true);
+					JSONObject jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch);
+					message = jsonObj.toString();
+				} catch (EMAnalyticsFwkException e) {
+					statusCode = e.getStatusCode();
+					message = e.getMessage();
+					_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+				}
+			}
+		}
+		
+		return Response.status(statusCode).entity(message).build();
 	}
 
 	/**
