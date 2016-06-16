@@ -5,11 +5,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 public interface OdsDataService {
 	public final static String ENTITY_FLAG = "ODS_ENTITY";
 	public final static String ENTITY_ID = "meId";
-	public final static String ENTITY_CLASS = "meClass";
-	public final static String ENTITY_TYPE_NAME = "usr_SSEntityType";//"omc_saved_search";
-	public final static String ENTITY_TYPE_DIS_NAME = "Saved Search";
-	public final static String FACT_TYPE_NAME = "ResultFact::DATA";
-	public final static String FACT_DISPLAY_NAME = "ResultFact";
+	public final static String ENTITY_CLASS = "TARGET";
+	public final static String ENTITY_TYPE_NAME = "omc_saved_search";//"usr_SSEntityType"
+//	public final static String ENTITY_TYPE_DIS_NAME = "Saved Search";
 	
 	public final static String HTTP_DELIMITER = "/";
 	public final static String SERVICE_NAME = "TargetModelManagement";
