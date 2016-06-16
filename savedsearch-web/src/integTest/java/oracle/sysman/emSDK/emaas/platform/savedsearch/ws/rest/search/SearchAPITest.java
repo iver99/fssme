@@ -68,7 +68,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch2nd() throws Exception {
@@ -104,7 +104,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch3th() throws Exception {
@@ -140,7 +140,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch5th() throws Exception {
@@ -173,7 +173,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch6th() throws Exception {
@@ -206,7 +206,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch4th() throws Exception {
@@ -242,7 +242,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch7th() throws Exception {
@@ -276,7 +276,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch8th() throws Exception {
@@ -310,7 +310,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch9th() throws Exception {
@@ -343,7 +343,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch10th() throws Exception {
@@ -376,7 +376,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch11th() throws Exception {
@@ -410,7 +410,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     @Test
     public void testCreateSearch12th() throws Exception {
@@ -443,7 +443,7 @@ public class SearchAPITest {
             }
 
         };
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     
     /**
@@ -487,13 +487,13 @@ public class SearchAPITest {
         };
         new MockUp<OdsDataServiceImpl>(){
             @Mock
-            public String createOdsEntity(String searchId, String searchName, String tenant) throws EMAnalyticsFwkException
+            public String createOdsEntity(String searchId, String searchName) throws EMAnalyticsFwkException
             {
             	return "odsentitymeid";
             }
         };
         
-        api.createSearch(inputJson, "tenant");
+        api.createSearch(inputJson);
     }
     
     @Test
@@ -507,12 +507,12 @@ public class SearchAPITest {
         };
         new MockUp<OdsDataServiceImpl>(){
             @Mock
-            public void deleteOdsEntity(long searchId, String tenant) throws EMAnalyticsFwkException
+            public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException
             {
 
             }
         };
-        Assert.assertNotNull(api.deleteSearch(100L, "tenant"));
+        Assert.assertNotNull(api.deleteSearch(100L));
 
     }
     @Test
@@ -528,12 +528,12 @@ public class SearchAPITest {
         };
         new MockUp<OdsDataServiceImpl>(){
             @Mock
-            public void deleteOdsEntity(long searchId, String tenant) throws EMAnalyticsFwkException
+            public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException
             {
 
             }
         };
-        Assert.assertNotNull(api.deleteSearch(100L, "tenant"));
+        Assert.assertNotNull(api.deleteSearch(100L));
 
     }
     @Test
@@ -987,12 +987,12 @@ public class SearchAPITest {
         
         new MockUp<OdsDataServiceImpl>(){
             @Mock
-            public String createOdsEntity(String searchId, String searchName, String tenant) throws EMAnalyticsFwkException
+            public String createOdsEntity(String searchId, String searchName) throws EMAnalyticsFwkException
             {
             	return "odsentitymeid";
             }
         };
     	
-    	Assert.assertNotNull(api.createOdsEntity(999L, "tenantName"));
+    	Assert.assertNotNull(api.createOdsEntity(999L));
     }
 }
