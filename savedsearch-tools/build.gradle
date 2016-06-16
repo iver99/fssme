@@ -25,6 +25,8 @@ sourceSets {
                 }
 			}
 
+def regLookupClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
+def regClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 dependencies {
 	compile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1'){transitive = false}
         compile(group: 'org.hamcrest', name:'hamcrest-core', version: '1.3'){transitive = false}
@@ -36,8 +38,8 @@ dependencies {
 
         compile(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){transitive = false}
         compile(group: 'log4j', name: 'log4j', version: '1.2.16'){transitive = false}
-    compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+'){transitive = false}
-        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+'){transitive = false}
+    compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: regClientVer){transitive = false}
+        compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: regLookupClientVer){transitive = false}
         compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
     testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
         
