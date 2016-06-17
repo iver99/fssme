@@ -94,7 +94,7 @@ public class WidgetAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "PROVIDER_ASSET_ROOT": "home"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
-	 *         <br>
+	 * <br>
 	 *         Response Code:<br>
 	 *         <table border="1">
 	 *         <tr>
@@ -116,7 +116,7 @@ public class WidgetAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllWidgets(@Context UriInfo uri, @HeaderParam(value = "OAM_REMOTE_USER") String userTenant,
+	public Response getAllWidgets(@Context UriInfo uri, @HeaderParam(value = "X-REMOTE-USER") String userTenant,
 			@QueryParam("widgetGroupId") String widgetGroupId,
 			@QueryParam("includeDashboardIneligible") boolean includeDashboardIneligible)
 	{
@@ -189,7 +189,7 @@ public class WidgetAPI
 	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "WIDGET_VISUAL":
 	 *         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAz3UlE..." }</font><br>
-	 *         <br>
+	 * <br>
 	 *         Response Code:<br>
 	 *         <table border="1">
 	 *         <tr>
@@ -221,39 +221,35 @@ public class WidgetAPI
 		cc.setMaxAge(2592000);
 		//try to get screenshot from cache
 		try {
-			final ScreenshotElement se = scm.getScreenshotFromCache(null,
-					widgetId, fileName);
+			final ScreenshotElement se = scm.getScreenshotFromCache(null, widgetId, fileName);
 			if (se != null) {
 				if (fileName.equals(se.getFileName())) {
 					return Response.ok(new StreamingOutput() {
 						@Override
-						public void write(OutputStream os) throws IOException,
-								WebApplicationException {
+						public void write(OutputStream os) throws IOException, WebApplicationException
+						{
 							os.write(se.getBuffer().getData());
 							os.flush();
 							os.close();
 						}
 
 					}).cacheControl(cc).build();
-				} else { // invalid screenshot file name
-					if (!ScreenshotPathGenerator.getInstance().validFileName(
-							widgetId, fileName, se.getFileName())) {
-						_logger.error(
-								"The requested screenshot file name {} , widget id={} is not a valid name",
-								fileName, widgetId, se.getFileName());
+				}
+				else { // invalid screenshot file name
+					if (!ScreenshotPathGenerator.getInstance().validFileName(widgetId, fileName, se.getFileName())) {
+						_logger.error("The requested screenshot file name {} , widget id={} is not a valid name", fileName,
+								widgetId, se.getFileName());
 						return Response.status(Status.NOT_FOUND).build();
 					}
 					_logger.debug("The request screenshot file name is not equal to the file name in cache, but it is valid. "
 							+ "Try to query from database to see if screenshot is actually updated already");
 				}
 			}
-		} catch (Exception e) {
-			_logger.error(
-					"Exception when getting screenshot from cache. Continue to get from database",
-					e);
 		}
-				
-				
+		catch (Exception e) {
+			_logger.error("Exception when getting screenshot from cache. Continue to get from database", e);
+		}
+
 		try {
 			SearchManager searchMan = SearchManager.getInstance();
 			final ScreenshotData ss = searchMan.getWidgetScreenshotById(widgetId);
@@ -268,8 +264,8 @@ public class WidgetAPI
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			if (!fileName.equals(se.getFileName())) {
-				_logger.error("The requested screenshot file name {}, widget id={} does not exist", fileName,
-						 widgetId, se.getFileName());
+				_logger.error("The requested screenshot file name {}, widget id={} does not exist", fileName, widgetId,
+						se.getFileName());
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			_logger.debug("Retrieved screenshot data from persistence layer, stored to cache, and build response now.");
@@ -304,10 +300,8 @@ public class WidgetAPI
 		catch (Exception e) {
 			message = e.getMessage();
 			statusCode = 500;
-			_logger.error(
-					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
-							+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message,
-					e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		return Response.status(statusCode).entity(message).type(MediaType.APPLICATION_JSON).build();
 	}
@@ -345,11 +339,11 @@ public class WidgetAPI
 		return null;
 	}
 
-	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible)
-			throws EMAnalyticsFwkException, IOException
+	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible) throws EMAnalyticsFwkException,
+			IOException
 	{
-		List<String> providers = TenantSubscriptionUtil
-				.getTenantSubscribedServiceProviders(TenantContext.getContext().gettenantName());
+		List<String> providers = TenantSubscriptionUtil.getTenantSubscribedServiceProviders(TenantContext.getContext()
+				.gettenantName());
 		_logger.debug("Retrieved subscribed providers {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
 		List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible, providers,

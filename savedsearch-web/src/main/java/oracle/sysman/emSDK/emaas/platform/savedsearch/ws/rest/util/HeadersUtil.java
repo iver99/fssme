@@ -35,7 +35,8 @@ public class HeadersUtil
 
 	public static final String SSF_HEADER = "ssfheadertest";
 
-	public static final String OAM_HEADER = "OAM_REMOTE_USER";
+	// EMCPSSF-253 savedsearch REST calls should not require OAM_REMOTE_USER
+	public static final String OAM_HEADER = "X-REMOTE-USER"; //"OAM_REMOTE_USER";
 
 	private static final Logger _logger = LogManager.getLogger(HeadersUtil.class);
 
