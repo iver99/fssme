@@ -20,26 +20,23 @@ public interface OdsDataService {
 	/**
 	 * create an ODS entity
 	 * @param searchName - will be used as entity name and display name
-	 * @param tenantName - tenant.username
 	 * @return ODS Entity ID
 	 * @throws EMAnalyticsFwkException
 	 */
-	public String createOdsEntity(String searchId, String searchName, String tenantName) throws EMAnalyticsFwkException;
+	public String createOdsEntity(String searchId, String searchName) throws EMAnalyticsFwkException;
 	
 	/**
 	 * delete the ODS entity by related Saved Search id
 	 * @param id - saved search id
-	 * @param tenantName - tenant.username
 	 * @throws EMAnalyticsFwkException
 	 */
-	public void deleteOdsEntity(long searchId, String tenantName) throws EMAnalyticsFwkException;
+	public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException;
 	
 	/**
 	 * create an ODS entity type
 	 * @param entityType - JSON format entity type
-	 * @param tenantName - tenant.username
 	 * @return ODS entity type
 	 * @throws EMAnalyticsFwkException 
 	 */
-	public String createOdsEntityType(String entityType, String tenantName) throws EMAnalyticsFwkException;
+	public String createOdsEntityType(String entityType) throws EMAnalyticsFwkException;
 }

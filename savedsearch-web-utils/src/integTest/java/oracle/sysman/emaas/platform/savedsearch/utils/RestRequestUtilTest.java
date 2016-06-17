@@ -2,6 +2,8 @@ package oracle.sysman.emaas.platform.savedsearch.utils;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
 import org.apache.http.HttpEntity;
@@ -31,10 +33,15 @@ public class RestRequestUtilTest {
 	}
 	
 	public void testRestGet(@Mocked final CloseableHttpClient client, @Mocked final LookupManager lm, 
-			@Mocked final MyHttpResponseProxy proxy) throws Exception {
+			@Mocked final MyHttpResponseProxy proxy, @Mocked final TenantContext context,
+			@Mocked final TenantInfo info) throws Exception {
 		
 		new Expectations() {
 			{
+				TenantContext.getContext();
+				result = info;
+				info.gettenantName();
+				result = "tenant";
 				lm.getAuthorizationToken();
 				result = new char[]{'a', 'b'};
 				client.execute((HttpUriRequest) any);
@@ -46,14 +53,19 @@ public class RestRequestUtilTest {
 			}
 		};
 		
-		Assert.assertEquals(RestRequestUtil.restGet("http://xxx", "tenantName"), MOCKED_RESPONSE);
+		Assert.assertEquals(RestRequestUtil.restGet("http://xxx"), MOCKED_RESPONSE);
 	}
 	
 	public void testRestPost(@Mocked final CloseableHttpClient client, @Mocked final LookupManager lm, 
-			@Mocked final MyHttpResponseProxy proxy) throws Exception {
+			@Mocked final MyHttpResponseProxy proxy, @Mocked final TenantContext context,
+			@Mocked final TenantInfo info) throws Exception {
 		
 		new Expectations() {
 			{
+				TenantContext.getContext();
+				result = info;
+				info.gettenantName();
+				result = "tenant";
 				lm.getAuthorizationToken();
 				result = new char[]{'a', 'b'};
 				client.execute((HttpUriRequest) any);
@@ -65,14 +77,19 @@ public class RestRequestUtilTest {
 			}
 		};
 		
-		Assert.assertEquals(RestRequestUtil.restPost("http://xxx", "tenantName", MOCKED_RESPONSE), MOCKED_RESPONSE);
+		Assert.assertEquals(RestRequestUtil.restPost("http://xxx", MOCKED_RESPONSE), MOCKED_RESPONSE);
 	}
 	
 	public void testRestDelete(@Mocked final CloseableHttpClient client, @Mocked final LookupManager lm, 
-			@Mocked final MyHttpResponseProxy proxy) throws Exception {
+			@Mocked final MyHttpResponseProxy proxy, @Mocked final TenantContext context,
+			@Mocked final TenantInfo info) throws Exception {
 		
 		new Expectations() {
 			{
+				TenantContext.getContext();
+				result = info;
+				info.gettenantName();
+				result = "tenant";
 				lm.getAuthorizationToken();
 				result = new char[]{'a', 'b'};
 				client.execute((HttpUriRequest) any);
@@ -84,6 +101,6 @@ public class RestRequestUtilTest {
 			}
 		};
 		
-		Assert.assertEquals(RestRequestUtil.restDelete("http://xxx", "tenantName"), MOCKED_RESPONSE);
+		Assert.assertEquals(RestRequestUtil.restDelete("http://xxx"), MOCKED_RESPONSE);
 	}
 }
