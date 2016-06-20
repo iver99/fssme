@@ -12,15 +12,15 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot;
 
 import java.util.Date;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.sun.jersey.core.util.Base64;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 
 /**
  * @author guochen
@@ -46,8 +46,8 @@ public class ScreenshotCacheManager
 	public ScreenshotElement getScreenshotFromCache(Tenant tenant, Long widgetId, String fileName) throws Exception
 	{
 		if (widgetId == null || widgetId <= 0) {
-			logger.error("Unexpected widget id to get screenshot from cache for tenant={}, widget id={}, fileName={}",
-					tenant, widgetId, fileName);
+			logger.error("Unexpected widget id to get screenshot from cache for tenant={}, widget id={}, fileName={}", tenant,
+					widgetId, fileName);
 			return null;
 		}
 		if (StringUtil.isEmpty(fileName)) {
@@ -61,7 +61,8 @@ public class ScreenshotCacheManager
 					widgetId, fileName);
 			return null;
 		}
-		logger.debug("Retrieved cacheable tenant:{},widgetId:{},fileName:{} from screenshot cache",tenant,widgetId,fileName);
+		logger.debug("Retrieved cacheable tenant:{},widgetId:{},fileName:{} from screenshot cache, the cached file name is: {}",
+				tenant, widgetId, fileName, se.getFileName());
 		return se;
 	}
 
@@ -86,7 +87,9 @@ public class ScreenshotCacheManager
 		Binary bin = new Binary(decoded);
 		ScreenshotElement se = new ScreenshotElement(fileName, bin);
 		cm.putCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE, new Keys(widgetId), se);
-		logger.debug("Cacheable with tenant:{} ,widgetId:{} ,creation:{} , modification:{} ,screenshot:{} is put into screenshot cache",tenant,widgetId,creation,modification,screenshot);
+		logger.debug(
+				"Cacheable with tenant:{} ,widgetId:{} ,creation:{} , modification:{} ,screenshot:{} is put into screenshot cache",
+				tenant, widgetId, creation, modification, screenshot);
 		return se;
 	}
 
