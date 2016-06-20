@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.savedsearch.utils;
 import java.net.URI;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
 import org.apache.http.Consts;
@@ -21,30 +22,30 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 public class RestRequestUtil {
-	public static final String TENANT_HEADER = "OAM_REMOTE_USER";
+	public static final String TENANT_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
 	public static final String AUTHORIZATION_HEADER = "Authorization";
 	
-	public static String restGet(String baseUrl, String tenantName) throws Exception {
+	public static String restGet(String baseUrl) throws Exception {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();
 
 		// Construct DELETE Request
 		HttpGet request = new HttpGet(restUri);
 		
-		return sendRequest(tenantName, request);
+		return sendRequest(request);
 	}
 	
-	public static String restDelete(String baseUrl, String tenantName) throws Exception {
+	public static String restDelete(String baseUrl) throws Exception {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();
 
 		// Construct DELETE Request
 		HttpDelete request = new HttpDelete(restUri);
 		
-		return sendRequest(tenantName, request);
+		return sendRequest(request);
 	}
 	
-	public static String restPost(String baseUrl, String tenantName, String json) throws Exception {
+	public static String restPost(String baseUrl, String json) throws Exception {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();
 
@@ -56,20 +57,20 @@ public class RestRequestUtil {
 		StringEntity s = new StringEntity(json, contentType);
 		request.setEntity(s);
 		
-		return sendRequest(tenantName, request);
+		return sendRequest(request);
 	}
 	
 	/**
 	 * public part of request sending
-	 * @param tenantName
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	private static String sendRequest(String tenantName, HttpRequestBase request) throws Exception {
+	private static String sendRequest(HttpRequestBase request) throws Exception {
 		HttpClient client = HttpClientBuilder.create().build();
 		
 		// Set Request Headers
+		String tenantName = TenantContext.getContext().gettenantName();
 		if (tenantName != null && !tenantName.isEmpty())
 			request.setHeader(TENANT_HEADER, tenantName);
 
