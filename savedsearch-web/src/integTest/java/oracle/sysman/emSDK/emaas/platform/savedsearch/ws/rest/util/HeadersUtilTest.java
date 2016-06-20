@@ -89,7 +89,7 @@ public class HeadersUtilTest
 			@Override
 			public String getHeader(String s)
 			{
-				if (s.equals("X-REMOTE-USER")) {
+				if ("OAM_REMOTE_USER".equals(s) || "X-REMOTE-USER".equals(s)) {
 					s = "Origin.userName";
 				}
 				return s;
