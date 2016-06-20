@@ -15,10 +15,11 @@ import javax.naming.InitialContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.savedsearch.property.PropertyReader;
@@ -263,9 +264,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	/**
 	 * Update saved search service status to out of service on service manager
 	 */
-	public void makeServiceOutOfService()
+	public void makeServiceOutOfService(List<InstanceInfo> services, List<NonServiceResource> resources,
+			List<String> otherReasons)
 	{
-		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.OUT_OF_SERVICE);
+		RegistrationManager.getInstance().getRegistrationClient().outOfServiceCausedBy(services, resources, otherReasons);
+		//		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.OUT_OF_SERVICE);
 	}
 
 	/**
@@ -318,12 +321,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			logger.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
-//			logger.info("Checking RegistryService");
-//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
-//				setRegistrationComplete(Boolean.FALSE);
-//				logger.error("Failed to found registryService. Saved search service registration is not complete.");
-//				return false;
-//			}
+			//			logger.info("Checking RegistryService");
+			//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
+			//				setRegistrationComplete(Boolean.FALSE);
+			//				logger.error("Failed to found registryService. Saved search service registration is not complete.");
+			//				return false;
+			//			}
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
