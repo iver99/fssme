@@ -149,6 +149,56 @@ public class SearchManagerImpl extends SearchManager
 
 		}
 	}
+
+	@Override
+	public void deleteTargetCard(long targetCardId, boolean permanently) throws EMAnalyticsFwkException
+	{
+		_logger.info("Deleting target card with id: " + targetCardId);
+		EntityManager em = null;
+		EmAnalyticsSearch targetCardObj = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if (permanently) {
+				targetCardObj = EmAnalyticsObjectUtil.getSearchByIdForDelete(targetCardId, em);
+			}
+			else {
+				targetCardObj = EmAnalyticsObjectUtil.getSearchById(targetCardId, em);
+			}
+			if (targetCardObj == null) {
+				throw new EMAnalyticsFwkException("Target Card with Id: " + targetCardId + " does not exist",
+						EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null);
+			}
+/*
+			if (targetCardObj.getSystemSearch() != null && targetCardObj.getSystemSearch().intValue() == 1) {
+				throw new EMAnalyticsFwkException("Target Card with Id: " + targetCardId + " is system search and NOT allowed to delete",
+						EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
+			}*/
+			targetCardObj.setDeleted(targetCardId);
+			em.getTransaction().begin();
+			if (permanently) {
+				em.remove(targetCardObj);
+			} else {
+				em.merge(targetCardObj);
+			}
+			em.getTransaction().commit();
+		}
+		catch (EMAnalyticsFwkException eme) {
+			_logger.error("Target Card with Id: " + targetCardId + " does not exist", eme);
+			throw eme;
+		}
+		catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, targetCardObj.getName());
+			_logger.error("Error while getting the Target Card object by ID: " + targetCardId, e);
+			throw new EMAnalyticsFwkException("Error while deleting the Target Card object by ID: " + targetCardId,
+					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { targetCardId }, e);
+
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
 	
 	
 	@Override
@@ -909,6 +959,42 @@ public class SearchManagerImpl extends SearchManager
 				em.close();
 			}
 
+		}
+	}
+
+	@Override
+	public Search saveTargetCard(Search targetCard) throws EMAnalyticsFwkException
+	{
+		EntityManager em = null;
+		try {
+			// use internal tenant id = 0 to create the EntityManager for target card
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			EmAnalyticsSearch targetCardEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(targetCard, em);
+			em.getTransaction().begin();
+			em.persist(targetCardEntity);
+			em.getTransaction().commit();
+			return createSearchObject(targetCardEntity, null);
+		}
+		catch (EMAnalyticsFwkException eme) {
+			_logger.error("Target card with name " + targetCard.getName() + " was saved but could not be retrieved back", eme);
+			throw eme;
+		}
+		catch (PersistenceException dmlce) {
+			processUniqueConstraints(targetCard, em, dmlce);
+			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, targetCard.getName());
+			_logger.error("Persistence error while saving the target card: " + targetCard.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while saving the target card: " + targetCard.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, dmlce);
+		}
+		catch (Exception e) {
+			_logger.error("Error while saving the target card: " + targetCard.getName(), e);
+			throw new EMAnalyticsFwkException("Error while saving the target card: " + targetCard.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, e);
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 	}
 

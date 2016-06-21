@@ -46,6 +46,14 @@ public abstract class SearchManager
 	public abstract void deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException;
 
 	/**
+	 *
+	 * @param searchId
+	 * @param permanently
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract void deleteTargetCard(long searchId, boolean permanently) throws EMAnalyticsFwkException;
+
+	/**
 	 * Edits an existing search entity in the analytics sub-system.
 	 * Don't allow edit system search by default.
 	 *
@@ -165,6 +173,14 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Search saveSearch(Search search) throws EMAnalyticsFwkException;
+
+	/**
+	 *
+	 * @param search
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Search saveTargetCard(Search search) throws EMAnalyticsFwkException;
 	
 	/**
 	 * get the parameter value of a saved search by parameter name

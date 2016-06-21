@@ -60,6 +60,8 @@ public class EntityJsonUtil
 
 	public static final String NAME_CATEGORY_ID = "categoryId";
 
+	public static final String Name_SYSTEM_SEARCH ="systemSearch";
+
 	public static final String NAME_CATEGORY = "category";
 	public static final String NAME_CATEGORY_DEFAULTFOLDERID = "defaultFolderId";
 	public static final String NAME_CATEGORY_DEFAULTFOLDER = "defaultFolder";
@@ -202,6 +204,57 @@ public class EntityJsonUtil
 				false);
 	}
 
+	/**
+	 *
+	 * @param baseUri
+	 * @param search
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+
+	public static JSONObject getTargetCardJsonObj(URI baseUri, Search search)
+			throws EMAnalyticsFwkException
+	{
+		return EntityJsonUtil.getTargetCardJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER,
+				NAME_SEARCH_QUERYSTR,NAME_LASTACCESSDATE,NAME_LASTMODIFIEDBY,Name_SYSTEM_SEARCH ,NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
+				NAME_SEARCH_IS_WIDGET });
+	}
+	/**
+	 *
+	 * @param baseUri
+	 * @param search
+	 * @param excludedFields
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+
+	public static JSONObject getTargetCardJsonObj(URI baseUri, Search search, String[] excludedFields) throws EMAnalyticsFwkException
+	{
+		JSONObject searchObj = null;
+		try {
+			searchObj = JSONUtil.ObjectToJSONObject(search, excludedFields);
+			if (searchObj.has(NAME_FOLDER_ID)) {
+				int folderId = searchObj.getInt(NAME_FOLDER_ID);
+				JSONObject folderObj = new JSONObject();
+				folderObj.put(NAME_ID, folderId);
+				searchObj.remove(NAME_FOLDER_ID);
+				searchObj.put(NAME_FOLDER, folderObj);
+			}
+			if (searchObj.has(NAME_CATEGORY_ID)) {
+				int categoryId = searchObj.getInt(NAME_CATEGORY_ID);
+				JSONObject folderObj = new JSONObject();
+				folderObj.put(NAME_ID, categoryId);
+				searchObj.remove(NAME_CATEGORY_ID);
+				searchObj.put(NAME_CATEGORY, folderObj);
+			}
+
+		}
+		catch (JSONException ex) {
+			throw new EMAnalyticsFwkException("An error occurred while converting search object to JSON string",
+					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
+		}
+		return searchObj;
+	}
 	/**
 	 * Return full JSON string for search
 	 *
