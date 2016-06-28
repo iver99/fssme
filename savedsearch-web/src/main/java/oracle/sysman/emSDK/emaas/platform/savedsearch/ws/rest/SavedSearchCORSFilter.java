@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogDirection;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.HeadersUtil;
@@ -33,9 +36,6 @@ public class SavedSearchCORSFilter implements Filter
 {
 	private static class OAMHttpRequestWrapper extends HttpServletRequestWrapper
 	{
-		private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
-		private static final String X_REMOTE_USER_HEADER = "X-REMOTE-USER";
-		private static final String X_USER_IDENTITY_DOMAIN_NAME_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
 		private String oam_remote_user = null;
 		private String tenant = null;
 		private Vector<String> headerNames = null;
@@ -127,6 +127,12 @@ public class SavedSearchCORSFilter implements Filter
 		}
 	}
 
+	private static final String EMCS_GLOBAL_INTER_SERVICE_APPID = "EMCS_GLOBAL_INTER_SERVICE_APPID";
+	private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
+	private static final String X_REMOTE_USER_HEADER = "X-REMOTE-USER";
+
+	private static final String X_USER_IDENTITY_DOMAIN_NAME_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
+
 	private static final String PARAM_NAME = "updateLastAccessTime";
 	private static final Logger _logger = LogManager.getLogger(SavedSearchCORSFilter.class);
 
@@ -170,13 +176,40 @@ public class SavedSearchCORSFilter implements Filter
 		}
 		else {
 			try {
+				String oamRemoteUserHeader = hReq.getHeader(OAM_REMOTE_USER_HEADER);
+				String tenantIdHeader = hReq.getHeader(X_USER_IDENTITY_DOMAIN_NAME_HEADER);
+				String xRemoteUserHeader = hReq.getHeader(X_REMOTE_USER_HEADER);
+				// Presence of OAM_REMOTE_USER header indicates an external request
+				if (oamRemoteUserHeader != null) {
+					RequestContext.setContext(RequestType.EXTERNAL);
+				}
+				// If header not present do an additional check for user principal
+				else {
+					Principal p = hReq.getUserPrincipal();
+					if (p == null || p.getName() == null
+							|| !p.getName().toLowerCase().endsWith(EMCS_GLOBAL_INTER_SERVICE_APPID.toLowerCase())) {
+						// no principal, erroneous request
+						RequestContext.setContext(RequestType.ERRONEOUS);
+						_logger.warn("Authorization failed: request has no principal with userIdentity " + tenantIdHeader
+								+ ", remoteUser " + xRemoteUserHeader);
+						hRes.sendError(HttpServletResponse.SC_FORBIDDEN, "Authorization failed: No principal.");
+						return;
+					}
+					// internal request
+					else {
+						if (tenantIdHeader != null && xRemoteUserHeader != null) {
+							RequestContext.setContext(RequestType.INTERNAL_TENANT_USER);
+						}
+						else {
+							RequestContext.setContext(RequestType.INTERNAL_TENANT);
+						}
+					}
+				}
 				TenantInfo info = HeadersUtil.getTenantInfo((HttpServletRequest) request);
 				TenantContext.setContext(info);
 				LogUtil.setInteractionLogThreadContext(info.gettenantName(), ((HttpServletRequest) request).getHeader("referer"),
 						InteractionLogDirection.IN);
-				if (isParameterPresent(hReq))
-
-				{
+				if (isParameterPresent(hReq)) {
 					HttpServletRequest newRequest = new RemoveHeader(hReq);
 					oamRequest = new OAMHttpRequestWrapper(newRequest);
 					chain.doFilter(oamRequest, response);
@@ -192,6 +225,7 @@ public class SavedSearchCORSFilter implements Filter
 			finally {
 				//always remove tenant-id from thradlocal when request completed or on error
 				TenantContext.clearContext();
+				RequestContext.clearContext();
 			}
 		}
 
@@ -216,13 +250,13 @@ public class SavedSearchCORSFilter implements Filter
 /*Enumeration headerNames = hReq.getHeaderNames();
 if (headerNames.hasMoreElements()) {
 
-	_logger.info("More elements");
+_logger.info("More elements");
 }
 else {
-	_logger.info("There is no more element");
+_logger.info("There is no more element");
 }
 while (headerNames.hasMoreElements()) {
-	Object elem = headerNames.nextElement();
-	String paramName = (String) elem;
-	_logger.info("Name=" + paramName);
+Object elem = headerNames.nextElement();
+String paramName = (String) elem;
+_logger.info("Name=" + paramName);
 }*/

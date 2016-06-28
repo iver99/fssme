@@ -31,10 +31,8 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
@@ -45,10 +43,15 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CategoryManagerImpl extends CategoryManager
 {
@@ -307,13 +310,27 @@ public class CategoryManagerImpl extends CategoryManager
 
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 
-			EmAnalyticsCategory categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
-					.setParameter("categoryName", categoryName)
-					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
-
+			EmAnalyticsCategory categoryObj = null;
+			// Internal request with tenant only
+			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+				categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByNameForTenant")
+						.setParameter("categoryName", categoryName).getSingleResult();
+			}
+			// External or internal request with tenant and user
+			else {
+				categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
+						.setParameter("categoryName", categoryName)
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getSingleResult();
+			}
 			if (categoryObj != null) {
 				category = CategoryManagerImpl.createCategoryObject(categoryObj, null);
 			}
+		}
+		catch (NonUniqueResultException nure) {
+			_logger.error("Error while getting the category object by Name ", nure);
+			throw new EMAnalyticsFwkException("Multiple category objects with same name: \'" + categoryName + "\' exist.",
+					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName }, nure);
 		}
 		catch (Exception e) {
 			_logger.error("Error while getting the category object by Name ", e);
@@ -353,8 +370,8 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce,
-					category.getDefaultFolderId() == null ? -1 : category.getDefaultFolderId(), category.getName());
+			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId() == null ? -1
+					: category.getDefaultFolderId(), category.getName());
 
 			_logger.error("Error while saving the category: " + category.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
@@ -420,8 +437,8 @@ public class CategoryManagerImpl extends CategoryManager
 										if (folder.getParentId() == null || folder.getParentId() == 0) {
 											folder.setParentId(1);
 										}
-										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil
-												.getFolderById(folder.getParentId().longValue(), em);
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(folder.getParentId()
+												.longValue(), em);
 
 										if (tmpfld == null) {
 											EmAnalyticsFolder fld = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
@@ -433,8 +450,8 @@ public class CategoryManagerImpl extends CategoryManager
 										}
 									}
 									else if (obj instanceof Integer) {
-										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil
-												.getFolderById(((Integer) obj).longValue(), em);
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(
+												((Integer) obj).longValue(), em);
 										if (tmpfld != null) {
 											category.setDefaultFolderId((Integer) obj);
 										}
