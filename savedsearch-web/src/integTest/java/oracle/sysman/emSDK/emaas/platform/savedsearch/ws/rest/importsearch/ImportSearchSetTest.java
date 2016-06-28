@@ -89,8 +89,6 @@ public class ImportSearchSetTest {
 
     @Test
     public void testImportSearches3th(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
-        URL url = ImportCategorySetTest.class.getResource("./search.xsd");
-        final  InputStream stream = url.openStream();
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");
