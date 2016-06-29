@@ -52,6 +52,13 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract void deleteTargetCard(long searchId, boolean permanently) throws EMAnalyticsFwkException;
+	/**
+	 * Resturns the search by its name dxy
+	 * @param searchName
+	 * @return search
+	 * @throw EMAnalyticsFwkException	 *
+	 */
+	public abstract List<Search> getTargetCard(String searchName)throws EMAnalyticsFwkException;
 
 	/**
 	 * Edits an existing search entity in the analytics sub-system.

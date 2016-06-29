@@ -998,6 +998,39 @@ public class SearchManagerImpl extends SearchManager
 		}
 	}
 
+	/**
+	 * @param name
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Search> getTargetCard(String name) throws EMAnalyticsFwkException{
+		EntityManager  em = null;
+		List<Search> targetCardResult  = new ArrayList<Search>();
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			List<EmAnalyticsSearch> targetCardList = (List<EmAnalyticsSearch>) em
+					.createNamedQuery("Search.getSearchListByTargetType")
+					.setParameter("searchName", "link_" + name + "%")
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+					.getResultList();
+			for(EmAnalyticsSearch emTargetCard : targetCardList){
+				em.refresh(emTargetCard);
+				targetCardResult.add(createSearchObject(emTargetCard, null));
+			}
+		} catch(Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of target card for the targetType : " + name, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of target card for the targetType : " + name,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+		} finally {
+			if(em != null)
+				em.close();
+		}
+		return  targetCardResult;
+	}
+
 	private Search createSearchObject(EmAnalyticsSearch searchObj, Search search) throws EMAnalyticsFwkException
 	{
 		SearchImpl rtnObj = null;

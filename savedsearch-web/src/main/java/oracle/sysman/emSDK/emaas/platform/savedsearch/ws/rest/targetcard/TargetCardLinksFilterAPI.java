@@ -3,6 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.targetcard;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
@@ -30,6 +31,38 @@ public class TargetCardLinksFilterAPI {
     private static final Logger _logger = LogManager.getLogger(TargetCardLinksFilterAPI.class);
     @Context
     UriInfo uri;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSearchByName(@QueryParam("targetType")String name){
+        LogUtil.getInteractionLogger().info("Service calling to (GET)/savedsearch/v1/targetcardlinks?targetType={}",name);
+        String message  = null;
+        int statusCode = 200;
+        JSONArray jsonArray = new JSONArray();
+        if(name==null||name.trim().equals("")){
+            return Response.status(400).entity("Please give one and only one query parameter of targetType").build();
+        }
+
+        SearchManager searchManager = SearchManager.getInstance();
+        try{
+            List<Search> searches = searchManager.getTargetCard(name);
+            if(searches.size()<=0){
+                return Response.status(statusCode).entity("NOT FOUND").build();
+            }
+            for(Search search : searches){
+                JSONObject jsonObject = EntityJsonUtil.getTargetCardJsonObj(uri.getBaseUri(),search);
+                jsonArray.put(jsonObject);
+            }
+            message = jsonArray.toString();
+        }catch(EMAnalyticsFwkException e){
+            statusCode = e.getStatusCode();
+            message = e.getMessage();
+            _logger.error((TenantContext.getContext()!=null ? TenantContext.getContext() : "")
+                    +"An error occurred while retrieving search by targetType,statusCode:"+e.getStatusCode()
+                    +" ,err:"+e.getMessage(),e);
+        }
+        return Response.status(statusCode).entity(message).build();
+    }
 
     @DELETE
     @Path("{id: [0-9]*}")
