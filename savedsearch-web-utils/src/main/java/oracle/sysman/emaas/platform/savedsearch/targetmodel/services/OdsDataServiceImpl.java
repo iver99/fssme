@@ -1,19 +1,16 @@
 package oracle.sysman.emaas.platform.savedsearch.targetmodel.services;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
 import org.codehaus.jettison.json.JSONObject;
 
 public class OdsDataServiceImpl implements OdsDataService {
 	private static final OdsDataServiceImpl instance = new OdsDataServiceImpl();
-	private static final Map<String, String> cache = new ConcurrentHashMap<String, String>();
 	
 	public static OdsDataServiceImpl getInstance() {
 		return instance;
@@ -21,30 +18,17 @@ public class OdsDataServiceImpl implements OdsDataService {
 	
 	
 	@Override
-	public String createOdsEntity(String searchId, String searchName, String tenantName) throws EMAnalyticsFwkException {
-		// get entity type
-		String meClass = getMeClassFromCache();
-		if (meClass == null) {
-			try {
-				String entityType = createOdsEntityType(generateOdsEntityTypeJson(), tenantName);
-				JSONObject json = new JSONObject(entityType);
-				meClass = json.getString(ENTITY_CLASS);
-			} catch(Exception e) {
-				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
-			}
-			putMeClassToCache(meClass);
-		}
-		
+	public String createOdsEntity(String searchId, String searchName) throws EMAnalyticsFwkException {
 		// get ODS entity
-		String odsEntity = generateOdsEntityJson(searchId, searchName, meClass);
+		String odsEntity = generateOdsEntityJson(searchId, searchName, ENTITY_CLASS);
 		
 		// send to ODS
-		String baseUrl = retriveEndpoint(tenantName, REL_DATA_RESOURCE, DATA_MES);
+		String baseUrl = retriveEndpoint(REL_DATA_RESOURCE, DATA_MES);
 		String meId = null;
 		// see if there is already an ODS entity created
 		try {
 			String result = 
-					RestRequestUtil.restGet(baseUrl+"?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId, tenantName);
+					RestRequestUtil.restGet(baseUrl+"?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId);
 			JSONObject jsonObj = new JSONObject(result);
 			if (jsonObj.getInt("count") > 0) {
 				JSONObject entity = (JSONObject) jsonObj.getJSONArray("items").get(0);
@@ -56,7 +40,7 @@ public class OdsDataServiceImpl implements OdsDataService {
 		// no existing ODS entity then create one
 		if (meId == null || meId.isEmpty()) {
 			try {
-				String result = RestRequestUtil.restPost(baseUrl, tenantName, odsEntity);
+				String result = RestRequestUtil.restPost(baseUrl, odsEntity);
 				JSONObject jsonObj = new JSONObject(result);
 				meId = jsonObj.getString(ENTITY_ID);
 			} catch (Exception e) {
@@ -68,7 +52,7 @@ public class OdsDataServiceImpl implements OdsDataService {
 	}
 	
 	@Override
-	public void deleteOdsEntity(long searchId, String tenantName) throws EMAnalyticsFwkException {
+	public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException {
 		// get ODS entity id from search parameters
 		SearchManager sman = SearchManager.getInstance();
 		String meid = sman.getSearchParamByName(searchId, ENTITY_ID);
@@ -79,9 +63,9 @@ public class OdsDataServiceImpl implements OdsDataService {
 		
 		// send the meid to ODS for deleting
 		StringBuffer baseUrl = new StringBuffer();
-		baseUrl.append(retriveEndpoint(tenantName, REL_DATA_RESOURCE, DATA_MES)).append(HTTP_DELIMITER).append(meid);
+		baseUrl.append(retriveEndpoint(REL_DATA_RESOURCE, DATA_MES)).append(HTTP_DELIMITER).append(meid);
 		try {
-			RestRequestUtil.restDelete(baseUrl.toString(), tenantName);
+			RestRequestUtil.restDelete(baseUrl.toString());
 		} catch (Exception e) {
 			throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
 		}
@@ -91,14 +75,14 @@ public class OdsDataServiceImpl implements OdsDataService {
 	 * create ODS entity type if the type doesn't exist
 	 */
 	@Override
-	public String createOdsEntityType(String entityType, String tenantName) throws EMAnalyticsFwkException {
-		String baseUrl = retriveEndpoint(tenantName, REL_METADATA_RESOURCE, METADATA_METYPES);
+	public String createOdsEntityType(String entityType) throws EMAnalyticsFwkException {
+		String baseUrl = retriveEndpoint(REL_METADATA_RESOURCE, METADATA_METYPES);
 		String result = null;
 		try {
-			result = RestRequestUtil.restGet(baseUrl + HTTP_DELIMITER + ENTITY_TYPE_NAME, tenantName);
+			result = RestRequestUtil.restGet(baseUrl + HTTP_DELIMITER + ENTITY_TYPE_NAME);
 		} catch(EMAnalyticsFwkException emExc) {
 			try {
-				result = RestRequestUtil.restPost(baseUrl, tenantName, entityType);
+				result = RestRequestUtil.restPost(baseUrl, entityType);
 			}catch (Exception e) {
 				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
 			}
@@ -111,24 +95,15 @@ public class OdsDataServiceImpl implements OdsDataService {
 	
 	/**
 	 * 
-	 * @param tenantName
 	 * @param rel
 	 * @param resource
 	 * @return http://host:port/targetmodel/api/v1/rel/resource
 	 */
-	private String retriveEndpoint(String tenantName, String rel, String resource) {
-		Link link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, tenantName);
+	private String retriveEndpoint(String rel, String resource) {
+		Link link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, TenantContext.getContext().gettenantName());
 		StringBuffer mesUrl = new StringBuffer();
 		mesUrl.append(link.getHref()).append(HTTP_DELIMITER).append(resource);
 		return mesUrl.toString();
-	}
-	
-	private String getMeClassFromCache() {
-		return cache.get(ENTITY_CLASS);
-	}
-	
-	private void putMeClassToCache(String meClass) {
-		cache.put(ENTITY_CLASS, meClass);
 	}
 	
 	static private String generateOdsEntityJson(String searchId, String searchName,String meClass) {
@@ -147,81 +122,4 @@ public class OdsDataServiceImpl implements OdsDataService {
 		return "UTC";
 	}
 
-	static private String generateOdsEntityTypeJson() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("{");
-		sb.append("\"entityType\":\"").append(ENTITY_TYPE_NAME).append("\",");
-		sb.append("\"displayName\":\"").append(ENTITY_TYPE_DIS_NAME).append("\",");
-		sb.append("\"facts\":[");
-		sb.append("{");
-		sb.append("\"factType\":\"").append(FACT_TYPE_NAME).append("\",");
-		sb.append("\"displayName\":\"").append(FACT_DISPLAY_NAME).append("\",");
-		sb.append("\"fields\":[");
-		sb.append("{");
-		sb.append("\"name\":\"ruleRef\",");
-		sb.append("\"isKey\":true,");
-		sb.append("\"displayName\":\"Rule Reference\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"column1\",");
-		sb.append("\"isKey\":true,");
-		sb.append("\"displayName\":\"Column 1\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"column2\",");
-		sb.append("\"isKey\":true,");
-		sb.append("\"displayName\":\"Column 2\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"column3\",");
-		sb.append("\"isKey\":true,");
-		sb.append("\"displayName\":\"Column 3\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"count\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Result Count\",");
-		sb.append("\"type\":\"NUM\",");
-		sb.append("\"typeFormat\":\"0\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"sourceURL\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Event Source URL\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"status\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Status\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"statusMessage\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Status Message\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"execTime\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Execution Time\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("},");
-		sb.append("{");
-		sb.append("\"name\":\"evalTimeWindow\",");
-		sb.append("\"isKey\":false,");
-		sb.append("\"displayName\":\"Evaluation Time Window\",");
-		sb.append("\"type\":\"STR\"");
-		sb.append("}");
-		sb.append("]");
-		sb.append("}");
-		sb.append("]");
-		sb.append("}");
-		return sb.toString();
-	}
 }

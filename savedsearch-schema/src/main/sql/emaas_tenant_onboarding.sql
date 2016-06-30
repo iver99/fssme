@@ -16,8 +16,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-Rem    aduan      3/15/2016     Made changes for version 1.7.5
-Rem    sdhamdhe   8/26/2015     Made changes for LCM rep manager cut-over
+Rem 	sdhamdhe  8/26/2015     Made changes for LCM rep manager cut-over
 Rem    vinjoshi   1/23/1015 	Created
      
 WHENEVER SQLERROR EXIT ROLLBACK
@@ -101,10 +100,8 @@ COMMIT;
 
 @&EMSAAS_SQL_ROOT/1.7.5/emaas_savesearch_seed_data_ita.sql  &TENANT_ID
 
-@&EMSAAS_SQL_ROOT/1.8.0/emaas_savesearch_seed_data.sql  &TENANT_ID
-
+@&EMSAAS_SQL_ROOT/1.8.0/emaas_savesearch_seed_data.sql &TENANT_ID
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
 END;
 /
-

@@ -27,7 +27,11 @@ import com.sun.jersey.core.util.Base64;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotCacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -211,11 +215,46 @@ public class WidgetAPI
 	public Response getWidgetScreenshotById(@PathParam("id") long widgetId, @PathParam("serviceVersion") String serviceVersion,
 			@PathParam("fileName") String fileName)
 	{
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/widgets/{}/screenshot/{}/images/{}",
+				widgetId, serviceVersion, fileName);
 		String message = null;
 		int statusCode = 200;
-
+		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
 		CacheControl cc = new CacheControl();
 		cc.setMaxAge(2592000);
+		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId(),
+				TenantContext.getContext().gettenantName());
+
+		//try to get screenshot from cache
+		try {
+			final ScreenshotElement se = scm.getScreenshotFromCache(cacheTenant, widgetId, fileName);
+			if (se != null) {
+				if (fileName.equals(se.getFileName())) {
+					return Response.ok(new StreamingOutput() {
+						@Override
+						public void write(OutputStream os) throws IOException, WebApplicationException
+						{
+							os.write(se.getBuffer().getData());
+							os.flush();
+							os.close();
+						}
+
+					}).cacheControl(cc).build();
+				}
+				else { // invalid screenshot file name
+					if (!ScreenshotPathGenerator.getInstance().validFileName(widgetId, fileName, se.getFileName())) {
+						_logger.error("The requested screenshot file name {}, widget id={} is not a valid name", fileName,
+								widgetId, se.getFileName());
+						return Response.status(Status.NOT_FOUND).build();
+					}
+					_logger.debug("The request screenshot file name is not equal to the file name in cache, but it is valid. "
+							+ "Try to query from database to see if screenshot is actually updated already");
+				}
+			}
+		}
+		catch (Exception e) {
+			_logger.error("Exception when getting screenshot from cache. Continue to get from database", e);
+		}
 
 		try {
 			SearchManager searchMan = SearchManager.getInstance();
@@ -224,7 +263,17 @@ public class WidgetAPI
 				_logger.error("Does not retrieved base64 screenshot data. return 404 then");
 				return Response.status(Status.NOT_FOUND).build();
 			}
-
+			//store to cache
+			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, widgetId, ss);
+			if (se == null || se.getBuffer() == null) {
+				_logger.debug("Does not retrieved base64 screenshot data after store to cache. return 404 then");
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			if (!fileName.equals(se.getFileName())) {
+				_logger.error("The requested screenshot file name {}, widget id={} does not exist", fileName, widgetId,
+						se.getFileName());
+				return Response.status(Status.NOT_FOUND).build();
+			}
 			_logger.debug("Retrieved screenshot data from persistence layer, stored to cache, and build response now.");
 			return Response.ok(new StreamingOutput() {
 				/* (non-Javadoc)

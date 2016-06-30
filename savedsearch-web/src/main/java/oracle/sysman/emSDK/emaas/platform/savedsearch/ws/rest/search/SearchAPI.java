@@ -50,7 +50,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class SearchAPI
 {
 
-	private static final String FOLDER_PATH = "flattenedFolderPath";
+	//private static final String FOLDER_PATH = "flattenedFolderPath";
 	private static final Logger _logger = LogManager.getLogger(SearchAPI.class);
 	@Context
 	UriInfo uri;
@@ -218,7 +218,7 @@ public class SearchAPI
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createSearch(JSONObject inputJsonObj, @HeaderParam(value = "OAM_REMOTE_USER") String tenantName)
+	public Response createSearch(JSONObject inputJsonObj)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/search");
 
@@ -236,7 +236,7 @@ public class SearchAPI
 					if (OdsDataService.ENTITY_FLAG.equalsIgnoreCase(param.getName())
 							&& "TRUE".equalsIgnoreCase(param.getValue())) {
 						OdsDataService ods = OdsDataServiceImpl.getInstance();
-						String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName(), tenantName);
+						String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
 							
 						// add ODS Entity ID as one of search parameters of the saved search
 						savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
@@ -310,7 +310,7 @@ public class SearchAPI
 	 */
 	@DELETE
 	@Path("{id: [0-9]*}")
-	public Response deleteSearch(@PathParam("id") long searchId, @HeaderParam(value = "OAM_REMOTE_USER") String tenantName)
+	public Response deleteSearch(@PathParam("id") long searchId)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/search/{}", searchId);
 		int statusCode = 204;
@@ -319,7 +319,7 @@ public class SearchAPI
 		SearchManager sman = SearchManager.getInstance();
 		
 		try {
-			odsService.deleteOdsEntity(searchId, tenantName);
+			odsService.deleteOdsEntity(searchId);
 			sman.deleteSearch(searchId, false);
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -479,7 +479,7 @@ public class SearchAPI
 	@Path("{id: [0-9]*}/odsentity")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createOdsEntity(@PathParam("id") long searchId, @HeaderParam(value = "OAM_REMOTE_USER") String tenantName) {
+	public Response createOdsEntity(@PathParam("id") long searchId) {
 		String message = null;
 		int statusCode = 200;
 		SearchManager sman = SearchManager.getInstance();
@@ -505,7 +505,7 @@ public class SearchAPI
 			if(statusCode != 400) {
 				OdsDataService ods = OdsDataServiceImpl.getInstance();
 				try {
-					String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName(), tenantName);
+					String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
 					savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
 					savedSearch = sman.editSearch(savedSearch, true);
 					JSONObject jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch);
