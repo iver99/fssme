@@ -41,7 +41,7 @@ public class TargetCardCURD {
     @Test
     public void targetCardCreateTest(){
         String inputCreateJson = "{" +
-                "  \"name\": \"link_host_loganalytics_test\"," +
+                "  \"name\": \"link_host_loganalytics_test2\"," +
                 "  \"category\": {" +
                 "    \"id\": 5" +
                 "  }," +
@@ -77,18 +77,18 @@ public class TargetCardCURD {
         Response createResponse = getResponseForCreateNewSearch(inputCreateJson);
         JsonPath jsonPathForCreate  = createResponse.jsonPath();
         System.out.println(createResponse.getStatusLine());
-        Assert.assertEquals(201,createResponse.getStatusCode());
+        Assert.assertTrue(createResponse.getStatusCode() == 201);
         searchIdToBeDelete.add(jsonPathForCreate.getLong("id"));
 
 
         Response getTargetCardByName = getResponseForTargetCardByName(targetType);
         JsonPath jsonPathForGetTargetCardByName = getTargetCardByName.jsonPath();
         System.out.println(getTargetCardByName.getStatusLine());
-        Assert.assertEquals(200,getTargetCardByName.getStatusCode());
+        Assert.assertTrue(getTargetCardByName.getStatusCode()==200);
 
         Response deleteResponse = getResponseForDelete(jsonPathForCreate.getLong("id"));
         System.out.println(deleteResponse.getStatusLine());
-        Assert.assertEquals(204,deleteResponse.getStatusCode());
+        Assert.assertTrue(deleteResponse.getStatusCode()==200);
     }
 
 
