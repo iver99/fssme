@@ -160,3 +160,4 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('Failed to create folder and category for Target Card  due to '||SQLERRM);
     RAISE;
 END;
+/
