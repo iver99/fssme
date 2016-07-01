@@ -51,8 +51,6 @@ public class PersistenceManagerTest {
     public void testPersistenceManager(@Mocked final Persistence anyPersistence) throws IOException {
         new Expectations(){
             {
-                System.getProperty(anyString, anyString);
-                result = "false";
                 System.getenv(anyString);
                 result = "true";
                 QAToolUtil.getDbProperties();
