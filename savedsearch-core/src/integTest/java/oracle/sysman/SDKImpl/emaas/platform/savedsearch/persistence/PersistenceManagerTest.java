@@ -48,20 +48,7 @@ public class PersistenceManagerTest {
     }
 
     @Test
-    public void testPersistenceManager(@Mocked final Persistence anyPersistence) throws IOException {
-        new Expectations(){
-            {
-                System.getenv(anyString);
-                result = "true";
-                QAToolUtil.getDbProperties();
-                result = properties;
-                Persistence.createEntityManagerFactory(anyString, withAny(properties));
-                entityManagerFactory.createEntityManager(withAny(new HashMap()));
-                result = entityManager;
-                tenantInfo.getTenantInternalId();
-                result = 1L;
-            }
-        };
+    public void testPersistenceManager() throws IOException {
         PersistenceManager pm = PersistenceManager.getInstance();
         Assert.assertNotNull(pm.getEntityManager(tenantInfo));
     }
