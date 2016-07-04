@@ -22,7 +22,7 @@ import javax.persistence.Persistence;
 /**
  * Created by xidai on 3/2/2016.
  */
-@Test(groups={"s2"})
+@Test
 public class PersistenceManagerTest {
     private PersistenceManager persistenceManager;
 
