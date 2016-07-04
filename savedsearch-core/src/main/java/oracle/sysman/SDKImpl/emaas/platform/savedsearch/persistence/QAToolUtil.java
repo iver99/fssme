@@ -140,7 +140,7 @@ public class QAToolUtil
 		}
 		catch (IOException e) {
 			logger.error("an error occureed while getting details by url" + ":: " + url, e);
-			System.out.println("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+		} finally {
 			try {
 				if (in != null) {
 					in.close();
@@ -152,7 +152,6 @@ public class QAToolUtil
 			catch (IOException ioEx) {
 				//ignore
 			}
-
 		}
 		return response.toString();
 

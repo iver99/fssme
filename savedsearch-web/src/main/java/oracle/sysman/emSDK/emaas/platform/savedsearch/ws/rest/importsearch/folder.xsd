@@ -4,11 +4,11 @@
   <xs:element name="FolderSet" type="folderSet"/>
   <xs:complexType name="folderSet">
     <xs:sequence>
-      <xs:element name="Folder" type="folderDetails" nillable="true" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="Folder" type="folderDetails" nillable="true" minOccurs="1" maxOccurs="2048"/>
       <xs:element name="FolderSet" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="FolderImpl" type="folderDetails" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="FolderImpl" type="folderDetails" minOccurs="0" maxOccurs="2048"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>

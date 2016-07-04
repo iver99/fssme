@@ -7,7 +7,7 @@
 
   <xs:complexType name="searchSet">
     <xs:sequence>
-      <xs:element name="Search" type="importSearchImpl" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Search" type="importSearchImpl" nillable="true" minOccurs="0" maxOccurs="2048"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -32,7 +32,7 @@
       <xs:element name="SearchParameters" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="SearchParameter" type="searchParameterDetails" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="SearchParameter" type="searchParameterDetails" minOccurs="0" maxOccurs="2048"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -89,7 +89,7 @@
       <xs:element name="Parameters" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="Parameter" type="parameter" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Parameter" type="parameter" minOccurs="0" maxOccurs="2048"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
