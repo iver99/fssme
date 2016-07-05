@@ -11,5 +11,11 @@ DEFINE TENANT_ID = '&1'
 
 @&EMSAAS_SQL_ROOT/1.8.0/emaas_savesearch_seed_data.sql '&TENANT_ID'
 
+@&EMSAAS_SQL_ROOT/1.8.0/emaas_savesearch_seed_data_la.sql '&TENANT_ID'
+
+@&EMSAAS_SQL_ROOT/1.8.0/emaas_savesearch_seed_data_ta.sql '&TENANT_ID'
+
+@&EMSAAS_SQL_ROOT/1.8.0/emaas_savesearch_seed_data_targetcard.sql '&TENANT_ID'
+
 commit;
 

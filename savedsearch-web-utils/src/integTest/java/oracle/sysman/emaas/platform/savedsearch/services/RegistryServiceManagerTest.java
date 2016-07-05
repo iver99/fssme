@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
+import java.util.List;
+
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -11,10 +13,9 @@ import org.testng.annotations.Test;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.savedsearch.property.PropertyReader;
@@ -44,6 +45,7 @@ public class RegistryServiceManagerTest
 		Assert.assertEquals(registryServiceManager.isRegistrationComplete(), new Boolean(true));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testMakeServiceOutOfService(@Mocked final RegistrationManager registrationManager,
 			@Mocked final RegistrationClient registrationClient) throws Exception
@@ -54,12 +56,13 @@ public class RegistryServiceManagerTest
 				result = registrationManager;
 				registrationManager.getRegistrationClient();
 				result = registrationClient;
-				registrationClient.updateStatus(InstanceInfo.InstanceStatus.OUT_OF_SERVICE);
+				registrationClient.outOfServiceCausedBy((List<InstanceInfo>) any, (List<NonServiceResource>) any,
+						(List<String>) any);
 			}
 		};
 
 		registryServiceManager = new RegistryServiceManager();
-		registryServiceManager.makeServiceOutOfService();
+		registryServiceManager.makeServiceOutOfService(null, null, null);
 	}
 
 	@Test

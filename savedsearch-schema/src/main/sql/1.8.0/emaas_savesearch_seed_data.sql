@@ -35,7 +35,7 @@ SELECT COUNT(CATEGORY_ID) INTO V_COUNT FROM EMS_ANALYTICS_CATEGORY WHERE CATEGOR
 IF (V_COUNT<1) THEN
  V_FOLDER_ID				:=   6;
  V_NAME						:=   'Target Card Searches';
- V_PARENT_ID				:=   null;
+ V_PARENT_ID				:=   1;
  V_DESCRIPTION				:=   'Target Card Root Folder';
  V_CREATION_DATE			:=   SYS_EXTRACT_UTC(SYSTIMESTAMP);
  V_OWNER					:=   'ORACLE';
@@ -160,3 +160,4 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('Failed to create folder and category for Target Card  due to '||SQLERRM);
     RAISE;
 END;
+/

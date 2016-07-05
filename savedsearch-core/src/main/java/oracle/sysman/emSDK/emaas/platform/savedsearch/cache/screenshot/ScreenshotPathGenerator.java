@@ -88,6 +88,48 @@ public class ScreenshotPathGenerator
 		return url;
 	}
 
+	public boolean validFileName(Long dashboardId, String fileNameToValid, String fileNameFromCache)
+	{
+		if (StringUtil.isEmpty(fileNameToValid)) {
+			logger.warn("Invalid file name as it is empty");
+			return false;
+		}
+		//		String[] newStrs = StringUtils.split(fileNameToValid, '_');
+		String[] newStrs = fileNameToValid.split("_");
+		if (newStrs == null || newStrs.length != 2) {
+			logger.warn("Invalid file name not in proper format with only one char '_' inside");
+			return false;
+		}
+		if (!newStrs[1].equals(String.valueOf(dashboardId) + DEFAULT_SCREENSHOT_EXT)) {
+			logger.warn("Invalid file name as dashboard id or image type does not match");
+			return false;
+		}
+		Long newTime = null;
+		try {
+			newTime = Long.valueOf(newStrs[0]);
+			//			String[] cachedStrs = StringUtils.split(fileNameFromCache, '_');
+			String[] cachedStrs = fileNameFromCache.split("_");
+			if (cachedStrs != null && cachedStrs.length == 2) {
+				Long cachedTime = Long.valueOf(cachedStrs[0]);
+				if (newTime < cachedTime) {
+					logger.warn(
+							"Invalid file name as requested file name {} contains older timestamp than the timestamp from the cached screenshot file name {}",
+							newTime, cachedTime);
+				}
+				return newTime >= cachedTime;
+			}
+			else {
+				logger.warn("Invalid file name as cached file name is invalid: cached file name={}, splitted cached strings",
+						fileNameFromCache, StringUtil.arrayToCommaDelimitedString(cachedStrs));
+				return false;
+			}
+		}
+		catch (NumberFormatException e) {
+			logger.warn(e);
+			return false;
+		}
+	}
+
 	private void initialize()
 	{
 		Properties properties = new Properties();
@@ -110,42 +152,6 @@ public class ScreenshotPathGenerator
 					logger.error(e);
 				}
 			}
-		}
-	}
-	public boolean validFileName(Long dashboardId, String fileNameToValid, String fileNameFromCache)
-	{
-		if (StringUtil.isEmpty(fileNameToValid)) {
-			logger.debug("Invalid file name as it is empty");
-			return false;
-		}
-//		String[] newStrs = StringUtils.split(fileNameToValid, '_');
-		String[] newStrs=fileNameToValid.split("_");
-		if (newStrs == null || newStrs.length != 2) {
-			logger.debug("Invalid file name not in proper format with only one char '_' inside");
-			return false;
-		}
-		if (!newStrs[1].equals(String.valueOf(dashboardId) + DEFAULT_SCREENSHOT_EXT)) {
-			logger.debug("Invalid file name as dashboard id or image type does not match");
-			return false;
-		}
-		Long newTime = null;
-		try {
-			newTime = Long.valueOf(newStrs[0]);
-//			String[] cachedStrs = StringUtils.split(fileNameFromCache, '_');
-			String[] cachedStrs=fileNameFromCache.split("_");
-			if (cachedStrs != null && cachedStrs.length == 2) {
-				Long cachedTime = Long.valueOf(cachedStrs[0]);
-				return newTime >= cachedTime;
-			}
-			else {
-				logger.debug("Invalid file name as cached file name is invalid: cached file name={}, splitted cached strings",
-						fileNameFromCache, StringUtil.arrayToCommaDelimitedString(cachedStrs));
-				return false;
-			}
-		}
-		catch (NumberFormatException e) {
-			logger.debug(e);
-			return false;
 		}
 	}
 }

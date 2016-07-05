@@ -19,7 +19,6 @@ import java.net.URL;
  */
 @Test(groups={"s2"})
 public class QAToolUtilTestS2 {
-    private  QAToolUtil qaToolUtil =new QAToolUtil();
     @Mocked
     Utils utils;
     @Mocked
@@ -60,6 +59,8 @@ public class QAToolUtilTestS2 {
                 bufferedReader.readLine();
                 result="http://slc04lec.us.oracle.com:7001//registry/servicemanager/registry/v1/ServiceManager/instance?servicename=LifecycleInvManager";
                 bufferedReader.readLine();
+                result = null;
+                bufferedReader.close();
                 new URL(anyString);
                 result =url;
                 url.openConnection();
@@ -72,6 +73,8 @@ public class QAToolUtilTestS2 {
                 bufferedReader.readLine();
                 result="schemaUser:username";
                 bufferedReader.readLine();
+                result = null;
+                bufferedReader.close();
             }
         };
         QAToolUtil.getDbProperties();
