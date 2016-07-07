@@ -33,6 +33,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+	classpath group:"com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "1.0+", transitive: true     
     }
 }
 repositories {
@@ -41,6 +42,7 @@ repositories {
     }
 }
 apply plugin: 'TestInfraPlugin'
+apply plugin: 'DevInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* ************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -57,7 +59,8 @@ maven {
         maven {
             url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
-
+def regLookupClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
+def regClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 dependencies {
 
 
@@ -105,8 +108,8 @@ dependencies {
       exclude group: 'emaas.platform', module: 'registry-client'
   
 	}
-	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+')
-	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+')	 
+	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: regLookupClientVer)
+	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: regClientVer)
 	configurations{
 		restAssured.exclude module: 'groovy'
 	}
