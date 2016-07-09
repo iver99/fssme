@@ -1,5 +1,5 @@
-apply plugin: 'artifactory'
-apply plugin: 'maven'
+apply plugin: 'artifactory-publish'
+apply plugin: 'maven-publish'
 
 // Override default artifactory ID for publishing through artifactory
 ext.archivesBaseName = archiveBaseName
