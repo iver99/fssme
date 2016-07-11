@@ -95,7 +95,7 @@ END IF;
 EXCEPTION
   WHEN OTHERS THEN
     ROLLBACK;
-    DBMS_OUTPUT.PUT_LINE('Failed to create folder and category for Security Analytics  due to error '||SQLERRM);
+    DBMS_OUTPUT.PUT_LINE('Failed to create folder and category for Security Analytics due to error '||SQLERRM);
     RAISE;
 END;
 /
