@@ -77,11 +77,13 @@ public class TenantSubscriptionUtil
 	private static final String SUBSCRIBED_SERVICE_NAME_ITA = "ITAnalytics";
 	private static final String SUBSCRIBED_SERVICE_NAME_LA = "LogAnalytics";
 	private static final String SUBSCRIBED_SERVICE_NAME_SA = "SecurityAnalytics";
+	private static final String SUBSCRIBED_SERVICE_NAME_OCS = "Orchestration";
 	private static String SERVICE_PROVIDER_NAME_APM = "ApmUI";
 	private static String SERVICE_PROVIDER_NAME_ITA = "emcitas-ui-apps";
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
 	private static String SERVICE_PROVIDER_NAME_LA = "LoganService";
 	private static String SERVICE_PROVIDER_NAME_SA = "SecurityAnalyticsUI";
+	private static String SERVICE_PROVIDER_NAME_OCS = "Orchestration";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
 	private static Map<String, String> providerToServiceMap = new Hashtable<String, String>();
@@ -92,6 +94,7 @@ public class TenantSubscriptionUtil
 		providerToServiceMap.put(SERVICE_PROVIDER_NAME_ITA, SUBSCRIBED_SERVICE_NAME_ITA);
 		providerToServiceMap.put(SERVICE_PROVIDER_NAME_APM, SUBSCRIBED_SERVICE_NAME_APM);
 		providerToServiceMap.put(SERVICE_PROVIDER_NAME_SA, SUBSCRIBED_SERVICE_NAME_SA);
+		providerToServiceMap.put(SERVICE_PROVIDER_NAME_OCS, SUBSCRIBED_SERVICE_NAME_OCS);
 	}
 
 	public static List<String> getProviderNameFromServiceName(String providerName)
@@ -108,6 +111,8 @@ public class TenantSubscriptionUtil
 				return Arrays.asList(SERVICE_PROVIDER_NAME_APM);
 			case SUBSCRIBED_SERVICE_NAME_SA:
 				return Arrays.asList(SERVICE_PROVIDER_NAME_SA);
+			case SUBSCRIBED_SERVICE_NAME_OCS:
+				return Arrays.asList(SERVICE_PROVIDER_NAME_OCS);
 		}
 		return null;
 	}
