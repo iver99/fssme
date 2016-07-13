@@ -176,6 +176,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderManagerImp
 
 
 //include "oracle/sysman/emaas/savedsearch/CategoryTest.class"
+include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"
 include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
 include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
 //include "oracle/sysman/emaas/savedsearch/SearchTest.class"
@@ -216,7 +217,13 @@ include "oracle/sysman/emaas/platform/savedsearch/entity/EmAnalyticsFolderTest.c
 include "oracle/sysman/emaas/platform/savedsearch/entity/EmAnalyticsCategoryTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/entity/EmAnalyticsCategoryParamTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/entity/EmAnalyticsCategoryParamPKTest.class"
-
+include "oracle/sysman/emaas/platform/savedsearch/utils/RestRequestUtilTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/utils/GlobalStatusTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/utils/JMXUtilTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/targetmodel/services/OdsDataServiceTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/services/ApplicationLifecycleServiceTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/services/AvailabilityServiceManagerTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/services/EMTargetMXBeanImplTest.class"
 
 useRestAssured =true
 ext.set("testType", "unit")
