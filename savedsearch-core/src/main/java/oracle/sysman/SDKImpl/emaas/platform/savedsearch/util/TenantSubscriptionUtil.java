@@ -76,10 +76,14 @@ public class TenantSubscriptionUtil
 	private static final String SUBSCRIBED_SERVICE_NAME_APM = "APM";
 	private static final String SUBSCRIBED_SERVICE_NAME_ITA = "ITAnalytics";
 	private static final String SUBSCRIBED_SERVICE_NAME_LA = "LogAnalytics";
+	private static final String SUBSCRIBED_SERVICE_NAME_SA = "SecurityAnalytics";
+	private static final String SUBSCRIBED_SERVICE_NAME_OCS = "Orchestration";
 	private static String SERVICE_PROVIDER_NAME_APM = "ApmUI";
 	private static String SERVICE_PROVIDER_NAME_ITA = "emcitas-ui-apps";
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
 	private static String SERVICE_PROVIDER_NAME_LA = "LoganService";
+	private static String SERVICE_PROVIDER_NAME_SA = "SecurityAnalyticsUI";
+	private static String SERVICE_PROVIDER_NAME_OCS = "Orchestration";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
 	private static Map<String, String> providerToServiceMap = new Hashtable<String, String>();
@@ -89,6 +93,8 @@ public class TenantSubscriptionUtil
 		providerToServiceMap.put(SERVICE_PROVIDER_NAME_TA, SUBSCRIBED_SERVICE_NAME_ITA);
 		providerToServiceMap.put(SERVICE_PROVIDER_NAME_ITA, SUBSCRIBED_SERVICE_NAME_ITA);
 		providerToServiceMap.put(SERVICE_PROVIDER_NAME_APM, SUBSCRIBED_SERVICE_NAME_APM);
+		providerToServiceMap.put(SERVICE_PROVIDER_NAME_SA, SUBSCRIBED_SERVICE_NAME_SA);
+		providerToServiceMap.put(SERVICE_PROVIDER_NAME_OCS, SUBSCRIBED_SERVICE_NAME_OCS);
 	}
 
 	public static List<String> getProviderNameFromServiceName(String providerName)
@@ -103,13 +109,17 @@ public class TenantSubscriptionUtil
 				return Arrays.asList(SERVICE_PROVIDER_NAME_TA, SERVICE_PROVIDER_NAME_ITA);
 			case SUBSCRIBED_SERVICE_NAME_APM:
 				return Arrays.asList(SERVICE_PROVIDER_NAME_APM);
+			case SUBSCRIBED_SERVICE_NAME_SA:
+				return Arrays.asList(SERVICE_PROVIDER_NAME_SA);
+			case SUBSCRIBED_SERVICE_NAME_OCS:
+				return Arrays.asList(SERVICE_PROVIDER_NAME_OCS);
 		}
 		return null;
 	}
 
 	public static List<Category> getTenantSubscribedCategories(String tenant, boolean includeDashboardIneligible)
 			throws EMAnalyticsFwkException
-	{
+			{
 		List<Category> resultList = new ArrayList<Category>();
 		if (tenant == null) {
 			return resultList;
@@ -131,7 +141,7 @@ public class TenantSubscriptionUtil
 		}
 
 		return resultList;
-	}
+			}
 
 	public static List<String> getTenantSubscribedServiceProviders(String tenant) throws IOException
 	{
@@ -151,6 +161,7 @@ public class TenantSubscriptionUtil
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), tenant);
 		return providers;
 	}
+
 	@SuppressWarnings("unchecked")
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
@@ -159,21 +170,20 @@ public class TenantSubscriptionUtil
 		Tenant cacheTenant = new Tenant(tenant);
 		List<String> cachedApps;
 		try {
-			cachedApps = (List<String>) cm.getCacheable(cacheTenant,
-					CacheManager.CACHES_SUBSCRIBE_CACHE,
+			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			logger.error(e);
 			return null;
 		}
 		if (cachedApps != null) {
 			logger.debug(
 					"retrieved subscribed apps for tenant {} from subscribe cache: "
-							+ StringUtil.arrayToCommaDelimitedString(cachedApps
-									.toArray()), tenant);
+							+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
 			return cachedApps;
 		}
-		
+
 		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenant);
 		if (domainLink == null || StringUtil.isEmpty(domainLink.getHref())) {
 			logger.warn("Checking tenant (" + tenant
@@ -189,8 +199,8 @@ public class TenantSubscriptionUtil
 		try {
 			DomainsEntity de = JSONUtil.fromJson(mapper, domainsResponse, DomainsEntity.class);//ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
-				logger.warn(
-						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
+				logger.warn("Checking tenant (" + tenant
+						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
 				return null;
 			}
 			String tenantAppUrl = null;
@@ -205,8 +215,8 @@ public class TenantSubscriptionUtil
 				return null;
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			logger.info(
-					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
+			logger.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
+					+ appMappingUrl);
 			String appMappingJson = rc.get(appMappingUrl);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
@@ -246,13 +256,14 @@ public class TenantSubscriptionUtil
 			if (apps == null || "".equals(apps)) {
 				return null;
 			}
-			List<String> origAppsList = Arrays
-					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+			List<String> origAppsList = Arrays.asList(apps
+					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
 			//put into cache
 			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
 					origAppsList);
-			logger.debug("Store subscribed apps for tenant {} to subscribe cache: "
-					+ StringUtil.arrayToCommaDelimitedString(origAppsList.toArray()), tenant);
+			logger.debug(
+					"Store subscribed apps for tenant {} to subscribe cache: "
+							+ StringUtil.arrayToCommaDelimitedString(origAppsList.toArray()), tenant);
 			return origAppsList;
 
 		}
