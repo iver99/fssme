@@ -235,7 +235,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
 	}
 
-	@Test
+	@Test(groups = { "s1" })
 	public void testGetFullSearchJsonObj()
 			throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{
@@ -364,7 +364,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(output2.contains(VERIFY_STRING8), VERIFY_STRING8 + " is NOT found as expected");
 	}
 
-	@Test
+	@Test(groups = { "s1" })
 	public void testGetSimpleSearchJsonObj()
 			throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{

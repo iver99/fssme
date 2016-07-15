@@ -36,17 +36,25 @@ dependencies {
 									 this allows build jobs to set version & resolve later
 */
 
+
 publishing.publications {
-    thisJarPublication(MavenPublication) {
-			from project.components.java
-      artifactId jar.baseName
-			setGroupId('com.oracle.emaas.emcpssf.test')
-    }
+        integTest(MavenPublication) {
+                setArtifactId(project.name + '-' + integTestJar.appendix)
+                setGroupId('com.oracle.emaas.emcpssf.test')
+                artifact integTestJar.archivePath
+        }
+
+        thisJarPublication(MavenPublication) {
+                setGroupId('com.oracle.emaas.emcpssf.test')
+                artifact jar
+        }
 }
 
 artifactoryPublish {
-	publications('thisJarPublication')
+        publications('integTest')
+        publications('thisJarPublication')
 }
+
 sourceSets {
         test{
                 java {
@@ -63,5 +71,5 @@ test {
                 //if you wish to run ALL tests within this projet - remove following.
                 includeGroups 's1' ,'s2'
         }
-}
+build.dependsOn integTestJar}
 
