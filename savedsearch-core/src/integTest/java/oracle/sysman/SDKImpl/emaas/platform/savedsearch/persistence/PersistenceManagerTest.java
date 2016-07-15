@@ -1,23 +1,45 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
 
-import mockit.Deencapsulation;
-import mockit.Expectations;
-import mockit.Mocked;
-import org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl;
+import mockit.*;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Properties;
+
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import org.openqa.jetty.html.Input;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 
 /**
  * Created by xidai on 3/2/2016.
  */
-@Test(groups={""})
+@Test
 public class PersistenceManagerTest {
+    private PersistenceManager persistenceManager;
 
+    @Mocked
+    System system;
+    @Mocked
+    Properties properties;
+    @Mocked
+    QAToolUtil qaToolUtil;
+    @Mocked
+    Persistence persistence;
+    @Mocked
+    EntityManagerFactory entityManagerFactory;
+    @Mocked
+    EntityManager entityManager;
+    @Mocked
+    TenantInfo tenantInfo;
     @BeforeMethod
     private void setUp() throws Exception
     {
@@ -26,17 +48,8 @@ public class PersistenceManagerTest {
     }
 
     @Test
-    public void testPersistenceManager(@Mocked final Persistence anyPersistence)
-    {
-        new Expectations(){
-            {
-                Deencapsulation.invoke(anyPersistence,"createEntityManagerFactory",anyString,withAny(new HashMap()));
-                result = new EntityManagerFactoryImpl(new String("EmaasAnalyticsPublicModelTest"),new HashMap(),new ArrayList());
-            }
-        };
-        long testTenant = 3L;
+    public void testPersistenceManager() throws IOException {
         PersistenceManager pm = PersistenceManager.getInstance();
-        Assert.assertNotNull(pm.getEntityManagerFactory());
-        pm.closeEntityManagerFactory();
+        Assert.assertNotNull(pm.getEntityManager(tenantInfo));
     }
 }
