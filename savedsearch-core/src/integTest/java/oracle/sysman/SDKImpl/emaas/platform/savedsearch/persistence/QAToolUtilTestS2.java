@@ -4,6 +4,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.StrictExpectations;
 import oracle.sysman.qatool.uifwk.utils.Utils;
+import org.apache.commons.collections.Buffer;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -13,96 +14,46 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Created by xidai on 3/4/2016.
  */
 @Test(groups={"s2"})
 public class QAToolUtilTestS2 {
+    private  QAToolUtil qaToolUtil =new QAToolUtil();
     @Mocked
     Utils utils;
     @Mocked
-    HttpURLConnection connection;
+    Properties properties;
     @Mocked
     URL url;
     @Mocked
+    HttpURLConnection httpURLConnection;
+    @Mocked
     InputStream inputStream;
-    @Mocked
-    InputStreamReader inputStreamReader;
-    @Mocked
-    BufferedReader bufferedReader;
     @Mocked
     SchemaUtil schemaUtil;
     @Mocked
-    Logger logger;
+    BufferedReader bufferedReader;
     @Test
     public void testGetDbProperties() throws Exception {
-        new StrictExpectations(){
-            {
-                Utils.getProperty(anyString);
-                result = "http://slc08twq.us.oracle.com";
-                Utils.getProperty(anyString);
-                result = "7001";
-                Utils.getProperty(anyString);
-                result = "registry/servicemanager/registry/v1";
-                Utils.getProperty(anyString);
-                result = "ServiceManager";
-                new URL(anyString);
-                result =url;
-                url.openConnection();
-                result = connection;
-                connection.setRequestProperty(anyString,anyString);
-                connection.getInputStream();
-                result = inputStream;
-                new BufferedReader(withAny(inputStreamReader));
-                result = bufferedReader;
-                bufferedReader.readLine();
-                result="http://slc04lec.us.oracle.com:7001//registry/servicemanager/registry/v1/ServiceManager/instance?servicename=LifecycleInvManager";
-                bufferedReader.readLine();
-                result = null;
-                bufferedReader.close();
-                new URL(anyString);
-                result =url;
-                url.openConnection();
-                result = connection;
-                connection.setRequestProperty(anyString,anyString);
-                connection.getInputStream();
-                result = inputStream;
-                new BufferedReader(withAny(inputStreamReader));
-                result = bufferedReader;
-                bufferedReader.readLine();
-                result="schemaUser:username";
-                bufferedReader.readLine();
-                result = null;
-                bufferedReader.close();
-            }
-        };
-        QAToolUtil.getDbProperties();
-    }
-
-    @Test
-    public void testGetSavedSearchDeploymentDet() throws Exception {
+        final ArrayList<String> urlList = new ArrayList<>();
+        urlList.add("url");
         new Expectations(){
             {
                 Utils.getProperty(anyString);
-                result = "http://slc08twq.us.oracle.com:7001//registry/servicemanager/registry/v1";
-                new URL(anyString);
-                result =url;
+                result = "ODS_HOstName";
                 url.openConnection();
-                result = connection;
-                connection.setRequestProperty(anyString,anyString);
-                connection.getInputStream();
+                result = httpURLConnection;
+                httpURLConnection.setRequestProperty(anyString,anyString);
+                httpURLConnection.getInputStream();
                 result = inputStream;
-                new BufferedReader(withAny(inputStreamReader));
-                result = bufferedReader;
-                bufferedReader.readLine();
-                result="http://slc04lec.us.oracle.com:7001//registry/servicemanager/registry/v1/ServiceManager/instance?servicename=LifecycleInvManager";
-                bufferedReader.readLine();
-                SchemaUtil.getSchemaUrls(anyString);
             }
         };
-       Assert.assertNull(QAToolUtil.getSavedSearchDeploymentDet());
-    }
+        Assert.assertNotNull(QAToolUtil.getDbProperties());
+    };
 
     @Test
     public void testGetTenantDetails() throws Exception {
