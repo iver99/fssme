@@ -60,6 +60,8 @@ public class CategoryManagerImpl extends CategoryManager
 
 	private static final CategoryManagerImpl _instance = new CategoryManagerImpl();
 
+	private static final String DB_DEFAULT_VALUE = "0";
+
 	public static Category createCategoryObject(EmAnalyticsCategory category, Category categoryObj) throws Exception
 	{
 		CategoryImpl rtnObj = null;
@@ -117,10 +119,21 @@ public class CategoryManagerImpl extends CategoryManager
 			if (params != null && params.size() > 0) {
 				List<Parameter> categoryParams = new ArrayList<Parameter>();
 				for (EmAnalyticsCategoryParam paramObj : params) {
+					if ("DASHBOARD_INELIGIBLE".equals(paramObj.getName())) {
+						continue;//now DASHBOARD_INELIGIBLE is provided by column DASHBOARD_INELIGIBLE in EMS_ANAYLICS_CATEGORY table
+						//instead of EMS_ANAYLICS_CATEGORY_PARAMS table
+					}
 					Parameter param = new Parameter();
 					param.setName(paramObj.getName());
 					param.setType(ParameterType.STRING);
 					param.setValue(paramObj.getValue());
+					categoryParams.add(param);
+				}
+				if (category.getDASHBOARD_INELIGIBLE() != null && !DB_DEFAULT_VALUE.equals(category.getDASHBOARD_INELIGIBLE())) {
+					Parameter param = new Parameter();
+					param.setName("DASHBOARD_INELIGIBLE");
+					param.setType(ParameterType.STRING);
+					param.setValue(category.getDASHBOARD_INELIGIBLE());
 					categoryParams.add(param);
 				}
 				rtnObj.setParameters(categoryParams);
@@ -247,7 +260,7 @@ public class CategoryManagerImpl extends CategoryManager
 			EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
-					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
+			.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			if (categories == null) {
 				categories = new ArrayList<Category>();
 			}
