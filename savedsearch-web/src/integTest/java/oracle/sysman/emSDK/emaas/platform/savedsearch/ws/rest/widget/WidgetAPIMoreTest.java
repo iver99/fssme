@@ -168,9 +168,9 @@ public class WidgetAPIMoreTest
 				TenantSubscriptionUtil.getTenantSubscribedServiceProviders(anyString);
 				result = providers;
 
-				SearchManager.getInstance();
-				result = searchManagerImpl;
-				searchManagerImpl.getWidgetListByProviderNames(anyBoolean, providers, anyString);
+				WidgetManager.getInstance();
+				result = widgetManagerImpl;
+				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString);
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
