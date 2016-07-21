@@ -31,4 +31,7 @@ public abstract class WidgetManager
 	}
 
 	public abstract String getWidgetJsonStringFromWidgetList(List<Widget> widgetList) throws EMAnalyticsFwkException;
+
+	public abstract List<Widget> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+			throws EMAnalyticsFwkException;
 }

@@ -12,11 +12,6 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotPathGenerator;
@@ -25,6 +20,11 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * @author guochen
@@ -63,8 +63,8 @@ public class WidgetManagerImpl extends WidgetManager
 		String tenantName = TenantContext.getContext().gettenantName();
 		String widgetAPIUrl = getWidgetAPIUrl(tenantName);
 		for (Widget widget : widgetList) {
-			String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl, Long.valueOf(widget.getId()),
-					widget.getCreatedOn(), widget.getLastModifiedOn());
+			String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl,
+					Long.valueOf(widget.getId()), widget.getCreatedOn(), widget.getLastModifiedOn());
 			JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(widget, widget.getCategory(), ssUrl);
 			if (jsonWidget != null) {
 				jsonArray.put(jsonWidget);
@@ -73,6 +73,17 @@ public class WidgetManagerImpl extends WidgetManager
 		message = jsonArray.toString();
 		logger.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
 		return message;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager#getWidgetListByProviderNames(java.util.List, java.lang.String)
+	 */
+	@Override
+	public List<Widget> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+			throws EMAnalyticsFwkException
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private String getWidgetAPIUrl(String tenantName)
