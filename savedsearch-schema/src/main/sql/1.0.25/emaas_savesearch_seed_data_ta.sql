@@ -366,43 +366,43 @@ ELSE
 END IF;
 
 --SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id=3002 AND NAME='WIDGET_VISUAL' AND TENANT_ID  ='&TENANT_ID';
---v_SEARCH_ID := 3002;
---v_NAME      :='WIDGET_VISUAL';
---v_TENANT_ID :='&TENANT_ID';
---SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
---IF (v_count=0) THEN
-----  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3002,'WIDGET_VISUAL',null,2,null, screenshot_3002,'&TENANT_ID');
---v_SEARCH_ID              :=3002                        ;
---v_NAME                   :='WIDGET_VISUAL'             ;
---v_PARAM_ATTRIBUTES       :=null                        ;
---v_PARAM_TYPE             :=2                           ;
---v_PARAM_VALUE_STR        :=null                        ;
---v_PARAM_VALUE_CLOB       := screenshot_3002            ;
---v_TENANT_ID              :='&TENANT_ID'                ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---v_SEARCH_ID,
---v_NAME,
---v_PARAM_ATTRIBUTES,
---v_PARAM_TYPE,
---v_PARAM_VALUE_STR,
---v_PARAM_VALUE_CLOB,
---v_TENANT_ID
---);
---  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3002)');
---ELSE
---  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3002) exists, no need to add again');
---END IF;
+v_SEARCH_ID := 3002;
+v_NAME      :='WIDGET_VISUAL';
+v_TENANT_ID :='&TENANT_ID';
+SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
+IF (v_count=0) THEN
+--  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3002,'WIDGET_VISUAL',null,2,null, screenshot_3002,'&TENANT_ID');
+v_SEARCH_ID              :=3002                        ;
+v_NAME                   :='WIDGET_VISUAL'             ;
+v_PARAM_ATTRIBUTES       :=null                        ;
+v_PARAM_TYPE             :=2                           ;
+v_PARAM_VALUE_STR        :=null                        ;
+v_PARAM_VALUE_CLOB       := screenshot_3002            ;
+v_TENANT_ID              :='&TENANT_ID'                ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+v_SEARCH_ID,
+v_NAME,
+v_PARAM_ATTRIBUTES,
+v_PARAM_TYPE,
+v_PARAM_VALUE_STR,
+v_PARAM_VALUE_CLOB,
+v_TENANT_ID
+);
+  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3002)');
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3002) exists, no need to add again');  
+END IF;
 
 --SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id=3003 AND NAME='WIDGET_VISUAL' AND TENANT_ID  ='&TENANT_ID';
 v_SEARCH_ID := 3003;
@@ -444,121 +444,121 @@ ELSE
 END IF;
 
 --SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id=3004 AND NAME='WIDGET_VISUAL' AND TENANT_ID  ='&TENANT_ID';
---v_SEARCH_ID := 3004;
---v_NAME      :='WIDGET_VISUAL';
---v_TENANT_ID :='&TENANT_ID';
---SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
---IF (v_count=0) THEN
-----  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3004,'WIDGET_VISUAL',null,2,null, screenshot_3004,'&TENANT_ID');
---v_SEARCH_ID              :=3004                  ;
---v_NAME                   :='WIDGET_VISUAL'       ;
---v_PARAM_ATTRIBUTES       :=null                  ;
---v_PARAM_TYPE             :=2                     ;
---v_PARAM_VALUE_STR        :=null                  ;
---v_PARAM_VALUE_CLOB       := screenshot_3004      ;
---v_TENANT_ID              :='&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---  (
---  SEARCH_ID,
---  NAME,
---  PARAM_ATTRIBUTES,
---  PARAM_TYPE,
---  PARAM_VALUE_STR,
---  PARAM_VALUE_CLOB,
---  TENANT_ID
---  )
---  values
---  (
---  v_SEARCH_ID,
---  v_NAME,
---  v_PARAM_ATTRIBUTES,
---  v_PARAM_TYPE,
---  v_PARAM_VALUE_STR,
---  v_PARAM_VALUE_CLOB,
---  v_TENANT_ID
---  );
---  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3004)');
---ELSE
---  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3004) exists, no need to add again');
---END IF;
+v_SEARCH_ID := 3004;
+v_NAME      :='WIDGET_VISUAL';
+v_TENANT_ID :='&TENANT_ID';
+SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
+IF (v_count=0) THEN
+--  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3004,'WIDGET_VISUAL',null,2,null, screenshot_3004,'&TENANT_ID');
+v_SEARCH_ID              :=3004                  ;
+v_NAME                   :='WIDGET_VISUAL'       ;
+v_PARAM_ATTRIBUTES       :=null                  ;
+v_PARAM_TYPE             :=2                     ;
+v_PARAM_VALUE_STR        :=null                  ;
+v_PARAM_VALUE_CLOB       := screenshot_3004      ;
+v_TENANT_ID              :='&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+  (
+  SEARCH_ID,
+  NAME,
+  PARAM_ATTRIBUTES,
+  PARAM_TYPE,
+  PARAM_VALUE_STR,
+  PARAM_VALUE_CLOB,
+  TENANT_ID
+  )
+  values
+  (
+  v_SEARCH_ID,
+  v_NAME,
+  v_PARAM_ATTRIBUTES,
+  v_PARAM_TYPE,
+  v_PARAM_VALUE_STR,
+  v_PARAM_VALUE_CLOB,
+  v_TENANT_ID
+  );
+  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3004)');
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3004) exists, no need to add again');  
+END IF;
 
 --SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id=3018 AND NAME='WIDGET_VISUAL' AND TENANT_ID  ='&TENANT_ID';
---v_SEARCH_ID := 3018;
---v_NAME      :='WIDGET_VISUAL';
---v_TENANT_ID :='&TENANT_ID';
---SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
---IF (v_count=0) THEN
-----  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3018,'WIDGET_VISUAL',null,2,null, screenshot_3018,'&TENANT_ID');
---v_SEARCH_ID              :=3018                    ;
---v_NAME                   :='WIDGET_VISUAL'         ;
---v_PARAM_ATTRIBUTES       :=null                    ;
---v_PARAM_TYPE             :=2                       ;
---v_PARAM_VALUE_STR        :=null                    ;
---v_PARAM_VALUE_CLOB       := screenshot_3018        ;
---v_TENANT_ID              :='&TENANT_ID'            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---v_SEARCH_ID,
---v_NAME,
---v_PARAM_ATTRIBUTES,
---v_PARAM_TYPE,
---v_PARAM_VALUE_STR,
---v_PARAM_VALUE_CLOB,
---v_TENANT_ID
---);
---  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3018)');
---ELSE
---  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3018) exists, no need to add again');
---END IF;
+v_SEARCH_ID := 3018;
+v_NAME      :='WIDGET_VISUAL';
+v_TENANT_ID :='&TENANT_ID';
+SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
+IF (v_count=0) THEN
+--  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3018,'WIDGET_VISUAL',null,2,null, screenshot_3018,'&TENANT_ID');
+v_SEARCH_ID              :=3018                    ;
+v_NAME                   :='WIDGET_VISUAL'         ;
+v_PARAM_ATTRIBUTES       :=null                    ;
+v_PARAM_TYPE             :=2                       ;
+v_PARAM_VALUE_STR        :=null                    ;
+v_PARAM_VALUE_CLOB       := screenshot_3018        ;
+v_TENANT_ID              :='&TENANT_ID'            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+v_SEARCH_ID,
+v_NAME,
+v_PARAM_ATTRIBUTES,
+v_PARAM_TYPE,
+v_PARAM_VALUE_STR,
+v_PARAM_VALUE_CLOB,
+v_TENANT_ID
+);
+  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3018)');
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3018) exists, no need to add again');  
+END IF;
 
 --SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id=3019 AND NAME='WIDGET_VISUAL' AND TENANT_ID  ='&TENANT_ID';
---v_SEARCH_ID := 3019;
---v_NAME      :='WIDGET_VISUAL';
---v_TENANT_ID :='&TENANT_ID';
---SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
---IF (v_count=0) THEN
-----  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3019,'WIDGET_VISUAL',null,2,null, screenshot_3019,'&TENANT_ID');
---v_SEARCH_ID              :=3019                 ;
---v_NAME                   :='WIDGET_VISUAL'      ;
---v_PARAM_ATTRIBUTES       :=null                 ;
---v_PARAM_TYPE             :=2                    ;
---v_PARAM_VALUE_STR        :=null                 ;
---v_PARAM_VALUE_CLOB       := screenshot_3019     ;
---v_TENANT_ID              :='&TENANT_ID'         ;
---   Insert into EMS_ANALYTICS_SEARCH_PARAMS
---  (
---  SEARCH_ID,
---  NAME,
---  PARAM_ATTRIBUTES,
---  PARAM_TYPE,
---  PARAM_VALUE_STR,
---  PARAM_VALUE_CLOB,
---  TENANT_ID
---  )
---  values
---  (
---  v_SEARCH_ID,
---  v_NAME,
---  v_PARAM_ATTRIBUTES,
---  v_PARAM_TYPE,
---  v_PARAM_VALUE_STR,
---  v_PARAM_VALUE_CLOB,
---  v_TENANT_ID
---  );
---  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3019)');
---ELSE
---  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3019) exists, no need to add again');
---END IF;
+v_SEARCH_ID := 3019;
+v_NAME      :='WIDGET_VISUAL';
+v_TENANT_ID :='&TENANT_ID';
+SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
+IF (v_count=0) THEN
+--  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3019,'WIDGET_VISUAL',null,2,null, screenshot_3019,'&TENANT_ID');
+v_SEARCH_ID              :=3019                 ;
+v_NAME                   :='WIDGET_VISUAL'      ;
+v_PARAM_ATTRIBUTES       :=null                 ;
+v_PARAM_TYPE             :=2                    ;
+v_PARAM_VALUE_STR        :=null                 ;
+v_PARAM_VALUE_CLOB       := screenshot_3019     ;
+v_TENANT_ID              :='&TENANT_ID'         ;
+   Insert into EMS_ANALYTICS_SEARCH_PARAMS
+  (
+  SEARCH_ID,
+  NAME,
+  PARAM_ATTRIBUTES,
+  PARAM_TYPE,
+  PARAM_VALUE_STR,
+  PARAM_VALUE_CLOB,
+  TENANT_ID
+  )
+  values
+  (
+  v_SEARCH_ID,
+  v_NAME,
+  v_PARAM_ATTRIBUTES,
+  v_PARAM_TYPE,
+  v_PARAM_VALUE_STR,
+  v_PARAM_VALUE_CLOB,
+  v_TENANT_ID
+  );
+  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3019)');
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3019) exists, no need to add again');  
+END IF;
 
 --SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id=3020 AND NAME='WIDGET_VISUAL' AND TENANT_ID  ='&TENANT_ID';
 v_SEARCH_ID := 3020;
@@ -639,104 +639,101 @@ ELSE
 END IF;
 
 --SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id=3022 AND NAME='WIDGET_VISUAL' AND TENANT_ID  ='&TENANT_ID';
---v_SEARCH_ID := 3022;
---v_NAME      :='WIDGET_VISUAL';
---v_TENANT_ID :='&TENANT_ID';
---SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
---IF (v_count=0) THEN
+v_SEARCH_ID := 3022;
+v_NAME      :='WIDGET_VISUAL';
+v_TENANT_ID :='&TENANT_ID';
+SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
+IF (v_count=0) THEN
 --  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3022,'WIDGET_VISUAL',null,2,null, screenshot_3022,'&TENANT_ID');
---v_SEARCH_ID              :=3022               ;
---v_NAME                   :='WIDGET_VISUAL'    ;
---v_PARAM_ATTRIBUTES       :=null               ;
---v_PARAM_TYPE             :=2                  ;
---v_PARAM_VALUE_STR        :=null               ;
---v_PARAM_VALUE_CLOB       := screenshot_3022   ;
---v_TENANT_ID              :='&TENANT_ID'       ;
--- Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---v_SEARCH_ID,
---v_NAME,
---v_PARAM_ATTRIBUTES,
---v_PARAM_TYPE,
---v_PARAM_VALUE_STR,
---v_PARAM_VALUE_CLOB,
---v_TENANT_ID
---);
---  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3022)');
---ELSE
---  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3022) exists, no need to add again');
---END IF;
+v_SEARCH_ID              :=3022               ;
+v_NAME                   :='WIDGET_VISUAL'    ;
+v_PARAM_ATTRIBUTES       :=null               ;
+v_PARAM_TYPE             :=2                  ;
+v_PARAM_VALUE_STR        :=null               ;
+v_PARAM_VALUE_CLOB       := screenshot_3022   ;
+v_TENANT_ID              :='&TENANT_ID'       ;
+ Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+v_SEARCH_ID,
+v_NAME,
+v_PARAM_ATTRIBUTES,
+v_PARAM_TYPE,
+v_PARAM_VALUE_STR,
+v_PARAM_VALUE_CLOB,
+v_TENANT_ID
+);
+  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3022)');
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3022) exists, no need to add again');  
+END IF;
 
 --SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id=3023 AND NAME='WIDGET_VISUAL' AND TENANT_ID  ='&TENANT_ID';
---v_SEARCH_ID := 3023;
---v_NAME      :='WIDGET_VISUAL';
---v_TENANT_ID :='&TENANT_ID';
---SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
---IF (v_count=0) THEN
-----  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3023,'WIDGET_VISUAL',null,2,null, screenshot_3023,'&TENANT_ID');
---v_SEARCH_ID              :=3023              ;
---v_NAME                   :='WIDGET_VISUAL'   ;
---v_PARAM_ATTRIBUTES       :=null              ;
---v_PARAM_TYPE             :=2                 ;
---v_PARAM_VALUE_STR        :=null              ;
---v_PARAM_VALUE_CLOB       :=screenshot_3023    ;
---v_TENANT_ID              :='&TENANT_ID'       ;
--- Insert into EMS_ANALYTICS_SEARCH_PARAMS
--- (
--- SEARCH_ID,
--- NAME,
--- PARAM_ATTRIBUTES,
--- PARAM_TYPE,
--- PARAM_VALUE_STR,
--- PARAM_VALUE_CLOB,
--- TENANT_ID
--- )
--- values
--- (
--- v_SEARCH_ID,
--- v_NAME,
--- v_PARAM_ATTRIBUTES,
--- v_PARAM_TYPE,
--- v_PARAM_VALUE_STR,
--- v_PARAM_VALUE_CLOB,
--- v_TENANT_ID
--- );
---  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3023)');
---ELSE
---  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3023) exists, no need to add again');
---END IF;
+v_SEARCH_ID := 3023;
+v_NAME      :='WIDGET_VISUAL';
+v_TENANT_ID :='&TENANT_ID';
+SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE search_id= v_SEARCH_ID AND NAME= v_NAME AND TENANT_ID  = v_TENANT_ID;
+IF (v_count=0) THEN
+--  Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (3023,'WIDGET_VISUAL',null,2,null, screenshot_3023,'&TENANT_ID');
+v_SEARCH_ID              :=3023              ;
+v_NAME                   :='WIDGET_VISUAL'   ;
+v_PARAM_ATTRIBUTES       :=null              ;
+v_PARAM_TYPE             :=2                 ;
+v_PARAM_VALUE_STR        :=null              ;
+v_PARAM_VALUE_CLOB       :=screenshot_3023    ;
+v_TENANT_ID              :='&TENANT_ID'       ;
+ Insert into EMS_ANALYTICS_SEARCH_PARAMS
+ (
+ SEARCH_ID,
+ NAME,
+ PARAM_ATTRIBUTES,
+ PARAM_TYPE,
+ PARAM_VALUE_STR,
+ PARAM_VALUE_CLOB,
+ TENANT_ID
+ )
+ values
+ (
+ v_SEARCH_ID,
+ v_NAME,
+ v_PARAM_ATTRIBUTES,
+ v_PARAM_TYPE,
+ v_PARAM_VALUE_STR,
+ v_PARAM_VALUE_CLOB,
+ v_TENANT_ID
+ );
+  DBMS_OUTPUT.PUT_LINE('Screenshot is add for widget (id=3023)');
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Screenshot of widget (id=3023) exists, no need to add again');  
+END IF;
 
---v_PARAM_VALUE_CLOB :=screenshot_3024;
---v_SEARCH_ID := 3024;
---v_NAME := 'WIDGET_VISUAL';
---v_PARAM_TYPE := 2;
---v_TENANT_ID  :='&TENANT_ID';
-
---Update EMS_ANALYTICS_SEARCH_PARAMS set PARAM_VALUE_CLOB= v_PARAM_VALUE_CLOB where SEARCH_ID=v_SEARCH_ID and NAME=v_NAME and PARAM_TYPE=v_PARAM_TYPE and TENANT_ID=v_TENANT_ID;
---v_PARAM_VALUE_CLOB :=screenshot_3025;
---v_SEARCH_ID := 3025;
---Update EMS_ANALYTICS_SEARCH_PARAMS set PARAM_VALUE_CLOB= v_PARAM_VALUE_CLOB where SEARCH_ID=v_SEARCH_ID and NAME=v_NAME and PARAM_TYPE=v_PARAM_TYPE and TENANT_ID=v_TENANT_ID;
---v_PARAM_VALUE_CLOB :=screenshot_3026;
---v_SEARCH_ID := 3026;
---Update EMS_ANALYTICS_SEARCH_PARAMS set PARAM_VALUE_CLOB= v_PARAM_VALUE_CLOB where SEARCH_ID=v_SEARCH_ID and NAME=v_NAME and PARAM_TYPE=v_PARAM_TYPE and TENANT_ID=v_TENANT_ID;
---v_PARAM_VALUE_CLOB :=screenshot_3027;
---v_SEARCH_ID := 3027;
---Update EMS_ANALYTICS_SEARCH_PARAMS set PARAM_VALUE_CLOB= v_PARAM_VALUE_CLOB where SEARCH_ID=v_SEARCH_ID and NAME=v_NAME and PARAM_TYPE=v_PARAM_TYPE and TENANT_ID=v_TENANT_ID;
-v_PARAM_VALUE_CLOB :=screenshot_3028;
-v_SEARCH_ID := 3028;
+v_PARAM_VALUE_CLOB :=screenshot_3024;
+v_SEARCH_ID := 3024;
 v_NAME := 'WIDGET_VISUAL';
 v_PARAM_TYPE := 2;
 v_TENANT_ID  :='&TENANT_ID';
+
+Update EMS_ANALYTICS_SEARCH_PARAMS set PARAM_VALUE_CLOB= v_PARAM_VALUE_CLOB where SEARCH_ID=v_SEARCH_ID and NAME=v_NAME and PARAM_TYPE=v_PARAM_TYPE and TENANT_ID=v_TENANT_ID;
+v_PARAM_VALUE_CLOB :=screenshot_3025;
+v_SEARCH_ID := 3025;
+Update EMS_ANALYTICS_SEARCH_PARAMS set PARAM_VALUE_CLOB= v_PARAM_VALUE_CLOB where SEARCH_ID=v_SEARCH_ID and NAME=v_NAME and PARAM_TYPE=v_PARAM_TYPE and TENANT_ID=v_TENANT_ID;
+v_PARAM_VALUE_CLOB :=screenshot_3026;
+v_SEARCH_ID := 3026;
+Update EMS_ANALYTICS_SEARCH_PARAMS set PARAM_VALUE_CLOB= v_PARAM_VALUE_CLOB where SEARCH_ID=v_SEARCH_ID and NAME=v_NAME and PARAM_TYPE=v_PARAM_TYPE and TENANT_ID=v_TENANT_ID;
+v_PARAM_VALUE_CLOB :=screenshot_3027;
+v_SEARCH_ID := 3027;
+Update EMS_ANALYTICS_SEARCH_PARAMS set PARAM_VALUE_CLOB= v_PARAM_VALUE_CLOB where SEARCH_ID=v_SEARCH_ID and NAME=v_NAME and PARAM_TYPE=v_PARAM_TYPE and TENANT_ID=v_TENANT_ID;
+v_PARAM_VALUE_CLOB :=screenshot_3028;
+v_SEARCH_ID := 3028;
 Update EMS_ANALYTICS_SEARCH_PARAMS set PARAM_VALUE_CLOB= v_PARAM_VALUE_CLOB where SEARCH_ID=v_SEARCH_ID and NAME=v_NAME and PARAM_TYPE=v_PARAM_TYPE and TENANT_ID=v_TENANT_ID;
 COMMIT;
 

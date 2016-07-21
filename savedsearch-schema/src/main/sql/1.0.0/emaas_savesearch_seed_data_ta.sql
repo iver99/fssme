@@ -1025,456 +1025,456 @@ PARAM_VALUE_CLOB,
 TENANT_ID
 );
 
---SEARCH_ID                  :=   3002;
---NAME                       :=   'WebLogic Servers and their Ports';
---OWNER                      :=   'ORACLE';
---CREATION_DATE              :=   SYS_EXTRACT_UTC(SYSTIMESTAMP);
---LAST_MODIFICATION_DATE     :=   SYS_EXTRACT_UTC(SYSTIMESTAMP);
---LAST_MODIFIED_BY           :=   'ORACLE';
---DESCRIPTION                :=   'Shows the Listen Port, SSL Listen Port and Administration Port for WebLogic Servers';
---FOLDER_ID                  :=   4;
---CATEGORY_ID                :=   2;
---NAME_NLSID                 :=   null;
---NAME_SUBSYSTEM             :=   null;
---DESCRIPTION_NLSID          :=   null;
---DESCRIPTION_SUBSYSTEM      :=   null;
---SYSTEM_SEARCH              :=   1;
---EM_PLUGIN_ID               :=   null;
---IS_LOCKED                  :=   0;
---METADATA_CLOB              :=   null;
---SEARCH_DISPLAY_STR         :=   '';
---UI_HIDDEN                  :=   0;
---TENANT_ID                  :=   '&TENANT_ID';
---IS_WIDGET                  :=   1;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---);
+SEARCH_ID                  :=   3002;
+NAME                       :=   'WebLogic Servers and their Ports';
+OWNER                      :=   'ORACLE';
+CREATION_DATE              :=   SYS_EXTRACT_UTC(SYSTIMESTAMP);
+LAST_MODIFICATION_DATE     :=   SYS_EXTRACT_UTC(SYSTIMESTAMP);
+LAST_MODIFIED_BY           :=   'ORACLE';
+DESCRIPTION                :=   'Shows the Listen Port, SSL Listen Port and Administration Port for WebLogic Servers';
+FOLDER_ID                  :=   4;
+CATEGORY_ID                :=   2;
+NAME_NLSID                 :=   null;
+NAME_SUBSYSTEM             :=   null;
+DESCRIPTION_NLSID          :=   null;
+DESCRIPTION_SUBSYSTEM      :=   null;
+SYSTEM_SEARCH              :=   1;
+EM_PLUGIN_ID               :=   null;
+IS_LOCKED                  :=   0;
+METADATA_CLOB              :=   null;
+SEARCH_DISPLAY_STR         :=   '';
+UI_HIDDEN                  :=   0;
+TENANT_ID                  :=   '&TENANT_ID';
+IS_WIDGET                  :=   1;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+);
 
---SEARCH_ID              := 3002                                                         ;
---NAME                   := 'WIDGET_TEMPLATE'                                            ;
---PARAM_ATTRIBUTES       := null                                                         ;
---PARAM_TYPE             := 1                                                            ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html'       ;
---PARAM_VALUE_CLOB       := null                                                         ;
---TENANT_ID              := '&TENANT_ID'                                                 ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                                             ;
---NAME                   := 'WIDGET_ICON'                                    ;
---PARAM_ATTRIBUTES       := null                                             ;
---PARAM_TYPE             := 1                                                ;
---PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png'        ;
---PARAM_VALUE_CLOB       := null                                             ;
---TENANT_ID              := '&TENANT_ID'                                     ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                                                        ;
---NAME                   := 'WIDGET_VIEWMODEL'                                          ;
---PARAM_ATTRIBUTES       := null                                                        ;
---PARAM_TYPE             := 1                                                           ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js'     ;
---PARAM_VALUE_CLOB       := null                                                        ;
---TENANT_ID              := '&TENANT_ID'                                                ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                                         ;
---NAME                   := 'TIME_PERIOD_KEY'                            ;
---PARAM_ATTRIBUTES       := null                                         ;
---PARAM_TYPE             := 1                                            ;
---PARAM_VALUE_STR        := '24'                                         ;
---PARAM_VALUE_CLOB       := null                                         ;
---TENANT_ID              := '&TENANT_ID'                                 ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002;
---NAME                   := 'TA_CRITERIA';
---PARAM_ATTRIBUTES       := null;
---PARAM_TYPE             := 2;
---PARAM_VALUE_STR        := null;
---PARAM_VALUE_CLOB       := '{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"weblogic_j2eeserver","metadata":{"category":false},"displayValue":"Oracle WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_listenport","_value":null,"dataType":"number","displayName":"Listen Port","displayDetails":"Server Information","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"string","useForSort":true},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"listenport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_ssllistenport","_value":null,"dataType":"number","displayName":"SSL Listen Port","displayDetails":"Server Information"'||',"role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"string","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"ssllistenport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_administrationport","_value":null,"dataType":"number","displayName":"Administration Port","displayDetails":"Server Information","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"string","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"administrationport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1}}]}';
---TENANT_ID              := '&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                   ;
---NAME                   := 'PROVIDER_VERSION'     ;
---PARAM_ATTRIBUTES       := null                   ;
---PARAM_TYPE             := 1                      ;
---PARAM_VALUE_STR        := '1.0'                  ;
---PARAM_VALUE_CLOB       := null                   ;
---TENANT_ID              := '&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                       ;
---NAME                   := 'WIDGET_KOC_NAME'          ;
---PARAM_ATTRIBUTES       := null                       ;
---PARAM_TYPE             := 1                          ;
---PARAM_VALUE_STR        := 'emcta-visualization'      ;
---PARAM_VALUE_CLOB       := null                       ;
---TENANT_ID              := '&TENANT_ID'               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                             ;
---NAME                   := 'VISUALIZATION_TYPE_KEY'         ;
---PARAM_ATTRIBUTES       := null                             ;
---PARAM_TYPE             := 1                                ;
---PARAM_VALUE_STR        := 'TABLE'                          ;
---PARAM_VALUE_CLOB       := null                             ;
---TENANT_ID              := '&TENANT_ID'                     ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                             ;
---NAME                   := 'PROVIDER_ASSET_ROOT'            ;
---PARAM_ATTRIBUTES       := null                             ;
---PARAM_TYPE             := 1                                ;
---PARAM_VALUE_STR        := 'assetRoot'                      ;
---PARAM_VALUE_CLOB       := null                             ;
---TENANT_ID              := '&TENANT_ID'                     ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                       ;
---NAME                   := 'WIDGET_SOURCE'            ;
---PARAM_ATTRIBUTES       := null                       ;
---PARAM_TYPE             := 1                          ;
---PARAM_VALUE_STR        := '1'                        ;
---PARAM_VALUE_CLOB       := null                       ;
---TENANT_ID              := '&TENANT_ID'               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---
---SEARCH_ID              := 3002                ;
---NAME                   := 'PROVIDER_NAME'     ;
---PARAM_ATTRIBUTES       := null                ;
---PARAM_TYPE             := 1                   ;
---PARAM_VALUE_STR        := 'TargetAnalytics'   ;
---PARAM_VALUE_CLOB       := null                ;
---TENANT_ID              := '&TENANT_ID'        ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---
---SEARCH_ID              := 3002                 ;
---NAME                   := 'TOP_N_ROWS'         ;
---PARAM_ATTRIBUTES       := null                 ;
---PARAM_TYPE             := 1                    ;
---PARAM_VALUE_STR        := '100'                ;
---PARAM_VALUE_CLOB       := null                 ;
---TENANT_ID              := '&TENANT_ID'         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                     ;
---NAME                   := 'TA_HORI_SORT_ORDER'     ;
---PARAM_ATTRIBUTES       := null                     ;
---PARAM_TYPE             := 1                        ;
---PARAM_VALUE_STR        := 'true'                   ;
---PARAM_VALUE_CLOB       := null                     ;
---TENANT_ID              := '&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3002                     ;
---NAME                   := 'TA_HORI_SORT_COLUMN'    ;
---PARAM_ATTRIBUTES       := null                     ;
---PARAM_TYPE             := 1                        ;
---PARAM_VALUE_STR        := '0'                      ;
---PARAM_VALUE_CLOB       := null                     ;
---TENANT_ID              := '&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID              := 3002                                                         ;
+NAME                   := 'WIDGET_TEMPLATE'                                            ;
+PARAM_ATTRIBUTES       := null                                                         ;
+PARAM_TYPE             := 1                                                            ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html'       ;
+PARAM_VALUE_CLOB       := null                                                         ;
+TENANT_ID              := '&TENANT_ID'                                                 ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                                             ;
+NAME                   := 'WIDGET_ICON'                                    ;
+PARAM_ATTRIBUTES       := null                                             ;
+PARAM_TYPE             := 1                                                ;
+PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png'        ;
+PARAM_VALUE_CLOB       := null                                             ;
+TENANT_ID              := '&TENANT_ID'                                     ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                                                        ;
+NAME                   := 'WIDGET_VIEWMODEL'                                          ;
+PARAM_ATTRIBUTES       := null                                                        ;
+PARAM_TYPE             := 1                                                           ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js'     ;
+PARAM_VALUE_CLOB       := null                                                        ;
+TENANT_ID              := '&TENANT_ID'                                                ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                                         ;
+NAME                   := 'TIME_PERIOD_KEY'                            ;
+PARAM_ATTRIBUTES       := null                                         ;
+PARAM_TYPE             := 1                                            ;
+PARAM_VALUE_STR        := '24'                                         ;
+PARAM_VALUE_CLOB       := null                                         ;
+TENANT_ID              := '&TENANT_ID'                                 ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002;
+NAME                   := 'TA_CRITERIA';
+PARAM_ATTRIBUTES       := null;
+PARAM_TYPE             := 2;
+PARAM_VALUE_STR        := null;
+PARAM_VALUE_CLOB       := '{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"weblogic_j2eeserver","metadata":{"category":false},"displayValue":"Oracle WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_listenport","_value":null,"dataType":"number","displayName":"Listen Port","displayDetails":"Server Information","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"string","useForSort":true},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"listenport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_ssllistenport","_value":null,"dataType":"number","displayName":"SSL Listen Port","displayDetails":"Server Information"'||',"role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"string","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"ssllistenport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_administrationport","_value":null,"dataType":"number","displayName":"Administration Port","displayDetails":"Server Information","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"string","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"administrationport","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1}}]}';
+TENANT_ID              := '&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                   ;
+NAME                   := 'PROVIDER_VERSION'     ;
+PARAM_ATTRIBUTES       := null                   ;
+PARAM_TYPE             := 1                      ;
+PARAM_VALUE_STR        := '1.0'                  ;
+PARAM_VALUE_CLOB       := null                   ;
+TENANT_ID              := '&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                       ;
+NAME                   := 'WIDGET_KOC_NAME'          ;
+PARAM_ATTRIBUTES       := null                       ;
+PARAM_TYPE             := 1                          ;
+PARAM_VALUE_STR        := 'emcta-visualization'      ;
+PARAM_VALUE_CLOB       := null                       ;
+TENANT_ID              := '&TENANT_ID'               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                             ;
+NAME                   := 'VISUALIZATION_TYPE_KEY'         ;
+PARAM_ATTRIBUTES       := null                             ;
+PARAM_TYPE             := 1                                ;
+PARAM_VALUE_STR        := 'TABLE'                          ;
+PARAM_VALUE_CLOB       := null                             ;
+TENANT_ID              := '&TENANT_ID'                     ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                             ;
+NAME                   := 'PROVIDER_ASSET_ROOT'            ;
+PARAM_ATTRIBUTES       := null                             ;
+PARAM_TYPE             := 1                                ;
+PARAM_VALUE_STR        := 'assetRoot'                      ;
+PARAM_VALUE_CLOB       := null                             ;
+TENANT_ID              := '&TENANT_ID'                     ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                       ;
+NAME                   := 'WIDGET_SOURCE'            ;
+PARAM_ATTRIBUTES       := null                       ;
+PARAM_TYPE             := 1                          ;
+PARAM_VALUE_STR        := '1'                        ;
+PARAM_VALUE_CLOB       := null                       ;
+TENANT_ID              := '&TENANT_ID'               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+
+SEARCH_ID              := 3002                ;
+NAME                   := 'PROVIDER_NAME'     ;
+PARAM_ATTRIBUTES       := null                ;
+PARAM_TYPE             := 1                   ;
+PARAM_VALUE_STR        := 'TargetAnalytics'   ;
+PARAM_VALUE_CLOB       := null                ;
+TENANT_ID              := '&TENANT_ID'        ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+
+SEARCH_ID              := 3002                 ;
+NAME                   := 'TOP_N_ROWS'         ;
+PARAM_ATTRIBUTES       := null                 ;
+PARAM_TYPE             := 1                    ;
+PARAM_VALUE_STR        := '100'                ;
+PARAM_VALUE_CLOB       := null                 ;
+TENANT_ID              := '&TENANT_ID'         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                     ;
+NAME                   := 'TA_HORI_SORT_ORDER'     ;
+PARAM_ATTRIBUTES       := null                     ;
+PARAM_TYPE             := 1                        ;
+PARAM_VALUE_STR        := 'true'                   ;
+PARAM_VALUE_CLOB       := null                     ;
+TENANT_ID              := '&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3002                     ;
+NAME                   := 'TA_HORI_SORT_COLUMN'    ;
+PARAM_ATTRIBUTES       := null                     ;
+PARAM_TYPE             := 1                        ;
+PARAM_VALUE_STR        := '0'                      ;
+PARAM_VALUE_CLOB       := null                     ;
+TENANT_ID              := '&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
 
 SEARCH_ID                  :=    3003;
 NAME                       :=    'Databases with Autoextend ON and size greater than 10GB';
@@ -1926,1357 +1926,1357 @@ PARAM_VALUE_CLOB,
 TENANT_ID
 );
 
---SEARCH_ID                  := 3004;
---NAME                       := 'Top 10 Listeners by Load';
---OWNER                      := 'ORACLE';
---CREATION_DATE              := SYS_EXTRACT_UTC(SYSTIMESTAMP);
---LAST_MODIFICATION_DATE     := SYS_EXTRACT_UTC(SYSTIMESTAMP);
---LAST_MODIFIED_BY           := 'ORACLE';
---DESCRIPTION                := 'Shows Response Time, Connections Established and Connections Refused for top 10 Listeners (by Load)';
---FOLDER_ID                  := 4;
---CATEGORY_ID                := 2;
---NAME_NLSID                 := null;
---NAME_SUBSYSTEM             := null;
---DESCRIPTION_NLSID          := null;
---DESCRIPTION_SUBSYSTEM      := null;
---SYSTEM_SEARCH              := 1;
---EM_PLUGIN_ID               := null;
---IS_LOCKED                  := 0;
---METADATA_CLOB              := null;
---SEARCH_DISPLAY_STR         := '';
---UI_HIDDEN                  := 0;
---TENANT_ID                  := '&TENANT_ID';
---IS_WIDGET                  := 1;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---);
---
---SEARCH_ID              := 3004                                                          ;
---NAME                   := 'WIDGET_TEMPLATE'                                             ;
---PARAM_ATTRIBUTES       := null                                                          ;
---PARAM_TYPE             := 1                                                             ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html'        ;
---PARAM_VALUE_CLOB       := null                                                          ;
---TENANT_ID              := '&TENANT_ID'                                                  ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                                                    ;
---NAME                   := 'WIDGET_ICON'                                           ;
---PARAM_ATTRIBUTES       := null                                                    ;
---PARAM_TYPE             := 1                                                       ;
---PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png'               ;
---PARAM_VALUE_CLOB       := null                                                    ;
---TENANT_ID              := '&TENANT_ID'                                            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                                                     ;
---NAME                   := 'WIDGET_VIEWMODEL'                                       ;
---PARAM_ATTRIBUTES       := null                                                     ;
---PARAM_TYPE             := 1                                                        ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js'  ;
---PARAM_VALUE_CLOB       := null                                                     ;
---TENANT_ID              := '&TENANT_ID'                                             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                 ;
---NAME                   := 'TIME_PERIOD_KEY'    ;
---PARAM_ATTRIBUTES       := null                 ;
---PARAM_TYPE             := 1                    ;
---PARAM_VALUE_STR        := '24'                 ;
---PARAM_VALUE_CLOB       := null                 ;
---TENANT_ID              := '&TENANT_ID'         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004;
---NAME                   := 'TA_CRITERIA';
---PARAM_ATTRIBUTES       := null;
---PARAM_TYPE             := 2;
---PARAM_VALUE_STR        := null;
---PARAM_VALUE_CLOB       := '{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"oracle_listener","metadata":{"category":false},"displayValue":"Listener"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","UIProperties":{"useForSort":false}}},{"jsonConstructor":"TargetStatusSearchCriterion","data":{"id":"target_status","_value":null,"dataType":"string","displayName":"Target Status","displayDetails":null,"role":"column","UIProperties":{"useForSort":false,"ignoreCase":true},"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_listener_Response_tnsPing","_value":null,"dataType":"number","displayName":"Response Time (msec)","displayDetails":"Response","role":"column","UIProperties":{"useForSort":false,"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar"},"targetType":"oracle_listener","mcName":"tnsPing","mgName":"Response","mgDisplayName":"Response","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_listener_Load_estConns","_value":null,"dataType":"number","displayName":"Connections Established","displayDetails":"Load","role":"column",'||'"UIProperties":{"useForSort":true,"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar"},"targetType":"oracle_listener","mcName":"estConns","mgName":"Load","mgDisplayName":"Load","isKey":0,"groupKeyColumns":[],"isConfig":0,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_listener_Load_refConns","_value":null,"dataType":"number","displayName":"Connections Refused (per","displayDetails":"Load","role":"column","UIProperties":{"useForSort":false,"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar"},"targetType":"oracle_listener","mcName":"refConns","mgName":"Load","mgDisplayName":"Load","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}';
---TENANT_ID              := '&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                     ;
---NAME                   := 'PROVIDER_VERSION'       ;
---PARAM_ATTRIBUTES       := null                     ;
---PARAM_TYPE             := 1                        ;
---PARAM_VALUE_STR        := '1.0'                    ;
---PARAM_VALUE_CLOB       := null                     ;
---TENANT_ID              := '&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                     ;
---NAME                   := 'WIDGET_KOC_NAME'        ;
---PARAM_ATTRIBUTES       := null                     ;
---PARAM_TYPE             := 1                        ;
---PARAM_VALUE_STR        := 'emcta-visualization'    ;
---PARAM_VALUE_CLOB       := null                     ;
---TENANT_ID              := '&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                         ;
---NAME                   := 'VISUALIZATION_TYPE_KEY'     ;
---PARAM_ATTRIBUTES       := null                         ;
---PARAM_TYPE             := 1                            ;
---PARAM_VALUE_STR        := 'TABLE'                      ;
---PARAM_VALUE_CLOB       := null                         ;
---TENANT_ID              := '&TENANT_ID'                 ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                     ;
---NAME                   := 'PROVIDER_ASSET_ROOT'    ;
---PARAM_ATTRIBUTES       := null                     ;
---PARAM_TYPE             := 1                        ;
---PARAM_VALUE_STR        := 'assetRoot'              ;
---PARAM_VALUE_CLOB       := null                     ;
---TENANT_ID              := '&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004            ;
---NAME                   := 'WIDGET_SOURCE' ;
---PARAM_ATTRIBUTES       := null            ;
---PARAM_TYPE             := 1               ;
---PARAM_VALUE_STR        := '1'             ;
---PARAM_VALUE_CLOB       := null            ;
---TENANT_ID              := '&TENANT_ID'    ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004               ;
---NAME                   := 'PROVIDER_NAME'    ;
---PARAM_ATTRIBUTES       := null               ;
---PARAM_TYPE             := 1                  ;
---PARAM_VALUE_STR        := 'TargetAnalytics'  ;
---PARAM_VALUE_CLOB       := null               ;
---TENANT_ID              := '&TENANT_ID'       ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                       ;
---NAME                   := 'TOP_N_ROWS'               ;
---PARAM_ATTRIBUTES       := null                       ;
---PARAM_TYPE             := 1                          ;
---PARAM_VALUE_STR        := '10'                       ;
---PARAM_VALUE_CLOB       := null                       ;
---TENANT_ID              := '&TENANT_ID'               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                         ;
---NAME                   := 'TA_HORI_SORT_ORDER'         ;
---PARAM_ATTRIBUTES       := null                         ;
---PARAM_TYPE             := 1                            ;
---PARAM_VALUE_STR        := 'true'                       ;
---PARAM_VALUE_CLOB       := null                         ;
---TENANT_ID              := '&TENANT_ID'                 ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3004                       ;
---NAME                   := 'TA_HORI_SORT_COLUMN'      ;
---PARAM_ATTRIBUTES       := null                       ;
---PARAM_TYPE             := 1                          ;
---PARAM_VALUE_STR        := '2'                        ;
---PARAM_VALUE_CLOB       := null                       ;
---TENANT_ID              := '&TENANT_ID'               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID                  := 3004;
+NAME                       := 'Top 10 Listeners by Load';
+OWNER                      := 'ORACLE';
+CREATION_DATE              := SYS_EXTRACT_UTC(SYSTIMESTAMP);
+LAST_MODIFICATION_DATE     := SYS_EXTRACT_UTC(SYSTIMESTAMP);
+LAST_MODIFIED_BY           := 'ORACLE';
+DESCRIPTION                := 'Shows Response Time, Connections Established and Connections Refused for top 10 Listeners (by Load)';
+FOLDER_ID                  := 4;
+CATEGORY_ID                := 2;
+NAME_NLSID                 := null;
+NAME_SUBSYSTEM             := null;
+DESCRIPTION_NLSID          := null;
+DESCRIPTION_SUBSYSTEM      := null;
+SYSTEM_SEARCH              := 1;
+EM_PLUGIN_ID               := null;
+IS_LOCKED                  := 0;
+METADATA_CLOB              := null;
+SEARCH_DISPLAY_STR         := '';
+UI_HIDDEN                  := 0;
+TENANT_ID                  := '&TENANT_ID';
+IS_WIDGET                  := 1;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+);
 
---SEARCH_ID                  := 3018;
---NAME                       := 'Host Inventory By Platform';
---OWNER                      := 'ORACLE';
---CREATION_DATE              := SYS_EXTRACT_UTC(SYSTIMESTAMP);
---LAST_MODIFICATION_DATE     := SYS_EXTRACT_UTC(SYSTIMESTAMP);
---LAST_MODIFIED_BY           := 'ORACLE';
---DESCRIPTION                := 'Shows CPU Implementation, Total CPU Cores/Sockets/Threads and Memory Size for Hosts grouped by Operating System';
---FOLDER_ID                  := 4;
---CATEGORY_ID                := 2;
---NAME_NLSID                 := null;
---NAME_SUBSYSTEM             := null;
---DESCRIPTION_NLSID          := null;
---DESCRIPTION_SUBSYSTEM      := null;
---SYSTEM_SEARCH              := 1;
---EM_PLUGIN_ID               := null;
---IS_LOCKED                  := 0;
---METADATA_CLOB              := null;
---SEARCH_DISPLAY_STR         := '';
---UI_HIDDEN                  := 0;
---TENANT_ID                  := '&TENANT_ID';
---IS_WIDGET                  := 1;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---);
---SEARCH_ID              :=3018;
---NAME                   :='WIDGET_TEMPLATE';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=1;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html';
---PARAM_VALUE_CLOB       :=null;
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018;
---NAME                   :='WIDGET_ICON';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=1;
---PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png';
---PARAM_VALUE_CLOB       :=null;
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018;
---NAME                   :='WIDGET_VIEWMODEL';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=1;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js';
---PARAM_VALUE_CLOB       :=null;
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018;
---NAME                   :='TIME_PERIOD_KEY';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=1;
---PARAM_VALUE_STR        :='24';
---PARAM_VALUE_CLOB       :=null;
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018;
---NAME                   :='TA_CRITERIA';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=2;
---PARAM_VALUE_STR        :=null;
---PARAM_VALUE_CLOB       :='{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"host","metadata":{"category":false},"displayValue":"Host"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_HwCpu_impl","_value":null,"dataType":"string","displayName":"Implementation","displayDetails":"CPUs","role":"column","func":null,"UIProperties":{"useForSort":false},"targetType":"host","unitStr":null,"mcName":"impl","mgName":"HwCpu","mgDisplayName":"CPUs","isKey":1,"groupKeyColumns":["numCores","ecacheInMb","freqInMhz","isHyperthreadEnabled","impl","mask","revision","siblings","vendorName"],"isConfig":1}},'||
---'{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Hw_totalCpuCores","_value":null,"dataType":"number","displayName":"Total CPU Cores","displayDetails":"Hardware","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"host","unitStr":null,"mcName":"totalCpuCores","mgName":"Hw","mgDisplayName":"Hardware","isKey":0,"groupKeyColumns":[],"isConfig":1}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Hw_physicalCpuCount","_value":null,"dataType":"number","displayName":"Total CPU Sockets","displayDetails":"Hardware","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"host","unitStr":null,"mcName":"physicalCpuCount","mgName":"Hw","mgDisplayName":"Hardware","isKey":0,"groupKeyColumns":[],"isConfig":1}}'||
---',{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Hw_logicalCpuCount","_value":null,"dataType":"number","displayName":"Total CPU Threads","displayDetails":"Hardware","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"host","unitStr":null,"mcName":"logicalCpuCount","mgName":"Hw","mgDisplayName":"Hardware","isKey":0,"groupKeyColumns":[],"isConfig":1}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Hw_memorySizeInMb","_value":null,"dataType":"number","displayName":"Memory Size (MB)","displayDetails":"Hardware","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},'||
---'{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"host","unitStr":null,"mcName":"memorySizeInMb","mgName":"Hw","mgDisplayName":"Hardware","isKey":0,"groupKeyColumns":[],"isConfig":1}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Os_name","_value":null,"dataType":"string","displayName":"Name","displayDetails":"Operating System","role":"group by","func":null,"UIProperties":{"useForSort":false},"targetType":"host","unitStr":null,"mcName":"name","mgName":"Os","mgDisplayName":"Operating System","isKey":0,"groupKeyColumns":[],"isConfig":1}}]}';
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018                  ;
---NAME                   :='PROVIDER_VERSION'    ;
---PARAM_ATTRIBUTES       :=null                  ;
---PARAM_TYPE             :=1                     ;
---PARAM_VALUE_STR        :='1.0'                 ;
---PARAM_VALUE_CLOB       :=null                  ;
---TENANT_ID              :='&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018                  ;
---NAME                   :='WIDGET_KOC_NAME'     ;
---PARAM_ATTRIBUTES       :=null                  ;
---PARAM_TYPE             :=1                     ;
---PARAM_VALUE_STR        :='emcta-visualization' ;
---PARAM_VALUE_CLOB       :=null                  ;
---TENANT_ID              :='&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018                         ;
---NAME                   :='VISUALIZATION_TYPE_KEY'     ;
---PARAM_ATTRIBUTES       :=null                         ;
---PARAM_TYPE             :=1                            ;
---PARAM_VALUE_STR        :='TABLE'                      ;
---PARAM_VALUE_CLOB       :=null                         ;
---TENANT_ID              :='&TENANT_ID'                 ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018                            ;
---NAME                   :='PROVIDER_ASSET_ROOT'           ;
---PARAM_ATTRIBUTES       :=null                            ;
---PARAM_TYPE             :=1                               ;
---PARAM_VALUE_STR        :='assetRoot'                     ;
---PARAM_VALUE_CLOB       :=null                            ;
---TENANT_ID              :='&TENANT_ID'                    ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018                              ;
---NAME                   :='WIDGET_SOURCE'                   ;
---PARAM_ATTRIBUTES       :=null                              ;
---PARAM_TYPE             :=1                                 ;
---PARAM_VALUE_STR        :='1'                               ;
---PARAM_VALUE_CLOB       :=null                              ;
---TENANT_ID              :='&TENANT_ID'                      ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018                               ;
---NAME                   :='PROVIDER_NAME'                    ;
---PARAM_ATTRIBUTES       :=null                               ;
---PARAM_TYPE             :=1                                  ;
---PARAM_VALUE_STR        :='TargetAnalytics'                  ;
---PARAM_VALUE_CLOB       :=null                               ;
---TENANT_ID              :='&TENANT_ID'                       ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018                            ;
---NAME                   :='TOP_N_ROWS'                    ;
---PARAM_ATTRIBUTES       :=null                            ;
---PARAM_TYPE             :=1                               ;
---PARAM_VALUE_STR        :='100'                           ;
---PARAM_VALUE_CLOB       :=null                            ;
---TENANT_ID              :='&TENANT_ID'                    ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018                        ;
---NAME                   :='TA_HORI_SORT_ORDER'        ;
---PARAM_ATTRIBUTES       :=null                        ;
---PARAM_TYPE             :=1                           ;
---PARAM_VALUE_STR        :='true'                      ;
---PARAM_VALUE_CLOB       :=null                        ;
---TENANT_ID              :='&TENANT_ID'                ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3018                     ;
---NAME                   :='TA_HORI_SORT_COLUMN'    ;
---PARAM_ATTRIBUTES       :=null                     ;
---PARAM_TYPE             :=1                        ;
---PARAM_VALUE_STR        :='-1'                     ;
---PARAM_VALUE_CLOB       :=null                     ;
---TENANT_ID              :='&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID              := 3004                                                          ;
+NAME                   := 'WIDGET_TEMPLATE'                                             ;
+PARAM_ATTRIBUTES       := null                                                          ;
+PARAM_TYPE             := 1                                                             ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html'        ;
+PARAM_VALUE_CLOB       := null                                                          ;
+TENANT_ID              := '&TENANT_ID'                                                  ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                                                    ;
+NAME                   := 'WIDGET_ICON'                                           ;
+PARAM_ATTRIBUTES       := null                                                    ;
+PARAM_TYPE             := 1                                                       ;
+PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png'               ;
+PARAM_VALUE_CLOB       := null                                                    ;
+TENANT_ID              := '&TENANT_ID'                                            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                                                     ;
+NAME                   := 'WIDGET_VIEWMODEL'                                       ;
+PARAM_ATTRIBUTES       := null                                                     ;
+PARAM_TYPE             := 1                                                        ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js'  ;
+PARAM_VALUE_CLOB       := null                                                     ;
+TENANT_ID              := '&TENANT_ID'                                             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                 ;
+NAME                   := 'TIME_PERIOD_KEY'    ;
+PARAM_ATTRIBUTES       := null                 ;
+PARAM_TYPE             := 1                    ;
+PARAM_VALUE_STR        := '24'                 ;
+PARAM_VALUE_CLOB       := null                 ;
+TENANT_ID              := '&TENANT_ID'         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004;
+NAME                   := 'TA_CRITERIA';
+PARAM_ATTRIBUTES       := null;
+PARAM_TYPE             := 2;
+PARAM_VALUE_STR        := null;
+PARAM_VALUE_CLOB       := '{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"oracle_listener","metadata":{"category":false},"displayValue":"Listener"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","UIProperties":{"useForSort":false}}},{"jsonConstructor":"TargetStatusSearchCriterion","data":{"id":"target_status","_value":null,"dataType":"string","displayName":"Target Status","displayDetails":null,"role":"column","UIProperties":{"useForSort":false,"ignoreCase":true},"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_listener_Response_tnsPing","_value":null,"dataType":"number","displayName":"Response Time (msec)","displayDetails":"Response","role":"column","UIProperties":{"useForSort":false,"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar"},"targetType":"oracle_listener","mcName":"tnsPing","mgName":"Response","mgDisplayName":"Response","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_listener_Load_estConns","_value":null,"dataType":"number","displayName":"Connections Established","displayDetails":"Load","role":"column",'||'"UIProperties":{"useForSort":true,"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar"},"targetType":"oracle_listener","mcName":"estConns","mgName":"Load","mgDisplayName":"Load","isKey":0,"groupKeyColumns":[],"isConfig":0,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_listener_Load_refConns","_value":null,"dataType":"number","displayName":"Connections Refused (per","displayDetails":"Load","role":"column","UIProperties":{"useForSort":false,"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar"},"targetType":"oracle_listener","mcName":"refConns","mgName":"Load","mgDisplayName":"Load","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}';
+TENANT_ID              := '&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                     ;
+NAME                   := 'PROVIDER_VERSION'       ;
+PARAM_ATTRIBUTES       := null                     ;
+PARAM_TYPE             := 1                        ;
+PARAM_VALUE_STR        := '1.0'                    ;
+PARAM_VALUE_CLOB       := null                     ;
+TENANT_ID              := '&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                     ;
+NAME                   := 'WIDGET_KOC_NAME'        ;
+PARAM_ATTRIBUTES       := null                     ;
+PARAM_TYPE             := 1                        ;
+PARAM_VALUE_STR        := 'emcta-visualization'    ;
+PARAM_VALUE_CLOB       := null                     ;
+TENANT_ID              := '&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                         ;
+NAME                   := 'VISUALIZATION_TYPE_KEY'     ;
+PARAM_ATTRIBUTES       := null                         ;
+PARAM_TYPE             := 1                            ;
+PARAM_VALUE_STR        := 'TABLE'                      ;
+PARAM_VALUE_CLOB       := null                         ;
+TENANT_ID              := '&TENANT_ID'                 ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                     ;
+NAME                   := 'PROVIDER_ASSET_ROOT'    ;
+PARAM_ATTRIBUTES       := null                     ;
+PARAM_TYPE             := 1                        ;
+PARAM_VALUE_STR        := 'assetRoot'              ;
+PARAM_VALUE_CLOB       := null                     ;
+TENANT_ID              := '&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004            ;
+NAME                   := 'WIDGET_SOURCE' ;
+PARAM_ATTRIBUTES       := null            ;
+PARAM_TYPE             := 1               ;
+PARAM_VALUE_STR        := '1'             ;
+PARAM_VALUE_CLOB       := null            ;
+TENANT_ID              := '&TENANT_ID'    ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004               ;
+NAME                   := 'PROVIDER_NAME'    ;
+PARAM_ATTRIBUTES       := null               ;
+PARAM_TYPE             := 1                  ;
+PARAM_VALUE_STR        := 'TargetAnalytics'  ;
+PARAM_VALUE_CLOB       := null               ;
+TENANT_ID              := '&TENANT_ID'       ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                       ;
+NAME                   := 'TOP_N_ROWS'               ;
+PARAM_ATTRIBUTES       := null                       ;
+PARAM_TYPE             := 1                          ;
+PARAM_VALUE_STR        := '10'                       ;
+PARAM_VALUE_CLOB       := null                       ;
+TENANT_ID              := '&TENANT_ID'               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                         ;
+NAME                   := 'TA_HORI_SORT_ORDER'         ;
+PARAM_ATTRIBUTES       := null                         ;
+PARAM_TYPE             := 1                            ;
+PARAM_VALUE_STR        := 'true'                       ;
+PARAM_VALUE_CLOB       := null                         ;
+TENANT_ID              := '&TENANT_ID'                 ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3004                       ;
+NAME                   := 'TA_HORI_SORT_COLUMN'      ;
+PARAM_ATTRIBUTES       := null                       ;
+PARAM_TYPE             := 1                          ;
+PARAM_VALUE_STR        := '2'                        ;
+PARAM_VALUE_CLOB       := null                       ;
+TENANT_ID              := '&TENANT_ID'               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
 
---SEARCH_ID                  :=3019;
---NAME                       :='Top 25 Databases by Resource Consumption';
---OWNER                      :='ORACLE';
---CREATION_DATE              :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
---LAST_MODIFICATION_DATE     :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
---LAST_MODIFIED_BY           :='ORACLE';
---DESCRIPTION                :='Shows the status, Database CPU Time, CPU Utilization, Total Memory Usage and Number of Transactions per second for Top 25 Databases (by Resource Consumption)';
---FOLDER_ID                  :=4;
---CATEGORY_ID                :=2;
---NAME_NLSID                 :=null;
---NAME_SUBSYSTEM             :=null;
---DESCRIPTION_NLSID          :=null;
---DESCRIPTION_SUBSYSTEM      :=null;
---SYSTEM_SEARCH              :=1;
---EM_PLUGIN_ID               :=null;
---IS_LOCKED                  :=0;
---METADATA_CLOB              :=null;
---SEARCH_DISPLAY_STR         :='';
---UI_HIDDEN                  :=0;
---TENANT_ID                  :='&TENANT_ID';
---IS_WIDGET                  :=1;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---);
---
---SEARCH_ID              :=3019                                                          ;
---NAME                   :='WIDGET_TEMPLATE'                                             ;
---PARAM_ATTRIBUTES       :=null                                                          ;
---PARAM_TYPE             :=1                                                             ;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html'        ;
---PARAM_VALUE_CLOB       :=null                                                          ;
---TENANT_ID              :='&TENANT_ID'                                                  ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019                                           ;
---NAME                   :='WIDGET_ICON'                                  ;
---PARAM_ATTRIBUTES       :=null                                           ;
---PARAM_TYPE             :=1                                              ;
---PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png'      ;
---PARAM_VALUE_CLOB       :=null                                           ;
---TENANT_ID              :='&TENANT_ID'                                   ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019                                                   ;
---NAME                   :='WIDGET_VIEWMODEL'                                     ;
---PARAM_ATTRIBUTES       :=null                                                   ;
---PARAM_TYPE             :=1                                                      ;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js';
---PARAM_VALUE_CLOB       :=null                                                   ;
---TENANT_ID              :='&TENANT_ID'                                           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019              ;
---NAME                   :='TIME_PERIOD_KEY' ;
---PARAM_ATTRIBUTES       :=null              ;
---PARAM_TYPE             :=1                 ;
---PARAM_VALUE_STR        :='24'              ;
---PARAM_VALUE_CLOB       :=null              ;
---TENANT_ID              :='&TENANT_ID'      ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019;
---NAME                   :='TA_CRITERIA';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=2;
---PARAM_VALUE_STR        :=null;
---PARAM_VALUE_CLOB       :='{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"oracle_database","metadata":{"category":false},"displayValue":"Database Instance"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"TargetStatusSearchCriterion","data":{"id":"target_status","_value":null,"dataType":"string","displayName":"Target Status","displayDetails":null,"role":"column","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_database_InstanceEfficiency_cpuTimePct","_value":null,"dataType":"number","displayName":"Database CPU Time (%)","displayDetails":"Efficiency","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},'||
---'{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":true},"targetType":"oracle_database","unitStr":null,"mcName":"cpuTimePct","mgName":"InstanceEfficiency","mgDisplayName":"Efficiency","isKey":0,"groupKeyColumns":[],"isConfig":0,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"AssociationSearchCriterion","data":{"assoc":{"sourceTargetType":"oracle_database","destinationTargetType":"host","associationType":"hosted_by","assocDisplayName":"hosted_by","inverseAssocType":"host_for","id":"hosted_by(oracle_database,host)"},"wrappedCriterion":{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Load_cpuUtil","_value":null,"dataType":"number","displayName":"CPU Utilization (%)","displayDetails":"Utilization ","role":"column","func":null,"UIProperties":{},"targetType":"host","unitStr":"%","mcName":"cpuUtil","mgName":"Load","mgDisplayName":"Utilization ","isKey":0,"groupKeyColumns":[],"isConfig":0}}'||
---',"id":"hosted_by(oracle_database,host)_host_Load_cpuUtil","_value":null,"dataType":"number","displayName":"CPU Utilization (%)","displayDetails":"hosted_by (Host) > Utilization ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_database_MemoryUsage_totalMemory","_value":null,"dataType":"number","displayName":"Total Memory Usage (MB)","displayDetails":"Memory Usage","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},'||
---'{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"oracle_database","unitStr":null,"mcName":"totalMemory","mgName":"MemoryUsage","mgDisplayName":"Memory Usage","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_database_InstanceThroughput_transactionsPs","_value":null,"dataType":"number","displayName":"Number of Transactions (per second)","displayDetails":"Throughput","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"oracle_database","unitStr":null,"mcName":"transactionsPs","mgName":"InstanceThroughput","mgDisplayName":"Throughput","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}';
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019                   ;
---NAME                   :='PROVIDER_VERSION'     ;
---PARAM_ATTRIBUTES       :=null                   ;
---PARAM_TYPE             :=1                      ;
---PARAM_VALUE_STR        :='1.0'                  ;
---PARAM_VALUE_CLOB       :=null                   ;
---TENANT_ID              :='&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019                        ;
---NAME                   :='WIDGET_KOC_NAME'           ;
---PARAM_ATTRIBUTES       :=null                        ;
---PARAM_TYPE             :=1                           ;
---PARAM_VALUE_STR        :='emcta-visualization'       ;
---PARAM_VALUE_CLOB       :=null                        ;
---TENANT_ID              :='&TENANT_ID'                ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019                              ;
---NAME                   :='VISUALIZATION_TYPE_KEY'          ;
---PARAM_ATTRIBUTES       :=null                              ;
---PARAM_TYPE             :=1                                 ;
---PARAM_VALUE_STR        :='TABLE'                           ;
---PARAM_VALUE_CLOB       :=null                              ;
---TENANT_ID              :='&TENANT_ID'                      ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019                       ;
---NAME                   :='PROVIDER_ASSET_ROOT'      ;
---PARAM_ATTRIBUTES       :=null                       ;
---PARAM_TYPE             :=1                          ;
---PARAM_VALUE_STR        :='assetRoot'                ;
---PARAM_VALUE_CLOB       :=null                       ;
---TENANT_ID              :='&TENANT_ID'               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019                 ;
---NAME                   :='WIDGET_SOURCE'      ;
---PARAM_ATTRIBUTES       :=null                 ;
---PARAM_TYPE             :=1                    ;
---PARAM_VALUE_STR        :='1'                  ;
---PARAM_VALUE_CLOB       :=null                 ;
---TENANT_ID              :='&TENANT_ID'         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019               ;
---NAME                   :='PROVIDER_NAME'    ;
---PARAM_ATTRIBUTES       :=null               ;
---PARAM_TYPE             :=1                  ;
---PARAM_VALUE_STR        :='TargetAnalytics'  ;
---PARAM_VALUE_CLOB       :=null               ;
---TENANT_ID              :='&TENANT_ID'       ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019              ;
---NAME                   :='TOP_N_ROWS'      ;
---PARAM_ATTRIBUTES       :=null              ;
---PARAM_TYPE             :=1                 ;
---PARAM_VALUE_STR        :='25'              ;
---PARAM_VALUE_CLOB       :=null              ;
---TENANT_ID              :='&TENANT_ID'      ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019                      ;
---NAME                   :='TA_HORI_SORT_ORDER'      ;
---PARAM_ATTRIBUTES       :=null                      ;
---PARAM_TYPE             :=1                         ;
---PARAM_VALUE_STR        :='true'                    ;
---PARAM_VALUE_CLOB       :=null                      ;
---TENANT_ID              :='&TENANT_ID'              ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3019                  ;
---NAME                   :='TA_HORI_SORT_COLUMN' ;
---PARAM_ATTRIBUTES       :=null                  ;
---PARAM_TYPE             :=1                     ;
---PARAM_VALUE_STR        :='1'                   ;
---PARAM_VALUE_CLOB       :=null                  ;
---TENANT_ID              :='&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID                  := 3018;
+NAME                       := 'Host Inventory By Platform';
+OWNER                      := 'ORACLE';
+CREATION_DATE              := SYS_EXTRACT_UTC(SYSTIMESTAMP);
+LAST_MODIFICATION_DATE     := SYS_EXTRACT_UTC(SYSTIMESTAMP);
+LAST_MODIFIED_BY           := 'ORACLE';
+DESCRIPTION                := 'Shows CPU Implementation, Total CPU Cores/Sockets/Threads and Memory Size for Hosts grouped by Operating System';
+FOLDER_ID                  := 4;
+CATEGORY_ID                := 2;
+NAME_NLSID                 := null;
+NAME_SUBSYSTEM             := null;
+DESCRIPTION_NLSID          := null;
+DESCRIPTION_SUBSYSTEM      := null;
+SYSTEM_SEARCH              := 1;
+EM_PLUGIN_ID               := null;
+IS_LOCKED                  := 0;
+METADATA_CLOB              := null;
+SEARCH_DISPLAY_STR         := '';
+UI_HIDDEN                  := 0;
+TENANT_ID                  := '&TENANT_ID';
+IS_WIDGET                  := 1;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+);
+SEARCH_ID              :=3018;
+NAME                   :='WIDGET_TEMPLATE';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=1;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html';
+PARAM_VALUE_CLOB       :=null;
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018;
+NAME                   :='WIDGET_ICON';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=1;
+PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png';
+PARAM_VALUE_CLOB       :=null;
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018;
+NAME                   :='WIDGET_VIEWMODEL';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=1;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js';
+PARAM_VALUE_CLOB       :=null;
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018;
+NAME                   :='TIME_PERIOD_KEY';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=1;
+PARAM_VALUE_STR        :='24';
+PARAM_VALUE_CLOB       :=null;
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018;
+NAME                   :='TA_CRITERIA';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=2;
+PARAM_VALUE_STR        :=null;
+PARAM_VALUE_CLOB       :='{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"host","metadata":{"category":false},"displayValue":"Host"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_HwCpu_impl","_value":null,"dataType":"string","displayName":"Implementation","displayDetails":"CPUs","role":"column","func":null,"UIProperties":{"useForSort":false},"targetType":"host","unitStr":null,"mcName":"impl","mgName":"HwCpu","mgDisplayName":"CPUs","isKey":1,"groupKeyColumns":["numCores","ecacheInMb","freqInMhz","isHyperthreadEnabled","impl","mask","revision","siblings","vendorName"],"isConfig":1}},'||
+'{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Hw_totalCpuCores","_value":null,"dataType":"number","displayName":"Total CPU Cores","displayDetails":"Hardware","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"host","unitStr":null,"mcName":"totalCpuCores","mgName":"Hw","mgDisplayName":"Hardware","isKey":0,"groupKeyColumns":[],"isConfig":1}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Hw_physicalCpuCount","_value":null,"dataType":"number","displayName":"Total CPU Sockets","displayDetails":"Hardware","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"host","unitStr":null,"mcName":"physicalCpuCount","mgName":"Hw","mgDisplayName":"Hardware","isKey":0,"groupKeyColumns":[],"isConfig":1}}'||
+',{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Hw_logicalCpuCount","_value":null,"dataType":"number","displayName":"Total CPU Threads","displayDetails":"Hardware","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"host","unitStr":null,"mcName":"logicalCpuCount","mgName":"Hw","mgDisplayName":"Hardware","isKey":0,"groupKeyColumns":[],"isConfig":1}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Hw_memorySizeInMb","_value":null,"dataType":"number","displayName":"Memory Size (MB)","displayDetails":"Hardware","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},'||
+'{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"host","unitStr":null,"mcName":"memorySizeInMb","mgName":"Hw","mgDisplayName":"Hardware","isKey":0,"groupKeyColumns":[],"isConfig":1}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Os_name","_value":null,"dataType":"string","displayName":"Name","displayDetails":"Operating System","role":"group by","func":null,"UIProperties":{"useForSort":false},"targetType":"host","unitStr":null,"mcName":"name","mgName":"Os","mgDisplayName":"Operating System","isKey":0,"groupKeyColumns":[],"isConfig":1}}]}';
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018                  ;
+NAME                   :='PROVIDER_VERSION'    ;
+PARAM_ATTRIBUTES       :=null                  ;
+PARAM_TYPE             :=1                     ;
+PARAM_VALUE_STR        :='1.0'                 ;
+PARAM_VALUE_CLOB       :=null                  ;
+TENANT_ID              :='&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018                  ;
+NAME                   :='WIDGET_KOC_NAME'     ;
+PARAM_ATTRIBUTES       :=null                  ;
+PARAM_TYPE             :=1                     ;
+PARAM_VALUE_STR        :='emcta-visualization' ;
+PARAM_VALUE_CLOB       :=null                  ;
+TENANT_ID              :='&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018                         ;
+NAME                   :='VISUALIZATION_TYPE_KEY'     ;
+PARAM_ATTRIBUTES       :=null                         ;
+PARAM_TYPE             :=1                            ;
+PARAM_VALUE_STR        :='TABLE'                      ;
+PARAM_VALUE_CLOB       :=null                         ;
+TENANT_ID              :='&TENANT_ID'                 ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018                            ;
+NAME                   :='PROVIDER_ASSET_ROOT'           ;
+PARAM_ATTRIBUTES       :=null                            ;
+PARAM_TYPE             :=1                               ;
+PARAM_VALUE_STR        :='assetRoot'                     ;
+PARAM_VALUE_CLOB       :=null                            ;
+TENANT_ID              :='&TENANT_ID'                    ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018                              ;
+NAME                   :='WIDGET_SOURCE'                   ;
+PARAM_ATTRIBUTES       :=null                              ;
+PARAM_TYPE             :=1                                 ;
+PARAM_VALUE_STR        :='1'                               ;
+PARAM_VALUE_CLOB       :=null                              ;
+TENANT_ID              :='&TENANT_ID'                      ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018                               ;
+NAME                   :='PROVIDER_NAME'                    ;
+PARAM_ATTRIBUTES       :=null                               ;
+PARAM_TYPE             :=1                                  ;
+PARAM_VALUE_STR        :='TargetAnalytics'                  ;
+PARAM_VALUE_CLOB       :=null                               ;
+TENANT_ID              :='&TENANT_ID'                       ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018                            ;
+NAME                   :='TOP_N_ROWS'                    ;
+PARAM_ATTRIBUTES       :=null                            ;
+PARAM_TYPE             :=1                               ;
+PARAM_VALUE_STR        :='100'                           ;
+PARAM_VALUE_CLOB       :=null                            ;
+TENANT_ID              :='&TENANT_ID'                    ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018                        ;
+NAME                   :='TA_HORI_SORT_ORDER'        ;
+PARAM_ATTRIBUTES       :=null                        ;
+PARAM_TYPE             :=1                           ;
+PARAM_VALUE_STR        :='true'                      ;
+PARAM_VALUE_CLOB       :=null                        ;
+TENANT_ID              :='&TENANT_ID'                ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3018                     ;
+NAME                   :='TA_HORI_SORT_COLUMN'    ;
+PARAM_ATTRIBUTES       :=null                     ;
+PARAM_TYPE             :=1                        ;
+PARAM_VALUE_STR        :='-1'                     ;
+PARAM_VALUE_CLOB       :=null                     ;
+TENANT_ID              :='&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+
+SEARCH_ID                  :=3019;
+NAME                       :='Top 25 Databases by Resource Consumption';
+OWNER                      :='ORACLE';
+CREATION_DATE              :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
+LAST_MODIFICATION_DATE     :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
+LAST_MODIFIED_BY           :='ORACLE';
+DESCRIPTION                :='Shows the status, Database CPU Time, CPU Utilization, Total Memory Usage and Number of Transactions per second for Top 25 Databases (by Resource Consumption)';
+FOLDER_ID                  :=4;
+CATEGORY_ID                :=2;
+NAME_NLSID                 :=null;
+NAME_SUBSYSTEM             :=null;
+DESCRIPTION_NLSID          :=null;
+DESCRIPTION_SUBSYSTEM      :=null;
+SYSTEM_SEARCH              :=1;
+EM_PLUGIN_ID               :=null;
+IS_LOCKED                  :=0;
+METADATA_CLOB              :=null;
+SEARCH_DISPLAY_STR         :='';
+UI_HIDDEN                  :=0;
+TENANT_ID                  :='&TENANT_ID';
+IS_WIDGET                  :=1;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+);
+
+SEARCH_ID              :=3019                                                          ;
+NAME                   :='WIDGET_TEMPLATE'                                             ;
+PARAM_ATTRIBUTES       :=null                                                          ;
+PARAM_TYPE             :=1                                                             ;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html'        ;
+PARAM_VALUE_CLOB       :=null                                                          ;
+TENANT_ID              :='&TENANT_ID'                                                  ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019                                           ;
+NAME                   :='WIDGET_ICON'                                  ;
+PARAM_ATTRIBUTES       :=null                                           ;
+PARAM_TYPE             :=1                                              ;
+PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png'      ;
+PARAM_VALUE_CLOB       :=null                                           ;
+TENANT_ID              :='&TENANT_ID'                                   ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019                                                   ;
+NAME                   :='WIDGET_VIEWMODEL'                                     ;
+PARAM_ATTRIBUTES       :=null                                                   ;
+PARAM_TYPE             :=1                                                      ;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js';
+PARAM_VALUE_CLOB       :=null                                                   ;
+TENANT_ID              :='&TENANT_ID'                                           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019              ;
+NAME                   :='TIME_PERIOD_KEY' ;
+PARAM_ATTRIBUTES       :=null              ;
+PARAM_TYPE             :=1                 ;
+PARAM_VALUE_STR        :='24'              ;
+PARAM_VALUE_CLOB       :=null              ;
+TENANT_ID              :='&TENANT_ID'      ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019;
+NAME                   :='TA_CRITERIA';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=2;
+PARAM_VALUE_STR        :=null;
+PARAM_VALUE_CLOB       :='{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"oracle_database","metadata":{"category":false},"displayValue":"Database Instance"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"TargetStatusSearchCriterion","data":{"id":"target_status","_value":null,"dataType":"string","displayName":"Target Status","displayDetails":null,"role":"column","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_database_InstanceEfficiency_cpuTimePct","_value":null,"dataType":"number","displayName":"Database CPU Time (%)","displayDetails":"Efficiency","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},'||
+'{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":true},"targetType":"oracle_database","unitStr":null,"mcName":"cpuTimePct","mgName":"InstanceEfficiency","mgDisplayName":"Efficiency","isKey":0,"groupKeyColumns":[],"isConfig":0,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"AssociationSearchCriterion","data":{"assoc":{"sourceTargetType":"oracle_database","destinationTargetType":"host","associationType":"hosted_by","assocDisplayName":"hosted_by","inverseAssocType":"host_for","id":"hosted_by(oracle_database,host)"},"wrappedCriterion":{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"host_Load_cpuUtil","_value":null,"dataType":"number","displayName":"CPU Utilization (%)","displayDetails":"Utilization ","role":"column","func":null,"UIProperties":{},"targetType":"host","unitStr":"%","mcName":"cpuUtil","mgName":"Load","mgDisplayName":"Utilization ","isKey":0,"groupKeyColumns":[],"isConfig":0}}'||
+',"id":"hosted_by(oracle_database,host)_host_Load_cpuUtil","_value":null,"dataType":"number","displayName":"CPU Utilization (%)","displayDetails":"hosted_by (Host) > Utilization ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_database_MemoryUsage_totalMemory","_value":null,"dataType":"number","displayName":"Total Memory Usage (MB)","displayDetails":"Memory Usage","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},'||
+'{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"oracle_database","unitStr":null,"mcName":"totalMemory","mgName":"MemoryUsage","mgDisplayName":"Memory Usage","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"oracle_database_InstanceThroughput_transactionsPs","_value":null,"dataType":"number","displayName":"Number of Transactions (per second)","displayDetails":"Throughput","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"oracle_database","unitStr":null,"mcName":"transactionsPs","mgName":"InstanceThroughput","mgDisplayName":"Throughput","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}';
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019                   ;
+NAME                   :='PROVIDER_VERSION'     ;
+PARAM_ATTRIBUTES       :=null                   ;
+PARAM_TYPE             :=1                      ;
+PARAM_VALUE_STR        :='1.0'                  ;
+PARAM_VALUE_CLOB       :=null                   ;
+TENANT_ID              :='&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019                        ;
+NAME                   :='WIDGET_KOC_NAME'           ;
+PARAM_ATTRIBUTES       :=null                        ;
+PARAM_TYPE             :=1                           ;
+PARAM_VALUE_STR        :='emcta-visualization'       ;
+PARAM_VALUE_CLOB       :=null                        ;
+TENANT_ID              :='&TENANT_ID'                ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019                              ;
+NAME                   :='VISUALIZATION_TYPE_KEY'          ;
+PARAM_ATTRIBUTES       :=null                              ;
+PARAM_TYPE             :=1                                 ;
+PARAM_VALUE_STR        :='TABLE'                           ;
+PARAM_VALUE_CLOB       :=null                              ;
+TENANT_ID              :='&TENANT_ID'                      ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019                       ;
+NAME                   :='PROVIDER_ASSET_ROOT'      ;
+PARAM_ATTRIBUTES       :=null                       ;
+PARAM_TYPE             :=1                          ;
+PARAM_VALUE_STR        :='assetRoot'                ;
+PARAM_VALUE_CLOB       :=null                       ;
+TENANT_ID              :='&TENANT_ID'               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019                 ;
+NAME                   :='WIDGET_SOURCE'      ;
+PARAM_ATTRIBUTES       :=null                 ;
+PARAM_TYPE             :=1                    ;
+PARAM_VALUE_STR        :='1'                  ;
+PARAM_VALUE_CLOB       :=null                 ;
+TENANT_ID              :='&TENANT_ID'         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019               ;
+NAME                   :='PROVIDER_NAME'    ;
+PARAM_ATTRIBUTES       :=null               ;
+PARAM_TYPE             :=1                  ;
+PARAM_VALUE_STR        :='TargetAnalytics'  ;
+PARAM_VALUE_CLOB       :=null               ;
+TENANT_ID              :='&TENANT_ID'       ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019              ;
+NAME                   :='TOP_N_ROWS'      ;
+PARAM_ATTRIBUTES       :=null              ;
+PARAM_TYPE             :=1                 ;
+PARAM_VALUE_STR        :='25'              ;
+PARAM_VALUE_CLOB       :=null              ;
+TENANT_ID              :='&TENANT_ID'      ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019                      ;
+NAME                   :='TA_HORI_SORT_ORDER'      ;
+PARAM_ATTRIBUTES       :=null                      ;
+PARAM_TYPE             :=1                         ;
+PARAM_VALUE_STR        :='true'                    ;
+PARAM_VALUE_CLOB       :=null                      ;
+TENANT_ID              :='&TENANT_ID'              ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3019                  ;
+NAME                   :='TA_HORI_SORT_COLUMN' ;
+PARAM_ATTRIBUTES       :=null                  ;
+PARAM_TYPE             :=1                     ;
+PARAM_VALUE_STR        :='1'                   ;
+PARAM_VALUE_CLOB       :=null                  ;
+TENANT_ID              :='&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
 
 SEARCH_ID                  := 3020                                                                                                      ;
 NAME                       := 'Database Configuration and Storage By Version'                                                           ;
@@ -4182,2712 +4182,2711 @@ PARAM_VALUE_CLOB,
 TENANT_ID
 );
 
---SEARCH_ID                  :=  3022                                                                                                                                                  ;
---NAME                       :=  'Top 25 WebLogic Servers by Load'                                                                                                                     ;
---OWNER                      :=  'ORACLE'                                                                                                                                              ;
---CREATION_DATE              :=  SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                                                                         ;
---LAST_MODIFICATION_DATE     :=  SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                                                                         ;
---LAST_MODIFIED_BY           :=  'ORACLE'                                                                                                                                              ;
---DESCRIPTION                :=  'Shows the status, CPU Usage, Active Sessions, Request Processing Time, Requests per minute and Heap Usage for Top 25 WebLogic Servers (by Load)'     ;
---FOLDER_ID                  :=  4                                                                                                                                                     ;
---CATEGORY_ID                :=  2                                                                                                                                                     ;
---NAME_NLSID                 :=  null                                                                                                                                                  ;
---NAME_SUBSYSTEM             :=  null                                                                                                                                                  ;
---DESCRIPTION_NLSID          :=  null                                                                                                                                                  ;
---DESCRIPTION_SUBSYSTEM      :=  null                                                                                                                                                  ;
---SYSTEM_SEARCH              :=  1                                                                                                                                                     ;
---EM_PLUGIN_ID               :=  null                                                                                                                                                  ;
---IS_LOCKED                  :=  0                                                                                                                                                     ;
---METADATA_CLOB              :=  null                                                                                                                                                  ;
---SEARCH_DISPLAY_STR         :=  ''                                                                                                                                                    ;
---UI_HIDDEN                  :=  0                                                                                                                                                     ;
---TENANT_ID                  :=  '&TENANT_ID'                                                                                                                                          ;
---IS_WIDGET                  :=  1                                                                                                                                                     ;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---);
---
---SEARCH_ID              :=3022;
---NAME                   :='WIDGET_TEMPLATE';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=1;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html';
---PARAM_VALUE_CLOB       :=null;
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022;
---NAME                   :='WIDGET_ICON';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=1;
---PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png';
---PARAM_VALUE_CLOB       :=null;
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                                                                ;
---NAME                   :='WIDGET_VIEWMODEL'                                                  ;
---PARAM_ATTRIBUTES       :=null                                                                ;
---PARAM_TYPE             :=1                                                                   ;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js'             ;
---PARAM_VALUE_CLOB       :=null                                                                ;
---TENANT_ID              :='&TENANT_ID'                                                        ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022;
---NAME                   :='TIME_PERIOD_KEY'                                    ;
---PARAM_ATTRIBUTES       :=null                                                 ;
---PARAM_TYPE             :=1                                                    ;
---PARAM_VALUE_STR        :='24'                                                 ;
---PARAM_VALUE_CLOB       :=null                                                 ;
---TENANT_ID              :='&TENANT_ID'                                         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022;
---NAME                   :='TA_CRITERIA';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=2;
---PARAM_VALUE_STR        :=null;
---PARAM_VALUE_CLOB       :='{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"weblogic_j2eeserver","metadata":{"category":false},"displayValue":"Oracle WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"TargetStatusSearchCriterion","data":{"id":"target_status","_value":null,"dataType":"string","displayName":"Target Status","displayDetails":null,"role":"column","func":null,"UIProperties":{"useForSort":false,"ignoreCase":true},"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_Jvm_cpuUsage.percentage","_value":null,"dataType":"number","displayName":"CPU Usage (%)","displayDetails":"Utilization ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},'||
---'{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":true},"targetType":"weblogic_j2eeserver","unitStr":"n/a","mcName":"cpuUsage.percentage","mgName":"Jvm","mgDisplayName":"Utilization ","isKey":0,"groupKeyColumns":[],"isConfig":0,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_ServerModule_session.Active","_value":null,"dataType":"number","displayName":"Active Sessions","displayDetails":"Load ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false}'||
---',"targetType":"weblogic_j2eeserver","unitStr":"n/a","mcName":"session.Active","mgName":"ServerModule","mgDisplayName":"Load ","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_ServerServletJsp_service.Time","_value":null,"dataType":"number","displayName":"Request Processing Time (ms)","displayDetails":"Response ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":"ms","mcName":"service.Time","mgName":"ServerServletJsp","mgDisplayName":"Response ","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_ServerServletJsp_service.Throughput","_value":null,"dataType":"number","displayName":"Requests (per minute)","displayDetails":"Load ",'||
---'"role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":"operations per minute","mcName":"service.Throughput","mgName":"ServerServletJsp","mgDisplayName":"Load ","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_Jvm_heapUsed.value","_value":null,"dataType":"number","displayName":"Heap Usage (MB)","displayDetails":"Load ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":"n/a","mcName":"heapUsed.value","mgName":"Jvm","mgDisplayName":"Load ","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}';
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                      ;
---NAME                   :='PROVIDER_VERSION'        ;
---PARAM_ATTRIBUTES       :=null                      ;
---PARAM_TYPE             :=1                         ;
---PARAM_VALUE_STR        :='1.0'                     ;
---PARAM_VALUE_CLOB       :=null                      ;
---TENANT_ID              :='&TENANT_ID'              ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                     ;
---NAME                   :='WIDGET_KOC_NAME'        ;
---PARAM_ATTRIBUTES       :=null                     ;
---PARAM_TYPE             :=1                        ;
---PARAM_VALUE_STR        :='emcta-visualization'    ;
---PARAM_VALUE_CLOB       :=null                     ;
---TENANT_ID              :='&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                         ;
---NAME                   :='VISUALIZATION_TYPE_KEY'     ;
---PARAM_ATTRIBUTES       :=null                         ;
---PARAM_TYPE             :=1                            ;
---PARAM_VALUE_STR        :='TABLE'                      ;
---PARAM_VALUE_CLOB       :=null                         ;
---TENANT_ID              :='&TENANT_ID'                 ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                       ;
---NAME                   :='PROVIDER_ASSET_ROOT'      ;
---PARAM_ATTRIBUTES       :=null                       ;
---PARAM_TYPE             :=1                          ;
---PARAM_VALUE_STR        :='assetRoot'                ;
---PARAM_VALUE_CLOB       :=null                       ;
---TENANT_ID              :='&TENANT_ID'               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                      ;
---NAME                   :='WIDGET_SOURCE'           ;
---PARAM_ATTRIBUTES       :=null                      ;
---PARAM_TYPE             :=1                         ;
---PARAM_VALUE_STR        :='1'                       ;
---PARAM_VALUE_CLOB       :=null                      ;
---TENANT_ID              :='&TENANT_ID'              ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                       ;
---NAME                   :='PROVIDER_NAME'            ;
---PARAM_ATTRIBUTES       :=null                       ;
---PARAM_TYPE             :=1                          ;
---PARAM_VALUE_STR        :='TargetAnalytics'          ;
---PARAM_VALUE_CLOB       :=null                       ;
---TENANT_ID              :='&TENANT_ID'               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                   ;
---NAME                   :='TOP_N_ROWS'           ;
---PARAM_ATTRIBUTES       :=null                   ;
---PARAM_TYPE             :=1                      ;
---PARAM_VALUE_STR        :='25'                   ;
---PARAM_VALUE_CLOB       :=null                   ;
---TENANT_ID              :='&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                     ;
---NAME                   :='TA_HORI_SORT_ORDER'     ;
---PARAM_ATTRIBUTES       :=null                     ;
---PARAM_TYPE             :=1                        ;
---PARAM_VALUE_STR        :='true'                   ;
---PARAM_VALUE_CLOB       :=null                     ;
---TENANT_ID              :='&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3022                     ;
---NAME                   :='TA_HORI_SORT_COLUMN'    ;
---PARAM_ATTRIBUTES       :=null                     ;
---PARAM_TYPE             :=1                        ;
---PARAM_VALUE_STR        :='1'                      ;
---PARAM_VALUE_CLOB       :=null                     ;
---TENANT_ID              :='&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID                  :=  3022                                                                                                                                                  ;
+NAME                       :=  'Top 25 WebLogic Servers by Load'                                                                                                                     ;
+OWNER                      :=  'ORACLE'                                                                                                                                              ;
+CREATION_DATE              :=  SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                                                                         ;
+LAST_MODIFICATION_DATE     :=  SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                                                                         ;
+LAST_MODIFIED_BY           :=  'ORACLE'                                                                                                                                              ;
+DESCRIPTION                :=  'Shows the status, CPU Usage, Active Sessions, Request Processing Time, Requests per minute and Heap Usage for Top 25 WebLogic Servers (by Load)'     ;
+FOLDER_ID                  :=  4                                                                                                                                                     ;
+CATEGORY_ID                :=  2                                                                                                                                                     ;
+NAME_NLSID                 :=  null                                                                                                                                                  ;
+NAME_SUBSYSTEM             :=  null                                                                                                                                                  ;
+DESCRIPTION_NLSID          :=  null                                                                                                                                                  ;
+DESCRIPTION_SUBSYSTEM      :=  null                                                                                                                                                  ;
+SYSTEM_SEARCH              :=  1                                                                                                                                                     ;
+EM_PLUGIN_ID               :=  null                                                                                                                                                  ;
+IS_LOCKED                  :=  0                                                                                                                                                     ;
+METADATA_CLOB              :=  null                                                                                                                                                  ;
+SEARCH_DISPLAY_STR         :=  ''                                                                                                                                                    ;
+UI_HIDDEN                  :=  0                                                                                                                                                     ;
+TENANT_ID                  :=  '&TENANT_ID'                                                                                                                                          ;
+IS_WIDGET                  :=  1                                                                                                                                                     ;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+);
 
---SEARCH_ID                  :=  3023                                      ;
---NAME                       :=  'WebLogic Servers by JDK Version'         ;
---OWNER                      :=  'ORACLE'                                  ;
---CREATION_DATE              :=  SYS_EXTRACT_UTC(SYSTIMESTAMP)             ;
---LAST_MODIFICATION_DATE     :=  SYS_EXTRACT_UTC(SYSTIMESTAMP)             ;
---LAST_MODIFIED_BY           :=  'ORACLE'                                  ;
---DESCRIPTION                :=  'Shows the Java VM Vendor, Target Version and Platform for WebLogic Servers grouped by Java version';
---FOLDER_ID                  :=  4                                         ;
---CATEGORY_ID                :=  2                                         ;
---NAME_NLSID                 :=  null                                      ;
---NAME_SUBSYSTEM             :=  null                                      ;
---DESCRIPTION_NLSID          :=  null                                      ;
---DESCRIPTION_SUBSYSTEM      :=  null                                      ;
---SYSTEM_SEARCH              :=  1                                         ;
---EM_PLUGIN_ID               :=  null                                      ;
---IS_LOCKED                  :=  0                                         ;
---METADATA_CLOB              :=  null                                      ;
---SEARCH_DISPLAY_STR         :=  ''                                        ;
---UI_HIDDEN                  :=  0                                         ;
---TENANT_ID                  :=  '&TENANT_ID'                              ;
---IS_WIDGET                  :=  1                                         ;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---TENANT_ID,
---IS_WIDGET
---);
---
---SEARCH_ID              := 3023                                                       ;
---NAME                   := 'WIDGET_TEMPLATE'                                          ;
---PARAM_ATTRIBUTES       := null                                                       ;
---PARAM_TYPE             := 1                                                          ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html'     ;
---PARAM_VALUE_CLOB       := null                                                       ;
---TENANT_ID              := '&TENANT_ID'                                               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                                            ;
---NAME                   := 'WIDGET_ICON'                                   ;
---PARAM_ATTRIBUTES       := null                                            ;
---PARAM_TYPE             := 1                                               ;
---PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png'       ;
---PARAM_VALUE_CLOB       := null                                            ;
---TENANT_ID              := '&TENANT_ID'                                    ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                                                       ;
---NAME                   := 'WIDGET_VIEWMODEL'                                         ;
---PARAM_ATTRIBUTES       := null                                                       ;
---PARAM_TYPE             := 1                                                          ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js'    ;
---PARAM_VALUE_CLOB       := null                                                       ;
---TENANT_ID              := '&TENANT_ID'                                               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                    ;
---NAME                   := 'TIME_PERIOD_KEY'       ;
---PARAM_ATTRIBUTES       := null                    ;
---PARAM_TYPE             := 1                       ;
---PARAM_VALUE_STR        := '24'                    ;
---PARAM_VALUE_CLOB       := null                    ;
---TENANT_ID              := '&TENANT_ID'            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                               ;
---NAME                   := 'TA_CRITERIA'                      ;
---PARAM_ATTRIBUTES       := null                               ;
---PARAM_TYPE             := 2                                  ;
---PARAM_VALUE_STR        := null                               ;
---PARAM_VALUE_CLOB       := '{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"weblogic_j2eeserver","metadata":{"category":false},"displayValue":"Oracle WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_javavmvendor","_value":null,"dataType":"string","displayName":"Java VM Vendor","displayDetails":"Server Information","role":"column","func":null,"UIProperties":{"useForSort":false,"ignoreCase":true},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"javavmvendor","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"PropertySearchCriterion","data":{"id":"property.orcl_gtp_target_version","_value":null,"dataType":"string","displayName":"Target Version","displayDetails":null,"role":"column","func":null,"UIProperties":{"useForSort":false},"targetType":"weblogic_j2eeserver","propertyName":"orcl_gtp_target_version"}},{"jsonConstructor":"PropertySearchCriterion","data":{"id":"property.orcl_gtp_platform","_value":null,"dataType":"string","displayName":"Platform","displayDetails":null,"role":"column","func":null,"UIProperties":{"useForSort":false},"targetType":"weblogic_j2eeserver","propertyName":"orcl_gtp_platform"}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_javaversion","_value":null,"dataType":"string","displayName":"Java Version","displayDetails":"Server Information","role":"group by","func":null,"UIProperties":{"useForSort":true,"ignoreCase":true},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"javaversion","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1,"direction":"DESC","inverseNullOrderBy":true}}]}';
---TENANT_ID              := '&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023              ;
---NAME                   := 'PROVIDER_VERSION';
---PARAM_ATTRIBUTES       := null              ;
---PARAM_TYPE             := 1                 ;
---PARAM_VALUE_STR        := '1.0'             ;
---PARAM_VALUE_CLOB       := null              ;
---TENANT_ID              := '&TENANT_ID'      ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                  ;
---NAME                   := 'WIDGET_KOC_NAME'     ;
---PARAM_ATTRIBUTES       := null                  ;
---PARAM_TYPE             := 1                     ;
---PARAM_VALUE_STR        := 'emcta-visualization' ;
---PARAM_VALUE_CLOB       := null                  ;
---TENANT_ID              := '&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                        ;
---NAME                   := 'VISUALIZATION_TYPE_KEY'    ;
---PARAM_ATTRIBUTES       := null                        ;
---PARAM_TYPE             := 1                           ;
---PARAM_VALUE_STR        := 'TABLE'                     ;
---PARAM_VALUE_CLOB       := null                        ;
---TENANT_ID              := '&TENANT_ID'                ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                     ;
---NAME                   := 'PROVIDER_ASSET_ROOT'    ;
---PARAM_ATTRIBUTES       := null                     ;
---PARAM_TYPE             := 1                        ;
---PARAM_VALUE_STR        := 'assetRoot'              ;
---PARAM_VALUE_CLOB       := null                     ;
---TENANT_ID              := '&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                  ;
---NAME                   := 'WIDGET_SOURCE'       ;
---PARAM_ATTRIBUTES       := null                  ;
---PARAM_TYPE             := 1                     ;
---PARAM_VALUE_STR        := '1'                   ;
---PARAM_VALUE_CLOB       := null                  ;
---TENANT_ID              := '&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                    ;
---NAME                   := 'PROVIDER_NAME'         ;
---PARAM_ATTRIBUTES       := null                    ;
---PARAM_TYPE             := 1                       ;
---PARAM_VALUE_STR        := 'TargetAnalytics'       ;
---PARAM_VALUE_CLOB       := null                    ;
---TENANT_ID              := '&TENANT_ID'            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                   ;
---NAME                   := 'TOP_N_ROWS'           ;
---PARAM_ATTRIBUTES       := null                   ;
---PARAM_TYPE             := 1                      ;
---PARAM_VALUE_STR        := '100'                  ;
---PARAM_VALUE_CLOB       := null                   ;
---TENANT_ID              := '&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                     ;
---NAME                   := 'TA_HORI_SORT_ORDER'     ;
---PARAM_ATTRIBUTES       := null                     ;
---PARAM_TYPE             := 1                        ;
---PARAM_VALUE_STR        := 'true'                   ;
---PARAM_VALUE_CLOB       := null                     ;
---TENANT_ID              := '&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3023                   ;
---NAME                   := 'TA_HORI_SORT_COLUMN'  ;
---PARAM_ATTRIBUTES       := null                   ;
---PARAM_TYPE             := 1                      ;
---PARAM_VALUE_STR        := '-2'                   ;
---PARAM_VALUE_CLOB       := null                   ;
---TENANT_ID              := '&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID              :=3022;
+NAME                   :='WIDGET_TEMPLATE';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=1;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html';
+PARAM_VALUE_CLOB       :=null;
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022;
+NAME                   :='WIDGET_ICON';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=1;
+PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png';
+PARAM_VALUE_CLOB       :=null;
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                                                                ;
+NAME                   :='WIDGET_VIEWMODEL'                                                  ;
+PARAM_ATTRIBUTES       :=null                                                                ;
+PARAM_TYPE             :=1                                                                   ;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js'             ;
+PARAM_VALUE_CLOB       :=null                                                                ;
+TENANT_ID              :='&TENANT_ID'                                                        ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022;
+NAME                   :='TIME_PERIOD_KEY'                                    ;
+PARAM_ATTRIBUTES       :=null                                                 ;
+PARAM_TYPE             :=1                                                    ;
+PARAM_VALUE_STR        :='24'                                                 ;
+PARAM_VALUE_CLOB       :=null                                                 ;
+TENANT_ID              :='&TENANT_ID'                                         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022;
+NAME                   :='TA_CRITERIA';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=2;
+PARAM_VALUE_STR        :=null;
+PARAM_VALUE_CLOB       :='{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"weblogic_j2eeserver","metadata":{"category":false},"displayValue":"Oracle WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"TargetStatusSearchCriterion","data":{"id":"target_status","_value":null,"dataType":"string","displayName":"Target Status","displayDetails":null,"role":"column","func":null,"UIProperties":{"useForSort":false,"ignoreCase":true},"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_Jvm_cpuUsage.percentage","_value":null,"dataType":"number","displayName":"CPU Usage (%)","displayDetails":"Utilization ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},'||
+'{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":true},"targetType":"weblogic_j2eeserver","unitStr":"n/a","mcName":"cpuUsage.percentage","mgName":"Jvm","mgDisplayName":"Utilization ","isKey":0,"groupKeyColumns":[],"isConfig":0,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_ServerModule_session.Active","_value":null,"dataType":"number","displayName":"Active Sessions","displayDetails":"Load ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false}'||
+',"targetType":"weblogic_j2eeserver","unitStr":"n/a","mcName":"session.Active","mgName":"ServerModule","mgDisplayName":"Load ","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_ServerServletJsp_service.Time","_value":null,"dataType":"number","displayName":"Request Processing Time (ms)","displayDetails":"Response ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":"ms","mcName":"service.Time","mgName":"ServerServletJsp","mgDisplayName":"Response ","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_ServerServletJsp_service.Throughput","_value":null,"dataType":"number","displayName":"Requests (per minute)","displayDetails":"Load ",'||
+'"role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":"operations per minute","mcName":"service.Throughput","mgName":"ServerServletJsp","mgDisplayName":"Load ","isKey":0,"groupKeyColumns":[],"isConfig":0}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_Jvm_heapUsed.value","_value":null,"dataType":"number","displayName":"Heap Usage (MB)","displayDetails":"Load ","role":"column","func":null,"UIProperties":{"dropDownOptions":[{"value":"cigar","label":"Cigar Chart"},{"value":"string","label":"Text"}],"dropDownValue":"cigar","useForSort":false},"targetType":"weblogic_j2eeserver","unitStr":"n/a","mcName":"heapUsed.value","mgName":"Jvm","mgDisplayName":"Load ","isKey":0,"groupKeyColumns":[],"isConfig":0}}]}';
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                      ;
+NAME                   :='PROVIDER_VERSION'        ;
+PARAM_ATTRIBUTES       :=null                      ;
+PARAM_TYPE             :=1                         ;
+PARAM_VALUE_STR        :='1.0'                     ;
+PARAM_VALUE_CLOB       :=null                      ;
+TENANT_ID              :='&TENANT_ID'              ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                     ;
+NAME                   :='WIDGET_KOC_NAME'        ;
+PARAM_ATTRIBUTES       :=null                     ;
+PARAM_TYPE             :=1                        ;
+PARAM_VALUE_STR        :='emcta-visualization'    ;
+PARAM_VALUE_CLOB       :=null                     ;
+TENANT_ID              :='&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                         ;
+NAME                   :='VISUALIZATION_TYPE_KEY'     ;
+PARAM_ATTRIBUTES       :=null                         ;
+PARAM_TYPE             :=1                            ;
+PARAM_VALUE_STR        :='TABLE'                      ;
+PARAM_VALUE_CLOB       :=null                         ;
+TENANT_ID              :='&TENANT_ID'                 ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                       ;
+NAME                   :='PROVIDER_ASSET_ROOT'      ;
+PARAM_ATTRIBUTES       :=null                       ;
+PARAM_TYPE             :=1                          ;
+PARAM_VALUE_STR        :='assetRoot'                ;
+PARAM_VALUE_CLOB       :=null                       ;
+TENANT_ID              :='&TENANT_ID'               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                      ;
+NAME                   :='WIDGET_SOURCE'           ;
+PARAM_ATTRIBUTES       :=null                      ;
+PARAM_TYPE             :=1                         ;
+PARAM_VALUE_STR        :='1'                       ;
+PARAM_VALUE_CLOB       :=null                      ;
+TENANT_ID              :='&TENANT_ID'              ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                       ;
+NAME                   :='PROVIDER_NAME'            ;
+PARAM_ATTRIBUTES       :=null                       ;
+PARAM_TYPE             :=1                          ;
+PARAM_VALUE_STR        :='TargetAnalytics'          ;
+PARAM_VALUE_CLOB       :=null                       ;
+TENANT_ID              :='&TENANT_ID'               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                   ;
+NAME                   :='TOP_N_ROWS'           ;
+PARAM_ATTRIBUTES       :=null                   ;
+PARAM_TYPE             :=1                      ;
+PARAM_VALUE_STR        :='25'                   ;
+PARAM_VALUE_CLOB       :=null                   ;
+TENANT_ID              :='&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                     ;
+NAME                   :='TA_HORI_SORT_ORDER'     ;
+PARAM_ATTRIBUTES       :=null                     ;
+PARAM_TYPE             :=1                        ;
+PARAM_VALUE_STR        :='true'                   ;
+PARAM_VALUE_CLOB       :=null                     ;
+TENANT_ID              :='&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3022                     ;
+NAME                   :='TA_HORI_SORT_COLUMN'    ;
+PARAM_ATTRIBUTES       :=null                     ;
+PARAM_TYPE             :=1                        ;
+PARAM_VALUE_STR        :='1'                      ;
+PARAM_VALUE_CLOB       :=null                     ;
+TENANT_ID              :='&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
 
---SEARCH_ID     			:= 3024                                                                                                       ;
---NAME     				:= 'Top 5 Databases'                                                                                          ;
---OWNER     				:= 'ORACLE'                                                                                                   ;
---CREATION_DATE     		:= SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                              ;
---LAST_MODIFICATION_DATE  := SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                              ;
---LAST_MODIFIED_BY     	:= 'ORACLE'                                                                                                   ;
---DESCRIPTION     		:= 'Shows the status, Database CPU Time, I/O Megabytes per second and Total Memory Usage for Top 5 Databases' ;
---FOLDER_ID     			:= 4                                                                                                          ;
---CATEGORY_ID     		:= 2                                                                                                          ;
---NAME_NLSID     			:= null                                                                                                       ;
---NAME_SUBSYSTEM     		:= null                                                                                                       ;
---DESCRIPTION_NLSID     	:= null                                                                                                       ;
---DESCRIPTION_SUBSYSTEM   := null                                                                                                       ;
---SYSTEM_SEARCH     		:= 1                                                                                                          ;
---EM_PLUGIN_ID     		:= null                                                                                                       ;
---IS_LOCKED     			:= 0                                                                                                          ;
---METADATA_CLOB     		:= null                                                                                                       ;
---SEARCH_DISPLAY_STR     	:=  null                                                                                                      ;
---UI_HIDDEN     			:= 0                                                                                                          ;
---DELETED     			:= 0                                                                                                          ;
---IS_WIDGET     			:= 1                                                                                                          ;
---TENANT_ID				:='&TENANT_ID'																								  ;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---DELETED,
---IS_WIDGET,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---DELETED,
---IS_WIDGET,
---TENANT_ID
---);
---SEARCH_ID              :=3024                ;
---NAME                   :='WIDGET_VISUAL'     ;
---PARAM_ATTRIBUTES       :=null                ;
---PARAM_TYPE             :=2                   ;
---PARAM_VALUE_STR        :=null                ;
---PARAM_VALUE_CLOB       :=screenshot_3024     ;
---TENANT_ID              :='&TENANT_ID'        ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                                       ;
---NAME                   :='WIDGET_ICON'                              ;
---PARAM_ATTRIBUTES       :=null                                       ;
---PARAM_TYPE             :=1                                          ;
---PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png'  ;
---PARAM_VALUE_CLOB       :=null                                       ;
---TENANT_ID              :='&TENANT_ID'                               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                                                  ;
---NAME                   :='WIDGET_TEMPLATE'                                     ;
---PARAM_ATTRIBUTES       :=null                                                  ;
---PARAM_TYPE             :=1                                                     ;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html';
---PARAM_VALUE_CLOB       :=null                                                  ;
---TENANT_ID              :='&TENANT_ID'                                          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                ;
---NAME                   :='PROVIDER_NAME'     ;
---PARAM_ATTRIBUTES       :=null                ;
---PARAM_TYPE             :=1                   ;
---PARAM_VALUE_STR        :='TargetAnalytics'   ;
---PARAM_VALUE_CLOB       :=null                ;
---TENANT_ID              :='&TENANT_ID'        ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                    ;
---NAME                   :='TA_HORI_SORT_ORDER'    ;
---PARAM_ATTRIBUTES       :=null                    ;
---PARAM_TYPE             :=1                       ;
---PARAM_VALUE_STR        :='true'                  ;
---PARAM_VALUE_CLOB       :=null                    ;
---TENANT_ID              :='&TENANT_ID'            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                  ;
---NAME                   :='TOP_N_ROWS'          ;
---PARAM_ATTRIBUTES       :=null                  ;
---PARAM_TYPE             :=1                     ;
---PARAM_VALUE_STR        :='5'                   ;
---PARAM_VALUE_CLOB       :=null                  ;
---TENANT_ID              :='&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                   ;
---NAME                   :='WIDGET_SOURCE'        ;
---PARAM_ATTRIBUTES       :=null                   ;
---PARAM_TYPE             :=1                      ;
---PARAM_VALUE_STR        :='1'                    ;
---PARAM_VALUE_CLOB       :=null                   ;
---TENANT_ID              :='&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                       ;
---NAME                   :='TA_HORI_SORT_COLUMN'      ;
---PARAM_ATTRIBUTES       :=null                       ;
---PARAM_TYPE             :=1                          ;
---PARAM_VALUE_STR        :='1'                        ;
---PARAM_VALUE_CLOB       :=null                       ;
---TENANT_ID              :='&TENANT_ID'               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                        ;
---NAME                   :='PROVIDER_ASSET_ROOT'       ;
---PARAM_ATTRIBUTES       :=null                        ;
---PARAM_TYPE             :=1                           ;
---PARAM_VALUE_STR        :='assetRoot'                 ;
---PARAM_VALUE_CLOB       :=null                        ;
---TENANT_ID              :='&TENANT_ID'                ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                 ;
---NAME                   :='TA_CRITERIA'        ;
---PARAM_ATTRIBUTES       :=null                 ;
---PARAM_TYPE             :=2                    ;
---PARAM_VALUE_STR        :=null                 ;
---PARAM_VALUE_CLOB       :=ta_criteria_3024     ;
---TENANT_ID              :='&TENANT_ID'         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                            ;
---NAME                   :='VISUALIZATION_TYPE_KEY'        ;
---PARAM_ATTRIBUTES       :=null                            ;
---PARAM_TYPE             :=1                               ;
---PARAM_VALUE_STR        :='TABLE'                         ;
---PARAM_VALUE_CLOB       :=null                            ;
---TENANT_ID              :='&TENANT_ID'                    ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                             ;
---NAME                   :='PROVIDER_VERSION'               ;
---PARAM_ATTRIBUTES       :=null                             ;
---PARAM_TYPE             :=1                                ;
---PARAM_VALUE_STR        :='1.0'                            ;
---PARAM_VALUE_CLOB       :=null                             ;
---TENANT_ID              :='&TENANT_ID'                     ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                                                      ;
---NAME                   :='WIDGET_VIEWMODEL'                                        ;
---PARAM_ATTRIBUTES       :=null                                                      ;
---PARAM_TYPE             :=1                                                         ;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js'   ;
---PARAM_VALUE_CLOB       :=null                                                      ;
---TENANT_ID              :='&TENANT_ID'                                              ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3024                     ;
---NAME                   :='WIDGET_KOC_NAME'        ;
---PARAM_ATTRIBUTES       :=null                     ;
---PARAM_TYPE             :=1                        ;
---PARAM_VALUE_STR        :='emcta-visualization'    ;
---PARAM_VALUE_CLOB       :=null                     ;
---TENANT_ID              :='&TENANT_ID'             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID                  :=  3023                                      ;
+NAME                       :=  'WebLogic Servers by JDK Version'         ;
+OWNER                      :=  'ORACLE'                                  ;
+CREATION_DATE              :=  SYS_EXTRACT_UTC(SYSTIMESTAMP)             ;
+LAST_MODIFICATION_DATE     :=  SYS_EXTRACT_UTC(SYSTIMESTAMP)             ;
+LAST_MODIFIED_BY           :=  'ORACLE'                                  ;
+DESCRIPTION                :=  'Shows the Java VM Vendor, Target Version and Platform for WebLogic Servers grouped by Java version';
+FOLDER_ID                  :=  4                                         ;
+CATEGORY_ID                :=  2                                         ;
+NAME_NLSID                 :=  null                                      ;
+NAME_SUBSYSTEM             :=  null                                      ;
+DESCRIPTION_NLSID          :=  null                                      ;
+DESCRIPTION_SUBSYSTEM      :=  null                                      ;
+SYSTEM_SEARCH              :=  1                                         ;
+EM_PLUGIN_ID               :=  null                                      ;
+IS_LOCKED                  :=  0                                         ;
+METADATA_CLOB              :=  null                                      ;
+SEARCH_DISPLAY_STR         :=  ''                                        ;
+UI_HIDDEN                  :=  0                                         ;
+TENANT_ID                  :=  '&TENANT_ID'                              ;
+IS_WIDGET                  :=  1                                         ;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+TENANT_ID,
+IS_WIDGET
+);
 
---SEARCH_ID                           :=3025                                                                                                  ;
---NAME                                :='Top 5 Hosts'                                                                                         ;
---OWNER                               :='ORACLE'                                                                                              ;
---CREATION_DATE                       :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                         ;
---LAST_MODIFICATION_DATE              :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                         ;
---LAST_MODIFIED_BY                    :='ORACLE'                                                                                              ;
---DESCRIPTION                         :='Shows the status, CPU Utilization, Total Disk I/O per second and Memory Utilization for Top 5 Hosts' ;
---FOLDER_ID                           :=4                                                                                                     ;
---CATEGORY_ID                         :=2                                                                                                     ;
---NAME_NLSID                          :=null                                                                                                  ;
---NAME_SUBSYSTEM                      :=null                                                                                                  ;
---DESCRIPTION_NLSID                   :=null                                                                                                  ;
---DESCRIPTION_SUBSYSTEM               :=null                                                                                                  ;
---SYSTEM_SEARCH                       :=1                                                                                                     ;
---EM_PLUGIN_ID                        :=null                                                                                                  ;
---IS_LOCKED                           :=0                                                                                                     ;
---METADATA_CLOB                       :=null                                                                                                  ;
---SEARCH_DISPLAY_STR                  := null                                                                                                 ;
---UI_HIDDEN                           :=0                                                                                                     ;
---DELETED                             :=0                                                                                                     ;
---IS_WIDGET                           :=1                                                                                                     ;
---TENANT_ID                           :='&TENANT_ID'                                                                                          ;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---DELETED,
---IS_WIDGET,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---DELETED,
---IS_WIDGET,
---TENANT_ID
---);
---SEARCH_ID              :=3025;
---NAME                   :='PROVIDER_VERSION';
---PARAM_ATTRIBUTES       :=null;
---PARAM_TYPE             :=1;
---PARAM_VALUE_STR        :='1.0';
---PARAM_VALUE_CLOB       :=null;
---TENANT_ID              :='&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                    ;
---NAME                   :='TA_HORI_SORT_COLUMN'   ;
---PARAM_ATTRIBUTES       :=null                    ;
---PARAM_TYPE             :=1                       ;
---PARAM_VALUE_STR        :='1'                     ;
---PARAM_VALUE_CLOB       :=null                    ;
---TENANT_ID              :='&TENANT_ID'            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                ;
---NAME                   :='TOP_N_ROWS'        ;
---PARAM_ATTRIBUTES       :=null                ;
---PARAM_TYPE             :=1                   ;
---PARAM_VALUE_STR        :='5'                 ;
---PARAM_VALUE_CLOB       :=null                ;
---TENANT_ID              :='&TENANT_ID'        ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                            ;
---NAME                   :='VISUALIZATION_TYPE_KEY'        ;
---PARAM_ATTRIBUTES       :=null                            ;
---PARAM_TYPE             :=1                               ;
---PARAM_VALUE_STR        :='TABLE'                         ;
---PARAM_VALUE_CLOB       :=null                            ;
---TENANT_ID              :='&TENANT_ID'                    ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                          ;
---NAME                   :='WIDGET_KOC_NAME'             ;
---PARAM_ATTRIBUTES       :=null                          ;
---PARAM_TYPE             :=1                             ;
---PARAM_VALUE_STR        :='emcta-visualization'         ;
---PARAM_VALUE_CLOB       :=null                          ;
---TENANT_ID              :='&TENANT_ID'                  ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                                                      ;
---NAME                   :='WIDGET_VIEWMODEL'                                        ;
---PARAM_ATTRIBUTES       :=null                                                      ;
---PARAM_TYPE             :=1                                                         ;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js'   ;
---PARAM_VALUE_CLOB       :=null                                                      ;
---TENANT_ID              :='&TENANT_ID'                                              ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025             ;
---NAME                   :='TA_CRITERIA'    ;
---PARAM_ATTRIBUTES       :=null             ;
---PARAM_TYPE             :=2                ;
---PARAM_VALUE_STR        :=null             ;
---PARAM_VALUE_CLOB       :=ta_criteria_3025 ;
---TENANT_ID              :='&TENANT_ID'     ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                                                     ;
---NAME                   :='WIDGET_TEMPLATE'                                        ;
---PARAM_ATTRIBUTES       :=null                                                     ;
---PARAM_TYPE             :=1                                                        ;
---PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html'   ;
---PARAM_VALUE_CLOB       :=null                                                     ;
---TENANT_ID              :='&TENANT_ID'                                             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                 ;
---NAME                   :='PROVIDER_NAME'      ;
---PARAM_ATTRIBUTES       :=null                 ;
---PARAM_TYPE             :=1                    ;
---PARAM_VALUE_STR        :='TargetAnalytics'    ;
---PARAM_VALUE_CLOB       :=null                 ;
---TENANT_ID              :='&TENANT_ID'         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                   ;
---NAME                   :='WIDGET_VISUAL'        ;
---PARAM_ATTRIBUTES       :=null                   ;
---PARAM_TYPE             :=2                      ;
---PARAM_VALUE_STR        :=null                   ;
---PARAM_VALUE_CLOB       :=screenshot_3025        ;
---TENANT_ID              :='&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                    ;
---NAME                   :='TA_HORI_SORT_ORDER'    ;
---PARAM_ATTRIBUTES       :=null                    ;
---PARAM_TYPE             :=1                       ;
---PARAM_VALUE_STR        :='true'                  ;
---PARAM_VALUE_CLOB       :=null                    ;
---TENANT_ID              :='&TENANT_ID'            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                      ;
---NAME                   :='PROVIDER_ASSET_ROOT'     ;
---PARAM_ATTRIBUTES       :=null                      ;
---PARAM_TYPE             :=1                         ;
---PARAM_VALUE_STR        :='assetRoot'               ;
---PARAM_VALUE_CLOB       :=null                      ;
---TENANT_ID              :='&TENANT_ID'              ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                                      ;
---NAME                   :='WIDGET_ICON'                             ;
---PARAM_ATTRIBUTES       :=null                                      ;
---PARAM_TYPE             :=1                                         ;
---PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png' ;
---PARAM_VALUE_CLOB       :=null                                      ;
---TENANT_ID              :='&TENANT_ID'                              ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              :=3025                 ;
---NAME                   :='WIDGET_SOURCE'      ;
---PARAM_ATTRIBUTES       :=null                 ;
---PARAM_TYPE             :=1                    ;
---PARAM_VALUE_STR        :='1'                  ;
---PARAM_VALUE_CLOB       :=null                 ;
---TENANT_ID              :='&TENANT_ID'         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID              := 3023                                                       ;
+NAME                   := 'WIDGET_TEMPLATE'                                          ;
+PARAM_ATTRIBUTES       := null                                                       ;
+PARAM_TYPE             := 1                                                          ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html'     ;
+PARAM_VALUE_CLOB       := null                                                       ;
+TENANT_ID              := '&TENANT_ID'                                               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                                            ;
+NAME                   := 'WIDGET_ICON'                                   ;
+PARAM_ATTRIBUTES       := null                                            ;
+PARAM_TYPE             := 1                                               ;
+PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png'       ;
+PARAM_VALUE_CLOB       := null                                            ;
+TENANT_ID              := '&TENANT_ID'                                    ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                                                       ;
+NAME                   := 'WIDGET_VIEWMODEL'                                         ;
+PARAM_ATTRIBUTES       := null                                                       ;
+PARAM_TYPE             := 1                                                          ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js'    ;
+PARAM_VALUE_CLOB       := null                                                       ;
+TENANT_ID              := '&TENANT_ID'                                               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                    ;
+NAME                   := 'TIME_PERIOD_KEY'       ;
+PARAM_ATTRIBUTES       := null                    ;
+PARAM_TYPE             := 1                       ;
+PARAM_VALUE_STR        := '24'                    ;
+PARAM_VALUE_CLOB       := null                    ;
+TENANT_ID              := '&TENANT_ID'            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                               ;
+NAME                   := 'TA_CRITERIA'                      ;
+PARAM_ATTRIBUTES       := null                               ;
+PARAM_TYPE             := 2                                  ;
+PARAM_VALUE_STR        := null                               ;
+PARAM_VALUE_CLOB       := '{"version":0.5,"criteria":[{"jsonConstructor":"TargetTypeSearchCriterion","data":{"id":"target_type","_value":{"jsonConstructor":"CriterionExpression","data":{"type":"in","values":[{"jsonConstructor":"CriterionValue","data":{"value":"weblogic_j2eeserver","metadata":{"category":false},"displayValue":"Oracle WebLogic Server"}}]}},"dataType":"string","displayName":"Target Type","displayDetails":null,"role":"filter","func":null,"UIProperties":{"useForSort":false}}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_javavmvendor","_value":null,"dataType":"string","displayName":"Java VM Vendor","displayDetails":"Server Information","role":"column","func":null,"UIProperties":{"useForSort":false,"ignoreCase":true},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"javavmvendor","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1,"direction":"DESC","inverseNullOrderBy":true}},{"jsonConstructor":"PropertySearchCriterion","data":{"id":"property.orcl_gtp_target_version","_value":null,"dataType":"string","displayName":"Target Version","displayDetails":null,"role":"column","func":null,"UIProperties":{"useForSort":false},"targetType":"weblogic_j2eeserver","propertyName":"orcl_gtp_target_version"}},{"jsonConstructor":"PropertySearchCriterion","data":{"id":"property.orcl_gtp_platform","_value":null,"dataType":"string","displayName":"Platform","displayDetails":null,"role":"column","func":null,"UIProperties":{"useForSort":false},"targetType":"weblogic_j2eeserver","propertyName":"orcl_gtp_platform"}},{"jsonConstructor":"MetricGroupSearchCriterion","data":{"id":"weblogic_j2eeserver_WeblogicServer_javaversion","_value":null,"dataType":"string","displayName":"Java Version","displayDetails":"Server Information","role":"group by","func":null,"UIProperties":{"useForSort":true,"ignoreCase":true},"targetType":"weblogic_j2eeserver","unitStr":null,"mcName":"javaversion","mgName":"WeblogicServer","mgDisplayName":"Server Information","isKey":0,"groupKeyColumns":[],"isConfig":1,"direction":"DESC","inverseNullOrderBy":true}}]}';
+TENANT_ID              := '&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023              ;
+NAME                   := 'PROVIDER_VERSION';
+PARAM_ATTRIBUTES       := null              ;
+PARAM_TYPE             := 1                 ;
+PARAM_VALUE_STR        := '1.0'             ;
+PARAM_VALUE_CLOB       := null              ;
+TENANT_ID              := '&TENANT_ID'      ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                  ;
+NAME                   := 'WIDGET_KOC_NAME'     ;
+PARAM_ATTRIBUTES       := null                  ;
+PARAM_TYPE             := 1                     ;
+PARAM_VALUE_STR        := 'emcta-visualization' ;
+PARAM_VALUE_CLOB       := null                  ;
+TENANT_ID              := '&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                        ;
+NAME                   := 'VISUALIZATION_TYPE_KEY'    ;
+PARAM_ATTRIBUTES       := null                        ;
+PARAM_TYPE             := 1                           ;
+PARAM_VALUE_STR        := 'TABLE'                     ;
+PARAM_VALUE_CLOB       := null                        ;
+TENANT_ID              := '&TENANT_ID'                ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                     ;
+NAME                   := 'PROVIDER_ASSET_ROOT'    ;
+PARAM_ATTRIBUTES       := null                     ;
+PARAM_TYPE             := 1                        ;
+PARAM_VALUE_STR        := 'assetRoot'              ;
+PARAM_VALUE_CLOB       := null                     ;
+TENANT_ID              := '&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                  ;
+NAME                   := 'WIDGET_SOURCE'       ;
+PARAM_ATTRIBUTES       := null                  ;
+PARAM_TYPE             := 1                     ;
+PARAM_VALUE_STR        := '1'                   ;
+PARAM_VALUE_CLOB       := null                  ;
+TENANT_ID              := '&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                    ;
+NAME                   := 'PROVIDER_NAME'         ;
+PARAM_ATTRIBUTES       := null                    ;
+PARAM_TYPE             := 1                       ;
+PARAM_VALUE_STR        := 'TargetAnalytics'       ;
+PARAM_VALUE_CLOB       := null                    ;
+TENANT_ID              := '&TENANT_ID'            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                   ;
+NAME                   := 'TOP_N_ROWS'           ;
+PARAM_ATTRIBUTES       := null                   ;
+PARAM_TYPE             := 1                      ;
+PARAM_VALUE_STR        := '100'                  ;
+PARAM_VALUE_CLOB       := null                   ;
+TENANT_ID              := '&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                     ;
+NAME                   := 'TA_HORI_SORT_ORDER'     ;
+PARAM_ATTRIBUTES       := null                     ;
+PARAM_TYPE             := 1                        ;
+PARAM_VALUE_STR        := 'true'                   ;
+PARAM_VALUE_CLOB       := null                     ;
+TENANT_ID              := '&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3023                   ;
+NAME                   := 'TA_HORI_SORT_COLUMN'  ;
+PARAM_ATTRIBUTES       := null                   ;
+PARAM_TYPE             := 1                      ;
+PARAM_VALUE_STR        := '-2'                   ;
+PARAM_VALUE_CLOB       := null                   ;
+TENANT_ID              := '&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
 
---SEARCH_ID                           :=3026                                                                                     ;
---NAME                                :='Top 5 WebLogic Servers'                                                                 ;
---OWNER                               :='ORACLE'                                                                                 ;
---CREATION_DATE                       :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                            ;
---LAST_MODIFICATION_DATE              :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                            ;
---LAST_MODIFIED_BY                    :='ORACLE'                                                                                 ;
---DESCRIPTION                         :='Shows the status, CPU Usage, Active Sessions and Heap Usage for Top 5 WebLogic Servers' ;
---FOLDER_ID                           :=4                                                                                        ;
---CATEGORY_ID                         :=2                                                                                        ;
---NAME_NLSID                          :=null                                                                                     ;
---NAME_SUBSYSTEM                      :=null                                                                                     ;
---DESCRIPTION_NLSID                   :=null                                                                                     ;
---DESCRIPTION_SUBSYSTEM               :=null                                                                                     ;
---SYSTEM_SEARCH                       :=1                                                                                        ;
---EM_PLUGIN_ID                        :=null                                                                                     ;
---IS_LOCKED                           :=0                                                                                        ;
---METADATA_CLOB                       :=null                                                                                     ;
---SEARCH_DISPLAY_STR                  := null                                                                                    ;
---UI_HIDDEN                           :=0                                                                                        ;
---DELETED                             :=0                                                                                        ;
---IS_WIDGET                           :=1                                                                                        ;
---TENANT_ID                           :='&TENANT_ID'                                                                             ;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---DELETED,
---IS_WIDGET,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---DELETED,
---IS_WIDGET,
---TENANT_ID
---);
---
---SEARCH_ID              := 3026                                                    ;
---NAME                   := 'WIDGET_TEMPLATE'                                       ;
---PARAM_ATTRIBUTES       := null                                                    ;
---PARAM_TYPE             := 1                                                       ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html'  ;
---PARAM_VALUE_CLOB       := null                                                    ;
---TENANT_ID              := '&TENANT_ID'                                            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026              ;
---NAME                   := 'TOP_N_ROWS'      ;
---PARAM_ATTRIBUTES       := null              ;
---PARAM_TYPE             := 1                 ;
---PARAM_VALUE_STR        := '5'               ;
---PARAM_VALUE_CLOB       := null              ;
---TENANT_ID              := '&TENANT_ID'      ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026              ;
---NAME                   := 'PROVIDER_VERSION';
---PARAM_ATTRIBUTES       := null              ;
---PARAM_TYPE             := 1                 ;
---PARAM_VALUE_STR        := '1.0'             ;
---PARAM_VALUE_CLOB       := null              ;
---TENANT_ID              := '&TENANT_ID'      ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                       ;
---NAME                   := 'PROVIDER_ASSET_ROOT'      ;
---PARAM_ATTRIBUTES       := null                       ;
---PARAM_TYPE             := 1                          ;
---PARAM_VALUE_STR        := 'assetRoot'                ;
---PARAM_VALUE_CLOB       := null                       ;
---TENANT_ID              := '&TENANT_ID'               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                    ;
---NAME                   := 'WIDGET_KOC_NAME'       ;
---PARAM_ATTRIBUTES       := null                    ;
---PARAM_TYPE             := 1                       ;
---PARAM_VALUE_STR        := 'emcta-visualization'   ;
---PARAM_VALUE_CLOB       := null                    ;
---TENANT_ID              := '&TENANT_ID'            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                                       ;
---NAME                   := 'WIDGET_ICON'                              ;
---PARAM_ATTRIBUTES       := null                                       ;
---PARAM_TYPE             := 1                                          ;
---PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png'  ;
---PARAM_VALUE_CLOB       := null                                       ;
---TENANT_ID              := '&TENANT_ID'                               ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                ;
---NAME                   := 'WIDGET_SOURCE'     ;
---PARAM_ATTRIBUTES       := null                ;
---PARAM_TYPE             := 1                   ;
---PARAM_VALUE_STR        := '1'                 ;
---PARAM_VALUE_CLOB       := null                ;
---TENANT_ID              := '&TENANT_ID'        ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                  ;
---NAME                   := 'PROVIDER_NAME'       ;
---PARAM_ATTRIBUTES       := null                  ;
---PARAM_TYPE             := 1                     ;
---PARAM_VALUE_STR        := 'TargetAnalytics'     ;
---PARAM_VALUE_CLOB       := null                  ;
---TENANT_ID              := '&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                   ;
---NAME                   := 'TA_HORI_SORT_ORDER'   ;
---PARAM_ATTRIBUTES       := null                   ;
---PARAM_TYPE             := 1                      ;
---PARAM_VALUE_STR        := 'true'                 ;
---PARAM_VALUE_CLOB       := null                   ;
---TENANT_ID              := '&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                    ;
---NAME                   := 'VISUALIZATION_TYPE_KEY';
---PARAM_ATTRIBUTES       := null                    ;
---PARAM_TYPE             := 1                       ;
---PARAM_VALUE_STR        := 'TABLE'                 ;
---PARAM_VALUE_CLOB       := null                    ;
---TENANT_ID              := '&TENANT_ID'            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                    ;
---NAME                   := 'TA_CRITERIA'           ;
---PARAM_ATTRIBUTES       := null                    ;
---PARAM_TYPE             := 2                       ;
---PARAM_VALUE_STR        := null                    ;
---PARAM_VALUE_CLOB       := ta_criteria_3026        ;
---TENANT_ID              := '&TENANT_ID'            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                                                     ;
---NAME                   := 'WIDGET_VIEWMODEL'                                       ;
---PARAM_ATTRIBUTES       := null                                                     ;
---PARAM_TYPE             := 1                                                        ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js'  ;
---PARAM_VALUE_CLOB       := null                                                     ;
---TENANT_ID              := '&TENANT_ID'                                             ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026              ;
---NAME                   := 'WIDGET_VISUAL'   ;
---PARAM_ATTRIBUTES       := null              ;
---PARAM_TYPE             := 2                 ;
---PARAM_VALUE_STR        := null              ;
---PARAM_VALUE_CLOB       := screenshot_3026   ;
---TENANT_ID              := '&TENANT_ID'      ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3026                  ;
---NAME                   := 'TA_HORI_SORT_COLUMN' ;
---PARAM_ATTRIBUTES       := null                  ;
---PARAM_TYPE             := 1                     ;
---PARAM_VALUE_STR        := '1'                   ;
---PARAM_VALUE_CLOB       := null                  ;
---TENANT_ID              := '&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID     			:= 3024                                                                                                       ;
+NAME     				:= 'Top 5 Databases'                                                                                          ;
+OWNER     				:= 'ORACLE'                                                                                                   ;
+CREATION_DATE     		:= SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                              ;
+LAST_MODIFICATION_DATE  := SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                              ;
+LAST_MODIFIED_BY     	:= 'ORACLE'                                                                                                   ;
+DESCRIPTION     		:= 'Shows the status, Database CPU Time, I/O Megabytes per second and Total Memory Usage for Top 5 Databases' ;
+FOLDER_ID     			:= 4                                                                                                          ;
+CATEGORY_ID     		:= 2                                                                                                          ;
+NAME_NLSID     			:= null                                                                                                       ;
+NAME_SUBSYSTEM     		:= null                                                                                                       ;
+DESCRIPTION_NLSID     	:= null                                                                                                       ;
+DESCRIPTION_SUBSYSTEM   := null                                                                                                       ;
+SYSTEM_SEARCH     		:= 1                                                                                                          ;
+EM_PLUGIN_ID     		:= null                                                                                                       ;
+IS_LOCKED     			:= 0                                                                                                          ;
+METADATA_CLOB     		:= null                                                                                                       ;
+SEARCH_DISPLAY_STR     	:=  null                                                                                                      ;
+UI_HIDDEN     			:= 0                                                                                                          ;
+DELETED     			:= 0                                                                                                          ;
+IS_WIDGET     			:= 1                                                                                                          ;
+TENANT_ID				:='&TENANT_ID'																								  ;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+DELETED,
+IS_WIDGET,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+DELETED,
+IS_WIDGET,
+TENANT_ID
+);
+SEARCH_ID              :=3024                ;
+NAME                   :='WIDGET_VISUAL'     ;
+PARAM_ATTRIBUTES       :=null                ;
+PARAM_TYPE             :=2                   ;
+PARAM_VALUE_STR        :=null                ;
+PARAM_VALUE_CLOB       :=screenshot_3024     ;
+TENANT_ID              :='&TENANT_ID'        ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                                       ;
+NAME                   :='WIDGET_ICON'                              ;
+PARAM_ATTRIBUTES       :=null                                       ;
+PARAM_TYPE             :=1                                          ;
+PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png'  ;
+PARAM_VALUE_CLOB       :=null                                       ;
+TENANT_ID              :='&TENANT_ID'                               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                                                  ;
+NAME                   :='WIDGET_TEMPLATE'                                     ;
+PARAM_ATTRIBUTES       :=null                                                  ;
+PARAM_TYPE             :=1                                                     ;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html';
+PARAM_VALUE_CLOB       :=null                                                  ;
+TENANT_ID              :='&TENANT_ID'                                          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                ;
+NAME                   :='PROVIDER_NAME'     ;
+PARAM_ATTRIBUTES       :=null                ;
+PARAM_TYPE             :=1                   ;
+PARAM_VALUE_STR        :='TargetAnalytics'   ;
+PARAM_VALUE_CLOB       :=null                ;
+TENANT_ID              :='&TENANT_ID'        ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                    ;
+NAME                   :='TA_HORI_SORT_ORDER'    ;
+PARAM_ATTRIBUTES       :=null                    ;
+PARAM_TYPE             :=1                       ;
+PARAM_VALUE_STR        :='true'                  ;
+PARAM_VALUE_CLOB       :=null                    ;
+TENANT_ID              :='&TENANT_ID'            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                  ;
+NAME                   :='TOP_N_ROWS'          ;
+PARAM_ATTRIBUTES       :=null                  ;
+PARAM_TYPE             :=1                     ;
+PARAM_VALUE_STR        :='5'                   ;
+PARAM_VALUE_CLOB       :=null                  ;
+TENANT_ID              :='&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                   ;
+NAME                   :='WIDGET_SOURCE'        ;
+PARAM_ATTRIBUTES       :=null                   ;
+PARAM_TYPE             :=1                      ;
+PARAM_VALUE_STR        :='1'                    ;
+PARAM_VALUE_CLOB       :=null                   ;
+TENANT_ID              :='&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                       ;
+NAME                   :='TA_HORI_SORT_COLUMN'      ;
+PARAM_ATTRIBUTES       :=null                       ;
+PARAM_TYPE             :=1                          ;
+PARAM_VALUE_STR        :='1'                        ;
+PARAM_VALUE_CLOB       :=null                       ;
+TENANT_ID              :='&TENANT_ID'               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                        ;
+NAME                   :='PROVIDER_ASSET_ROOT'       ;
+PARAM_ATTRIBUTES       :=null                        ;
+PARAM_TYPE             :=1                           ;
+PARAM_VALUE_STR        :='assetRoot'                 ;
+PARAM_VALUE_CLOB       :=null                        ;
+TENANT_ID              :='&TENANT_ID'                ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                 ;
+NAME                   :='TA_CRITERIA'        ;
+PARAM_ATTRIBUTES       :=null                 ;
+PARAM_TYPE             :=2                    ;
+PARAM_VALUE_STR        :=null                 ;
+PARAM_VALUE_CLOB       :=ta_criteria_3024     ;
+TENANT_ID              :='&TENANT_ID'         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                            ;
+NAME                   :='VISUALIZATION_TYPE_KEY'        ;
+PARAM_ATTRIBUTES       :=null                            ;
+PARAM_TYPE             :=1                               ;
+PARAM_VALUE_STR        :='TABLE'                         ;
+PARAM_VALUE_CLOB       :=null                            ;
+TENANT_ID              :='&TENANT_ID'                    ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                             ;
+NAME                   :='PROVIDER_VERSION'               ;
+PARAM_ATTRIBUTES       :=null                             ;
+PARAM_TYPE             :=1                                ;
+PARAM_VALUE_STR        :='1.0'                            ;
+PARAM_VALUE_CLOB       :=null                             ;
+TENANT_ID              :='&TENANT_ID'                     ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                                                      ;
+NAME                   :='WIDGET_VIEWMODEL'                                        ;
+PARAM_ATTRIBUTES       :=null                                                      ;
+PARAM_TYPE             :=1                                                         ;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js'   ;
+PARAM_VALUE_CLOB       :=null                                                      ;
+TENANT_ID              :='&TENANT_ID'                                              ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3024                     ;
+NAME                   :='WIDGET_KOC_NAME'        ;
+PARAM_ATTRIBUTES       :=null                     ;
+PARAM_TYPE             :=1                        ;
+PARAM_VALUE_STR        :='emcta-visualization'    ;
+PARAM_VALUE_CLOB       :=null                     ;
+TENANT_ID              :='&TENANT_ID'             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
 
---SEARCH_ID                           :=3027                                                                                                                   ;
---NAME                                :='Top 5 Application Deployments '                                                                                       ;
---OWNER                               :='ORACLE'                                                                                                               ;
---CREATION_DATE                       :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                                          ;
---LAST_MODIFICATION_DATE              :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                                          ;
---LAST_MODIFIED_BY                    :='ORACLE'                                                                                                               ;
---DESCRIPTION                         :='Shows the status, Requests per minute, Request Processing Time and Active Sessions for Top 5 Application Deployments' ;
---FOLDER_ID                           :=4                                                                                                                      ;
---CATEGORY_ID                         :=2                                                                                                                      ;
---NAME_NLSID                          :=null                                                                                                                   ;
---NAME_SUBSYSTEM                      :=null                                                                                                                   ;
---DESCRIPTION_NLSID                   :=null                                                                                                                   ;
---DESCRIPTION_SUBSYSTEM               :=null                                                                                                                   ;
---SYSTEM_SEARCH                       :=1                                                                                                                      ;
---EM_PLUGIN_ID                        :=null                                                                                                                   ;
---IS_LOCKED                           :=0                                                                                                                      ;
---METADATA_CLOB                       :=null                                                                                                                   ;
---SEARCH_DISPLAY_STR                  := null                                                                                                                  ;
---UI_HIDDEN                           :=0                                                                                                                      ;
---DELETED                             :=0                                                                                                                      ;
---IS_WIDGET                           :=1                                                                                                                      ;
---TENANT_ID                           :='&TENANT_ID'                                                                                                           ;
---Insert into EMS_ANALYTICS_SEARCH
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---DELETED,
---IS_WIDGET,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---OWNER,
---CREATION_DATE,
---LAST_MODIFICATION_DATE,
---LAST_MODIFIED_BY,
---DESCRIPTION,
---FOLDER_ID,
---CATEGORY_ID,
---NAME_NLSID,
---NAME_SUBSYSTEM,
---DESCRIPTION_NLSID,
---DESCRIPTION_SUBSYSTEM,
---SYSTEM_SEARCH,
---EM_PLUGIN_ID,
---IS_LOCKED,
---METADATA_CLOB,
---SEARCH_DISPLAY_STR,
---UI_HIDDEN,
---DELETED,
---IS_WIDGET,
---TENANT_ID
---);
---SEARCH_ID              := 3027                             ;
---NAME                   := 'WIDGET_VISUAL'                  ;
---PARAM_ATTRIBUTES       := null                             ;
---PARAM_TYPE             := 2                                ;
---PARAM_VALUE_STR        := null                             ;
---PARAM_VALUE_CLOB       := screenshot_3027                  ;
---TENANT_ID              := '&TENANT_ID'                     ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                                                    ;
---NAME                   := 'WIDGET_VIEWMODEL'                                      ;
---PARAM_ATTRIBUTES       := null                                                    ;
---PARAM_TYPE             := 1                                                       ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js' ;
---PARAM_VALUE_CLOB       := null                                                    ;
---TENANT_ID              := '&TENANT_ID'                                            ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027;
---NAME                   := 'WIDGET_SOURCE';
---PARAM_ATTRIBUTES       := null;
---PARAM_TYPE             := 1;
---PARAM_VALUE_STR        := '1';
---PARAM_VALUE_CLOB       := null;
---TENANT_ID              := '&TENANT_ID';
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                         ;
---NAME                   := 'VISUALIZATION_TYPE_KEY'     ;
---PARAM_ATTRIBUTES       := null                         ;
---PARAM_TYPE             := 1                            ;
---PARAM_VALUE_STR        := 'TABLE'                      ;
---PARAM_VALUE_CLOB       := null                         ;
---TENANT_ID              := '&TENANT_ID'                 ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                                                  ;
---NAME                   := 'WIDGET_TEMPLATE'                                     ;
---PARAM_ATTRIBUTES       := null                                                  ;
---PARAM_TYPE             := 1                                                     ;
---PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html';
---PARAM_VALUE_CLOB       := null                                                  ;
---TENANT_ID              := '&TENANT_ID'                                          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027             ;
---NAME                   := 'TOP_N_ROWS'     ;
---PARAM_ATTRIBUTES       := null             ;
---PARAM_TYPE             := 1                ;
---PARAM_VALUE_STR        := '5'              ;
---PARAM_VALUE_CLOB       := null             ;
---TENANT_ID              := '&TENANT_ID'     ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                   ;
---NAME                   := 'TA_HORI_SORT_ORDER'   ;
---PARAM_ATTRIBUTES       := null                   ;
---PARAM_TYPE             := 1                      ;
---PARAM_VALUE_STR        := 'true'                 ;
---PARAM_VALUE_CLOB       := null                   ;
---TENANT_ID              := '&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                 ;
---NAME                   := 'TA_HORI_SORT_COLUMN';
---PARAM_ATTRIBUTES       := null                 ;
---PARAM_TYPE             := 1                    ;
---PARAM_VALUE_STR        := '1'                  ;
---PARAM_VALUE_CLOB       := null                 ;
---TENANT_ID              := '&TENANT_ID'         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                 ;
---NAME                   := 'TA_CRITERIA'        ;
---PARAM_ATTRIBUTES       := null                 ;
---PARAM_TYPE             := 2                    ;
---PARAM_VALUE_STR        := null                 ;
---PARAM_VALUE_CLOB       := ta_criteria_3027     ;
---TENANT_ID              := '&TENANT_ID'         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                 ;
---NAME                   := 'PROVIDER_VERSION'   ;
---PARAM_ATTRIBUTES       := null                 ;
---PARAM_TYPE             := 1                    ;
---PARAM_VALUE_STR        := '1.0'                ;
---PARAM_VALUE_CLOB       := null                 ;
---TENANT_ID              := '&TENANT_ID'         ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                   ;
---NAME                   := 'WIDGET_KOC_NAME'      ;
---PARAM_ATTRIBUTES       := null                   ;
---PARAM_TYPE             := 1                      ;
---PARAM_VALUE_STR        := 'emcta-visualization'  ;
---PARAM_VALUE_CLOB       := null                   ;
---TENANT_ID              := '&TENANT_ID'           ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                  ;
---NAME                   := 'PROVIDER_NAME'       ;
---PARAM_ATTRIBUTES       := null                  ;
---PARAM_TYPE             := 1                     ;
---PARAM_VALUE_STR        := 'TargetAnalytics'     ;
---PARAM_VALUE_CLOB       := null                  ;
---TENANT_ID              := '&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                                      ;
---NAME                   := 'WIDGET_ICON'                             ;
---PARAM_ATTRIBUTES       := null                                      ;
---PARAM_TYPE             := 1                                         ;
---PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png' ;
---PARAM_VALUE_CLOB       := null                                      ;
---TENANT_ID              := '&TENANT_ID'                              ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
---SEARCH_ID              := 3027                  ;
---NAME                   := 'PROVIDER_ASSET_ROOT' ;
---PARAM_ATTRIBUTES       := null                  ;
---PARAM_TYPE             := 1                     ;
---PARAM_VALUE_STR        := 'assetRoot'           ;
---PARAM_VALUE_CLOB       := null                  ;
---TENANT_ID              := '&TENANT_ID'          ;
---Insert into EMS_ANALYTICS_SEARCH_PARAMS
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---)
---values
---(
---SEARCH_ID,
---NAME,
---PARAM_ATTRIBUTES,
---PARAM_TYPE,
---PARAM_VALUE_STR,
---PARAM_VALUE_CLOB,
---TENANT_ID
---);
+SEARCH_ID                           :=3025                                                                                                  ;
+NAME                                :='Top 5 Hosts'                                                                                         ;
+OWNER                               :='ORACLE'                                                                                              ;
+CREATION_DATE                       :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                         ;
+LAST_MODIFICATION_DATE              :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                         ;
+LAST_MODIFIED_BY                    :='ORACLE'                                                                                              ;
+DESCRIPTION                         :='Shows the status, CPU Utilization, Total Disk I/O per second and Memory Utilization for Top 5 Hosts' ;
+FOLDER_ID                           :=4                                                                                                     ;
+CATEGORY_ID                         :=2                                                                                                     ;
+NAME_NLSID                          :=null                                                                                                  ;
+NAME_SUBSYSTEM                      :=null                                                                                                  ;
+DESCRIPTION_NLSID                   :=null                                                                                                  ;
+DESCRIPTION_SUBSYSTEM               :=null                                                                                                  ;
+SYSTEM_SEARCH                       :=1                                                                                                     ;
+EM_PLUGIN_ID                        :=null                                                                                                  ;
+IS_LOCKED                           :=0                                                                                                     ;
+METADATA_CLOB                       :=null                                                                                                  ;
+SEARCH_DISPLAY_STR                  := null                                                                                                 ;
+UI_HIDDEN                           :=0                                                                                                     ;
+DELETED                             :=0                                                                                                     ;
+IS_WIDGET                           :=1                                                                                                     ;
+TENANT_ID                           :='&TENANT_ID'                                                                                          ;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+DELETED,
+IS_WIDGET,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+DELETED,
+IS_WIDGET,
+TENANT_ID
+);
+SEARCH_ID              :=3025;
+NAME                   :='PROVIDER_VERSION';
+PARAM_ATTRIBUTES       :=null;
+PARAM_TYPE             :=1;
+PARAM_VALUE_STR        :='1.0';
+PARAM_VALUE_CLOB       :=null;
+TENANT_ID              :='&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                    ;
+NAME                   :='TA_HORI_SORT_COLUMN'   ;
+PARAM_ATTRIBUTES       :=null                    ;
+PARAM_TYPE             :=1                       ;
+PARAM_VALUE_STR        :='1'                     ;
+PARAM_VALUE_CLOB       :=null                    ;
+TENANT_ID              :='&TENANT_ID'            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                ;
+NAME                   :='TOP_N_ROWS'        ;
+PARAM_ATTRIBUTES       :=null                ;
+PARAM_TYPE             :=1                   ;
+PARAM_VALUE_STR        :='5'                 ;
+PARAM_VALUE_CLOB       :=null                ;
+TENANT_ID              :='&TENANT_ID'        ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                            ;
+NAME                   :='VISUALIZATION_TYPE_KEY'        ;
+PARAM_ATTRIBUTES       :=null                            ;
+PARAM_TYPE             :=1                               ;
+PARAM_VALUE_STR        :='TABLE'                         ;
+PARAM_VALUE_CLOB       :=null                            ;
+TENANT_ID              :='&TENANT_ID'                    ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                          ;
+NAME                   :='WIDGET_KOC_NAME'             ;
+PARAM_ATTRIBUTES       :=null                          ;
+PARAM_TYPE             :=1                             ;
+PARAM_VALUE_STR        :='emcta-visualization'         ;
+PARAM_VALUE_CLOB       :=null                          ;
+TENANT_ID              :='&TENANT_ID'                  ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                                                      ;
+NAME                   :='WIDGET_VIEWMODEL'                                        ;
+PARAM_ATTRIBUTES       :=null                                                      ;
+PARAM_TYPE             :=1                                                         ;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/js/VisualizationWidget.js'   ;
+PARAM_VALUE_CLOB       :=null                                                      ;
+TENANT_ID              :='&TENANT_ID'                                              ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025             ;
+NAME                   :='TA_CRITERIA'    ;
+PARAM_ATTRIBUTES       :=null             ;
+PARAM_TYPE             :=2                ;
+PARAM_VALUE_STR        :=null             ;
+PARAM_VALUE_CLOB       :=ta_criteria_3025 ;
+TENANT_ID              :='&TENANT_ID'     ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                                                     ;
+NAME                   :='WIDGET_TEMPLATE'                                        ;
+PARAM_ATTRIBUTES       :=null                                                     ;
+PARAM_TYPE             :=1                                                        ;
+PARAM_VALUE_STR        :='/widget/visualizationWidget/visualizationWidget.html'   ;
+PARAM_VALUE_CLOB       :=null                                                     ;
+TENANT_ID              :='&TENANT_ID'                                             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                 ;
+NAME                   :='PROVIDER_NAME'      ;
+PARAM_ATTRIBUTES       :=null                 ;
+PARAM_TYPE             :=1                    ;
+PARAM_VALUE_STR        :='TargetAnalytics'    ;
+PARAM_VALUE_CLOB       :=null                 ;
+TENANT_ID              :='&TENANT_ID'         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                   ;
+NAME                   :='WIDGET_VISUAL'        ;
+PARAM_ATTRIBUTES       :=null                   ;
+PARAM_TYPE             :=2                      ;
+PARAM_VALUE_STR        :=null                   ;
+PARAM_VALUE_CLOB       :=screenshot_3025        ;
+TENANT_ID              :='&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                    ;
+NAME                   :='TA_HORI_SORT_ORDER'    ;
+PARAM_ATTRIBUTES       :=null                    ;
+PARAM_TYPE             :=1                       ;
+PARAM_VALUE_STR        :='true'                  ;
+PARAM_VALUE_CLOB       :=null                    ;
+TENANT_ID              :='&TENANT_ID'            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                      ;
+NAME                   :='PROVIDER_ASSET_ROOT'     ;
+PARAM_ATTRIBUTES       :=null                      ;
+PARAM_TYPE             :=1                         ;
+PARAM_VALUE_STR        :='assetRoot'               ;
+PARAM_VALUE_CLOB       :=null                      ;
+TENANT_ID              :='&TENANT_ID'              ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                                      ;
+NAME                   :='WIDGET_ICON'                             ;
+PARAM_ATTRIBUTES       :=null                                      ;
+PARAM_TYPE             :=1                                         ;
+PARAM_VALUE_STR        :='/../images/func_horibargraph_24_ena.png' ;
+PARAM_VALUE_CLOB       :=null                                      ;
+TENANT_ID              :='&TENANT_ID'                              ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              :=3025                 ;
+NAME                   :='WIDGET_SOURCE'      ;
+PARAM_ATTRIBUTES       :=null                 ;
+PARAM_TYPE             :=1                    ;
+PARAM_VALUE_STR        :='1'                  ;
+PARAM_VALUE_CLOB       :=null                 ;
+TENANT_ID              :='&TENANT_ID'         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+
+SEARCH_ID                           :=3026                                                                                     ;
+NAME                                :='Top 5 WebLogic Servers'                                                                 ;
+OWNER                               :='ORACLE'                                                                                 ;
+CREATION_DATE                       :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                            ;
+LAST_MODIFICATION_DATE              :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                            ;
+LAST_MODIFIED_BY                    :='ORACLE'                                                                                 ;
+DESCRIPTION                         :='Shows the status, CPU Usage, Active Sessions and Heap Usage for Top 5 WebLogic Servers' ;
+FOLDER_ID                           :=4                                                                                        ;
+CATEGORY_ID                         :=2                                                                                        ;
+NAME_NLSID                          :=null                                                                                     ;
+NAME_SUBSYSTEM                      :=null                                                                                     ;
+DESCRIPTION_NLSID                   :=null                                                                                     ;
+DESCRIPTION_SUBSYSTEM               :=null                                                                                     ;
+SYSTEM_SEARCH                       :=1                                                                                        ;
+EM_PLUGIN_ID                        :=null                                                                                     ;
+IS_LOCKED                           :=0                                                                                        ;
+METADATA_CLOB                       :=null                                                                                     ;
+SEARCH_DISPLAY_STR                  := null                                                                                    ;
+UI_HIDDEN                           :=0                                                                                        ;
+DELETED                             :=0                                                                                        ;
+IS_WIDGET                           :=1                                                                                        ;
+TENANT_ID                           :='&TENANT_ID'                                                                             ;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+DELETED,
+IS_WIDGET,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+DELETED,
+IS_WIDGET,
+TENANT_ID
+);
+
+SEARCH_ID              := 3026                                                    ;
+NAME                   := 'WIDGET_TEMPLATE'                                       ;
+PARAM_ATTRIBUTES       := null                                                    ;
+PARAM_TYPE             := 1                                                       ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html'  ;
+PARAM_VALUE_CLOB       := null                                                    ;
+TENANT_ID              := '&TENANT_ID'                                            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026              ;
+NAME                   := 'TOP_N_ROWS'      ;
+PARAM_ATTRIBUTES       := null              ;
+PARAM_TYPE             := 1                 ;
+PARAM_VALUE_STR        := '5'               ;
+PARAM_VALUE_CLOB       := null              ;
+TENANT_ID              := '&TENANT_ID'      ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026              ;
+NAME                   := 'PROVIDER_VERSION';
+PARAM_ATTRIBUTES       := null              ;
+PARAM_TYPE             := 1                 ;
+PARAM_VALUE_STR        := '1.0'             ;
+PARAM_VALUE_CLOB       := null              ;
+TENANT_ID              := '&TENANT_ID'      ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                       ;
+NAME                   := 'PROVIDER_ASSET_ROOT'      ;
+PARAM_ATTRIBUTES       := null                       ;
+PARAM_TYPE             := 1                          ;
+PARAM_VALUE_STR        := 'assetRoot'                ;
+PARAM_VALUE_CLOB       := null                       ;
+TENANT_ID              := '&TENANT_ID'               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                    ;
+NAME                   := 'WIDGET_KOC_NAME'       ;
+PARAM_ATTRIBUTES       := null                    ;
+PARAM_TYPE             := 1                       ;
+PARAM_VALUE_STR        := 'emcta-visualization'   ;
+PARAM_VALUE_CLOB       := null                    ;
+TENANT_ID              := '&TENANT_ID'            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                                       ;
+NAME                   := 'WIDGET_ICON'                              ;
+PARAM_ATTRIBUTES       := null                                       ;
+PARAM_TYPE             := 1                                          ;
+PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png'  ;
+PARAM_VALUE_CLOB       := null                                       ;
+TENANT_ID              := '&TENANT_ID'                               ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                ;
+NAME                   := 'WIDGET_SOURCE'     ;
+PARAM_ATTRIBUTES       := null                ;
+PARAM_TYPE             := 1                   ;
+PARAM_VALUE_STR        := '1'                 ;
+PARAM_VALUE_CLOB       := null                ;
+TENANT_ID              := '&TENANT_ID'        ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                  ;
+NAME                   := 'PROVIDER_NAME'       ;
+PARAM_ATTRIBUTES       := null                  ;
+PARAM_TYPE             := 1                     ;
+PARAM_VALUE_STR        := 'TargetAnalytics'     ;
+PARAM_VALUE_CLOB       := null                  ;
+TENANT_ID              := '&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                   ;
+NAME                   := 'TA_HORI_SORT_ORDER'   ;
+PARAM_ATTRIBUTES       := null                   ;
+PARAM_TYPE             := 1                      ;
+PARAM_VALUE_STR        := 'true'                 ;
+PARAM_VALUE_CLOB       := null                   ;
+TENANT_ID              := '&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                    ;
+NAME                   := 'VISUALIZATION_TYPE_KEY';
+PARAM_ATTRIBUTES       := null                    ;
+PARAM_TYPE             := 1                       ;
+PARAM_VALUE_STR        := 'TABLE'                 ;
+PARAM_VALUE_CLOB       := null                    ;
+TENANT_ID              := '&TENANT_ID'            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                    ;
+NAME                   := 'TA_CRITERIA'           ;
+PARAM_ATTRIBUTES       := null                    ;
+PARAM_TYPE             := 2                       ;
+PARAM_VALUE_STR        := null                    ;
+PARAM_VALUE_CLOB       := ta_criteria_3026        ;
+TENANT_ID              := '&TENANT_ID'            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                                                     ;
+NAME                   := 'WIDGET_VIEWMODEL'                                       ;
+PARAM_ATTRIBUTES       := null                                                     ;
+PARAM_TYPE             := 1                                                        ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js'  ;
+PARAM_VALUE_CLOB       := null                                                     ;
+TENANT_ID              := '&TENANT_ID'                                             ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026              ;
+NAME                   := 'WIDGET_VISUAL'   ;
+PARAM_ATTRIBUTES       := null              ;
+PARAM_TYPE             := 2                 ;
+PARAM_VALUE_STR        := null              ;
+PARAM_VALUE_CLOB       := screenshot_3026   ;
+TENANT_ID              := '&TENANT_ID'      ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3026                  ;
+NAME                   := 'TA_HORI_SORT_COLUMN' ;
+PARAM_ATTRIBUTES       := null                  ;
+PARAM_TYPE             := 1                     ;
+PARAM_VALUE_STR        := '1'                   ;
+PARAM_VALUE_CLOB       := null                  ;
+TENANT_ID              := '&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+
+SEARCH_ID                           :=3027                                                                                                                   ;
+NAME                                :='Top 5 Application Deployments '                                                                                       ;
+OWNER                               :='ORACLE'                                                                                                               ;
+CREATION_DATE                       :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                                          ;
+LAST_MODIFICATION_DATE              :=SYS_EXTRACT_UTC(SYSTIMESTAMP)                                                                                          ;
+LAST_MODIFIED_BY                    :='ORACLE'                                                                                                               ;
+DESCRIPTION                         :='Shows the status, Requests per minute, Request Processing Time and Active Sessions for Top 5 Application Deployments' ;
+FOLDER_ID                           :=4                                                                                                                      ;
+CATEGORY_ID                         :=2                                                                                                                      ;
+NAME_NLSID                          :=null                                                                                                                   ;
+NAME_SUBSYSTEM                      :=null                                                                                                                   ;
+DESCRIPTION_NLSID                   :=null                                                                                                                   ;
+DESCRIPTION_SUBSYSTEM               :=null                                                                                                                   ;
+SYSTEM_SEARCH                       :=1                                                                                                                      ;
+EM_PLUGIN_ID                        :=null                                                                                                                   ;
+IS_LOCKED                           :=0                                                                                                                      ;
+METADATA_CLOB                       :=null                                                                                                                   ;
+SEARCH_DISPLAY_STR                  := null                                                                                                                  ;
+UI_HIDDEN                           :=0                                                                                                                      ;
+DELETED                             :=0                                                                                                                      ;
+IS_WIDGET                           :=1                                                                                                                      ;
+TENANT_ID                           :='&TENANT_ID'                                                                                                           ;
+Insert into EMS_ANALYTICS_SEARCH
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+DELETED,
+IS_WIDGET,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+OWNER,
+CREATION_DATE,
+LAST_MODIFICATION_DATE,
+LAST_MODIFIED_BY,
+DESCRIPTION,
+FOLDER_ID,
+CATEGORY_ID,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+SYSTEM_SEARCH,
+EM_PLUGIN_ID,
+IS_LOCKED,
+METADATA_CLOB,
+SEARCH_DISPLAY_STR,
+UI_HIDDEN,
+DELETED,
+IS_WIDGET,
+TENANT_ID
+);
+SEARCH_ID              := 3027                             ;
+NAME                   := 'WIDGET_VISUAL'                  ;
+PARAM_ATTRIBUTES       := null                             ;
+PARAM_TYPE             := 2                                ;
+PARAM_VALUE_STR        := null                             ;
+PARAM_VALUE_CLOB       := screenshot_3027                  ;
+TENANT_ID              := '&TENANT_ID'                     ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                                                    ;
+NAME                   := 'WIDGET_VIEWMODEL'                                      ;
+PARAM_ATTRIBUTES       := null                                                    ;
+PARAM_TYPE             := 1                                                       ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/js/VisualizationWidget.js' ;
+PARAM_VALUE_CLOB       := null                                                    ;
+TENANT_ID              := '&TENANT_ID'                                            ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027;
+NAME                   := 'WIDGET_SOURCE';
+PARAM_ATTRIBUTES       := null;
+PARAM_TYPE             := 1;
+PARAM_VALUE_STR        := '1';
+PARAM_VALUE_CLOB       := null;
+TENANT_ID              := '&TENANT_ID';
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                         ;
+NAME                   := 'VISUALIZATION_TYPE_KEY'     ;
+PARAM_ATTRIBUTES       := null                         ;
+PARAM_TYPE             := 1                            ;
+PARAM_VALUE_STR        := 'TABLE'                      ;
+PARAM_VALUE_CLOB       := null                         ;
+TENANT_ID              := '&TENANT_ID'                 ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                                                  ;
+NAME                   := 'WIDGET_TEMPLATE'                                     ;
+PARAM_ATTRIBUTES       := null                                                  ;
+PARAM_TYPE             := 1                                                     ;
+PARAM_VALUE_STR        := '/widget/visualizationWidget/visualizationWidget.html';
+PARAM_VALUE_CLOB       := null                                                  ;
+TENANT_ID              := '&TENANT_ID'                                          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027             ;
+NAME                   := 'TOP_N_ROWS'     ;
+PARAM_ATTRIBUTES       := null             ;
+PARAM_TYPE             := 1                ;
+PARAM_VALUE_STR        := '5'              ;
+PARAM_VALUE_CLOB       := null             ;
+TENANT_ID              := '&TENANT_ID'     ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                   ;
+NAME                   := 'TA_HORI_SORT_ORDER'   ;
+PARAM_ATTRIBUTES       := null                   ;
+PARAM_TYPE             := 1                      ;
+PARAM_VALUE_STR        := 'true'                 ;
+PARAM_VALUE_CLOB       := null                   ;
+TENANT_ID              := '&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                 ;
+NAME                   := 'TA_HORI_SORT_COLUMN';
+PARAM_ATTRIBUTES       := null                 ;
+PARAM_TYPE             := 1                    ;
+PARAM_VALUE_STR        := '1'                  ;
+PARAM_VALUE_CLOB       := null                 ;
+TENANT_ID              := '&TENANT_ID'         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                 ;
+NAME                   := 'TA_CRITERIA'        ;
+PARAM_ATTRIBUTES       := null                 ;
+PARAM_TYPE             := 2                    ;
+PARAM_VALUE_STR        := null                 ;
+PARAM_VALUE_CLOB       := ta_criteria_3027     ;
+TENANT_ID              := '&TENANT_ID'         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                 ;
+NAME                   := 'PROVIDER_VERSION'   ;
+PARAM_ATTRIBUTES       := null                 ;
+PARAM_TYPE             := 1                    ;
+PARAM_VALUE_STR        := '1.0'                ;
+PARAM_VALUE_CLOB       := null                 ;
+TENANT_ID              := '&TENANT_ID'         ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                   ;
+NAME                   := 'WIDGET_KOC_NAME'      ;
+PARAM_ATTRIBUTES       := null                   ;
+PARAM_TYPE             := 1                      ;
+PARAM_VALUE_STR        := 'emcta-visualization'  ;
+PARAM_VALUE_CLOB       := null                   ;
+TENANT_ID              := '&TENANT_ID'           ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                  ;
+NAME                   := 'PROVIDER_NAME'       ;
+PARAM_ATTRIBUTES       := null                  ;
+PARAM_TYPE             := 1                     ;
+PARAM_VALUE_STR        := 'TargetAnalytics'     ;
+PARAM_VALUE_CLOB       := null                  ;
+TENANT_ID              := '&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                                      ;
+NAME                   := 'WIDGET_ICON'                             ;
+PARAM_ATTRIBUTES       := null                                      ;
+PARAM_TYPE             := 1                                         ;
+PARAM_VALUE_STR        := '/../images/func_horibargraph_24_ena.png' ;
+PARAM_VALUE_CLOB       := null                                      ;
+TENANT_ID              := '&TENANT_ID'                              ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
+SEARCH_ID              := 3027                  ;
+NAME                   := 'PROVIDER_ASSET_ROOT' ;
+PARAM_ATTRIBUTES       := null                  ;
+PARAM_TYPE             := 1                     ;
+PARAM_VALUE_STR        := 'assetRoot'           ;
+PARAM_VALUE_CLOB       := null                  ;
+TENANT_ID              := '&TENANT_ID'          ;
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+)
+values
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+);
 
 SEARCH_ID                           :=3028                                                                                              ;
 NAME                                :='Targets Status'                                                                                  ;
