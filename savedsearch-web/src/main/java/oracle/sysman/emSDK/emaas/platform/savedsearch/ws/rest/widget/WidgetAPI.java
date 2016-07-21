@@ -3,6 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -30,7 +31,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.Screensho
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
 import org.apache.logging.log4j.LogManager;
@@ -346,16 +346,17 @@ public class WidgetAPI
 	}
 
 	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible) throws EMAnalyticsFwkException,
-	IOException
+			IOException
 	{
 		List<String> providers = TenantSubscriptionUtil.getTenantSubscribedServiceProviders(TenantContext.getContext()
 				.gettenantName());
 		_logger.debug("Retrieved subscribed providers {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
-		List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible, providers,
-				widgetGroupId);
-		//		List<Widget> widgetList = WidgetManager.getInstance().getWidgetListByProviderNames(providers, widgetGroupId);
-		String message = WidgetManager.getInstance().getWidgetJsonStringFromWidgetList(widgetList);
+		/*List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible, providers,
+				widgetGroupId);*/
+		List<Map<String, Object>> widgetList = WidgetManager.getInstance().getWidgetListByProviderNames(providers, widgetGroupId);
+		/*String message = WidgetManager.getInstance().getWidgetJsonStringFromWidgetList(widgetList);*/
+		String message = WidgetManager.getInstance().getSpelledJsonFromQueryResult(widgetList);
 
 		return message;
 	}
