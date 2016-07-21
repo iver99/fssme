@@ -60,7 +60,7 @@ class EmAnalyticsObjectUtil
 			String parentFolder = "parentFolder";
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
-			.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 
 			if (folderList.size() > 0) {
 				throw new EMAnalyticsFwkException("Sub folders founds", EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
@@ -83,7 +83,7 @@ class EmAnalyticsObjectUtil
 				if (cateObj.getDeleted() == 0
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 								|| cateObj.getOwner().equals("ORACLE") || cateObj.getOwner().equals(
-										TenantContext.getContext().getUsername()))) {
+								TenantContext.getContext().getUsername()))) {
 
 					return cateObj;
 				}
@@ -170,7 +170,15 @@ class EmAnalyticsObjectUtil
 		List<Parameter> params = category.getParameters();
 		//Set<EmAnalyticsCategoryParam> paramSet = new HashSet<EmAnalyticsCategoryParam>();
 		if (params != null && params.size() != 0) {
-			for (Parameter param : params) {
+			Iterator<Parameter> paramIter = params.iterator();
+			while (paramIter.hasNext()) {
+				Parameter param = paramIter.next();
+				//parameter DASHBOARD_INELIGIBLE has been move into Category table as a column
+				if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
+					categoryObj.setDASHBOARD_INELIGIBLE(param.getValue());
+					paramIter.remove();
+					continue;
+				}
 				EmAnalyticsCategoryParam categoryParamEntity = new EmAnalyticsCategoryParam();
 				categoryParamEntity.setEmAnalyticsCategory(categoryObj);
 				categoryParamEntity.setName(param.getName());
@@ -231,6 +239,15 @@ class EmAnalyticsObjectUtil
 
 		existingParams.addAll(newParams.values()); // Set addition takes
 		// care of duplicates !!
+		Iterator<EmAnalyticsCategoryParam> paramIter = existingParams.iterator();
+		while (paramIter.hasNext()) {
+			EmAnalyticsCategoryParam paramObj = paramIter.next();
+			if ("DASHBOARD_INELIGIBLE".equals(paramObj.getName())) {
+				categoryEntity.setDASHBOARD_INELIGIBLE(paramObj.getValue());
+				paramIter.remove();
+				break;
+			}
+		}
 		return categoryEntity;
 	}
 
@@ -538,7 +555,7 @@ class EmAnalyticsObjectUtil
 					&& folderObj.getDeleted() == 0
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+									TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -611,7 +628,7 @@ class EmAnalyticsObjectUtil
 				if (searchObj.getDeleted() == 0
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 								|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-								TenantContext.getContext().getUsername()))) {
+										TenantContext.getContext().getUsername()))) {
 
 					return searchObj;
 				}
@@ -636,7 +653,7 @@ class EmAnalyticsObjectUtil
 			if (searchObj != null
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+									TenantContext.getContext().getUsername()))) {
 				return searchObj;
 			}
 			else {
