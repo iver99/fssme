@@ -7,34 +7,60 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
 
-public class OdsDataServiceImpl implements OdsDataService {
+public class OdsDataServiceImpl implements OdsDataService
+{
+
+	private static final Logger logger = LogManager.getLogger(OdsDataServiceImpl.class);
 	private static final OdsDataServiceImpl instance = new OdsDataServiceImpl();
-	
-	public static OdsDataServiceImpl getInstance() {
+
+	public static OdsDataServiceImpl getInstance()
+	{
 		return instance;
 	}
-	
-	
+
+	static private String generateOdsEntityJson(String searchId, String searchName, String meClass)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("{");
+		sb.append("\"entityType\" : \"").append(ENTITY_TYPE_NAME).append("\",");
+		sb.append("\"entityName\" : \"").append(searchId).append("\",");
+		sb.append("\"displayName\" : \"").append(searchName).append("\",");
+		sb.append("\"timezoneRegion\" : \"").append(OdsDataServiceImpl.getTimeZone()).append("\",");
+		sb.append("\"meClass\" : \"").append(meClass).append("\"");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	static private String getTimeZone()
+	{
+		return "UTC";
+	}
+
 	@Override
-	public String createOdsEntity(String searchId, String searchName) throws EMAnalyticsFwkException {
+	public String createOdsEntity(String searchId, String searchName) throws EMAnalyticsFwkException
+	{
 		// get ODS entity
-		String odsEntity = generateOdsEntityJson(searchId, searchName, ENTITY_CLASS);
-		
+		String odsEntity = OdsDataServiceImpl.generateOdsEntityJson(searchId, searchName, ENTITY_CLASS);
+		logger.info("ODS Entity's string value is:" + odsEntity);
 		// send to ODS
 		String baseUrl = retriveEndpoint(REL_DATA_RESOURCE, DATA_MES);
+		logger.info("base URL is:" + baseUrl);
 		String meId = null;
 		// see if there is already an ODS entity created
 		try {
-			String result = 
-					RestRequestUtil.restGet(baseUrl+"?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId);
+			String result = RestRequestUtil.restGet(baseUrl + "?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId);
+			logger.info("result is" + result);
 			JSONObject jsonObj = new JSONObject(result);
 			if (jsonObj.getInt("count") > 0) {
 				JSONObject entity = (JSONObject) jsonObj.getJSONArray("items").get(0);
 				meId = entity.getString(ENTITY_ID);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			// do nothing
 		}
 		// no existing ODS entity then create one
@@ -43,83 +69,76 @@ public class OdsDataServiceImpl implements OdsDataService {
 				String result = RestRequestUtil.restPost(baseUrl, odsEntity);
 				JSONObject jsonObj = new JSONObject(result);
 				meId = jsonObj.getString(ENTITY_ID);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
 			}
 		}
-		
+		logger.info("meId before return is " + meId);
 		return meId;
 	}
-	
+
+	/**
+	 * create ODS entity type if the type doesn't exist
+	 */
 	@Override
-	public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException {
+	public String createOdsEntityType(String entityType) throws EMAnalyticsFwkException
+	{
+		String baseUrl = retriveEndpoint(REL_METADATA_RESOURCE, METADATA_METYPES);
+		String result = null;
+		try {
+			result = RestRequestUtil.restGet(baseUrl + HTTP_DELIMITER + ENTITY_TYPE_NAME);
+		}
+		catch (EMAnalyticsFwkException emExc) {
+			try {
+				result = RestRequestUtil.restPost(baseUrl, entityType);
+			}
+			catch (Exception e) {
+				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
+			}
+		}
+		catch (Exception e) {
+			throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException
+	{
 		// get ODS entity id from search parameters
 		SearchManager sman = SearchManager.getInstance();
 		String meid = sman.getSearchParamByName(searchId, ENTITY_ID);
-		
+
 		// no ods entity need to be deleted
-		if(meid == null)
+		if (meid == null) {
 			return;
-		
+		}
+
 		// send the meid to ODS for deleting
 		StringBuffer baseUrl = new StringBuffer();
 		baseUrl.append(retriveEndpoint(REL_DATA_RESOURCE, DATA_MES)).append(HTTP_DELIMITER).append(meid);
 		try {
 			RestRequestUtil.restDelete(baseUrl.toString());
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
 		}
 	}
-	
+
 	/**
-	 * create ODS entity type if the type doesn't exist
-	 */
-	@Override
-	public String createOdsEntityType(String entityType) throws EMAnalyticsFwkException {
-		String baseUrl = retriveEndpoint(REL_METADATA_RESOURCE, METADATA_METYPES);
-		String result = null;
-		try {
-			result = RestRequestUtil.restGet(baseUrl + HTTP_DELIMITER + ENTITY_TYPE_NAME);
-		} catch(EMAnalyticsFwkException emExc) {
-			try {
-				result = RestRequestUtil.restPost(baseUrl, entityType);
-			}catch (Exception e) {
-				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
-			}
-		} catch(Exception e) {
-			throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * 
 	 * @param rel
 	 * @param resource
 	 * @return http://host:port/targetmodel/api/v1/rel/resource
 	 */
-	private String retriveEndpoint(String rel, String resource) {
-		Link link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, TenantContext.getContext().gettenantName());
+	private String retriveEndpoint(String rel, String resource)
+	{
+		Link link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, TenantContext.getContext()
+				.gettenantName());
 		StringBuffer mesUrl = new StringBuffer();
 		mesUrl.append(link.getHref()).append(HTTP_DELIMITER).append(resource);
 		return mesUrl.toString();
-	}
-	
-	static private String generateOdsEntityJson(String searchId, String searchName,String meClass) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("{");
-		sb.append("\"entityType\" : \"").append(ENTITY_TYPE_NAME).append("\",");
-		sb.append("\"entityName\" : \"").append(searchId).append("\",");
-		sb.append("\"displayName\" : \"").append(searchName).append("\",");
-		sb.append("\"timezoneRegion\" : \"").append(getTimeZone()).append("\",");
-		sb.append("\"meClass\" : \"").append(meClass).append("\"");
-		sb.append("}");
-		return sb.toString();
-	}
-	
-	static private String getTimeZone() {
-		return "UTC";
 	}
 
 }
