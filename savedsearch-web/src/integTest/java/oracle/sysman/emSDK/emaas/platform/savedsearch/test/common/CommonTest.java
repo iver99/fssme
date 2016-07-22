@@ -50,17 +50,17 @@ public class CommonTest
 	{
 		String url = "";
 		try {
-//            url = QAToolUtil.getSavedSearchDeploymentDet();
-            HOSTNAME = "slc09csb.us.oracle.com";//CommonTest.getDomainName(url);
-            portno = "7019";//CommonTest.getPort(url) + "";
-            authToken = "Basic RU0wMV9FTUNTX0dMT0JBTF9JTlRFUl9TRVJWSUNFX0FQUElEOkN6czBwd2FkM3ZrX3Vo";//Utils.getProperty("SAAS_AUTH_TOKEN");
-            tenantid = "emaastesttenant1";//Utils.getProperty("TENANT_ID");
-            remoteuser = "emcsadmin";//Utils.getProperty("SSO_USERNAME");
-            serveruri = "http://" + HOSTNAME + ":" + portno;
-            RestAssured.useRelaxedHTTPSValidation();
-            RestAssured.baseURI = serveruri;
-            RestAssured.basePath = "/savedsearch/v1";
-            RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
+			url = QAToolUtil.getSavedSearchDeploymentDet();
+			HOSTNAME = CommonTest.getDomainName(url);
+			portno = CommonTest.getPort(url) + "";
+			authToken = Utils.getProperty("SAAS_AUTH_TOKEN");
+			tenantid = Utils.getProperty("TENANT_ID");
+			remoteuser = Utils.getProperty("SSO_USERNAME");
+			serveruri = "http://" + HOSTNAME + ":" + portno;
+			RestAssured.useRelaxedHTTPSValidation();
+			RestAssured.baseURI = serveruri;
+			RestAssured.basePath = "/savedsearch/v1";
+			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 		}
 		catch (Exception e) {
 			System.out.println("an error occurred while retrving ssf deployment details" + " " + url + " " + portno
