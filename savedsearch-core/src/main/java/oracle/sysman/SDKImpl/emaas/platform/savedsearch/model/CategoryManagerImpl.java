@@ -119,23 +119,23 @@ public class CategoryManagerImpl extends CategoryManager
 			if (params != null && params.size() > 0) {
 				List<Parameter> categoryParams = new ArrayList<Parameter>();
 				for (EmAnalyticsCategoryParam paramObj : params) {
-					if ("DASHBOARD_INELIGIBLE".equals(paramObj.getName())) {
-						continue;//now DASHBOARD_INELIGIBLE is provided by column DASHBOARD_INELIGIBLE in EMS_ANAYLICS_CATEGORY table
-						//instead of EMS_ANAYLICS_CATEGORY_PARAMS table
-					}
 					Parameter param = new Parameter();
 					param.setName(paramObj.getName());
 					param.setType(ParameterType.STRING);
 					param.setValue(paramObj.getValue());
 					categoryParams.add(param);
 				}
-				if (category.getDASHBOARD_INELIGIBLE() != null && !DB_DEFAULT_VALUE.equals(category.getDASHBOARD_INELIGIBLE())) {
-					Parameter param = new Parameter();
-					param.setName("DASHBOARD_INELIGIBLE");
-					param.setType(ParameterType.STRING);
-					param.setValue(category.getDASHBOARD_INELIGIBLE());
-					categoryParams.add(param);
+				if (!CategoryManagerImpl.containsDashboardIneligible(categoryParams)) {
+					if (category.getDASHBOARD_INELIGIBLE() != null
+							&& !DB_DEFAULT_VALUE.equals(category.getDASHBOARD_INELIGIBLE())) {
+						Parameter param = new Parameter();
+						param.setName("DASHBOARD_INELIGIBLE");
+						param.setType(ParameterType.STRING);
+						param.setValue(category.getDASHBOARD_INELIGIBLE());
+						categoryParams.add(param);
+					}
 				}
+
 				rtnObj.setParameters(categoryParams);
 			}
 
@@ -150,6 +150,17 @@ public class CategoryManagerImpl extends CategoryManager
 	public static CategoryManager getInstance()
 	{
 		return _instance;
+	}
+
+	//check if param list contains DASHBOARD_INELIGIBLE
+	private static boolean containsDashboardIneligible(List<Parameter> params)
+	{
+		for (Parameter param : params) {
+			if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -510,5 +521,4 @@ public class CategoryManagerImpl extends CategoryManager
 		}
 		return importedList;
 	}
-
 }
