@@ -1,8 +1,8 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.upgrade;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
@@ -34,8 +34,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	static String TENANT_ID_OPC1;
 	static String TENANT_ID1;
 
-	static int catid = -1;
-	static int folderid = -1;
+	static BigInteger catid = BigInteger.ONE.negate();
+	static BigInteger folderid = BigInteger.ONE.negate();
 	static String catName = "";
 
 	@AfterClass
@@ -56,7 +56,7 @@ public class CategoryCRUDBeforeUpgradeTest
 		Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 		System.out.println(res.asString());
-		folderid = res.jsonPath().get("id");
+		folderid = new BigInteger(res.jsonPath().getString("id"));
 
 		String jsonString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><CategorySet><Category><Name>MyCategoryTesting</Name><Description>Testing</Description>"
 				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
@@ -68,7 +68,7 @@ public class CategoryCRUDBeforeUpgradeTest
 		for (int index = 0; index < arrfld.length(); index++) {
 			System.out.println("verifying categoryids");
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			catid = jsonObj.getInt("id");
+			catid = new BigInteger(jsonObj.getString("id"));
 			catName = jsonObj.getString("name");
 			System.out.println("verified categoryids");
 		}
@@ -147,7 +147,7 @@ public class CategoryCRUDBeforeUpgradeTest
 			System.out.println("providerAssetRoot :" + jp.get("providerAssetRoot"));
 			Assert.assertEquals(jp.get("description"), "Testing");
 			Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
-			Assert.assertEquals(jp.get("id"), catid);
+			Assert.assertEquals(jp.get("id"), catid.toString());
 			Assert.assertEquals(jp.get("providerName"), "Name");
 			Assert.assertEquals(jp.get("providerVersion"), "1");
 			Assert.assertEquals(jp.get("providerAssetRoot"), "Root");
@@ -191,7 +191,7 @@ public class CategoryCRUDBeforeUpgradeTest
 			System.out.println("providerAssetRoot :" + jp.get("providerAssetRoot"));
 			Assert.assertEquals(jp.get("description"), "Testing");
 			Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
-			Assert.assertEquals(jp.get("id"), catid);
+			Assert.assertEquals(jp.get("id"), catid.toString());
 			Assert.assertEquals(jp.get("providerName"), "Name");
 			Assert.assertEquals(jp.get("providerVersion"), "1");
 			Assert.assertEquals(jp.get("providerAssetRoot"), "Root");
@@ -280,11 +280,11 @@ public class CategoryCRUDBeforeUpgradeTest
 	{
 		try {
 
-			String jsonString1 = "{\"name\":\"Search_Bycat\",\"category\":{\"id\":"
+			String jsonString1 = "{\"name\":\"Search_Bycat\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
 					.post("/search");
@@ -306,7 +306,7 @@ public class CategoryCRUDBeforeUpgradeTest
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.delete("/search/" + jp1.get("id"));
-			Assert.assertTrue(res.getStatusCode() == 200);
+			Assert.assertEquals(res3.getStatusCode(), 204);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
@@ -323,9 +323,7 @@ public class CategoryCRUDBeforeUpgradeTest
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/abc/searches");
-			Assert.assertTrue(res.getStatusCode() == 400);
-			String output = res.getBody().asString();
-			Assert.assertEquals(output, "Id/count should be a positive number and not an alphanumeric");
+			Assert.assertEquals(res.getStatusCode(), 404);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
@@ -629,11 +627,11 @@ public class CategoryCRUDBeforeUpgradeTest
 			System.out.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;
-			String jsonString1 = "{\"name\":\"Search_A\",\"category\":{\"id\":"
+			String jsonString1 = "{\"name\":\"Search_A\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
 					.post("/search");
@@ -696,11 +694,11 @@ public class CategoryCRUDBeforeUpgradeTest
 			System.out.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;
-			String jsonString1 = "{\"name\":\"Search_B\",\"category\":{\"id\":"
+			String jsonString1 = "{\"name\":\"Search_B\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
 					.post("/search");
