@@ -67,6 +67,7 @@ public class OdsDataServiceImpl implements OdsDataService
 		if (meId == null || meId.isEmpty()) {
 			try {
 				String result = RestRequestUtil.restPost(baseUrl, odsEntity);
+				logger.info("RestRequestUtil.restPost(baseUrl, odsEntity) is executed,and result is " + result);
 				JSONObject jsonObj = new JSONObject(result);
 				meId = jsonObj.getString(ENTITY_ID);
 			}
