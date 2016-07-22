@@ -16,6 +16,8 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.util.List;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -28,11 +30,10 @@ import org.codehaus.jackson.map.ser.BeanSerializerFactory;
 import org.codehaus.jackson.map.ser.FilterProvider;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.type.JavaType;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 
 public class JSONUtil
 {
@@ -151,17 +152,26 @@ public class JSONUtil
 		return false;
 	}
 
-	public static JSONObject ObjectToJSONObject(Object object) throws JSONException, EMAnalyticsFwkException
+	public static ObjectNode ObjectToJSONObject(Object object) throws JSONException, EMAnalyticsFwkException
 	{
 		return JSONUtil.ObjectToJSONObject(object, null);
 
 	}
 
-	public static JSONObject ObjectToJSONObject(Object object, String[] excludedFields)
+	public static ObjectNode ObjectToJSONObject(Object object, String[] excludedFields)
 			throws JSONException, EMAnalyticsFwkException
 	{
-
-		return new JSONObject(JSONUtil.ObjectToJSONString(object, excludedFields));
+		ObjectNode jNode = null;
+		String objString = JSONUtil.ObjectToJSONString(object, excludedFields);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			jNode = mapper.readValue(objString, ObjectNode.class);
+		} catch (IOException e) {
+			throw new EMAnalyticsFwkException("Error converting to JsonNode",
+					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, e);
+		}
+		return jNode;
+//		return new JSONObject(JSONUtil.ObjectToJSONString(object, excludedFields));
 	}
 
 	public static String ObjectToJSONString(Object object) throws EMAnalyticsFwkException

@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -28,7 +29,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Table(name = "EMS_ANALYTICS_LAST_ACCESS")
 @Inheritance
 @DiscriminatorColumn(name = "OBJECT_TYPE")
-public class EmAnalyticsLastAccess implements Serializable
+public class EmAnalyticsLastAccess extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +37,7 @@ public class EmAnalyticsLastAccess implements Serializable
 
 	@Id
 	@Column(name = "OBJECT_ID")
-	private long objectId;
+	private BigInteger objectId;
 
 	@Id
 	@Column(name = "ACCESSED_BY")
@@ -54,7 +55,7 @@ public class EmAnalyticsLastAccess implements Serializable
 	{
 	}
 
-	public EmAnalyticsLastAccess(long objectId, String accessedBy, long objectType)
+	public EmAnalyticsLastAccess(BigInteger objectId, String accessedBy, long objectType)
 	{
 
 		this.objectId = objectId;
@@ -74,7 +75,7 @@ public class EmAnalyticsLastAccess implements Serializable
 	}
 
 	@Transient
-	public long getObjectId()
+	public BigInteger getObjectId()
 	{
 		return objectId;
 	}

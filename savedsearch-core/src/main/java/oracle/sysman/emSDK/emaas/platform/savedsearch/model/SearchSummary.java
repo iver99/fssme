@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -20,7 +21,7 @@ public interface SearchSummary
 	 * @see oracle.sysman.emSDK.core.emanalytics.api.ComponentCategory
 	 * @return category
 	 */
-	public Integer getCategoryId();
+	public BigInteger getCategoryId();
 
 	/**
 	 * Returns the creation date for search.
@@ -42,14 +43,14 @@ public interface SearchSummary
 	 *
 	 * @return containing folder id
 	 */
-	public Integer getFolderId();
+	public BigInteger getFolderId();
 
 	/**
 	 * returns the unique identofier for the search.
 	 *
 	 * @return identifier
 	 */
-	public Integer getId();
+	public BigInteger getId();
 
 	public Date getLastAccessDate();
 

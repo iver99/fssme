@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.navigation;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +28,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Saved Search Service
@@ -93,15 +95,15 @@ public class SavedSearchAPI
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/categories");
 		String message = null;
 		int statusCode = 200;
-		JSONArray jsonArray = new JSONArray();
+		ArrayNode jsonArray = new ObjectMapper().createArrayNode();
 		List<Category> catList = new ArrayList<Category>();
 
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
 			catList = catMan.getAllCategories();
 			for (Category category : catList) {
-				JSONObject jsonCat = EntityJsonUtil.getSimpleCategoryJsonObj(uri.getBaseUri(), category);
-				jsonArray.put(jsonCat);
+				ObjectNode jsonCat = EntityJsonUtil.getSimpleCategoryJsonObj(uri.getBaseUri(), category);
+				jsonArray.add(jsonCat);
 			}
 			message = jsonArray.toString();
 
@@ -206,32 +208,20 @@ public class SavedSearchAPI
 	@GET
 	@Path("/entities")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDetails(@QueryParam("folderId") String id)
+	public Response getDetails(@QueryParam("folderId") BigInteger id)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/entities?folderId={}", id);
 		String message = null;
-		Long folderId = 0L;
+		BigInteger folderId = BigInteger.ZERO;
 		/**
 		 * /entities will make id null
 		 */
 		if (id == null) {
 			return Response.status(400).entity("Please give folderId").build();
+		} else {
+			folderId = id;
 		}
-		else if ("".equals(id.trim())) {
-			return Response.status(400).entity("Empty folderId").build();
-		}
-		else {
-			try {
-
-				if (!"".equals(id.trim())) {
-					folderId = Long.parseLong(id);
-				}
-			}
-			catch (NumberFormatException e) {
-				return Response.status(400).entity("Folder Id should be a numeric and not alphanumeric").build();
-			}
-		}
-		if (folderId > 0L) {
+		if (BigInteger.ZERO.compareTo(folderId) < 0) {
 			try {
 				return Response.status(200).entity(getFolderDetails(folderId)).build();
 			}
@@ -304,7 +294,7 @@ public class SavedSearchAPI
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1");
 		String message = "";
 		try {
-			message = getFolderDetails(0);
+			message = getFolderDetails(BigInteger.ZERO);
 		}
 		catch (EMAnalyticsFwkException e) {
 			e.printStackTrace();
@@ -319,34 +309,32 @@ public class SavedSearchAPI
 
 	}
 
-	private String getFolderDetails(long id) throws EMAnalyticsFwkException, UnsupportedEncodingException, JSONException,
+	private String getFolderDetails(BigInteger id) throws EMAnalyticsFwkException, UnsupportedEncodingException, JSONException,
 			EMAnalyticsFwkException
 	{
 
 		String message = new String();
 		FolderManager fman = FolderManager.getInstance();
 		SearchManager sman = SearchManager.getInstance();
-		JSONArray jsonArray = new JSONArray();
-		if (id != 0) {
+		ArrayNode jsonArray = new ObjectMapper().createArrayNode();
+		if (!BigInteger.ZERO.equals(id)) {
 			fman.getFolder(id);
 		}
-		JSONObject jsonObj;
+		ObjectNode jsonObj;
 		List<Folder> folderList = fman.getSubFolders(id);
 		for (Folder folderObj : folderList) {
 			jsonObj = EntityJsonUtil.getSimpleFolderJsonObj(uri.getBaseUri(), folderObj, true);
-			jsonArray.put(jsonObj);
+			jsonArray.add(jsonObj);
 		}
 
 		// Get Searches too !!
 		List<Search> searchList;
-
 		searchList = sman.getSearchListByFolderId(id);
-
 		for (Search searchObj : searchList) {
 			jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchObj, null, true);
-			jsonArray.put(jsonObj);
+			jsonArray.add(jsonObj);
 		}
-		message = jsonArray.toString(1);
+		message = jsonArray.toString();
 
 		return message;
 

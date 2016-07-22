@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
+import java.math.BigInteger;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -23,7 +25,7 @@ public class EmAnalyticsSearchLastAccess extends EmAnalyticsLastAccess
 
 	}
 
-	public EmAnalyticsSearchLastAccess(long objectId, String accessedBy)
+	public EmAnalyticsSearchLastAccess(BigInteger objectId, String accessedBy)
 	{
 		super(objectId, accessedBy, EmAnalyticsLastAccess.LAST_ACCESS_TYPE_SEARCH);
 	}

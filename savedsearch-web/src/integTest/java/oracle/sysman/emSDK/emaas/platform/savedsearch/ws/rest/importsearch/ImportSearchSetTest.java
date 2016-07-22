@@ -7,12 +7,14 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
+
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.InputStream;
 import java.io.StringReader;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,8 @@ import java.util.List;
  */
 @Test(groups="s2")
 public class ImportSearchSetTest {
-    private ImportSearchSet importSearchSet =new ImportSearchSet();
+    private static final BigInteger TEST_ID_10 = BigInteger.TEN;
+	private ImportSearchSet importSearchSet =new ImportSearchSet();
     private String xml = "[{\"id\":121,\"name\":\"Category123\",\"providerName\":\"Log Analytics\",\"prividerVersion\":\"1.0\",\"providerDiscovery\":\"discovery\",\"providerAssetRoot\":\"asset\"}]";
     @Test
     public void testImportSearches(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
@@ -31,12 +34,12 @@ public class ImportSearchSetTest {
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");
-        importSearch.setId(10);
+        importSearch.setId(TEST_ID_10);
         importSearchList.add(importSearch);
         final List<Search> list = new ArrayList<Search>();
         SearchImpl search = new SearchImpl();
         search.setName("name");
-        search.setId(10);
+        search.setId(TEST_ID_10);
         list.add(search);
         new Expectations(){
             {
@@ -57,7 +60,7 @@ public class ImportSearchSetTest {
             @Mock
             public Object getCategoryDetails()
             {   CategoryImpl category = new CategoryImpl();
-                category.setId(10);
+                category.setId(TEST_ID_10);
                 category.setName("name");
                 return category;
             }
@@ -65,7 +68,7 @@ public class ImportSearchSetTest {
             public Object getFolderDetails()
             {
                 FolderImpl folder = new FolderImpl();
-                folder.setId(10);
+                folder.setId(TEST_ID_10);
                 folder.setName("name");
                 return folder;
             }
@@ -90,12 +93,12 @@ public class ImportSearchSetTest {
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");
-        importSearch.setId(10);
+        importSearch.setId(TEST_ID_10);
         importSearchList.add(importSearch);
         final List<Search> list = new ArrayList<Search>();
         SearchImpl search = new SearchImpl();
         search.setName("name");
-        search.setId(10);
+        search.setId(TEST_ID_10);
         list.add(search);
         new Expectations(){
             {
@@ -116,7 +119,7 @@ public class ImportSearchSetTest {
             @Mock
             public Object getCategoryDetails()
             {   CategoryImpl category = new CategoryImpl();
-                category.setId(10);
+                category.setId(TEST_ID_10);
                 category.setName("name");
                 return category;
             }
@@ -124,7 +127,7 @@ public class ImportSearchSetTest {
             public Object getFolderDetails()
             {
                 FolderImpl folder = new FolderImpl();
-                folder.setId(10);
+                folder.setId(TEST_ID_10);
                 folder.setName("name");
                 return folder;
             }
@@ -150,12 +153,12 @@ public class ImportSearchSetTest {
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");
-        importSearch.setId(10);
+        importSearch.setId(TEST_ID_10);
         importSearchList.add(importSearch);
         final List<Search> list = new ArrayList<Search>();
         SearchImpl search = new SearchImpl();
         search.setName("name");
-        search.setId(10);
+        search.setId(TEST_ID_10);
         list.add(search);
         new Expectations(){
             {
@@ -176,7 +179,7 @@ public class ImportSearchSetTest {
             @Mock
             public Object getCategoryDetails()
             {   CategoryImpl category = new CategoryImpl();
-                category.setId(10);
+                category.setId(TEST_ID_10);
                 category.setName("name");
                 return category;
             }
@@ -184,7 +187,7 @@ public class ImportSearchSetTest {
             public Object getFolderDetails()
             {
                 FolderImpl folder = new FolderImpl();
-                folder.setId(10);
+                folder.setId(TEST_ID_10);
                 folder.setName("name");
                 return folder;
             }

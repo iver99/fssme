@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
@@ -39,7 +40,7 @@ public abstract class FolderManager
 	 * @param permanently
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract void deleteFolder(long folderId, boolean permanently) throws EMAnalyticsFwkException;
+	public abstract void deleteFolder(BigInteger folderId, boolean permanently) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the folder object identified by the given identifier.
@@ -49,7 +50,7 @@ public abstract class FolderManager
 	 * @return folder
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Folder getFolder(long folderId) throws EMAnalyticsFwkException;
+	public abstract Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the string representation of path of folder (from root, "/" separated).
@@ -59,7 +60,7 @@ public abstract class FolderManager
 	 * @return path of the folder from root
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException;
+	public abstract String[] getPathForFolderId(BigInteger folderId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns a list of sub-folders, <code>null</code> if there are none.
@@ -69,7 +70,7 @@ public abstract class FolderManager
 	 * @return
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract List<Folder> getSubFolders(long folderId) throws EMAnalyticsFwkException;
+	public abstract List<Folder> getSubFolders(BigInteger folderId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Saves the folder into the system.

@@ -1,12 +1,11 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
+import java.math.BigInteger;
+import java.util.Date;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.Date;
-
-import static org.testng.Assert.*;
 
 /**
  * @author qianqi
@@ -20,7 +19,7 @@ public class EmAnalyticsLastAccessTest {
     @BeforeClass
     public void setUp() throws Exception {
         emAnalyticsLastAccess = new EmAnalyticsLastAccess();
-        emAnalyticsLastAccess1 = new EmAnalyticsLastAccess(222L,"accessedBy2",2L);
+        emAnalyticsLastAccess1 = new EmAnalyticsLastAccess(BigInteger.ONE,"accessedBy2",2L);
     }
 
     @Test (groups = {"s1"})
@@ -37,7 +36,7 @@ public class EmAnalyticsLastAccessTest {
 
     @Test (groups = {"s1"})
     public void testGetObjectId() throws Exception {
-        Assert.assertEquals(222L,emAnalyticsLastAccess1.getObjectId());
+        Assert.assertEquals(BigInteger.ONE,emAnalyticsLastAccess1.getObjectId());
     }
 
     @Test (groups = {"s1"})

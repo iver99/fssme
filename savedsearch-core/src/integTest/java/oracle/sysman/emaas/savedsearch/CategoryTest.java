@@ -1,27 +1,26 @@
 package oracle.sysman.emaas.savedsearch;
 
-import mockit.Mocked;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CategoryTest extends BaseTest
 {
-	private static Integer categoryId;
-
-	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
-
-	//@Mocked
-    //PersistenceManager persistenceManager;
+	private static BigInteger categoryId;
 
 	@AfterClass
 	public static void testDelete()
@@ -41,7 +40,7 @@ public class CategoryTest extends BaseTest
 			// here the assertion not required or required
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -75,7 +74,7 @@ public class CategoryTest extends BaseTest
 
 			category = catMan.saveCategory(category);
 			categoryId = category.getId();
-			AssertJUnit.assertFalse(categoryId == 0);
+			AssertJUnit.assertFalse(BigInteger.ZERO.equals(categoryId));
 
 			category = catMan.getCategory(categoryId);
 			AssertJUnit.assertEquals(2, category.getParameters().size());
@@ -86,12 +85,10 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals("ProviderVersionTest", category.getProviderVersion());
 			AssertJUnit.assertEquals("ProviderDiscoveryTest", category.getProviderDiscovery());
 			AssertJUnit.assertEquals("ProviderAssetRootTest", category.getProviderAssetRoot());
-			// Assert.assertEquals("MyCategory", category.getDisplayName());
 			AssertJUnit.assertNotNull(category.getCreatedOn());
-
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 
 	}
@@ -102,7 +99,6 @@ public class CategoryTest extends BaseTest
 		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
 				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
 				.get(QAToolUtil.TENANT_NAME).toString())));
-
 	}
 
 	/*@AfterClass
@@ -125,7 +121,7 @@ public class CategoryTest extends BaseTest
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
-			catMan.deleteCategory(99898987898L, true);
+			catMan.deleteCategory(BigInteger.TEN, true);
 
 		}
 		catch (EMAnalyticsFwkException emanfe) {
@@ -146,7 +142,7 @@ public class CategoryTest extends BaseTest
 			// now set the some value
 			category.setName("testName");
 			category.setDescription("testcase checking");
-			category.setDefaultFolderId(1);
+			category.setDefaultFolderId(BigInteger.ONE);
 			category.setProviderName("ProviderNameTestEdit");
 			category.setProviderVersion("ProviderVersionTestEdit");
 			category.setProviderDiscovery("ProviderDiscoveryTestEdit");
@@ -162,10 +158,7 @@ public class CategoryTest extends BaseTest
 
 			category.setParameters(list);
 			obj.editCategory(category);
-
 			category = obj.getCategory(categoryId);
-
-			// Assert.assertEquals(1,category.getParameters().size());
 
 			AssertJUnit.assertEquals("testName", category.getName());
 			AssertJUnit.assertEquals("testcase checking", category.getDescription());
@@ -173,16 +166,13 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals("ProviderVersionTestEdit", category.getProviderVersion());
 			AssertJUnit.assertEquals("ProviderDiscoveryTestEdit", category.getProviderDiscovery());
 			AssertJUnit.assertEquals("ProviderAssetRootTestEdit", category.getProviderAssetRoot());
-			// Assert.assertEquals("displayTestName",
-			// category.getDisplayName());
-
 		}
 		catch (Exception e) {
 			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 	}
 
-	/*@Test
+/*	@Test
 	public void testGetAllCategories() throws Exception
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -196,16 +186,16 @@ public class CategoryTest extends BaseTest
 		AssertJUnit.assertNotNull(new Integer(catMan.getAllCategories().size()));
 	}*/
 
-	/*@Test
+/*	@Test
 	public void testGetCategoryById() throws Exception
 	{
 		TenantContext.setContext(TENANT_ID_OPC2);
 		CategoryManager catMan = CategoryManager.getInstance();
 		AssertJUnit.assertNotNull(catMan.getCategory(1));
 		TenantContext.clearContext();
-	}*/
-
-	/*@Test
+	}
+*/
+/*	@Test
 	public void testGetCategoryByName() throws Exception
 	{
 		TenantContext.setContext(TENANT_ID_OPC2);
@@ -214,7 +204,7 @@ public class CategoryTest extends BaseTest
 		TenantContext.clearContext();
 	}*/
 
-	/*@Test
+/*	@Test
 	public void testEditCategory_DuplicateName() throws Exception
 	{
 
@@ -234,15 +224,14 @@ public class CategoryTest extends BaseTest
 					EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME));
 		}
 	}*/
-
-        @Test 
+	
+	@Test
 	public void testgetCategoryInvalidId() throws Exception
 	{
 
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
-			catMan.getCategory(99898987898L);
-
+			catMan.getCategory(new BigInteger("99898987898"));
 		}
 		catch (EMAnalyticsFwkException emanfe) {
 			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
@@ -273,7 +262,7 @@ public class CategoryTest extends BaseTest
 		Category category = catMan.createNewCategory();
 		category.setName("CategoryName");
 		category.setDescription("CategoryTest");
-		category.setDefaultFolderId(9878787);
+		category.setDefaultFolderId(BigInteger.TEN);
 		try {
 			catMan.saveCategory(category);
 		}

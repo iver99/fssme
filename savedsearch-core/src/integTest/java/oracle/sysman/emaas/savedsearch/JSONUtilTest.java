@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,8 +21,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,14 +32,14 @@ public class JSONUtilTest extends BaseTest
 	public void testObjectToJSONObject()
 	{
 		SearchImpl search = new SearchImpl();
-		search.setId(10000);
-		search.setCategoryId(999);
-		search.setFolderId(999);
+		search.setId(new BigInteger("58799942836057747713005328191260486291"));
+		search.setCategoryId(new BigInteger("999"));
+		search.setFolderId(new BigInteger("999"));
 		search.setName("Search for UT");
 		search.setQueryStr("*");
 		long time = 1406040533048L;
 		Date d = new Date(time);
-		search.setCreatedOn(d);
+		search.setCreationDate(d);
 
 		List<SearchParameter> params = new ArrayList<SearchParameter>();
 		SearchParameter p1 = new SearchParameter();
@@ -49,7 +50,7 @@ public class JSONUtilTest extends BaseTest
 		search.setParameters(params);
 		try {
 			String output = JSONUtil.ObjectToJSONString(search, new String[] { "id", "queryStr", "parameters" });
-			final String VERIFY_STRING1 = "\"id\":10000";
+			final String VERIFY_STRING1 = "\"id\":58799942836057747713005328191260486291";
 			final String VERIFY_STRING2 = "\"queryStr\":\"*\"";
 			final String VERIFY_STRING3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
 			final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
@@ -75,7 +76,7 @@ public class JSONUtilTest extends BaseTest
 			Assert.assertTrue(output3.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
 			Assert.assertTrue(output3.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
 
-			JSONObject json_output = JSONUtil.ObjectToJSONObject(search, new String[] { "id", "queryStr", "parameters" });
+			JsonNode json_output = JSONUtil.ObjectToJSONObject(search, new String[] { "id", "queryStr", "parameters" });
 			String output4 = json_output.toString();
 			Assert.assertNotNull(json_output);
 			Assert.assertFalse(output4.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
@@ -83,7 +84,7 @@ public class JSONUtilTest extends BaseTest
 			Assert.assertFalse(output4.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
 			Assert.assertTrue(output4.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
 
-			JSONObject json_output2 = JSONUtil.ObjectToJSONObject(search);
+			JsonNode json_output2 = JSONUtil.ObjectToJSONObject(search);
 			String output5 = json_output2.toString();
 			Assert.assertNotNull(json_output2);
 			Assert.assertTrue(output5.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");

@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public interface Search extends SearchSummary
 	 * @return id of the folder containing search
 	 */
 	@Override
-	public Integer getFolderId();
+	public BigInteger getFolderId();
 
 	/**
 	 * Returns <code>true</code> if the search is a widget, <code>false</code> otherwise.
@@ -73,7 +74,7 @@ public interface Search extends SearchSummary
 	 * @param categoryId
 	 *            identifier of the category
 	 */
-	public void setCategoryId(Integer categoryId);
+	public void setCategoryId(BigInteger categoryId);
 
 	/**
 	 * Sets the description for the search.
@@ -90,7 +91,7 @@ public interface Search extends SearchSummary
 	 * @param folderId
 	 *            identifier of the folder
 	 */
-	public void setFolderId(Integer folderId);
+	public void setFolderId(BigInteger folderId);
 
 	/**
 	 * Set the search object to be marked as a widget.
@@ -158,4 +159,6 @@ public interface Search extends SearchSummary
 	 *            hidden behavior of search
 	 */
 	public void setUiHidden(boolean uiHidden);
+	
+	public void setId(BigInteger id);
 }

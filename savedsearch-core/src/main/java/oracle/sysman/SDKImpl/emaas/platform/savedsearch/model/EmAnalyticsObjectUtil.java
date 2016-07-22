@@ -1,6 +1,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -37,7 +38,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
 class EmAnalyticsObjectUtil
 {
-	public static boolean canDeleteFolder(long folderId, EntityManager em) throws EMAnalyticsFwkException
+	public static boolean canDeleteFolder(BigInteger folderId, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 		int count = ((Number) em.createNamedQuery("Search.getSearchCountByFolder").setParameter("folder", folder)
@@ -72,7 +73,7 @@ class EmAnalyticsObjectUtil
 		return true;
 	}
 
-	public static EmAnalyticsCategory getCategoryById(long id, EntityManager em)
+	public static EmAnalyticsCategory getCategoryById(BigInteger id, EntityManager em)
 	{
 
 		EmAnalyticsCategory cateObj = null;
@@ -80,7 +81,7 @@ class EmAnalyticsObjectUtil
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null) {
-				if (cateObj.getDeleted() == 0
+				if (BigInteger.ZERO.equals(cateObj.getDeleted())
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 								|| cateObj.getOwner().equals("ORACLE") || cateObj.getOwner().equals(
 										TenantContext.getContext().getUsername()))) {
@@ -100,7 +101,7 @@ class EmAnalyticsObjectUtil
 		return cateObj;
 	}
 
-	public static EmAnalyticsCategory getCategoryByIdForDelete(long id, EntityManager em)
+	public static EmAnalyticsCategory getCategoryByIdForDelete(BigInteger id, EntityManager em)
 	{
 
 		EmAnalyticsCategory cateObj = null;
@@ -148,13 +149,15 @@ class EmAnalyticsObjectUtil
 			throws EMAnalyticsFwkException
 	{
 		EmAnalyticsCategory categoryObj = new EmAnalyticsCategory();
+		categoryObj.setCategoryId(category.getId());
 		categoryObj.setName(category.getName());
 		categoryObj.setDescription(category.getDescription());
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-		Date utcNow = DateUtil.getCurrentUTCTime();
+		Date utcNow = DateUtil.getGatewayTime();
 		categoryObj.setOwner(currentUser);
 		categoryObj.setCreationDate(utcNow);
-		categoryObj.setDeleted(0);
+		categoryObj.setLastModificationDate(utcNow);
+		categoryObj.setDeleted(BigInteger.ZERO);
 		categoryObj.setProviderName(category.getProviderName());
 		categoryObj.setProviderVersion(category.getProviderVersion());
 		categoryObj.setProviderDiscovery(category.getProviderDiscovery());
@@ -172,13 +175,14 @@ class EmAnalyticsObjectUtil
 		if (params != null && params.size() != 0) {
 			for (Parameter param : params) {
 				EmAnalyticsCategoryParam categoryParamEntity = new EmAnalyticsCategoryParam();
+				categoryParamEntity.setCategoryId(categoryObj.getCategoryId());
 				categoryParamEntity.setEmAnalyticsCategory(categoryObj);
 				categoryParamEntity.setName(param.getName());
 				categoryParamEntity.setValue(param.getValue());
+				categoryParamEntity.setCreationDate(utcNow);
+				categoryParamEntity.setLastModificationDate(utcNow);
 				categoryObj.getEmAnalyticsCategoryParams().add(categoryParamEntity);
-
 			}
-
 		}
 
 		return categoryObj;
@@ -192,11 +196,13 @@ class EmAnalyticsObjectUtil
 		categoryEntity.setDescription(category.getDescription());
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		categoryEntity.setOwner(currentUser);
-		categoryEntity.setDeleted(0);
+		categoryEntity.setDeleted(BigInteger.ZERO);
 		categoryEntity.setProviderName(category.getProviderName());
 		categoryEntity.setProviderVersion(category.getProviderVersion());
 		categoryEntity.setProviderDiscovery(category.getProviderDiscovery());
 		categoryEntity.setProviderAssetRoot(category.getProviderAssetRoot());
+		Date utcNow = DateUtil.getGatewayTime();
+		categoryEntity.setLastModificationDate(utcNow);
 		if (category.getDefaultFolderId() != null) {
 			categoryEntity.setEmAnalyticsFolder(EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em));
 		}
@@ -216,6 +222,8 @@ class EmAnalyticsObjectUtil
 			newCatParam.setEmAnalyticsCategory(categoryEntity);
 			newCatParam.setValue(param.getValue());
 			newCatParam.setEmAnalyticsCategory(categoryEntity);
+			newCatParam.setCreationDate(utcNow);
+			newCatParam.setLastModificationDate(utcNow);
 			newParams.put(newPK, newCatParam);
 		}
 
@@ -251,7 +259,7 @@ class EmAnalyticsObjectUtil
 			else {
 				if (folder.getParentId() != null) {
 					EmAnalyticsFolder parentFolderObj = null;
-					if (folder.getParentId() == 1) {
+					if (BigInteger.ONE.compareTo(folder.getParentId()) == 0) {
 						try {
 							parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
 									.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
@@ -262,7 +270,7 @@ class EmAnalyticsObjectUtil
 						}
 					}
 					else {
-						parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId().longValue(), em);
+						parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
 					}
 					if (parentFolderObj == null) {
 						return folderObj;
@@ -293,7 +301,8 @@ class EmAnalyticsObjectUtil
 	public static EmAnalyticsFolder getEmAnalyticsFolderForAdd(Folder folder, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
-		Date utcNow = DateUtil.getCurrentUTCTime();
+		Date utcNow = DateUtil.getGatewayTime();
+		folderObj.setFolderId(folder.getId());
 		folderObj.setDescription(folder.getDescription());
 		folderObj.setName(folder.getName());
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
@@ -304,7 +313,7 @@ class EmAnalyticsObjectUtil
 		folderObj.setUiHidden(new BigDecimal(0));
 		boolean bResult = "ORACLE".equals(currentUser);
 		folderObj.setSystemFolder(bResult ? new BigDecimal(1) : new BigDecimal(0));
-		folderObj.setDeleted(0);
+		folderObj.setDeleted(BigInteger.ZERO);
 		if (folder.getParentId() != null) {
 
 			EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
@@ -329,15 +338,15 @@ class EmAnalyticsObjectUtil
 			folderObj.setDescription(folder.getDescription());
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 			folderObj.setLastModifiedBy(currentUser);
-			Date utcNow = DateUtil.getCurrentUTCTime();
+			Date utcNow = DateUtil.getGatewayTime();
 			folderObj.setLastModificationDate(utcNow);
 			folderObj.setSystemFolder(folder.isSystemFolder() == true ? new BigDecimal(1) : new BigDecimal(0));
 			folderObj.setUiHidden(folder.isUiHidden() == true ? new BigDecimal(1) : new BigDecimal(0));
-			folderObj.setDeleted(0);
+			folderObj.setDeleted(BigInteger.ZERO);
 			if (folder.getParentId() != null) {
 				EmAnalyticsFolder parentFolderObj = null;
 
-				if (folder.getParentId() == 1) { //get root for folder for tenant-id  vb
+				if (BigInteger.ONE.compareTo(folder.getParentId()) == 0) { //get root for folder for tenant-id  vb
 					try {
 						parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
 						/*parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
@@ -371,7 +380,7 @@ class EmAnalyticsObjectUtil
 	{
 		EmAnalyticsSearch searchEntity = new EmAnalyticsSearch();
 		// Copy all the data to entity !!
-
+		searchEntity.setId(search.getId());
 		searchEntity.setName(search.getName());
 		searchEntity.setDescription(search.getDescription());
 		EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(search.getFolderId(), em);
@@ -392,7 +401,7 @@ class EmAnalyticsObjectUtil
 			searchEntity.setEmAnalyticsCategory(categoryObj);
 		}
 
-		Date utcDate = DateUtil.getCurrentUTCTime();
+		Date utcDate = DateUtil.getGatewayTime();
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		searchEntity.setOwner(currentUser);
 		searchEntity.setCreationDate(utcDate);
@@ -405,7 +414,7 @@ class EmAnalyticsObjectUtil
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
 		searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden() ? 1 : 0));
 		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
-		searchEntity.setDeleted(0);
+		searchEntity.setDeleted(BigInteger.ZERO);
 		List<SearchParameter> params = search.getParameters();
 		if (params != null && params.size() != 0) {
 			for (SearchParameter param : params) {
@@ -421,7 +430,10 @@ class EmAnalyticsObjectUtil
 				else {
 					searchParamEntity.setParamValueStr(param.getValue());
 				}
-
+				
+				searchParamEntity.setCreationDate(utcDate);
+				searchParamEntity.setLastModificationDate(utcDate);
+				
 				searchEntity.getEmAnalyticsSearchParams().add(searchParamEntity);
 			}
 		}
@@ -457,7 +469,7 @@ class EmAnalyticsObjectUtil
 			searchEntity.setEmAnalyticsCategory(categoryObj);
 		}
 
-		Date utcNow = DateUtil.getCurrentUTCTime();
+		Date utcNow = DateUtil.getGatewayTime();
 		if (!RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 			searchEntity.setOwner(currentUser);
@@ -472,7 +484,7 @@ class EmAnalyticsObjectUtil
 
 		searchEntity.setUiHidden(new java.math.BigDecimal(search != null && search.isUiHidden() ? 1 : 0));
 		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
-		searchEntity.setDeleted(0);
+		searchEntity.setDeleted(BigInteger.ZERO);
 		searchEntity.setName(search.getName());
 		List<SearchParameter> params = search.getParameters();
 		// Params handling !!
@@ -497,7 +509,10 @@ class EmAnalyticsObjectUtil
 				else {
 					newSearchParam.setParamValueClob(param.getValue());
 				}
-
+				
+				newSearchParam.setCreationDate(utcNow);
+				newSearchParam.setLastModificationDate(utcNow);
+				
 				newParams.put(newPK, newSearchParam);
 			}
 		}
@@ -526,7 +541,7 @@ class EmAnalyticsObjectUtil
 		return searchEntity;
 	}
 
-	public static EmAnalyticsFolder getFolderById(long id, EntityManager em)
+	public static EmAnalyticsFolder getFolderById(BigInteger id, EntityManager em)
 	{
 
 		EmAnalyticsFolder folderObj = null;
@@ -535,7 +550,7 @@ class EmAnalyticsObjectUtil
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
 			if (folderObj != null
-					&& folderObj.getDeleted() == 0
+					&& BigInteger.ZERO.equals(folderObj.getDeleted())
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
 							TenantContext.getContext().getUsername()))) {
@@ -554,7 +569,7 @@ class EmAnalyticsObjectUtil
 		return folderObj;
 	}
 
-	public static EmAnalyticsFolder getFolderByIdForDelete(long id, EntityManager em)
+	public static EmAnalyticsFolder getFolderByIdForDelete(BigInteger id, EntityManager em)
 	{
 
 		EmAnalyticsFolder folderObj = null;
@@ -584,7 +599,7 @@ class EmAnalyticsObjectUtil
 	{
 		final String ROOT_FOLDER_NAME = "All Searches";
 		EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
-		Date utcNow = DateUtil.getCurrentUTCTime();
+		Date utcNow = DateUtil.getGatewayTime();
 		folderObj.setDescription(ROOT_FOLDER_NAME);
 		folderObj.setName(ROOT_FOLDER_NAME);
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
@@ -594,13 +609,13 @@ class EmAnalyticsObjectUtil
 		folderObj.setLastModificationDate(utcNow);
 		folderObj.setUiHidden(new BigDecimal(0));
 		folderObj.setSystemFolder(new BigDecimal(1));
-		folderObj.setDeleted(0);
+		folderObj.setDeleted(BigInteger.ZERO);
 		folderObj.setEmAnalyticsFolder(null);
 
 		return folderObj;
 	}
 
-	public static EmAnalyticsSearch getSearchById(long id, EntityManager em)
+	public static EmAnalyticsSearch getSearchById(BigInteger id, EntityManager em)
 	{
 
 		EmAnalyticsSearch searchObj = null;
@@ -608,7 +623,7 @@ class EmAnalyticsObjectUtil
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null) {
-				if (searchObj.getDeleted() == 0
+				if (BigInteger.ZERO.equals(searchObj.getDeleted())
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 								|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
 								TenantContext.getContext().getUsername()))) {
@@ -626,7 +641,7 @@ class EmAnalyticsObjectUtil
 		return searchObj;
 	}
 
-	public static EmAnalyticsSearch getSearchByIdForDelete(long id, EntityManager em)
+	public static EmAnalyticsSearch getSearchByIdForDelete(BigInteger id, EntityManager em)
 	{
 
 		EmAnalyticsSearch searchObj = null;
@@ -691,7 +706,7 @@ class EmAnalyticsObjectUtil
 	 */
 
 	@SuppressWarnings("unchecked")
-	public static String getSearchParamByName(long searchId, String paramName, EntityManager em)
+	public static String getSearchParamByName(BigInteger searchId, String paramName, EntityManager em)
 	{
 		List<EmAnalyticsSearchParam> paramList = em.createNamedQuery("SearchParam.getParamByName")
 				.setParameter("searchId", searchId).setParameter("name", paramName).getResultList();

@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
@@ -45,9 +47,9 @@ public class MultitenentSearchTest extends BaseTest
 	private static String username2 = null;
 	private static String username3 = null;
 
-	public static int createCategory()
+	public static BigInteger createCategory()
 	{
-		int id = 0;
+		BigInteger id = BigInteger.ZERO;
 
 		try {
 			CategoryManager fmger = CategoryManager.getInstance();
@@ -68,9 +70,9 @@ public class MultitenentSearchTest extends BaseTest
 		return id;
 	}
 
-	public static int createfolder()
+	public static BigInteger createfolder()
 	{
-		int id = 0;
+		BigInteger id = BigInteger.ZERO;
 
 		try {
 			FolderManager fmger = FolderManager.getInstance();
@@ -86,9 +88,9 @@ public class MultitenentSearchTest extends BaseTest
 		return id;
 	}
 
-	public static int createSearch(Long value, String username)
+	public static BigInteger createSearch(Long value, String username)
 	{
-		int id = 0;
+		BigInteger id = BigInteger.ZERO;
 		TenantContext.setContext(new TenantInfo(username, value));
 		try {
 			SearchManager fmger = SearchManager.getInstance();
@@ -109,7 +111,7 @@ public class MultitenentSearchTest extends BaseTest
 		return id;
 	}
 
-	public static boolean deleteCategory(int id)
+	public static boolean deleteCategory(BigInteger id)
 	{
 		boolean bResult = false;
 		try {
@@ -125,7 +127,7 @@ public class MultitenentSearchTest extends BaseTest
 		return bResult;
 	}
 
-	public static boolean deleteFolder(int id)
+	public static boolean deleteFolder(BigInteger id)
 	{
 		boolean bResult = false;
 		try {
@@ -141,7 +143,7 @@ public class MultitenentSearchTest extends BaseTest
 		return bResult;
 	}
 
-	public static boolean deleteSearch(int id, Long value, String username)
+	public static boolean deleteSearch(BigInteger id, Long value, String username)
 	{
 		boolean bResult = false;
 		boolean bResult1 = false;
@@ -150,8 +152,8 @@ public class MultitenentSearchTest extends BaseTest
 			TenantContext.setContext(new TenantInfo(username, value));
 			SearchManager fmger = SearchManager.getInstance();
 			Search sr = fmger.getSearch(id);
-			int catid = sr.getCategoryId();
-			int fldid = sr.getFolderId();
+			BigInteger catid = sr.getCategoryId();
+			BigInteger fldid = sr.getFolderId();
 			fmger.deleteSearch(id, true);
 			bResult1 = MultitenentSearchTest.deleteFolder(fldid);
 			bResult2 = MultitenentSearchTest.deleteCategory(catid);
@@ -166,7 +168,7 @@ public class MultitenentSearchTest extends BaseTest
 		return bResult && bResult1 && bResult2;
 	}
 
-	public static Search getSearch(int id, Long value, String username)
+	public static Search getSearch(BigInteger id, Long value, String username)
 	{
 		Search fld = null;
 		try {
@@ -199,12 +201,12 @@ public class MultitenentSearchTest extends BaseTest
 		username2 = TestUtils.getUsername(TENANT_ID2);
 		username3 = TestUtils.getUsername(TENANT_ID3);
 
-		int id1 = MultitenentSearchTest.createSearch(opc1, username1);
-		int id2 = MultitenentSearchTest.createSearch(opc2, username2);
-		int id3 = MultitenentSearchTest.createSearch(opc3, username3);
-		Assert.assertTrue(id1 > 0);
-		Assert.assertTrue(id2 > 0);
-		Assert.assertTrue(id3 > 0);
+		BigInteger id1 = MultitenentSearchTest.createSearch(opc1, username1);
+		BigInteger id2 = MultitenentSearchTest.createSearch(opc2, username2);
+		BigInteger id3 = MultitenentSearchTest.createSearch(opc3, username3);
+		Assert.assertTrue(BigInteger.ZERO.compareTo(id1) == -1);
+		Assert.assertTrue(BigInteger.ZERO.compareTo(id2) == -1);
+		Assert.assertTrue(BigInteger.ZERO.compareTo(id3) == -1);
 
 		Search s1 = MultitenentSearchTest.getSearch(id1, opc1, username1);
 		Search s2 = MultitenentSearchTest.getSearch(id2, opc2, username2);

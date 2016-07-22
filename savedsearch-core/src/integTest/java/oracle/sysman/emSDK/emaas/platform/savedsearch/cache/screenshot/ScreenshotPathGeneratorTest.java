@@ -3,6 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -15,17 +16,17 @@ public class ScreenshotPathGeneratorTest {
 
     @Test
     public void testGenerateFileName() throws Exception {
-        Assert.assertTrue(screenshotPathGenerator.generateFileName(1234L, now, now) instanceof String);
+        Assert.assertTrue(screenshotPathGenerator.generateFileName(BigInteger.ONE, now, now) instanceof String);
         Assert.assertNull(screenshotPathGenerator.generateFileName(null, now, now));
-        screenshotPathGenerator.generateFileName(1234L,null, now);
-        screenshotPathGenerator.generateFileName(1234L, now,null);
-        screenshotPathGenerator.generateFileName(1234L,null,null);
+        screenshotPathGenerator.generateFileName(BigInteger.ONE, null, now);
+        screenshotPathGenerator.generateFileName(BigInteger.ONE, now, null);
+        screenshotPathGenerator.generateFileName(BigInteger.ONE, null, null);
     }
 
     @Test
     public void testGenerateScreenshotUrl() throws Exception {
         String baseUrl = "baseUrlxx";
-        Long widgetId = 1234L;
+        BigInteger widgetId = BigInteger.ONE;
         Date creation = now;
         Date modification = now;
         Assert.assertTrue(screenshotPathGenerator.generateScreenshotUrl(baseUrl,widgetId,creation,modification) instanceof String);

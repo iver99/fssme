@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,14 +43,14 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<CategoryManagerImpl>(){
             @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+            public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return category;
             }
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -76,7 +77,7 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<CategoryManagerImpl>(){
             @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+            public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
             {   if(true)
                 throw new EMAnalyticsFwkException(new Throwable());
                 return category;
@@ -84,7 +85,7 @@ public class FilterSearchAPITest {
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -106,14 +107,14 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<FolderManagerImpl>(){
             @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+            public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return folder;
             }
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByFolderId(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -135,7 +136,7 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<FolderManagerImpl>(){
             @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+            public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 if(true){throw new EMAnalyticsFwkException(new Throwable());}
                 return folder;
@@ -143,7 +144,7 @@ public class FilterSearchAPITest {
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByFolderId(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -167,12 +168,12 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<FolderManagerImpl>(){
             @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+            public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return folder;
             }
             @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException
+            public String[] getPathForFolderId(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return path;
             }
@@ -187,8 +188,8 @@ public class FilterSearchAPITest {
         };
         new MockUp<SearchSummaryImpl>(){
             @Mock
-            public Integer getFolderId(){
-                return 1;
+            public BigInteger getFolderId(){
+                return BigInteger.ONE;
             }
 
         };
@@ -210,13 +211,13 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<FolderManagerImpl>(){
             @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+            public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 if(true){throw new EMAnalyticsFwkException(new Throwable());}
                 return folder;
             }
             @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException
+            public String[] getPathForFolderId(BigInteger folderId) throws EMAnalyticsFwkException
             {
 
                 if(true){throw new EMAnalyticsFwkException(new Throwable());}
@@ -233,8 +234,8 @@ public class FilterSearchAPITest {
         };
         new MockUp<SearchSummaryImpl>(){
             @Mock
-            public Integer getFolderId(){
-                return 1;
+            public BigInteger getFolderId(){
+                return BigInteger.ONE;
             }
 
         };
@@ -261,13 +262,13 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<FolderManagerImpl>(){
             @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+            public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 if(true){throw new EMAnalyticsFwkException(new Throwable());}
                 return folder;
             }
             @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException,JSONException
+            public String[] getPathForFolderId(BigInteger folderId) throws EMAnalyticsFwkException,JSONException
             {
                 if(true){
                     throw new JSONException("");
@@ -285,8 +286,8 @@ public class FilterSearchAPITest {
         };
         new MockUp<SearchSummaryImpl>(){
             @Mock
-            public Integer getFolderId(){
-                return 1;
+            public BigInteger getFolderId(){
+                return BigInteger.ONE;
             }
 
         };
@@ -308,13 +309,13 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<FolderManagerImpl>(){
             @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+            public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 if(true){throw new EMAnalyticsFwkException(new Throwable());}
                 return folder;
             }
             @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException,Exception
+            public String[] getPathForFolderId(BigInteger folderId) throws EMAnalyticsFwkException,Exception
             {
                 if(true){
                     throw new Exception("");
@@ -333,8 +334,8 @@ public class FilterSearchAPITest {
         };
         new MockUp<SearchSummaryImpl>(){
             @Mock
-            public Integer getFolderId(){
-                return 1;
+            public BigInteger getFolderId(){
+                return BigInteger.ONE;
             }
 
         };
@@ -360,21 +361,21 @@ public class FilterSearchAPITest {
                 return category;
             }
             @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+            public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return category;
             }
         };
         new MockUp<CategoryImpl>(){
            @Mock
-            public Integer getId()
+            public BigInteger getId()
             {
-                return 1;
+                return BigInteger.ONE;
             }
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -402,7 +403,7 @@ public class FilterSearchAPITest {
                 return category;
             }
             @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+            public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 if(true){throw new EMAnalyticsFwkException(new Throwable());}
                 return category;
@@ -410,14 +411,14 @@ public class FilterSearchAPITest {
         };
         new MockUp<CategoryImpl>(){
             @Mock
-            public Integer getId()
+            public BigInteger getId()
             {
-                return 1;
+                return BigInteger.ONE;
             }
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -439,14 +440,14 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<FolderManagerImpl>(){
             @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+            public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return folder;
             }
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByFolderId(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -468,14 +469,14 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<CategoryManagerImpl>(){
             @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+            public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return category;
             }
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -497,14 +498,14 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<CategoryManagerImpl>(){
             @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+            public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return category;
             }
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -526,14 +527,14 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<CategoryManagerImpl>(){
             @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+            public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return category;
             }
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return searches;
             }
@@ -555,14 +556,14 @@ public class FilterSearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<CategoryManagerImpl>(){
             @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+            public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return category;
             }
         };
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+            public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
             {
                 return searches;
             }

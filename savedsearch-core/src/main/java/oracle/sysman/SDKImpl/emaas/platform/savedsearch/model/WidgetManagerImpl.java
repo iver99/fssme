@@ -63,7 +63,7 @@ public class WidgetManagerImpl extends WidgetManager
 		String tenantName = TenantContext.getContext().gettenantName();
 		String widgetAPIUrl = getWidgetAPIUrl(tenantName);
 		for (Widget widget : widgetList) {
-			String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl, Long.valueOf(widget.getId()),
+			String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl, widget.getId(),
 					widget.getCreatedOn(), widget.getLastModifiedOn());
 			JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(widget, widget.getCategory(), ssUrl);
 			if (jsonWidget != null) {

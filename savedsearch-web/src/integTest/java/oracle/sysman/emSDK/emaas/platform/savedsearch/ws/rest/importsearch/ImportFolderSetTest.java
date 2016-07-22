@@ -8,12 +8,14 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.Objec
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
+
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.InputStream;
 import java.io.StringReader;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,8 @@ import java.util.List;
  */
 @Test(groups={"s2"})
 public class ImportFolderSetTest {
-    private  ImportFolderSet importFolderSet = new ImportFolderSet();
+    private static final BigInteger TEST_ID_10 = BigInteger.TEN;
+	private  ImportFolderSet importFolderSet = new ImportFolderSet();
     private String xml = "[{\"id\":121,\"name\":\"Category123\",\"providerName\":\"Log Analytics\",\"prividerVersion\":\"1.0\",\"providerDiscovery\":\"discovery\",\"providerAssetRoot\":\"asset\"}]";
 
     @Test
@@ -37,7 +40,7 @@ public class ImportFolderSetTest {
         final List<FolderImpl> folderlist = new ArrayList<FolderImpl>();
         FolderImpl folder = new FolderImpl();
         folder.setName("name");
-        folder.setId(10);
+        folder.setId(TEST_ID_10);
         folderlist.add(folder);
         final FolderManagerImpl folderManager = FolderManagerImpl.getInstance();
         new Expectations(){
@@ -77,7 +80,7 @@ public class ImportFolderSetTest {
         final List<FolderImpl> folderlist = new ArrayList<FolderImpl>();
         FolderImpl folder = new FolderImpl();
         folder.setName("name");
-        folder.setId(10);
+        folder.setId(TEST_ID_10);
         folderlist.add(folder);
         final FolderManagerImpl folderManager = FolderManagerImpl.getInstance();
         new Expectations(){
@@ -118,7 +121,7 @@ public class ImportFolderSetTest {
         final List<FolderImpl> folderlist = new ArrayList<FolderImpl>();
         FolderImpl folder = new FolderImpl();
         folder.setName("name");
-        folder.setId(10);
+        folder.setId(TEST_ID_10);
         folderlist.add(folder);
         final FolderManagerImpl folderManager = FolderManagerImpl.getInstance();
         new Expectations() {

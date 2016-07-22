@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,7 @@ import com.sun.jersey.spi.container.ContainerResponse;
 public class WidgetAPIMoreTest
 {
 
+	private static final BigInteger TEST_ID_1234 = new BigInteger("1234");
 	WidgetAPI widgetAPI;
 	Date now = new Date();
 
@@ -340,13 +342,13 @@ public class WidgetAPIMoreTest
 			{
 				SearchManager.getInstance();
 				result = searchManager;
-				searchManager.getWidgetScreenshotById(anyLong);
+				searchManager.getWidgetScreenshotById((BigInteger) any);
 				result = new ScreenshotData("data:image/jpeg;base64,test", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
-		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName2");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_1234, "serviceVersion", "fileName");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_1234, "serviceVersion", "fileName2");
 	}
 
 	@Test(groups = { "s2" })
@@ -358,12 +360,12 @@ public class WidgetAPIMoreTest
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
-				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
 				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_1234, "serviceVersion", "fileName");
 	}
 
 	@Test(groups = { "s2" })
@@ -375,12 +377,12 @@ public class WidgetAPIMoreTest
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
-				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
 				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_1234, "serviceVersion", "fileName");
 	}
 
 	@Test(groups = { "s2" })
@@ -392,12 +394,12 @@ public class WidgetAPIMoreTest
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
-				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
 				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_1234, "serviceVersion", "fileName");
 	}
 
 	@Test(groups = { "s2" })
@@ -410,12 +412,12 @@ public class WidgetAPIMoreTest
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
-				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
 				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_1234, "serviceVersion", "fileName");
 	}
 
 	@Test(groups = { "s2" })
@@ -428,12 +430,12 @@ public class WidgetAPIMoreTest
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
-				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
 				result = new ScreenshotData("screenShot", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_1234, "serviceVersion", "fileName");
 	}
 
 	@Test(groups = { "s2" })
@@ -446,13 +448,13 @@ public class WidgetAPIMoreTest
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
-				searchManagerImpl.getWidgetScreenshotById(anyLong);
+				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
 				result = null;
 
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getWidgetScreenshotById(1234L, "serviceVersion", "fileName");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_1234, "serviceVersion", "fileName");
 	}
 
 }

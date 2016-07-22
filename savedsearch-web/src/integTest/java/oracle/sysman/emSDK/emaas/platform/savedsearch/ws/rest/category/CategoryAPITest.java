@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.category;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,14 +39,14 @@ public class CategoryAPITest {
             new MockUp<CategoryManagerImpl>()
             {
                 @Mock
-                public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+                public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
                 {
                     return new CategoryImpl();
                 }
             };
             }
         };
-        Assert.assertNotNull(categoryAPI.getCategory(111));
+        Assert.assertNotNull(categoryAPI.getCategory(new BigInteger("111")));
     }
 
     @Test    public void testGetCategoryByName() throws Exception {
@@ -68,10 +69,8 @@ public class CategoryAPITest {
 
     @Test
     public void testGetSearchesByCategory() throws Exception {
-        Assert.assertNotNull(categoryAPI.getSearchesByCategory("",""));
         Assert.assertNotNull(categoryAPI.getSearchesByCategory(null,""));
-        Assert.assertNotNull(categoryAPI.getSearchesByCategory("11111s",""));
-        Assert.assertNotNull(categoryAPI.getSearchesByCategory("0",""));
+        Assert.assertNotNull(categoryAPI.getSearchesByCategory(BigInteger.ZERO,""));
     }
     @Test
     public void testGetSearchesByCategory2nd() throws Exception {
@@ -81,7 +80,7 @@ public class CategoryAPITest {
             {
                 new MockUp<CategoryManagerImpl>(){
                     @Mock
-                    public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+                    public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
                     {
                         return  new CategoryImpl();
                     }
@@ -89,20 +88,20 @@ public class CategoryAPITest {
 
                 new MockUp<SearchManagerImpl>(){
                     @Mock
-                    public List<Search> getSystemSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+                    public List<Search> getSystemSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
                     {
                         return  searches;
                     }
                     @Mock
-                    public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+                    public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
                     {
                         return  searches;
                     }
                 };
             }
         };
-        Assert.assertNotNull(categoryAPI.getSearchesByCategory("1111",""));
-        Assert.assertNotNull(categoryAPI.getSearchesByCategory("1111",null));
+        Assert.assertNotNull(categoryAPI.getSearchesByCategory(new BigInteger("1111"),""));
+        Assert.assertNotNull(categoryAPI.getSearchesByCategory(new BigInteger("1111"),null));
 
     }
 }

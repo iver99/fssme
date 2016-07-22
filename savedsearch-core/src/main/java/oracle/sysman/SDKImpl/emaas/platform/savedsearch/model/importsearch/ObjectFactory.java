@@ -1,6 +1,8 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch;
 
 
+import java.math.BigInteger;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
@@ -131,12 +133,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Integer }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "CategoryId", substitutionHeadNamespace = "", substitutionHeadName = "categoryDet")
-    public JAXBElement<Integer> createCategoryId(Integer value) {
-        return new JAXBElement<Integer>(_CategoryId_QNAME, Integer.class, null, value);
+    public JAXBElement<BigInteger> createCategoryId(BigInteger value) {
+        return new JAXBElement<BigInteger>(_CategoryId_QNAME, BigInteger.class, null, value);
     }
 
     /**
@@ -167,12 +169,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Integer }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "FolderId", substitutionHeadNamespace = "", substitutionHeadName = "folderDet")
-    public JAXBElement<Integer> createFolderId(Integer value) {
-        return new JAXBElement<Integer>(_FolderId_QNAME, Integer.class, null, value);
+    public JAXBElement<BigInteger> createFolderId(BigInteger value) {
+        return new JAXBElement<BigInteger>(_FolderId_QNAME, BigInteger.class, null, value);
     }
 
     /**

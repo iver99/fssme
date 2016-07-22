@@ -251,7 +251,7 @@ public class ImportSearchSet
 			JSONArray jsonArray = new JSONArray();
 			for (Search impSearch : addedList) {
 				JSONObject jObj = new JSONObject();
-				jObj.put("id", impSearch.getId());
+				jObj.put("id", impSearch.getId().toString());
 				jObj.put("name", impSearch.getName());
 				jsonArray.put(jObj);
 			}

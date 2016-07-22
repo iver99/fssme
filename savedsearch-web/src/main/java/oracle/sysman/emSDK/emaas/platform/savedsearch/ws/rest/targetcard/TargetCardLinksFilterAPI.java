@@ -1,27 +1,41 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.targetcard;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.ArrayList;
-import java.util.List;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.node.ObjectNode;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Created by xidai on 6/21/2016.
@@ -50,7 +64,7 @@ public class TargetCardLinksFilterAPI {
                 return Response.status(statusCode).entity("NOT FOUND").build();
             }
             for(Search search : searches){
-                JSONObject jsonObject = EntityJsonUtil.getTargetCardJsonObj(uri.getBaseUri(),search);
+            	ObjectNode jsonObject = EntityJsonUtil.getTargetCardJsonObj(uri.getBaseUri(),search);
                 jsonArray.put(jsonObject);
             }
             message = jsonArray.toString();
@@ -66,7 +80,7 @@ public class TargetCardLinksFilterAPI {
 
     @DELETE
     @Path("{id: [0-9]*}")
-    public Response deleteTargetCard(@PathParam("id") long searchId)
+    public Response deleteTargetCard(@PathParam("id") BigInteger searchId)
     {
         LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/targetcardlinks/{}", searchId);
         int statusCode = 204;
@@ -88,7 +102,7 @@ public class TargetCardLinksFilterAPI {
         LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/targetcardlinks");
         String message = "";
         int statusCode = 201;
-        JSONObject jsonObj;
+        ObjectNode jsonObj;
         SearchManager searchManager =  SearchManager.getInstance();
         try{
             Search targetObject = createSearchObjectForAdd(inputJsonObj);
@@ -168,7 +182,7 @@ public class TargetCardLinksFilterAPI {
 
         try {
             JSONObject jsonObj = json.getJSONObject("category");
-            searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
+            searchObj.setCategoryId(new BigInteger(jsonObj.getString("id")));
         }
         catch (JSONException je) {
             throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",
@@ -176,7 +190,7 @@ public class TargetCardLinksFilterAPI {
         }
         try {
             JSONObject jsonFold = json.getJSONObject("folder");
-            searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id")));
+            searchObj.setFolderId(new BigInteger(jsonFold.getString("id")));
         }
         catch (JSONException je) {
             throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",

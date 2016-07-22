@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +40,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 @Test(groups = { "s2" })
 public class WidgetAPITest
 {
+	private static final BigInteger TEST_ID_10 = BigInteger.TEN;
 	private final WidgetAPI widgetAPI = new WidgetAPI();
 	Date now = new Date();
 
@@ -170,7 +172,7 @@ public class WidgetAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(new CategoryImpl());
 		}
 
@@ -201,7 +203,7 @@ public class WidgetAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -266,7 +268,7 @@ public class WidgetAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -331,7 +333,7 @@ public class WidgetAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -391,12 +393,12 @@ public class WidgetAPITest
 	{
 		new MockUp<SearchManagerImpl>() {
 			@Mock
-			public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
+			public ScreenshotData getWidgetScreenshotById(BigInteger widgetId) throws EMAnalyticsFwkException
 			{
 				return new ScreenshotData("10", now, now);
 			}
 		};
-		widgetAPI.getWidgetScreenshotById(10L, "1.0", "test.png");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_10, "1.0", "test.png");
 	}
 
 	@Test
@@ -404,12 +406,12 @@ public class WidgetAPITest
 	{
 		new MockUp<SearchManagerImpl>() {
 			@Mock
-			public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
+			public ScreenshotData getWidgetScreenshotById(BigInteger widgetId) throws EMAnalyticsFwkException
 			{
 				throw new EMAnalyticsFwkException(new Throwable());
 			}
 		};
-		widgetAPI.getWidgetScreenshotById(10L, "1.0", "test.png");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_10, "1.0", "test.png");
 	}
 
 	@Test
@@ -417,11 +419,11 @@ public class WidgetAPITest
 	{
 		new MockUp<SearchManagerImpl>() {
 			@Mock
-			public ScreenshotData getWidgetScreenshotById(long widgetId) throws Exception
+			public ScreenshotData getWidgetScreenshotById(BigInteger widgetId) throws Exception
 			{
 				throw new Exception("");
 			}
 		};
-		widgetAPI.getWidgetScreenshotById(10L, "1.0", "test.png");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_10, "1.0", "test.png");
 	}
 }

@@ -2,6 +2,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -19,11 +20,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.sun.jersey.core.util.Base64;
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
@@ -37,6 +33,11 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.sun.jersey.core.util.Base64;
 
 /**
  * Saved Search Service
@@ -212,7 +213,7 @@ public class WidgetAPI
 	 */
 	@GET
 	@Path("{id: [1-9][0-9]*}/screenshot/{serviceVersion}/images/{fileName}")
-	public Response getWidgetScreenshotById(@PathParam("id") long widgetId, @PathParam("serviceVersion") String serviceVersion,
+	public Response getWidgetScreenshotById(@PathParam("id") BigInteger widgetId, @PathParam("serviceVersion") String serviceVersion,
 			@PathParam("fileName") String fileName)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/widgets/{}/screenshot/{}/images/{}",

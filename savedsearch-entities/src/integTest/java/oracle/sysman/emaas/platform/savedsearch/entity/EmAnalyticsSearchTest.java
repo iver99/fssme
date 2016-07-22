@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -19,7 +20,7 @@ public class EmAnalyticsSearchTest {
     @BeforeMethod
     public void setUp() throws Exception {
         emAnalyticsSearch = new EmAnalyticsSearch();
-        emAnalyticsSearch.setId(123412341234L);
+        emAnalyticsSearch.setId(BigInteger.TEN);
         emAnalyticsSearch.setOwner("ownerxx");
     }
 
@@ -50,9 +51,8 @@ public class EmAnalyticsSearchTest {
 
     @Test (groups = {"s1"})
     public void testGetDeleted() throws Exception {
-        long deleted = 123412341234L;
-        emAnalyticsSearch.setDeleted(deleted);
-        Assert.assertEquals(deleted,emAnalyticsSearch.getDeleted());
+        emAnalyticsSearch.setDeleted(BigInteger.TEN);
+        Assert.assertEquals(BigInteger.TEN,emAnalyticsSearch.getDeleted());
     }
 
     @Test (groups = {"s1"})
@@ -109,9 +109,8 @@ public class EmAnalyticsSearchTest {
 
     @Test (groups = {"s1"})
     public void testGetId() throws Exception {
-        long id = 1234123412341234L;
-        emAnalyticsSearch.setId(id);
-        Assert.assertEquals(id,emAnalyticsSearch.getId());
+        emAnalyticsSearch.setId(BigInteger.TEN);
+        Assert.assertEquals(BigInteger.TEN,emAnalyticsSearch.getId());
     }
 
     @Test (groups = {"s1"})

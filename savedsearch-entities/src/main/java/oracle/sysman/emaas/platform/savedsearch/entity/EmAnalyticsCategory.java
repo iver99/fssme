@@ -1,15 +1,13 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -17,10 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.PrivateOwned;
@@ -41,19 +36,15 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 				+ ":categoryName" + " AND e.deleted = 0  AND e.owner in ('ORACLE',:userName)"),
 		@NamedQuery(name = "Category.getCategoryByNameForTenant", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
 				+ ":categoryName" + " AND e.deleted = 0 ") })
-@SequenceGenerator(name = "EMS_ANALYTICS_CATEGORY_SEQ", sequenceName = "EMS_ANALYTICS_CATEGORY_SEQ", allocationSize = 1)
-public class EmAnalyticsCategory implements Serializable
+//@SequenceGenerator(name = "EMS_ANALYTICS_CATEGORY_SEQ", sequenceName = "EMS_ANALYTICS_CATEGORY_SEQ", allocationSize = 1)
+public class EmAnalyticsCategory extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "CATEGORY_ID")
-	@GeneratedValue(generator = "EMS_ANALYTICS_CATEGORY_SEQ", strategy = GenerationType.SEQUENCE)
-	private long categoryId;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATION_DATE")
-	private Date creationDate;
+//	@GeneratedValue(generator = "EMS_ANALYTICS_CATEGORY_SEQ", strategy = GenerationType.SEQUENCE)
+	private BigInteger categoryId;
 
 	private String description;
 
@@ -84,7 +75,7 @@ public class EmAnalyticsCategory implements Serializable
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	@Column(name = "DELETED")
-	private long deleted;
+	private BigInteger deleted;
 
 	@Column(name = "PROVIDER_NAME")
 	private String providerName;
@@ -112,17 +103,12 @@ public class EmAnalyticsCategory implements Serializable
 	{
 	}
 
-	public long getCategoryId()
+	public BigInteger getCategoryId()
 	{
 		return categoryId;
 	}
 
-	public Date getCreationDate()
-	{
-		return creationDate;
-	}
-
-	public long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -205,17 +191,12 @@ public class EmAnalyticsCategory implements Serializable
 		return providerVersion;
 	}
 
-	public void setCategoryId(long categoryId)
+	public void setCategoryId(BigInteger categoryId)
 	{
 		this.categoryId = categoryId;
 	}
 
-	public void setCreationDate(Date creationDate)
-	{
-		this.creationDate = creationDate;
-	}
-
-	public void setDeleted(long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}

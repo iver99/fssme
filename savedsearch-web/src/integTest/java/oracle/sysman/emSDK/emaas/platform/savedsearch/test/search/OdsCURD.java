@@ -21,7 +21,7 @@ public class OdsCURD {
     static String authToken;
     static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC0;
     static String TENANT_ID1 = TestConstant.TENANT_ID0;
-    static ArrayList<Long> odsIdToBeDelete;
+    static ArrayList<String> odsIdToBeDelete;
 
     @BeforeClass
     public static void setUp()
@@ -31,13 +31,13 @@ public class OdsCURD {
         authToken = ct.getAuthToken();
         TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
         TENANT_ID_OPC1 = ct.getTenant();
-        odsIdToBeDelete = new ArrayList<Long>();
+        odsIdToBeDelete = new ArrayList<String>();
     }
 
     //Delete the ods entity has been created during the test.
     @AfterClass
     public static void destroy(){
-        for(Long searchId : odsIdToBeDelete){
+        for(String searchId : odsIdToBeDelete){
             Response deleteResponseForCreate =  RestAssured.given().contentType(ContentType.JSON).log().everything()
                     .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
                     .delete("/search/" + searchId);
@@ -53,8 +53,8 @@ public class OdsCURD {
             //input json
             String inputCreateJson ="{" +
                     "    \"name\": \"DD Test\",  " +
-                    "    \"category\": {\"id\":1}, " +
-                    "    \"folder\": {\"id\":3}, " +
+                    "    \"category\": {\"id\":\"1\"}, " +
+                    "    \"folder\": {\"id\":\"3\"}, " +
                     "    \"description\": \"Search for Demo\",  " +
                     "    \"parameters\":[" +
                     "        {" +
@@ -68,7 +68,7 @@ public class OdsCURD {
         JsonPath jsonPathForCreate  = createResponse.jsonPath();
         System.out.println(createResponse.getStatusLine());
         Assert.assertTrue(createResponse.getStatusCode()== 201);
-        odsIdToBeDelete.add(jsonPathForCreate.getLong("id"));
+        odsIdToBeDelete.add(jsonPathForCreate.getString("id"));
     }
 
     //For the non system search
@@ -76,21 +76,21 @@ public class OdsCURD {
     @Test
     public void createOdsEntityForExsitingNonSystemSearch(){
         //create a search for test
-        String jsonForCreateSavedSearch = "{\"name\":\"Test_Search\",\"category\":{\"id\":"
+        String jsonForCreateSavedSearch = "{\"name\":\"Test_Search\",\"category\":{\"id\":\""
                 + 1
-                + "},\"folder\":{\"id\":"
+                + "\"},\"folder\":{\"id\":\""
                 + 1
-                + "},\"description\":\" \",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":\"STRING\",\"value\":\"my_value\",\"attributes\":\"test\"}]}";
+                + "\"},\"description\":\" \",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":\"STRING\",\"value\":\"my_value\",\"attributes\":\"test\"}]}";
         Response testCreateSearchResponse = getResponseForCreateNewSearch(jsonForCreateSavedSearch);
         JsonPath testCreateSearchResponseJsonPath = testCreateSearchResponse.jsonPath();
 
         //create an ods entity for existing non-system search
-        Response createForExistingSearchResponse = getResponseForCreateOdsForExistingSearch(testCreateSearchResponseJsonPath.getLong("id"));
+        Response createForExistingSearchResponse = getResponseForCreateOdsForExistingSearch(testCreateSearchResponseJsonPath.getString("id"));
         JsonPath jsonPathForCreateForExistingSearch = createForExistingSearchResponse.jsonPath();
         System.out.println(createForExistingSearchResponse.getStatusLine());
         Assert.assertTrue(createForExistingSearchResponse.getStatusCode()== 200);
 
-        odsIdToBeDelete.add(jsonPathForCreateForExistingSearch.getLong("id"));
+        odsIdToBeDelete.add(jsonPathForCreateForExistingSearch.getString("id"));
     }
 
     //For the system search
@@ -98,14 +98,14 @@ public class OdsCURD {
     @Test
     public void createEntityForExsitingSystemSearch(){
         //create an ods entity for existing system search
-        Response createForExistingSearchResponse = getResponseForCreateOdsForExistingSearch(2023L);
+        Response createForExistingSearchResponse = getResponseForCreateOdsForExistingSearch("2023");
         System.out.println(createForExistingSearchResponse.getBody().asString());
         Assert.assertTrue(createForExistingSearchResponse.getStatusCode()== 200
                 ||createForExistingSearchResponse.getBody().asString()
                     .startsWith("Exist Entity ID"));
     }
 
-    private Response getResponseForCreateOdsForExistingSearch(Long searchId) {
+    private Response getResponseForCreateOdsForExistingSearch(String searchId) {
         return RestAssured.given().contentType(ContentType.JSON).log().everything()
                 .header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when()

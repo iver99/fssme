@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -28,10 +31,9 @@ import org.testng.annotations.Test;
 public class SearchParamTest extends BaseTest
 {
 
-	private static Integer folderId;
-	private static Integer categoryId;
+	private static BigInteger folderId;
+	private static BigInteger categoryId;
 	private static Search searchObj;
-	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
 	@AfterClass
 	public static void testEndSearchparam() throws Exception
@@ -84,9 +86,7 @@ public class SearchParamTest extends BaseTest
 	@BeforeClass
 	public static void testInitSearchparam() throws Exception
 	{
-
 		try {
-
 			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
 					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
 					.get(QAToolUtil.TENANT_NAME).toString())));
@@ -113,6 +113,7 @@ public class SearchParamTest extends BaseTest
 			categoryId = cat.getId();
 
 			searchObj = new SearchImpl();
+			searchObj.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
 			searchObj.setName("Test Parameter1");
 			searchObj.setDescription("analyze Parameter");
 			searchObj.setFolderId(folderId);
@@ -145,8 +146,7 @@ public class SearchParamTest extends BaseTest
 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 	}
 
@@ -174,7 +174,6 @@ public class SearchParamTest extends BaseTest
 			tmpSearch.getParameters().add(sp1);
 			SearchManagerImpl.getInstance().editSearch(tmpSearch);
 
-			Search tmpEditSearch = SearchManagerImpl.getInstance().getSearch(searchObj.getId());
 			List<SearchParameter> paraEditList = tmpSearch.getParameters();
 			AssertJUnit.assertTrue(paraEditList.size() == 4);
 

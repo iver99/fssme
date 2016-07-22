@@ -1,25 +1,31 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
+
 import org.eclipse.persistence.internal.jpa.EntityManagerImpl;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * @author jishshi
@@ -83,7 +89,7 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryById(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any,withAny(entityManager));
                 result = emAnalyticsCategory;
                 entityManager.getTransaction();
                 result = entityTransaction;
@@ -95,7 +101,7 @@ public class CategoryManagerImplTest {
                 entityManager.close();
             }
         };
-        categoryManager.deleteCategory(10L,false);
+        categoryManager.deleteCategory(BigInteger.TEN,false);
     }
     @Test
     public void testDeleteCategory2nd() throws Exception {
@@ -105,7 +111,7 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryByIdForDelete(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryByIdForDelete((BigInteger) any,withAny(entityManager));
                 result = emAnalyticsCategory;
                 entityManager.getTransaction();
                 result = entityTransaction;
@@ -118,7 +124,7 @@ public class CategoryManagerImplTest {
 
             }
         };
-        categoryManager.deleteCategory(10L,true);
+        categoryManager.deleteCategory(BigInteger.TEN,true);
     }
 
     @Test
@@ -129,7 +135,7 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryByIdForDelete(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryByIdForDelete((BigInteger) any,withAny(entityManager));
                 result = emAnalyticsCategory;
                 entityManager.getTransaction();
                 result = entityTransaction;
@@ -144,7 +150,7 @@ public class CategoryManagerImplTest {
             }
         };
         try {
-            categoryManager.deleteCategory(10L, true);
+            categoryManager.deleteCategory(BigInteger.TEN, true);
         }catch(EMAnalyticsFwkException e){
             Assert.assertTrue(true);
         }
@@ -159,7 +165,7 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryByIdForDelete(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryByIdForDelete((BigInteger) any,withAny(entityManager));
                 result = emAnalyticsCategory;
                 entityManager.getTransaction();
                 result = entityTransaction;
@@ -173,7 +179,7 @@ public class CategoryManagerImplTest {
             }
         };
         try {
-            categoryManager.deleteCategory(10L, true);
+            categoryManager.deleteCategory(BigInteger.TEN, true);
         }catch(Exception e){
             Assert.assertTrue(true);
         }
@@ -247,8 +253,6 @@ public class CategoryManagerImplTest {
 
     @Test
     public void testGetAllCategories() throws Exception {
-        //TODO
-        final List<EmAnalyticsCategory> categories = new ArrayList<>();
         new Expectations(){
             {
                 PersistenceManager.getInstance();
@@ -274,11 +278,11 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryById(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any,withAny(entityManager));
                 result = emAnalyticsCategory;
             }
         };
-        Assert.assertNotNull(categoryManager.getCategory(10L));
+        Assert.assertNotNull(categoryManager.getCategory(BigInteger.TEN));
     }
 
     @Test
@@ -289,12 +293,12 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryById(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any,withAny(entityManager));
                 result = exception;
             }
         };
         try {
-            categoryManager.getCategory(10L);
+            categoryManager.getCategory(BigInteger.TEN);
         }catch(EMAnalyticsFwkException e){
             Assert.assertTrue(true);
         }
@@ -308,12 +312,12 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryById(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any,withAny(entityManager));
 
             }
         };
         try {
-            categoryManager.getCategory(10L);
+            categoryManager.getCategory(BigInteger.TEN);
         }catch(EMAnalyticsFwkException e){
             Assert.assertTrue(true);
         }
@@ -434,10 +438,10 @@ public class CategoryManagerImplTest {
 
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl importCategory = new ImportCategoryImpl();
-        importCategory.setId(10);
+        importCategory.setId(BigInteger.TEN);
         list.add(importCategory);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(10);
+        categoryinput.setId(BigInteger.TEN);
         new Expectations(){
             {
                 PersistenceManager.getInstance();
@@ -449,10 +453,11 @@ public class CategoryManagerImplTest {
                 entityTransaction.begin();
                 importCategory.getCategoryDetails();
                 result = categoryinput;
-                EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(withAny(category),withAny(entityManager));
-                result =   emAnalyticsCategory;
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
+                result = emAnalyticsCategory;
+                EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(withAny(category), withAny(entityManager));
+                result = emAnalyticsCategory;
                 entityManager.merge(withAny(emAnalyticsCategory));
-                importCategory.setId(anyInt);
                 entityManager.getTransaction();
                 result = entityTransaction;
                 entityTransaction.commit();
@@ -468,10 +473,10 @@ public class CategoryManagerImplTest {
 
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl importCategory = new ImportCategoryImpl();
-        importCategory.setId(10);
+        importCategory.setId(BigInteger.TEN);
         list.add(importCategory);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(-1);
+        categoryinput.setId(BigInteger.ONE.negate());
         new Expectations(){
             {
                 PersistenceManager.getInstance();
@@ -483,19 +488,6 @@ public class CategoryManagerImplTest {
                 entityTransaction.begin();
                 importCategory.getCategoryDetails();
                 result = categoryinput;
-                entityManager.createNamedQuery(anyString);
-                result = query;
-                query.setParameter(anyString,anyString);
-                result = query;
-                query.setParameter(anyString, anyString);
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getUsername();
-                result = "";
-                query.getSingleResult();
-                result =   emAnalyticsCategory;
-                emAnalyticsCategory.getCategoryId();
-                result = 10L;
             }
         };
         CategoryManagerImpl categoryManager =  (CategoryManagerImpl)CategoryManagerImpl.getInstance();
@@ -506,10 +498,10 @@ public class CategoryManagerImplTest {
 
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl importCategory = new ImportCategoryImpl();
-        importCategory.setId(10);
+        importCategory.setId(BigInteger.TEN);
         list.add(importCategory);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(-1);
+        categoryinput.setId(BigInteger.ONE.negate());
         new Expectations(){
             {
                 PersistenceManager.getInstance();
@@ -521,19 +513,6 @@ public class CategoryManagerImplTest {
                 entityTransaction.begin();
                 importCategory.getCategoryDetails();
                 result = categoryinput;
-                entityManager.createNamedQuery(anyString);
-                result = query;
-                query.setParameter(anyString,anyString);
-                result = query;
-                query.setParameter(anyString, anyString);
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getUsername();
-                result = "";
-                query.getSingleResult();
-                result =   new NoResultException();
-                importCategory.getFolderDetails();
-                result = folder;
             }
         };
         CategoryManagerImpl categoryManager =  (CategoryManagerImpl)CategoryManagerImpl.getInstance();

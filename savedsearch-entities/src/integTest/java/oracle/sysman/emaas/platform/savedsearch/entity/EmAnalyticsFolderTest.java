@@ -1,13 +1,14 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author qianqi
@@ -32,7 +33,7 @@ public class EmAnalyticsFolderTest {
 
     @Test (groups = {"s1"})
     public void testGetDeleted() throws Exception {
-        long deleted = 123412341234L;
+        BigInteger deleted = new BigInteger("123412341234");
         emAnalyticsFolder.setDeleted(deleted);
         Assert.assertEquals(deleted,emAnalyticsFolder.getDeleted());
     }
@@ -87,7 +88,7 @@ public class EmAnalyticsFolderTest {
 
     @Test (groups = {"s1"})
     public void testGetFolderId() throws Exception {
-        long folderId = 123412341234L;
+        BigInteger folderId = new BigInteger("123412341234");
         emAnalyticsFolder.setFolderId(folderId);
         Assert.assertEquals(folderId,emAnalyticsFolder.getFolderId());
     }

@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +32,10 @@ import org.testng.annotations.Test;
  */
 @Test(groups={"s1"})
 public class SearchAPITest {
-    private SearchAPI api = new SearchAPI();
+	private static final BigInteger TEST_ID_10 = BigInteger.TEN;
+	private static final BigInteger TEST_ID_100 = new BigInteger("100");
+	private static final BigInteger TEST_ID_999 = new BigInteger("999");
+	private SearchAPI api = new SearchAPI();
     @BeforeMethod
     public void setUp() throws Exception {
         api.uri = TestHelper.mockUriInfo();
@@ -474,7 +478,7 @@ public class SearchAPITest {
             public Search saveSearch(Search search) throws EMAnalyticsFwkException,EMAnalyticsWSException
             {
             	SearchImpl searchImpl = new SearchImpl();
-            	searchImpl.setId(999);
+            	searchImpl.setId(TEST_ID_999);
             	searchImpl.setName("Saved Search");
             	searchImpl.setParameters(new ArrayList<SearchParameter>());
                 return searchImpl;
@@ -500,26 +504,26 @@ public class SearchAPITest {
     public void testDeleteSearch() throws Exception {
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public void deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException
+            public void deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException
             {
 
             }
         };
         new MockUp<OdsDataServiceImpl>(){
             @Mock
-            public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException
+            public void deleteOdsEntity(BigInteger searchId) throws EMAnalyticsFwkException
             {
 
             }
         };
-        Assert.assertNotNull(api.deleteSearch(100L));
+        Assert.assertNotNull(api.deleteSearch(TEST_ID_100));
 
     }
     @Test
     public void testDeleteSearch2nd() throws Exception {
         new MockUp<SearchManagerImpl>(){
             @Mock
-            public void deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException
+            public void deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException
             {
                 if(true){
                     throw new EMAnalyticsFwkException(new Throwable());
@@ -528,12 +532,12 @@ public class SearchAPITest {
         };
         new MockUp<OdsDataServiceImpl>(){
             @Mock
-            public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException
+            public void deleteOdsEntity(BigInteger searchId) throws EMAnalyticsFwkException
             {
 
             }
         };
-        Assert.assertNotNull(api.deleteSearch(100L));
+        Assert.assertNotNull(api.deleteSearch(TEST_ID_100));
 
     }
     @Test
@@ -562,7 +566,7 @@ public class SearchAPITest {
 
         new MockUp<SearchManagerImpl>() {
             @Mock
-            private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException {
+            private Search getSearch(BigInteger searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException {
              return new SearchImpl();
             }
             @Mock
@@ -572,7 +576,7 @@ public class SearchAPITest {
             }
 
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"",TEST_ID_10));
     }
     @Test
     public void testEditSearch2nd() throws Exception {
@@ -600,7 +604,7 @@ public class SearchAPITest {
 
         new MockUp<SearchManagerImpl>() {
             @Mock
-            private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException {
+            private Search getSearch(BigInteger searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException {
                 return new SearchImpl();
             }
             @Mock
@@ -610,7 +614,7 @@ public class SearchAPITest {
             }
 
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",TEST_ID_10));
     }
 
     @Test
@@ -639,7 +643,7 @@ public class SearchAPITest {
 
         new MockUp<SearchManagerImpl>() {
             @Mock
-            private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException {
+            private Search getSearch(BigInteger searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException {
                 if(true){
                     throw new EMAnalyticsFwkException(new Throwable());
                 }
@@ -652,7 +656,7 @@ public class SearchAPITest {
             }
 
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",TEST_ID_10));
     }
     @Test
     public void testEditSearch4th() throws Exception {
@@ -680,7 +684,7 @@ public class SearchAPITest {
 
         new MockUp<SearchManagerImpl>() {
             @Mock
-            private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException ,EMAnalyticsWSException{
+            private Search getSearch(BigInteger searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException ,EMAnalyticsWSException{
                 if(true){
                     throw new EMAnalyticsWSException(new Throwable());
                 }
@@ -693,7 +697,7 @@ public class SearchAPITest {
             }
 
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",TEST_ID_10));
     }
     @Test
     public void testEditSearch5th() throws Exception {
@@ -721,7 +725,7 @@ public class SearchAPITest {
 
         new MockUp<SearchManagerImpl>() {
             @Mock
-            private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException ,EMAnalyticsWSException{
+            private Search getSearch(BigInteger searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException ,EMAnalyticsWSException{
 
                 return new SearchImpl();
             }
@@ -732,7 +736,7 @@ public class SearchAPITest {
             }
 
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",TEST_ID_10));
     }
 
 
@@ -740,7 +744,7 @@ public class SearchAPITest {
     public void testEditSearchAccessDate() throws Exception {
         new MockUp<SearchManagerImpl>() {
             @Mock
-            public Search getSearch(long searchId) throws EMAnalyticsFwkException
+            public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 return new SearchImpl();
             }
@@ -750,7 +754,7 @@ public class SearchAPITest {
                 return new SearchImpl();
             }
             @Mock
-            public Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException
+            public Date modifyLastAccessDate(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 return new Date();
             }
@@ -761,13 +765,13 @@ public class SearchAPITest {
                 return "categoryId=11";
             }
         };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10,true));
     }
     @Test
     public void testEditSearchAccessDate2nd() throws Exception {
         new MockUp<SearchManagerImpl>() {
             @Mock
-            public Search getSearch(long searchId) throws EMAnalyticsFwkException
+            public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 return new SearchImpl();
             }
@@ -777,7 +781,7 @@ public class SearchAPITest {
                 return new SearchImpl();
             }
             @Mock
-            public Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException
+            public Date modifyLastAccessDate(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 if(true){
                     throw new EMAnalyticsFwkException(new Throwable());
@@ -791,13 +795,13 @@ public class SearchAPITest {
                 return "categoryId=11";
             }
         };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10,true));
     }
     @Test
     public void testEditSearchAccessDate3th() throws Exception {
         new MockUp<SearchManagerImpl>() {
             @Mock
-            public Search getSearch(long searchId) throws EMAnalyticsFwkException
+            public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 return new SearchImpl();
             }
@@ -807,7 +811,7 @@ public class SearchAPITest {
                 return new SearchImpl();
             }
             @Mock
-            public Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException
+            public Date modifyLastAccessDate(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 if(true){
                     throw new EMAnalyticsFwkException(new Throwable());
@@ -821,13 +825,13 @@ public class SearchAPITest {
                 return null;
             }
         };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10,true));
     }
     @Test
     public void testEditSearchAccessDate4th() throws Exception {
         new MockUp<SearchManagerImpl>() {
             @Mock
-            public Search getSearch(long searchId) throws EMAnalyticsFwkException
+            public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 return new SearchImpl();
             }
@@ -837,7 +841,7 @@ public class SearchAPITest {
                 return new SearchImpl();
             }
             @Mock
-            public Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException
+            public Date modifyLastAccessDate(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 if(true){
                     throw new EMAnalyticsFwkException(new Throwable());
@@ -851,13 +855,13 @@ public class SearchAPITest {
                 return "searchId = 1";
             }
         };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,false));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10,false));
     }
     @Test
     public void testEditSearchAccessDate5th() throws Exception {
         new MockUp<SearchManagerImpl>() {
             @Mock
-            public Search getSearch(long searchId) throws EMAnalyticsFwkException
+            public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 return new SearchImpl();
             }
@@ -867,7 +871,7 @@ public class SearchAPITest {
                 return new SearchImpl();
             }
             @Mock
-            public Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException
+            public Date modifyLastAccessDate(BigInteger searchId) throws EMAnalyticsFwkException
             {
                 if(true){
                     throw new EMAnalyticsFwkException(new Throwable());
@@ -881,7 +885,7 @@ public class SearchAPITest {
                 return "searchId";
             }
         };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10,true));
     }
     @Test
     public void testGetSearch() throws Exception {
@@ -891,32 +895,32 @@ public class SearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<SearchManagerImpl>() {
             @Mock
-            public Search getSearch(long searchId) throws EMAnalyticsFwkException {
+            public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException {
                 return new SearchImpl();
             }
         };
         new MockUp<FolderManagerImpl>(){
 
             @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+            public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return folder;
             }
             @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException
+            public String[] getPathForFolderId(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return path;
             }
         };
         new MockUp<SearchSummaryImpl>(){
             @Mock
-            public Integer getFolderId(){
-                return 1;
+            public BigInteger getFolderId(){
+                return BigInteger.ONE;
             }
 
         };
 
-        Assert.assertNotNull(api.getSearch(10L,true));
+        Assert.assertNotNull(api.getSearch(TEST_ID_10,true));
     }
     @Test
     public void testGetSearch2nd() throws Exception {
@@ -926,7 +930,7 @@ public class SearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new MockUp<SearchManagerImpl>() {
             @Mock
-            public Search getSearch(long searchId) throws EMAnalyticsFwkException {
+            public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException {
                 if(true){
                     throw new EMAnalyticsFwkException(new Throwable());
                 }
@@ -936,12 +940,12 @@ public class SearchAPITest {
         new MockUp<FolderManagerImpl>(){
 
             @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+            public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return folder;
             }
             @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException
+            public String[] getPathForFolderId(BigInteger folderId) throws EMAnalyticsFwkException
             {
                 return path;
 
@@ -949,13 +953,13 @@ public class SearchAPITest {
         };
         new MockUp<SearchSummaryImpl>(){
             @Mock
-            public Integer getFolderId(){
-                return 1;
+            public BigInteger getFolderId(){
+                return BigInteger.ONE;
             }
 
         };
 
-        Assert.assertNotNull(api.getSearch(10L,true));
+        Assert.assertNotNull(api.getSearch(TEST_ID_10,true));
     }
     @Test
     public void testUpdateLastAccessTime() throws Exception {
@@ -970,10 +974,10 @@ public class SearchAPITest {
     public void testCreateOdsEntity() throws Exception{
     	new MockUp<SearchManagerImpl>(){
             @Mock
-            public Search getSearch(long searchId) throws EMAnalyticsFwkException
+            public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException
             {
             	SearchImpl searchImpl = new SearchImpl();
-            	searchImpl.setId(999);
+            	searchImpl.setId(TEST_ID_999);
             	searchImpl.setName("Saved Search");
             	searchImpl.setParameters(new ArrayList<SearchParameter>());
                 return searchImpl;
@@ -993,6 +997,6 @@ public class SearchAPITest {
             }
         };
     	
-    	Assert.assertNotNull(api.createOdsEntity(999L));
+    	Assert.assertNotNull(api.createOdsEntity(TEST_ID_999));
     }
 }

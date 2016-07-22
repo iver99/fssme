@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -63,7 +64,7 @@ public class TenantDataLeakTest extends BaseTest
 	@Test 
 	public void tenantLeakTest()
 	{
-		long id = 6666;
+		BigInteger id = new BigInteger("6666");
 		Connection conn = null;
 		try {
 
@@ -143,9 +144,9 @@ public class TenantDataLeakTest extends BaseTest
 			AssertJUnit.assertNull(folder);
 			folder = getFolder(id, 999);
 			AssertJUnit.assertNull(folder);
-			AssertJUnit.assertTrue(deleteFolder(1, 777, true));
-			AssertJUnit.assertTrue(deleteFolder(1, 888, true));
-			AssertJUnit.assertTrue(deleteFolder(1, 999, true));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 777, true));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 888, true));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 999, true));
 
 			deleteSeedData(conn, 777);
 			deleteSeedData(conn, 888);
@@ -167,7 +168,7 @@ public class TenantDataLeakTest extends BaseTest
 	@Test
 	public void tenantLeakTest_softdelete()
 	{
-		long id = 6666;
+		BigInteger id = new BigInteger("6666");
 		Connection conn = null;
 		try {
 
@@ -247,9 +248,9 @@ public class TenantDataLeakTest extends BaseTest
 			AssertJUnit.assertNull(folder);
 			folder = getFolder(id, 999);
 			AssertJUnit.assertNull(folder);
-			AssertJUnit.assertTrue(deleteFolder(1, 777, false));
-			AssertJUnit.assertTrue(deleteFolder(1, 888, false));
-			AssertJUnit.assertTrue(deleteFolder(1, 999, false));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 777, false));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 888, false));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 999, false));
 
 			deleteSeedData(conn, 777);
 			deleteSeedData(conn, 888);
@@ -269,7 +270,7 @@ public class TenantDataLeakTest extends BaseTest
 		}
 	}
 
-	private boolean deleteCategory(long id, long tenantid, boolean permanently)
+	private boolean deleteCategory(BigInteger id, long tenantid, boolean permanently)
 	{
 		boolean bResult = false;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
@@ -290,7 +291,7 @@ public class TenantDataLeakTest extends BaseTest
 		return bResult;
 	}
 
-	private boolean deleteFolder(long id, long tenantid, boolean permanently)
+	private boolean deleteFolder(BigInteger id, long tenantid, boolean permanently)
 	{
 		boolean bResult = false;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
@@ -311,7 +312,7 @@ public class TenantDataLeakTest extends BaseTest
 		return bResult;
 	}
 
-	private boolean deleteSearch(long id, long tenantid, boolean permanently)
+	private boolean deleteSearch(BigInteger id, long tenantid, boolean permanently)
 	{
 		boolean bResult = false;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
@@ -355,7 +356,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	}
 
-	private Category getCategory(long id, long tenantid)
+	private Category getCategory(BigInteger id, long tenantid)
 	{
 		Category category = null;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
@@ -373,7 +374,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	}
 
-	private Folder getFolder(long id, long tenantid)
+	private Folder getFolder(BigInteger id, long tenantid)
 	{
 		Folder folder = null;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
@@ -393,7 +394,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	}
 
-	private Search getSearch(long id, long tenantid)
+	private Search getSearch(BigInteger id, long tenantid)
 	{
 		Search search = null;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));

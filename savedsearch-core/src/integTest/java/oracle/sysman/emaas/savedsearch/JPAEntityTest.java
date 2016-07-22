@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.testng.Assert;
@@ -33,10 +34,10 @@ public class JPAEntityTest
 	public void testEntityCategory() throws Exception
 	{
 		EmAnalyticsCategory cat = new EmAnalyticsCategory();
-		cat.setCategoryId(1);
-		Date utcNow = DateUtil.getCurrentUTCTime();
+		cat.setCategoryId(BigInteger.ONE);
+		Date utcNow = DateUtil.getGatewayTime();
 		cat.setCreationDate(utcNow);
-		cat.setDeleted(0);
+		cat.setDeleted(BigInteger.ZERO);
 		cat.setDescription("Test");
 		cat.setDescriptionNlsid("Test");
 		cat.setDescriptionSubsystem("Test");
@@ -51,12 +52,12 @@ public class JPAEntityTest
 		cat.setProviderName("Test");
 		cat.setProviderVersion("Test");
 		EmAnalyticsCategoryParam param = new EmAnalyticsCategoryParam();
-		param.setCategoryId(1);
+		param.setCategoryId(BigInteger.ONE);
 		param.setEmAnalyticsCategory(null);
 		param.setName("Test");
 		param.setValue("Test");
 		EmAnalyticsCategoryParamPK parampk = new EmAnalyticsCategoryParamPK();
-		parampk.setCategoryId(1);
+		parampk.setCategoryId(BigInteger.ONE);
 		parampk.setName("Test");
 		parampk.setTenantId(1L);
 
@@ -88,7 +89,7 @@ public class JPAEntityTest
 	{
 
 		EmAnalyticsFolder fld = new EmAnalyticsFolder();
-		Date utcNow = DateUtil.getCurrentUTCTime();
+		Date utcNow = DateUtil.getGatewayTime();
 		fld.setCreationDate(utcNow);
 		fld.setDescription("desc");
 		fld.setDescriptionNlsid("desc");
@@ -97,7 +98,7 @@ public class JPAEntityTest
 		fld.setEmAnalyticsFolder(null);
 		fld.setEmAnalyticsFolders(null);
 		fld.setEmPluginId("null");
-		fld.setFolderId(1);
+		fld.setFolderId(BigInteger.ONE);
 		fld.setName("abc");
 		fld.setLastModificationDate(utcNow);
 		fld.setUiHidden(new BigDecimal(1));

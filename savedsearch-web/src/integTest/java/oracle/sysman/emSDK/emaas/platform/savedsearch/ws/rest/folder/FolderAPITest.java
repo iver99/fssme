@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.folder;
 
+import java.math.BigInteger;
+
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mock;
@@ -21,8 +23,10 @@ import org.testng.annotations.Test;
  */
 @Test(groups={"s2"})
 public class FolderAPITest {
-        private FolderAPI folderAPI = new FolderAPI();
-    @BeforeMethod
+	private static final BigInteger TEST_ID = new BigInteger("1111");
+	private FolderAPI folderAPI = new FolderAPI();
+	
+	@BeforeMethod
     public void setUp() throws Exception {
         Deencapsulation.setField(folderAPI, "uri", TestHelper.mockUriInfo());
     }
@@ -35,9 +39,9 @@ public class FolderAPITest {
     public void testCreateFolder2nd() throws Exception {
         final JSONObject folderoj = new JSONObject();
         JSONObject parentFolder = new JSONObject();
-        folderoj.append("name","name");
-        folderoj.append("description","desctription");
-        parentFolder.append("id",10);
+        folderoj.put("name","name");
+        folderoj.put("description","desctription");
+        parentFolder.put("id", BigInteger.TEN);
         folderoj.put("parentFolder",parentFolder);
         new Expectations(){
             {
@@ -60,14 +64,14 @@ public class FolderAPITest {
             {
                 new MockUp<FolderManagerImpl>(){
                     @Mock
-                    public void deleteFolder(long folderId, boolean permanently) throws EMAnalyticsFwkException
+                    public void deleteFolder(BigInteger folderId, boolean permanently) throws EMAnalyticsFwkException
                     {
                     }
                 };
             }
 
         };
-        Assert.assertNotNull(folderAPI.delete(1111));
+        Assert.assertNotNull(folderAPI.delete(TEST_ID));
     }
 
     @Test
@@ -76,7 +80,7 @@ public class FolderAPITest {
             {
                 new MockUp<FolderManagerImpl>(){
                     @Mock
-                    public void deleteFolder(long folderId, boolean permanently) throws EMAnalyticsFwkException
+                    public void deleteFolder(BigInteger folderId, boolean permanently) throws EMAnalyticsFwkException
                     {
                         throw new EMAnalyticsFwkException(1, new Throwable());
                     }
@@ -84,12 +88,12 @@ public class FolderAPITest {
             }
 
         };
-        Assert.assertNotNull(folderAPI.delete(1111));
+        Assert.assertNotNull(folderAPI.delete(TEST_ID));
     }
     @Test
     public void testEditFolder() throws Exception {
         JSONObject folderobj = new JSONObject();
-        folderobj.append("name","name");
+        folderobj.put("name","name");
         new Expectations(){
             {
                 new MockUp<FolderManagerImpl>(){
@@ -99,7 +103,7 @@ public class FolderAPITest {
                         return folder;
                     }
                     @Mock
-                    public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+                    public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
                     {
                         if(true)
                         throw new EMAnalyticsFwkException(2,new Throwable());
@@ -110,13 +114,13 @@ public class FolderAPITest {
             }
 
         };
-        Assert.assertNotNull(folderAPI.editFolder(folderobj,111111));
+        Assert.assertNotNull(folderAPI.editFolder(folderobj,TEST_ID));
 
     }
     @Test
     public void testEditFolder2nd() throws Exception {
         JSONObject folderobj = new JSONObject();
-        folderobj.append("name","name");
+        folderobj.put("name","name");
         new Expectations(){
             {
                 new MockUp<FolderManagerImpl>(){
@@ -126,7 +130,7 @@ public class FolderAPITest {
                         return folder;
                     }
                     @Mock
-                    public Folder getFolder(long folderId) throws EMAnalyticsFwkException,EMAnalyticsWSException
+                    public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException,EMAnalyticsWSException
                     {
                         if(true)
                             throw new EMAnalyticsWSException(new Throwable());
@@ -137,14 +141,14 @@ public class FolderAPITest {
             }
 
         };
-        Assert.assertNotNull(folderAPI.editFolder(folderobj,111111));
+        Assert.assertNotNull(folderAPI.editFolder(folderobj,TEST_ID));
     }
     @Test
     public void testEditFolder3th() throws Exception {
         JSONObject folderobj = new JSONObject();
         JSONObject parentFolder = new JSONObject();
-        parentFolder.append("id",10);
-        folderobj.append("name","name");
+        parentFolder.put("id", BigInteger.TEN);
+        folderobj.put("name","name");
         folderobj.put("parentFolder",parentFolder);
 
         new Expectations(){
@@ -156,7 +160,7 @@ public class FolderAPITest {
                         return folder;
                     }
                     @Mock
-                    public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+                    public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
                     {
 
                         return new FolderImpl();
@@ -165,12 +169,12 @@ public class FolderAPITest {
             }
 
         };
-        Assert.assertNotNull(folderAPI.editFolder(folderobj,111111));
+        Assert.assertNotNull(folderAPI.editFolder(folderobj,TEST_ID));
     }
     @Test
     public void testEditFolder4th() throws Exception {
         JSONObject folderobj = new JSONObject();
-        folderobj.append("name","");
+        folderobj.put("name","");
         new Expectations(){
             {
                 new MockUp<FolderManagerImpl>(){
@@ -180,7 +184,7 @@ public class FolderAPITest {
                         return folder;
                     }
                     @Mock
-                    public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+                    public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
                     {
 
                         return new FolderImpl();
@@ -189,7 +193,7 @@ public class FolderAPITest {
             }
 
         };
-        Assert.assertNotNull(folderAPI.editFolder(folderobj,111111));
+        Assert.assertNotNull(folderAPI.editFolder(folderobj,TEST_ID));
     }
     @Test
     public void testEditFolder5th() throws Exception {
@@ -204,7 +208,7 @@ public class FolderAPITest {
                         return folder;
                     }
                     @Mock
-                    public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+                    public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
                     {
 
                         return new FolderImpl();
@@ -213,14 +217,14 @@ public class FolderAPITest {
             }
 
         };
-        Assert.assertNotNull(folderAPI.editFolder(folderobj,111111));
+        Assert.assertNotNull(folderAPI.editFolder(folderobj,TEST_ID));
     }
     @Test
     public void testEditFolder6th() throws Exception {
         JSONObject folderobj = new JSONObject();
         JSONObject parentFolder = new JSONObject();
-        parentFolder.append("id",0);
-        folderobj.append("name","name");
+        parentFolder.put("id", BigInteger.ZERO);
+        folderobj.put("name","name");
         folderobj.put("parentFolder",parentFolder);
         System.out.print(folderobj.optJSONObject("parentFolder"));
 
@@ -233,7 +237,7 @@ public class FolderAPITest {
                         return folder;
                     }
                     @Mock
-                    public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+                    public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
                     {
 
                         return new FolderImpl();
@@ -242,7 +246,7 @@ public class FolderAPITest {
             }
 
         };
-        Assert.assertNotNull(folderAPI.editFolder(folderobj,111111));
+        Assert.assertNotNull(folderAPI.editFolder(folderobj,TEST_ID));
     }
     @Test
     public void testGetFolder() throws Exception {
@@ -255,7 +259,7 @@ public class FolderAPITest {
                         return folder;
                     }
                     @Mock
-                    public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+                    public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
                     {
 
                         return new FolderImpl();
@@ -264,7 +268,7 @@ public class FolderAPITest {
             }
 
             };
-            Assert.assertNotNull(folderAPI.getFolder(1111));
+            Assert.assertNotNull(folderAPI.getFolder(TEST_ID));
     }
     @Test
     public void testGetFolder2nd() throws Exception {
@@ -273,7 +277,7 @@ public class FolderAPITest {
                 new MockUp<FolderManagerImpl>(){
 
                     @Mock
-                    public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+                    public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException
                     {   if(true)
                         throw new EMAnalyticsFwkException(1,new Throwable());
                         return new FolderImpl();
@@ -282,6 +286,6 @@ public class FolderAPITest {
             }
 
         };
-        Assert.assertNotNull(folderAPI.getFolder(1111));
+        Assert.assertNotNull(folderAPI.getFolder(TEST_ID));
     }
 }

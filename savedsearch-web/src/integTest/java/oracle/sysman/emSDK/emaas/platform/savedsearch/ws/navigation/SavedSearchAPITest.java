@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.navigation;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,19 +109,14 @@ public class SavedSearchAPITest {
 
     @Test (groups = {"s2"})
     public void testGetDetails() throws Exception {
-        Assert.assertNotNull(savedSearchAPI.getDetails(""));
         Assert.assertNotNull(savedSearchAPI.getDetails(null));
-        Assert.assertNotNull(savedSearchAPI.getDetails("id"));
-
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
 
     @Test (groups = {"s2"})
     public void testGetDetails2nd() throws Exception {
-        Assert.assertNotNull(savedSearchAPI.getDetails(""));
         Assert.assertNotNull(savedSearchAPI.getDetails(null));
-        Assert.assertNotNull(savedSearchAPI.getDetails("id"));
         final List<Folder> folderList = new ArrayList<>();
         folderList.add(folder);
         new Expectations(){
@@ -129,12 +125,12 @@ public class SavedSearchAPITest {
                 result =folderManager;
                 SearchManager.getInstance();
                 result =searchManager;
-                folderManager.getFolder(anyLong);
-                folderManager.getSubFolders(anyLong);
+                folderManager.getFolder((BigInteger) any);
+                folderManager.getSubFolders((BigInteger) any);
                 result = folderList;
             }
         };
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
     @Test (groups = {"s2"})
@@ -150,20 +146,20 @@ public class SavedSearchAPITest {
             {
                 new MockUp<FolderManagerImpl>(){
                     @Mock
-                    public Folder getFolder(long folderId) throws EMAnalyticsFwkException{
+                    public Folder getFolder(BigInteger folderId) throws EMAnalyticsFwkException{
                         return folder;
                     }
                     @Mock
-                    public List<Folder> getSubFolders(long folderId) throws EMAnalyticsFwkException {
+                    public List<Folder> getSubFolders(BigInteger folderId) throws EMAnalyticsFwkException {
                         return folderList;
                     }
                 };
 
                 new MockUp<SearchManagerImpl>(){
                   @Mock
-                  public List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException
+                  public List<Search> getSearchListByFolderId(BigInteger folderId) throws EMAnalyticsFwkException
                   {
-                      folderId = 10L;
+                      folderId = BigInteger.TEN;
                       return searchLists;
                   }
                 };

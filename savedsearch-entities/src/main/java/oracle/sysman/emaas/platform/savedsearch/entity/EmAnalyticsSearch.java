@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,8 +12,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -22,10 +21,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.PrivateOwned;
@@ -49,19 +45,16 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Search.getWidgetListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 AND e.isWidget = 1 AND (e.owner in (:userName) OR e.systemSearch =1) "),
 		@NamedQuery(name="Search.getSearchListByTargetType",query="SELECT e FROM EmAnalyticsSearch e WHERE e.name like :searchName AND (e.owner in (:userName) OR e.systemSearch =1) AND e.deleted=0")})
 
-@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
-public class EmAnalyticsSearch implements Serializable
+//@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
+public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
+
 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "SEARCH_ID")
-	@GeneratedValue(generator = "EMS_ANALYTICS_SEARCH_SEQ", strategy = GenerationType.SEQUENCE)
-	private long id;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATION_DATE")
-	private Date creationDate;
+//	@GeneratedValue(generator = "EMS_ANALYTICS_SEARCH_SEQ", strategy = GenerationType.SEQUENCE)
+	private BigInteger id;
 
 	private String description;
 
@@ -76,10 +69,6 @@ public class EmAnalyticsSearch implements Serializable
 
 	@Column(name = "IS_LOCKED")
 	private BigDecimal isLocked;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "LAST_MODIFICATION_DATE")
-	private Date lastModificationDate;
 
 	@Column(name = "LAST_MODIFIED_BY")
 	private String lastModifiedBy;
@@ -115,7 +104,7 @@ public class EmAnalyticsSearch implements Serializable
 	private BigDecimal uiHidden;
 
 	@Column(name = "DELETED")
-	private long deleted;
+	private BigInteger deleted;
 
 	@Column(name = "IS_WIDGET")
 	private long isWidget;
@@ -178,12 +167,7 @@ public class EmAnalyticsSearch implements Serializable
 		return lastAccess.getAccessedBy();
 	}
 
-	public Date getCreationDate()
-	{
-		return creationDate;
-	}
-
-	public long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -229,7 +213,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the id
 	 */
-	public long getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -250,11 +234,6 @@ public class EmAnalyticsSearch implements Serializable
 	public EmAnalyticsLastAccess getLastAccess()
 	{
 		return lastAccess;
-	}
-
-	public Date getLastModificationDate()
-	{
-		return lastModificationDate;
 	}
 
 	public String getLastModifiedBy()
@@ -282,7 +261,7 @@ public class EmAnalyticsSearch implements Serializable
 		return nameSubsystem;
 	}
 
-	public Long getObjectId()
+	public BigInteger getObjectId()
 	{
 		if (lastAccess == null) {
 			return null;
@@ -332,16 +311,13 @@ public class EmAnalyticsSearch implements Serializable
 		if (lastAccess == null) {
 			lastAccess = new EmAnalyticsSearchLastAccess(getId(), getOwner());
 			lastAccess.setEmAnalyticsSearch(this);
+			lastAccess.setCreationDate(getCreationDate());
+			lastAccess.setLastModificationDate(getLastModificationDate());
 		}
 		lastAccess.setAccessDate(accessDate);
 	}
 
-	public void setCreationDate(Date creationDate)
-	{
-		this.creationDate = creationDate;
-	}
-
-	public void setDeleted(long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -385,7 +361,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(long id)
+	public void setId(BigInteger id)
 	{
 		this.id = id;
 	}
@@ -407,11 +383,6 @@ public class EmAnalyticsSearch implements Serializable
 	public void setIsWidget(long isWidget)
 	{
 		this.isWidget = isWidget;
-	}
-
-	public void setLastModificationDate(Date lastModificationDate)
-	{
-		this.lastModificationDate = lastModificationDate;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy)

@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -32,13 +33,13 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @NamedQueries({
 	@NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
 })
-public class EmAnalyticsSearchParam implements Serializable
+public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "SEARCH_ID", insertable = false, updatable = false, nullable = false)
-	private long searchId;
+	private BigInteger searchId;
 
 	@Id
 	private String name;
@@ -169,7 +170,7 @@ public class EmAnalyticsSearchParam implements Serializable
 		return paramValueStr;
 	}
 
-	public long getSearchId()
+	public BigInteger getSearchId()
 	{
 		return searchId;
 	}
@@ -187,7 +188,7 @@ public class EmAnalyticsSearchParam implements Serializable
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (searchId ^ searchId >>> 32);
+		result = prime * result + (int) (searchId.intValue() ^ searchId.intValue() >>> 32);
 		result = prime * result + (name == null ? 0 : name.hashCode());
 		result = prime * result + (paramAttributes == null ? 0 : paramAttributes.hashCode());
 		result = prime * result + (paramType == null ? 0 : paramType.hashCode());
@@ -229,7 +230,7 @@ public class EmAnalyticsSearchParam implements Serializable
 		this.paramValueStr = paramValueStr;
 	}
 
-	public void setSearchId(long searchId)
+	public void setSearchId(BigInteger searchId)
 	{
 		this.searchId = searchId;
 	}

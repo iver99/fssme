@@ -1,7 +1,14 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+
 import mockit.Expectations;
-import mockit.Mock;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
@@ -9,18 +16,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
-import org.testng.Assert;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
-
-import java.util.ArrayList;
-import java.util.Date;
-
-import static org.testng.Assert.*;
 
 /**
  * Created by xidai on 6/29/2016.
@@ -59,11 +57,11 @@ public class SearchManagerImplForTargetCardTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getSearchById(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getSearchById((BigInteger) any,withAny(entityManager));
                 result = emAnalyticsSearch;
-                EmAnalyticsObjectUtil.getSearchByIdForDelete(anyLong, withAny(entityManager));
+                EmAnalyticsObjectUtil.getSearchByIdForDelete((BigInteger) any, withAny(entityManager));
                 result =emAnalyticsSearch;
-                emAnalyticsSearch.setDeleted(anyLong);
+                emAnalyticsSearch.setDeleted((BigInteger) any);
                 entityManager.getTransaction();
                 result = entityTransaction;
                 entityTransaction.begin();
@@ -73,8 +71,8 @@ public class SearchManagerImplForTargetCardTest {
                 entityManager.close();
             }
         };
-        searchManager.deleteTargetCard(10000,false);
-        searchManager.deleteTargetCard(10000,true);
+        searchManager.deleteTargetCard(new BigInteger("10000"),false);
+        searchManager.deleteTargetCard(new BigInteger("10000"),true);
     }
 
     @Test

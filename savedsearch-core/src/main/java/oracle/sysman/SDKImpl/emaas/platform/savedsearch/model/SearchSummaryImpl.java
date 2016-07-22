@@ -1,6 +1,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlTransient;
@@ -8,29 +9,24 @@ import javax.xml.bind.annotation.XmlTransient;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSummary;
 
 @XmlTransient
-public class SearchSummaryImpl implements SearchSummary, Serializable
+public class SearchSummaryImpl extends EmBase implements SearchSummary, Serializable
 {
 	private static final long serialVersionUID = 1578561229141793173L;
 
 	protected String guid;
-	protected Integer id;
+	protected BigInteger id;
 	protected String name;
-
 	protected String description;
-
-	protected Integer categoryId;
-	protected Integer folderId;
-
+	protected BigInteger categoryId;
+	protected BigInteger folderId;
 	protected String owner;
-	protected Date createdOn;
 	protected String lastModifiedBy;
-	protected Date lastModifiedOn;
 	protected Date lastAccessDate;
 	protected boolean systemSearch;
 	protected String[] tags;
 
 	@Override
-	public Integer getCategoryId()
+	public BigInteger getCategoryId()
 	{
 		return categoryId;
 	}
@@ -38,7 +34,7 @@ public class SearchSummaryImpl implements SearchSummary, Serializable
 	@Override
 	public Date getCreatedOn()
 	{
-		return createdOn;
+		return creationDate;
 	}
 
 	@Override
@@ -48,7 +44,7 @@ public class SearchSummaryImpl implements SearchSummary, Serializable
 	}
 
 	@Override
-	public Integer getFolderId()
+	public BigInteger getFolderId()
 	{
 		return folderId;
 	}
@@ -59,7 +55,7 @@ public class SearchSummaryImpl implements SearchSummary, Serializable
 	}
 
 	@Override
-	public Integer getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -79,7 +75,7 @@ public class SearchSummaryImpl implements SearchSummary, Serializable
 	@Override
 	public Date getLastModifiedOn()
 	{
-		return lastModifiedOn;
+		return lastModificationDate;
 	}
 
 	@Override
@@ -110,14 +106,9 @@ public class SearchSummaryImpl implements SearchSummary, Serializable
 		return systemSearch;
 	}
 
-	public void setCategoryId(Integer categoryId)
+	public void setCategoryId(BigInteger categoryId)
 	{
 		this.categoryId = categoryId;
-	}
-
-	public void setCreatedOn(Date createdOn)
-	{
-		this.createdOn = createdOn;
 	}
 
 	public void setDescription(String description)
@@ -125,7 +116,7 @@ public class SearchSummaryImpl implements SearchSummary, Serializable
 		this.description = description;
 	}
 
-	public void setFolderId(Integer folderId)
+	public void setFolderId(BigInteger folderId)
 	{
 		this.folderId = folderId;
 	}
@@ -135,7 +126,7 @@ public class SearchSummaryImpl implements SearchSummary, Serializable
 		this.guid = guid;
 	}
 
-	public void setId(Integer id)
+	public void setId(BigInteger id)
 	{
 		this.id = id;
 	}
@@ -148,11 +139,6 @@ public class SearchSummaryImpl implements SearchSummary, Serializable
 	public void setLastModifiedBy(String lastModifiedBy)
 	{
 		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public void setLastModifiedOn(Date lastModifiedOn)
-	{
-		this.lastModifiedOn = lastModifiedOn;
 	}
 
 	public void setName(String name)
