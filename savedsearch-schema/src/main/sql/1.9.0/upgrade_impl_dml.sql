@@ -14,5 +14,6 @@ DEFINE TENANT_ID = '&1'
 @&EMSAAS_SQL_ROOT/1.9.0/emaas_savesearch_seed_data_la.sql '&TENANT_ID'
 @&EMSAAS_SQL_ROOT/1.9.0/emaas_savesearch_ta_remove_brownfield.sql  '&TENANT_ID'
 @&EMSAAS_SQL_ROOT/1.9.0/emaas_savesearch_ta_ui_gallery.sql  '&TENANT_ID'
+@&EMSAAS_SQL_ROOT/1.9.0/emaas_savesearch_seed_data_targetcard.sql  '&TENANT_ID'
 commit;
 
