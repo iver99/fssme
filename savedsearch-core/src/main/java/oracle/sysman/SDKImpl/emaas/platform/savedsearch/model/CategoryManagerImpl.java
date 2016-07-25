@@ -126,10 +126,10 @@ public class CategoryManagerImpl extends CategoryManager
 					categoryParams.add(param);
 				}
 				if (!CategoryManagerImpl.containsDashboardIneligible(categoryParams)) {
-					_logger.info("Try to Get DASHBOARD_INELIGIBLE from category");
+					_logger.debug("Try to Get DASHBOARD_INELIGIBLE from category");
 					if (category.getDASHBOARD_INELIGIBLE() != null
 							&& !DB_DEFAULT_VALUE.equals(category.getDASHBOARD_INELIGIBLE())) {
-						_logger.info("Getting DASHBOARD_INELIGIBLE from category");
+						_logger.debug("Getting DASHBOARD_INELIGIBLE from category");
 						Parameter param = new Parameter();
 						param.setName("DASHBOARD_INELIGIBLE");
 						param.setType(ParameterType.STRING);
@@ -159,11 +159,11 @@ public class CategoryManagerImpl extends CategoryManager
 	{
 		for (Parameter param : params) {
 			if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
-				_logger.info("List<Parameter> contains DASHBOARD_INELIGIBLE!");
+				_logger.debug("List<Parameter> contains DASHBOARD_INELIGIBLE!");
 				return true;
 			}
 		}
-		_logger.info("List<Parameter> did not contains DASHBOARD_INELIGIBLE!");
+		_logger.debug("List<Parameter> did not contains DASHBOARD_INELIGIBLE!");
 		return false;
 	}
 
@@ -275,7 +275,7 @@ public class CategoryManagerImpl extends CategoryManager
 			EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
-					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
+			.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			if (categories == null) {
 				categories = new ArrayList<Category>();
 			}
