@@ -84,11 +84,11 @@ BEGIN
   ,'Top 5 application deployments'
   ,'Target status');
   COMMIT;
-  DBMS_OUTPUT.PUT_LINE('Remove out of box dashboards for BF successfully');
+  DBMS_OUTPUT.PUT_LINE('Remove out of box widgets for BF successfully');
 EXCEPTION
   WHEN OTHERS THEN
     ROLLBACK;
-    DBMS_OUTPUT.PUT_LINE('Failed to remove out of box dashboards for BF due to error '||SQLERRM);
+    DBMS_OUTPUT.PUT_LINE('Failed to remove out of box widgets for BF due to error '||SQLERRM);
     RAISE;
 END;
 /
