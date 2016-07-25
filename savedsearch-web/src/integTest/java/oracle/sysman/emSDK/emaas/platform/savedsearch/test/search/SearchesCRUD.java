@@ -1977,4 +1977,13 @@ public class SearchesCRUD
 
 	}
 
+	@Test
+	public void getAssetRootTest(){
+		Assert.assertEquals(200,
+				RestAssured.given().contentType(ContentType.JSON).log().everything()
+						.header("Authorization", authToken)
+						.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+						.get("search/2000/assetroot").getStatusCode());
+	}
+
 }
