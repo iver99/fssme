@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.category;
 
+import java.util.List;
+
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
@@ -85,13 +87,13 @@ public class OOBCategoryCRUD
 			Assert.assertTrue(String.valueOf(jp.get("defaultFolder.href")).contains(
 					"/savedsearch/v1/folder/" + jp.get("defaultFolder.id")));
 
-			/*Assert.assertNotNull(jp.get("parameters"));
+			Assert.assertNotNull(jp.get("parameters"));
 			List<String> nameList = jp.getList("parameters.name");
 			Assert.assertEquals(nameList.size(), 1);
 			Assert.assertEquals(nameList.get(0), "DASHBOARD_INELIGIBLE");
 			List<String> valueList = jp.getList("parameters.value");
 			Assert.assertEquals(nameList.size(), 1);
-			Assert.assertEquals(valueList.get(0), "1");*/
+			Assert.assertEquals(valueList.get(0), "1");
 
 			System.out.println("										");
 			System.out.println("----------------------------------------");

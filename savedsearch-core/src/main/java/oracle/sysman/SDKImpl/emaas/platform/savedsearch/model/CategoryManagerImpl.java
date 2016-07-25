@@ -116,8 +116,8 @@ public class CategoryManagerImpl extends CategoryManager
 			// handle params
 
 			Set<EmAnalyticsCategoryParam> params = category.getEmAnalyticsCategoryParams();
+			List<Parameter> categoryParams = new ArrayList<Parameter>();
 			if (params != null && params.size() > 0) {
-				List<Parameter> categoryParams = new ArrayList<Parameter>();
 				for (EmAnalyticsCategoryParam paramObj : params) {
 					Parameter param = new Parameter();
 					param.setName(paramObj.getName());
@@ -125,19 +125,21 @@ public class CategoryManagerImpl extends CategoryManager
 					param.setValue(paramObj.getValue());
 					categoryParams.add(param);
 				}
-				if (!CategoryManagerImpl.containsDashboardIneligible(categoryParams)) {
-					_logger.debug("Try to Get DASHBOARD_INELIGIBLE from category");
-					if (category.getDASHBOARD_INELIGIBLE() != null
-							&& !DB_DEFAULT_VALUE.equals(category.getDASHBOARD_INELIGIBLE())) {
-						_logger.debug("Getting DASHBOARD_INELIGIBLE from category");
-						Parameter param = new Parameter();
-						param.setName("DASHBOARD_INELIGIBLE");
-						param.setType(ParameterType.STRING);
-						param.setValue(category.getDASHBOARD_INELIGIBLE());
-						categoryParams.add(param);
-					}
-				}
 
+			}
+			if (!CategoryManagerImpl.containsDashboardIneligible(categoryParams)) {
+				_logger.debug("Try to Get DASHBOARD_INELIGIBLE from category");
+				if (category.getDASHBOARD_INELIGIBLE() != null && !DB_DEFAULT_VALUE.equals(category.getDASHBOARD_INELIGIBLE())) {
+					_logger.debug("Getting DASHBOARD_INELIGIBLE from category");
+					Parameter param = new Parameter();
+					param.setName("DASHBOARD_INELIGIBLE");
+					param.setType(ParameterType.STRING);
+					param.setValue(category.getDASHBOARD_INELIGIBLE());
+					categoryParams.add(param);
+				}
+			}
+			if (categoryParams.size() > 0) {
+				_logger.debug("Category's parameter number is > 0!");
 				rtnObj.setParameters(categoryParams);
 			}
 
@@ -275,7 +277,7 @@ public class CategoryManagerImpl extends CategoryManager
 			EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
-			.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 			if (categories == null) {
 				categories = new ArrayList<Category>();
 			}
