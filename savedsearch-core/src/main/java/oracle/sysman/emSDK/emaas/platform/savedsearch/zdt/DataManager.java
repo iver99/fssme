@@ -241,6 +241,67 @@ public class DataManager
 
 	}
 
+	public void syncFolderTable(Long folderId, String name, Long parentId, String description, String creationDate, String owner,
+			String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem, String descriptionNlsid,
+			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, Long deleted, Long tenantId)
+	{
+		EntityManager em = null;
+		em = getEntityManager();
+		String sql = "select count(1) from EMS_ANALYTICS_FOLDERS t where t.FOLDER_ID=? and t.TENANT_ID=?";//check if the data is existing.
+		Query q1 = em.createNativeQuery(sql);
+		q1.setParameter(0, folderId);
+		q1.setParameter(1, tenantId);
+		Integer count = Integer.valueOf(q1.getSingleResult().toString());
+
+		if (count <= 0) {
+			//execute insert action
+			logger.debug("Data not exist in table EMS_ANYLITICS_CATEGORY,execute insert action.");
+			sql = SyncSavedSearchSqlUtil.concatFolderInsert(folderId, name, parentId, description, creationDate, owner,
+					lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem, descriptionNlsid, descriptionSubsystem,
+					systemFolder, emPluginId, uiHidden, deleted, tenantId);
+		}
+		else {
+			//execute update action
+			logger.debug("Data exist in table EMS_ANYLITICS_CATEGORY,execute update action.");
+			sql = SyncSavedSearchSqlUtil.concatFolderUpdate(folderId, name, parentId, description, creationDate, owner,
+					lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem, descriptionNlsid, descriptionSubsystem,
+					systemFolder, emPluginId, uiHidden, deleted, tenantId);
+		}
+		//sync Data
+		syncDatabaseTableData(sql);
+
+	}
+
+	public void syncLastAccessTable(Long objectId, String accessedBy, Long objectType, String accessDate, Long tenantId,
+			String creationDate, String lastModificationDate)
+	{
+		EntityManager em = null;
+		em = getEntityManager();
+		String sql = "select count(1) from EMS_ANALYTICS_LAST_ACCESS t where t.OBJECT_ID=? and t.ACCESSED_BY=? and t.OBJECT_TYPE=? and t.TENANT_ID=?";//check if the data is existing.
+		Query q1 = em.createNativeQuery(sql);
+		q1.setParameter(0, objectId);
+		q1.setParameter(1, accessedBy);
+		q1.setParameter(2, objectType);
+		q1.setParameter(3, tenantId);
+		Integer count = Integer.valueOf(q1.getSingleResult().toString());
+
+		if (count <= 0) {
+			//execute insert action
+			logger.debug("Data not exist in table EMS_ANYLITICS_CATEGORY,execute insert action.");
+			sql = SyncSavedSearchSqlUtil.concatLastAccessInsert(objectId, accessedBy, objectType, accessDate, tenantId,
+					creationDate, lastModificationDate);
+		}
+		else {
+			//execute update action
+			logger.debug("Data exist in table EMS_ANYLITICS_CATEGORY,execute update action.");
+			sql = SyncSavedSearchSqlUtil.concatLastAccessUpdate(objectId, accessedBy, objectType, accessDate, tenantId,
+					creationDate, lastModificationDate);
+		}
+		//sync Data
+		syncDatabaseTableData(sql);
+
+	}
+
 	/**
 	 * Retrieves database data rows for specific native SQL for all tenant
 	 *

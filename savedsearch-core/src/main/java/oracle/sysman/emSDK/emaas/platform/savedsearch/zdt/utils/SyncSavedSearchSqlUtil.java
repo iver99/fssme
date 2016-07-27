@@ -53,4 +53,41 @@ public class SyncSavedSearchSqlUtil
 
 		return updateSql;
 	}
+
+	public static String concatFolderInsert(Long folderId, String name, Long parentId, String description, String creationDate,
+			String owner, String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem,
+			String descriptionNlsid, String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden,
+			Long deleted, Long tenantId)
+	{
+		String insertSql = "";
+
+		return insertSql;
+	}
+
+	public static String concatFolderUpdate(Long folderId, String name, Long parentId, String description, String creationDate,
+			String owner, String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem,
+			String descriptionNlsid, String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden,
+			Long deleted, Long tenantId)
+	{
+		String insertSql = "";
+
+		return insertSql;
+	}
+
+	public static String concatLastAccessInsert(Long objectId, String accessedBy, Long objectType, String accessDate,
+			Long tenantId, String creationDate, String lastModificationDate)
+	{
+		String insertSql = "";
+
+		return insertSql;
+	}
+
+	public static String concatLastAccessUpdate(Long objectId, String accessedBy, Long objectType, String accessDate,
+			Long tenantId, String creationDate, String lastModificationDate)
+	{
+		String insertSql = "";
+
+		return insertSql;
+	}
+
 }
