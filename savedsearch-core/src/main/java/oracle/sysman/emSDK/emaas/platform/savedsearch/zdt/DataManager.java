@@ -19,6 +19,7 @@ import javax.persistence.Query;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.utils.SyncSavedSearchSqlUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,10 +66,7 @@ public class DataManager
 	public long getAllCategoryCount()
 	{
 		EntityManager em = null;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-		if (em == null) {
-			logger.error("Can't get persistence entity manager");
-		}
+		em = getEntityManager();
 		Query query = em.createNativeQuery(SQL_ALL_CATEGORY_COUNT);
 		long count = ((Number) query.getSingleResult()).longValue();
 		return count;
@@ -84,10 +82,7 @@ public class DataManager
 	public long getAllFolderCount()
 	{
 		EntityManager em = null;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-		if (em == null) {
-			logger.error("Can't get persistence entity manager");
-		}
+		em = getEntityManager();
 		Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT);
 		long count = ((Number) query.getSingleResult()).longValue();
 		return count;
@@ -102,10 +97,7 @@ public class DataManager
 	public long getAllSearchCount()
 	{
 		EntityManager em = null;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-		if (em == null) {
-			logger.error("Can't get persistence entity manager");
-		}
+		em = getEntityManager();
 		Query query = em.createNativeQuery(SQL_ALL_SEARCH_COUNT);
 		long count = ((Number) query.getSingleResult()).longValue();
 		return count;
@@ -188,6 +180,67 @@ public class DataManager
 		return getDatabaseTableData(SQL_ALL_SEARCH_ROWS);
 	}
 
+	public void syncCategoryParamTable(Long categoryId, String name, String paramValue, Long tenantId, String creationDate,
+			String lastModificationDate)
+	{
+		EntityManager em = null;
+		em = getEntityManager();
+		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
+		Query q1 = em.createNativeQuery(sql);
+		q1.setParameter(0, categoryId);
+		q1.setParameter(1, tenantId);
+		q1.setParameter(2, name);
+		Integer count = Integer.valueOf(q1.getSingleResult().toString());
+
+		if (count <= 0) {
+			//execute insert action
+			logger.debug("Data not exist in table EMS_ANYLITICS_CATEGORY,execute insert action.");
+			sql = SyncSavedSearchSqlUtil.concatCategoryParamInsert(categoryId, name, paramValue, tenantId, creationDate,
+					lastModificationDate);
+		}
+		else {
+			//execute update action
+			logger.debug("Data exist in table EMS_ANYLITICS_CATEGORY,execute update action.");
+			sql = SyncSavedSearchSqlUtil.concatCategoryParamUpdate(categoryId, name, paramValue, tenantId, creationDate,
+					lastModificationDate);
+		}
+		//sync Data
+		syncDatabaseTableData(sql);
+
+	}
+
+	public void syncCategoryTable(Long categoryId, String name, String description, String owner, String creationDate,
+			String nameNlsid, String nameSubSystem, String descriptionNlsid, String descriptionSubSystem, String emPluginId,
+			Long defaultFolderId, Long deleted, String providerName, String providerVersion, String providerDiscovery,
+			String providerAssetroot, Long tenantId, String dashboardIneligible, String lastModificationDate)
+	{
+		EntityManager em = null;
+		em = getEntityManager();
+		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=? and t.TENANT_ID=?";//check if the data is existing.
+		Query q1 = em.createNativeQuery(sql);
+		q1.setParameter(0, categoryId);
+		q1.setParameter(1, tenantId);
+		Integer count = Integer.valueOf(q1.getSingleResult().toString());
+
+		if (count <= 0) {
+			//execute insert action
+			logger.debug("Data not exist in table EMS_ANYLITICS_CATEGORY,execute insert action.");
+			sql = SyncSavedSearchSqlUtil.concatCategoryInsert(categoryId, name, description, owner, creationDate, nameNlsid,
+					nameSubSystem, descriptionNlsid, descriptionSubSystem, emPluginId, defaultFolderId, deleted, providerName,
+					providerVersion, providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
+		}
+		else {
+			//execute update action
+			logger.debug("Data exist in table EMS_ANYLITICS_CATEGORY,execute update action.");
+			sql = SyncSavedSearchSqlUtil.concatCategoryUpdate(categoryId, name, description, owner, creationDate, nameNlsid,
+					nameSubSystem, descriptionNlsid, descriptionSubSystem, emPluginId, defaultFolderId, deleted, providerName,
+					providerVersion, providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
+		}
+		//sync Data
+		syncDatabaseTableData(sql);
+
+	}
+
 	/**
 	 * Retrieves database data rows for specific native SQL for all tenant
 	 *
@@ -200,14 +253,45 @@ public class DataManager
 			return null;
 		}
 		EntityManager em = null;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-		if (em == null) {
-			logger.error("Can't get persistence entity manager");
-		}
+		em = getEntityManager();
 		Query query = em.createNativeQuery(nativeSql);
 		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> list = query.getResultList();
 		return list;
 	}
+
+	private EntityManager getEntityManager()
+	{
+		EntityManager em;
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		if (em == null) {
+			logger.error("Can't get persistence entity manager");
+		}
+		return em;
+	}
+
+	private void initialPameters(Query query, List<Object> paramList)
+	{
+		if (query == null || paramList == null) {
+			return;
+		}
+		for (int i = 0; i < paramList.size(); i++) {
+			Object value = paramList.get(i);
+			query.setParameter(i + 1, value);
+			logger.debug("binding parameter [{}] as [{}]", i + 1, value);
+		}
+	}
+
+	private void syncDatabaseTableData(String syncSql)
+	{
+		if (StringUtil.isEmpty(syncSql)) {
+			logger.error("Can't sync database table with null or empty SQL statement!");
+			return;
+		}
+		EntityManager em = null;
+		em = getEntityManager();
+		Query query = em.createNativeQuery(syncSql);
+	}
+
 }
