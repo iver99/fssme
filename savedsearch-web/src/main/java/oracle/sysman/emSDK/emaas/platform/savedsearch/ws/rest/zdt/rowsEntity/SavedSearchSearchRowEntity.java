@@ -116,6 +116,12 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
+	@JsonProperty("FOLDER_ID")
+	private Long folderId;
+
+	@JsonProperty("CATEGORY_ID")
+	private Long categoryId;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -400,6 +406,14 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
+	 * @return the categoryId
+	 */
+	public Long getCategoryId()
+	{
+		return categoryId;
+	}
+
+	/**
 	 * @return the creationDate
 	 */
 	public String getCreationDate()
@@ -453,6 +467,14 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	public String getEmPluginId()
 	{
 		return emPluginId;
+	}
+
+	/**
+	 * @return the folderId
+	 */
+	public Long getFolderId()
+	{
+		return folderId;
 	}
 
 	/**
@@ -708,6 +730,15 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
+	 * @param categoryId
+	 *            the categoryId to set
+	 */
+	public void setCategoryId(Long categoryId)
+	{
+		this.categoryId = categoryId;
+	}
+
+	/**
 	 * @param creationDate
 	 *            the creationDate to set
 	 */
@@ -768,6 +799,15 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	public void setEmPluginId(String emPluginId)
 	{
 		this.emPluginId = emPluginId;
+	}
+
+	/**
+	 * @param folderId
+	 *            the folderId to set
+	 */
+	public void setFolderId(Long folderId)
+	{
+		this.folderId = folderId;
 	}
 
 	/**
@@ -1021,7 +1061,8 @@ public class SavedSearchSearchRowEntity implements RowEntity
 				+ widgetIcon + ", widgetKocName=" + widgetKocName + ", widgetViewModel=" + widgetViewModel + ", widgetTemplate="
 				+ widgetTemplate + ", widgetSupportTimeControl=" + widgetSupportTimeControl + ", widgetLinkedDashboard="
 				+ widgetLinkedDashboard + ", widgetDefaulWidth=" + widgetDefaulWidth + ", widgetDefaultHeight="
-				+ widgetDefaultHeight + ", dashboardIneligible=" + dashboardIneligible + ", tenantId=" + tenantId + "]";
+				+ widgetDefaultHeight + ", dashboardIneligible=" + dashboardIneligible + ", tenantId=" + tenantId + ", folderId="
+				+ folderId + ", categoryId=" + categoryId + "]";
 	}
 
 }

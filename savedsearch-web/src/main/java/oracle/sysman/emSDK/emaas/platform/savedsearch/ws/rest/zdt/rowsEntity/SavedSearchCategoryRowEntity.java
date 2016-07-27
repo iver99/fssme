@@ -65,6 +65,15 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
+	@JsonProperty("CREATION_DATE")
+	private String creationDate;
+
+	@JsonProperty("DEFAULT_FOLDER_ID")
+	private Long defaultFolderId;
+
+	@JsonProperty("DASHBOARD_INELIGIBLE")
+	private String dashboardIneligible;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -218,6 +227,30 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	public Long getCategoryId()
 	{
 		return categoryId;
+	}
+
+	/**
+	 * @return the creationDate
+	 */
+	public String getCreationDate()
+	{
+		return creationDate;
+	}
+
+	/**
+	 * @return the dashboardIneligible
+	 */
+	public String getDashboardIneligible()
+	{
+		return dashboardIneligible;
+	}
+
+	/**
+	 * @return the defaultFolderId
+	 */
+	public Long getDefaultFolderId()
+	{
+		return defaultFolderId;
 	}
 
 	/**
@@ -377,6 +410,33 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	}
 
 	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(String creationDate)
+	{
+		this.creationDate = creationDate;
+	}
+
+	/**
+	 * @param dashboardIneligible
+	 *            the dashboardIneligible to set
+	 */
+	public void setDashboardIneligible(String dashboardIneligible)
+	{
+		this.dashboardIneligible = dashboardIneligible;
+	}
+
+	/**
+	 * @param defaultFolderId
+	 *            the defaultFolderId to set
+	 */
+	public void setDefaultFolderId(Long defaultFolderId)
+	{
+		this.defaultFolderId = defaultFolderId;
+	}
+
+	/**
 	 * @param deleted
 	 *            the deleted to set
 	 */
@@ -522,7 +582,8 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 				+ name + ", nameNlsid=" + nameNlsid + ", nameSubsystem=" + nameSubsystem + ", owner=" + owner + ", deleted="
 				+ deleted + ", providerName=" + providerName + ", providerVersion=" + providerVersion + ", providerDiscovery="
 				+ providerDiscovery + ", providerAssetRoot=" + providerAssetRoot + ", lastModificationDate="
-				+ lastModificationDate + ", tenantId=" + tenantId + "]";
+				+ lastModificationDate + ", tenantId=" + tenantId + ", creationDate=" + creationDate + ", defaultFolderId="
+				+ defaultFolderId + ", dashboardIneligible=" + dashboardIneligible + "]";
 	}
 
 }

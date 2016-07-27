@@ -65,6 +65,9 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	@JsonProperty("PARENT_ID")
 	private Long parentId;
 
+	@JsonProperty("CREATION_DATE")
+	private String creationDate;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -210,6 +213,14 @@ public class SavedSearchFolderRowEntity implements RowEntity
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @return the creationDate
+	 */
+	public String getCreationDate()
+	{
+		return creationDate;
 	}
 
 	/**
@@ -368,6 +379,15 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	}
 
 	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(String creationDate)
+	{
+		this.creationDate = creationDate;
+	}
+
+	/**
 	 * @param deleted
 	 *            the deleted to set
 	 */
@@ -522,7 +542,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 				+ ", lastModifiedBy=" + lastModifiedBy + ", lastModificationDate=" + lastModificationDate + ", name=" + name
 				+ ", nameNlsid=" + nameNlsid + ", nameSubsystem=" + nameSubsystem + ", owner=" + owner + ", systemFolder="
 				+ systemFolder + ", uiHidden=" + uiHidden + ", deleted=" + deleted + ", tenantId=" + tenantId + ", parentId="
-				+ parentId + "]";
+				+ parentId + ", creationDate=" + creationDate + "]";
 	}
 
 }
