@@ -15,6 +15,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.Impor
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.loggingconfig.LoggingConfigAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search.FilterSearchAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search.SearchAPI;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.targetcard.TargetCardLinksFilterAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget.WidgetAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget.WidgetGroupAPI;
 
@@ -36,6 +37,7 @@ public class SavedSearchApplication extends Application
 		s.add(WidgetAPI.class);
 		s.add(WidgetGroupAPI.class);
 		s.add(LoggingConfigAPI.class);
+		s.add(TargetCardLinksFilterAPI.class);
 
 		return s;
 	}

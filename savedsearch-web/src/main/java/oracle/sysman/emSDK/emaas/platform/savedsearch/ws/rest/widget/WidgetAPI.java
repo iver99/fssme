@@ -117,7 +117,7 @@ public class WidgetAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllWidgets(@Context UriInfo uri, @HeaderParam(value = "OAM_REMOTE_USER") String userTenant,
+	public Response getAllWidgets(@Context UriInfo uri, @HeaderParam(value = "X-REMOTE-USER") String userTenant,
 			@QueryParam("widgetGroupId") String widgetGroupId,
 			@QueryParam("includeDashboardIneligible") boolean includeDashboardIneligible)
 	{

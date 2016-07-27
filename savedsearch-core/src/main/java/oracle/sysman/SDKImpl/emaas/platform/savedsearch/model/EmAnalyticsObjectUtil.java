@@ -22,6 +22,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -35,28 +37,12 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
 class EmAnalyticsObjectUtil
 {
-	@SuppressWarnings("unchecked")
-	public static String getSearchParamByName(long searchId, String paramName, EntityManager em) {
-		List<EmAnalyticsSearchParam> paramList = (List<EmAnalyticsSearchParam>) em
-				.createNamedQuery("SearchParam.getParamByName")
-				.setParameter("searchId", searchId)
-				.setParameter("name", paramName).getResultList();
-		if(!paramList.isEmpty()) {
-			EmAnalyticsSearchParam param = paramList.get(0);
-			return ParameterType.STRING.getIntValue() == param.getParamType().intValue()
-					? param.getParamValueStr() 
-					: param.getParamValueClob();
-		} else {
-			return null;
-		}
-	}
-
 	public static boolean canDeleteFolder(long folderId, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 		int count = ((Number) em.createNamedQuery("Search.getSearchCountByFolder").setParameter("folder", folder)
 				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult())
-						.intValue();
+				.intValue();
 
 		if (count > 0) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with searches",
@@ -64,8 +50,7 @@ class EmAnalyticsObjectUtil
 		}
 
 		if (em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder)
-				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList()
-				.size() > 0) {
+				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList().size() > 0) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with categories",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
@@ -75,7 +60,7 @@ class EmAnalyticsObjectUtil
 			String parentFolder = "parentFolder";
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
-					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
+			.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 
 			if (folderList.size() > 0) {
 				throw new EMAnalyticsFwkException("Sub folders founds", EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
@@ -95,8 +80,10 @@ class EmAnalyticsObjectUtil
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null) {
-				if (cateObj.getDeleted() == 0 && (cateObj.getOwner().equals("ORACLE")
-						|| cateObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
+				if (cateObj.getDeleted() == 0
+						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
+								|| cateObj.getOwner().equals("ORACLE") || cateObj.getOwner().equals(
+										TenantContext.getContext().getUsername()))) {
 
 					return cateObj;
 				}
@@ -120,8 +107,9 @@ class EmAnalyticsObjectUtil
 		try {
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
-			if (cateObj != null && (cateObj.getOwner().equals("ORACLE")
-					|| cateObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
+			if (cateObj != null
+					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext()) || cateObj.getOwner().equals("ORACLE") || cateObj
+							.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 				return cateObj;
 			}
@@ -139,9 +127,16 @@ class EmAnalyticsObjectUtil
 	public static EmAnalyticsCategory getCategoryByName(String categoryName, EntityManager em)
 	{
 		try {
-			return (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
-					.setParameter("categoryName", categoryName)
-					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
+			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+				return (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByNameForTenant")
+						.setParameter("categoryName", categoryName).getSingleResult();
+			}
+			else {
+				return (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
+						.setParameter("categoryName", categoryName)
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getSingleResult();
+			}
 		}
 		catch (NoResultException e) {
 			return null;
@@ -228,8 +223,8 @@ class EmAnalyticsObjectUtil
 		Iterator<EmAnalyticsCategoryParam> it = existingParams.iterator();
 		while (it.hasNext()) {
 			EmAnalyticsCategoryParam catParam = it.next();
-			if (!newParams.containsKey(catParam.getCategoryId())
-					|| newParams.containsKey(catParam.getCategoryId()) && !newParams.containsValue(catParam)) {
+			if (!newParams.containsKey(catParam.getCategoryId()) || newParams.containsKey(catParam.getCategoryId())
+					&& !newParams.containsValue(catParam)) {
 				it.remove();
 			}
 		}
@@ -463,12 +458,14 @@ class EmAnalyticsObjectUtil
 		}
 
 		Date utcNow = DateUtil.getCurrentUTCTime();
-		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-		searchEntity.setOwner(currentUser);
-		searchEntity.setLastModifiedBy(currentUser);
+		if (!RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+			searchEntity.setOwner(currentUser);
+			searchEntity.setLastModifiedBy(currentUser);
+		}
 		searchEntity.setLastModificationDate(utcNow);
-		searchEntity.setSystemSearch(
-				searchEntity.getSystemSearch() != null ? searchEntity.getSystemSearch() : new java.math.BigDecimal(0));
+		searchEntity.setSystemSearch(searchEntity.getSystemSearch() != null ? searchEntity.getSystemSearch()
+				: new java.math.BigDecimal(0));
 		searchEntity.setIsLocked(search != null && search.isLocked() ? new java.math.BigDecimal(1) : new java.math.BigDecimal(0));
 
 		searchEntity.setSearchDisplayStr(search.getQueryStr());
@@ -504,21 +501,22 @@ class EmAnalyticsObjectUtil
 				newParams.put(newPK, newSearchParam);
 			}
 		}
-		
+
 		// return error if the ODS entity id is missed
 		// not in old -> false;
 		// in old and in new -> false;
 		// in old but not in new -> true;
-		if(containODSEntityId(existingParams) && !containODSEntityId(newParams.values())) {
+		if (EmAnalyticsObjectUtil.containODSEntityId(existingParams)
+				&& !EmAnalyticsObjectUtil.containODSEntityId(newParams.values())) {
 			throw new EMAnalyticsFwkException("Can not delete ODS Entity without deleting Saved Search: " + search.getName(),
 					EMAnalyticsFwkException.ERR_GENERIC, null);
 		}
-		
+
 		Iterator<EmAnalyticsSearchParam> it = existingParams.iterator();
 		while (it.hasNext()) {
 			EmAnalyticsSearchParam searchParam = it.next();
-			if (!newParams.containsKey(searchParam.getSearchId())
-					|| newParams.containsKey(searchParam.getSearchId()) && !newParams.containsValue(searchParam)) {
+			if (!newParams.containsKey(searchParam.getSearchId()) || newParams.containsKey(searchParam.getSearchId())
+					&& !newParams.containsValue(searchParam)) {
 				it.remove();
 			}
 		}
@@ -536,8 +534,11 @@ class EmAnalyticsObjectUtil
 		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
-			if (folderObj != null && folderObj.getDeleted() == 0 && (folderObj.getSystemFolder().intValue() == 1
-					|| folderObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
+			if (folderObj != null
+					&& folderObj.getDeleted() == 0
+					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
+							|| folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
+							TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -561,8 +562,9 @@ class EmAnalyticsObjectUtil
 		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
-			if (folderObj != null && (folderObj.getSystemFolder().intValue() == 1
-					|| folderObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
+			if (folderObj != null
+					&& (folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
+							TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -606,8 +608,10 @@ class EmAnalyticsObjectUtil
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null) {
-				if (searchObj.getDeleted() == 0 && (searchObj.getSystemSearch().intValue() == 1
-						|| searchObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
+				if (searchObj.getDeleted() == 0
+						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
+								|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
+								TenantContext.getContext().getUsername()))) {
 
 					return searchObj;
 				}
@@ -615,6 +619,30 @@ class EmAnalyticsObjectUtil
 					searchObj = null;
 				}
 			}
+		}
+		catch (Exception nre) {
+			//don nothing
+		}
+		return searchObj;
+	}
+
+	public static EmAnalyticsSearch getSearchByIdForDelete(long id, EntityManager em)
+	{
+
+		EmAnalyticsSearch searchObj = null;
+		try {
+
+			searchObj = em.find(EmAnalyticsSearch.class, id);
+			if (searchObj != null
+					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
+							|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
+							TenantContext.getContext().getUsername()))) {
+				return searchObj;
+			}
+			else {
+				searchObj = null;
+			}
+
 		}
 		catch (Exception nre) {
 			//don nothing
@@ -662,31 +690,25 @@ class EmAnalyticsObjectUtil
 	}
 	 */
 
-	public static EmAnalyticsSearch getSearchByIdForDelete(long id, EntityManager em)
+	@SuppressWarnings("unchecked")
+	public static String getSearchParamByName(long searchId, String paramName, EntityManager em)
 	{
-
-		EmAnalyticsSearch searchObj = null;
-		try {
-
-			searchObj = em.find(EmAnalyticsSearch.class, id);
-			if (searchObj != null && (searchObj.getSystemSearch().intValue() == 1
-					|| searchObj.getOwner().equals(TenantContext.getContext().getUsername()))) {
-				return searchObj;
-			}
-			else {
-				searchObj = null;
-			}
-
+		List<EmAnalyticsSearchParam> paramList = em.createNamedQuery("SearchParam.getParamByName")
+				.setParameter("searchId", searchId).setParameter("name", paramName).getResultList();
+		if (!paramList.isEmpty()) {
+			EmAnalyticsSearchParam param = paramList.get(0);
+			return ParameterType.STRING.getIntValue() == param.getParamType().intValue() ? param.getParamValueStr() : param
+					.getParamValueClob();
 		}
-		catch (Exception nre) {
-			//don nothing
+		else {
+			return null;
 		}
-		return searchObj;
 	}
 
-	private static boolean containODSEntityId(Collection<EmAnalyticsSearchParam> params) {
-		for(EmAnalyticsSearchParam param : params) {
-			if("meId".equals(param.getName())) {
+	private static boolean containODSEntityId(Collection<EmAnalyticsSearchParam> params)
+	{
+		for (EmAnalyticsSearchParam param : params) {
+			if ("meId".equals(param.getName())) {
 				return true;
 			}
 		}

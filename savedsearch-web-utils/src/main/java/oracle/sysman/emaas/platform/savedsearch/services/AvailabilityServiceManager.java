@@ -1,18 +1,19 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.DBConnectionManager;
-import oracle.sysman.emaas.platform.savedsearch.utils.GlobalStatus;
-import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.DBConnectionManager;
+import oracle.sysman.emaas.platform.savedsearch.utils.GlobalStatus;
+import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.management.timer.Timer;
 
@@ -21,9 +22,9 @@ import weblogic.management.timer.Timer;
  */
 public class AvailabilityServiceManager implements ApplicationServiceManager, NotificationListener
 {
-	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
-
 	private static final long PERIOD = Timer.ONE_MINUTE;
+
+	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
 	private Timer timer;
 	private Integer notificationId;
 	private final RegistryServiceManager rsm;
@@ -64,7 +65,9 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		boolean isDBAvailable = isDatabaseAvailable();
 		// update saved search service status
 		if (!isDBAvailable) {
-			rsm.makeServiceOutOfService();
+			List<String> dbReasons = new ArrayList<>();
+			dbReasons.add("Saved search service is out of service because database is unavailable");
+			rsm.makeServiceOutOfService(null, null, dbReasons);
 			GlobalStatus.setSavedSearchDownStatus();
 			logger.error("Saved search service is out of service because database is unavailable");
 		}

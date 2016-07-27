@@ -1435,7 +1435,7 @@ public class FolderCRUDAfterUpgradeTest
 			System.out.println("------------------------------------------");
 			System.out.println("Delete the searches from folderId: " + jp1.get("id"));
 
-			if (jp4.get("name[0]") == "Search_s2") {
+			if ("Search_s2".equals(jp4.get("name[0]"))) {
 				Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 						.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 						.delete("/search/" + jp3.get("id"));

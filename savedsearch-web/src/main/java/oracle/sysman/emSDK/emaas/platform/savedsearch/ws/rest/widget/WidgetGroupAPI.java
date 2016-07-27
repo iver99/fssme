@@ -12,17 +12,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Saved Search Service
@@ -40,9 +40,9 @@ public class WidgetGroupAPI
 	 * Get list of all existed widget groups<br>
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/widgetgroups</font><br>
-	 * The string "widgetgroups" in the URL signifies read operation on widget group. URL:
-	 * <font color="blue">http://&lt;host-name&gt;:&lt;port
-	 * number&gt;/savedsearch/v1/widgetgroups?includeDashboardIneligible=&lt;true or false&gt;</font><br>
+	 * The string "widgetgroups" in the URL signifies read operation on widget group. URL: <font
+	 * color="blue">http://&lt;host-name&gt;:&lt;port number&gt;/savedsearch/v1/widgetgroups?includeDashboardIneligible=&lt;true
+	 * or false&gt;</font><br>
 	 * The string "widgetgroups?includeDashboardIneligible=&lt;true or false&gt;" in the URL signifies read operation on widget
 	 * groups, includeDashboardIneligible specifies whether to return Dashboard Ineligible widget groups or not.<br>
 	 *
@@ -53,15 +53,14 @@ public class WidgetGroupAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "WIDGET_GROUP_ID": 1,<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "WIDGET_GROUP_NAME": "Log Analytics",<br>
-	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "WIDGET_GROUP_DESCRIPTION": "Search Category for Log Analytics"
-	 *         <br>
+	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "WIDGET_GROUP_DESCRIPTION": "Search Category for Log Analytics" <br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "PROVIDER_NAME": "Log Analytics"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "PROVIDER_VERSION": "1.0"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "PROVIDER_DISCOVERY": "discovery"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "PROVIDER_ASSET_ROOT": "asset"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
-	 *         <br>
+	 * <br>
 	 *         Response Code:<br>
 	 *         <table border="1">
 	 *         <tr>
@@ -83,7 +82,7 @@ public class WidgetGroupAPI
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllWidgetGroups(@HeaderParam(value = "OAM_REMOTE_USER") String userTenant,
+	public Response getAllWidgetGroups(@HeaderParam(value = "X-REMOTE-USER") String userTenant,
 			@QueryParam("includeDashboardIneligible") boolean includeDashboardIneligible)
 
 	{
@@ -105,8 +104,8 @@ public class WidgetGroupAPI
 			}
 
 			JSONArray jsonArray = new JSONArray();
-			List<Category> catList = TenantSubscriptionUtil
-					.getTenantSubscribedCategories(userTenant.substring(0, userTenant.indexOf(".")), includeDashboardIneligible);
+			List<Category> catList = TenantSubscriptionUtil.getTenantSubscribedCategories(
+					userTenant.substring(0, userTenant.indexOf(".")), includeDashboardIneligible);
 			for (Category category : catList) {
 				if (!"home".equalsIgnoreCase(category.getProviderAssetRoot())) {
 					JSONObject jsonWidgetGroup = EntityJsonUtil.getWidgetGroupJsonObj(uri.getBaseUri(), category);

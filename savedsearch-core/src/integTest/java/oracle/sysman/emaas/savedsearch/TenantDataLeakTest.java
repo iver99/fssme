@@ -159,7 +159,8 @@ public class TenantDataLeakTest extends BaseTest
 		}
 
 		finally {
-			TenantDataLeakTest.closeConnection(conn);
+			if(conn != null)
+				TenantDataLeakTest.closeConnection(conn);
 		}
 	}
 
@@ -263,7 +264,8 @@ public class TenantDataLeakTest extends BaseTest
 		}
 
 		finally {
-			TenantDataLeakTest.closeConnection(conn);
+			if(conn != null)
+				TenantDataLeakTest.closeConnection(conn);
 		}
 	}
 

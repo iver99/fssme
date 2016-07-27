@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
@@ -35,7 +37,12 @@ public class HeadersUtil
 
 	public static final String SSF_HEADER = "ssfheadertest";
 
-	public static final String OAM_HEADER = "OAM_REMOTE_USER";
+	// EMCPSSF-253 saved search REST calls should not require OAM_REMOTE_USER.
+	// Look for X-REMOTE-USER if OAM_REMOTE_USER is missing.
+	// For backwards compatibility, need to continue supporting the use of OAM_REMOTE_USER by internal clients.
+	public static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
+	public static final String X_REMOTE_USER_HEADER = "X-REMOTE-USER";
+	public static final String X_USER_IDENTITY_DOMAIN_NAME_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
 
 	private static final Logger _logger = LogManager.getLogger(HeadersUtil.class);
 
@@ -43,17 +50,27 @@ public class HeadersUtil
 	{
 		HeadersUtil.validateOAMHeader(request);
 		Long id = HeadersUtil.getInternalTenantId(request);
-		String userTenant = request.getHeader(OAM_HEADER);
-		String user = userTenant.substring(userTenant.indexOf(".") + 1, userTenant.length());
+		String userTenant = HeadersUtil.getRemoteUserHeader(request);
+		String user = null;
+		String tenantName = null;
+		// For internal request with tenant only
+		if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+			tenantName = request.getHeader(X_USER_IDENTITY_DOMAIN_NAME_HEADER);
+		}
+		// For external request and internal request with tenant and user
+		else {
+			user = userTenant.substring(userTenant.indexOf(".") + 1, userTenant.length());
+			tenantName = userTenant.substring(0, userTenant.indexOf("."));
+		}
 		TenantInfo info = new TenantInfo(user, id);
-		info.settenantName(userTenant.substring(0, userTenant.indexOf(".")));
+		info.settenantName(tenantName);
 		return info;
 
 	}
 
 	private static Long getInternalTenantId(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
-		String header = request.getHeader(OAM_HEADER);
+		String header = HeadersUtil.getRemoteUserHeader(request);
 		Long internalId = null;
 		String testHeader = request.getHeader(SSF_HEADER);
 		Boolean isTestEnv = false;
@@ -69,7 +86,13 @@ public class HeadersUtil
 			}
 		}
 		else {
-			String tName = header.substring(0, header.indexOf("."));
+			String tName = null;
+			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+				tName = request.getHeader(X_USER_IDENTITY_DOMAIN_NAME_HEADER);
+			}
+			else {
+				tName = header.substring(0, header.indexOf("."));
+			}
 			try {
 				internalId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tName);
 				_logger.info("Internal tenant id =" + internalId);
@@ -126,43 +149,66 @@ public class HeadersUtil
 		return userName;
 	}*/
 
+	private static String getRemoteUserHeader(HttpServletRequest request)
+	{
+		String remoteUser = request.getHeader(OAM_REMOTE_USER_HEADER);
+		// Look for X-REMOTE-USER if OAM_REMOTE_USER is missing
+		if (remoteUser == null) {
+			remoteUser = request.getHeader(X_REMOTE_USER_HEADER);
+		}
+		return remoteUser;
+	}
+
 	private static void validateOAMHeader(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
 		String userTenant = null;
 		String userName = null;
 
-		userTenant = request.getHeader(OAM_HEADER);
-		if (userTenant == null) {
-			_logger.error(OAM_HEADER + " header value is missing.");
-			throw new EMAnalyticsFwkException(OAM_HEADER + " header value is missing.",
-					EMAnalyticsFwkException.ERR_VALID_OAM_HEADER, null);
+		userTenant = HeadersUtil.getRemoteUserHeader(request);
+		// For internal request with tenant only
+		if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+			String tenantIdHeader = request.getHeader(X_USER_IDENTITY_DOMAIN_NAME_HEADER);
+			if (tenantIdHeader == null) {
+				_logger.error(X_USER_IDENTITY_DOMAIN_NAME_HEADER + " header value is missing.");
+				throw new EMAnalyticsFwkException(X_USER_IDENTITY_DOMAIN_NAME_HEADER + " header value is missing.",
+						EMAnalyticsFwkException.ERR_VALID_OAM_HEADER, null);
+			}
 		}
-		int idx = userTenant.indexOf(".");
-		if (idx <= 0) {
+		// For external and internal request with both tenant and user
+		else {
+			if (userTenant == null) {
+				_logger.error(X_REMOTE_USER_HEADER + " header value is missing.");
+				throw new EMAnalyticsFwkException(X_REMOTE_USER_HEADER + " header value is missing.",
+						EMAnalyticsFwkException.ERR_VALID_OAM_HEADER, null);
+			}
+			int idx = userTenant.indexOf(".");
+			if (idx <= 0) {
 
-			_logger.error(" Please provide " + OAM_HEADER + " header value in following format <tenant_name>.<user_name>");
-			throw new EMAnalyticsFwkException("Please provide " + OAM_HEADER
-					+ " header value in following format <tenant_name>.<user_name>", EMAnalyticsFwkException.ERR_VALID_USER_NAME,
-					null);
-		}
+				_logger.error(" Please provide " + X_REMOTE_USER_HEADER
+						+ " header value in following format <tenant_name>.<user_name>");
+				throw new EMAnalyticsFwkException("Please provide " + X_REMOTE_USER_HEADER
+						+ " header value in following format <tenant_name>.<user_name>",
+						EMAnalyticsFwkException.ERR_VALID_USER_NAME, null);
+			}
 
-		userName = userTenant.substring(0, idx);
-		if (userName == null || "".equalsIgnoreCase(userName.trim())) {
-			_logger.error("Tenant name was not provided , Please provide " + OAM_HEADER
-					+ " header value in following format <tenant_name>.<user_name>");
-			throw new EMAnalyticsFwkException("Tenant name was not provided , Please provide " + OAM_HEADER
-					+ " header value in following format <tenant_name>.<user_name>", EMAnalyticsFwkException.ERR_VALID_USER_NAME,
-					null);
-		}
+			userName = userTenant.substring(0, idx);
+			if (userName == null || "".equalsIgnoreCase(userName.trim())) {
+				_logger.error("Tenant name was not provided , Please provide " + X_REMOTE_USER_HEADER
+						+ " header value in following format <tenant_name>.<user_name>");
+				throw new EMAnalyticsFwkException("Tenant name was not provided , Please provide " + X_REMOTE_USER_HEADER
+						+ " header value in following format <tenant_name>.<user_name>",
+						EMAnalyticsFwkException.ERR_VALID_USER_NAME, null);
+			}
 
-		userName = userTenant.substring(idx + 1, userTenant.length());
+			userName = userTenant.substring(idx + 1, userTenant.length());
 
-		if (userName == null || "".equalsIgnoreCase(userName.trim())) {
-			_logger.error("User name was not provided , Please provide " + OAM_HEADER
-					+ " header value in following format <tenant_name>.<user_name>");
-			throw new EMAnalyticsFwkException("User name was not provided , Please provide " + OAM_HEADER
-					+ " header value in following format <tenant_name>.<user_name>", EMAnalyticsFwkException.ERR_VALID_USER_NAME,
-					null);
+			if (userName == null || "".equalsIgnoreCase(userName.trim())) {
+				_logger.error("User name was not provided , Please provide " + X_REMOTE_USER_HEADER
+						+ " header value in following format <tenant_name>.<user_name>");
+				throw new EMAnalyticsFwkException("User name was not provided , Please provide " + X_REMOTE_USER_HEADER
+						+ " header value in following format <tenant_name>.<user_name>",
+						EMAnalyticsFwkException.ERR_VALID_USER_NAME, null);
+			}
 		}
 
 	}

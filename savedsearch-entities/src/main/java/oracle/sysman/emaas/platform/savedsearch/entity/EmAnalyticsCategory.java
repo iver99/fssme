@@ -38,7 +38,9 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Category.getCategoryByFolder", query = "SELECT e FROM EmAnalyticsCategory e Where e.emAnalyticsFolder = :id  AND e.deleted =0  AND e.owner in ('ORACLE',:userName)"),
 		@NamedQuery(name = "Category.getAllCategory", query = "SELECT e FROM EmAnalyticsCategory e Where e.deleted =0  AND e.owner in ('ORACLE',:userName)"),
 		@NamedQuery(name = "Category.getCategoryByName", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
-				+ ":categoryName" + " AND e.deleted = 0  AND e.owner in ('ORACLE',:userName)") })
+				+ ":categoryName" + " AND e.deleted = 0  AND e.owner in ('ORACLE',:userName)"),
+		@NamedQuery(name = "Category.getCategoryByNameForTenant", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
+				+ ":categoryName" + " AND e.deleted = 0 ") })
 @SequenceGenerator(name = "EMS_ANALYTICS_CATEGORY_SEQ", sequenceName = "EMS_ANALYTICS_CATEGORY_SEQ", allocationSize = 1)
 public class EmAnalyticsCategory implements Serializable
 {

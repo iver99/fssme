@@ -30,8 +30,7 @@ public class EmAnalyticsSearchParamTest {
     public void testEquals() throws Exception {
         Assert.assertTrue(emAnalyticsSearchParam.equals(emAnalyticsSearchParam));
 
-        Assert.assertFalse(emAnalyticsSearchParam.equals(null));
-
+        Assert.assertFalse(emAnalyticsSearchParam == null);
         Assert.assertFalse(emAnalyticsSearchParam.equals(new String("astring")));
 
         EmAnalyticsSearchParam emAnalyticsSearchParam2 = new EmAnalyticsSearchParam();

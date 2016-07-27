@@ -10,6 +10,7 @@ DEFINE TENANT_ID = '&1'
 --update OOB Folder, since OOB folder can be referenced by search and category, don't use delete from ...
 
 @&EMSAAS_SQL_ROOT/1.8.0/emaas_savesearch_seed_data.sql '&TENANT_ID'
+
 @&EMSAAS_SQL_ROOT/1.8.0/emaas_savesearch_seed_data_la.sql '&TENANT_ID'
 
 @&EMSAAS_SQL_ROOT/1.8.0/emaas_savesearch_seed_data_ta.sql '&TENANT_ID'
