@@ -110,18 +110,40 @@ public class ZDTSynchronizer
 
 	private void syncSearchParamsTableRows(List<SavedSearchSearchParamRowEntity> rows)
 	{
+		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
+			logger.debug("List<SavedSearchSearchParamRowEntity> is null,no sync action is needed");
 			return;
 		}
-		// TODO: call DataManager implementation to insert or update data to database
+		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH_PARAMS table");
+		for (SavedSearchSearchParamRowEntity e : rows) {
+			DataManager.getInstance().syncSearchParamsTable(e.getSearchId(), e.getName(), e.getParamAttributes(),
+					e.getParamType(), e.getParamValueStr(), e.getParamValueClob(), e.getTenantId(), e.getCreationDate(),
+					e.getLastModificationDate());
+		}
+		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH_PARAMS table");
 	}
 
 	private void syncSearchTableRows(List<SavedSearchSearchRowEntity> rows)
 	{
+		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
+			logger.debug("List<SavedSearchSearchRowEntity> is null,no sync action is needed");
 			return;
 		}
-		// TODO: call DataManager implementation to insert or update data to database
-	}
+		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
+		for (SavedSearchSearchRowEntity e : rows) {
+			DataManager.getInstance().syncSearchTable(e.getSearchId(), e.getSearchGuid(), e.getName(), e.getOwner(),
+					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId(),
+					e.getCategoryId(), e.getNameNlsid(), e.getNameSubsystem(), e.getDescriptionNlsid(),
+					e.getDescriptionSubsystem(), e.getSystemSearch(), e.getEmPluginId(), e.getIsLocked(), e.getMetadataClob(),
+					e.getSearchDisplayStr(), e.getUiHidden(), e.getDeleted(), e.getIsWidget(), e.getTenantId(),
+					e.getNameWidgetSource(), e.getWidgetGroupName(), e.getWidgetScreenshotHref(), e.getWidgetIcon(),
+					e.getWidgetKocName(), e.getWidgetViewModel(), e.getWidgetTemplate(), e.getWidgetSupportTimeControl(),
+					e.getWidgetLinkedDashboard(), e.getWidgetDefaulWidth(), e.getWidgetDefaultHeight(),
+					e.getDashboardIneligible(), e.getProviderName(), e.getProviderVersion(), e.getProviderAssetRoot());
 
+		}
+		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH table");
+	}
 }

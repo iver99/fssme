@@ -10,6 +10,7 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.zdt;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -296,6 +297,80 @@ public class DataManager
 			logger.debug("Data exist in table EMS_ANYLITICS_CATEGORY,execute update action.");
 			sql = SyncSavedSearchSqlUtil.concatLastAccessUpdate(objectId, accessedBy, objectType, accessDate, tenantId,
 					creationDate, lastModificationDate);
+		}
+		//sync Data
+		syncDatabaseTableData(sql);
+
+	}
+
+	public void syncSearchParamsTable(BigInteger searchId, String name, String paramAttributes, Long paramType,
+			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate)
+	{
+		EntityManager em = null;
+		em = getEntityManager();
+		String sql = "select count(1) from EMS_ANALYTICS_SEARCH_PARAMS t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
+		Query q1 = em.createNativeQuery(sql);
+		q1.setParameter(0, searchId);
+		q1.setParameter(1, name);
+		q1.setParameter(2, tenantId);
+		Integer count = Integer.valueOf(q1.getSingleResult().toString());
+
+		if (count <= 0) {
+			//execute insert action
+			logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute insert action.");
+			sql = SyncSavedSearchSqlUtil.concatSearchParamsInsert(searchId, name, paramAttributes, paramType, paramValueStr,
+					paramValueClob, tenantId, creationDate, lastModificationDate);
+		}
+		else {
+			//execute update action
+			logger.debug("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
+			sql = SyncSavedSearchSqlUtil.concatSearchParamsUpdate(searchId, name, paramAttributes, paramType, paramValueStr,
+					paramValueClob, tenantId, creationDate, lastModificationDate);
+		}
+		//sync Data
+		syncDatabaseTableData(sql);
+
+	}
+
+	public void syncSearchTable(Long searchId, String searchGuid, String name, String owner, String creationDate,
+			String lastModificationDate, String lastModifiedBy, String description, Long folderId, Long categoryId,
+			String nameNlsid, String nameSubsystem, String descriptionNlsid, String descriptionSubsystem, Integer systemSearch,
+			String emPluginId, Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, Long deleted,
+			Integer isWidget, Long tenantId, String nameWidgetSource, String widgetGroupName, String widgetScreenshotHref,
+			String widgetIcon, String widgetKocName, String viewModel, String widgetTemplate, String widgetSupportTimeControl,
+			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
+			String providerName, String providerVersion, String providerAssetRoot)
+	{
+		EntityManager em = null;
+		em = getEntityManager();
+		String sql = "select count(1) from EMS_ANALYTICS_SEARCH_PARAMS t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
+		Query q1 = em.createNativeQuery(sql);
+		q1.setParameter(0, searchId);
+		q1.setParameter(1, name);
+		q1.setParameter(2, tenantId);
+		Integer count = Integer.valueOf(q1.getSingleResult().toString());
+
+		if (count <= 0) {
+			//execute insert action
+			logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute insert action.");
+			sql = SyncSavedSearchSqlUtil.concatSearchInsert(searchId, searchGuid, name, owner, creationDate,
+					lastModificationDate, lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem,
+					descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, metaDataClob, searchDisplayStr,
+					uiHidden, deleted, isWidget, tenantId, nameWidgetSource, widgetGroupName, widgetScreenshotHref, widgetIcon,
+					widgetKocName, viewModel, widgetTemplate, widgetSupportTimeControl, widgetLinkedDashboard,
+					widgetDefaultWidth, widgetDefaultHeight, dashboardIneligible, providerName, providerVersion,
+					providerAssetRoot);
+		}
+		else {
+			//execute update action
+			logger.debug("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
+			sql = SyncSavedSearchSqlUtil.concatSearchUpdate(searchId, searchGuid, name, owner, creationDate,
+					lastModificationDate, lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem,
+					descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, metaDataClob, searchDisplayStr,
+					uiHidden, deleted, isWidget, tenantId, nameWidgetSource, widgetGroupName, widgetScreenshotHref, widgetIcon,
+					widgetKocName, viewModel, widgetTemplate, widgetSupportTimeControl, widgetLinkedDashboard,
+					widgetDefaultWidth, widgetDefaultHeight, dashboardIneligible, providerName, providerVersion,
+					providerAssetRoot);
 		}
 		//sync Data
 		syncDatabaseTableData(sql);
