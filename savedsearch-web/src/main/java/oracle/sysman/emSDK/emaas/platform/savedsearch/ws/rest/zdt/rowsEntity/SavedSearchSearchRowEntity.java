@@ -122,6 +122,15 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	@JsonProperty("CATEGORY_ID")
 	private Long categoryId;
 
+	@JsonProperty("PROVIDER_NAME")
+	private String providerName;
+
+	@JsonProperty("PROVIDER_VERSION")
+	private String providerVersion;
+
+	@JsonProperty("PROVIDER_ASSET_ROOT")
+	private String providerAssetRoot;
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -558,6 +567,30 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
+	 * @return the providerAssetRoot
+	 */
+	public String getProviderAssetRoot()
+	{
+		return providerAssetRoot;
+	}
+
+	/**
+	 * @return the providerName
+	 */
+	public String getProviderName()
+	{
+		return providerName;
+	}
+
+	/**
+	 * @return the providerVersion
+	 */
+	public String getProviderVersion()
+	{
+		return providerVersion;
+	}
+
+	/**
 	 * @return the searchDisplayStr
 	 */
 	public String getSearchDisplayStr()
@@ -901,6 +934,33 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
+	 * @param providerAssetRoot
+	 *            the providerAssetRoot to set
+	 */
+	public void setProviderAssetRoot(String providerAssetRoot)
+	{
+		this.providerAssetRoot = providerAssetRoot;
+	}
+
+	/**
+	 * @param providerName
+	 *            the providerName to set
+	 */
+	public void setProviderName(String providerName)
+	{
+		this.providerName = providerName;
+	}
+
+	/**
+	 * @param providerVersion
+	 *            the providerVersion to set
+	 */
+	public void setProviderVersion(String providerVersion)
+	{
+		this.providerVersion = providerVersion;
+	}
+
+	/**
 	 * @param searchDisplayStr
 	 *            the searchDisplayStr to set
 	 */
@@ -1062,7 +1122,8 @@ public class SavedSearchSearchRowEntity implements RowEntity
 				+ widgetTemplate + ", widgetSupportTimeControl=" + widgetSupportTimeControl + ", widgetLinkedDashboard="
 				+ widgetLinkedDashboard + ", widgetDefaulWidth=" + widgetDefaulWidth + ", widgetDefaultHeight="
 				+ widgetDefaultHeight + ", dashboardIneligible=" + dashboardIneligible + ", tenantId=" + tenantId + ", folderId="
-				+ folderId + ", categoryId=" + categoryId + "]";
+				+ folderId + ", categoryId=" + categoryId + ", providerName=" + providerName + ", providerVersion="
+				+ providerVersion + ", providerAssetRoot=" + providerAssetRoot + "]";
 	}
 
 }
