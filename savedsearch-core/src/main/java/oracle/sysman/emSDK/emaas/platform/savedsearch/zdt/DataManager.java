@@ -427,7 +427,7 @@ public class DataManager
 		}
 		EntityManager em = null;
 		em = getEntityManager();
-		Query query = em.createNativeQuery(syncSql);
+		em.createNativeQuery(syncSql).executeUpdate();
 	}
 
 }
