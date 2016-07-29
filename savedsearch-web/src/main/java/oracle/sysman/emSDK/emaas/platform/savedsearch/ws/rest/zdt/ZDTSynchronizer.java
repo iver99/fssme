@@ -38,8 +38,8 @@ public class ZDTSynchronizer
 		syncCategoryParamsTableRows(data.getSavedSearchCategoryParams());
 		syncFoldersTableRows(data.getSavedSearchFoldersy());
 		syncLastAccessTableRows(data.getSavedSearchLastAccess());
-		syncSearchParamsTableRows(data.getSavedSearchSearchParams());
 		syncSearchTableRows(data.getSavedSearchSearch());
+		syncSearchParamsTableRows(data.getSavedSearchSearchParams());
 	}
 
 	private void syncCategoryParamsTableRows(List<SavedSearchCategoryParamRowEntity> rows)
