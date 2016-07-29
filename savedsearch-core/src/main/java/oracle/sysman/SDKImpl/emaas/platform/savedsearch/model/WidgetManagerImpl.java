@@ -96,7 +96,8 @@ public class WidgetManagerImpl extends WidgetManager
 			String jsonString = EntityJsonUtil.getJsonString(widget, ssUrl);
 			sb.append(jsonString);
 		}
-		sb.deleteCharAt(sb.length() - 1);//remove the extra comma
+		//remove the extra comma
+		sb.deleteCharAt(sb.length() - 1);
 		sb.append("]");
 		String message = sb.toString();
 		logger.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
@@ -228,8 +229,8 @@ public class WidgetManagerImpl extends WidgetManager
 		Object sModifiedOn = widget.get("LAST_MODIFICATION_DATE");
 		Date createdOn = sCreatedOn == null ? null : Timestamp.valueOf(String.valueOf(sCreatedOn));
 		Date modifiedOn = sCreatedOn == null ? null : Timestamp.valueOf(String.valueOf(sModifiedOn));
-		String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl, id, createdOn, modifiedOn);
-		return ssUrl;
+		return ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl, id, createdOn, modifiedOn);
+
 	}
 
 	private String getWidgetAPIUrl(String tenantName)

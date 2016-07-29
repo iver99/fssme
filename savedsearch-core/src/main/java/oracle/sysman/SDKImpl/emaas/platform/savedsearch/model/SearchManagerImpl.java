@@ -597,7 +597,7 @@ public class SearchManagerImpl extends SearchManager
 	@SuppressWarnings("unchecked")
 	public List<Widget> getWidgetListByProviderNames(boolean includeDashboardIneligible, List<String> providerNames,
 			String widgetGroupId) throws EMAnalyticsFwkException
-			{
+	{
 		if (providerNames == null || providerNames.isEmpty()) {
 			return null;
 		}
@@ -687,7 +687,7 @@ public class SearchManagerImpl extends SearchManager
 				em.close();
 			}
 		}
-			}
+	}
 
 	@Override
 	public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
@@ -1095,9 +1095,7 @@ public class SearchManagerImpl extends SearchManager
 				|| "PROVIDER_VERSION".equals(name) || "PROVIDER_ASSET_ROOT".equals(name)) {
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 
 	}
 
