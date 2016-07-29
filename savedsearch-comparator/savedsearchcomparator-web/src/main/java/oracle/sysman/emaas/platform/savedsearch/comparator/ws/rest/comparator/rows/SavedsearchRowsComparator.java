@@ -197,25 +197,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		cd.getInstance2().getData().setSavedSearchFoldersy(result.getList2());
 	}
 
-	/**
-	 * Compares the SSF schema version rows data for the 2 instances, and put the compare result into
-	 * <code>ComparedData</code> object
-	 *
-	 * @param rows1
-	 * @param rows2
-	 * @param cd
-	 */
-	private void compareSSFSchemaVersionRows(List<SavedSearchSchemaVerRowEntity> rows1,
-			List<SavedSearchSchemaVerRowEntity> rows2, InstancesComparedData<ZDTTableRowEntity> cd)
-	{
-		if (cd == null) {
-			return;
-		}
-		RowEntityComparator<SavedSearchSchemaVerRowEntity> rec = new RowEntityComparator<SavedSearchSchemaVerRowEntity>();
-		CompareListPair<SavedSearchSchemaVerRowEntity> result = rec.compare(rows1, rows2);
-		cd.getInstance1().getData().setSavedSearchSchemaVer(result.getList1());
-		cd.getInstance2().getData().setSavedSearchSchemaVer(result.getList2());
-	}
+	
 
 	private InstancesComparedData<ZDTTableRowEntity> compareInstancesData(InstanceData<ZDTTableRowEntity> insData1,
 			InstanceData<ZDTTableRowEntity> insData2)
@@ -234,7 +216,6 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		compareSSFFolderRows(insData1.getData().getSavedSearchFoldersy(),
 				insData2.getData().getSavedSearchFoldersy(), cd);
 		compareSSFLastAccessRows(insData1.getData().getSavedSearchLastAccess(), insData2.getData().getSavedSearchLastAccess(), cd);
-		compareSSFSchemaVersionRows(insData1.getData().getSavedSearchSchemaVer(), insData2.getData().getSavedSearchSchemaVer(), cd);
 		compareSSFSearchParamsRows(insData1.getData().getSavedSearchSearchParams(),
 				insData2.getData().getSavedSearchSearchParams(), cd);
 		compareSSFSearchRows(insData1.getData().getSavedSearchSearch(),
