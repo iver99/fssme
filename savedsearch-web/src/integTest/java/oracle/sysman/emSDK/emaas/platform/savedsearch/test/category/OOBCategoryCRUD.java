@@ -14,7 +14,8 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
-public class OOBCategoryCRUD {
+public class OOBCategoryCRUD
+{
 	/**
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases .
@@ -26,7 +27,13 @@ public class OOBCategoryCRUD {
 	static String authToken;
 	static String TENANT_ID_OPC1;
 	static String TENANT_ID1;
-	
+
+	@AfterClass
+	public static void afterTest()
+	{
+
+	}
+
 	@BeforeClass
 	public static void setUp()
 	{
@@ -38,20 +45,15 @@ public class OOBCategoryCRUD {
 		TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
 		TENANT_ID_OPC1 = ct.getTenant();
 	}
-	
-	@AfterClass
-	public static void afterTest()
-	{
-		
-	}
-	
+
 	@Test
 	public void testCategory5()
 	{
 		testCategory(5, 6);
 	}
-	
-	private void testCategory(int category, int defaultFolder) {
+
+	private void testCategory(int category, int defaultFolder)
+	{
 		try {
 			System.out.println("------------------------------------------");
 			System.out.println("Test OOB category " + category);
@@ -63,7 +65,7 @@ public class OOBCategoryCRUD {
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertEquals(res.getStatusCode(), 200);
-			
+
 			System.out.println(res.asString());
 			JsonPath jp = res.jsonPath();
 			System.out.println("											");
@@ -79,11 +81,12 @@ public class OOBCategoryCRUD {
 			Assert.assertEquals(jp.get("name"), "Target Card");
 			Assert.assertNotNull(jp.get("href"));
 			Assert.assertTrue(String.valueOf(jp.get("href")).contains("/savedsearch/v1/category/" + jp.get("id")));
-			
+
 			Assert.assertEquals(jp.get("defaultFolder.id"), defaultFolder);
 			Assert.assertNotNull(jp.get("defaultFolder.href"));
-			Assert.assertTrue(String.valueOf(jp.get("defaultFolder.href")).contains("/savedsearch/v1/folder/" + jp.get("defaultFolder.id")));
-			
+			Assert.assertTrue(String.valueOf(jp.get("defaultFolder.href")).contains(
+					"/savedsearch/v1/folder/" + jp.get("defaultFolder.id")));
+
 			Assert.assertNotNull(jp.get("parameters"));
 			List<String> nameList = jp.getList("parameters.name");
 			Assert.assertEquals(nameList.size(), 1);
@@ -91,7 +94,7 @@ public class OOBCategoryCRUD {
 			List<String> valueList = jp.getList("parameters.value");
 			Assert.assertEquals(nameList.size(), 1);
 			Assert.assertEquals(valueList.get(0), "1");
-			
+
 			System.out.println("										");
 			System.out.println("----------------------------------------");
 			System.out.println("										");

@@ -16,12 +16,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import java.util.Map;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
@@ -30,7 +27,13 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class EntityJsonUtilTest extends BaseTest
 {
@@ -135,6 +138,8 @@ public class EntityJsonUtilTest extends BaseTest
 		SearchParameter wp5 = new SearchParameter();
 		SearchParameter wp6 = new SearchParameter();
 		SearchParameter wp7 = new SearchParameter();
+		SearchParameter wp8 = new SearchParameter();
+		SearchParameter wp9 = new SearchParameter();
 		wp1.setName("WIDGET_VIEWMODEL");
 		wp1.setType(ParameterType.STRING);
 		wp1.setValue("dependencies/widgets/iFrame/js/widget-iframe");
@@ -156,6 +161,12 @@ public class EntityJsonUtilTest extends BaseTest
 		wp7.setName("WIDGET_VISUAL");
 		wp7.setType(ParameterType.CLOB);
 		wp7.setValue("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAYKklEQVR4AdxSBRIDIQy8");
+		wp8.setName("WIDGET_DEFAULT_WIDTH");
+		wp8.setType(ParameterType.STRING);
+		wp8.setValue("10");
+		wp9.setName("WIDGET_DEFAULT_HEIGHT");
+		wp9.setType(ParameterType.STRING);
+		wp9.setValue("0");
 		widgetParams.add(wp1);
 		widgetParams.add(wp2);
 		widgetParams.add(wp3);
@@ -163,6 +174,8 @@ public class EntityJsonUtilTest extends BaseTest
 		widgetParams.add(wp5);
 		widgetParams.add(wp6);
 		widgetParams.add(wp7);
+		widgetParams.add(wp8);
+		widgetParams.add(wp9);
 
 		widget.setParameters(widgetParams);
 	}
@@ -236,15 +249,15 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetFullSearchJsonObj()
-			throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
+	public void testGetFullSearchJsonObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
+	URISyntaxException
 	{
 		JSONObject fullSearchObj = EntityJsonUtil.getFullSearchJsonObj(uri, search);
 		String output = fullSearchObj.toString();
 		//		System.out.println(output);
 
-		JSONObject fullSearchObjWithFolderPath = EntityJsonUtil.getFullSearchJsonObj(uri, search,
-				new String[] { "parent Folder", "Root Folder" });
+		JSONObject fullSearchObjWithFolderPath = EntityJsonUtil.getFullSearchJsonObj(uri, search, new String[] { "parent Folder",
+		"Root Folder" });
 		String output2 = fullSearchObjWithFolderPath.toString();
 		//		System.out.println(output2);
 
@@ -286,8 +299,66 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetSimpleCategoryObj()
-			throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
+	public void testGetJsonString()
+	{
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put("SEARCH_ID", 1000);
+		m.put("WIDGET_KOC_NAME", "TestKOC");
+		m.put("WIDGET_VIEWMODEL", "TestViewModel");
+		m.put("WIDGET_TEMPLATE", "TestTemplate");
+		m.put("WIDGET_LINKED_DASHBOARD", "1");
+		m.put("WIDGET_DEFAULT_WIDTH", 1);
+		m.put("WIDGET_DEFAULT_HEIGHT", 1);
+		m.put("DASHBOARD_INELIGIBLE", "1");
+		m.put("NAME", "TestName");
+		m.put("DESCRIPTION", "TestDesc");
+		m.put("OWNER", "Test");
+		//m.put("CREATION_DATE", "2016-05-16 05:49:10");
+		m.put("CATOGORY_NAME", "TestCateName");
+		m.put("PROVIDER_NAME", "TestProviderName");
+		m.put("PROVIDER_VERSION", "TestProviderVersion");
+		m.put("PROVIDER_ASSET_ROOT", "TestProviderAssetRoot");
+		String result = null;
+		try {
+			result = EntityJsonUtil.getJsonString(m, "testScreenshotUrl");
+		}
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+		}
+		final String VERIFY_STRING1 = "\"WIDGET_UNIQUE_ID\":1000";
+		final String VERIFY_STRING2 = "\"WIDGET_KOC_NAME\":\"TestKOC\"";
+		final String VERIFY_STRING3 = "\"WIDGET_VIEWMODEL\":\"TestViewModel\"";
+		final String VERIFY_STRING4 = "\"WIDGET_TEMPLATE\":\"TestTemplate\"";
+		final String VERIFY_STRING5 = "\"WIDGET_LINKED_DASHBOARD\":\"1\"";
+		final String VERIFY_STRING6 = "\"WIDGET_DEFAULT_WIDTH\":\"1\"";
+		final String VERIFY_STRING7 = "\"WIDGET_DEFAULT_HEIGHT\":\"1\"";
+		final String VERIFY_STRING8 = "\"DASHBOARD_INELIGIBLE\":\"1\"";
+		final String VERIFY_STRING9 = "\"WIDGET_NAME\":\"TestName\"";
+		final String VERIFY_STRING10 = "\"WIDGET_DESCRIPTION\":\"TestDesc\"";
+		final String VERIFY_STRING11 = "\"WIDGET_OWNER\":\"Test\"";
+		final String VERIFY_STRING14 = "\"PROVIDER_NAME\":\"TestProviderName\"";
+		final String VERIFY_STRING15 = "\"PROVIDER_VERSION\":\"TestProviderVersion\"";
+		final String VERIFY_STRING16 = "\"PROVIDER_ASSET_ROOT\":\"TestProviderAssetRoot\"";
+		Assert.assertNotNull(result);
+		Assert.assertTrue(result.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(VERIFY_STRING5), VERIFY_STRING5 + " is found unexpected");
+		Assert.assertTrue(result.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
+		Assert.assertTrue(result.contains(VERIFY_STRING7), VERIFY_STRING7 + " is found unexpected");
+		Assert.assertTrue(result.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
+		Assert.assertTrue(result.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(VERIFY_STRING14), VERIFY_STRING14 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(VERIFY_STRING15), VERIFY_STRING15 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(VERIFY_STRING16), VERIFY_STRING16 + " is NOT found as expected");
+	}
+
+	@Test(groups = { "s1" })
+	public void testGetSimpleCategoryObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
+	URISyntaxException
 	{
 		JSONObject simpleCategoryObj = EntityJsonUtil.getSimpleCategoryJsonObj(uri, category);
 		String output = simpleCategoryObj.toString();
@@ -325,8 +396,8 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetSimpleFolderJsonObj()
-			throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
+	public void testGetSimpleFolderJsonObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
+	URISyntaxException
 	{
 		JSONObject simpleFolderObj = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder);
 		String output = simpleFolderObj.toString();
@@ -365,15 +436,15 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetSimpleSearchJsonObj()
-			throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
+	public void testGetSimpleSearchJsonObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
+	URISyntaxException
 	{
 		JSONObject simpleSearchObj = EntityJsonUtil.getSimpleSearchJsonObj(uri, search);
 		String output = simpleSearchObj.toString();
 		//		System.out.println(output);
 
-		JSONObject simpleSearchObjWithFolderPath = EntityJsonUtil.getSimpleSearchJsonObj(uri, search,
-				new String[] { "parent Folder", "Root Folder" }, false);
+		JSONObject simpleSearchObjWithFolderPath = EntityJsonUtil.getSimpleSearchJsonObj(uri, search, new String[] {
+				"parent Folder", "Root Folder" }, false);
 		String output2 = simpleSearchObjWithFolderPath.toString();
 		//		System.out.println(output2);
 
@@ -423,6 +494,30 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
+	public void testGetTargetCardJsonObj()
+	{
+		Search search = new SearchImpl();
+		search.setFolderId(1);
+		search.setCategoryId(1);
+		try {
+			JSONObject jsonObject = EntityJsonUtil.getTargetCardJsonObj(uri, search, null);
+			System.out.println(jsonObject);
+			Assert.assertNotNull(jsonObject);
+			Assert.assertNotNull(jsonObject.get("folder"));
+			Assert.assertNotNull(jsonObject.get("category"));
+			Assert.assertEquals(jsonObject.has("folderId"), false);
+			Assert.assertEquals(jsonObject.has("categoryId"), false);
+
+		}
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test(groups = { "s1" })
 	public void testGetWidgetGroupJsonObj() throws EMAnalyticsFwkException
 	{
 		JSONObject widgetGroupObj = EntityJsonUtil.getWidgetGroupJsonObj(uri, category);
@@ -451,7 +546,6 @@ public class EntityJsonUtilTest extends BaseTest
 	{
 		JSONObject widgetObj = EntityJsonUtil.getWidgetJsonObj(widget, category, null);
 		String output = widgetObj.toString();
-
 		final String VERIFY_STRING1 = "\"WIDGET_UNIQUE_ID\":10001";
 		final String VERIFY_STRING2 = "\"WIDGET_NAME\":\"Widget for UT\"";
 		final String VERIFY_STRING3 = "\"WIDGET_DESCRIPTION\":\"Widget desc for UT\"";
@@ -469,7 +563,8 @@ public class EntityJsonUtilTest extends BaseTest
 		final String VERIFY_STRING15 = "\"PROVIDER_NAME\":\"Provider name for UT\"";
 		final String VERIFY_STRING16 = "\"PROVIDER_ASSET_ROOT\":\"Provider asset root for UT\"";
 		final String VERIFY_STRING17 = "\"WIDGET_VISUAL\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAYKklEQVR4AdxSBRIDIQy8\"";
-
+		final String VERIFY_STRING18 = "\"WIDGET_DEFAULT_WIDTH\":8";
+		final String VERIFY_STRING19 = "\"WIDGET_DEFAULT_HEIGHT\":1";
 		Assert.assertNotNull(output);
 		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
@@ -485,6 +580,8 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is NOT found as expected");
 		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
 		Assert.assertFalse(output.contains(VERIFY_STRING17), VERIFY_STRING17 + " is found NOT as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING18), VERIFY_STRING18 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(VERIFY_STRING19), VERIFY_STRING19 + " is NOT found as expected");
 
 		widget.getParameters().remove(5);
 		widget.getParameters().remove(4);

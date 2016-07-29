@@ -74,6 +74,8 @@ public class SearchManagerImpl extends SearchManager
 			+ "AND e.deleted=0 AND e.isWidget=1 AND e.tenant=:tenantId AND (e.owner=:userName OR e.systemSearch =1) "
 			+ "AND (pm.paramValueStr IS NULL OR pm.paramValueStr<>'1')";
 
+	private static final String DEFAULT_DB_VALUE = "0";
+
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
 	/**
@@ -171,16 +173,17 @@ public class SearchManagerImpl extends SearchManager
 				throw new EMAnalyticsFwkException("Target Card with Id: " + targetCardId + " does not exist",
 						EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null);
 			}
-/*
-			if (targetCardObj.getSystemSearch() != null && targetCardObj.getSystemSearch().intValue() == 1) {
-				throw new EMAnalyticsFwkException("Target Card with Id: " + targetCardId + " is system search and NOT allowed to delete",
-						EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
-			}*/
+			/*
+						if (targetCardObj.getSystemSearch() != null && targetCardObj.getSystemSearch().intValue() == 1) {
+							throw new EMAnalyticsFwkException("Target Card with Id: " + targetCardId + " is system search and NOT allowed to delete",
+									EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
+						}*/
 			targetCardObj.setDeleted(targetCardId);
 			em.getTransaction().begin();
 			if (permanently) {
 				em.remove(targetCardObj);
-			} else {
+			}
+			else {
 				em.merge(targetCardObj);
 			}
 			em.getTransaction().commit();
@@ -519,6 +522,41 @@ public class SearchManagerImpl extends SearchManager
 
 	}
 
+	/**
+	 * @param name
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Search> getTargetCard(String name) throws EMAnalyticsFwkException
+	{
+		EntityManager em = null;
+		List<Search> targetCardResult = new ArrayList<Search>();
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			List<EmAnalyticsSearch> targetCardList = em.createNamedQuery("Search.getSearchListByTargetType")
+					.setParameter("searchName", "link_" + name + "%")
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
+			for (EmAnalyticsSearch emTargetCard : targetCardList) {
+				em.refresh(emTargetCard);
+				targetCardResult.add(createSearchObject(emTargetCard, null));
+			}
+		}
+		catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			_logger.error("Error while retrieving the list of target card for the targetType : " + name, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of target card for the targetType : " + name,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		return targetCardResult;
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
@@ -559,7 +597,7 @@ public class SearchManagerImpl extends SearchManager
 	@SuppressWarnings("unchecked")
 	public List<Widget> getWidgetListByProviderNames(boolean includeDashboardIneligible, List<String> providerNames,
 			String widgetGroupId) throws EMAnalyticsFwkException
-			{
+	{
 		if (providerNames == null || providerNames.isEmpty()) {
 			return null;
 		}
@@ -649,7 +687,7 @@ public class SearchManagerImpl extends SearchManager
 				em.close();
 			}
 		}
-			}
+	}
 
 	@Override
 	public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
@@ -1046,37 +1084,19 @@ public class SearchManagerImpl extends SearchManager
 		}
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 * @throws EMAnalyticsFwkException
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Search> getTargetCard(String name) throws EMAnalyticsFwkException{
-		EntityManager  em = null;
-		List<Search> targetCardResult  = new ArrayList<Search>();
-		try {
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			List<EmAnalyticsSearch> targetCardList = (List<EmAnalyticsSearch>) em
-					.createNamedQuery("Search.getSearchListByTargetType")
-					.setParameter("searchName", "link_" + name + "%")
-					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
-					.getResultList();
-			for(EmAnalyticsSearch emTargetCard : targetCardList){
-				em.refresh(emTargetCard);
-				targetCardResult.add(createSearchObject(emTargetCard, null));
-			}
-		} catch(Exception e) {
-			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			_logger.error("Error while retrieving the list of target card for the targetType : " + name, e);
-			throw new EMAnalyticsFwkException("Error while retrieving the list of target card for the targetType : " + name,
-					EMAnalyticsFwkException.ERR_GENERIC, null, e);
-		} finally {
-			if(em != null)
-				em.close();
+	private boolean checkIfIsOldParam(EmAnalyticsSearchParam param)
+	{
+		String name = param.getName();
+		if ("NAME_WIDGET_SOURCE".equals(name) || "WIDGET_GROUP_NAME".equals(name) || "WIDGET_SCREENSHOT_HREF".equals(name)
+				|| "WIDGET_ICON".equals(name) || "WIDGET_KOC_NAME".equals(name) || "WIDGET_VIEWMODEL".equals(name)
+				|| "WIDGET_TEMPLATE".equals(name) || "WIDGET_SUPPORT_TIME_CONTROL".equals(name)
+				|| "WIDGET_LINKED_DASHBOARD".equals(name) || "WIDGET_DEFAULT_WIDTH".equals(name)
+				|| "DASHBOARD_INELIGIBLE".equals(name) || "WIDGET_DEFAULT_HEIGHT".equals(name) || "PROVIDER_NAME".equals(name)
+				|| "PROVIDER_VERSION".equals(name) || "PROVIDER_ASSET_ROOT".equals(name)) {
+			return true;
 		}
-		return  targetCardResult;
+		return false;
+
 	}
 
 	private Search createSearchObject(EmAnalyticsSearch searchObj, Search search) throws EMAnalyticsFwkException
@@ -1147,14 +1167,14 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
 
 			{
-				List<SearchParameter> searchParams = null;
+				List<SearchParameter> searchParams = new ArrayList<SearchParameter>();
 				// get parameters
 				Set<EmAnalyticsSearchParam> params = searchObj.getEmAnalyticsSearchParams();
 				for (EmAnalyticsSearchParam paramObj : params) {
-					EmAnalyticsSearchParam paramVORow = paramObj;
-					if (searchParams == null) {
-						searchParams = new ArrayList<SearchParameter>();
+					if (checkIfIsOldParam(paramObj)) {
+						continue;//handle thos param later
 					}
+					EmAnalyticsSearchParam paramVORow = paramObj;
 					SearchParameter param = new SearchParameter();
 					param.setName(paramVORow.getName());
 					param.setAttributes(paramVORow.getParamAttributes());
@@ -1177,6 +1197,8 @@ public class SearchManagerImpl extends SearchManager
 					}
 					searchParams.add(param);
 				}
+				//handle params in search
+				handleParamsInSearch(searchObj, searchParams);
 				rtnObj.setParameters(searchParams);
 			}
 
@@ -1188,42 +1210,6 @@ public class SearchManagerImpl extends SearchManager
 					null, e);
 		}
 	}
-
-	/*
-	 * private EmAnalyticsFolder
-	 * getEmAnalyticsFolderByCategory(ImportCategoryImpl category ,
-	 * EntityManager em) { EmAnalyticsFolder folder =null; try {
-	 * if(category.getDefaultFolderId()!=null) folder
-	 * =em.find(EmAnalyticsFolder.class , new
-	 * Long(category.getDefaultFolderId())); else {
-	 * if(category.getFolderDetails()!=null){
-	 *
-	 *
-	 * try { folder = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(
-	 * (Folder)category.getFolderDetails(),em); folder =(EmAnalyticsFolder)
-	 * em.createNamedQuery("Folder.getRootFolderByName").
-	 * setParameter("foldername", folder.getName()). getSingleResult();
-	 *
-	 * }catch(NoResultException e){ folder=null; } } } } catch
-	 * (EMAnalyticsFwkException e) { folder =null; } return folder; }
-	 */
-
-	/*private void OrderBybuilder(StringBuilder query, String[] orderBy)
-	{
-		// incidentally the field names for EmAnalyticsSearch and SearchImpl is
-		// same , hence order by will work here
-		if (orderBy != null && orderBy.length != 0 && orderBy[0].length() != 0) {
-			if (orderBy[0] != null) {
-				query.append(" ORDER BY " + SEARCH_ENT_PREFIX + orderBy[0].replaceAll("-", " "));
-			}
-			for (int i = 1; i < orderBy.length; i++) {
-				if (orderBy[i] != null) {
-					query.append("," + SEARCH_ENT_PREFIX + orderBy[i].replaceAll("-", " "));
-				}
-			}
-		}
-
-	}*/
 
 	private Widget createWidgetObject(EmAnalyticsSearch searchObj, boolean loadScreenshot) throws EMAnalyticsFwkException
 	{
@@ -1265,14 +1251,15 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setLastAccessDate(searchObj.getAccessDate());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
 
-			List<SearchParameter> searchParams = null;
+			List<SearchParameter> searchParams = new ArrayList<SearchParameter>();
 			// get parameters
 			Set<EmAnalyticsSearchParam> params = searchObj.getEmAnalyticsSearchParams();
 			for (EmAnalyticsSearchParam paramObj : params) {
-				EmAnalyticsSearchParam paramVORow = paramObj;
-				if (searchParams == null) {
-					searchParams = new ArrayList<SearchParameter>();
+				//check if the param is moved to search ,if is,handle it later
+				if (checkIfIsOldParam(paramObj)) {
+					continue;
 				}
+				EmAnalyticsSearchParam paramVORow = paramObj;
 				SearchParameter param = new SearchParameter();
 				param.setName(paramVORow.getName());
 				param.setType(ParameterType.fromIntValue(paramVORow.getParamType().intValue()));
@@ -1295,6 +1282,8 @@ public class SearchManagerImpl extends SearchManager
 				}
 				searchParams.add(param);
 			}
+			//handle the param(those moved to search) in search
+			handleParamsInSearch(searchObj, searchParams);
 			rtnObj.setParameters(searchParams);
 
 			Category category = CategoryManagerImpl.createCategoryObject(searchObj.getEmAnalyticsCategory(), null);
@@ -1308,6 +1297,42 @@ public class SearchManagerImpl extends SearchManager
 					null, e);
 		}
 	}
+
+	/*
+	 * private EmAnalyticsFolder
+	 * getEmAnalyticsFolderByCategory(ImportCategoryImpl category ,
+	 * EntityManager em) { EmAnalyticsFolder folder =null; try {
+	 * if(category.getDefaultFolderId()!=null) folder
+	 * =em.find(EmAnalyticsFolder.class , new
+	 * Long(category.getDefaultFolderId())); else {
+	 * if(category.getFolderDetails()!=null){
+	 *
+	 *
+	 * try { folder = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(
+	 * (Folder)category.getFolderDetails(),em); folder =(EmAnalyticsFolder)
+	 * em.createNamedQuery("Folder.getRootFolderByName").
+	 * setParameter("foldername", folder.getName()). getSingleResult();
+	 *
+	 * }catch(NoResultException e){ folder=null; } } } } catch
+	 * (EMAnalyticsFwkException e) { folder =null; } return folder; }
+	 */
+
+	/*private void OrderBybuilder(StringBuilder query, String[] orderBy)
+	{
+		// incidentally the field names for EmAnalyticsSearch and SearchImpl is
+		// same , hence order by will work here
+		if (orderBy != null && orderBy.length != 0 && orderBy[0].length() != 0) {
+			if (orderBy[0] != null) {
+				query.append(" ORDER BY " + SEARCH_ENT_PREFIX + orderBy[0].replaceAll("-", " "));
+			}
+			for (int i = 1; i < orderBy.length; i++) {
+				if (orderBy[i] != null) {
+					query.append("," + SEARCH_ENT_PREFIX + orderBy[i].replaceAll("-", " "));
+				}
+			}
+		}
+
+	}*/
 
 	private EmAnalyticsCategory getEmAnalyticsCategoryBySearch(ImportSearchImpl search, EntityManager em)
 	{
@@ -1408,6 +1433,120 @@ public class SearchManagerImpl extends SearchManager
 			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId });
 		}
 		return search;
+	}
+
+	private void handleParamsInSearch(EmAnalyticsSearch searchObj, List<SearchParameter> searchParams)
+	{
+		if (searchObj.getNAME_WIDGET_SOURCE() != null && !DEFAULT_DB_VALUE.equals(searchObj.getNAME_WIDGET_SOURCE())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("NAME_WIDGET_SOURCE");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getNAME_WIDGET_SOURCE());
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_GROUP_NAME() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_GROUP_NAME())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_GROUP_NAME");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getWIDGET_GROUP_NAME());
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_SCREENSHOT_HREF() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_SCREENSHOT_HREF())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_SCREENSHOT_HREF");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getWIDGET_SCREENSHOT_HREF());
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_ICON() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_ICON())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_ICON");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getWIDGET_ICON());
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_KOC_NAME() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_KOC_NAME())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_KOC_NAME");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getWIDGET_KOC_NAME());
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_VIEWMODEL() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_VIEWMODEL())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_VIEWMODEL");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getWIDGET_VIEWMODEL());
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_TEMPLATE() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_TEMPLATE())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_TEMPLATE");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getWIDGET_TEMPLATE());
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_SUPPORT_TIME_CONTROL() != null
+				&& !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_SUPPORT_TIME_CONTROL())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_SUPPORT_TIME_CONTROL");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getWIDGET_SUPPORT_TIME_CONTROL());
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_LINKED_DASHBOARD() != 0L
+				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getNAME_WIDGET_SOURCE()))) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_LINKED_DASHBOARD");
+			param.setType(ParameterType.STRING);
+			param.setValue(String.valueOf(searchObj.getWIDGET_LINKED_DASHBOARD()));
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_DEFAULT_WIDTH() != 0L
+				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getWIDGET_DEFAULT_WIDTH()))) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_DEFAULT_WIDTH");
+			param.setType(ParameterType.STRING);
+			param.setValue(String.valueOf(searchObj.getWIDGET_DEFAULT_WIDTH()));
+			searchParams.add(param);
+		}
+		if (searchObj.getWIDGET_DEFAULT_HEIGHT() != 0L
+				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getWIDGET_DEFAULT_HEIGHT()))) {
+			SearchParameter param = new SearchParameter();
+			param.setName("WIDGET_DEFAULT_HEIGHT");
+			param.setType(ParameterType.STRING);
+			param.setValue(String.valueOf(searchObj.getWIDGET_DEFAULT_HEIGHT()));
+			searchParams.add(param);
+		}
+		if (searchObj.getDASHBOARD_INELIGIBLE() != null && !DEFAULT_DB_VALUE.equals(searchObj.getDASHBOARD_INELIGIBLE())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("DASHBOARD_INELIGIBLE");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getDASHBOARD_INELIGIBLE());
+			searchParams.add(param);
+		}
+		//handle 3 provider information
+		if (searchObj.getPROVIDER_VERSION() != null && !DEFAULT_DB_VALUE.equals(searchObj.getPROVIDER_VERSION())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("PROVIDER_VERSION");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getPROVIDER_VERSION());
+			searchParams.add(param);
+		}
+		if (searchObj.getPROVIDER_ASSET_ROOT() != null && !DEFAULT_DB_VALUE.equals(searchObj.getPROVIDER_ASSET_ROOT())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("PROVIDER_ASSET_ROOT");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getPROVIDER_ASSET_ROOT());
+			searchParams.add(param);
+		}
+		if (searchObj.getPROVIDER_NAME() != null && !DEFAULT_DB_VALUE.equals(searchObj.getPROVIDER_NAME())) {
+			SearchParameter param = new SearchParameter();
+			param.setName("PROVIDER_NAME");
+			param.setType(ParameterType.STRING);
+			param.setValue(searchObj.getPROVIDER_NAME());
+			searchParams.add(param);
+		}
 	}
 
 	private void processUniqueConstraints(Search search, EntityManager em, PersistenceException dmlce)

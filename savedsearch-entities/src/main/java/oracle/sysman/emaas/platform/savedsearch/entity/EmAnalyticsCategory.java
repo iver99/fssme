@@ -98,6 +98,9 @@ public class EmAnalyticsCategory implements Serializable
 	@Column(name = "PROVIDER_ASSET_ROOT")
 	private String providerAssetRoot;
 
+	@Column(name = "DASHBOARD_INELIGIBLE")
+	private String DASHBOARD_INELIGIBLE;
+
 	@OneToMany(mappedBy = "emAnalyticsCategory", cascade = CascadeType.ALL)
 	@PrivateOwned
 	private Set<EmAnalyticsCategoryParam> emAnalyticsCategoryParams;
@@ -120,6 +123,14 @@ public class EmAnalyticsCategory implements Serializable
 	public Date getCreationDate()
 	{
 		return creationDate;
+	}
+
+	/**
+	 * @return the dASHBOARD_INELIGIBLE
+	 */
+	public String getDASHBOARD_INELIGIBLE()
+	{
+		return DASHBOARD_INELIGIBLE;
 	}
 
 	public long getDeleted()
@@ -213,6 +224,15 @@ public class EmAnalyticsCategory implements Serializable
 	public void setCreationDate(Date creationDate)
 	{
 		this.creationDate = creationDate;
+	}
+
+	/**
+	 * @param dASHBOARD_INELIGIBLE
+	 *            the dASHBOARD_INELIGIBLE to set
+	 */
+	public void setDASHBOARD_INELIGIBLE(String dASHBOARD_INELIGIBLE)
+	{
+		DASHBOARD_INELIGIBLE = dASHBOARD_INELIGIBLE;
 	}
 
 	public void setDeleted(long deleted)
