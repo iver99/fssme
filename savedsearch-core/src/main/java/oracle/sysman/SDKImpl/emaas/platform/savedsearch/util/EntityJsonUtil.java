@@ -288,7 +288,8 @@ public class EntityJsonUtil
 		}
 
 		if (sb.toString().endsWith(",")) {
-			sb.deleteCharAt(sb.length() - 1);//remove the extra comma
+			//remove the extra comma
+			sb.deleteCharAt(sb.length() - 1);
 		}
 
 		sb.append("},");
@@ -306,7 +307,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-	EMAnalyticsFwkException
+			EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
