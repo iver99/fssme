@@ -60,6 +60,8 @@ public class CategoryManagerImpl extends CategoryManager
 
 	private static final CategoryManagerImpl _instance = new CategoryManagerImpl();
 
+	private static final String DB_DEFAULT_VALUE = "0";
+
 	public static Category createCategoryObject(EmAnalyticsCategory category, Category categoryObj) throws Exception
 	{
 		CategoryImpl rtnObj = null;
@@ -114,8 +116,8 @@ public class CategoryManagerImpl extends CategoryManager
 			// handle params
 
 			Set<EmAnalyticsCategoryParam> params = category.getEmAnalyticsCategoryParams();
+			List<Parameter> categoryParams = new ArrayList<Parameter>();
 			if (params != null && params.size() > 0) {
-				List<Parameter> categoryParams = new ArrayList<Parameter>();
 				for (EmAnalyticsCategoryParam paramObj : params) {
 					Parameter param = new Parameter();
 					param.setName(paramObj.getName());
@@ -123,6 +125,21 @@ public class CategoryManagerImpl extends CategoryManager
 					param.setValue(paramObj.getValue());
 					categoryParams.add(param);
 				}
+
+			}
+			if (!CategoryManagerImpl.containsDashboardIneligible(categoryParams)) {
+				_logger.debug("Try to Get DASHBOARD_INELIGIBLE from category");
+				if (category.getDASHBOARD_INELIGIBLE() != null && !DB_DEFAULT_VALUE.equals(category.getDASHBOARD_INELIGIBLE())) {
+					_logger.debug("Getting DASHBOARD_INELIGIBLE from category");
+					Parameter param = new Parameter();
+					param.setName("DASHBOARD_INELIGIBLE");
+					param.setType(ParameterType.STRING);
+					param.setValue(category.getDASHBOARD_INELIGIBLE());
+					categoryParams.add(param);
+				}
+			}
+			if (categoryParams.size() > 0) {
+				_logger.debug("Category's parameter number is > 0!");
 				rtnObj.setParameters(categoryParams);
 			}
 
@@ -137,6 +154,19 @@ public class CategoryManagerImpl extends CategoryManager
 	public static CategoryManager getInstance()
 	{
 		return _instance;
+	}
+
+	//check if param list contains DASHBOARD_INELIGIBLE
+	private static boolean containsDashboardIneligible(List<Parameter> params)
+	{
+		for (Parameter param : params) {
+			if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
+				_logger.debug("List<Parameter> contains DASHBOARD_INELIGIBLE!");
+				return true;
+			}
+		}
+		_logger.debug("List<Parameter> did not contains DASHBOARD_INELIGIBLE!");
+		return false;
 	}
 
 	/**
@@ -497,5 +527,4 @@ public class CategoryManagerImpl extends CategoryManager
 		}
 		return importedList;
 	}
-
 }

@@ -11,6 +11,13 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,12 +25,6 @@ import org.apache.logging.log4j.message.MessageFormatMessage;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
 /**
  * Create JSON string for each entity (search/folder/category) and return to user
@@ -60,7 +61,7 @@ public class EntityJsonUtil
 
 	public static final String NAME_CATEGORY_ID = "categoryId";
 
-	public static final String Name_SYSTEM_SEARCH ="systemSearch";
+	public static final String Name_SYSTEM_SEARCH = "systemSearch";
 
 	public static final String NAME_CATEGORY = "category";
 	public static final String NAME_CATEGORY_DEFAULTFOLDERID = "defaultFolderId";
@@ -124,6 +125,8 @@ public class EntityJsonUtil
 	public static final String ERROR_CODE = "errorCode";
 
 	private static final Integer MAX_DASHBOARD_TILE_WIDTH = 8;
+
+	private static final String DEFAULT_DB_VALUE = "0";
 
 	public static JSONObject getErrorJsonObject(long id, String message, long errorcode) throws EMAnalyticsFwkException
 	{
@@ -199,62 +202,10 @@ public class EntityJsonUtil
 	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray)
 			throws EMAnalyticsFwkException
 	{
-		return EntityJsonUtil.getSearchJsonObj(baseUri, search,
-				new String[] { NAME_GUID, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET }, folderPathArray,
-				false);
+		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
+				NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET }, folderPathArray, false);
 	}
 
-	/**
-	 *
-	 * @param baseUri
-	 * @param search
-	 * @return
-	 * @throws EMAnalyticsFwkException
-	 */
-
-	public static JSONObject getTargetCardJsonObj(URI baseUri, Search search)
-			throws EMAnalyticsFwkException
-	{
-		return EntityJsonUtil.getTargetCardJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER,
-				NAME_SEARCH_QUERYSTR,NAME_LASTACCESSDATE,NAME_LASTMODIFIEDBY,Name_SYSTEM_SEARCH ,NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
-				NAME_SEARCH_IS_WIDGET });
-	}
-	/**
-	 *
-	 * @param baseUri
-	 * @param search
-	 * @param excludedFields
-	 * @return
-	 * @throws EMAnalyticsFwkException
-	 */
-
-	public static JSONObject getTargetCardJsonObj(URI baseUri, Search search, String[] excludedFields) throws EMAnalyticsFwkException
-	{
-		JSONObject searchObj = null;
-		try {
-			searchObj = JSONUtil.ObjectToJSONObject(search, excludedFields);
-			if (searchObj.has(NAME_FOLDER_ID)) {
-				int folderId = searchObj.getInt(NAME_FOLDER_ID);
-				JSONObject folderObj = new JSONObject();
-				folderObj.put(NAME_ID, folderId);
-				searchObj.remove(NAME_FOLDER_ID);
-				searchObj.put(NAME_FOLDER, folderObj);
-			}
-			if (searchObj.has(NAME_CATEGORY_ID)) {
-				int categoryId = searchObj.getInt(NAME_CATEGORY_ID);
-				JSONObject folderObj = new JSONObject();
-				folderObj.put(NAME_ID, categoryId);
-				searchObj.remove(NAME_CATEGORY_ID);
-				searchObj.put(NAME_CATEGORY, folderObj);
-			}
-
-		}
-		catch (JSONException ex) {
-			throw new EMAnalyticsFwkException("An error occurred while converting search object to JSON string",
-					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
-		}
-		return searchObj;
-	}
 	/**
 	 * Return full JSON string for search
 	 *
@@ -281,6 +232,70 @@ public class EntityJsonUtil
 		return obj;
 	}
 
+	public static String getJsonString(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		sb.append("\"WIDGET_UNIQUE_ID\":").append(Integer.valueOf(m.get("SEARCH_ID").toString())).append(",");
+		sb.append("\"WIDGET_NAME\":").append("\"" + m.get("NAME") + "\"").append(",");
+		sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
+		sb.append("\"WIDGET_OWNER\":").append("\"" + m.get("OWNER") + "\"").append(",");
+
+		String createdOn = null;
+		if (m.get("CREATION_DATE") != null) {
+			createdOn = DateUtil.getDateFormatter().format(m.get("CREATION_DATE"));
+		}
+		sb.append("\"WIDGET_CREATION_TIME\":").append("\"" + createdOn + "\"").append(",");
+		sb.append("\"WIDGET_SOURCE\":").append(1).append(",");
+		sb.append("\"WIDGET_GROUP_NAME\":").append("\"" + m.get("CATOGORY_NAME") + "\"").append(",");
+		sb.append("\"WIDGET_SCREENSHOT_HREF\":").append("\"" + screenshotUrl + "\"").append(",");
+		sb.append("\"WIDGET_SUPPORT_TIME_CONTROL\":").append("\"" + m.get("WIDGET_SUPPORT_TIME_CONTROL") + "\"").append(",");
+		sb.append("\"WIDGET_KOC_NAME\":").append("\"" + m.get("WIDGET_KOC_NAME") + "\"").append(",");
+		sb.append("\"WIDGET_TEMPLATE\":").append("\"" + m.get("WIDGET_TEMPLATE") + "\"").append(",");
+		sb.append("\"WIDGET_VIEWMODEL\":").append("\"" + m.get("WIDGET_VIEWMODEL") + "\"").append(",");
+
+		//if provider_name ,provider_version,provider_asset_root, did not exist in search table, find value in category table
+		if (m.get("PROVIDER_NAME") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_NAME"))) {
+			sb.append("\"PROVIDER_NAME\":").append("\"" + m.get("PROVIDER_NAME") + "\"").append(",");
+		}
+		else {
+			sb.append("\"PROVIDER_NAME\":").append("\"" + m.get("C_PROVIDER_NAME") + "\"").append(",");
+		}
+		if (m.get("PROVIDER_VERSION") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_VERSION"))) {
+			sb.append("\"PROVIDER_VERSION\":").append("\"" + m.get("PROVIDER_VERSION") + "\"").append(",");
+		}
+		else {
+			sb.append("\"PROVIDER_VERSION\":").append("\"" + m.get("C_PROVIDER_VERSION") + "\"").append(",");
+		}
+		if (m.get("PROVIDER_ASSET_ROOT") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_ASSET_ROOT"))) {
+			sb.append("\"PROVIDER_ASSET_ROOT\":").append("\"" + m.get("PROVIDER_ASSET_ROOT") + "\"").append(",");
+		}
+		else {
+			sb.append("\"PROVIDER_ASSET_ROOT\":").append("\"" + m.get("C_PROVIDER_ASSET_ROOT") + "\"").append(",");
+		}
+
+		if (m.get("WIDGET_DEFAULT_HEIGHT") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_HEIGHT").toString())) {
+			sb.append("\"WIDGET_DEFAULT_HEIGHT\":").append("\"" + m.get("WIDGET_DEFAULT_HEIGHT") + "\"").append(",");
+		}
+		if (m.get("DASHBOARD_INELIGIBLE") != null && !DEFAULT_DB_VALUE.equals(m.get("DASHBOARD_INELIGIBLE").toString())) {
+			sb.append("\"DASHBOARD_INELIGIBLE\":").append("\"" + m.get("DASHBOARD_INELIGIBLE") + "\"").append(",");
+		}
+		if (m.get("WIDGET_LINKED_DASHBOARD") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_LINKED_DASHBOARD").toString())) {
+			sb.append("\"WIDGET_LINKED_DASHBOARD\":").append("\"" + m.get("WIDGET_LINKED_DASHBOARD") + "\"").append(",");
+		}
+		if (m.get("WIDGET_DEFAULT_WIDTH") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_WIDTH").toString())) {
+			sb.append("\"WIDGET_DEFAULT_WIDTH\":").append("\"" + m.get("WIDGET_DEFAULT_WIDTH") + "\"");
+		}
+
+		if (sb.toString().endsWith(",")) {
+			sb.deleteCharAt(sb.length() - 1);//remove the extra comma
+		}
+
+		sb.append("},");
+		logger.debug("Finished Conversion to JSON String:" + sb.toString());
+		return sb.toString();
+	}
+
 	/**
 	 * Return simple JSON string for category (without default folder and parameters)
 	 *
@@ -290,11 +305,11 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category)
-			throws JSONException, EMAnalyticsFwkException
+	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
+	EMAnalyticsFwkException
 	{
-		return EntityJsonUtil.getCategoryJsonObj(baseUri, category,
-				new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER, NAME_PARAMETERS }, true);
+		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
+				NAME_PARAMETERS }, true);
 	}
 
 	/**
@@ -324,9 +339,8 @@ public class EntityJsonUtil
 	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder, boolean includeType)
 			throws EMAnalyticsFwkException
 	{
-		return EntityJsonUtil.getFolderJsonObj(baseUri, folder,
-				new String[] { NAME_OWNER, NAME_LASTMODIFIEDBY, NAME_FOLDER_PARENTFOLDER, NAME_FOLDER_UIHIDDEN }, true,
-				includeType);
+		return EntityJsonUtil.getFolderJsonObj(baseUri, folder, new String[] { NAME_OWNER, NAME_LASTMODIFIEDBY,
+				NAME_FOLDER_PARENTFOLDER, NAME_FOLDER_UIHIDDEN }, true, includeType);
 	}
 
 	/**
@@ -373,10 +387,60 @@ public class EntityJsonUtil
 	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search, String[] folderPathArray, boolean includeType)
 			throws EMAnalyticsFwkException
 	{
-		return EntityJsonUtil.getSearchJsonObj(baseUri, search,
-				new String[] { NAME_GUID, NAME_OWNER, NAME_LASTMODIFIEDBY, NAME_SEARCH_QUERYSTR, NAME_PARAMETERS,
-						NAME_LASTACCESSDATE, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET },
-				folderPathArray, includeType);
+		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER, NAME_LASTMODIFIEDBY,
+				NAME_SEARCH_QUERYSTR, NAME_PARAMETERS, NAME_LASTACCESSDATE, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
+				NAME_SEARCH_IS_WIDGET }, folderPathArray, includeType);
+	}
+
+	/**
+	 * @param baseUri
+	 * @param search
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+
+	public static JSONObject getTargetCardJsonObj(URI baseUri, Search search) throws EMAnalyticsFwkException
+	{
+		return EntityJsonUtil.getTargetCardJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER, NAME_SEARCH_QUERYSTR,
+				NAME_LASTACCESSDATE, NAME_LASTMODIFIEDBY, Name_SYSTEM_SEARCH, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
+				NAME_SEARCH_IS_WIDGET });
+	}
+
+	/**
+	 * @param baseUri
+	 * @param search
+	 * @param excludedFields
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+
+	public static JSONObject getTargetCardJsonObj(URI baseUri, Search search, String[] excludedFields)
+			throws EMAnalyticsFwkException
+	{
+		JSONObject searchObj = null;
+		try {
+			searchObj = JSONUtil.ObjectToJSONObject(search, excludedFields);
+			if (searchObj.has(NAME_FOLDER_ID)) {
+				int folderId = searchObj.getInt(NAME_FOLDER_ID);
+				JSONObject folderObj = new JSONObject();
+				folderObj.put(NAME_ID, folderId);
+				searchObj.remove(NAME_FOLDER_ID);
+				searchObj.put(NAME_FOLDER, folderObj);
+			}
+			if (searchObj.has(NAME_CATEGORY_ID)) {
+				int categoryId = searchObj.getInt(NAME_CATEGORY_ID);
+				JSONObject folderObj = new JSONObject();
+				folderObj.put(NAME_ID, categoryId);
+				searchObj.remove(NAME_CATEGORY_ID);
+				searchObj.put(NAME_CATEGORY, folderObj);
+			}
+
+		}
+		catch (JSONException ex) {
+			throw new EMAnalyticsFwkException("An error occurred while converting search object to JSON string",
+					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
+		}
+		return searchObj;
 	}
 
 	/**
@@ -406,6 +470,26 @@ public class EntityJsonUtil
 
 		return widgetGroupObj;
 	}
+
+	//	/**
+	//	 * Return simple JSON string for widget screen shot
+	//	 *
+	//	 * @param widgetScreenshot
+	//	 * @return
+	//	 * @throws JSONException
+	//	 */
+	//	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
+	//	{
+	//		JSONObject widgetScreenshotObj = new JSONObject();
+	//		try {
+	//			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
+	//		}
+	//		catch (JSONException ex) {
+	//			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
+	//					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
+	//		}
+	//		return widgetScreenshotObj;
+	//	}
 
 	/**
 	 * Return simple JSON string for widget
@@ -487,9 +571,9 @@ public class EntityJsonUtil
 			}
 
 			//Check if it is a valid widget, if not then return null
-			if (widgetObj.has(NAME_WIDGET_KOC_NAME) && widgetObj.has(NAME_WIDGET_VIEWMODEL) && widgetObj.has(NAME_WIDGET_TEMPLATE)
-					&& widgetObj.has(NAME_WIDGET_PROVIDER_NAME) && widgetObj.has(NAME_WIDGET_PROVIDER_VERSION)
-					&& widgetObj.has(NAME_WIDGET_PROVIDER_ASSET_ROOT)) {
+			if (widgetObj.has(NAME_WIDGET_KOC_NAME) && widgetObj.has(NAME_WIDGET_VIEWMODEL)
+					&& widgetObj.has(NAME_WIDGET_TEMPLATE) && widgetObj.has(NAME_WIDGET_PROVIDER_NAME)
+					&& widgetObj.has(NAME_WIDGET_PROVIDER_VERSION) && widgetObj.has(NAME_WIDGET_PROVIDER_ASSET_ROOT)) {
 				return widgetObj;
 			}
 		}
@@ -499,26 +583,6 @@ public class EntityJsonUtil
 		}
 		return null;
 	}
-
-	//	/**
-	//	 * Return simple JSON string for widget screen shot
-	//	 *
-	//	 * @param widgetScreenshot
-	//	 * @return
-	//	 * @throws JSONException
-	//	 */
-	//	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
-	//	{
-	//		JSONObject widgetScreenshotObj = new JSONObject();
-	//		try {
-	//			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
-	//		}
-	//		catch (JSONException ex) {
-	//			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
-	//					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
-	//		}
-	//		return widgetScreenshotObj;
-	//	}
 
 	private static JSONObject getCategoryJsonObj(URI baseUri, Category category, String[] excludedFields, boolean isSimple)
 			throws EMAnalyticsFwkException
