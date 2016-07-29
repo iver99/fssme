@@ -27,6 +27,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
 import org.codehaus.jettison.json.JSONException;
@@ -493,6 +494,30 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
+	public void testGetTargetCardJsonObj()
+	{
+		Search search = new SearchImpl();
+		search.setFolderId(1);
+		search.setCategoryId(1);
+		try {
+			JSONObject jsonObject = EntityJsonUtil.getTargetCardJsonObj(uri, search, null);
+			System.out.println(jsonObject);
+			Assert.assertNotNull(jsonObject);
+			Assert.assertNotNull(jsonObject.get("folder"));
+			Assert.assertNotNull(jsonObject.get("category"));
+			Assert.assertEquals(jsonObject.has("folderId"), false);
+			Assert.assertEquals(jsonObject.has("categoryId"), false);
+
+		}
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test(groups = { "s1" })
 	public void testGetWidgetGroupJsonObj() throws EMAnalyticsFwkException
 	{
 		JSONObject widgetGroupObj = EntityJsonUtil.getWidgetGroupJsonObj(uri, category);
@@ -521,7 +546,6 @@ public class EntityJsonUtilTest extends BaseTest
 	{
 		JSONObject widgetObj = EntityJsonUtil.getWidgetJsonObj(widget, category, null);
 		String output = widgetObj.toString();
-		System.out.println(widgetObj);
 		final String VERIFY_STRING1 = "\"WIDGET_UNIQUE_ID\":10001";
 		final String VERIFY_STRING2 = "\"WIDGET_NAME\":\"Widget for UT\"";
 		final String VERIFY_STRING3 = "\"WIDGET_DESCRIPTION\":\"Widget desc for UT\"";
