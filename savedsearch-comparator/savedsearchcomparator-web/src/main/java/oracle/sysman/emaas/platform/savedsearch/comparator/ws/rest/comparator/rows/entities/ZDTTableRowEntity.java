@@ -32,9 +32,6 @@ public class ZDTTableRowEntity
 	@JsonProperty("EMS_ANALYTICS_LAST_ACCESS")
 	private List<SavedSearchLastAccessRowEntity> savedSearchLastAccess;
 
-	@JsonProperty("EMS_ANALYTICS_SCHEMA_VER_SSF")
-	private List<SavedSearchSchemaVerRowEntity> savedSearchSchemaVer;
-
 	@JsonProperty("EMS_ANALYTICS_SEARCH_PARAMS")
 	private List<SavedSearchSearchParamRowEntity> savedSearchSearchParams;
 
@@ -89,14 +86,7 @@ public class ZDTTableRowEntity
 		else if (!savedSearchLastAccess.equals(other.savedSearchLastAccess)) {
 			return false;
 		}
-		if (savedSearchSchemaVer == null) {
-			if (other.savedSearchSchemaVer != null) {
-				return false;
-			}
-		}
-		else if (!savedSearchSchemaVer.equals(other.savedSearchSchemaVer)) {
-			return false;
-		}
+		
 		if (savedSearchSearch == null) {
 			if (other.savedSearchSearch != null) {
 				return false;
@@ -148,14 +138,7 @@ public class ZDTTableRowEntity
 		return savedSearchLastAccess;
 	}
 
-	/**
-	 * @return the savedSearchSchemaVer
-	 */
-	public List<SavedSearchSchemaVerRowEntity> getSavedSearchSchemaVer()
-	{
-		return savedSearchSchemaVer;
-	}
-
+	
 	/**
 	 * @return the savedSearchSearch
 	 */
@@ -184,7 +167,6 @@ public class ZDTTableRowEntity
 		result = prime * result + (savedSearchCategoryParams == null ? 0 : savedSearchCategoryParams.hashCode());
 		result = prime * result + (savedSearchFoldersy == null ? 0 : savedSearchFoldersy.hashCode());
 		result = prime * result + (savedSearchLastAccess == null ? 0 : savedSearchLastAccess.hashCode());
-		result = prime * result + (savedSearchSchemaVer == null ? 0 : savedSearchSchemaVer.hashCode());
 		result = prime * result + (savedSearchSearch == null ? 0 : savedSearchSearch.hashCode());
 		result = prime * result + (savedSearchSearchParams == null ? 0 : savedSearchSearchParams.hashCode());
 		return result;
@@ -226,15 +208,7 @@ public class ZDTTableRowEntity
 		this.savedSearchLastAccess = savedSearchLastAccess;
 	}
 
-	/**
-	 * @param savedSearchSchemaVer
-	 *            the savedSearchSchemaVer to set
-	 */
-	public void setSavedSearchSchemaVer(List<SavedSearchSchemaVerRowEntity> savedSearchSchemaVer)
-	{
-		this.savedSearchSchemaVer = savedSearchSchemaVer;
-	}
-
+	
 	/**
 	 * @param savedSearchSearch
 	 *            the savedSearchSearch to set
@@ -261,7 +235,7 @@ public class ZDTTableRowEntity
 	{
 		return "ZDTTableRowEntity [savedSearchCategory=" + savedSearchCategory + ", savedSearchCategoryParams="
 				+ savedSearchCategoryParams + ", savedSearchFoldersy=" + savedSearchFoldersy + ", savedSearchLastAccess="
-				+ savedSearchLastAccess + ", savedSearchSchemaVer=" + savedSearchSchemaVer + ", savedSearchSearchParams="
+				+ savedSearchLastAccess + ", savedSearchSearchParams="
 				+ savedSearchSearchParams + ", savedSearchSearch=" + savedSearchSearch + "]";
 	}
 
