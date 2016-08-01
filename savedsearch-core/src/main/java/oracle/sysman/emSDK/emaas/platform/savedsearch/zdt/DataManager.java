@@ -26,6 +26,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.config.QueryHints;
 import org.eclipse.persistence.config.ResultType;
+import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
+import org.eclipse.persistence.jpa.JpaEntityManager;
+import org.eclipse.persistence.queries.DatabaseQuery;
+import org.eclipse.persistence.sessions.DatabaseRecord;
+import org.eclipse.persistence.sessions.Session;
 
 /**
  * @author pingwu
@@ -195,17 +200,17 @@ public class DataManager
 
 		if (count <= 0) {
 			//execute insert action
-			logger.debug("Data not exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute insert action.");
+			logger.info("Data not exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute insert action.");
 			sql = SyncSavedSearchSqlUtil.concatCategoryParamInsert(categoryId, name, paramValue, tenantId, creationDate,
 					lastModificationDate);
-			logger.debug("Sync data in EMS_ANALYTICS_CATEGORY_PARAMS,execute insert SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_CATEGORY_PARAMS,execute insert SQL:[" + sql + "]");
 		}
 		else {
 			//execute update action
-			logger.debug("Data exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute update action.");
+			logger.info("Data exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute update action.");
 			sql = SyncSavedSearchSqlUtil.concatCategoryParamUpdate(categoryId, name, paramValue, tenantId, creationDate,
 					lastModificationDate);
-			logger.debug("Sync data in EMS_ANALYTICS_CATEGORY_PARAMS,execute update SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_CATEGORY_PARAMS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
 		syncDatabaseTableData(sql);
@@ -217,29 +222,36 @@ public class DataManager
 			Long defaultFolderId, Long deleted, String providerName, String providerVersion, String providerDiscovery,
 			String providerAssetroot, Long tenantId, String dashboardIneligible, String lastModificationDate)
 	{
+		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
-		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=?0 and t.TENANT_ID=?1";//check if the data is existing.
+		//em = getEntityManager();
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		if (em == null) {
+			logger.error("Can't get persistence entity manager");
+		}
 		Query q1 = em.createNativeQuery(sql);
+		Session session = em.unwrap(JpaEntityManager.class).getActiveSession();
+		DatabaseQuery databaseQuery = ((EJBQueryImpl) q1).getDatabaseQuery();
+		databaseQuery.prepareCall(session, new DatabaseRecord());
 		q1.setParameter(0, categoryId);
 		q1.setParameter(1, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
 			//execute insert action
-			logger.debug("Data not exist in table EMS_ANALYTICS_CATEGORY,execute insert action.");
+			logger.info("Data not exist in table EMS_ANALYTICS_CATEGORY,execute insert action.");
 			sql = SyncSavedSearchSqlUtil.concatCategoryInsert(categoryId, name, description, owner, creationDate, nameNlsid,
 					nameSubSystem, descriptionNlsid, descriptionSubSystem, emPluginId, defaultFolderId, deleted, providerName,
 					providerVersion, providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-			logger.debug("Sync data in EMS_ANALYTICS_CATEGORY,execute insert SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_CATEGORY,execute insert SQL:[" + sql + "]");
 		}
 		else {
 			//execute update action
-			logger.debug("Data exist in table EMS_ANALYTICS_CATEGORY,execute update action.");
+			logger.info("Data exist in table EMS_ANALYTICS_CATEGORY,execute update action.");
 			sql = SyncSavedSearchSqlUtil.concatCategoryUpdate(categoryId, name, description, owner, creationDate, nameNlsid,
 					nameSubSystem, descriptionNlsid, descriptionSubSystem, emPluginId, defaultFolderId, deleted, providerName,
 					providerVersion, providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-			logger.debug("Sync data in EMS_ANALYTICS_CATEGORY,execute update SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_CATEGORY,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
 		syncDatabaseTableData(sql);
@@ -260,19 +272,19 @@ public class DataManager
 
 		if (count <= 0) {
 			//execute insert action
-			logger.debug("Data not exist in table EMS_ANALYTICS_FOLDERS,execute insert action.");
+			logger.info("Data not exist in table EMS_ANALYTICS_FOLDERS,execute insert action.");
 			sql = SyncSavedSearchSqlUtil.concatFolderInsert(folderId, name, parentId, description, creationDate, owner,
 					lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem, descriptionNlsid, descriptionSubsystem,
 					systemFolder, emPluginId, uiHidden, deleted, tenantId);
-			logger.debug("Sync data in EMS_ANALYTICS_FOLDERS,execute insert SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_FOLDERS,execute insert SQL:[" + sql + "]");
 		}
 		else {
 			//execute update action
-			logger.debug("Data exist in table EMS_ANALYTICS_FOLDERS,execute update action.");
+			logger.info("Data exist in table EMS_ANALYTICS_FOLDERS,execute update action.");
 			sql = SyncSavedSearchSqlUtil.concatFolderUpdate(folderId, name, parentId, description, creationDate, owner,
 					lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem, descriptionNlsid, descriptionSubsystem,
 					systemFolder, emPluginId, uiHidden, deleted, tenantId);
-			logger.debug("Sync data in EMS_ANALYTICS_FOLDERS,execute update SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_FOLDERS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
 		syncDatabaseTableData(sql);
@@ -294,17 +306,17 @@ public class DataManager
 
 		if (count <= 0) {
 			//execute insert action
-			logger.debug("Data not exist in table EMS_ANALYTICS_LAST_ACCESS,execute insert action.");
+			logger.info("Data not exist in table EMS_ANALYTICS_LAST_ACCESS,execute insert action.");
 			sql = SyncSavedSearchSqlUtil.concatLastAccessInsert(objectId, accessedBy, objectType, accessDate, tenantId,
 					creationDate, lastModificationDate);
-			logger.debug("Sync data in EMS_ANALYTICS_LAST_ACCESS,execute insert SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_LAST_ACCESS,execute insert SQL:[" + sql + "]");
 		}
 		else {
 			//execute update action
-			logger.debug("Data exist in table EMS_ANALYTICS_LAST_ACCESS,execute update action.");
+			logger.info("Data exist in table EMS_ANALYTICS_LAST_ACCESS,execute update action.");
 			sql = SyncSavedSearchSqlUtil.concatLastAccessUpdate(objectId, accessedBy, objectType, accessDate, tenantId,
 					creationDate, lastModificationDate);
-			logger.debug("Sync data in EMS_ANALYTICS_LAST_ACCESS,execute update SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_LAST_ACCESS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
 		syncDatabaseTableData(sql);
@@ -325,17 +337,17 @@ public class DataManager
 
 		if (count <= 0) {
 			//execute insert action
-			logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute insert action.");
+			logger.info("Data not exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute insert action.");
 			sql = SyncSavedSearchSqlUtil.concatSearchParamsInsert(searchId, name, paramAttributes, paramType, paramValueStr,
 					paramValueClob, tenantId, creationDate, lastModificationDate);
-			logger.debug("Sync data in EMS_ANALYTICS_SEARCH_PARAMS,execute insert SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_SEARCH_PARAMS,execute insert SQL:[" + sql + "]");
 		}
 		else {
 			//execute update action
-			logger.debug("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
+			logger.info("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
 			sql = SyncSavedSearchSqlUtil.concatSearchParamsUpdate(searchId, name, paramAttributes, paramType, paramValueStr,
 					paramValueClob, tenantId, creationDate, lastModificationDate);
-			logger.debug("Sync data in EMS_ANALYTICS_SEARCH_PARAMS,execute update SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_SEARCH_PARAMS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
 		syncDatabaseTableData(sql);
@@ -362,7 +374,7 @@ public class DataManager
 
 		if (count <= 0) {
 			//execute insert action
-			logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH,execute insert action.");
+			logger.info("Data not exist in table EMS_ANALYTICS_SEARCH,execute insert action.");
 			sql = SyncSavedSearchSqlUtil.concatSearchInsert(searchId, searchGuid, name, owner, creationDate,
 					lastModificationDate, lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem,
 					descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, metaDataClob, searchDisplayStr,
@@ -370,11 +382,11 @@ public class DataManager
 					widgetKocName, viewModel, widgetTemplate, widgetSupportTimeControl, widgetLinkedDashboard,
 					widgetDefaultWidth, widgetDefaultHeight, dashboardIneligible, providerName, providerVersion,
 					providerAssetRoot);
-			logger.debug("Sync data in EMS_ANALYTICS_SEARCH,execute insert SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_SEARCH,execute insert SQL:[" + sql + "]");
 		}
 		else {
 			//execute update action
-			logger.debug("Data exist in table EMS_ANALYTICS_SEARCH,execute update action.");
+			logger.info("Data exist in table EMS_ANALYTICS_SEARCH,execute update action.");
 			sql = SyncSavedSearchSqlUtil.concatSearchUpdate(searchId, searchGuid, name, owner, creationDate,
 					lastModificationDate, lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem,
 					descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, metaDataClob, searchDisplayStr,
@@ -382,7 +394,7 @@ public class DataManager
 					widgetKocName, viewModel, widgetTemplate, widgetSupportTimeControl, widgetLinkedDashboard,
 					widgetDefaultWidth, widgetDefaultHeight, dashboardIneligible, providerName, providerVersion,
 					providerAssetRoot);
-			logger.debug("Sync data in EMS_ANALYTICS_SEARCH,execute update SQL:[" + sql + "]");
+			logger.info("Sync data in EMS_ANALYTICS_SEARCH,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
 		syncDatabaseTableData(sql);
