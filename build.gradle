@@ -243,7 +243,7 @@ publishing.publications {
     if (project.tasks.findByName('lrgMetadataZip')) {
         // Publication for publishing lrg metadata
         lrgMetadata(MavenPublication) {
-            groupId 'com.oracle.emaas.emcpssf.test' 
+            groupId "${publishGroup}"
             artifact lrgMetadataZip
             setArtifactId(lrgMetadataZip.baseName)
         }
