@@ -1,6 +1,11 @@
                                
 buildscript {
-   apply from: 'test-buildscript-apply.gradle'                                                                                            
+   apply from: 'test-buildscript-apply.gradle'  
+   dependencies { 
+         
+        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"                
+        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}"              
+    }                                                                                                
 }  
 apply from: 'setup.gradle'
 apply from: 'test-project-apply.gradle'                                                                                     
