@@ -346,8 +346,19 @@ public class SearchManagerTest extends BaseTest
 		AssertJUnit.assertNotNull(queried);
 		if (queried != null) {
 			AssertJUnit.assertEquals(2, queried.size());
-			assertSearchEquals(search1, queried.get(0));
-			assertSearchEquals(search2, queried.get(1));
+			long searchId1 = queried.get(0).getId();
+			long searchId2 = queried.get(1).getId();
+			if (searchId1 < searchId2) {
+				assertSearchEquals(search1, queried.get(0));
+				assertSearchEquals(search2, queried.get(1));
+			}
+			else if (searchId1 > searchId2) {
+				assertSearchEquals(search2, queried.get(0));
+				assertSearchEquals(search1, queried.get(1));
+			}
+			else {
+				AssertJUnit.assertTrue("Same search id of two searches: search_id=" + searchId1, false);
+			}
 		}
 
 		sm.deleteSearch(search1.getId(), true);
