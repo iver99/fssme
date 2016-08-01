@@ -346,16 +346,13 @@ public class WidgetAPI
 	}
 
 	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible) throws EMAnalyticsFwkException,
-			IOException
+	IOException
 	{
 		List<String> providers = TenantSubscriptionUtil.getTenantSubscribedServiceProviders(TenantContext.getContext()
 				.gettenantName());
 		_logger.debug("Retrieved subscribed providers {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
-		/*List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible, providers,
-				widgetGroupId);*/
 		List<Map<String, Object>> widgetList = WidgetManager.getInstance().getWidgetListByProviderNames(providers, widgetGroupId);
-		/*String message = WidgetManager.getInstance().getWidgetJsonStringFromWidgetList(widgetList);*/
 		String message = WidgetManager.getInstance().getSpelledJsonFromQueryResult(widgetList);
 
 		return message;

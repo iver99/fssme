@@ -146,7 +146,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImp
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/SearchPaurameterDetailsTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/DBConnectionManagerTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderManagerImplTest.java"*/
-
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/WidgetManagerImplTest.class"
 
 //include "oracle/sysman/emaas/savedsearch/CategoryTest.class"
 //include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
