@@ -186,7 +186,7 @@ public class DataManager
 	{
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY_PARAMS t where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
+		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY_PARAMS t where t.CATEGORY_ID=?0 and t.TENANT_ID=?1 and t.NAME=?2";//check if the data is existing.
 		Query q1 = em.createNativeQuery(sql);
 		q1.setParameter(0, categoryId);
 		q1.setParameter(1, tenantId);
@@ -219,7 +219,7 @@ public class DataManager
 	{
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=?0 and t.TENANT_ID=?1";//check if the data is existing.
 		Query q1 = em.createNativeQuery(sql);
 		q1.setParameter(0, categoryId);
 		q1.setParameter(1, tenantId);
@@ -252,7 +252,7 @@ public class DataManager
 	{
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_FOLDERS t where t.FOLDER_ID=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select count(1) from EMS_ANALYTICS_FOLDERS t where t.FOLDER_ID=?0 and t.TENANT_ID=?1";//check if the data is existing.
 		Query q1 = em.createNativeQuery(sql);
 		q1.setParameter(0, folderId);
 		q1.setParameter(1, tenantId);
@@ -284,7 +284,7 @@ public class DataManager
 	{
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_LAST_ACCESS t where t.OBJECT_ID=? and t.ACCESSED_BY=? and t.OBJECT_TYPE=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select count(1) from EMS_ANALYTICS_LAST_ACCESS t where t.OBJECT_ID=?0 and t.ACCESSED_BY=?1 and t.OBJECT_TYPE=?2 and t.TENANT_ID=?3";//check if the data is existing.
 		Query q1 = em.createNativeQuery(sql);
 		q1.setParameter(0, objectId);
 		q1.setParameter(1, accessedBy);
@@ -316,7 +316,7 @@ public class DataManager
 	{
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_SEARCH_PARAMS t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select count(1) from EMS_ANALYTICS_SEARCH_PARAMS t where t.SEARCH_ID=?0 and t.NAME=?1 and t.TENANT_ID=?2";//check if the data is existing.
 		Query q1 = em.createNativeQuery(sql);
 		q1.setParameter(0, searchId);
 		q1.setParameter(1, name);
@@ -353,7 +353,7 @@ public class DataManager
 	{
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_SEARCH t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select count(1) from EMS_ANALYTICS_SEARCH t where t.SEARCH_ID=?0 and t.NAME=?1 and t.TENANT_ID=?2";//check if the data is existing.
 		Query q1 = em.createNativeQuery(sql);
 		q1.setParameter(0, searchId);
 		q1.setParameter(1, name);
