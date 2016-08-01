@@ -173,7 +173,15 @@ class EmAnalyticsObjectUtil
 		List<Parameter> params = category.getParameters();
 		//Set<EmAnalyticsCategoryParam> paramSet = new HashSet<EmAnalyticsCategoryParam>();
 		if (params != null && params.size() != 0) {
-			for (Parameter param : params) {
+			Iterator<Parameter> paramIter = params.iterator();
+			while (paramIter.hasNext()) {
+				Parameter param = paramIter.next();
+				//parameter DASHBOARD_INELIGIBLE has been move into Category table as a column
+				if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
+					categoryObj.setDASHBOARD_INELIGIBLE(param.getValue());
+					paramIter.remove();
+					continue;
+				}
 				EmAnalyticsCategoryParam categoryParamEntity = new EmAnalyticsCategoryParam();
 				categoryParamEntity.setCategoryId(categoryObj.getCategoryId());
 				categoryParamEntity.setEmAnalyticsCategory(categoryObj);
@@ -239,6 +247,15 @@ class EmAnalyticsObjectUtil
 
 		existingParams.addAll(newParams.values()); // Set addition takes
 		// care of duplicates !!
+		Iterator<EmAnalyticsCategoryParam> paramIter = existingParams.iterator();
+		while (paramIter.hasNext()) {
+			EmAnalyticsCategoryParam paramObj = paramIter.next();
+			if ("DASHBOARD_INELIGIBLE".equals(paramObj.getName())) {
+				categoryEntity.setDASHBOARD_INELIGIBLE(paramObj.getValue());
+				paramIter.remove();
+				break;
+			}
+		}
 		return categoryEntity;
 	}
 
@@ -416,6 +433,8 @@ class EmAnalyticsObjectUtil
 		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
 		searchEntity.setDeleted(BigInteger.ZERO);
 		List<SearchParameter> params = search.getParameters();
+		//move values from search_params table to search table
+		EmAnalyticsObjectUtil.moveParamsToSearchAdd(searchEntity, params);
 		if (params != null && params.size() != 0) {
 			for (SearchParameter param : params) {
 				EmAnalyticsSearchParam searchParamEntity = new EmAnalyticsSearchParam();
@@ -536,6 +555,9 @@ class EmAnalyticsObjectUtil
 			}
 		}
 		existingParams.addAll(newParams.values());
+
+		//move value from params to search table
+		EmAnalyticsObjectUtil.moveParamsToSearchEdit(searchEntity, existingParams);
 
 		searchEntity.setAccessDate(utcNow);
 		return searchEntity;
@@ -665,6 +687,31 @@ class EmAnalyticsObjectUtil
 		return searchObj;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static String getSearchParamByName(BigInteger searchId, String paramName, EntityManager em)
+	{
+		List<EmAnalyticsSearchParam> paramList = em.createNamedQuery("SearchParam.getParamByName")
+				.setParameter("searchId", searchId).setParameter("name", paramName).getResultList();
+		if (!paramList.isEmpty()) {
+			EmAnalyticsSearchParam param = paramList.get(0);
+			return ParameterType.STRING.getIntValue() == param.getParamType().intValue() ? param.getParamValueStr() : param
+					.getParamValueClob();
+		}
+		else {
+			return null;
+		}
+	}
+
+	private static boolean containODSEntityId(Collection<EmAnalyticsSearchParam> params)
+	{
+		for (EmAnalyticsSearchParam param : params) {
+			if ("meId".equals(param.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/* DEAD CODE
 	public static boolean isFolderExist(Folder folder)
 	{
@@ -705,28 +752,171 @@ class EmAnalyticsObjectUtil
 	}
 	 */
 
-	@SuppressWarnings("unchecked")
-	public static String getSearchParamByName(BigInteger searchId, String paramName, EntityManager em)
+	private static void moveParamsToSearchAdd(EmAnalyticsSearch searchEntity, List<SearchParameter> params)
 	{
-		List<EmAnalyticsSearchParam> paramList = em.createNamedQuery("SearchParam.getParamByName")
-				.setParameter("searchId", searchId).setParameter("name", paramName).getResultList();
-		if (!paramList.isEmpty()) {
-			EmAnalyticsSearchParam param = paramList.get(0);
-			return ParameterType.STRING.getIntValue() == param.getParamType().intValue() ? param.getParamValueStr() : param
-					.getParamValueClob();
-		}
-		else {
-			return null;
+		if (params != null && params.size() != 0) {
+			Iterator<SearchParameter> paramIter = params.iterator();
+			while (paramIter.hasNext()) {
+				SearchParameter param = paramIter.next();
+				if ("NAME_WIDGET_SOURCE".equals(param.getName())) {
+					searchEntity.setNAME_WIDGET_SOURCE(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_GROUP_NAME".equals(param.getName())) {
+					searchEntity.setWIDGET_GROUP_NAME(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_SCREENSHOT_HREF".equals(param.getName())) {
+					searchEntity.setWIDGET_SCREENSHOT_HREF(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_ICON".equals(param.getName())) {
+					searchEntity.setWIDGET_ICON(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_KOC_NAME".equals(param.getName())) {
+					searchEntity.setWIDGET_KOC_NAME(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_VIEWMODEL".equals(param.getName())) {
+					searchEntity.setWIDGET_VIEWMODEL(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_TEMPLATE".equals(param.getName())) {
+					searchEntity.setWIDGET_TEMPLATE(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_SUPPORT_TIME_CONTROL".equals(param.getName())) {
+					searchEntity.setWIDGET_SUPPORT_TIME_CONTROL(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_LINKED_DASHBOARD".equals(param.getName())) {
+					searchEntity.setWIDGET_LINKED_DASHBOARD(Long.valueOf(param.getValue()));
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_DEFAULT_WIDTH".equals(param.getName())) {
+					searchEntity.setWIDGET_DEFAULT_WIDTH(Long.valueOf(param.getValue()));
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_DEFAULT_HEIGHT".equals(param.getName())) {
+					searchEntity.setWIDGET_DEFAULT_HEIGHT(Long.valueOf(param.getValue()));
+					paramIter.remove();
+					continue;
+				}
+				if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
+					searchEntity.setDASHBOARD_INELIGIBLE(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("PROVIDER_NAME".equals(param.getName())) {
+					searchEntity.setPROVIDER_NAME(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("PROVIDER_VERSION".equals(param.getName())) {
+					searchEntity.setPROVIDER_VERSION(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("PROVIDER_ASSET_ROOT".equals(param.getName())) {
+					searchEntity.setPROVIDER_ASSET_ROOT(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+			}
 		}
 	}
 
-	private static boolean containODSEntityId(Collection<EmAnalyticsSearchParam> params)
+	private static void moveParamsToSearchEdit(EmAnalyticsSearch searchEntity, Set<EmAnalyticsSearchParam> existingParams)
 	{
-		for (EmAnalyticsSearchParam param : params) {
-			if ("meId".equals(param.getName())) {
-				return true;
+		Iterator<EmAnalyticsSearchParam> paramIter = existingParams.iterator();
+		while (paramIter.hasNext()) {
+			EmAnalyticsSearchParam param = paramIter.next();
+			if ("NAME_WIDGET_SOURCE".equals(param.getName())) {
+				searchEntity.setNAME_WIDGET_SOURCE(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_GROUP_NAME".equals(param.getName())) {
+				searchEntity.setWIDGET_GROUP_NAME(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_SCREENSHOT_HREF".equals(param.getName())) {
+				searchEntity.setWIDGET_SCREENSHOT_HREF(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_ICON".equals(param.getName())) {
+				searchEntity.setWIDGET_ICON(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_KOC_NAME".equals(param.getName())) {
+				searchEntity.setWIDGET_KOC_NAME(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_VIEWMODEL".equals(param.getName())) {
+				searchEntity.setWIDGET_VIEWMODEL(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_TEMPLATE".equals(param.getName())) {
+				searchEntity.setWIDGET_TEMPLATE(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_SUPPORT_TIME_CONTROL".equals(param.getName())) {
+				searchEntity.setWIDGET_SUPPORT_TIME_CONTROL(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_LINKED_DASHBOARD".equals(param.getName())) {
+				searchEntity.setWIDGET_LINKED_DASHBOARD(Long.valueOf(param.getParamValueStr()));
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_DEFAULT_WIDTH".equals(param.getName())) {
+				searchEntity.setWIDGET_DEFAULT_WIDTH(Long.valueOf(param.getParamValueStr()));
+				paramIter.remove();
+				continue;
+			}
+			if ("WIDGET_DEFAULT_HEIGHT".equals(param.getName())) {
+				searchEntity.setWIDGET_DEFAULT_HEIGHT(Long.valueOf(param.getParamValueStr()));
+				paramIter.remove();
+				continue;
+			}
+			if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
+				searchEntity.setDASHBOARD_INELIGIBLE(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("PROVIDER_NAME".equals(param.getName())) {
+				searchEntity.setPROVIDER_NAME(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("PROVIDER_VERSION".equals(param.getName())) {
+				searchEntity.setPROVIDER_VERSION(param.getParamValueStr());
+				paramIter.remove();
+				continue;
+			}
+			if ("PROVIDER_ASSET_ROOT".equals(param.getName())) {
+				searchEntity.setPROVIDER_ASSET_ROOT(param.getParamValueStr());
+				paramIter.remove();
+				continue;
 			}
 		}
-		return false;
 	}
 }

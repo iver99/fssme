@@ -38,7 +38,6 @@ public class SavedSearchApplication extends Application
 		s.add(WidgetGroupAPI.class);
 		s.add(LoggingConfigAPI.class);
 		s.add(TargetCardLinksFilterAPI.class);
-
 		return s;
 	}
 

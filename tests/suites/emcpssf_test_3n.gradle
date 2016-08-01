@@ -105,6 +105,8 @@ task DEVTest(type:EMTest,dependsOn: omcSetup){
 	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/SearchManagerTestMockup.class"
 	include "oracle/sysman/emaas/savedsearch/SavedSearchDbExceptionTest.class"
+	include "oracle/sysman/emaas/savedsearch/SearchNonGroupsTest.class"
+	include "oracle/sysman/emaas/savedsearch/FolderManagerNonGroupsTest.class"
 	useRestAssured =true
 	ext.set("testType", "unit")
 }

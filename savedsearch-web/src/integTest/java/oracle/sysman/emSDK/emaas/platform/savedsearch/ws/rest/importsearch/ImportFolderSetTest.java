@@ -28,13 +28,18 @@ public class ImportFolderSetTest {
     private static final BigInteger TEST_ID_10 = BigInteger.TEN;
 	private  ImportFolderSet importFolderSet = new ImportFolderSet();
     private String xml = "[{\"id\":121,\"name\":\"Category123\",\"providerName\":\"Log Analytics\",\"prividerVersion\":\"1.0\",\"providerDiscovery\":\"discovery\",\"providerAssetRoot\":\"asset\"}]";
-
+    @Mocked
+    InputStream inputStream;
+    @Mocked
+    FolderSet folderSet;
+    @Mocked
+    FolderManagerImpl folderManagerImpl;
+    @Mocked
+    JAXBContext jaxbContext;
     @Test
     public void testImportsFolders(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
-        URL url = ImportCategorySetTest.class.getResource("./folder.xsd");
-        final  InputStream stream = url.openStream();
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
-        FolderDetails folderDetails = new FolderDetails();
+        final FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("name");
         folderDetailses.add(folderDetails);
         final List<FolderImpl> folderlist = new ArrayList<FolderImpl>();
@@ -46,33 +51,19 @@ public class ImportFolderSetTest {
         new Expectations(){
             {
                 anyJaxbutil.getJAXBContext(ObjectFactory.class);
-                result = JAXBContext.newInstance();
-                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(stream),withAny(JAXBContext.newInstance()));
-                result = new FolderSet();
+                result = jaxbContext;
+                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(inputStream),withAny(jaxbContext));
+                result = folderSet;
+                folderManagerImpl.saveMultipleFolders(folderDetailses);
+                folderSet.getFolderSet();
+                result = folderDetails;
             }
-        };
-        new MockUp<FolderManagerImpl>(){
-            @Mock
-            public List<FolderImpl> saveMultipleFolders(List<FolderDetails> folders) throws Exception
-            {
-                return folderlist;
-            }
-        };
-        new MockUp<FolderSet>(){
-            @Mock
-            public List<FolderDetails> getFolderSet()
-            {
-                return folderDetailses;
-            }
-
         };
         Assert.assertNotNull(importFolderSet.importsFolders(xml));
 
     }
     @Test
     public void testImportsFolders2nd(@Mocked final JAXBUtil anyJaxbutil, @Mocked final Exception exception) throws Exception {
-        URL url = ImportCategorySetTest.class.getResource("./folder.xsd");
-        final  InputStream stream = url.openStream();
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
         FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("name");
@@ -86,25 +77,13 @@ public class ImportFolderSetTest {
         new Expectations(){
             {
                 anyJaxbutil.getJAXBContext(ObjectFactory.class);
-                result = exception;
-                exception.printStackTrace();
+                result = jaxbContext;
+                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(inputStream),withAny(jaxbContext));
+                result = folderSet;
+                folderManagerImpl.saveMultipleFolders(folderDetailses);
+                folderSet.getFolderSet();
+                result = folderDetailses;
             }
-        };
-        new MockUp<FolderManagerImpl>(){
-            @Mock
-            public List<FolderImpl> saveMultipleFolders(List<FolderDetails> folders) throws Exception
-            {
-                if(true){throw new Exception();}
-                return folderlist;
-            }
-        };
-        new MockUp<FolderSet>(){
-            @Mock
-            public List<FolderDetails> getFolderSet()
-            {
-                return folderDetailses;
-            }
-
         };
         Assert.assertNotNull(importFolderSet.importsFolders(xml));
 
@@ -112,8 +91,6 @@ public class ImportFolderSetTest {
 
     @Test
     public void testImportsFolders3th(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
-        URL url = ImportCategorySetTest.class.getResource("./folder.xsd");
-        final InputStream stream = url.openStream();
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
         FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("name");
@@ -127,27 +104,15 @@ public class ImportFolderSetTest {
         new Expectations() {
             {
                 anyJaxbutil.getJAXBContext(ObjectFactory.class);
-                result = JAXBContext.newInstance();
-                Deencapsulation.invoke(anyJaxbutil, "unmarshal", withAny(new StringReader(xml)), withAny(stream), withAny(JAXBContext.newInstance()));
-                result = new FolderSet();
+                result = jaxbContext;
+                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(inputStream),withAny(jaxbContext));
+                result = folderSet;
+                folderManagerImpl.saveMultipleFolders(folderDetailses);
+                folderSet.getFolderSet();
+                result = folderDetailses;
             }
-        };
-        new MockUp<FolderManagerImpl>() {
-            @Mock
-            public List<FolderImpl> saveMultipleFolders(List<FolderDetails> folders) throws Exception {
-                if (true) {
-                    throw new ImportException();
-                }
-                return folderlist;
-            }
-        };
-        new MockUp<FolderSet>() {
-            @Mock
-            public List<FolderDetails> getFolderSet() {
-                return folderDetailses;
-            }
-
         };
         Assert.assertNotNull(importFolderSet.importsFolders(xml));
          }
     }
+
