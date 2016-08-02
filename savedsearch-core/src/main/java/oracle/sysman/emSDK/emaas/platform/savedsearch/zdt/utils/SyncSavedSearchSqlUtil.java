@@ -150,7 +150,7 @@ public class SyncSavedSearchSqlUtil
 				+ widgetLinkedDashboard + "," + widgetDefaultWidth + "," + widgetDefaultHeight + ",'" + providerName + "','"
 				+ providerVersion + "','" + providerAssetRoot + "','" + dashboardIneligible + "')";//look out the order of 3 provider* columns and dashboard_ineligible
 		 */
-		String insertSql = "INSERT INTO EMS_ANALYTICS_SEARCH(SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
+		String insertSql = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
 				+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,"
 				+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,"
 				+ "EM_PLUGIN_ID,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
@@ -195,7 +195,7 @@ public class SyncSavedSearchSqlUtil
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot)
 	{
-		String updateSql = "UPDATE EMS_ANALYTICS_SEARCH t set t.SEARCH_GUID='" + searchGuid + "',t.NAME='" + name + "',t.OWNER='"
+		/*String updateSql = "UPDATE EMS_ANALYTICS_SEARCH t set t.SEARCH_GUID='" + searchGuid + "',t.NAME='" + name + "',t.OWNER='"
 				+ owner + "'," + "t.CREATION_DATE=to_timestamp('" + creationDate
 				+ "','yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFICATION_DATE=to_timestamp('" + lastModificationDate
 				+ "','yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFIED_BY='" + lastModifiedBy + "'," + "t.DESCRIPTION='" + description
@@ -213,7 +213,14 @@ public class SyncSavedSearchSqlUtil
 				+ "t.PROVIDER_VERSION='" + providerVersion + "',t.PROVIDER_ASSET_ROOT='" + providerAssetRoot
 				+ "',t.DASHBOARD_INELIGIBLE='" + dashboardIneligible + "' " + "where t.SEARCH_ID=" + searchId
 				+ " and t.TENANT_ID=" + tenantId;//look out the order of 3 provider* columns and dashboard_ineligible
-
+*/
+		String updateSql="UPDATE EMS_ANALYTICS_SEARCH t set t.SEARCH_GUID=?,t.NAME=?,t.OWNER=?,t.CREATION_DATE=?,t.LAST_MODIFICATION_DATE=?,"
+				+ "t.LAST_MODIFIED_BY=?,t.DESCRIPTION=?,t.FOLDER_ID=?,t.CATEGORY_ID=?,t.NAME_NLSID=?,t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,"
+				+ "t.DESCRIPTION_SUBSYSTEM=?,t.SYSTEM_SEARCH=?,t.EM_PLUGIN_ID=?,t.IS_LOCKED=?,t.METADATA_CLOB=?,t.SEARCH_DISPLAY_STR=?,t.UI_HIDDEN=?,"
+				+ "t.DELETED=?,t.IS_WIDGET=?,t.NAME_WIDGET_SOURCE=?,t.WIDGET_GROUP_NAME=?,t.WIDGET_SCREENSHOT_HREF=?,t.WIDGET_ICON=?,"
+				+ "t.WIDGET_KOC_NAME=?,t.WIDGET_VIEWMODEL=?,t.WIDGET_TEMPLATE=?,t.WIDGET_SUPPORT_TIME_CONTROL=?,t.WIDGET_LINKED_DASHBOARD=?,"
+				+ "t.WIDGET_DEFAULT_WIDTH=?,t.WIDGET_DEFAULT_HEIGHT=?,t.PROVIDER_NAME=?,t.PROVIDER_VERSION=?,t.PROVIDER_ASSET_ROOT=?,"
+				+ "t.DASHBOARD_INELIGIBLE=? where t.SEARCH_ID=? and t.TENANT_ID=?";
 		return updateSql;
 	}
 

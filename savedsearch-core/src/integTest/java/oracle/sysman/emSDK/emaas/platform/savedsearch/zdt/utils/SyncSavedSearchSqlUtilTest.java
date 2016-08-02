@@ -238,7 +238,7 @@ public class SyncSavedSearchSqlUtilTest
 
 	}
 
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatSearchUpdate()
 	{
 		String VERITY_STRING1 = "t.SEARCH_GUID='35D93AFFF3112149E053C05DF00A2A5D'";

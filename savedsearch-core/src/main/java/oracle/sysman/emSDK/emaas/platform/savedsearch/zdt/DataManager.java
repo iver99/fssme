@@ -384,7 +384,7 @@ public class DataManager
 			.setParameter(28, widgetKocName).setParameter(29, viewModel).setParameter(30, widgetTemplate)
 					.setParameter(31, widgetSupportTimeControl).setParameter(32, widgetLinkedDashboard)
 					.setParameter(33, widgetDefaultWidth).setParameter(34, widgetDefaultHeight).setParameter(35, providerName)
-			.setParameter(36, providerVersion).setParameter(374, providerAssetRoot).setParameter(38, dashboardIneligible)
+			.setParameter(36, providerVersion).setParameter(37, providerAssetRoot).setParameter(38, dashboardIneligible)
 					.executeUpdate();
 		}
 		else {
@@ -398,7 +398,21 @@ public class DataManager
 					widgetDefaultWidth, widgetDefaultHeight, dashboardIneligible, providerName, providerVersion,
 					providerAssetRoot);
 			logger.info("Sync data in EMS_ANALYTICS_SEARCH,execute update SQL:[" + sql + "]");
-			em.createNativeQuery(sql).executeUpdate();
+			em.createNativeQuery(sql).setParameter(1, searchGuid).setParameter(2, name)
+			.setParameter(3, owner).setParameter(4, creationDate).setParameter(5, lastModificationDate)
+					.setParameter(6, lastModifiedBy).setParameter(7, description).setParameter(8, folderId)
+					.setParameter(9, categoryId).setParameter(10, nameNlsid).setParameter(11, nameSubsystem)
+					.setParameter(12, descriptionNlsid).setParameter(13, descriptionSubsystem).setParameter(14, systemSearch)
+			.setParameter(15, emPluginId).setParameter(16, isLocked).setParameter(17, metaDataClob)
+					.setParameter(18, searchDisplayStr).setParameter(19, uiHidden).setParameter(20, deleted)
+					.setParameter(21, isWidget).setParameter(22, nameWidgetSource)
+					.setParameter(23, widgetGroupName).setParameter(24, widgetScreenshotHref).setParameter(25, widgetIcon)
+			.setParameter(26, widgetKocName).setParameter(27, viewModel).setParameter(28, widgetTemplate)
+					.setParameter(29, widgetSupportTimeControl).setParameter(30, widgetLinkedDashboard)
+					.setParameter(31, widgetDefaultWidth).setParameter(32, widgetDefaultHeight).setParameter(33, providerName)
+			.setParameter(34, providerVersion).setParameter(35, providerAssetRoot).setParameter(36, dashboardIneligible)
+			.setParameter(37, searchId).setParameter(38, tenantId)
+					.executeUpdate();
 		}
 		//sync Data
 		//		syncDatabaseTableData(sql,em);
