@@ -3,86 +3,81 @@ SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
 DECLARE
+OOB_WLS_PATCH      CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='WebLogic Servers with their Patch IDs';
+OOB_WLS_MAX_HEAP   CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='WebLogic Servers with small Maximum Heap Size';
+OOB_WLS_PORTS      CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='WebLogic Servers and their Ports';
+OOB_DB_GT_10G      CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Databases with Autoextend ON and size greater than 10GB';
+OOB_TOP10_LNR_LOAD CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Top 10 Listeners by Load';
+OOB_HOST_INV       CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Host Inventory By Platform';
+OOB_TOP25_DB_RC    CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Top 25 Databases by Resource Consumption';
+OOB_DB_CFG_VER     CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Database Configuration and Storage By Version';
+OOB_TOP25_WLS_HEAP CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Top 25 WebLogic Servers by Heap Usage';
+OOB_TOP25_WLS_LOAD CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Top 25 WebLogic Servers by Load';
+OOB_WLS_JDK        CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='WebLogic Servers by JDK Version';
+OOB_TOP5_DB        CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Top 5 Databases';
+OOB_TOP5_HOSTS     CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Top 5 Hosts';
+OOB_TOP5_WLS       CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Top 5 WebLogic Servers';
+OOB_TOP5_APP       CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Top 5 Application Deployments ';
+OOB_TARGET_ST      CONSTANT EMS_ANALYTICS_SEARCH.NAME%TYPE:='Targets Status';
 BEGIN
   DELETE FROM EMS_ANALYTICS_LAST_ACCESS
   WHERE TENANT_ID = '&TENANT_ID' AND OBJECT_TYPE=2 and OBJECT_ID IN
       (SELECT SEARCH_ID FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' and  SEARCH_ID<10000 and NAME IN 
-  ('Database Configuration and Storage by Version'
-  ,'Enterprise Overview'
-  ,'Host Inventory by Platform'
-  ,'Top 25 Databases by Resource Consumption'
-  ,'Top 25 Weblogic Servers by Heap Usage'
-  ,'Top 25 Weblogic Servers by Load'
-  ,'Weblogic Severs by JDK Version'
-  ,'Weblogic Servers with their Patch ID'
-  ,'Weblogic Servers with small maximum heap'
-  ,'Weblogic servers and their ports'
-  ,'Databases with autoextend on and size greater than 10GB'
-  ,'Top 10 listeners by load'
-  ,'host inventory by platform'
-  ,'Top 25 databases by resource consumption'
-  ,'Database Configuration and Storage by Version'
-  ,'Top 25 Weblogic Servers by Heap Usage'
-  ,'Top 25 Weblogic Servers by Load'
-  ,'Weblogic servers by JDK version'
-  ,'Top 5 databases'
-  ,'Top 5 hosts'
-  ,'Top 5 weblogic servers'
-  ,'Top 5 application deployments'
-  ,'Target status')
+  (OOB_WLS_PATCH
+  ,OOB_WLS_MAX_HEAP
+  ,OOB_WLS_PORTS
+  ,OOB_DB_GT_10G
+  ,OOB_TOP10_LNR_LOAD
+  ,OOB_HOST_INV
+  ,OOB_TOP25_DB_RC
+  ,OOB_DB_CFG_VER
+  ,OOB_TOP25_WLS_HEAP
+  ,OOB_TOP25_WLS_LOAD
+  ,OOB_WLS_JDK
+  ,OOB_TOP5_DB
+  ,OOB_TOP5_HOSTS
+  ,OOB_TOP5_WLS
+  ,OOB_TOP5_APP
+  ,OOB_TARGET_ST)
       );
       
   DELETE FROM EMS_ANALYTICS_SEARCH_PARAMS
   WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID IN
       (SELECT SEARCH_ID FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' and  SEARCH_ID<10000 and NAME IN 
-  ('Database Configuration and Storage by Version'
-  ,'Enterprise Overview'
-  ,'Host Inventory by Platform'
-  ,'Top 25 Databases by Resource Consumption'
-  ,'Top 25 Weblogic Servers by Heap Usage'
-  ,'Top 25 Weblogic Servers by Load'
-  ,'Weblogic Severs by JDK Version'
-  ,'Weblogic Servers with their Patch ID'
-  ,'Weblogic Servers with small maximum heap'
-  ,'Weblogic servers and their ports'
-  ,'Databases with autoextend on and size greater than 10GB'
-  ,'Top 10 listeners by load'
-  ,'host inventory by platform'
-  ,'Top 25 databases by resource consumption'
-  ,'Database Configuration and Storage by Version'
-  ,'Top 25 Weblogic Servers by Heap Usage'
-  ,'Top 25 Weblogic Servers by Load'
-  ,'Weblogic servers by JDK version'
-  ,'Top 5 databases'
-  ,'Top 5 hosts'
-  ,'Top 5 weblogic servers'
-  ,'Top 5 application deployments'
-  ,'Target status')
+  (OOB_WLS_PATCH
+  ,OOB_WLS_MAX_HEAP
+  ,OOB_WLS_PORTS
+  ,OOB_DB_GT_10G
+  ,OOB_TOP10_LNR_LOAD
+  ,OOB_HOST_INV
+  ,OOB_TOP25_DB_RC
+  ,OOB_DB_CFG_VER
+  ,OOB_TOP25_WLS_HEAP
+  ,OOB_TOP25_WLS_LOAD
+  ,OOB_WLS_JDK
+  ,OOB_TOP5_DB
+  ,OOB_TOP5_HOSTS
+  ,OOB_TOP5_WLS
+  ,OOB_TOP5_APP
+  ,OOB_TARGET_ST)
       );
   DELETE FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' and  SEARCH_ID<10000 and NAME IN 
-  ('Database Configuration and Storage by Version'
-  ,'Enterprise Overview'
-  ,'Host Inventory by Platform'
-  ,'Top 25 Databases by Resource Consumption'
-  ,'Top 25 Weblogic Servers by Heap Usage'
-  ,'Top 25 Weblogic Servers by Load'
-  ,'Weblogic Severs by JDK Version'
-  ,'Weblogic Servers with their Patch ID'
-  ,'Weblogic Servers with small maximum heap'
-  ,'Weblogic servers and their ports'
-  ,'Databases with autoextend on and size greater than 10GB'
-  ,'Top 10 listeners by load'
-  ,'host inventory by platform'
-  ,'Top 25 databases by resource consumption'
-  ,'Database Configuration and Storage by Version'
-  ,'Top 25 Weblogic Servers by Heap Usage'
-  ,'Top 25 Weblogic Servers by Load'
-  ,'Weblogic servers by JDK version'
-  ,'Top 5 databases'
-  ,'Top 5 hosts'
-  ,'Top 5 weblogic servers'
-  ,'Top 5 application deployments'
-  ,'Target status');
+  (OOB_WLS_PATCH
+  ,OOB_WLS_MAX_HEAP
+  ,OOB_WLS_PORTS
+  ,OOB_DB_GT_10G
+  ,OOB_TOP10_LNR_LOAD
+  ,OOB_HOST_INV
+  ,OOB_TOP25_DB_RC
+  ,OOB_DB_CFG_VER
+  ,OOB_TOP25_WLS_HEAP
+  ,OOB_TOP25_WLS_LOAD
+  ,OOB_WLS_JDK
+  ,OOB_TOP5_DB
+  ,OOB_TOP5_HOSTS
+  ,OOB_TOP5_WLS
+  ,OOB_TOP5_APP
+  ,OOB_TARGET_ST);
   COMMIT;
   DBMS_OUTPUT.PUT_LINE('Remove out of box widgets for BF successfully');
 EXCEPTION
