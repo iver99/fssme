@@ -6,6 +6,10 @@ import java.util.List;
 
 import javax.ws.rs.core.UriBuilder;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
 
@@ -57,11 +61,36 @@ public class TenantSubscriptionUtilTest
 	AppMappingCollection appMappingCollection;
 	@Mocked
 	AppMappingEntity appMappingEntity;
-
+	@Mocked
+	Category category;
+	@Mocked
+    CategoryManager categoryManager;
+    @Mocked
+    CacheManager cacheManager;
+    @Mocked
+    Tenant tenant;
+    @Mocked
+    AppMappingEntity.AppMappingValue appMappingValue;
 	@Test
 	public void testGetTenantSubscribedCategories() throws Exception
 	{
-
+        final ArrayList<Category> categories = new ArrayList<>();
+        categories.add(category);
+        final ArrayList<String> cachedApps = new ArrayList<>();
+        cachedApps.add("TargetAnalytics");
+        new Expectations(){
+            {
+                CategoryManager.getInstance();
+                result =categoryManager;
+                categoryManager.getAllCategories();
+                result = categories;
+                cacheManager.getCacheable(withAny(tenant), anyString, anyString);
+                result = cachedApps;
+                category.getProviderName();
+                result = "TargetAnalytics";
+            }
+        };
+        TenantSubscriptionUtil.getTenantSubscribedCategories("testtenant", true);
 	}
 
 	@Test
@@ -72,7 +101,9 @@ public class TenantSubscriptionUtilTest
 		list.add(domainEntity);
 		final List<AppMappingEntity> amecList = new ArrayList<>();
 		amecList.add(appMappingEntity);
-		new Expectations() {
+        final List<AppMappingEntity.AppMappingValue>  appMappingValues = new ArrayList<>();
+        appMappingValues.add(appMappingValue);
+        new Expectations() {
 			{
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = link;
@@ -108,8 +139,22 @@ public class TenantSubscriptionUtilTest
 				result = appMappingCollection;
 				appMappingCollection.getItems();
 				result = amecList;
+                appMappingEntity.getValues();
+                result = appMappingValues;
+                appMappingValue.getOpcTenantId();
+                result = "testtenant";
+                appMappingValue.getApplicationNames();
+                result = "LogAnalytics,ITAnalytics,APM";
 			}
 		};
-		TenantSubscriptionUtil.getTenantSubscribedServices("");
+		TenantSubscriptionUtil.getTenantSubscribedServices("testtenant");
+	}
+	@Test
+	public void testGetProviderNameFromServiceName(){
+		TenantSubscriptionUtil.getProviderNameFromServiceName("ITAnalytics");
+		TenantSubscriptionUtil.getProviderNameFromServiceName("LogAnalytics");
+		TenantSubscriptionUtil.getProviderNameFromServiceName("APM");
+		TenantSubscriptionUtil.getProviderNameFromServiceName(null);
+		TenantSubscriptionUtil.getProviderNameFromServiceName("APMUI");
 	}
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -31,7 +32,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.Screensho
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
 import org.apache.logging.log4j.LogManager;
@@ -96,7 +96,7 @@ public class WidgetAPI
 	 *         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "PROVIDER_ASSET_ROOT": "home"<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; }<br>
 	 *         ]</font><br>
-	 *         <br>
+	 * <br>
 	 *         Response Code:<br>
 	 *         <table border="1">
 	 *         <tr>
@@ -191,7 +191,7 @@ public class WidgetAPI
 	 *         <font color="DarkCyan">{<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "WIDGET_VISUAL":
 	 *         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAz3UlE..." }</font><br>
-	 *         <br>
+	 * <br>
 	 *         Response Code:<br>
 	 *         <table border="1">
 	 *         <tr>
@@ -223,8 +223,8 @@ public class WidgetAPI
 		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
 		CacheControl cc = new CacheControl();
 		cc.setMaxAge(2592000);
-		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId(),
-				TenantContext.getContext().gettenantName());
+		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId(), TenantContext.getContext()
+				.gettenantName());
 
 		//try to get screenshot from cache
 		try {
@@ -307,10 +307,8 @@ public class WidgetAPI
 		catch (Exception e) {
 			message = e.getMessage();
 			statusCode = 500;
-			_logger.error(
-					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
-							+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message,
-					e);
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		return Response.status(statusCode).entity(message).type(MediaType.APPLICATION_JSON).build();
 	}
@@ -348,16 +346,15 @@ public class WidgetAPI
 		return null;
 	}
 
-	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible)
-			throws EMAnalyticsFwkException, IOException
+	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible) throws EMAnalyticsFwkException,
+	IOException
 	{
-		List<String> providers = TenantSubscriptionUtil
-				.getTenantSubscribedServiceProviders(TenantContext.getContext().gettenantName());
+		List<String> providers = TenantSubscriptionUtil.getTenantSubscribedServiceProviders(TenantContext.getContext()
+				.gettenantName());
 		_logger.debug("Retrieved subscribed providers {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
-		List<Widget> widgetList = SearchManager.getInstance().getWidgetListByProviderNames(includeDashboardIneligible, providers,
-				widgetGroupId);
-		String message = WidgetManager.getInstance().getWidgetJsonStringFromWidgetList(widgetList);
+		List<Map<String, Object>> widgetList = WidgetManager.getInstance().getWidgetListByProviderNames(providers, widgetGroupId);
+		String message = WidgetManager.getInstance().getSpelledJsonFromQueryResult(widgetList);
 
 		return message;
 	}

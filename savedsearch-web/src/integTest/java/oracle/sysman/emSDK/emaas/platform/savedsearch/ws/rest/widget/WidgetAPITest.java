@@ -5,15 +5,14 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
@@ -34,6 +33,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 /**
  * Created by xidai on 2/26/2016.
  */
@@ -41,7 +43,34 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 public class WidgetAPITest
 {
 	private static final BigInteger TEST_ID_10 = BigInteger.TEN;
+	private static List<Map<String, Object>> mockedWidgetObjects()
+	{
+		List<Map<String, Object>> map = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < 45; i++) {
+			Map<String, Object> m = new HashMap<String, Object>();
+			m.put("SEARCH_ID", "1000");
+			m.put("SP_WIDGET_KOC_NAME", "Test");
+			m.put("SP_WIDGET_VIEWMODEL", "Test");
+			m.put("SP_WIDGET_TEMPLATE", "Test");
+			m.put("SP_WIDGET_LINKED_DASHBOARD", "1");
+			m.put("SP_WIDGET_DEFAULT_WIDTH", "10");
+			m.put("SP_WIDGET_DEFAULT_HEIGHT", "10");
+			m.put("SP_DASHBOARD_INELIGIBLE", "Test");
+			m.put("NAME", "Test");
+			m.put("DESCRIPTION", "Test");
+			m.put("OWNER", "Test");
+			m.put("CREATION_DATE", "20-05-16 05.49.10.971542000 AM");
+			m.put("CATOGORY_NAME", "Test");
+			m.put("PROVIDER_NAME", "Test");
+			m.put("PROVIDER_VERSION", "100");
+			m.put("PROVIDER_ASSET_ROOT", "Test");
+			map.add(m);
+		}
+		return map;
+	}
+
 	private final WidgetAPI widgetAPI = new WidgetAPI();
+
 	Date now = new Date();
 
 	@BeforeMethod
@@ -222,7 +251,7 @@ public class WidgetAPITest
 		new Expectations() {
 			{
 				oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil
-						.getTenantSubscribedServiceProviders(anyString);
+				.getTenantSubscribedServiceProviders(anyString);
 				result = Arrays.asList("LoganService", "emcitas-ui-apps", "TargetAnalytics", "ApmUI");
 			}
 		};
@@ -233,14 +262,14 @@ public class WidgetAPITest
 		//				return list;
 		//			}
 		//		};
-		new MockUp<SearchManagerImpl>() {
+		/*new MockUp<SearchManagerImpl>() {
 			@Mock
 			public List<Search> getWidgetListByProviderNames(boolean includeDashboardIneligible, List<String> providerNames,
 					String widgetGroupId) throws EMAnalyticsFwkException
 			{
 				return searches;
 			}
-		};
+		};*/
 		//		new MockUp<URI>() {
 		//			@Mock
 		//			public String getQuery()
@@ -248,6 +277,14 @@ public class WidgetAPITest
 		//				return "widgetGroupId=10&includeDashboardIneligible=true";
 		//			}
 		//		};
+		new MockUp<WidgetManagerImpl>() {
+			@Mock
+			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+					throws EMAnalyticsFwkException
+					{
+				return WidgetAPITest.mockedWidgetObjects();
+					}
+		};
 		new MockUp<WidgetManagerImpl>() {
 			@Mock
 			public String getWidgetJsonStringFromWidgetList(List<Widget> widgetList)
@@ -287,7 +324,7 @@ public class WidgetAPITest
 		new Expectations() {
 			{
 				oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil
-						.getTenantSubscribedServiceProviders(anyString);
+				.getTenantSubscribedServiceProviders(anyString);
 				result = Arrays.asList("LoganService", "emcitas-ui-apps", "TargetAnalytics", "ApmUI");
 			}
 		};
@@ -298,14 +335,14 @@ public class WidgetAPITest
 		//				return list;
 		//			}
 		//		};
-		new MockUp<SearchManagerImpl>() {
+		/*new MockUp<SearchManagerImpl>() {
 			@Mock
 			public List<Search> getWidgetListByProviderNames(boolean includeDashboardIneligible, List<String> providerNames,
 					String widgetGroupId) throws EMAnalyticsFwkException
 			{
 				return searches;
 			}
-		};
+		};*/
 		//		new MockUp<URI>() {
 		//			@Mock
 		//			public String getQuery()
@@ -319,6 +356,13 @@ public class WidgetAPITest
 			{
 				throw new EMAnalyticsFwkException(new Exception());
 			}
+
+			@Mock
+			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+					throws EMAnalyticsFwkException
+					{
+				return WidgetAPITest.mockedWidgetObjects();
+					}
 		};
 		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
 	}
@@ -352,7 +396,7 @@ public class WidgetAPITest
 		new Expectations() {
 			{
 				oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil
-						.getTenantSubscribedServiceProviders(anyString);
+				.getTenantSubscribedServiceProviders(anyString);
 				result = Arrays.asList("LoganService", "emcitas-ui-apps", "TargetAnalytics", "ApmUI");
 			}
 		};
@@ -363,14 +407,14 @@ public class WidgetAPITest
 		//				return list;
 		//			}
 		//		};
-		new MockUp<SearchManagerImpl>() {
+		/*new MockUp<SearchManagerImpl>() {
 			@Mock
 			public List<Search> getWidgetListByProviderNames(boolean includeDashboardIneligible, List<String> providerNames,
 					String widgetGroupId) throws EMAnalyticsFwkException
 			{
 				return searches;
 			}
-		};
+		};*/
 		//		new MockUp<URI>() {
 		//			@Mock
 		//			public String getQuery()
@@ -384,6 +428,13 @@ public class WidgetAPITest
 			{
 				throw new Exception();
 			}
+
+			@Mock
+			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+					throws EMAnalyticsFwkException
+					{
+				return WidgetAPITest.mockedWidgetObjects();
+					}
 		};
 		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
 	}
