@@ -40,7 +40,6 @@ public class SavedSearchApplication extends Application
 		s.add(LoggingConfigAPI.class);
 		s.add(TargetCardLinksFilterAPI.class);
 		s.add(ZDTAPI.class);
-
 		return s;
 	}
 

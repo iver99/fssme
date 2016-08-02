@@ -122,9 +122,9 @@ public class WidgetAPIMoreTest
 	public void testGetAllWidgets() throws Exception
 	{
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(new WebApplicationContext(new WebApplicationImpl(),
-				new ContainerRequest(new WebApplicationImpl(), "method", null, null, new InBoundHeaders(), null),
-				new ContainerResponse(new WebApplicationImpl(), null, null)), "userTenant", "widgetGroupId", true);
+		widgetAPI.getAllWidgets(new WebApplicationContext(new WebApplicationImpl(), new ContainerRequest(
+				new WebApplicationImpl(), "method", null, null, new InBoundHeaders(), null), new ContainerResponse(
+				new WebApplicationImpl(), null, null)), "userTenant", "widgetGroupId", true);
 	}
 
 	@Test(groups = { "s2" })
@@ -170,9 +170,9 @@ public class WidgetAPIMoreTest
 				TenantSubscriptionUtil.getTenantSubscribedServiceProviders(anyString);
 				result = providers;
 
-				SearchManager.getInstance();
-				result = searchManagerImpl;
-				searchManagerImpl.getWidgetListByProviderNames(anyBoolean, providers, anyString);
+				WidgetManager.getInstance();
+				result = widgetManagerImpl;
+				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString);
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
@@ -257,9 +257,9 @@ public class WidgetAPIMoreTest
 				TenantSubscriptionUtil.getTenantSubscribedServiceProviders(anyString);
 				result = providers;
 
-				SearchManager.getInstance();
-				result = searchManagerImpl;
-				searchManagerImpl.getWidgetListByProviderNames(anyBoolean, providers, anyString);
+				WidgetManager.getInstance();
+				result = widgetManagerImpl;
+				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString);
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;

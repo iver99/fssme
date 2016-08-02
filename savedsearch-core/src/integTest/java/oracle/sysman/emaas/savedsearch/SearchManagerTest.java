@@ -8,11 +8,6 @@ import java.util.Random;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import org.testng.AssertJUnit;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
@@ -28,7 +23,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
@@ -38,6 +32,11 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
+
+import org.testng.AssertJUnit;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 public class SearchManagerTest extends BaseTest
 {
@@ -139,9 +138,9 @@ public class SearchManagerTest extends BaseTest
 	@BeforeClass
 	public void initTenantDetails()
 	{
-		TenantContext.setContext(
-				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
-						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+				.get(QAToolUtil.TENANT_NAME).toString())));
 	}
 
 	@AfterClass
@@ -169,8 +168,8 @@ public class SearchManagerTest extends BaseTest
 		final int folderCount = 10000;//change this to your desired count
 		final int searchCount = 1000000;//change this to your desired count
 		long start = System.currentTimeMillis();
-		System.out.println(
-				"Start to create " + categoryCount + " categories, " + folderCount + " folders and " + searchCount + " searches");
+		System.out.println("Start to create " + categoryCount + " categories, " + folderCount + " folders and " + searchCount
+				+ " searches");
 		for (int i = 0; i < categoryCount; i++) {
 			Category cat = SearchManagerTest.createTestCategory(cm, null, "CategoryTest " + i);
 			for (int j = 0; j < folderCount / categoryCount; j++) {
@@ -180,8 +179,8 @@ public class SearchManagerTest extends BaseTest
 				}
 			}
 		}
-		System.out.println("Total time to create " + categoryCount + " categories, " + folderCount + " folders and " + searchCount
-				+ " searches is " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+		System.out.println("Total time to create " + categoryCount + " categories, " + folderCount + " folders and "
+				+ searchCount + " searches is " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
 	@Test
@@ -503,7 +502,7 @@ public class SearchManagerTest extends BaseTest
 		savedWidget1 = null;
 
 		// not include category ineligible widgets
-		Parameter pm = new Parameter();
+		/*Parameter pm = new Parameter();
 		pm.setName(SearchManager.SEARCH_PARAM_DASHBOARD_INELIGIBLE);
 		pm.setType(ParameterType.STRING);
 		pm.setValue("1");
@@ -530,7 +529,7 @@ public class SearchManagerTest extends BaseTest
 		catch (EMAnalyticsFwkException e) {
 			AssertJUnit.fail();
 		}
-		assertSearchEquals(widget1, savedWidget1);
+		assertSearchEquals(widget1, savedWidget1);*/
 
 		// not include ineligible widgets from categories
 
@@ -553,8 +552,8 @@ public class SearchManagerTest extends BaseTest
 
 		SearchManager sm = SearchManager.getInstance();
 		String screenshot = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAYKklEQVR4AdxSBRIDIQy8";
-		Search widget1 = SearchManagerTest.createTestWidget(sm, folder, cat, "WidgetWithScreenshot " + System.currentTimeMillis(),
-				screenshot);
+		Search widget1 = SearchManagerTest.createTestWidget(sm, folder, cat,
+				"WidgetWithScreenshot " + System.currentTimeMillis(), screenshot);
 		Search widget2 = SearchManagerTest.createTestWidget(sm, folder, cat,
 				"WidgetWithoutScreenshot " + System.currentTimeMillis(), null);
 

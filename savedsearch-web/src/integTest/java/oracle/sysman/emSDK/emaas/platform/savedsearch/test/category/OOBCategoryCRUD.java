@@ -15,7 +15,8 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
-public class OOBCategoryCRUD {
+public class OOBCategoryCRUD
+{
 	/**
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases .
@@ -27,7 +28,13 @@ public class OOBCategoryCRUD {
 	static String authToken;
 	static String TENANT_ID_OPC1;
 	static String TENANT_ID1;
-	
+
+	@AfterClass
+	public static void afterTest()
+	{
+
+	}
+
 	@BeforeClass
 	public static void setUp()
 	{
@@ -39,26 +46,21 @@ public class OOBCategoryCRUD {
 		TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
 		TENANT_ID_OPC1 = ct.getTenant();
 	}
-	
-	@AfterClass
-	public static void afterTest()
-	{
-		
-	}
-	
+
 	@Test
 	public void testCategory5()
 	{
 		testCategory(new BigInteger("5"), new BigInteger("6"), "Target Card");
 	}
 	
-	private void testCategory(BigInteger category, BigInteger defaultFolder, String categoryName) {
+	private void testCategory(BigInteger category, BigInteger defaultFolder, String categoryName)
+	{
 		try {
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + category);
 
 			Assert.assertEquals(res.getStatusCode(), 200);
-			
+
 			JsonPath jp = res.jsonPath();
 			Assert.assertEquals(jp.get("id"), category.toString());
 			Assert.assertEquals(jp.get("name"), categoryName);
