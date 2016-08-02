@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
@@ -189,13 +190,14 @@ public class DataManager
 	public void syncCategoryParamTable(Long categoryId, String name, String paramValue, Long tenantId, String creationDate,
 			String lastModificationDate)
 	{
+		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY_PARAMS t where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY_PARAMS t where t.CATEGORY_ID=?0 and t.TENANT_ID=?1 and t.NAME=?2";//check if the data is existing.
-		Query q1 = em.createNativeQuery(sql);
-		q1.setParameter(0, categoryId);
-		q1.setParameter(1, tenantId);
-		q1.setParameter(2, name);
+		em.getTransaction().begin();
+		Query q1 = em.createNativeQuery(sql)
+		.setParameter(1, categoryId)
+		.setParameter(2, tenantId)
+		.setParameter(3, name);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -213,7 +215,9 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_CATEGORY_PARAMS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql);
+		syncDatabaseTableData(sql,em);
+		em.getTransaction().commit();
+		em.close();
 
 	}
 
@@ -224,19 +228,13 @@ public class DataManager
 	{
 		String sql = "select count(1) from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
-		//em = getEntityManager();
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-		if (em == null) {
-			logger.error("Can't get persistence entity manager");
-		}
-		Query q1 = em.createNativeQuery(sql);
-		Session session = em.unwrap(JpaEntityManager.class).getActiveSession();
-		DatabaseQuery databaseQuery = ((EJBQueryImpl) q1).getDatabaseQuery();
-		databaseQuery.prepareCall(session, new DatabaseRecord());
-		q1.setParameter(0, categoryId);
-		q1.setParameter(1, tenantId);
+		em = getEntityManager();
+		em.getTransaction().begin();
+		Query q1 = em.createNativeQuery(sql)
+				.setParameter(1, categoryId)
+				.setParameter(2, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
-
+		
 		if (count <= 0) {
 			//execute insert action
 			logger.info("Data not exist in table EMS_ANALYTICS_CATEGORY,execute insert action.");
@@ -254,7 +252,10 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_CATEGORY,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql);
+		syncDatabaseTableData(sql,em);
+//		logger.info("count's value is "+count);
+		em.getTransaction().commit();
+		em.close();
 
 	}
 
@@ -262,12 +263,13 @@ public class DataManager
 			String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem, String descriptionNlsid,
 			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, Long deleted, Long tenantId)
 	{
+		String sql = "select count(1) from EMS_ANALYTICS_FOLDERS t where t.FOLDER_ID=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_FOLDERS t where t.FOLDER_ID=?0 and t.TENANT_ID=?1";//check if the data is existing.
-		Query q1 = em.createNativeQuery(sql);
-		q1.setParameter(0, folderId);
-		q1.setParameter(1, tenantId);
+		em.getTransaction().begin();
+		Query q1 = em.createNativeQuery(sql)
+		.setParameter(1, folderId)
+		.setParameter(2, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -287,21 +289,24 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_FOLDERS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql);
+		syncDatabaseTableData(sql,em);
+		em.getTransaction().commit();
+		em.close();
 
 	}
 
 	public void syncLastAccessTable(Long objectId, String accessedBy, Long objectType, String accessDate, Long tenantId,
 			String creationDate, String lastModificationDate)
 	{
+		String sql = "select count(1) from EMS_ANALYTICS_LAST_ACCESS t where t.OBJECT_ID=? and t.ACCESSED_BY=? and t.OBJECT_TYPE=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_LAST_ACCESS t where t.OBJECT_ID=?0 and t.ACCESSED_BY=?1 and t.OBJECT_TYPE=?2 and t.TENANT_ID=?3";//check if the data is existing.
-		Query q1 = em.createNativeQuery(sql);
-		q1.setParameter(0, objectId);
-		q1.setParameter(1, accessedBy);
-		q1.setParameter(2, objectType);
-		q1.setParameter(3, tenantId);
+		em.getTransaction().begin();
+		Query q1 = em.createNativeQuery(sql)
+		.setParameter(1, objectId)
+		.setParameter(2, accessedBy)
+		.setParameter(3, objectType)
+		.setParameter(4, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -319,20 +324,23 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_LAST_ACCESS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql);
+		syncDatabaseTableData(sql,em);
+		em.getTransaction().commit();
+		em.close();
 
 	}
 
 	public void syncSearchParamsTable(BigInteger searchId, String name, String paramAttributes, Long paramType,
 			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate)
 	{
+		String sql = "select count(1) from EMS_ANALYTICS_SEARCH_PARAMS t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_SEARCH_PARAMS t where t.SEARCH_ID=?0 and t.NAME=?1 and t.TENANT_ID=?2";//check if the data is existing.
-		Query q1 = em.createNativeQuery(sql);
-		q1.setParameter(0, searchId);
-		q1.setParameter(1, name);
-		q1.setParameter(2, tenantId);
+		em.getTransaction().begin();
+		Query q1 = em.createNativeQuery(sql)
+		.setParameter(1, searchId)
+		.setParameter(2, name)
+		.setParameter(3, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -350,7 +358,9 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_SEARCH_PARAMS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql);
+		syncDatabaseTableData(sql,em);
+		em.getTransaction().commit();
+		em.close();
 
 	}
 
@@ -363,13 +373,14 @@ public class DataManager
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot)
 	{
+		String sql = "select count(1) from EMS_ANALYTICS_SEARCH t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		String sql = "select count(1) from EMS_ANALYTICS_SEARCH t where t.SEARCH_ID=?0 and t.NAME=?1 and t.TENANT_ID=?2";//check if the data is existing.
-		Query q1 = em.createNativeQuery(sql);
-		q1.setParameter(0, searchId);
-		q1.setParameter(1, name);
-		q1.setParameter(2, tenantId);
+		em.getTransaction().begin();
+		Query q1 = em.createNativeQuery(sql)
+		.setParameter(1, searchId)
+		.setParameter(2, name)
+		.setParameter(3, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -397,7 +408,9 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_SEARCH,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql);
+		syncDatabaseTableData(sql,em);
+		em.getTransaction().commit();
+		em.close();
 
 	}
 
@@ -431,14 +444,12 @@ public class DataManager
 		return em;
 	}
 
-	private void syncDatabaseTableData(String syncSql)
+	private void syncDatabaseTableData(String syncSql,EntityManager em)
 	{
 		if (StringUtil.isEmpty(syncSql)) {
 			logger.error("Can't sync database table with null or empty SQL statement!");
 			return;
 		}
-		EntityManager em = null;
-		em = getEntityManager();
 		em.createNativeQuery(syncSql).executeUpdate();
 	}
 
