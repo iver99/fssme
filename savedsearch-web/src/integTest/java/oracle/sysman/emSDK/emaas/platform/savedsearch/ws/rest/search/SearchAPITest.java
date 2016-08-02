@@ -433,12 +433,7 @@ public class SearchAPITest {
         api.createSearch(inputJson);
     }
 
-    /**
-     * test create ods entity
-     * 
-     * @throws Exception
-     */
-    /*@Test
+    @Test
     public void testCreateSearch13th() throws Exception {
         JSONObject category = new JSONObject();
         category.put("id","999");
@@ -464,6 +459,10 @@ public class SearchAPITest {
                 result = search;
                 searchManager.editSearch(withAny(search));
                 result = search;
+		search.getId();
+                result = "999";
+                search.getName();
+                result = "searchName";
                 odsDataServiceImpl.createOdsEntity(anyString,anyString);
                 result = "odsentitymeid";
                 search.getParameters();
@@ -471,7 +470,7 @@ public class SearchAPITest {
             }
         };
         api.createSearch(inputJson);
-    }*/
+    }
     
     @Test
     public void testDeleteSearch() throws Exception {
