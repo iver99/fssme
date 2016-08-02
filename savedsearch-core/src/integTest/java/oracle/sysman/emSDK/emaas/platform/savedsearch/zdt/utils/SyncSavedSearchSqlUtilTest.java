@@ -192,7 +192,7 @@ public class SyncSavedSearchSqlUtilTest
 		Assert.assertTrue(sql.contains(VERITY_STRING7), VERITY_STRING7 + " is NOT found unexpected");
 	}
 
-	@Test(groups = { "s1" })
+	//@Test(groups = { "s1" })
 	public void testConcatSearchInsert()
 	{
 		String sql = SyncSavedSearchSqlUtil.concatSearchInsert(666666L, "35D93AFFF3112149E053C05DF00A2A5D", "test", "test",

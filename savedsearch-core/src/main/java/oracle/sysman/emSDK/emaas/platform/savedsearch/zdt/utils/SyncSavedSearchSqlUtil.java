@@ -139,7 +139,7 @@ public class SyncSavedSearchSqlUtil
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot)
 	{
-		String insertSql = "INSERT INTO EMS_ANALYTICS_SEARCH VALUES(" + searchId + ",'" + searchGuid + "','" + name + "','"
+		/*String insertSql = "INSERT INTO EMS_ANALYTICS_SEARCH VALUES(" + searchId + ",'" + searchGuid + "','" + name + "','"
 				+ owner + "',to_timestamp('" + creationDate + "','yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp('"
 				+ lastModificationDate + "','yyyy-mm-dd hh24:mi:ss.ff'),'" + lastModifiedBy + "'," + "'" + description + "',"
 				+ folderId + "," + categoryId + ",'" + nameNlsid + "','" + nameSubsystem + "','" + descriptionNlsid + "','"
@@ -149,7 +149,16 @@ public class SyncSavedSearchSqlUtil
 				+ widgetKocName + "','" + viewModel + "','" + widgetTemplate + "'," + "'" + widgetSupportTimeControl + "',"
 				+ widgetLinkedDashboard + "," + widgetDefaultWidth + "," + widgetDefaultHeight + ",'" + providerName + "','"
 				+ providerVersion + "','" + providerAssetRoot + "','" + dashboardIneligible + "')";//look out the order of 3 provider* columns and dashboard_ineligible
-
+		 */
+		String insertSql = "INSERT INTO EMS_ANALYTICS_SEARCH(SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
+				+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,"
+				+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,"
+				+ "EM_PLUGIN_ID,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
+				+ "DELETED,IS_WIDGET,TENANT_ID,NAME_WIDGET_SOURCE,WIDGET_GROUP_NAME,"
+				+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
+				+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
+				+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE) VALUES(?,?,?,?,?," + "?,?,?,?,?," + "?,?,?,?,?,"
+				+ "?,?,?,?,?," + "?,?,?,?,?," + "?,?,?,?,?," + "?,?,?,?,?," + "?,?,?)";
 		return insertSql;
 	}
 

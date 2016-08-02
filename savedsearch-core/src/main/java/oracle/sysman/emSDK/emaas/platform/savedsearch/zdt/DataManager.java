@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
@@ -27,11 +26,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.config.QueryHints;
 import org.eclipse.persistence.config.ResultType;
-import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
-import org.eclipse.persistence.jpa.JpaEntityManager;
-import org.eclipse.persistence.queries.DatabaseQuery;
-import org.eclipse.persistence.sessions.DatabaseRecord;
-import org.eclipse.persistence.sessions.Session;
 
 /**
  * @author pingwu
@@ -194,10 +188,7 @@ public class DataManager
 		EntityManager em = null;
 		em = getEntityManager();
 		em.getTransaction().begin();
-		Query q1 = em.createNativeQuery(sql)
-		.setParameter(1, categoryId)
-		.setParameter(2, tenantId)
-		.setParameter(3, name);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId).setParameter(3, name);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -215,7 +206,7 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_CATEGORY_PARAMS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql,em);
+		syncDatabaseTableData(sql, em);
 		em.getTransaction().commit();
 		em.close();
 
@@ -230,11 +221,9 @@ public class DataManager
 		EntityManager em = null;
 		em = getEntityManager();
 		em.getTransaction().begin();
-		Query q1 = em.createNativeQuery(sql)
-				.setParameter(1, categoryId)
-				.setParameter(2, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
-		
+
 		if (count <= 0) {
 			//execute insert action
 			logger.info("Data not exist in table EMS_ANALYTICS_CATEGORY,execute insert action.");
@@ -252,8 +241,8 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_CATEGORY,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql,em);
-//		logger.info("count's value is "+count);
+		syncDatabaseTableData(sql, em);
+		//		logger.info("count's value is "+count);
 		em.getTransaction().commit();
 		em.close();
 
@@ -267,9 +256,7 @@ public class DataManager
 		EntityManager em = null;
 		em = getEntityManager();
 		em.getTransaction().begin();
-		Query q1 = em.createNativeQuery(sql)
-		.setParameter(1, folderId)
-		.setParameter(2, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, folderId).setParameter(2, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -289,7 +276,7 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_FOLDERS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql,em);
+		syncDatabaseTableData(sql, em);
 		em.getTransaction().commit();
 		em.close();
 
@@ -302,11 +289,8 @@ public class DataManager
 		EntityManager em = null;
 		em = getEntityManager();
 		em.getTransaction().begin();
-		Query q1 = em.createNativeQuery(sql)
-		.setParameter(1, objectId)
-		.setParameter(2, accessedBy)
-		.setParameter(3, objectType)
-		.setParameter(4, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, objectId).setParameter(2, accessedBy).setParameter(3, objectType)
+				.setParameter(4, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -324,7 +308,7 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_LAST_ACCESS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql,em);
+		syncDatabaseTableData(sql, em);
 		em.getTransaction().commit();
 		em.close();
 
@@ -337,10 +321,7 @@ public class DataManager
 		EntityManager em = null;
 		em = getEntityManager();
 		em.getTransaction().begin();
-		Query q1 = em.createNativeQuery(sql)
-		.setParameter(1, searchId)
-		.setParameter(2, name)
-		.setParameter(3, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -358,7 +339,7 @@ public class DataManager
 			logger.info("Sync data in EMS_ANALYTICS_SEARCH_PARAMS,execute update SQL:[" + sql + "]");
 		}
 		//sync Data
-		syncDatabaseTableData(sql,em);
+		syncDatabaseTableData(sql, em);
 		em.getTransaction().commit();
 		em.close();
 
@@ -377,10 +358,7 @@ public class DataManager
 		EntityManager em = null;
 		em = getEntityManager();
 		em.getTransaction().begin();
-		Query q1 = em.createNativeQuery(sql)
-		.setParameter(1, searchId)
-		.setParameter(2, name)
-		.setParameter(3, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
 		Integer count = Integer.valueOf(q1.getSingleResult().toString());
 
 		if (count <= 0) {
@@ -394,6 +372,20 @@ public class DataManager
 					widgetDefaultWidth, widgetDefaultHeight, dashboardIneligible, providerName, providerVersion,
 					providerAssetRoot);
 			logger.info("Sync data in EMS_ANALYTICS_SEARCH,execute insert SQL:[" + sql + "]");
+			em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, searchGuid).setParameter(3, name)
+			.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
+					.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
+					.setParameter(10, categoryId).setParameter(11, nameNlsid).setParameter(12, nameSubsystem)
+					.setParameter(13, descriptionNlsid).setParameter(14, descriptionSubsystem).setParameter(15, systemSearch)
+			.setParameter(16, emPluginId).setParameter(17, isLocked).setParameter(18, metaDataClob)
+					.setParameter(19, searchDisplayStr).setParameter(20, uiHidden).setParameter(21, deleted)
+					.setParameter(22, isWidget).setParameter(23, tenantId).setParameter(24, nameWidgetSource)
+					.setParameter(25, widgetGroupName).setParameter(26, widgetScreenshotHref).setParameter(27, widgetIcon)
+			.setParameter(28, widgetKocName).setParameter(29, viewModel).setParameter(30, widgetTemplate)
+					.setParameter(31, widgetSupportTimeControl).setParameter(32, widgetLinkedDashboard)
+					.setParameter(33, widgetDefaultWidth).setParameter(34, widgetDefaultHeight).setParameter(35, providerName)
+			.setParameter(36, providerVersion).setParameter(374, providerAssetRoot).setParameter(38, dashboardIneligible)
+					.executeUpdate();
 		}
 		else {
 			//execute update action
@@ -406,9 +398,10 @@ public class DataManager
 					widgetDefaultWidth, widgetDefaultHeight, dashboardIneligible, providerName, providerVersion,
 					providerAssetRoot);
 			logger.info("Sync data in EMS_ANALYTICS_SEARCH,execute update SQL:[" + sql + "]");
+			em.createNativeQuery(sql).executeUpdate();
 		}
 		//sync Data
-		syncDatabaseTableData(sql,em);
+		//		syncDatabaseTableData(sql,em);
 		em.getTransaction().commit();
 		em.close();
 
@@ -444,7 +437,7 @@ public class DataManager
 		return em;
 	}
 
-	private void syncDatabaseTableData(String syncSql,EntityManager em)
+	private void syncDatabaseTableData(String syncSql, EntityManager em)
 	{
 		if (StringUtil.isEmpty(syncSql)) {
 			logger.error("Can't sync database table with null or empty SQL statement!");
