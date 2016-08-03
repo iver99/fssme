@@ -123,7 +123,7 @@ public class ZDTAPI
 	@Path("sync")
 	public Response sync(JSONObject dataToSync)
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync");
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/sync");
 		ZDTTableRowEntity data = null;
 		try {
 			data = JSONUtil.fromJson(new ObjectMapper(), dataToSync.toString(), ZDTTableRowEntity.class);
