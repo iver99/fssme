@@ -6,22 +6,48 @@
  * NOTE that the below code expects SAAS_VERSION environment variable to be set correctly.
  */
 ext.emcpssf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, emcpssf)
+import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
+ 
 dependencies {
+ testConfig group: 'com.oracle.emaas.emcpssf.testsdk', name: 'savedsearch-zdt-test-sdk', version: "${emcpssf_REPO_BID}"
     
 }
  
+
 task emcpssf_zdtPlay(type: EMTest) {
-    options.suiteXmlBuilder().suite('name': "${project.name}-${name}") {
-        test('name': "${project.name}-${name}") {
-            // The tests to be run
-        }
-    }
-}
+  
+      options.suiteXmlBuilder().suite('name': 'testSdk-test') {
+           test('name': 'testSdk-test') {
+               classes([:]) {
+                  'class'('name': 'oracle.sysman.emaas.platform.savedsearch.testsdk.SavedsearchOrderWriteCURD')
+                  
+               }
+           }
+       }
+  
+   }
+  
+  task emcpssf_zdtReplay(type: EMTest) {
+  
+      options.suiteXmlBuilder().suite('name': 'testSdk-test') {
+           test('name': 'testSdk-test') {
+               classes([:]) {
+                  'class'('name': 'oracle.sysman.emaas.platform.savedsearch.testsdk.SavedsearchOrderWriteCURD')
+                  
+               }
+           }
+       }
+  
+   }
+   
+
+
+
+
+//task emcpssf_zdtPlaySaveState(type: EMTest)
  
-task emcpssf_zdtPlaySaveState(type: EMTest)
+//task emcpssf_zdtReplaySaveState(type: EMTest)
  
-task emcpssf_zdtReplaySaveState(type: EMTest)
- 
-task emcpssf_zdtCompare(type: EMTest)
+//task emcpssf_zdtCompare(type: EMTest)
 
 
