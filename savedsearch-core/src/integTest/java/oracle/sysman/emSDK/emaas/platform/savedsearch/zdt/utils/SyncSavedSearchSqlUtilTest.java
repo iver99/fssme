@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 public class SyncSavedSearchSqlUtilTest
 {
 	//test insert
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatCategoryInsert()
 	{
 
@@ -33,7 +33,7 @@ public class SyncSavedSearchSqlUtilTest
 		Assert.assertEquals(sql, VERIFY_STRING);
 	}
 
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatCategoryParamInsert()
 	{
 		String sql = SyncSavedSearchSqlUtil.concatCategoryParamInsert(666666L, "test", "test", 1L, "2016-07-12 08:55:59.647387",
@@ -42,7 +42,7 @@ public class SyncSavedSearchSqlUtilTest
 		Assert.assertEquals(sql, VERIFY_STRING);
 	}
 
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatCategoryParamUpdate()
 	{
 		String VERITY_STRING1 = "T.PARAM_VALUE='test'";
@@ -62,7 +62,7 @@ public class SyncSavedSearchSqlUtilTest
 	}
 
 	//update action
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatCategoryUpdate()
 	{
 		String VERITY_STRING1 = "CATEGORY_ID=666666";
@@ -112,7 +112,7 @@ public class SyncSavedSearchSqlUtilTest
 
 	}
 
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatFoldersInsert()
 	{
 		String sql = SyncSavedSearchSqlUtil.concatFolderInsert(666666L, "test", 1L, "test", "2016-07-12 08:55:59.647387", "test",
@@ -121,7 +121,7 @@ public class SyncSavedSearchSqlUtilTest
 		Assert.assertEquals(sql, VERIFY_STRING);
 	}
 
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatFoldersUpdate()
 	{
 		String VERITY_STRING1 = "t.NAME='test'";
@@ -162,7 +162,7 @@ public class SyncSavedSearchSqlUtilTest
 		Assert.assertTrue(sql.contains(VERITY_STRING17), VERITY_STRING17 + " is NOT found unexpected");
 	}
 
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatLastAccessInsert()
 	{
 		String sql = SyncSavedSearchSqlUtil.concatLastAccessInsert(666666L, "test", 1L, "2016-07-12 08:55:59.647387", 1L,
@@ -171,7 +171,7 @@ public class SyncSavedSearchSqlUtilTest
 		Assert.assertEquals(sql, VERIFY_STRING);
 	}
 
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatLastAccessUpdate()
 	{
 		String VERITY_STRING1 = "t.ACCESS_DATE=to_timestamp('2016-07-12 08:55:59.647387','yyyy-mm-dd hh24:mi:ss.ff')";
@@ -203,7 +203,7 @@ public class SyncSavedSearchSqlUtilTest
 		Assert.assertEquals(sql, VERIFY_STRING);
 	}
 
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatSearchParamInsert()
 	{
 		String sql = SyncSavedSearchSqlUtil.concatSearchParamsInsert(new BigInteger(new Long(666666).toString()), "test", "test",
@@ -212,7 +212,7 @@ public class SyncSavedSearchSqlUtilTest
 		Assert.assertEquals(sql, VERIFY_STRING);
 	}
 
-	@Test(groups = { "s1" })
+//	@Test(groups = { "s1" })
 	public void testConcatSearchParamUpdate()
 	{
 		String VERITY_STRING1 = "t.PARAM_ATTRIBUTES='test'";
