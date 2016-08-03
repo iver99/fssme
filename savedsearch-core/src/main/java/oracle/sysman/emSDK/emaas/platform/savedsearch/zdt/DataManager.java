@@ -282,15 +282,15 @@ public class DataManager
 				//execute insert action
 				logger.debug("Data not exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute insert action.");
 				em.createNativeQuery(SQL_INSERT_CATEGORY_PARAM).setParameter(1, categoryId).setParameter(2, name)
-				.setParameter(3, paramValue).setParameter(4, tenantId).setParameter(5, creationDate)
-				.setParameter(6, lastModificationDate).executeUpdate();
+						.setParameter(3, paramValue).setParameter(4, tenantId).setParameter(5, creationDate)
+						.setParameter(6, lastModificationDate).executeUpdate();
 			}
 			else {
 				//execute update action
 				logger.debug("Data exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute update action.");
 				em.createNativeQuery(SQL_UPDATE_CATEGORY_PARAM).setParameter(1, paramValue).setParameter(2, creationDate)
-						.setParameter(3, lastModificationDate).setParameter(4, categoryId).setParameter(5, name)
-						.setParameter(6, tenantId).executeUpdate();
+				.setParameter(3, lastModificationDate).setParameter(4, categoryId).setParameter(5, name)
+				.setParameter(6, tenantId).executeUpdate();
 			}
 			em.getTransaction().commit();
 		}
@@ -321,24 +321,24 @@ public class DataManager
 				//execute insert action
 				logger.debug("Data not exist in table EMS_ANALYTICS_CATEGORY,execute insert action.");
 				em.createNativeQuery(SQL_INSERT_CATEGORY).setParameter(1, categoryId).setParameter(2, name)
-						.setParameter(3, description).setParameter(4, owner).setParameter(5, creationDate)
-						.setParameter(6, nameNlsid).setParameter(7, nameSubSystem).setParameter(8, descriptionNlsid)
-						.setParameter(9, descriptionSubSystem).setParameter(10, emPluginId).setParameter(11, defaultFolderId)
-						.setParameter(12, deleted).setParameter(13, providerName).setParameter(14, providerVersion)
-						.setParameter(15, providerDiscovery).setParameter(16, providerAssetroot).setParameter(17, tenantId)
-						.setParameter(18, dashboardIneligible).setParameter(19, lastModificationDate).executeUpdate();
+				.setParameter(3, description).setParameter(4, owner).setParameter(5, creationDate)
+				.setParameter(6, nameNlsid).setParameter(7, nameSubSystem).setParameter(8, descriptionNlsid)
+				.setParameter(9, descriptionSubSystem).setParameter(10, emPluginId).setParameter(11, defaultFolderId)
+				.setParameter(12, deleted).setParameter(13, providerName).setParameter(14, providerVersion)
+				.setParameter(15, providerDiscovery).setParameter(16, providerAssetroot).setParameter(17, tenantId)
+				.setParameter(18, dashboardIneligible).setParameter(19, lastModificationDate).executeUpdate();
 			}
 			else {
 				//execute update action
 				logger.debug("Data exist in table EMS_ANALYTICS_CATEGORY,execute update action.");
 				em.createNativeQuery(SQL_UPDATE_CATEGORY).setParameter(1, name).setParameter(2, description)
-						.setParameter(3, owner).setParameter(4, creationDate).setParameter(5, nameNlsid)
-						.setParameter(6, nameSubSystem).setParameter(7, descriptionNlsid).setParameter(8, descriptionSubSystem)
-						.setParameter(9, emPluginId).setParameter(10, defaultFolderId).setParameter(11, deleted)
-						.setParameter(12, providerName).setParameter(13, providerVersion).setParameter(14, providerDiscovery)
-						.setParameter(15, providerAssetroot).setParameter(16, dashboardIneligible)
-						.setParameter(17, lastModificationDate).setParameter(18, categoryId).setParameter(19, tenantId)
-						.executeUpdate();
+				.setParameter(3, owner).setParameter(4, creationDate).setParameter(5, nameNlsid)
+				.setParameter(6, nameSubSystem).setParameter(7, descriptionNlsid).setParameter(8, descriptionSubSystem)
+				.setParameter(9, emPluginId).setParameter(10, defaultFolderId).setParameter(11, deleted)
+				.setParameter(12, providerName).setParameter(13, providerVersion).setParameter(14, providerDiscovery)
+				.setParameter(15, providerAssetroot).setParameter(16, dashboardIneligible)
+				.setParameter(17, lastModificationDate).setParameter(18, categoryId).setParameter(19, tenantId)
+				.executeUpdate();
 			}
 			em.getTransaction().commit();
 		}
@@ -367,21 +367,21 @@ public class DataManager
 				//execute insert action
 				logger.debug("Data not exist in table EMS_ANALYTICS_FOLDERS,execute insert action.");
 				em.createNativeQuery(SQL_INSERT_FOLDER).setParameter(1, folderId).setParameter(2, name).setParameter(3, parentId)
-						.setParameter(4, description).setParameter(5, creationDate).setParameter(6, owner)
-						.setParameter(7, lastModificationDate).setParameter(8, lastModifiedBy).setParameter(9, nameNlsid)
-						.setParameter(10, nameSubsystem).setParameter(11, descriptionNlsid)
-						.setParameter(12, descriptionSubsystem).setParameter(13, systemFolder).setParameter(14, emPluginId)
-						.setParameter(15, uiHidden).setParameter(16, deleted).setParameter(17, tenantId).executeUpdate();
+				.setParameter(4, description).setParameter(5, creationDate).setParameter(6, owner)
+				.setParameter(7, lastModificationDate).setParameter(8, lastModifiedBy).setParameter(9, nameNlsid)
+				.setParameter(10, nameSubsystem).setParameter(11, descriptionNlsid)
+				.setParameter(12, descriptionSubsystem).setParameter(13, systemFolder).setParameter(14, emPluginId)
+				.setParameter(15, uiHidden).setParameter(16, deleted).setParameter(17, tenantId).executeUpdate();
 			}
 			else {
 				//execute update action
 				logger.debug("Data exist in table EMS_ANALYTICS_FOLDERS,execute update action.");
 				em.createNativeQuery(SQL_UPDATE_FOLDER).setParameter(1, name).setParameter(2, parentId)
-						.setParameter(3, description).setParameter(4, creationDate).setParameter(5, owner)
-						.setParameter(6, lastModificationDate).setParameter(7, lastModifiedBy).setParameter(8, nameNlsid)
-						.setParameter(9, nameSubsystem).setParameter(10, descriptionNlsid).setParameter(11, descriptionSubsystem)
-						.setParameter(12, systemFolder).setParameter(13, emPluginId).setParameter(14, uiHidden)
-						.setParameter(15, deleted).setParameter(16, folderId).setParameter(17, tenantId).executeUpdate();
+				.setParameter(3, description).setParameter(4, creationDate).setParameter(5, owner)
+				.setParameter(6, lastModificationDate).setParameter(7, lastModifiedBy).setParameter(8, nameNlsid)
+				.setParameter(9, nameSubsystem).setParameter(10, descriptionNlsid).setParameter(11, descriptionSubsystem)
+				.setParameter(12, systemFolder).setParameter(13, emPluginId).setParameter(14, uiHidden)
+				.setParameter(15, deleted).setParameter(16, folderId).setParameter(17, tenantId).executeUpdate();
 			}
 			em.getTransaction().commit();
 		}
@@ -411,15 +411,15 @@ public class DataManager
 				//execute insert action
 				logger.debug("Data not exist in table EMS_ANALYTICS_LAST_ACCESS,execute insert action.");
 				em.createNativeQuery(SQL_INSERT_LAST_ACCESS).setParameter(1, objectId).setParameter(2, accessedBy)
-				.setParameter(3, objectType).setParameter(4, accessDate).setParameter(5, tenantId)
-				.setParameter(6, creationDate).setParameter(7, lastModificationDate).executeUpdate();
+						.setParameter(3, objectType).setParameter(4, accessDate).setParameter(5, tenantId)
+						.setParameter(6, creationDate).setParameter(7, lastModificationDate).executeUpdate();
 			}
 			else {
 				//execute update action
 				logger.debug("Data exist in table EMS_ANALYTICS_LAST_ACCESS,execute update action.");
 				em.createNativeQuery(SQL_UPDATE_LAST_ACCESS).setParameter(1, accessDate).setParameter(2, creationDate)
-						.setParameter(3, lastModificationDate).setParameter(4, objectId).setParameter(5, accessedBy)
-						.setParameter(6, objectType).setParameter(7, tenantId).executeUpdate();
+				.setParameter(3, lastModificationDate).setParameter(4, objectId).setParameter(5, accessedBy)
+				.setParameter(6, objectType).setParameter(7, tenantId).executeUpdate();
 			}
 			em.getTransaction().commit();
 		}
@@ -448,17 +448,17 @@ public class DataManager
 				//execute insert action
 				logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute insert action.");
 				em.createNativeQuery(SQL_INSERT_SEARCH_PARAM).setParameter(1, searchId).setParameter(2, name)
-						.setParameter(3, paramAttributes).setParameter(4, paramType).setParameter(5, paramValueStr)
-						.setParameter(6, paramValueClob).setParameter(7, tenantId).setParameter(8, creationDate)
-						.setParameter(9, lastModificationDate).executeUpdate();
+				.setParameter(3, paramAttributes).setParameter(4, paramType).setParameter(5, paramValueStr)
+				.setParameter(6, paramValueClob).setParameter(7, tenantId).setParameter(8, creationDate)
+				.setParameter(9, lastModificationDate).executeUpdate();
 			}
 			else {
 				//execute update action
 				logger.debug("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
 				em.createNativeQuery(SQL_UPDATE_SEARCH_PARAM).setParameter(1, paramAttributes).setParameter(2, paramType)
-						.setParameter(3, paramValueStr).setParameter(4, paramValueClob).setParameter(5, creationDate)
-						.setParameter(6, lastModificationDate).setParameter(7, searchId).setParameter(8, name)
-						.setParameter(9, tenantId).executeUpdate();
+				.setParameter(3, paramValueStr).setParameter(4, paramValueClob).setParameter(5, creationDate)
+				.setParameter(6, lastModificationDate).setParameter(7, searchId).setParameter(8, name)
+				.setParameter(9, tenantId).executeUpdate();
 			}
 			//sync Data
 			em.getTransaction().commit();
@@ -494,38 +494,38 @@ public class DataManager
 			if (count <= 0) {
 				//execute insert action
 				logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH,execute insert action.");
-				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, searchGuid)
-						.setParameter(3, name).setParameter(4, owner).setParameter(5, creationDate)
-						.setParameter(6, lastModificationDate).setParameter(7, lastModifiedBy).setParameter(8, description)
-						.setParameter(9, folderId).setParameter(10, categoryId).setParameter(11, nameNlsid)
-						.setParameter(12, nameSubsystem).setParameter(13, descriptionNlsid)
-						.setParameter(14, descriptionSubsystem).setParameter(15, systemSearch).setParameter(16, emPluginId)
-						.setParameter(17, isLocked).setParameter(18, metaDataClob).setParameter(19, searchDisplayStr)
-						.setParameter(20, uiHidden).setParameter(21, deleted).setParameter(22, isWidget)
-						.setParameter(23, tenantId).setParameter(24, nameWidgetSource).setParameter(25, widgetGroupName)
-						.setParameter(26, widgetScreenshotHref).setParameter(27, widgetIcon).setParameter(28, widgetKocName)
-						.setParameter(29, viewModel).setParameter(30, widgetTemplate).setParameter(31, widgetSupportTimeControl)
-						.setParameter(32, widgetLinkedDashboard).setParameter(33, widgetDefaultWidth)
-						.setParameter(34, widgetDefaultHeight).setParameter(35, providerName).setParameter(36, providerVersion)
-						.setParameter(37, providerAssetRoot).setParameter(38, dashboardIneligible).executeUpdate();
+				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, null).setParameter(3, name)
+						.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
+						.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
+						.setParameter(10, categoryId).setParameter(11, nameNlsid).setParameter(12, nameSubsystem)
+						.setParameter(13, descriptionNlsid).setParameter(14, descriptionSubsystem).setParameter(15, systemSearch)
+						.setParameter(16, emPluginId).setParameter(17, isLocked).setParameter(18, metaDataClob)
+						.setParameter(19, searchDisplayStr).setParameter(20, uiHidden).setParameter(21, deleted)
+						.setParameter(22, isWidget).setParameter(23, tenantId).setParameter(24, nameWidgetSource)
+						.setParameter(25, widgetGroupName).setParameter(26, widgetScreenshotHref).setParameter(27, widgetIcon)
+						.setParameter(28, widgetKocName).setParameter(29, viewModel).setParameter(30, widgetTemplate)
+						.setParameter(31, widgetSupportTimeControl).setParameter(32, widgetLinkedDashboard)
+						.setParameter(33, widgetDefaultWidth).setParameter(34, widgetDefaultHeight)
+						.setParameter(35, providerName).setParameter(36, providerVersion).setParameter(37, providerAssetRoot)
+						.setParameter(38, dashboardIneligible).executeUpdate();
 			}
 			else {
 				//execute update action
 				logger.debug("Data exist in table EMS_ANALYTICS_SEARCH,execute update action.");
-				em.createNativeQuery(SQL_UPDATE_SEARCH).setParameter(1, searchGuid).setParameter(2, name).setParameter(3, owner)
-						.setParameter(4, creationDate).setParameter(5, lastModificationDate).setParameter(6, lastModifiedBy)
-						.setParameter(7, description).setParameter(8, folderId).setParameter(9, categoryId)
-						.setParameter(10, nameNlsid).setParameter(11, nameSubsystem).setParameter(12, descriptionNlsid)
-						.setParameter(13, descriptionSubsystem).setParameter(14, systemSearch).setParameter(15, emPluginId)
-						.setParameter(16, isLocked).setParameter(17, metaDataClob).setParameter(18, searchDisplayStr)
-						.setParameter(19, uiHidden).setParameter(20, deleted).setParameter(21, isWidget)
-						.setParameter(22, nameWidgetSource).setParameter(23, widgetGroupName)
-						.setParameter(24, widgetScreenshotHref).setParameter(25, widgetIcon).setParameter(26, widgetKocName)
-						.setParameter(27, viewModel).setParameter(28, widgetTemplate).setParameter(29, widgetSupportTimeControl)
-						.setParameter(30, widgetLinkedDashboard).setParameter(31, widgetDefaultWidth)
-						.setParameter(32, widgetDefaultHeight).setParameter(33, providerName).setParameter(34, providerVersion)
-						.setParameter(35, providerAssetRoot).setParameter(36, dashboardIneligible).setParameter(37, searchId)
-						.setParameter(38, tenantId).executeUpdate();
+				em.createNativeQuery(SQL_UPDATE_SEARCH).setParameter(1, null).setParameter(2, name).setParameter(3, owner)
+				.setParameter(4, creationDate).setParameter(5, lastModificationDate).setParameter(6, lastModifiedBy)
+				.setParameter(7, description).setParameter(8, folderId).setParameter(9, categoryId)
+				.setParameter(10, nameNlsid).setParameter(11, nameSubsystem).setParameter(12, descriptionNlsid)
+				.setParameter(13, descriptionSubsystem).setParameter(14, systemSearch).setParameter(15, emPluginId)
+				.setParameter(16, isLocked).setParameter(17, metaDataClob).setParameter(18, searchDisplayStr)
+				.setParameter(19, uiHidden).setParameter(20, deleted).setParameter(21, isWidget)
+				.setParameter(22, nameWidgetSource).setParameter(23, widgetGroupName)
+				.setParameter(24, widgetScreenshotHref).setParameter(25, widgetIcon).setParameter(26, widgetKocName)
+				.setParameter(27, viewModel).setParameter(28, widgetTemplate).setParameter(29, widgetSupportTimeControl)
+				.setParameter(30, widgetLinkedDashboard).setParameter(31, widgetDefaultWidth)
+				.setParameter(32, widgetDefaultHeight).setParameter(33, providerName).setParameter(34, providerVersion)
+				.setParameter(35, providerAssetRoot).setParameter(36, dashboardIneligible).setParameter(37, searchId)
+				.setParameter(38, tenantId).executeUpdate();
 			}
 			em.getTransaction().commit();
 		}
