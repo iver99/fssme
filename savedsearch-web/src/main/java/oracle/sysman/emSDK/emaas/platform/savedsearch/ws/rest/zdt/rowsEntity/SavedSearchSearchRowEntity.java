@@ -55,10 +55,11 @@ public class SavedSearchSearchRowEntity implements RowEntity
 
 	@JsonProperty("SEARCH_DISPLAY_STR")
 	private String searchDisplayStr;
-
-	@JsonProperty("SEARCH_GUID")
-	private String searchGuid;
-
+	/**
+	 * This column is useless, do not need to compare it.
+	 *
+	 * @JsonProperty("SEARCH_GUID") private String searchGuid;
+	 */
 	@JsonProperty("SYSTEM_SEARCH")
 	private Integer systemSearch;
 
@@ -291,14 +292,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		else if (!searchDisplayStr.equals(other.searchDisplayStr)) {
 			return false;
 		}
-		if (searchGuid == null) {
-			if (other.searchGuid != null) {
-				return false;
-			}
-		}
-		else if (!searchGuid.equals(other.searchGuid)) {
-			return false;
-		}
+
 		if (searchId == null) {
 			if (other.searchId != null) {
 				return false;
@@ -599,14 +593,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
-	 * @return the searchGuid
-	 */
-	public String getSearchGuid()
-	{
-		return searchGuid;
-	}
-
-	/**
 	 * @return the searchId
 	 */
 	public Long getSearchId()
@@ -744,7 +730,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		result = prime * result + (nameWidgetSource == null ? 0 : nameWidgetSource.hashCode());
 		result = prime * result + (owner == null ? 0 : owner.hashCode());
 		result = prime * result + (searchDisplayStr == null ? 0 : searchDisplayStr.hashCode());
-		result = prime * result + (searchGuid == null ? 0 : searchGuid.hashCode());
 		result = prime * result + (searchId == null ? 0 : searchId.hashCode());
 		result = prime * result + (systemSearch == null ? 0 : systemSearch.hashCode());
 		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
@@ -970,15 +955,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
-	 * @param searchGuid
-	 *            the searchGuid to set
-	 */
-	public void setSearchGuid(String searchGuid)
-	{
-		this.searchGuid = searchGuid;
-	}
-
-	/**
 	 * @param searchId
 	 *            the searchId to set
 	 */
@@ -1114,8 +1090,8 @@ public class SavedSearchSearchRowEntity implements RowEntity
 				+ descriptionNlsid + ", descriptionSubsystem=" + descriptionSubsystem + ", emPluginId=" + emPluginId
 				+ ", isLocked=" + isLocked + ", lastModifiedBy=" + lastModifiedBy + ", metadataClob=" + metadataClob + ", name="
 				+ name + ", nameNlsid=" + nameNlsid + ", nameSubsystem=" + nameSubsystem + ", owner=" + owner
-				+ ", searchDisplayStr=" + searchDisplayStr + ", searchGuid=" + searchGuid + ", systemSearch=" + systemSearch
-				+ ", uiHidden=" + uiHidden + ", deleted=" + deleted + ", isWidget=" + isWidget + ", creationDate=" + creationDate
+				+ ", searchDisplayStr=" + searchDisplayStr + ", systemSearch=" + systemSearch + ", uiHidden=" + uiHidden
+				+ ", deleted=" + deleted + ", isWidget=" + isWidget + ", creationDate=" + creationDate
 				+ ", lastModificationDate=" + lastModificationDate + ", nameWidgetSource=" + nameWidgetSource
 				+ ", widgetGroupName=" + widgetGroupName + ", widgetScreenshotHref=" + widgetScreenshotHref + ", widgetIcon="
 				+ widgetIcon + ", widgetKocName=" + widgetKocName + ", widgetViewModel=" + widgetViewModel + ", widgetTemplate="
