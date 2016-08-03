@@ -25,7 +25,11 @@ V_PARAM_TYPE                      NUMBER(38,0)                    ;
 V_PARAM_VALUE_STR                 VARCHAR2(1024 BYTE)          ;
 V_PARAM_VALUE_CLOB                CLOB                           ;
 
+v_count number;
 BEGIN
+
+    SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH WHERE search_id=3040 AND TENANT_ID  ='&TENANT_ID';
+    IF (v_count=0) THEN
 
   V_SEARCH_ID                :=3040;
   V_NAME                     :='Label';
@@ -33369,8 +33373,10 @@ select SEARCH_ID,'ORACLE',2,SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID' from EMS_
 
 
   COMMIT;
-  DBMS_OUTPUT.PUT_LINE('TA OOB widgets have been updated to cut over to greenfield target model.');
-
+  DBMS_OUTPUT.PUT_LINE('TA OOB widgets have been updated to cut over to greenfield target model successfully.');
+ELSE
+  DBMS_OUTPUT.PUT_LINE('TA OOB widgets have been updated to cut over to greenfield target model already, no need to update again.'); 
+END IF;
 EXCEPTION
 WHEN OTHERS THEN
   ROLLBACK;
