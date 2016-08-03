@@ -373,19 +373,19 @@ public class DataManager
 					providerAssetRoot);
 			logger.info("Sync data in EMS_ANALYTICS_SEARCH,execute insert SQL:[" + sql + "]");
 			em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, searchGuid).setParameter(3, name)
-			.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
-					.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
-					.setParameter(10, categoryId).setParameter(11, nameNlsid).setParameter(12, nameSubsystem)
-					.setParameter(13, descriptionNlsid).setParameter(14, descriptionSubsystem).setParameter(15, systemSearch)
-			.setParameter(16, emPluginId).setParameter(17, isLocked).setParameter(18, metaDataClob)
-					.setParameter(19, searchDisplayStr).setParameter(20, uiHidden).setParameter(21, deleted)
-					.setParameter(22, isWidget).setParameter(23, tenantId).setParameter(24, nameWidgetSource)
-					.setParameter(25, widgetGroupName).setParameter(26, widgetScreenshotHref).setParameter(27, widgetIcon)
-			.setParameter(28, widgetKocName).setParameter(29, viewModel).setParameter(30, widgetTemplate)
-					.setParameter(31, widgetSupportTimeControl).setParameter(32, widgetLinkedDashboard)
-					.setParameter(33, widgetDefaultWidth).setParameter(34, widgetDefaultHeight).setParameter(35, providerName)
-			.setParameter(36, providerVersion).setParameter(37, providerAssetRoot).setParameter(38, dashboardIneligible)
-					.executeUpdate();
+					.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
+			.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
+			.setParameter(10, categoryId).setParameter(11, nameNlsid).setParameter(12, nameSubsystem)
+			.setParameter(13, descriptionNlsid).setParameter(14, descriptionSubsystem).setParameter(15, systemSearch)
+					.setParameter(16, emPluginId).setParameter(17, isLocked).setParameter(18, metaDataClob)
+			.setParameter(19, searchDisplayStr).setParameter(20, uiHidden).setParameter(21, deleted)
+			.setParameter(22, isWidget).setParameter(23, tenantId).setParameter(24, nameWidgetSource)
+			.setParameter(25, widgetGroupName).setParameter(26, widgetScreenshotHref).setParameter(27, widgetIcon)
+					.setParameter(28, widgetKocName).setParameter(29, viewModel).setParameter(30, widgetTemplate)
+			.setParameter(31, widgetSupportTimeControl).setParameter(32, widgetLinkedDashboard)
+			.setParameter(33, widgetDefaultWidth).setParameter(34, widgetDefaultHeight).setParameter(35, providerName)
+					.setParameter(36, providerVersion).setParameter(37, providerAssetRoot).setParameter(38, dashboardIneligible)
+			.executeUpdate();
 		}
 		else {
 			//execute update action
@@ -398,21 +398,20 @@ public class DataManager
 					widgetDefaultWidth, widgetDefaultHeight, dashboardIneligible, providerName, providerVersion,
 					providerAssetRoot);
 			logger.info("Sync data in EMS_ANALYTICS_SEARCH,execute update SQL:[" + sql + "]");
-			em.createNativeQuery(sql).setParameter(1, searchGuid).setParameter(2, name)
-			.setParameter(3, owner).setParameter(4, creationDate).setParameter(5, lastModificationDate)
-					.setParameter(6, lastModifiedBy).setParameter(7, description).setParameter(8, folderId)
-					.setParameter(9, categoryId).setParameter(10, nameNlsid).setParameter(11, nameSubsystem)
-					.setParameter(12, descriptionNlsid).setParameter(13, descriptionSubsystem).setParameter(14, systemSearch)
-			.setParameter(15, emPluginId).setParameter(16, isLocked).setParameter(17, metaDataClob)
-					.setParameter(18, searchDisplayStr).setParameter(19, uiHidden).setParameter(20, deleted)
-					.setParameter(21, isWidget).setParameter(22, nameWidgetSource)
-					.setParameter(23, widgetGroupName).setParameter(24, widgetScreenshotHref).setParameter(25, widgetIcon)
-			.setParameter(26, widgetKocName).setParameter(27, viewModel).setParameter(28, widgetTemplate)
-					.setParameter(29, widgetSupportTimeControl).setParameter(30, widgetLinkedDashboard)
-					.setParameter(31, widgetDefaultWidth).setParameter(32, widgetDefaultHeight).setParameter(33, providerName)
-			.setParameter(34, providerVersion).setParameter(35, providerAssetRoot).setParameter(36, dashboardIneligible)
-			.setParameter(37, searchId).setParameter(38, tenantId)
-					.executeUpdate();
+			em.createNativeQuery(sql).setParameter(1, searchGuid).setParameter(2, name).setParameter(3, owner)
+					.setParameter(4, creationDate).setParameter(5, lastModificationDate).setParameter(6, lastModifiedBy)
+					.setParameter(7, description).setParameter(8, folderId).setParameter(9, categoryId)
+					.setParameter(10, nameNlsid).setParameter(11, nameSubsystem).setParameter(12, descriptionNlsid)
+					.setParameter(13, descriptionSubsystem).setParameter(14, systemSearch).setParameter(15, emPluginId)
+					.setParameter(16, isLocked).setParameter(17, metaDataClob).setParameter(18, searchDisplayStr)
+					.setParameter(19, uiHidden).setParameter(20, deleted).setParameter(21, isWidget)
+					.setParameter(22, nameWidgetSource).setParameter(23, widgetGroupName).setParameter(24, widgetScreenshotHref)
+					.setParameter(25, widgetIcon).setParameter(26, widgetKocName).setParameter(27, viewModel)
+					.setParameter(28, widgetTemplate).setParameter(29, widgetSupportTimeControl)
+					.setParameter(30, widgetLinkedDashboard).setParameter(31, widgetDefaultWidth)
+					.setParameter(32, widgetDefaultHeight).setParameter(33, providerName).setParameter(34, providerVersion)
+					.setParameter(35, providerAssetRoot).setParameter(36, dashboardIneligible).setParameter(37, searchId)
+					.setParameter(38, tenantId).executeUpdate();
 		}
 		//sync Data
 		//		syncDatabaseTableData(sql,em);
@@ -426,6 +425,7 @@ public class DataManager
 	 *
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private List<Map<String, Object>> getDatabaseTableData(String nativeSql)
 	{
 		if (StringUtil.isEmpty(nativeSql)) {
@@ -433,11 +433,21 @@ public class DataManager
 			return null;
 		}
 		EntityManager em = null;
-		em = getEntityManager();
-		Query query = em.createNativeQuery(nativeSql);
-		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> list = query.getResultList();
+		List<Map<String, Object>> list = null;
+		try {
+			em = getEntityManager();
+			Query query = em.createNativeQuery(nativeSql);
+			query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+			list = query.getResultList();
+		}
+		catch (Exception e) {
+			logger.error("Error occured when execute SQL:[" + nativeSql + "]");
+			e.printStackTrace();
+		}
+		finally {
+			em.close();
+		}
+
 		return list;
 	}
 
