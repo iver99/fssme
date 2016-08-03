@@ -66,10 +66,21 @@ public class DataManager
 
 	public long getAllCategoryCount()
 	{
+		long count = 0L;
 		EntityManager em = null;
-		em = getEntityManager();
-		Query query = em.createNativeQuery(SQL_ALL_CATEGORY_COUNT);
-		long count = ((Number) query.getSingleResult()).longValue();
+		try {
+			em = getEntityManager();
+			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_COUNT);
+			count = ((Number) query.getSingleResult()).longValue();
+		}
+		catch (Exception e) {
+			logger.error("Error occured when get all category count!");
+			e.printStackTrace();
+		}
+		finally {
+			em.close();
+		}
+
 		return count;
 
 	}
@@ -83,9 +94,20 @@ public class DataManager
 	public long getAllFolderCount()
 	{
 		EntityManager em = null;
-		em = getEntityManager();
-		Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT);
-		long count = ((Number) query.getSingleResult()).longValue();
+		long count = 0l;
+		try {
+			em = getEntityManager();
+			Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT);
+			count = ((Number) query.getSingleResult()).longValue();
+		}
+		catch (Exception e) {
+
+		}
+		finally {
+			logger.error("Error occured when get all folder count!");
+			em.close();
+		}
+
 		return count;
 	}
 
@@ -98,9 +120,19 @@ public class DataManager
 	public long getAllSearchCount()
 	{
 		EntityManager em = null;
-		em = getEntityManager();
-		Query query = em.createNativeQuery(SQL_ALL_SEARCH_COUNT);
-		long count = ((Number) query.getSingleResult()).longValue();
+		long count = 0l;
+		try {
+			em = getEntityManager();
+			Query query = em.createNativeQuery(SQL_ALL_SEARCH_COUNT);
+			count = ((Number) query.getSingleResult()).longValue();
+		}
+		catch (Exception e) {
+
+		}
+		finally {
+			logger.error("Error occured when get all search count!");
+			em.close();
+		}
 		return count;
 
 	}
@@ -197,8 +229,6 @@ public class DataManager
 				sql = SyncSavedSearchSqlUtil.concatCategoryParamInsert(categoryId, name, paramValue, tenantId, creationDate,
 						lastModificationDate);
 				logger.info("Sync data in EMS_ANALYTICS_CATEGORY_PARAMS,execute insert SQL:[" + sql + "]");
-				/*"INSERT INTO EMS_ANALYTICS_CATEGORY_PARAMS (CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE) "
-				+ "VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";*/
 				em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, name).setParameter(3, paramValue)
 						.setParameter(4, tenantId).setParameter(5, creationDate).setParameter(6, lastModificationDate)
 						.executeUpdate();
@@ -209,8 +239,6 @@ public class DataManager
 				sql = SyncSavedSearchSqlUtil.concatCategoryParamUpdate(categoryId, name, paramValue, tenantId, creationDate,
 						lastModificationDate);
 				logger.info("Sync data in EMS_ANALYTICS_CATEGORY_PARAMS,execute update SQL:[" + sql + "]");
-				/*"UPDATE EMS_ANALYTICS_CATEGORY_PARAMS T SET T.PARAM_VALUE=?,T.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
-				+ "T.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') where T.CATEGORY_ID=? and T.NAME=? and T.TENANT_ID=?";*/
 				em.createNativeQuery(sql).setParameter(1, paramValue).setParameter(2, creationDate)
 						.setParameter(3, lastModificationDate).setParameter(4, categoryId).setParameter(5, name)
 						.setParameter(6, tenantId).executeUpdate();
@@ -247,13 +275,6 @@ public class DataManager
 						providerName, providerVersion, providerDiscovery, providerAssetroot, tenantId, dashboardIneligible,
 						lastModificationDate);
 				logger.info("Sync data in EMS_ANALYTICS_CATEGORY,execute insert SQL:[" + sql + "]");
-				/*"INSERT INTO EMS_ANALYTICS_CATEGORY (CATEGORY_ID,NAME,DESCRIPTION,OWNER,CREATION_DATE,"
-				+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,EM_PLUGIN_ID,"
-				+ "DEFAULT_FOLDER_ID,DELETED,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_DISCOVERY,"
-				+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
-				+ "?,?,?,?,?,"
-				+ "?,?,?,?,?,"
-				+ "?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))"*/
 				em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, name).setParameter(3, description)
 						.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, nameNlsid)
 						.setParameter(7, nameSubSystem).setParameter(8, descriptionNlsid).setParameter(9, descriptionSubSystem)
@@ -270,10 +291,6 @@ public class DataManager
 						providerName, providerVersion, providerDiscovery, providerAssetroot, tenantId, dashboardIneligible,
 						lastModificationDate);
 				logger.info("Sync data in EMS_ANALYTICS_CATEGORY,execute update SQL:[" + sql + "]");
-				/*"UPDATE EMS_ANALYTICS_CATEGORY t set t.NAME=?,t.DESCRIPTION=?,t.OWNER=?,t.CREATION_DATE=?,"
-				+ "t.NAME_NLSID=?,t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,t.DESCRIPTION_SUBSYSTEM==?,t.EM_PLUGIN_ID=?,"
-				+ "t.DEFAULT_FOLDER_ID=?,t.DELETED=?,t.PROVIDER_NAME=?,t.PROVIDER_VERSION=?,t.PROVIDER_DISCOVERY=?,"
-				+ "t.PROVIDER_ASSET_ROOT=?,t.DASHBOARD_INELIGIBLE=?,t.LAST_MODIFICATION_DATE=? where t.CATEGORY_ID=? and t.TENANT_ID=?";*/
 				em.createNativeQuery(sql).setParameter(1, name).setParameter(2, description).setParameter(3, owner)
 						.setParameter(4, creationDate).setParameter(5, nameNlsid).setParameter(6, nameSubSystem)
 						.setParameter(7, descriptionNlsid).setParameter(8, descriptionSubSystem).setParameter(9, emPluginId)
@@ -312,12 +329,6 @@ public class DataManager
 						lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem, descriptionNlsid, descriptionSubsystem,
 						systemFolder, emPluginId, uiHidden, deleted, tenantId);
 				logger.info("Sync data in EMS_ANALYTICS_FOLDERS,execute insert SQL:[" + sql + "]");
-				/*String insertSql = "INSERT INTO EMS_ANALYTICS_FOLDERS (FOLDER_ID,NAME,PARENT_ID,DESCRIPTION,CREATION_DATE,OWNER,"
-						+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
-						+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID) VALUES(?,?,?,?,?,"
-						+ "?,?,?,?,?,"
-						+ "?,?,?,?,?,"
-						+ "?,?)";*/
 				em.createNativeQuery(sql).setParameter(1, folderId).setParameter(2, name).setParameter(3, parentId)
 						.setParameter(4, description).setParameter(5, creationDate).setParameter(6, owner)
 						.setParameter(7, lastModificationDate).setParameter(8, lastModifiedBy).setParameter(9, nameNlsid)
@@ -332,10 +343,6 @@ public class DataManager
 						lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem, descriptionNlsid, descriptionSubsystem,
 						systemFolder, emPluginId, uiHidden, deleted, tenantId);
 				logger.info("Sync data in EMS_ANALYTICS_FOLDERS,execute update SQL:[" + sql + "]");
-				/*"UPDATE EMS_ANALYTICS_FOLDERS t SET t.NAME=?,t.PARENT_ID=?,t.DESCRIPTION=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
-				+ "t.OWNER=?,t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFIED_BY=?,t.NAME_NLSID=?,"
-				+ "t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,t.DESCRIPTION_SUBSYSTEM=?,t.SYSTEM_FOLDER=?,t.EM_PLUGIN_ID=?,"
-				+ "t.UI_HIDDEN=?,t.DELETED=? where t.FOLDER_ID=? and t.TENANT_ID=?";*/
 				em.createNativeQuery(sql).setParameter(1, name).setParameter(2, parentId).setParameter(3, description)
 						.setParameter(4, creationDate).setParameter(5, owner).setParameter(6, lastModificationDate)
 						.setParameter(7, lastModifiedBy).setParameter(8, nameNlsid).setParameter(9, nameSubsystem)
@@ -371,8 +378,6 @@ public class DataManager
 				logger.info("Data not exist in table EMS_ANALYTICS_LAST_ACCESS,execute insert action.");
 				sql = SyncSavedSearchSqlUtil.concatLastAccessInsert(objectId, accessedBy, objectType, accessDate, tenantId,
 						creationDate, lastModificationDate);
-				/*String insertSql = "INSERT INTO EMS_ANALYTICS_LAST_ACCESS (OBJECT_ID,ACCESSED_BY,OBJECT_TYPE,ACCESS_DATE,"
-						+ "TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE) VALUES(?,?,?,?,?,?,?)";*/
 				logger.info("Sync data in EMS_ANALYTICS_LAST_ACCESS,execute insert SQL:[" + sql + "]");
 				em.createNativeQuery(sql).setParameter(1, objectId).setParameter(2, accessedBy).setParameter(3, objectType)
 						.setParameter(4, accessDate).setParameter(5, tenantId).setParameter(6, creationDate)
@@ -384,12 +389,6 @@ public class DataManager
 				sql = SyncSavedSearchSqlUtil.concatLastAccessUpdate(objectId, accessedBy, objectType, accessDate, tenantId,
 						creationDate, lastModificationDate);
 				logger.info("Sync data in EMS_ANALYTICS_LAST_ACCESS,execute update SQL:[" + sql + "]");
-				/*String updateSql = "UPDATE EMS_ANALYTICS_LAST_ACCESS t SET t.ACCESS_DATE=to_timestamp('" + accessDate
-				+ "','yyyy-mm-dd hh24:mi:ss.ff'),t.CREATION_DATE=to_timestamp('" + creationDate
-				+ "','yyyy-mm-dd hh24:mi:ss.ff')," + "t.LAST_MODIFICATION_DATE=to_timestamp('" + lastModificationDate
-				+ "','yyyy-mm-dd hh24:mi:ss.ff') " + "where t.OBJECT_ID=" + objectId + " and t.ACCESSED_BY='" + accessedBy
-				+ "' and t.OBJECT_TYPE=" + objectType + " and t.TENANT_ID=" + tenantId + "";
-				*/
 				em.createNativeQuery(sql).setParameter(1, accessDate).setParameter(2, creationDate)
 						.setParameter(3, lastModificationDate).setParameter(4, objectId).setParameter(5, accessedBy)
 						.setParameter(6, objectType).setParameter(7, tenantId).executeUpdate();
@@ -422,8 +421,6 @@ public class DataManager
 				sql = SyncSavedSearchSqlUtil.concatSearchParamsInsert(searchId, name, paramAttributes, paramType, paramValueStr,
 						paramValueClob, tenantId, creationDate, lastModificationDate);
 				logger.info("Sync data in EMS_ANALYTICS_SEARCH_PARAMS,execute insert SQL:[" + sql + "]");
-				/*String insertSql = "INSERT INTO EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
-						+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE) VALUES(?,?,?,?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";*/
 				em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, paramAttributes)
 						.setParameter(4, paramType).setParameter(5, paramValueStr).setParameter(6, paramValueClob)
 						.setParameter(7, tenantId).setParameter(8, creationDate).setParameter(9, lastModificationDate)
@@ -435,9 +432,6 @@ public class DataManager
 				sql = SyncSavedSearchSqlUtil.concatSearchParamsUpdate(searchId, name, paramAttributes, paramType, paramValueStr,
 						paramValueClob, tenantId, creationDate, lastModificationDate);
 				logger.info("Sync data in EMS_ANALYTICS_SEARCH_PARAMS,execute update SQL:[" + sql + "]");
-				/*String updateSql = "UPDATE EMS_ANALYTICS_SEARCH_PARAMS t set t.PARAM_ATTRIBUTES=?,t.PARAM_TYPE=?,t.PARAM_VALUE_STR=?,"
-						+ "t.PARAM_VALUE_CLOB=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";*/
-
 				em.createNativeQuery(sql).setParameter(1, paramAttributes).setParameter(2, paramType)
 						.setParameter(3, paramValueStr).setParameter(4, paramValueClob).setParameter(5, creationDate)
 						.setParameter(6, lastModificationDate).setParameter(7, searchId).setParameter(8, name)
