@@ -749,7 +749,7 @@ public class SearchAPITest {
             {
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearchWithoutOwner(anyLong);
                 result = search;
                 FolderManager .getInstance();
                 result = folderManager;
@@ -772,7 +772,7 @@ public class SearchAPITest {
             {
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearchWithoutOwner(anyLong);
                 result = new EMAnalyticsFwkException(new Throwable());
             }
         };
