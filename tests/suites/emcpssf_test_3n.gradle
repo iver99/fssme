@@ -39,6 +39,16 @@ apply from: 'setup.gradle'
 apply plugin: 'DevInfraPlugin'
 apply plugin: 'TestInfraPlugin'
 
+/* Your lrg specific code would come here */
+repositories {
+    maven {
+        url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+    }
+    maven {
+        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
+    }
+}
+
 /***************** OMCTF Plugin **********************/
 configurations { omctfPluginConfig }
 dependencies {
@@ -52,15 +62,6 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
  
- 
-/* Your lrg specific code would come here */
-repositories {
-maven {
-        url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-    }
-        maven {
-            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
-    }
 dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
