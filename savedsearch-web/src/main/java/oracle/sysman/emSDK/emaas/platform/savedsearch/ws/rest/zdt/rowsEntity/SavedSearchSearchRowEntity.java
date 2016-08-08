@@ -10,6 +10,7 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -58,7 +59,8 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * This column is useless, do not need to compare it.
 	 */
-	@JsonProperty("SEARCH_GUID")
+	//	@JsonProperty("SEARCH_GUID")
+	@JsonIgnore
 	private String searchGuid;
 
 	@JsonProperty("SYSTEM_SEARCH")
@@ -594,14 +596,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
-	 * @return the searchGuid
-	 */
-	public String getSearchGuid()
-	{
-		return searchGuid;
-	}
-
-	/**
 	 * @return the searchId
 	 */
 	public Long getSearchId()
@@ -961,15 +955,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	public void setSearchDisplayStr(String searchDisplayStr)
 	{
 		this.searchDisplayStr = searchDisplayStr;
-	}
-
-	/**
-	 * @param searchGuid
-	 *            the searchGuid to set
-	 */
-	public void setSearchGuid(String searchGuid)
-	{
-		this.searchGuid = searchGuid;
 	}
 
 	/**
