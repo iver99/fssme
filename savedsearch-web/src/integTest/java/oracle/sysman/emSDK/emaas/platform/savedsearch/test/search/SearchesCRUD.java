@@ -1240,7 +1240,7 @@ public class SearchesCRUD
 					+ 1
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3000");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
 			System.out.println(res1.asString());
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 400);
@@ -1261,7 +1261,7 @@ public class SearchesCRUD
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3000");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -1344,7 +1344,7 @@ public class SearchesCRUD
 					+ 1
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3000");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
 			System.out.println(res1.asString());
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 400);
@@ -1363,7 +1363,7 @@ public class SearchesCRUD
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3000");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
