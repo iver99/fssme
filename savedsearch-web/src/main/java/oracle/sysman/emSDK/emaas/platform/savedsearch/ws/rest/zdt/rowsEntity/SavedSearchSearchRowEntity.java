@@ -57,9 +57,10 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private String searchDisplayStr;
 	/**
 	 * This column is useless, do not need to compare it.
-	 *
-	 * @JsonProperty("SEARCH_GUID") private String searchGuid;
 	 */
+	@JsonProperty("SEARCH_GUID")
+	private String searchGuid;
+
 	@JsonProperty("SYSTEM_SEARCH")
 	private Integer systemSearch;
 
@@ -593,6 +594,14 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
+	 * @return the searchGuid
+	 */
+	public String getSearchGuid()
+	{
+		return searchGuid;
+	}
+
+	/**
 	 * @return the searchId
 	 */
 	public Long getSearchId()
@@ -952,6 +961,15 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	public void setSearchDisplayStr(String searchDisplayStr)
 	{
 		this.searchDisplayStr = searchDisplayStr;
+	}
+
+	/**
+	 * @param searchGuid
+	 *            the searchGuid to set
+	 */
+	public void setSearchGuid(String searchGuid)
+	{
+		this.searchGuid = searchGuid;
 	}
 
 	/**
