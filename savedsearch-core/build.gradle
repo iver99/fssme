@@ -1,13 +1,8 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 import java.util.Date
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
-apply plugin: 'artifactory-publish'
+
 
 dfversion = project.ext.getServiceVersion('SavedSearchService')
 def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
@@ -32,12 +27,12 @@ def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").
 publishing.publications {
     integTest(MavenPublication) {
 			setArtifactId(project.name + '-' + integTestJar.appendix)
-			setGroupId('com.oracle.emaas.emcpssf.test')
+			setGroupId("${publishGroup}")
 			artifact integTestJar.archivePath
     }
     thisJarPublication(MavenPublication) {
 			from project.components.java
-			setGroupId('com.oracle.emaas.emcpssf.test')
+			setGroupId("${publishGroup}")
     }
 }
 
