@@ -319,13 +319,13 @@ public class SearchManagerTest extends BaseTest
 		AssertJUnit.assertNotNull(queried);
 		if (queried != null) {
 			AssertJUnit.assertEquals(2, queried.size());
-			long searchId1 = queried.get(0).getId();
-			long searchId2 = queried.get(1).getId();
-			if (searchId1 < searchId2) {
+			BigInteger searchId1 = queried.get(0).getId();
+			BigInteger searchId2 = queried.get(1).getId();
+			if (searchId1.compareTo(searchId2) < 0) {
 				assertSearchEquals(search1, queried.get(0));
 				assertSearchEquals(search2, queried.get(1));
 			}
-			else if (searchId1 > searchId2) {
+			else if (searchId1.compareTo(searchId2) > 0) {
 				assertSearchEquals(search2, queried.get(0));
 				assertSearchEquals(search1, queried.get(1));
 			}
