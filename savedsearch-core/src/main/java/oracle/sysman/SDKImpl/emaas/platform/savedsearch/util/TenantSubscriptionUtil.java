@@ -17,9 +17,9 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingCollection;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
@@ -32,46 +32,13 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 /**
  * @author aduan
  */
 public class TenantSubscriptionUtil
 {
-	public static class RestClient
-	{
-		public RestClient()
-		{
-		}
-
-		public String get(String url)
-		{
-			if (StringUtil.isEmpty(url)) {
-				return null;
-			}
-
-			ClientConfig cc = new DefaultClientConfig();
-			Client client = Client.create(cc);
-			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-			String auth = String.copyValueOf(authToken);
-			logger.debug("Retrieved authorization token from registration manager: " + auth);
-			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
-			return builder.get(String.class);
-		}
-	}
-
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 	private static final String SUBSCRIBED_SERVICE_NAME_APM = "APM";
 	private static final String SUBSCRIBED_SERVICE_NAME_ITA = "ITAnalytics";
@@ -119,7 +86,7 @@ public class TenantSubscriptionUtil
 
 	public static List<Category> getTenantSubscribedCategories(String tenant, boolean includeDashboardIneligible)
 			throws EMAnalyticsFwkException
-			{
+	{
 		List<Category> resultList = new ArrayList<Category>();
 		if (tenant == null) {
 			return resultList;
@@ -141,7 +108,7 @@ public class TenantSubscriptionUtil
 		}
 
 		return resultList;
-			}
+	}
 
 	public static List<String> getTenantSubscribedServiceProviders(String tenant) throws IOException
 	{
@@ -178,9 +145,8 @@ public class TenantSubscriptionUtil
 			return null;
 		}
 		if (cachedApps != null) {
-			logger.debug(
-					"retrieved subscribed apps for tenant {} from subscribe cache: "
-							+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
+			logger.debug("retrieved subscribed apps for tenant {} from subscribe cache: "
+					+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
 			return cachedApps;
 		}
 
@@ -199,8 +165,8 @@ public class TenantSubscriptionUtil
 		try {
 			DomainsEntity de = JSONUtil.fromJson(mapper, domainsResponse, DomainsEntity.class);//ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
-				logger.warn("Checking tenant (" + tenant
-						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
+				logger.warn(
+						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
 				return null;
 			}
 			String tenantAppUrl = null;
@@ -215,8 +181,8 @@ public class TenantSubscriptionUtil
 				return null;
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			logger.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
-					+ appMappingUrl);
+			logger.info(
+					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
 			String appMappingJson = rc.get(appMappingUrl);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
@@ -256,14 +222,13 @@ public class TenantSubscriptionUtil
 			if (apps == null || "".equals(apps)) {
 				return null;
 			}
-			List<String> origAppsList = Arrays.asList(apps
-					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+			List<String> origAppsList = Arrays
+					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
 			//put into cache
 			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
 					origAppsList);
-			logger.debug(
-					"Store subscribed apps for tenant {} to subscribe cache: "
-							+ StringUtil.arrayToCommaDelimitedString(origAppsList.toArray()), tenant);
+			logger.debug("Store subscribed apps for tenant {} to subscribe cache: "
+					+ StringUtil.arrayToCommaDelimitedString(origAppsList.toArray()), tenant);
 			return origAppsList;
 
 		}
