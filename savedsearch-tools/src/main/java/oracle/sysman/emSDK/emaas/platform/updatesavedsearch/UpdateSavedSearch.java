@@ -46,7 +46,7 @@ public class UpdateSavedSearch
 	private String m_authToken;
 
 	private Long m_lngCategoryId;
-	private static Logger _logger = UpdateSavedSearchLog.getLogger(UpdateSavedSearch.class);
+	private static Logger LOGGER = UpdateSavedSearchLog.getLogger(UpdateSavedSearch.class);
 
 	public String getauthToken()
 	{
@@ -245,36 +245,27 @@ public class UpdateSavedSearch
 					foundSearchVersion = true;
 				}
 				else {
-					System.out.println("Error :Please specify valid command ");
 					System.exit(0);
 				}
 			}
 
 		}
 		catch (IllegalArgumentException e) {
-			System.out.println("Error: " + e.getMessage());
-			_logger.error("Error: " + e.getMessage());
+			LOGGER.error("Error: " + e.getMessage());
 			m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 		}
 
 		if (foundImport && foundExport) {
 			m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
-			System.out.println("Error : argument " + UpdateUtilConstants.IMPORT + "  not allowed with argument "
 					+ UpdateUtilConstants.EXPORT);
 			System.exit(0);
 		}
 
 		if (!foundHelp && foundImport && (!foundInputPath || !foundOutputPath || !foundToken || !foundTenant)) {
-			System.out.println("Error: you must specify " + UpdateUtilConstants.INPUT_FILE_PATH + " "
-					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " and " + UpdateUtilConstants.AUTH_TOKEN
-					+ UpdateUtilConstants.TENANT_TOKEN + " options.");
 			System.exit(0);
 		}
 
 		if (!foundHelp && foundExport && (!foundCategory || !foundOutputPath || !foundToken || !foundTenant)) {
-			System.out.println("Error: you must specify both " + UpdateUtilConstants.CATEGORY_ID + " "
-					+ UpdateUtilConstants.OUTPUT_FILE_PATH + " and  " + UpdateUtilConstants.AUTH_TOKEN
-					+ UpdateUtilConstants.TENANT_TOKEN + " options.");
 			System.exit(0);
 		}
 
@@ -296,11 +287,9 @@ public class UpdateSavedSearch
 			if (foundEndPoint && foundSmUrl || foundEndPoint && foundSearchVersion || foundSmUrl && !foundSearchVersion
 					|| !foundSmUrl && foundSearchVersion || !foundEndPoint && !foundSmUrl) {
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
-				System.out.println("Please specify valid command - specify either service manager URL and version  or SSF URL");
 			}
 			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
 				if (temp.length() != 0) {
-					System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.IMPORT);
 				}
 			}
 
@@ -324,11 +313,9 @@ public class UpdateSavedSearch
 			if (foundEndPoint && foundSmUrl || foundEndPoint && foundSearchVersion || foundSmUrl && !foundSearchVersion
 					|| !foundSmUrl && foundSearchVersion || !foundEndPoint && !foundSmUrl) {
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
-				System.out.println("Please specify valid command - specify either service manager URL and version  or SSF URL");
 			}
 			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
 				if (temp.length() != 0) {
-					System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.EXPORT);
 				}
 			}
 		}
@@ -351,7 +338,6 @@ public class UpdateSavedSearch
 			}
 			if (foundInputPath) {
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
-				System.out.println("Please specify valid command");
 			}
 			if (foundSmUrl) {
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
@@ -383,7 +369,6 @@ public class UpdateSavedSearch
 				temp = temp + UpdateUtilConstants.TENANT_TOKEN + "  ";
 			}
 			if (m_intCommandNo == UpdateUtilConstants.OPT_INVALID) {
-				System.out.println("Error : argument " + temp + "  not allowed with argument " + UpdateUtilConstants.HELP);
 			}
 		}
 
@@ -391,11 +376,10 @@ public class UpdateSavedSearch
 			try {
 				if (m_intCommandNo != UpdateUtilConstants.OPT_INVALID) {
 					m_strEndPoint = ServiceDiscoveryUtil.getSsfUrlBySmUrl(m_strSmUrl, m_strSsfVersion);
-					_logger.info("URL:" + m_strEndPoint);
+					LOGGER.info("URL:" + m_strEndPoint);
 				}
 			}
 			catch (Exception e) {
-				System.out.println("Error : An error occurred while discovering SSF Url");
 				m_intCommandNo = UpdateUtilConstants.OPT_INVALID;
 			}
 		}

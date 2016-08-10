@@ -164,7 +164,6 @@ public class WidgetManagerImpl extends WidgetManager
 					String sqlString = databaseQuery.getSQLString();
 					//				String sqlString = databaseQuery.getTranslatedSQLString(session, new DatabaseRecord());
 					LOGGER.debug("The SQL statement to retrieve all widget is: [{}]", sqlString);
-					System.out.println(sqlString);
 				}
 				catch (Exception e) {
 					LOGGER.error("Error when printing debug sql: ", e);

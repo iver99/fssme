@@ -61,11 +61,9 @@ public class CategoryCRUDBeforeUpgradeTest {
         Assert.assertEquals(res1.getStatusCode(), 200);
         JSONArray arrfld = new JSONArray(res1.getBody().asString());
         for (int index = 0; index < arrfld.length(); index++) {
-            System.out.println("verifying categoryids");
             JSONObject jsonObj = arrfld.getJSONObject(index);
             catid = jsonObj.getInt("id");
             catName = jsonObj.getString("name");
-            System.out.println("verified categoryids");
         }
     }
 

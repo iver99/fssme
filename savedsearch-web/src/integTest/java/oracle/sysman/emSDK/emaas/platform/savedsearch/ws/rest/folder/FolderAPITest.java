@@ -153,7 +153,6 @@ public class FolderAPITest {
         parentFolder.append("id",0);
         folderobj.append("name","name");
         folderobj.put("parentFolder",parentFolder);
-        System.out.print(folderobj.optJSONObject("parentFolder"));
 
         new Expectations(){
             {

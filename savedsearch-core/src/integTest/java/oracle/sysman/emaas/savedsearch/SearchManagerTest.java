@@ -195,8 +195,6 @@ public class SearchManagerTest extends BaseTest
 		final int folderCount = 10000;//change this to your desired count
 		final int searchCount = 1000000;//change this to your desired count
 		long start = System.currentTimeMillis();
-		System.out.println("Start to create " + categoryCount + " categories, " + folderCount + " folders and " + searchCount
-				+ " searches");
 		for (int i = 0; i < categoryCount; i++) {
 			Category cat = SearchManagerTest.createTestCategory(cm, null, "CategoryTest " + i);
 			for (int j = 0; j < folderCount / categoryCount; j++) {
@@ -206,8 +204,6 @@ public class SearchManagerTest extends BaseTest
 				}
 			}
 		}
-		System.out.println("Total time to create " + categoryCount + " categories, " + folderCount + " folders and "
-				+ searchCount + " searches is " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
 	@Test
@@ -647,7 +643,6 @@ public class SearchManagerTest extends BaseTest
 
 		final SearchManager sm = SearchManager.getInstance();
 		List<Search> searches = sm.getSearchListByFolderId(folderId);
-		System.out.println(searches.size() + " searches returned");
 	}
 
 	/*
@@ -755,7 +750,6 @@ public class SearchManagerTest extends BaseTest
 		//sm.getSearch(search.getId());
 		sm.getSearch(searchId);
 		long end = System.currentTimeMillis();
-		System.out.println("Time spent to query search by ID from 1,000,000 searches: " + (end - start) + "ms");
 	}
 
 	/*
@@ -782,7 +776,6 @@ public class SearchManagerTest extends BaseTest
 		//sm.getSearchByName(search.getName(), folder.getId());
 		sm.getSearchByName(searchName, folderId);
 		long end = System.currentTimeMillis();
-		System.out.println("Time spent to query search by name from 1,000,000 searches: " + (end - start) + "ms");
 	}
 
 	/*
@@ -809,8 +802,6 @@ public class SearchManagerTest extends BaseTest
 		//List<Search> searches = sm.getSearchListByFolderId(folder.getId());
 		List<Search> searches = sm.getSearchListByFolderId(folderId);
 		long end = System.currentTimeMillis();
-		System.out.println("Time spent to get search list by folder id from 1,000,000 searches: " + (end - start) + "ms");
-		System.out.println("amount of searches " + searches.size());
 	}
 
 	@Test

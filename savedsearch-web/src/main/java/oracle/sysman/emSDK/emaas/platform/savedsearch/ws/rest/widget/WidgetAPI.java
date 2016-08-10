@@ -46,7 +46,7 @@ import com.sun.jersey.core.util.Base64;
 @Path("/widgets")
 public class WidgetAPI
 {
-	private static final Logger _logger = LogManager.getLogger(WidgetAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(WidgetAPI.class);
 
 	private static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
 
@@ -164,13 +164,13 @@ public class WidgetAPI
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to get widgets, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		catch (Exception e) {
 			message = e.getMessage();
 			statusCode = 500;
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Unknow error when retrieving widgets, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
@@ -243,38 +243,38 @@ public class WidgetAPI
 				}
 				else { // invalid screenshot file name
 					if (!ScreenshotPathGenerator.getInstance().validFileName(widgetId, fileName, se.getFileName())) {
-						_logger.error("The requested screenshot file name {}, widget id={} is not a valid name", fileName,
+						LOGGER.error("The requested screenshot file name {}, widget id={} is not a valid name", fileName,
 								widgetId, se.getFileName());
 						return Response.status(Status.NOT_FOUND).build();
 					}
-					_logger.debug("The request screenshot file name is not equal to the file name in cache, but it is valid. "
+					LOGGER.debug("The request screenshot file name is not equal to the file name in cache, but it is valid. "
 							+ "Try to query from database to see if screenshot is actually updated already");
 				}
 			}
 		}
 		catch (Exception e) {
-			_logger.error("Exception when getting screenshot from cache. Continue to get from database", e);
+			LOGGER.error("Exception when getting screenshot from cache. Continue to get from database", e);
 		}
 
 		try {
 			SearchManager searchMan = SearchManager.getInstance();
 			final ScreenshotData ss = searchMan.getWidgetScreenshotById(widgetId);
 			if (ss == null || ss.getScreenshot() == null) { // searchManagerImpl ensures an non-null return value. put check for later possible checks
-				_logger.error("Does not retrieved base64 screenshot data. return 404 then");
+				LOGGER.error("Does not retrieved base64 screenshot data. return 404 then");
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			//store to cache
 			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, widgetId, ss);
 			if (se == null || se.getBuffer() == null) {
-				_logger.debug("Does not retrieved base64 screenshot data after store to cache. return 404 then");
+				LOGGER.debug("Does not retrieved base64 screenshot data after store to cache. return 404 then");
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			if (!fileName.equals(se.getFileName())) {
-				_logger.error("The requested screenshot file name {}, widget id={} does not exist", fileName, widgetId,
+				LOGGER.error("The requested screenshot file name {}, widget id={} does not exist", fileName, widgetId,
 						se.getFileName());
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			_logger.debug("Retrieved screenshot data from persistence layer, stored to cache, and build response now.");
+			LOGGER.debug("Retrieved screenshot data from persistence layer, stored to cache, and build response now.");
 			return Response.ok(new StreamingOutput() {
 				/* (non-Javadoc)
 				 * @see javax.ws.rs.core.StreamingOutput#write(java.io.OutputStream)
@@ -300,13 +300,13 @@ public class WidgetAPI
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to get widget screen shot, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		catch (Exception e) {
 			message = e.getMessage();
 			statusCode = 500;
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Unknow error when retrieving widget screen shot, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		return Response.status(statusCode).entity(message).type(MediaType.APPLICATION_JSON).build();
@@ -350,7 +350,7 @@ public class WidgetAPI
 	{
 		List<String> providers = TenantSubscriptionUtil.getTenantSubscribedServiceProviders(TenantContext.getContext()
 				.gettenantName());
-		_logger.debug("Retrieved subscribed providers {} for tenant {}",
+		LOGGER.debug("Retrieved subscribed providers {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
 		List<Map<String, Object>> widgetList = WidgetManager.getInstance().getWidgetListByProviderNames(providers, widgetGroupId);
 		String message = WidgetManager.getInstance().getSpelledJsonFromQueryResult(widgetList);

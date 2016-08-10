@@ -167,7 +167,6 @@ public class UpdateSearchTest extends BaseTest
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header("OAM_REMOTE_USER", R_TENANT_USER).when().delete("/search/" + mySearchId);
-		System.out.println("											");
 		return res1.getStatusCode() == 204;
 
 	}

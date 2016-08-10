@@ -63,8 +63,6 @@ public class CommonTest
 			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 		}
 		catch (Exception e) {
-			System.out.println("an error occurred while retrving ssf deployment details" + " " + url + " " + portno
-					+ e.toString());
 			LOGGER.error("an error occurred while retrving ssf deployment details" + " " + url + " " + portno + e.toString());
 		}
 
