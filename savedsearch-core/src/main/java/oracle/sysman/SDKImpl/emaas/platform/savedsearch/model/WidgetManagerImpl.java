@@ -60,7 +60,7 @@ public class WidgetManagerImpl extends WidgetManager
 			+ "FROM EMS_ANALYTICS_SEARCH s, EMS_ANALYTICS_CATEGORY c ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_2 = "WHERE c.provider_name in (";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_3 = ") "
-			+ "AND (s.owner=? OR s.system_search=1) AND s.deleted=0 AND s.IS_WIDGET=1 AND s.TENANT_ID=? ";
+			+ "AND s.deleted=0 AND s.IS_WIDGET=1 AND s.TENANT_ID=? ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4 = "AND s.category_id=c.category_id And c.tenant_id=? ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_5 = "AND c.CATEGORY_ID=? ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_6 = "AND (s.DASHBOARD_INELIGIBLE IS NULL OR s.DASHBOARD_INELIGIBLE <>'1') ORDER BY s.SEARCH_ID ASC ";
@@ -206,9 +206,7 @@ public class WidgetManagerImpl extends WidgetManager
 			sb.append(providerNames.get(i));
 			sb.append("'");
 		}
-		String userName = TenantContext.getContext().getUsername();
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_3);
-		paramList.add(userName);
 		paramList.add(tenantId);
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4);
 		paramList.add(tenantId);

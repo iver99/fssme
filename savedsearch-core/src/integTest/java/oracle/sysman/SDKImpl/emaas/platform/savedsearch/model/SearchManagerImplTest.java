@@ -226,11 +226,29 @@ public class SearchManagerImplTest
 				result = entityManager;
 				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
 				result = emAnalyticsSearch;
-				entityManager.refresh(any);
-
 			}
 		};
 		searchManager.getSearch(1234);
+	}
+	
+	@Test
+	public void testGetSearchWithoutOwner(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+			@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final EmAnalyticsSearch emAnalyticsSearch)
+					throws Exception
+	{
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				entityManager.find(EmAnalyticsSearch.class, anyLong);
+				result = emAnalyticsSearch;
+				emAnalyticsSearch.getDeleted();
+				result = 0L;
+			}
+		};
+		searchManager.getSearchWithoutOwner(1234);
 	}
 
 	@Test
@@ -747,8 +765,10 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, (EntityManager) any);
+				entityManager.find(EmAnalyticsSearch.class, anyLong);
 				result = emAnalyticsSearch;
+				emAnalyticsSearch.getDeleted();
+				result = 0L;
 			}
 		};
 		searchManager.getWidgetScreenshotById(1234);

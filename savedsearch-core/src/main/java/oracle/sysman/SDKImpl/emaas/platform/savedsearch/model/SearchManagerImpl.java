@@ -267,6 +267,12 @@ public class SearchManagerImpl extends SearchManager
 		//Get full search data
 		return getSearch(searchId, false);
 	}
+	
+	@Override
+	public Search getSearchWithoutOwner(long searchId) throws EMAnalyticsFwkException
+	{
+		return getSearchWithoutOwner(searchId, false);
+	}
 
 	@Override
 	public Search getSearchByName(String name, long folderId) throws EMAnalyticsFwkException
@@ -698,7 +704,7 @@ public class SearchManagerImpl extends SearchManager
 	public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
 	{
 		String screenshot = null;
-		Search search = getSearch(widgetId, true);
+		Search search = getSearchWithoutOwner(widgetId, true);
 		List<SearchParameter> paramList = search.getParameters();
 		if (paramList != null && paramList.size() > 0) {
 			for (SearchParameter param : paramList) {
@@ -1400,26 +1406,42 @@ public class SearchManagerImpl extends SearchManager
 		}
 		return folder;
 	}
-
-	private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException
-	{
+	
+	private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException {
 		_logger.info("Retrieving search with id: " + searchId);
 		EntityManager em = null;
-		Search search = null;
+		EmAnalyticsSearch searchObj = null;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			EmAnalyticsSearch searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
-			if (searchObj != null) {
-				em.refresh(searchObj);
-				if (loadWidgetOnly) {
-					search = createWidgetObject(searchObj, true);
-				}
-				else {
-					search = createSearchObject(searchObj, null);
-				}
+			searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
+		} catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			String errMsg = "Error while getting the search object by ID: " + searchId;
+			_logger.error(errMsg, e);
+			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId }, e);
+		} finally {
+			if (em != null) {
+				em.close();
 			}
 		}
-		catch (Exception e) {
+		
+		if (searchObj == null) {
+			String errMsg = "Search identified by ID: " + searchId + " does not exist";
+			_logger.error(errMsg);
+			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId });
+		}
+		
+		return getSearch(searchObj, loadWidgetOnly);
+	}
+	
+	private Search getSearchWithoutOwner(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException{
+		_logger.info("getSearchWithoutOwner with id: " + searchId);
+		EntityManager em = null;
+		EmAnalyticsSearch searchObj = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			searchObj = em.find(EmAnalyticsSearch.class, searchId);
+		} catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
 			String errMsg = "Error while getting the search object by ID: " + searchId;
 			_logger.error(errMsg, e);
@@ -1431,12 +1453,27 @@ public class SearchManagerImpl extends SearchManager
 			if (em != null) {
 				em.close();
 			}
-
 		}
-		if (search == null) {
+		
+		if(searchObj == null || searchObj.getDeleted() != 0) {
 			String errMsg = "Search identified by ID: " + searchId + " does not exist";
 			_logger.error(errMsg);
 			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId });
+		}
+		
+		return getSearch(searchObj, loadWidgetOnly);
+	}
+	
+	private Search getSearch(EmAnalyticsSearch searchObj, boolean loadWidgetOnly) throws EMAnalyticsFwkException
+	{
+		Search search = null;
+		if (searchObj != null) {
+			if (loadWidgetOnly) {
+				search = createWidgetObject(searchObj, true);
+			}
+			else {
+				search = createSearchObject(searchObj, null);
+			}
 		}
 		return search;
 	}
