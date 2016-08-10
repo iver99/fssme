@@ -14,7 +14,7 @@ public class ScreenshotPathGeneratorTest {
     Date now = new Date();
 
     @Test
-    public void testGenerateFileName() throws Exception {
+    public void testGenerateFileName(){
         Assert.assertTrue(screenshotPathGenerator.generateFileName(1234L, now, now) instanceof String);
         Assert.assertNull(screenshotPathGenerator.generateFileName(null, now, now));
         screenshotPathGenerator.generateFileName(1234L,null, now);
@@ -23,7 +23,7 @@ public class ScreenshotPathGeneratorTest {
     }
 
     @Test
-    public void testGenerateScreenshotUrl() throws Exception {
+    public void testGenerateScreenshotUrl(){
         String baseUrl = "baseUrlxx";
         Long widgetId = 1234L;
         Date creation = now;

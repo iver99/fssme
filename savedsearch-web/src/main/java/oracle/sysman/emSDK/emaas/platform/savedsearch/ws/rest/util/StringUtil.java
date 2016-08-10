@@ -30,7 +30,7 @@ public class StringUtil
 	{
 
 		boolean specialCharFound = false;
-		if (value == null || value.trim().equalsIgnoreCase("")) {
+		if (value == null || "".equalsIgnoreCase(value.trim())) {
 			return specialCharFound;
 		}
 		int sLen = value.length();

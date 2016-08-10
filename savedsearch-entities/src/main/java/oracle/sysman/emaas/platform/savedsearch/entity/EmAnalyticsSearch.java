@@ -230,7 +230,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the dASHBOARD_INELIGIBLE
 	 */
-	public String getDASHBOARD_INELIGIBLE()
+	public String getDASHBOARDINELIGIBLE()
 	{
 		return DASHBOARD_INELIGIBLE;
 	}
@@ -327,7 +327,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the nAME_WIDGET_SOURCE
 	 */
-	public String getNAME_WIDGET_SOURCE()
+	public String getNAMEWIDGETSOURCE()
 	{
 		return NAME_WIDGET_SOURCE;
 	}
@@ -366,7 +366,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the pROVIDER_ASSET_ROOT
 	 */
-	public String getPROVIDER_ASSET_ROOT()
+	public String getPROVIDERASSETROOT()
 	{
 		return PROVIDER_ASSET_ROOT;
 	}
@@ -374,7 +374,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the pROVIDER_NAME
 	 */
-	public String getPROVIDER_NAME()
+	public String getPROVIDERNAME()
 	{
 		return PROVIDER_NAME;
 	}
@@ -386,7 +386,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the pROVIDER_VERSION
 	 */
-	public String getPROVIDER_VERSION()
+	public String getPROVIDERVERSION()
 	{
 		return PROVIDER_VERSION;
 	}
@@ -414,7 +414,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_DEFAULT_HEIGHT
 	 */
-	public long getWIDGET_DEFAULT_HEIGHT()
+	public long getWIDGETDEFAULTHEIGHT()
 	{
 		return WIDGET_DEFAULT_HEIGHT;
 	}
@@ -422,7 +422,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_DEFAULT_WIDTH
 	 */
-	public long getWIDGET_DEFAULT_WIDTH()
+	public long getWIDGETDEFAULTWIDTH()
 	{
 		return WIDGET_DEFAULT_WIDTH;
 	}
@@ -430,7 +430,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_GROUP_NAME
 	 */
-	public String getWIDGET_GROUP_NAME()
+	public String getWIDGETGROUPNAME()
 	{
 		return WIDGET_GROUP_NAME;
 	}
@@ -438,7 +438,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_ICON
 	 */
-	public String getWIDGET_ICON()
+	public String getWIDGETICON()
 	{
 		return WIDGET_ICON;
 	}
@@ -446,7 +446,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_KOC_NAME
 	 */
-	public String getWIDGET_KOC_NAME()
+	public String getWIDGETKOCNAME()
 	{
 		return WIDGET_KOC_NAME;
 	}
@@ -454,7 +454,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_LINKED_DASHBOARD
 	 */
-	public long getWIDGET_LINKED_DASHBOARD()
+	public long getWIDGETLINKEDDASHBOARD()
 	{
 		return WIDGET_LINKED_DASHBOARD;
 	}
@@ -462,7 +462,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_SCREENSHOT_HREF
 	 */
-	public String getWIDGET_SCREENSHOT_HREF()
+	public String getWIDGETSCREENSHOTHREF()
 	{
 		return WIDGET_SCREENSHOT_HREF;
 	}
@@ -479,7 +479,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_SUPPORT_TIME_CONTROL
 	 */
-	public String getWIDGET_SUPPORT_TIME_CONTROL()
+	public String getWIDGETSUPPORTTIMECONTROL()
 	{
 		return WIDGET_SUPPORT_TIME_CONTROL;
 	}
@@ -487,7 +487,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_TEMPLATE
 	 */
-	public String getWIDGET_TEMPLATE()
+	public String getWIDGETTEMPLATE()
 	{
 		return WIDGET_TEMPLATE;
 	}
@@ -495,7 +495,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_VIEWMODEL
 	 */
-	public String getWIDGET_VIEWMODEL()
+	public String getWIDGETVIEWMODEL()
 	{
 		return WIDGET_VIEWMODEL;
 	}
@@ -528,7 +528,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param dASHBOARD_INELIGIBLE
 	 *            the dASHBOARD_INELIGIBLE to set
 	 */
-	public void setDASHBOARD_INELIGIBLE(String dASHBOARD_INELIGIBLE)
+	public void setDASHBOARDINELIGIBLE(String dASHBOARD_INELIGIBLE)
 	{
 		DASHBOARD_INELIGIBLE = dASHBOARD_INELIGIBLE;
 	}
@@ -616,7 +616,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param nAME_WIDGET_SOURCE
 	 *            the nAME_WIDGET_SOURCE to set
 	 */
-	public void setNAME_WIDGET_SOURCE(String nAME_WIDGET_SOURCE)
+	public void setNAMEWIDGETSOURCE(String nAME_WIDGET_SOURCE)
 	{
 		NAME_WIDGET_SOURCE = nAME_WIDGET_SOURCE;
 	}
@@ -640,7 +640,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param pROVIDER_ASSET_ROOT
 	 *            the pROVIDER_ASSET_ROOT to set
 	 */
-	public void setPROVIDER_ASSET_ROOT(String pROVIDER_ASSET_ROOT)
+	public void setPROVIDERASSETROOT(String pROVIDER_ASSET_ROOT)
 	{
 		PROVIDER_ASSET_ROOT = pROVIDER_ASSET_ROOT;
 	}
@@ -649,7 +649,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param pROVIDER_NAME
 	 *            the pROVIDER_NAME to set
 	 */
-	public void setPROVIDER_NAME(String pROVIDER_NAME)
+	public void setPROVIDERNAME(String pROVIDER_NAME)
 	{
 		PROVIDER_NAME = pROVIDER_NAME;
 	}
@@ -658,7 +658,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param pROVIDER_VERSION
 	 *            the pROVIDER_VERSION to set
 	 */
-	public void setPROVIDER_VERSION(String pROVIDER_VERSION)
+	public void setPROVIDERVERSION(String pROVIDER_VERSION)
 	{
 		PROVIDER_VERSION = pROVIDER_VERSION;
 	}
@@ -687,7 +687,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_DEFAULT_HEIGHT
 	 *            the wIDGET_DEFAULT_HEIGHT to set
 	 */
-	public void setWIDGET_DEFAULT_HEIGHT(long wIDGET_DEFAULT_HEIGHT)
+	public void setWIDGETDEFAULTHEIGHT(long wIDGET_DEFAULT_HEIGHT)
 	{
 		WIDGET_DEFAULT_HEIGHT = wIDGET_DEFAULT_HEIGHT;
 	}
@@ -696,7 +696,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_DEFAULT_WIDTH
 	 *            the wIDGET_DEFAULT_WIDTH to set
 	 */
-	public void setWIDGET_DEFAULT_WIDTH(long wIDGET_DEFAULT_WIDTH)
+	public void setWIDGETDEFAULTWIDTH(long wIDGET_DEFAULT_WIDTH)
 	{
 		WIDGET_DEFAULT_WIDTH = wIDGET_DEFAULT_WIDTH;
 	}
@@ -705,7 +705,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_GROUP_NAME
 	 *            the wIDGET_GROUP_NAME to set
 	 */
-	public void setWIDGET_GROUP_NAME(String wIDGET_GROUP_NAME)
+	public void setWIDGETGROUPNAME(String wIDGET_GROUP_NAME)
 	{
 		WIDGET_GROUP_NAME = wIDGET_GROUP_NAME;
 	}
@@ -714,7 +714,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_ICON
 	 *            the wIDGET_ICON to set
 	 */
-	public void setWIDGET_ICON(String wIDGET_ICON)
+	public void setWIDGETICON(String wIDGET_ICON)
 	{
 		WIDGET_ICON = wIDGET_ICON;
 	}
@@ -723,7 +723,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_KOC_NAME
 	 *            the wIDGET_KOC_NAME to set
 	 */
-	public void setWIDGET_KOC_NAME(String wIDGET_KOC_NAME)
+	public void setWIDGETKOCNAME(String wIDGET_KOC_NAME)
 	{
 		WIDGET_KOC_NAME = wIDGET_KOC_NAME;
 	}
@@ -732,7 +732,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_LINKED_DASHBOARD
 	 *            the wIDGET_LINKED_DASHBOARD to set
 	 */
-	public void setWIDGET_LINKED_DASHBOARD(long wIDGET_LINKED_DASHBOARD)
+	public void setWIDGETLINKEDDASHBOARD(long wIDGET_LINKED_DASHBOARD)
 	{
 		WIDGET_LINKED_DASHBOARD = wIDGET_LINKED_DASHBOARD;
 	}
@@ -741,7 +741,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_SCREENSHOT_HREF
 	 *            the wIDGET_SCREENSHOT_HREF to set
 	 */
-	public void setWIDGET_SCREENSHOT_HREF(String wIDGET_SCREENSHOT_HREF)
+	public void setWIDGETSCREENSHOTHREF(String wIDGET_SCREENSHOT_HREF)
 	{
 		WIDGET_SCREENSHOT_HREF = wIDGET_SCREENSHOT_HREF;
 	}
@@ -750,7 +750,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_SUPPORT_TIME_CONTROL
 	 *            the wIDGET_SUPPORT_TIME_CONTROL to set
 	 */
-	public void setWIDGET_SUPPORT_TIME_CONTROL(String wIDGET_SUPPORT_TIME_CONTROL)
+	public void setWIDGETSUPPORTTIMECONTROL(String wIDGET_SUPPORT_TIME_CONTROL)
 	{
 		WIDGET_SUPPORT_TIME_CONTROL = wIDGET_SUPPORT_TIME_CONTROL;
 	}
@@ -759,7 +759,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_TEMPLATE
 	 *            the wIDGET_TEMPLATE to set
 	 */
-	public void setWIDGET_TEMPLATE(String wIDGET_TEMPLATE)
+	public void setWIDGETTEMPLATE(String wIDGET_TEMPLATE)
 	{
 		WIDGET_TEMPLATE = wIDGET_TEMPLATE;
 	}
@@ -768,7 +768,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param wIDGET_VIEWMODEL
 	 *            the wIDGET_VIEWMODEL to set
 	 */
-	public void setWIDGET_VIEWMODEL(String wIDGET_VIEWMODEL)
+	public void setWIDGETVIEWMODEL(String wIDGET_VIEWMODEL)
 	{
 		WIDGET_VIEWMODEL = wIDGET_VIEWMODEL;
 	}

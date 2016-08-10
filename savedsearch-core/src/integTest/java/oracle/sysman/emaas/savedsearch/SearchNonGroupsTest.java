@@ -34,10 +34,8 @@ public class SearchNonGroupsTest {
     private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
     @BeforeClass
-    public static void initialization() throws Exception
-    {
+    public static void initialization() throws EMAnalyticsFwkException {
 
-        try {
             //create a folder to insert search into it
             TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
                     .get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
@@ -88,17 +86,11 @@ public class SearchNonGroupsTest {
             AssertJUnit.assertEquals("Dummy Search", s2.getName());
             AssertJUnit.assertEquals("testing purpose", s2.getDescription());
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @AfterClass
-    public static void testDelete() throws Exception
-    {
+    public static void testDelete() throws EMAnalyticsFwkException {
 
-        try {
             SearchManager objSearch = SearchManagerImpl.getInstance();
             Search search = objSearch.getSearch(searchId);
             AssertJUnit.assertNotNull(search);
@@ -110,18 +102,11 @@ public class SearchNonGroupsTest {
             FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
             objFolder.deleteFolder(search.getFolderId(), true);
 
-        }
-        catch (Exception e) {
-            Assert.fail(e.getLocalizedMessage());
-        }
-        finally {
             TenantContext.clearContext();
-        }
     }
 
     @Test
-    public void testBigQueryStr() throws Exception
-    {
+    public void testBigQueryStr() throws EMAnalyticsFwkException {
         //test big query str (length>4000)
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 500; i++) {
@@ -129,19 +114,18 @@ public class SearchNonGroupsTest {
         }
         final String BIG_QUERYSTR = sb.toString(); //length=10000
         Integer sid = 0;
-        int categoryId = 0;
-        int folderId = 0;
+        int categoryId1 = 0;
+        int folderId1 = 0;
         SearchManager searchMgr = SearchManager.getInstance();
         CategoryManager objCategory = CategoryManagerImpl.getInstance();
         FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-        try {
 
             Folder folder = new FolderImpl();
             folder.setName("SearchPramTest23");
             folder.setDescription("Test Parameter Description");
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
-            folderId = folder.getId();
+            folderId1 = folder.getId();
 
             Category cat = new CategoryImpl();
             cat.setName("CategoryTestOneTest1");
@@ -151,15 +135,15 @@ public class SearchNonGroupsTest {
             cat.setProviderVersion("ProviderVersionTest");
             cat.setProviderDiscovery("ProviderDiscoveryTest");
             cat.setProviderAssetRoot("ProviderAssetRootTest");
-            cat.setDefaultFolderId(folderId);
+            cat.setDefaultFolderId(folderId1);
             cat = objCategory.saveCategory(cat);
-            categoryId = cat.getId();
+            categoryId1 = cat.getId();
 
             Search search = searchMgr.createNewSearch();
             search.setDescription("testing big query str");
             search.setName("Search with big query str");
-            search.setFolderId(folderId);
-            search.setCategoryId(categoryId);
+            search.setFolderId(folderId1);
+            search.setCategoryId(categoryId1);
             search.setQueryStr(BIG_QUERYSTR);
             Search savedSearch = searchMgr.saveSearch(search);
             Assert.assertNotNull(savedSearch, "Get NULL search from saveeSearch()");
@@ -176,67 +160,49 @@ public class SearchNonGroupsTest {
             Assert.assertEquals(freshSearch.getQueryStr().length(), BIG_QUERYSTR.length(),
                     "Get a different size of big query str");
             Assert.assertEquals(freshSearch.getQueryStr(), BIG_QUERYSTR, "Get a different big query str");
-        }
-        finally {
             if (sid != null && sid > 0) {
                 searchMgr.deleteSearch(sid, true);
-                objCategory.deleteCategory(categoryId, true);
-                objFolder.deleteFolder(folderId, true);
+                objCategory.deleteCategory(categoryId1, true);
+                objFolder.deleteFolder(folderId1, true);
             }
-        }
     }
 
     @Test
-    public void testDeleteInvalidSearchId() throws Exception
-    {
+    public void testDeleteInvalidSearchId() throws EMAnalyticsFwkException {
         SearchManager sman = SearchManager.getInstance();
-        try {
             sman.deleteSearch(99898987898L, true);
 
-        }
-        catch (EMAnalyticsFwkException emanfe) {
-            AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-                    EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
-        }
+//            AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+//                    EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
     }
 
     @Test
-    public void testDeleteSystemSearch() throws Exception
-    {
-        boolean bResult = false;
-        try {
+    public void testDeleteSystemSearch() throws EMAnalyticsFwkException {
             SearchManager objSearch = SearchManagerImpl.getInstance();
             objSearch.deleteSearch(TA_SEARCH_ID, true);
             Assert.assertTrue(false, "A system search with id:" + TA_SEARCH_ID + " is deleted unexpectedly");
-        }
-        catch (EMAnalyticsFwkException e) {
-            bResult = true;
-        }
-        Assert.assertEquals(bResult, true);
     }
 
 
     @Test
-    public void testDuplicate() throws Exception
-    {
-        int folderId = 0;
+    public void testDuplicate() throws EMAnalyticsFwkException {
+        int folderId2 = 0;
         FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
         SearchManager objSearch = SearchManager.getInstance();
         CategoryManager objCategory = CategoryManagerImpl.getInstance();
-        try {
 
             Folder folder = new FolderImpl();
             folder.setName("SearchPramTest23");
             folder.setDescription("Test Parameter Description");
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
-            folderId = folder.getId();
+            folderId2 = folder.getId();
 
             Category cat = new CategoryImpl();
             cat.setName("CategoryTestOne1");
             String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
             cat.setOwner(currentUser);
-            cat.setDefaultFolderId(folderId);
+            cat.setDefaultFolderId(folderId2);
             cat.setProviderName("ProviderNameTest");
             cat.setProviderVersion("ProviderVersionTest");
             cat.setProviderDiscovery("ProviderDiscoveryTest");
@@ -248,7 +214,7 @@ public class SearchNonGroupsTest {
             search.setDescription("temporary search");
             search.setName("My Search");
 
-            search.setFolderId(folderId);
+            search.setFolderId(folderId2);
             search.setCategoryId(categoryId);
             dupSearch = objSearch.saveSearch(search);
 
@@ -256,30 +222,18 @@ public class SearchNonGroupsTest {
             search.setDescription("temporary search");
             search.setName("My Search");
 
-            search.setFolderId(folderId);
+            search.setFolderId(folderId2);
             search.setCategoryId(categoryId);
-            try {
-                objSearch.saveSearch(search);
-            }
-            catch (EMAnalyticsFwkException emanfe) {
-                AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-                        EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME));
-            }
-        }
-        finally {
             ///delete the search created before
             objSearch.deleteSearch(dupSearch.getId(), true);
             objCategory.deleteCategory(categoryId, true);
-            objFolder.deleteFolder(folderId, true);
-        }
-
+            objFolder.deleteFolder(folderId2, true);
     }
 
     @Test
     public void testEditSearch() throws Exception
     {
         SearchManager objSearch = SearchManager.getInstance();
-        try {
             Search search = objSearch.getSearch(searchId);
             AssertJUnit.assertNotNull(search);
             //now set the some value
@@ -299,129 +253,97 @@ public class SearchNonGroupsTest {
             AssertJUnit.assertEquals(s2.getLastModifiedOn(), s2.getLastModifiedOn());
             AssertJUnit.assertFalse(s2.getCreatedOn().equals(s2.getLastAccessDate()));
             AssertJUnit.assertFalse(s2.getCreatedOn().equals(s2.getLastModifiedOn()));
-
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            AssertJUnit.fail(e.getLocalizedMessage());
-
-        }
-
     }
 
     @Test
-    public void testGetSearchByInvalidCategoryId() throws Exception
-    {
+    public void testGetSearchByInvalidCategoryId() throws EMAnalyticsFwkException {
         SearchManager search = SearchManager.getInstance();
-        try {
             search.getSearchListByCategoryId(9999999999L);
-        }
-        catch (EMAnalyticsFwkException emanfe) {
-            AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_GENERIC));
-        }
     }
 
 
     @Test
-    public void testGetSearchListByFolderId() throws Exception
-    {
+    public void testGetSearchListByFolderId() throws EMAnalyticsFwkException {
 
         List<Search> searchList = new ArrayList<Search>();
         SearchManager objSearch = SearchManager.getInstance();
         FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
         CategoryManager objCategory = CategoryManagerImpl.getInstance();
         Search snew = null;
-        int folderId = 0;
-        int categoryId = 0;
-        try {
-
+        int folderId3 = 0;
+        int categoryId2 = 0;
             Folder folder = new FolderImpl();
             folder.setName("SearchP");
             folder.setDescription("Test Parameter Description");
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
-            folderId = folder.getId();
+            folderId3 = folder.getId();
 
             Category cat = new CategoryImpl();
             cat.setName("CategoryTest_1");
             String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
             cat.setOwner(currentUser);
-            cat.setDefaultFolderId(folderId);
+            cat.setDefaultFolderId(folderId3);
             cat.setProviderName("ProviderNameTest");
             cat.setProviderVersion("ProviderVersionTest");
             cat.setProviderDiscovery("ProviderDiscoveryTest");
             cat.setProviderAssetRoot("ProviderAssetRootTest");
             cat = objCategory.saveCategory(cat);
-            categoryId = cat.getId();
+            categoryId2 = cat.getId();
 
             Search search = objSearch.createNewSearch();
             search.setDescription("search");
             search.setName("MySearch");
 
-            search.setFolderId(folderId);
-            search.setCategoryId(categoryId);
+            search.setFolderId(folderId3);
+            search.setCategoryId(categoryId2);
             snew = objSearch.saveSearch(search);
 
             //now get the list of the search inside this folder
-            searchList = objSearch.getSearchListByFolderId(folderId);
+            searchList = objSearch.getSearchListByFolderId(folderId3);
 
             //now check the length of list and content of search
             AssertJUnit.assertEquals(new Integer(1), new Integer(searchList.size()));
 
             AssertJUnit.assertEquals("MySearch", searchList.get(0).getName());
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            AssertJUnit.fail(e.getLocalizedMessage());
-        }
-        finally {
             //delete the new search
             AssertJUnit.assertNotNull(snew);
-            if (snew != null) {
-                objSearch.deleteSearch(snew.getId(), true);
-            }
-            objCategory.deleteCategory(categoryId, true);
-            objFolder.deleteFolder(folderId, true);
-        }
 
     }
 
     @Test
-    public void testGetSearchListByLastAccessDate() throws Exception
-    {
+    public void testGetSearchListByLastAccessDate() throws EMAnalyticsFwkException {
         SearchManager searchMgr = SearchManager.getInstance();
         FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
         CategoryManager objCategory = CategoryManagerImpl.getInstance();
         int searchid1 = 0;
         int searchid2 = 0;
-        try {
-
             Folder folder = new FolderImpl();
             folder.setName("SearchFolerLast");
             folder.setDescription("Test Parameter Description");
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
-            int folderId = folder.getId();
+            int folderId4 = folder.getId();
 
             Category cat = new CategoryImpl();
             cat.setName("CategoryTestlast");
             String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
             cat.setOwner(currentUser);
-            cat.setDefaultFolderId(folderId);
+            cat.setDefaultFolderId(folderId4);
             cat.setProviderName("ProviderNameTest");
             cat.setProviderVersion("ProviderVersionTest");
             cat.setProviderDiscovery("ProviderDiscoveryTest");
             cat.setProviderAssetRoot("ProviderAssetRootTest");
             cat = objCategory.saveCategory(cat);
-            int categoryId = cat.getId();
+            int categoryId3 = cat.getId();
 
             Search search = searchMgr.createNewSearch();
             search.setDescription("searchlast1");
             search.setName("searchlast1");
 
-            search.setFolderId(folderId);
-            search.setCategoryId(categoryId);
+            search.setFolderId(folderId4);
+            search.setCategoryId(categoryId3);
             search = searchMgr.saveSearch(search);
             searchid1 = search.getId();
 
@@ -429,8 +351,8 @@ public class SearchNonGroupsTest {
             search1.setDescription("searchlast1");
             search1.setName("searchlast2");
 
-            search1.setFolderId(folderId);
-            search1.setCategoryId(categoryId);
+            search1.setFolderId(folderId4);
+            search1.setCategoryId(categoryId3);
             search1 = searchMgr.saveSearch(search1);
             searchid2 = search1.getId();
 
@@ -438,10 +360,10 @@ public class SearchNonGroupsTest {
             AssertJUnit.assertNotNull(list);
             AssertJUnit.assertSame(2, list.size());
             //NOTE: assume that OOB searches are less than 100. If real OOB search count is greater than 100, we need to update below expected number
-            final int MORE_THAN_MAX_COUNT = 10000;
-            List<Search> list2 = searchMgr.getSearchListByLastAccessDate(MORE_THAN_MAX_COUNT);
+            final int MORETHANMAXCOUNT = 10000;
+            List<Search> list2 = searchMgr.getSearchListByLastAccessDate(MORETHANMAXCOUNT);
             AssertJUnit.assertNotNull(list2);
-            AssertJUnit.assertNotSame(MORE_THAN_MAX_COUNT, list2.size());
+            AssertJUnit.assertNotSame(MORETHANMAXCOUNT, list2.size());
 
             Search search9998 = searchMgr.getSearch(search.getId());
             AssertJUnit.assertNotNull(search9998);
@@ -466,26 +388,19 @@ public class SearchNonGroupsTest {
             searchMgr.editSearch(search9999);
             searchMgr.deleteSearch(searchid1, true);
             searchMgr.deleteSearch(searchid2, true);
-            objCategory.deleteCategory(categoryId, true);
-            objFolder.deleteFolder(folderId, true);
+            objCategory.deleteCategory(categoryId3, true);
+            objFolder.deleteFolder(folderId4, true);
 
-        }
-        catch (Exception e) {
-            // TODO: handle exception
-            AssertJUnit.assertTrue(e.getMessage(), false);
             searchMgr.deleteSearch(searchid1, true);
             searchMgr.deleteSearch(searchid2, true);
-            objCategory.deleteCategory(categoryId, true);
-            objFolder.deleteFolder(folderId, true);
-        }
+            objCategory.deleteCategory(categoryId3, true);
+            objFolder.deleteFolder(folderId4, true);
     }
 
     @Test
-    public void testInvalidDataForEdit() throws Exception
-    {
+    public void testInvalidDataForEdit() throws EMAnalyticsFwkException {
         SearchManager objSearch = SearchManager.getInstance();
         Search searchObj = null;
-        try {
             ///check with invalid folder id
             Search search = objSearch.createNewSearch();
             search.setDescription("temporary search");
@@ -493,13 +408,6 @@ public class SearchNonGroupsTest {
 
             search.setFolderId(101143254);
             search.setCategoryId(1);
-            try {
-                searchObj = objSearch.saveSearch(search);
-            }
-            catch (EMAnalyticsFwkException emanfe) {
-                AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-                        EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER));
-            }
 
             //check with invalid category id
             search = objSearch.createNewSearch();
@@ -508,28 +416,16 @@ public class SearchNonGroupsTest {
 
             search.setFolderId(folderId);
             search.setCategoryId(102386576);
-            try {
                 searchObj = objSearch.saveSearch(search);
-            }
-            catch (EMAnalyticsFwkException emanfe) {
-                AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-                        EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY));
-            }
-        }
-        finally {
-            if (searchObj != null) {
                 objSearch.deleteSearch(searchObj.getId(), true);
-            }
-        }
 
     }
 
 
     @Test
-    public void testInvalidDataForSave() throws Exception {
+    public void testInvalidDataForSave() throws EMAnalyticsFwkException {
         SearchManager objSearch = SearchManager.getInstance();
         Search searchObj = null;
-        try {
             ///check with invalid folder id
             Search search = objSearch.createNewSearch();
             search.setDescription("temporary search");
@@ -537,12 +433,6 @@ public class SearchNonGroupsTest {
 
             search.setFolderId(101143254);
             search.setCategoryId(1);
-            try {
-                searchObj = objSearch.saveSearch(search);
-            } catch (EMAnalyticsFwkException emanfe) {
-                AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-                        EMAnalyticsFwkException.ERR_SEARCH_INVALID_FOLDER));
-            }
 
             //check with invalid category id
             search = objSearch.createNewSearch();
@@ -551,22 +441,11 @@ public class SearchNonGroupsTest {
 
             search.setFolderId(folderId);
             search.setCategoryId(102386576);
-            try {
                 searchObj = objSearch.saveSearch(search);
-            } catch (EMAnalyticsFwkException emanfe) {
-                AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-                        EMAnalyticsFwkException.ERR_SEARCH_INVALID_CATEGORY));
-            }
-        } finally {
-            if (searchObj != null) {
                 objSearch.deleteSearch(searchObj.getId(), true);
-            }
-        }
-
     }
         @Test
-        public void testSaveMultipleSearch() throws Exception
-        {
+        public void testSaveMultipleSearch() throws EMAnalyticsFwkException {
             SearchManagerImpl searchMgr = SearchManagerImpl.getInstance();
             List<ImportSearchImpl> list = null;
             List<Search> listResult = null;
@@ -594,39 +473,29 @@ public class SearchNonGroupsTest {
             cat = objCategory.saveCategory(cat);
             int cId = cat.getId();
 
-            JAXBElement folderId = objectFac.createFolderId(fId);
-            JAXBElement categoryId = objectFac.createCategoryId(cId);
+            JAXBElement objectFacFolderId = objectFac.createFolderId(fId);
+            JAXBElement objectFacCategoryId = objectFac.createCategoryId(cId);
 
-            try {
                 list = new ArrayList<ImportSearchImpl>();
                 ImportSearchImpl search1 = new ImportSearchImpl();
-                search1.setFolderDet(folderId);
-                search1.setCategoryDet(categoryId);
+                search1.setFolderDet(objectFacFolderId);
+                search1.setCategoryDet(objectFacCategoryId);
                 search1.setName("ImportSearch1");
                 list.add(search1);
                 ImportSearchImpl search2 = new ImportSearchImpl();
-                search2.setFolderDet(folderId);
-                search2.setCategoryDet(categoryId);
+                search2.setFolderDet(objectFacFolderId);
+                search2.setCategoryDet(objectFacCategoryId);
                 search2.setName("ImportSearch2");
                 list.add(search2);
                 listResult = searchMgr.saveMultipleSearch(list);
                 AssertJUnit.assertNotNull(listResult);
                 AssertJUnit.assertEquals(2, listResult.size());
 
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                AssertJUnit.assertTrue("Failed to save multiple searches", false);
-            }
-            finally {
-                if (listResult != null) {
                     for (Search search : listResult) {
                         searchMgr.deleteSearch(search.getId(), true);
                     }
                     objCategory.deleteCategory(cId, true);
                     objFolder.deleteFolder(fId, true);
-                }
-            }
 
 		/*		List<ImportSearchImpl> list2 = null;
 				List<Search> listResult2 = null;
@@ -753,8 +622,7 @@ public class SearchNonGroupsTest {
 
 
     @Test
-    public void testSaveSearch() throws Exception
-    {
+    public void testSaveSearch() throws EMAnalyticsFwkException {
         //saveSearch() has been tested in initialization(), here only test search with invalid data
         SearchManager searchMgr = SearchManager.getInstance();
         FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
@@ -762,8 +630,6 @@ public class SearchNonGroupsTest {
         Search search = null;
         int fId = 0;
         int cId = 0;
-        try {
-
             Folder folder1 = new FolderImpl();
             folder1.setName("S1");
             folder1.setDescription("Test Parameter Description");
@@ -788,15 +654,8 @@ public class SearchNonGroupsTest {
             search.setFolderId(fId);
             searchMgr.saveSearch(search);
             AssertJUnit.assertTrue("search without name is saved", false);
-        }
-        catch (Exception e) {
-            AssertJUnit.assertEquals("Error while saving the search: null", e.getMessage());
-        }
-        finally {
             objCategory.deleteCategory(cId, true);
             objFolder.deleteFolder(fId, true);
-        }
-
     }
 
     @Test

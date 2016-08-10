@@ -38,8 +38,8 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("importsearches")
 public class ImportSearchSet
 {
-	private static final Logger _logger = LogManager.getLogger(ImportSearchSet.class);
-	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
+	private static final Logger LOGGER = LogManager.getLogger(ImportSearchSet.class);
+	private final String RESOURCE_PATH = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
 
 	/**
 	 * Import the searches with defined XML file<br>
@@ -216,8 +216,7 @@ public class ImportSearchSet
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes("application/xml")
-	public Response importSearches(String xml, @HeaderParam("SSF_OOB") String oobSearch)
-	{
+	public Response importSearches(String xml, @HeaderParam("SSF_OOB") String oobSearch) throws IOException {
 
 		Response res = null;
 		InputStream stream = null;
@@ -227,12 +226,12 @@ public class ImportSearchSet
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(RESOURCE_PATH);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			SearchSet searches = (SearchSet) JAXBUtil.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(ObjectFactory.class));
 			List<ImportSearchImpl> list = searches.getSearchSet();
-			if (list.size() == 0) {
+			if (list.isEmpty()) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 			}
 			if (validateData(list)) {
@@ -243,7 +242,7 @@ public class ImportSearchSet
 			if (oobSearch == null) {
 				bResult = false;
 			}
-			if (oobSearch != null && oobSearch.equalsIgnoreCase("true")) {
+			if (oobSearch != null && "true".equalsIgnoreCase(oobSearch)) {
 				bResult = true;
 			}
 
@@ -259,26 +258,23 @@ public class ImportSearchSet
 
 		}
 		catch (ImportException e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to import searches (1)", e);
 			msg = e.getMessage();
 			e.printStackTrace();
 			res = Response.status(Status.BAD_REQUEST).entity(msg).build();
 		}
 		catch (Exception e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to import searches (2)", e);
 			msg = "An internal error has occurred" + e.getMessage();
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
 		}
 		finally {
 			if (stream != null) {
-				try {
-					stream.close();
-				}
-				catch (IOException e) {
 
-				}
+					stream.close();
+
 			}
 		}
 		return res;

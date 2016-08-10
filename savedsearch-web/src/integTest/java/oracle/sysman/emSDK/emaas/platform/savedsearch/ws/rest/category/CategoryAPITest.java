@@ -27,12 +27,12 @@ import org.testng.annotations.Test;
 public class CategoryAPITest {
     private CategoryAPI categoryAPI = new CategoryAPI();
     @BeforeMethod
-	public void setUp() throws Exception {
+	public void setUp(){
 		Deencapsulation.setField(categoryAPI, "uri", TestHelper.mockUriInfo());
 	}
     
     @Test
-    public void testGetCategory() throws Exception {
+    public void testGetCategory(){
 
         new Expectations(){{
             new MockUp<CategoryManagerImpl>()
@@ -48,7 +48,7 @@ public class CategoryAPITest {
         Assert.assertNotNull(categoryAPI.getCategory(111));
     }
 
-    @Test    public void testGetCategoryByName() throws Exception {
+    @Test    public void testGetCategoryByName(){
         new Expectations(){{
             new MockUp<CategoryManagerImpl>()
             {
@@ -67,14 +67,14 @@ public class CategoryAPITest {
     }
 
     @Test
-    public void testGetSearchesByCategory() throws Exception {
+    public void testGetSearchesByCategory(){
         Assert.assertNotNull(categoryAPI.getSearchesByCategory("",""));
         Assert.assertNotNull(categoryAPI.getSearchesByCategory(null,""));
         Assert.assertNotNull(categoryAPI.getSearchesByCategory("11111s",""));
         Assert.assertNotNull(categoryAPI.getSearchesByCategory("0",""));
     }
     @Test
-    public void testGetSearchesByCategory2nd() throws Exception {
+    public void testGetSearchesByCategory2nd(){
         final List<Search> searches= new ArrayList<Search>();
         searches.add(new SearchImpl());
         new Expectations(){

@@ -10,7 +10,6 @@
 
 package oracle.sysman.emaas.platform.savedsearch.services;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SchemaVersion;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.VersionManager;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.AbstractApplicationLifecycleService;
@@ -29,7 +28,7 @@ import weblogic.application.ApplicationLifecycleEvent;
  */
 public class VersionValidationServiceManager implements ApplicationServiceManager
 {
-	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
+	private final Logger LOGGER = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceversionvalidation");
 	public static final String SERVICE_NAME_VERSION_VALIDATION = "Version Validation Service";
 	public static final int SSF_CODE_VERSION_MAJOR = 1;
@@ -53,24 +52,23 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#postStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt) throws Exception
+	public void postStart(ApplicationLifecycleEvent evt) 
 	{
 		// TODO Auto-generated method stub
 		SchemaVersion schemaVer = VersionManager.getInstance().getSchemaVersion();
 		try {
 			if (SSF_CODE_VERSION_MAJOR == schemaVer.getMajorVersion() && SSF_CODE_VERSION_MINOR == schemaVer.getMinorVersion()) {
-				logger.info("code version matched schema version:(" + SSF_CODE_VERSION_MAJOR + "." + SSF_CODE_VERSION_MINOR + ")");
+				LOGGER.info("code version matched schema version:(" + SSF_CODE_VERSION_MAJOR + "." + SSF_CODE_VERSION_MINOR + ")");
 			}
 			else {
 				String errMsg = "Failed to startup. Code version(" + SSF_CODE_VERSION_MAJOR + "." + SSF_CODE_VERSION_MINOR
 						+ ") doesn't match schema version:(" + schemaVer.getMajorVersion() + "." + schemaVer.getMinorVersion()
 						+ ")";
-				logger.error(errMsg);
-				throw new RuntimeException(errMsg);
+				LOGGER.error(errMsg);
 			}
 		}
 		catch (Exception e) {
-			logger.error("Failed to startup:" + e.getMessage(), e);
+			LOGGER.error("Failed to startup:" + e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -79,7 +77,7 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#postStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
 		// TODO Auto-generated method stub
 
@@ -89,7 +87,7 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#preStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	public void preStart(ApplicationLifecycleEvent evt) 
 	{
 
 	}
@@ -98,7 +96,7 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#preStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt) throws Exception
+	public void preStop(ApplicationLifecycleEvent evt) 
 	{
 		// TODO Auto-generated method stub
 

@@ -16,6 +16,7 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -40,8 +41,7 @@ public class CategoryAPI
 
 	@Context
 	private UriInfo uri;
-	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
-	private static final Logger _logger = LogManager.getLogger(CategoryAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(CategoryAPI.class);
 
 	/*	@DELETE
 		@Path("{id : [0-9]*}")
@@ -98,7 +98,7 @@ public class CategoryAPI
 			try {
 				Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(categoryId));
 				objCategory = catMan.editCategory(objCategory);
-				sMsg = JSONUtil.ObjectToJSONString(objCategory);
+				sMsg = JSONUtil.objectToJSONString(objCategory);
 			}
 			catch (EMAnalyticsFwkException e) {
 				sMsg = e.getMessage();
@@ -128,7 +128,7 @@ public class CategoryAPI
 			try {
 				Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(name));
 				objCategory = catMan.editCategory(objCategory);
-				sMsg = JSONUtil.ObjectToJSONString(objCategory);
+				sMsg = JSONUtil.objectToJSONString(objCategory);
 			}
 			catch (EMAnalyticsFwkException e) {
 				sMsg = e.getMessage();
@@ -160,7 +160,7 @@ public class CategoryAPI
 					for (int i = 0; i < catList.size(); i++) {
 						category = catList.get(i);
 						try {
-							jsonArray.put(JSONUtil.ObjectToJSONObject(category));
+							jsonArray.put(JSONUtil.objectToJSONObject(category));
 						}
 						catch (JSONException e) {
 							message = e.getMessage();
@@ -258,6 +258,7 @@ public class CategoryAPI
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 		}
@@ -335,7 +336,7 @@ public class CategoryAPI
 		if (name == null) {
 			return Response.status(400).entity("please give category name").build();
 		}
-		else if (name.equals("")) {
+		else if (StringUtil.isEmpty(name)) {
 			return Response.status(400).entity("please give category name").build();
 		}
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -348,7 +349,7 @@ public class CategoryAPI
 		catch (EMAnalyticsFwkException e) {
 			statusCode = e.getStatusCode();
 			message = e.getMessage();
-			_logger.error(
+			LOGGER.error(
 					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "An error occurredh while retrieving all category by name, statusCode:" + e.getStatusCode()
 					+ " ,err:" + e.getMessage(), e);
@@ -370,7 +371,7 @@ public class CategoryAPI
 		try {
 			Category category = createCategoryObjectForAdd(inputJsonObj);
 			category = catMan.saveCategory(category);
-			sMsg = JSONUtil.ObjectToJSONString(category);
+			sMsg = JSONUtil.objectToJSONString(category);
 
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -613,7 +614,7 @@ public class CategoryAPI
 			if (oobSearch == null) {
 				bResult = false;
 			}
-			if (oobSearch != null && oobSearch.equalsIgnoreCase("true")) {
+			if (oobSearch != null && "true".equalsIgnoreCase(oobSearch)) {
 				bResult = true;
 			}
 
@@ -627,7 +628,7 @@ public class CategoryAPI
 			}
 		}
 		catch (EMAnalyticsFwkException e) {
-
+			LOGGER.error(e.getLocalizedMessage());
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 
@@ -639,14 +640,14 @@ public class CategoryAPI
 					jsonArray.put(jsonObj);
 				}
 				catch (JSONException e) {
-
+					LOGGER.error(e.getLocalizedMessage());
 					return Response.status(500).entity(e.getMessage()).build();
 				}
 			}
 			message = jsonArray.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-
+			LOGGER.error(e.getLocalizedMessage());
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 		return Response.status(statusCode).entity(message).build();

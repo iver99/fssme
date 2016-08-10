@@ -131,12 +131,7 @@ public class JSONUtil
 		String result = "";
 		JSONObject json1 = new JSONObject(jsonString);
 
-		try {
 			result = json1.getString(field);
-		}
-		catch (Exception e) {
-			return null;
-		}
 		return (List<T>) JSONUtil.fromJson(mapper, result, JSONUtil.constructParametricType(mapper, List.class, classMeta));
 	}
 
@@ -151,22 +146,21 @@ public class JSONUtil
 		return false;
 	}
 
-	public static JSONObject ObjectToJSONObject(Object object) throws JSONException, EMAnalyticsFwkException
-	{
-		return JSONUtil.ObjectToJSONObject(object, null);
+	public static JSONObject objectToJSONObject(Object object) throws EMAnalyticsFwkException, JSONException {
+		return JSONUtil.objectToJSONObject(object, null);
 
 	}
 
-	public static JSONObject ObjectToJSONObject(Object object, String[] excludedFields)
+	public static JSONObject objectToJSONObject(Object object, String[] excludedFields)
 			throws JSONException, EMAnalyticsFwkException
 	{
 
-		return new JSONObject(JSONUtil.ObjectToJSONString(object, excludedFields));
+		return new JSONObject(JSONUtil.objectToJSONString(object, excludedFields));
 	}
 
-	public static String ObjectToJSONString(Object object) throws EMAnalyticsFwkException
+	public static String objectToJSONString(Object object) throws EMAnalyticsFwkException
 	{
-		return JSONUtil.ObjectToJSONString(object, null);
+		return JSONUtil.objectToJSONString(object, null);
 	}
 
 	/**
@@ -179,7 +173,7 @@ public class JSONUtil
 	 * @return converted JSON string
 	 * @throws EMAnalyticsFwkException
 	 */
-	public static String ObjectToJSONString(Object object, String[] excludedFieldItems) throws EMAnalyticsFwkException
+	public static String objectToJSONString(Object object, String[] excludedFieldItems) throws EMAnalyticsFwkException
 	{
 		try {
 
@@ -189,13 +183,13 @@ public class JSONUtil
 			mapper.setSerializationInclusion(Inclusion.NON_NULL);
 			mapper.setDateFormat(DateUtil.getDateFormatter());
 			if (excludedFieldItems != null) {
-				final String EXCLUDE_FILTER = "exclude_filter";
-				FilterProvider filters = new SimpleFilterProvider().addFilter(EXCLUDE_FILTER,
+				final String EXCLUDEFILTER = "exclude_filter";
+				FilterProvider filters = new SimpleFilterProvider().addFilter(EXCLUDEFILTER,
 						SimpleBeanPropertyFilter.serializeAllExcept(excludedFieldItems));
 				mapper.setFilters(filters);
 				JsonGenerator generator = mapper.getJsonFactory().createJsonGenerator(os, JsonEncoding.UTF8);
 				SSFBeanSerializerFactory bbFactory = new SSFBeanSerializerFactory(null);
-				bbFactory.setFilterId(EXCLUDE_FILTER);
+				bbFactory.setFilterId(EXCLUDEFILTER);
 				mapper.setSerializerFactory(bbFactory);
 				mapper.writeValue(generator, object);
 				return ((ByteArrayOutputStream) os).toString("UTF-8");

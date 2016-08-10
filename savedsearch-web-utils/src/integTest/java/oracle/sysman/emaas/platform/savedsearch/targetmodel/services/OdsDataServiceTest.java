@@ -10,8 +10,11 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
+import org.apache.http.HttpException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.net.URISyntaxException;
 
 @Test(groups = {"s2"})
 public class OdsDataServiceTest {
@@ -20,7 +23,7 @@ public class OdsDataServiceTest {
 	
 	public void testCreateOdsEntity(@Mocked final RegistryLookupUtil registryLookupUtil, @Mocked final Link link,
 			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws Exception {
+			@Mocked final TenantInfo info) throws HttpException, EMAnalyticsFwkException, URISyntaxException {
 		new Expectations() {
 			{
 				TenantContext.getContext();
@@ -43,7 +46,7 @@ public class OdsDataServiceTest {
 	
 	public void testDeleteOdsEntity(@Mocked final SearchManager sman, @Mocked final RegistryLookupUtil registryLookupUtil, 
 			@Mocked final Link link, @Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws Exception {
+			@Mocked final TenantInfo info) throws EMAnalyticsFwkException, URISyntaxException, HttpException {
 		new Expectations() {
 			{
 				TenantContext.getContext();
@@ -66,7 +69,7 @@ public class OdsDataServiceTest {
 	
 	public void testCreateOdsEntityType(@Mocked final RegistryLookupUtil registryLookupUtil, @Mocked final Link link,
 			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws Exception {
+			@Mocked final TenantInfo info) throws HttpException, EMAnalyticsFwkException, URISyntaxException {
 		new Expectations() {
 			{
 				TenantContext.getContext();

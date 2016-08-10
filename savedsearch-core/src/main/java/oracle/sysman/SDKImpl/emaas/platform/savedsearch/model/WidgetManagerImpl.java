@@ -47,7 +47,7 @@ import org.eclipse.persistence.sessions.Session;
  */
 public class WidgetManagerImpl extends WidgetManager
 {
-	private static final Logger logger = LogManager.getLogger(WidgetManagerImpl.class);
+	private static final Logger LOGGER = LogManager.getLogger(WidgetManagerImpl.class);
 
 	public static final String WIDGET_API_SERVICENAME = "SavedSearch";
 	public static final String WIDGET_API_VERSION = "1.0+";
@@ -65,11 +65,11 @@ public class WidgetManagerImpl extends WidgetManager
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_5 = "AND c.CATEGORY_ID=? ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_6 = "AND (s.DASHBOARD_INELIGIBLE IS NULL OR s.DASHBOARD_INELIGIBLE <>'1') ORDER BY s.SEARCH_ID ASC ";
 
-	public static final WidgetManagerImpl instance = new WidgetManagerImpl();
+	public static final WidgetManagerImpl INSTANCE = new WidgetManagerImpl();
 
 	public static WidgetManagerImpl getInstance()
 	{
-		return instance;
+		return INSTANCE;
 	}
 
 	private WidgetManagerImpl()
@@ -92,7 +92,7 @@ public class WidgetManagerImpl extends WidgetManager
 			Long id = Long.valueOf(sId);
 			//generate ssUrl
 			String ssUrl = generateSSUrl(widgetAPIUrl, widget, id);
-			logger.debug("Screenshot URL is generated for widget id={}, url={}", id, ssUrl);
+			LOGGER.debug("Screenshot URL is generated for widget id={}, url={}", id, ssUrl);
 			String jsonString = EntityJsonUtil.getJsonString(widget, ssUrl);
 			sb.append(jsonString);
 		}
@@ -100,7 +100,7 @@ public class WidgetManagerImpl extends WidgetManager
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append("]");
 		String message = sb.toString();
-		logger.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
+		LOGGER.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
 		return message;
 	}
 
@@ -111,7 +111,7 @@ public class WidgetManagerImpl extends WidgetManager
 	public String getWidgetJsonStringFromWidgetList(List<Widget> widgetList) throws EMAnalyticsFwkException
 	{
 		if (widgetList == null) {
-			logger.debug("Json string for widget list is null as input widget list is null");
+			LOGGER.debug("Json string for widget list is null as input widget list is null");
 			return null;
 		}
 		String message = null;
@@ -127,7 +127,7 @@ public class WidgetManagerImpl extends WidgetManager
 			}
 		}
 		message = jsonArray.toString();
-		logger.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
+		LOGGER.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
 		return message;
 	}
 
@@ -149,7 +149,7 @@ public class WidgetManagerImpl extends WidgetManager
 		EntityManager em = null;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			logger.debug("The SQL to query all widget is {}", sb.toString());
+			LOGGER.debug("The SQL to query all widget is {}", sb.toString());
 			long start = System.currentTimeMillis();
 			Query query = em.createNativeQuery(sb.toString());
 			query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
@@ -163,24 +163,24 @@ public class WidgetManagerImpl extends WidgetManager
 					databaseQuery.prepareCall(session, new DatabaseRecord());
 					String sqlString = databaseQuery.getSQLString();
 					//				String sqlString = databaseQuery.getTranslatedSQLString(session, new DatabaseRecord());
-					logger.debug("The SQL statement to retrieve all widget is: [{}]", sqlString);
+					LOGGER.debug("The SQL statement to retrieve all widget is: [{}]", sqlString);
 					System.out.println(sqlString);
 				}
 				catch (Exception e) {
-					logger.error("Error when printing debug sql: ", e);
+					LOGGER.error("Error when printing debug sql: ", e);
 				}
 			}
 			initializeQueryParams(query, paramList);
 
 			List<Map<String, Object>> searchList = query.getResultList();
-			logger.debug("Querying to get all widgets takes {} ms, and retrieved {} widgets", System.currentTimeMillis() - start,
+			LOGGER.debug("Querying to get all widgets takes {} ms, and retrieved {} widgets", System.currentTimeMillis() - start,
 					searchList == null ? 0 : searchList.size());
 
 			return searchList;
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			logger.error("Error while retrieving the list of widgets for providerNames : " + providerNames, e);
+			LOGGER.error("Error while retrieving the list of widgets for providerNames : " + providerNames, e);
 			throw new EMAnalyticsFwkException("Error while retrieving the list of widgets for providerNames : " + providerNames,
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 
@@ -238,7 +238,7 @@ public class WidgetManagerImpl extends WidgetManager
 		Link lnk = RegistryLookupUtil.getServiceExternalLink(WIDGET_API_SERVICENAME, WIDGET_API_VERSION, WIDGET_API_STATIC_REL,
 				tenantName);
 		String url = lnk == null ? null : lnk.getHref();
-		logger.debug("We get widget api url is {}", url);
+		LOGGER.debug("We get widget api url is {}", url);
 		return url;
 	}
 
@@ -250,7 +250,7 @@ public class WidgetManagerImpl extends WidgetManager
 		for (int i = 0; i < paramList.size(); i++) {
 			Object value = paramList.get(i);
 			query.setParameter(i + 1, value);
-			logger.debug("binding parameter [{}] as [{}]", i + 1, value);
+			LOGGER.debug("binding parameter [{}] as [{}]", i + 1, value);
 		}
 	}
 

@@ -4,9 +4,11 @@ import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import org.eclipse.persistence.jaxb.xmlmodel.ObjectFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -20,7 +22,6 @@ import java.io.Reader;
  */
 @Test(groups={"s2"})
 public class JAXBUtilTestS2 {
-    private JAXBUtil jaxbUtil;
     @Mocked
     Reader reader;
     @Mocked
@@ -30,12 +31,12 @@ public class JAXBUtilTestS2 {
     @Mocked
     SchemaFactory schemaFactory;
     @Test
-    public void testGetJAXBContext() throws Exception {
+    public void testGetJAXBContext() throws JAXBException {
         JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
     }
 
-    @Test
-    public void testUnmarshal() throws Exception {
+    @Test(expectedExceptions = {ImportException.class})
+    public void testUnmarshal() throws JAXBException, ImportException, SAXException {
 
         new Expectations(){
             {
@@ -46,43 +47,29 @@ public class JAXBUtilTestS2 {
         JAXBUtil.unmarshal(reader,inputStream,jaxbContext);
     }
 
-    @Test
-    public void testUnmarshalFFor() throws Exception {
+    @Mocked
+    Throwable throwable;
+    @Test(expectedExceptions = {UnmarshalException.class})
+    public void testUnmarshalFFor() throws JAXBException, ImportException, SAXException {
 
         new Expectations(){
             {
                 SchemaFactory.newInstance(anyString);
-                result = new UnmarshalException(new Throwable());
+                result = new UnmarshalException(throwable);
             }
         };
-        new MockUp<Throwable>(){
-            @Mock
-            public void printStackTrace(){
-            }
 
-        };
-        try {
             JAXBUtil.unmarshal(reader, inputStream, jaxbContext);
-        }catch(Exception e){
-            Assert.assertTrue(true);}
     }
 
-    @Test
-    public void testUnmarshalFForValidationEventHandler() throws Exception {
+    @Test(expectedExceptions = {JAXBException.class})
+    public void testUnmarshalFForValidationEventHandler() throws JAXBException, ImportException, SAXException {
         new Expectations() {
             {
                 SchemaFactory.newInstance(anyString);
-                result = new JAXBException(new Throwable());
+                result = new JAXBException(throwable);
             }
         };
-        new MockUp<Throwable>(){
-            @Mock
-            public void printStackTrace(){
-            }
-
-        };
-        try {
             JAXBUtil.unmarshal(reader, inputStream, jaxbContext);
-        }catch(Exception e){}
     }
 }

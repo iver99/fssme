@@ -40,7 +40,6 @@ public class QAToolUtil
 	private static final String DEPLOY_URL = "/instances?servicename=LifecycleInventoryService";
 	private static final String SSF_DEPLOY_URL = "/instances?servicename=SavedSearch";
 	private static final String DEPLY_SCHEMA = "/schemaDeployments?softwareName=SavedSearchService";
-	private static final String SERVICE_NAME = "SavedSearchService";
 	private static final String PASSWORD = "welcome1";
 	public static final String JDBC_URL = "jdbc:oracle:thin:@";
 	private static final String SCHEMA_USER = "schemaUser";
@@ -62,10 +61,12 @@ public class QAToolUtil
 	public static final String TENANT_USER_NAME = "TENANT_USER_NAME";
 	public static final String TENANT_NAME = "TENANT_NAME";
 
-	private static Logger logger = LogManager.getLogger(QAToolUtil.class);
+	private static Logger LOGGER = LogManager.getLogger(QAToolUtil.class);
 
-	public static Properties getDbProperties()
-	{
+	private QAToolUtil() {
+	}
+
+	public static Properties getDbProperties()  {
 		Properties props = new Properties();
 		String url = JDBC_URL + Utils.getProperty(ODS_HOSTNAME) + ":" + Utils.getProperty(ODS_PORT) + ":"
 				+ Utils.getProperty(ODS_SID);
@@ -77,9 +78,7 @@ public class QAToolUtil
 		return props;
 	}
 
-	public static String getSavedSearchDeploymentDet()
-	{
-		String username = null;
+	public static String getSavedSearchDeploymentDet() throws IOException {
 		String data = QAToolUtil.getDetaildByUrl(Utils.getProperty(SERVICE_MANAGER_URL) + SSF_DEPLOY_URL);
 		//String data = QAToolUtil.getDetaildByUrl("http://slc08twq.us.oracle.com:7001//registry/servicemanager/registry/v1"
 		//	+ SSF_DEPLOY_URL);
@@ -94,9 +93,9 @@ public class QAToolUtil
 	public static Properties getTenantDetails()
 	{
 		Properties props = new Properties();
-		String TENANT_ID_INTERNAL= "TENANT_ID_INTERNAL_"+Utils.getProperty("TENANT_ID");
-		props.put(TENANT_USER_NAME, Utils.getProperty(TENANT_ID_INTERNAL) + "." + Utils.getProperty("SSO_USERNAME"));
-		props.put(TENANT_NAME, Utils.getProperty(TENANT_ID_INTERNAL));
+		String tenantIdInternal= "TENANT_ID_INTERNAL_"+Utils.getProperty("TENANT_ID");
+		props.put(TENANT_USER_NAME, Utils.getProperty(tenantIdInternal) + "." + Utils.getProperty("SSO_USERNAME"));
+		props.put(TENANT_NAME, Utils.getProperty(tenantIdInternal));
 		return props;
 	}
 
@@ -121,14 +120,13 @@ public class QAToolUtil
 		return result;
 	}
 
-	private static String getDetaildByUrl(String url)
-	{
+	private static String getDetaildByUrl(String url) {
 		BufferedReader in = null;
 		InputStreamReader inReader = null;
 		StringBuffer response = new StringBuffer();
 		try {
-			URL schema_dep_url = new URL(url);
-			HttpURLConnection con = (HttpURLConnection) schema_dep_url.openConnection();
+			URL schemaDepUrl = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) schemaDepUrl.openConnection();
 			con.setRequestProperty(AUTHORIZATION, AUTH_STRING);
 			//int responseCode = con.getResponseCode();
 			inReader = new InputStreamReader(con.getInputStream(), "UTF-8");
@@ -139,19 +137,25 @@ public class QAToolUtil
 			}
 		}
 		catch (IOException e) {
-			logger.error("an error occureed while getting details by url" + ":: " + url, e);
+			LOGGER.error("an error occureed while getting details by url" + ":: " + url, e);
 		} finally {
-			try {
 				if (in != null) {
-					in.close();
+					try {
+						in.close();
+					} catch (IOException e) {
+						LOGGER.error(e.getLocalizedMessage());
+						e.printStackTrace();
+					}
 				}
 				if (inReader != null) {
-					inReader.close();
+					try {
+						inReader.close();
+					} catch (IOException e) {
+						LOGGER.error(e.getLocalizedMessage());
+						e.printStackTrace();
+					}
 				}
-			}
-			catch (IOException ioEx) {
-				//ignore
-			}
+
 		}
 		return response.toString();
 
@@ -160,8 +164,7 @@ public class QAToolUtil
 	/**
 	 * @return
 	 */
-	private static String getSchemaDeploymentDetails()
-	{
+	private static String getSchemaDeploymentDetails() {
 		String username = null;
 		String data = QAToolUtil.getDetaildByUrl(Utils.getProperty(SERVICE_MANAGER_URL) + DEPLOY_URL);
 		//String data = QAToolUtil.getDetaildByUrl("http://slc04lec.us.oracle.com:7001//registry/servicemanager/registry/v1"

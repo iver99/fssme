@@ -5,15 +5,15 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.*;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class ImportSearchSetTest {
     @Mocked
     JAXBContext jaxbContext;
     @Test
-    public void testImportSearches(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+    public void testImportSearches(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         final ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");
@@ -62,7 +62,7 @@ public class ImportSearchSetTest {
     }
 
     @Test
-    public void testImportSearches2nd(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+    public void testImportSearches2nd(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");
@@ -88,7 +88,7 @@ public class ImportSearchSetTest {
     }
 
     @Test
-    public void testImportSearches3th(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+    public void testImportSearches3th(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");

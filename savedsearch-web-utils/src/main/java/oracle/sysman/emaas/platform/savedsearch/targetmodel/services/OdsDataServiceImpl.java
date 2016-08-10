@@ -7,19 +7,23 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
+import org.apache.http.HttpException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import java.net.URISyntaxException;
 
 public class OdsDataServiceImpl implements OdsDataService
 {
 
-	private static final Logger logger = LogManager.getLogger(OdsDataServiceImpl.class);
-	private static final OdsDataServiceImpl instance = new OdsDataServiceImpl();
+	private static final Logger LOGGER = LogManager.getLogger(OdsDataServiceImpl.class);
+	private static final OdsDataServiceImpl INSTANCE = new OdsDataServiceImpl();
 
 	public static OdsDataServiceImpl getInstance()
 	{
-		return instance;
+		return INSTANCE;
 	}
 
 	static private String generateOdsEntityJson(String searchId, String searchName, String meClass)
@@ -45,37 +49,49 @@ public class OdsDataServiceImpl implements OdsDataService
 	{
 		// get ODS entity
 		String odsEntity = OdsDataServiceImpl.generateOdsEntityJson(searchId, searchName, ENTITY_CLASS);
-		logger.info("ODS Entity's string value is:" + odsEntity);
+		LOGGER.info("ODS Entity's string value is:" + odsEntity);
 		// send to ODS
 		String baseUrl = retriveEndpoint(REL_DATA_RESOURCE, DATA_MES);
-		logger.info("base URL is:" + baseUrl);
+		LOGGER.info("base URL is:" + baseUrl);
 		String meId = null;
 		// see if there is already an ODS entity created
+		String result = null;
 		try {
-			String result = RestRequestUtil.restGet(baseUrl + "?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId);
-			logger.info("result is" + result);
-			JSONObject jsonObj = new JSONObject(result);
+			result = RestRequestUtil.restGet(baseUrl + "?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId);
+		} catch (URISyntaxException e) {
+			LOGGER.error(e.getLocalizedMessage());
+		} catch (HttpException e) {
+			LOGGER.error(e.getLocalizedMessage());
+		}
+		LOGGER.info("result is" + result);
+		JSONObject jsonObj = null;
+		try {
+			jsonObj = new JSONObject(result);
+		} catch (JSONException e) {
+			LOGGER.error(e.getLocalizedMessage());
+		}
+		try {
 			if (jsonObj.getInt("count") > 0) {
-				JSONObject entity = (JSONObject) jsonObj.getJSONArray("items").get(0);
-				meId = entity.getString(ENTITY_ID);
-			}
+                    JSONObject entity = (JSONObject) jsonObj.getJSONArray("items").get(0);
+                    meId = entity.getString(ENTITY_ID);
+                }
+		} catch (JSONException e) {
+			LOGGER.error(e.getLocalizedMessage());
 		}
-		catch (Exception e) {
-			// do nothing
-		}
+
 		// no existing ODS entity then create one
 		if (meId == null || meId.isEmpty()) {
 			try {
-				String result = RestRequestUtil.restPost(baseUrl, odsEntity);
-				logger.info("RestRequestUtil.restPost(baseUrl, odsEntity) is executed,and result is " + result);
-				JSONObject jsonObj = new JSONObject(result);
+				result = RestRequestUtil.restPost(baseUrl, odsEntity);
+				LOGGER.info("RestRequestUtil.restPost(baseUrl, odsEntity) is executed,and result is " + result);
+				jsonObj = new JSONObject(result);
 				meId = jsonObj.getString(ENTITY_ID);
 			}
 			catch (Exception e) {
 				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
 			}
 		}
-		logger.info("meId before return is " + meId);
+		LOGGER.info("meId before return is " + meId);
 		return meId;
 	}
 

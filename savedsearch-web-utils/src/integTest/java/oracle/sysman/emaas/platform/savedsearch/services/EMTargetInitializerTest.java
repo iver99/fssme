@@ -13,6 +13,7 @@ import weblogic.application.ApplicationLifecycleEvent;
 
 import javax.management.*;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.lang.management.ManagementFactory;
 
 /**
@@ -24,42 +25,42 @@ public class EMTargetInitializerTest {
     EMTargetInitializer emTargetInitializer;
 
     @Mocked
-    Logger logger;
+    Logger LOGGER;
 
     @Mocked
     LogManager logManager;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp(){
         new NonStrictExpectations(){
             {
                 logManager.getLogger(EMTargetInitializer.class);
-                result = logger;
+                result = LOGGER;
             }
         };
 
     }
 
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName(){
         emTargetInitializer = new EMTargetInitializer();
         Assert.assertEquals("Saved Search Target Initializer",emTargetInitializer.getName());
     }
 
     @Test
-    public void testPostStart_Exception(@Mocked final MBeanServer mbs,@Mocked final Exception e) throws Exception {
+    public void testPostStart_Exception(@Mocked final MBeanServer mbs,@Mocked final Exception e){
         emTargetInitializer = new EMTargetInitializer();
         emTargetInitializer.postStart(new ApplicationLifecycleEvent(null,null,false));
     }
 
     @Test
-    public void testPostStart_noneExceptionAndInstanceAlreadyExistsException(@Mocked final MBeanServer mbs, @Mocked final InitialContext initialContext, @Mocked final InstanceAlreadyExistsException e) throws Exception {
+    public void testPostStart_noneExceptionAndInstanceAlreadyExistsException(@Mocked final MBeanServer mbs, @Mocked final InitialContext initialContext, @Mocked final InstanceAlreadyExistsException e) throws NamingException {
         new Expectations(){
             {
                 InitialContext.doLookup(anyString);
                 result = "xxxx";
                 times = 2;
-//  ?              logger.error(anyString,e);
+//  ?              LOGGER.error(anyString,e);
 //                times = 1;
             }
         };
@@ -74,7 +75,7 @@ public class EMTargetInitializerTest {
     }
 
     @Test
-    public void testPostStart_MalformedObjectNameException(@Mocked final MBeanServer mbs,@Mocked final InitialContext initialContext) throws Exception {
+    public void testPostStart_MalformedObjectNameException(@Mocked final MBeanServer mbs,@Mocked final InitialContext initialContext) throws NamingException {
         new Expectations(){
             {
                 InitialContext.doLookup(anyString);
@@ -89,18 +90,18 @@ public class EMTargetInitializerTest {
 
 
     @Test
-    public void testPostStop() throws Exception {
+    public void testPostStop(){
         emTargetInitializer.postStop(null);
     }
 
     @Test
-    public void testPreStart() throws Exception {
+    public void testPreStart(){
         emTargetInitializer.preStart(null);
     }
 
 
     @Test
-    public void testPreStop_isRegistered(@Mocked final ManagementFactory managementFactory, @Mocked final MBeanServer mbs, @Mocked final JMXUtil jmxUtil) throws Exception {
+    public void testPreStop_isRegistered(@Mocked final ManagementFactory managementFactory, @Mocked final MBeanServer mbs, @Mocked final JMXUtil jmxUtil) throws MalformedObjectNameException, InstanceNotFoundException, MBeanRegistrationException {
         new Expectations(){
             {
                 ManagementFactory.getPlatformMBeanServer();
@@ -118,7 +119,7 @@ public class EMTargetInitializerTest {
     }
 
     @Test
-    public void testPreStop_notRegistered(@Mocked final ManagementFactory managementFactory, @Mocked final MBeanServer mbs, @Mocked final JMXUtil jmxUtil) throws Exception {
+    public void testPreStop_notRegistered(@Mocked final ManagementFactory managementFactory, @Mocked final MBeanServer mbs, @Mocked final JMXUtil jmxUtil) throws MalformedObjectNameException, InstanceNotFoundException, MBeanRegistrationException {
         new Expectations(){
             {
                 ManagementFactory.getPlatformMBeanServer();

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogDirection;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -46,7 +47,7 @@ public class SavedSearchCORSFilter implements Filter
 			super(request);
 
 			oam_remote_user = request.getHeader(OAM_REMOTE_USER_HEADER);
-			_logger.debug(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
+			LOGGER.debug(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
 			//oamRemoteUser could be null in dev mode. In dev mode, there is no OHS configured
 			if (oam_remote_user != null) {
 				int pos = oam_remote_user.indexOf(".");
@@ -134,12 +135,12 @@ public class SavedSearchCORSFilter implements Filter
 	private static final String X_USER_IDENTITY_DOMAIN_NAME_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
 
 	private static final String PARAM_NAME = "updateLastAccessTime";
-	private static final Logger _logger = LogManager.getLogger(SavedSearchCORSFilter.class);
+	private static final Logger LOGGER = LogManager.getLogger(SavedSearchCORSFilter.class);
 
-	@Override
-	public void destroy()
-	{
-	}
+//	@Override
+//	public void destroy()
+//	{
+//	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
@@ -167,12 +168,8 @@ public class SavedSearchCORSFilter implements Filter
 		}
 
 		if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) request).getMethod())) {
-			try {
 				chain.doFilter(oamRequest, response);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+
 		}
 		else {
 			try {
@@ -190,7 +187,7 @@ public class SavedSearchCORSFilter implements Filter
 							|| !p.getName().toLowerCase().endsWith(EMCS_GLOBAL_INTER_SERVICE_APPID.toLowerCase())) {
 						// no principal, erroneous request
 						RequestContext.setContext(RequestType.ERRONEOUS);
-						_logger.warn("Authorization failed: request has no principal with userIdentity " + tenantIdHeader
+						LOGGER.warn("Authorization failed: request has no principal with userIdentity " + tenantIdHeader
 								+ ", remoteUser " + xRemoteUserHeader);
 						hRes.sendError(HttpServletResponse.SC_FORBIDDEN, "Authorization failed: No principal.");
 						return;
@@ -217,12 +214,9 @@ public class SavedSearchCORSFilter implements Filter
 				else {
 					chain.doFilter(oamRequest, response);
 				}
-			}
-			catch (Exception e) {
-				hRes.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-				return;
-			}
-			finally {
+			} catch (EMAnalyticsFwkException e) {
+				LOGGER.error(e.getLocalizedMessage());
+			} finally {
 				//always remove tenant-id from thradlocal when request completed or on error
 				TenantContext.clearContext();
 				RequestContext.clearContext();
@@ -232,8 +226,14 @@ public class SavedSearchCORSFilter implements Filter
 	}
 
 	@Override
+	public void destroy() {
+		//TODO
+	}
+
+	@Override
 	public void init(FilterConfig config) throws ServletException
 	{
+		//TODO
 	}
 
 	private boolean isParameterPresent(HttpServletRequest hReq)
@@ -250,13 +250,13 @@ public class SavedSearchCORSFilter implements Filter
 /*Enumeration headerNames = hReq.getHeaderNames();
 if (headerNames.hasMoreElements()) {
 
-_logger.info("More elements");
+LOGGER.info("More elements");
 }
 else {
-_logger.info("There is no more element");
+LOGGER.info("There is no more element");
 }
 while (headerNames.hasMoreElements()) {
 Object elem = headerNames.nextElement();
 String paramName = (String) elem;
-_logger.info("Name=" + paramName);
+LOGGER.info("Name=" + paramName);
 }*/

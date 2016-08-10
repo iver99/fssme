@@ -15,7 +15,7 @@ public class EmAnalyticsLastAccessPKTest {
     private EmAnalyticsLastAccessPK emAnalyticsLastAccessPK;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public void setUp() {
         emAnalyticsLastAccessPK = new EmAnalyticsLastAccessPK();
         emAnalyticsLastAccessPK.setAccessedBy("accessedBy1");
         emAnalyticsLastAccessPK.setObjectId(111L);
@@ -23,7 +23,7 @@ public class EmAnalyticsLastAccessPKTest {
     }
 
     @Test (groups = {"s1"})
-    public void testEquals() throws Exception {
+    public void testEquals() {
         Assert.assertTrue(emAnalyticsLastAccessPK.equals(emAnalyticsLastAccessPK));
 
         Assert.assertFalse(emAnalyticsLastAccessPK.equals(new String("astring")));
@@ -36,22 +36,22 @@ public class EmAnalyticsLastAccessPKTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetAccessedBy() throws Exception {
+    public void testGetAccessedBy() {
         Assert.assertEquals("accessedBy1",emAnalyticsLastAccessPK.getAccessedBy());
     }
 
     @Test (groups = {"s1"})
-    public void testGetObjectId() throws Exception {
+    public void testGetObjectId() {
         Assert.assertEquals(111L,emAnalyticsLastAccessPK.getObjectId());
     }
 
     @Test (groups = {"s1"})
-    public void testGetObjectType() throws Exception {
+    public void testGetObjectType() {
         Assert.assertEquals(1L,emAnalyticsLastAccessPK.getObjectType());
     }
 
     @Test (groups = {"s1"})
-    public void testHashCode() throws Exception {
+    public void testHashCode() {
         Assert.assertEquals(emAnalyticsLastAccessPK.hashCode(),-1782651096);
     }
 }

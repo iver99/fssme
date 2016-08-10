@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class DBConnectionManager
 {
-	private final Logger logger = LogManager.getLogger(DBConnectionManager.class);
+	private final Logger LOGGER = LogManager.getLogger(DBConnectionManager.class);
 	private static DBConnectionManager instance;
 
 	static {
@@ -23,7 +23,7 @@ public class DBConnectionManager
 	}
 
 	/**
-	 * Returns the singleton instance for database connection manager
+	 * Returns the singleton INSTANCE for database connection manager
 	 *
 	 * @return
 	 */
@@ -51,7 +51,7 @@ public class DBConnectionManager
 			return BigDecimal.valueOf(1).equals(result);
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return false;
 		}
 		finally {

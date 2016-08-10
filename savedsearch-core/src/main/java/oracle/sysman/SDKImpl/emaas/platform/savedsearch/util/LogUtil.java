@@ -35,6 +35,10 @@ public class LogUtil
 		private String serviceInvoked;
 		private String direction;
 
+		private InteractionLogContext(String tenantId) {
+			this.tenantId = tenantId;
+		}
+
 		public InteractionLogContext(String tenantId, String serviceInvoked, String direction)
 		{
 			this.tenantId = tenantId;
@@ -116,7 +120,7 @@ public class LogUtil
 		}
 	}
 
-	private static final Logger logger = LogManager.getLogger(LogUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(LogUtil.class);
 	public static final String LOG_PROP_TENANTID = "tenantId";
 	public static final String LOG_VALUE_NA = "N/A";
 	public static final String INTERACTION_LOG_PROP_SERVICE_INVOKED = "serviceInvoked";
@@ -148,7 +152,7 @@ public class LogUtil
 	}
 
 	/**
-	 * Retrieve the long timestamp for update time for specified logger
+	 * Retrieve the long timestamp for update time for specified LOGGER
 	 *
 	 * @param cfg
 	 * @param lc
@@ -195,16 +199,16 @@ public class LogUtil
 	{
 		InteractionLogContext old = new InteractionLogContext(ThreadContext.get(LOG_PROP_TENANTID),
 				ThreadContext.get(INTERACTION_LOG_PROP_SERVICE_INVOKED), ThreadContext.get(INTERACTION_LOG_PROP_DIRECTION));
-		if (tenantId == null || tenantId.equals("")) {
-			logger.debug("Initialize interaction log context: tenantId is null or empty");
+		if (tenantId == null || "".equals(tenantId)) {
+			LOGGER.debug("Initialize interaction log context: tenantId is null or empty");
 			tenantId = LOG_VALUE_NA;
 		}
-		if (serviceInvoked == null || serviceInvoked.equals("")) {
-			logger.debug("Initialize interaction log context: serviceInvoked is null or empty");
+		if (serviceInvoked == null || "".equals(serviceInvoked)) {
+			LOGGER.debug("Initialize interaction log context: serviceInvoked is null or empty");
 			serviceInvoked = "Service invoked: N/A";
 		}
 		if (direction == null) {
-			logger.debug("Initialize interaction log context: direction is null");
+			LOGGER.debug("Initialize interaction log context: direction is null");
 			direction = InteractionLogDirection.NA;
 		}
 		ThreadContext.put(LOG_PROP_TENANTID, tenantId);
@@ -214,7 +218,7 @@ public class LogUtil
 	}
 
 	/**
-	 * Sets the update timestamp for specified logger
+	 * Sets the update timestamp for specified LOGGER
 	 *
 	 * @param cfg
 	 * @param lc

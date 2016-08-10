@@ -15,10 +15,12 @@ public class CacheFactory {
 	}
 	
 	public static CacheUnit getCache(String cacheName,int expire){
-		if(cacheName ==null)
+		if(cacheName ==null) {
 			throw new IllegalArgumentException("cache name cannot be null!");
-		if("".equals(cacheName))
+		}
+		if("".equals(cacheName)) {
 			throw new IllegalArgumentException("cache name cannot be empty!");
+		}
 		CacheUnit cu=cacheUnitMap.get(cacheName);
 		if(cu == null){
 			return createCacheUnit(cacheName, expire);

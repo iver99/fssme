@@ -15,7 +15,7 @@ public class ParameterTest {
     Parameter parameter;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp()  {
         parameter = new Parameter();
         parameter.setName("namexx");
         parameter.setType(ParameterType.STRING);
@@ -23,7 +23,7 @@ public class ParameterTest {
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals()  {
         Parameter param2 = new Parameter();
         Assert.assertFalse(param2.equals(parameter));
 
@@ -33,17 +33,17 @@ public class ParameterTest {
     }
 
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName()  {
         Assert.assertEquals(parameter.getName(),"namexx");
     }
 
     @Test
-    public void testGetType() throws Exception {
+    public void testGetType()  {
         Assert.assertTrue(parameter.getType() instanceof ParameterType);
     }
 
     @Test
-    public void testGetValue() throws Exception {
+    public void testGetValue()  {
         Assert.assertEquals(parameter.getValue(),"valuexx");
     }
 }

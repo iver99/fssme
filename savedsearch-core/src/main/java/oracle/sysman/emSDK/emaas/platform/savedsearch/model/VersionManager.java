@@ -26,13 +26,13 @@ import org.apache.logging.log4j.Logger;
  */
 public class VersionManager
 {
-	private static final Logger _logger = LogManager.getLogger(VersionManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(VersionManager.class);
 
-	private static final VersionManager verMgr = new VersionManager();
+	private static final VersionManager VER_MGR = new VersionManager();
 
 	public static VersionManager getInstance()
 	{
-		return verMgr;
+		return VER_MGR;
 	}
 
 	private SchemaVersion schemaVersion;
@@ -45,7 +45,7 @@ public class VersionManager
 	public SchemaVersion getSchemaVersion()
 	{
 
-		_logger.info("Retrieving schema version... ");
+		LOGGER.info("Retrieving schema version... ");
 		EntityManager em = null;
 		try {
 			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
@@ -58,8 +58,8 @@ public class VersionManager
 			}
 			else {
 				final String errMsg = "Invalid Schema Version are detected: ";
-				_logger.error(errMsg);
-				throw new RuntimeException(errMsg + vers);
+				LOGGER.error(errMsg);
+
 			}
 		}
 		finally {

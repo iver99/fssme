@@ -1,19 +1,14 @@
 package oracle.sysman.emaas.savedsearch;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Persistence;
-import javax.xml.bind.JAXBElement;
 
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -40,13 +35,10 @@ public class SearchTest extends BaseTest
 
 	private static Integer searchId;
 
-	private static Search dupSearch;
 	private static final int TA_SEARCH_ID = 3000;//a system search that always exists
 	private static int initialSearchCnt = 0;
 
-	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
-	@BeforeClass
 	public static void initialization() throws Exception
 	{
 
@@ -107,7 +99,6 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@AfterClass
 	public static void testDelete() throws Exception
 	{
 
@@ -133,7 +124,6 @@ public class SearchTest extends BaseTest
 	}
 
 
-	@Test (groups = {"s1"})
 	public void testEditSystemSearch() throws Exception
 	{
 		boolean bresult = false;
@@ -156,7 +146,6 @@ public class SearchTest extends BaseTest
 		Assert.assertEquals(bresult, true);
 	}
 
-	@Test (groups = {"s1"})
 	public void testGetInstance()
 	{
 		try {
@@ -171,7 +160,6 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test (groups = {"s1"})
 	public void testGetSearch() throws Exception
 	{
 		try {
@@ -199,7 +187,6 @@ public class SearchTest extends BaseTest
 	}*/
 
 
-	@Test (groups = {"s1"})
 	public void testGetSearchByInvalidFolderId(@Mocked final Persistence persistence) throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();
@@ -259,7 +246,6 @@ public class SearchTest extends BaseTest
 		}
 	}*/
 
-	@Test (groups = {"s1"})
 	public void testSearchNotExist() throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();

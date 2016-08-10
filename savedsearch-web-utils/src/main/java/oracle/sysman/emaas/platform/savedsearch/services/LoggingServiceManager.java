@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
 import java.lang.management.ManagementFactory;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -37,7 +38,7 @@ import weblogic.application.ApplicationLifecycleEvent;
  */
 public class LoggingServiceManager implements ApplicationServiceManager
 {
-	private final Logger logger = LogManager.getLogger(LoggingServiceManager.class);
+	private final Logger LOGGER = LogManager.getLogger(LoggingServiceManager.class);
 	public static final String MBEAN_NAME = "oracle.sysman.emaas.platform.savedsearch.logging.beans:type=AppLoggingManageMXBean";
 	public static final String MBEAN_NAME_TMP = "oracle.sysman.emaas.platform.savedsearch.logging.beans:type=AppLoggingManageMXBean"
 			+ System.currentTimeMillis();
@@ -56,29 +57,59 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#postStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt) throws Exception
+	public void postStart(ApplicationLifecycleEvent evt)
 	{
 		URL url = LoggingServiceManager.class.getResource("/log4j2_ssf.xml");
-		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
+		try {
+			Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
+		} catch (URISyntaxException e) {
+			LOGGER.error(e.getLocalizedMessage());
+		}
 		LogUtil.initializeLoggersUpdateTime();
-		logger.info("Saved search log4j2 logging configuration has been initialized");
+		LOGGER.info("Saved search log4j2 logging configuration has been initialized");
 
 		try {
 			registerMBean(MBEAN_NAME);
 		}
 		catch (InstanceAlreadyExistsException e) {
-			logger.warn("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
+			LOGGER.warn("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
 			try {
 				unregisterMBean(MBEAN_NAME);
 			}
 			catch (Exception ex) {
-				logger.error(ex);
+				LOGGER.error(ex);
 				// failed to unregister with name 'MBEAN_NAME', register with a temporary name
-				registerMBean(MBEAN_NAME_TMP);
+				try {
+					registerMBean(MBEAN_NAME_TMP);
+				} catch (InstanceAlreadyExistsException e1) {
+					LOGGER.error(e.getLocalizedMessage());
+				} catch (MBeanRegistrationException e1) {
+					LOGGER.error(e.getLocalizedMessage());
+				} catch (NotCompliantMBeanException e1) {
+					LOGGER.error(e.getLocalizedMessage());
+				} catch (MalformedObjectNameException e1) {
+					LOGGER.error(e.getLocalizedMessage());
+				}
 				tempMBeanExists = true;
 				return;
 			}
-			registerMBean(MBEAN_NAME);
+			try {
+				registerMBean(MBEAN_NAME);
+			} catch (InstanceAlreadyExistsException e1) {
+				LOGGER.error(e.getLocalizedMessage());
+			} catch (MBeanRegistrationException e1) {
+				LOGGER.error(e.getLocalizedMessage());
+			} catch (NotCompliantMBeanException e1) {
+				LOGGER.error(e.getLocalizedMessage());
+			} catch (MalformedObjectNameException e1) {
+				LOGGER.error(e.getLocalizedMessage());
+			}
+		} catch (MalformedObjectNameException e) {
+			LOGGER.error(e.getLocalizedMessage());
+		} catch (NotCompliantMBeanException e) {
+			LOGGER.error(e.getLocalizedMessage());
+		} catch (MBeanRegistrationException e) {
+			LOGGER.error(e.getLocalizedMessage());
 		}
 	}
 
@@ -86,7 +117,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#postStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	public void postStop(ApplicationLifecycleEvent evt) 
 	{
 		// no impl
 	}
@@ -95,7 +126,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#preStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	public void preStart(ApplicationLifecycleEvent evt) 
 	{
 	}
 
@@ -103,9 +134,9 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#preStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt) throws Exception
+	public void preStop(ApplicationLifecycleEvent evt) 
 	{
-		logger.info("Pre-stopping logging service");
+		LOGGER.info("Pre-stopping logging service");
 		try {
 			if (tempMBeanExists) {
 				tempMBeanExists = false;
@@ -114,7 +145,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 			unregisterMBean(MBEAN_NAME);
 		}
 		catch (Throwable e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -124,7 +155,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 		ObjectName on = new ObjectName(name);
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		mbs.registerMBean(new AppLoggingManageMXBean(), on);
-		logger.info("MBean '" + name + "' has been registered");
+		LOGGER.info("MBean '" + name + "' has been registered");
 	}
 
 	private void unregisterMBean(String name) throws MBeanRegistrationException, InstanceNotFoundException,
@@ -132,6 +163,6 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	{
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		mbs.unregisterMBean(new ObjectName(name));
-		logger.info("MBean '" + name + "' has been un-registered");
+		LOGGER.info("MBean '" + name + "' has been un-registered");
 	}
 }

@@ -12,6 +12,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by xidai on 5/11/2016.
@@ -21,7 +22,7 @@ public class OdsCURD {
     static String authToken;
     static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC0;
     static String TENANT_ID1 = TestConstant.TENANT_ID0;
-    static ArrayList<Long> odsIdToBeDelete;
+    static List<Long> odsIdToBeDelete;
 
     @BeforeClass
     public static void setUp()
@@ -41,7 +42,6 @@ public class OdsCURD {
             Response deleteResponseForCreate =  RestAssured.given().contentType(ContentType.JSON).log().everything()
                     .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
                     .delete("/search/" + searchId);
-            System.out.println(deleteResponseForCreate.getStatusLine());
             Assert.assertTrue(deleteResponseForCreate.getStatusCode()== 204);
         }
     }
@@ -66,7 +66,6 @@ public class OdsCURD {
                     "}";
         Response createResponse = getResponseForCreateNewSearch(inputCreateJson);
         JsonPath jsonPathForCreate  = createResponse.jsonPath();
-        System.out.println(createResponse.getStatusLine());
         Assert.assertTrue(createResponse.getStatusCode()== 201);
         odsIdToBeDelete.add(jsonPathForCreate.getLong("id"));
     }
@@ -87,7 +86,6 @@ public class OdsCURD {
         //create an ods entity for existing non-system search
         Response createForExistingSearchResponse = getResponseForCreateOdsForExistingSearch(testCreateSearchResponseJsonPath.getLong("id"));
         JsonPath jsonPathForCreateForExistingSearch = createForExistingSearchResponse.jsonPath();
-        System.out.println(createForExistingSearchResponse.getStatusLine());
         Assert.assertTrue(createForExistingSearchResponse.getStatusCode()== 200);
 
         odsIdToBeDelete.add(jsonPathForCreateForExistingSearch.getLong("id"));
@@ -99,7 +97,6 @@ public class OdsCURD {
     public void createEntityForExsitingSystemSearch(){
         //create an ods entity for existing system search
         Response createForExistingSearchResponse = getResponseForCreateOdsForExistingSearch(2023L);
-        System.out.println(createForExistingSearchResponse.getBody().asString());
         Assert.assertTrue(createForExistingSearchResponse.getStatusCode()== 200
                 ||createForExistingSearchResponse.getBody().asString()
                     .startsWith("Exist Entity ID"));

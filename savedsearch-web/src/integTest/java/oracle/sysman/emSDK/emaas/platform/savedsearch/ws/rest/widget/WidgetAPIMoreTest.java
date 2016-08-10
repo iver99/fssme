@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,11 +25,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
 import org.testng.annotations.Test;
 
-import com.sun.jersey.core.header.InBoundHeaders;
-import com.sun.jersey.server.impl.application.WebApplicationContext;
-import com.sun.jersey.server.impl.application.WebApplicationImpl;
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerResponse;
 
 /**
  * Created by QIQIAN on 2016/3/28.
@@ -41,7 +37,7 @@ public class WidgetAPIMoreTest
 	Date now = new Date();
 
 	@Test(groups = { "s2" })
-	public void testCheckQueryParam_groupIdLessThen0(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testCheckQueryParamGroupIdLessThen0(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -56,7 +52,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testCheckQueryParam_inputLengthLessThen2(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testCheckQueryParamInputLengthLessThen2(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -71,8 +67,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testCheckQueryParam_inputLengthLessThen2_keyNotCorrect(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
-			throws Exception
+	public void testCheckQueryParamInputLengthLessThen2KeyNotCorrect(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -87,7 +82,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testCheckQueryParam_key1NotCorrect(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testCheckQueryParamKey1NotCorrect(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -102,7 +97,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testCheckQueryParam_key2NotCorrect(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testCheckQueryParamKey2NotCorrect(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -117,16 +112,16 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test
-	public void testGetAllWidgets() throws Exception
+	public void testGetAllWidgets()
 	{
-		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(new WebApplicationContext(new WebApplicationImpl(), new ContainerRequest(
-				new WebApplicationImpl(), "method", null, null, new InBoundHeaders(), null), new ContainerResponse(
-				new WebApplicationImpl(), null, null)), "userTenant", "widgetGroupId", true);
+//		widgetAPI = new WidgetAPI();
+//		widgetAPI.getAllWidgets(new WebApplicationContext(new WebApplicationImpl(), new ContainerRequest(
+//				new WebApplicationImpl(), "method", null, null, new InBoundHeaders(), null), new ContainerResponse(
+//				new WebApplicationImpl(), null, null)), "userTenant", "widgetGroupId", true);
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_EMAnalyticsFwkException(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testGetAllWidgetsEMAnalyticsFwkException(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -139,14 +134,17 @@ public class WidgetAPIMoreTest
 		widgetAPI = new WidgetAPI();
 		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
 	}
-
+	@Mocked WidgetManager widgetManager;
+	@Mocked WidgetManagerImpl widgetManagerImpl;
+	@Mocked SearchManager searchManager;
+	@Mocked SearchManagerImpl searchManagerImpl;
+	@Mocked TenantSubscriptionUtil tenantSubscriptionUtil;
+	@Mocked TenantContext tenantContext;
+	@Mocked TenantInfo tenantInfo;
+	@Mocked UriInfo uriInfo;
+	@Mocked URI uri;
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_getWigetListFromCache_Exception_widgetGroupIdNotNull(@Mocked WidgetManager widgetManager,
-			@Mocked final WidgetManagerImpl widgetManagerImpl, @Mocked SearchManager searchManager,
-			@Mocked final SearchManagerImpl searchManagerImpl, @Mocked TenantSubscriptionUtil tenantSubscriptionUtil,
-			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo,
-			@Mocked final URI uri) throws Exception
-	{
+	public void testGetAllWidgetsGetWigetListFromCacheExceptionWidgetGroupIdNotNull() throws IOException, EMAnalyticsFwkException {
 		final List<String> providers = new ArrayList<>();
 		providers.add("providerQQ");
 		providers.add("providerPP");
@@ -182,7 +180,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_groupIdLargerThen(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testGetAllWidgetsGroupIdLargerThen(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -197,8 +195,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_groupIdLargerThen0_paramLessThen2(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
-			throws Exception
+	public void testGetAllWidgetsGroupIdLargerThen0ParamLessThen2(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -213,7 +210,7 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_groupIdLessThen0(@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testGetAllWidgetsGroupIdLessThen0(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -228,12 +225,11 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_widgetGroupIdNotNull(@Mocked WidgetManager widgetManager,
-			@Mocked final WidgetManagerImpl widgetManagerImpl, @Mocked SearchManager searchManager,
-			@Mocked final SearchManagerImpl searchManagerImpl, @Mocked TenantSubscriptionUtil tenantSubscriptionUtil,
-			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo,
-			@Mocked final URI uri) throws Exception
-	{
+	public void testGetAllWidgetsWidgetGroupIdNotNull(@Mocked WidgetManager widgetManager,
+													  @Mocked final WidgetManagerImpl widgetManagerImpl, @Mocked SearchManager searchManager,
+													  @Mocked final SearchManagerImpl searchManagerImpl, @Mocked TenantSubscriptionUtil tenantSubscriptionUtil,
+													  @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final UriInfo uriInfo,
+													  @Mocked final URI uri) throws IOException, EMAnalyticsFwkException {
 		final List<String> providers = new ArrayList<>();
 		providers.add("providerQQ");
 		providers.add("providerPP");
@@ -268,8 +264,8 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetAllWidgets_widgetGroupIdNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked final UriInfo uriInfo, @Mocked final URI uri) throws Exception
+	public void testGetAllWidgetsWidgetGroupIdNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+												   @Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
@@ -333,15 +329,12 @@ public class WidgetAPIMoreTest
 	//	}
 
 	@Test(groups = { "s2" })
-	public void testGetWidgetScreenshotById(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked final SearchManager searchManager) throws Exception
-	{
+	public void testGetWidgetScreenshotById(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo
+				) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				SearchManager.getInstance();
 				result = searchManager;
-				searchManager.getWidgetScreenshotById(anyLong);
-				result = new ScreenshotData("data:image/jpeg;base64,test", now, now);
 			}
 		};
 		widgetAPI = new WidgetAPI();
@@ -350,9 +343,8 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetWidgetScreenshotById_B64seNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
-	{
+	public void testGetWidgetScreenshotByIdB64SeNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+													 @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
@@ -367,9 +359,8 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetWidgetScreenshotById_Exception(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
-	{
+	public void testGetWidgetScreenshotByIdException(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+													 @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
@@ -384,9 +375,8 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetWidgetScreenshotById_seNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws Exception
-	{
+	public void testGetWidgetScreenshotByIdSeNull(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+												  @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
@@ -401,10 +391,9 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetWidgetScreenshotById_seNull_EMAnalyticsFwkException(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked SearchManager searchManager,
-			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
-	{
+	public void testGetWidgetScreenshotByIdSeNullEMAnalyticsFwkException(@Mocked TenantContext tenantContext,
+																		 @Mocked final TenantInfo tenantInfo, @Mocked SearchManager searchManager,
+																		 @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
@@ -419,10 +408,9 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetWidgetScreenshotById_seNull_Exception(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked SearchManager searchManager,
-			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
-	{
+	public void testGetWidgetScreenshotByIdSeNullException(@Mocked TenantContext tenantContext,
+														   @Mocked final TenantInfo tenantInfo, @Mocked SearchManager searchManager,
+														   @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
@@ -437,10 +425,9 @@ public class WidgetAPIMoreTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetWidgetScreenshotById_seNull_ssNull(@Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo, @Mocked SearchManager searchManager,
-			@Mocked final SearchManagerImpl searchManagerImpl) throws Exception
-	{
+	public void testGetWidgetScreenshotByIdSeNullSsNull(@Mocked TenantContext tenantContext,
+														@Mocked final TenantInfo tenantInfo, @Mocked SearchManager searchManager,
+														@Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();

@@ -30,6 +30,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  */
 public class SchemaUtil
 {
+	private SchemaUtil() {
+	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeployment
@@ -355,12 +357,12 @@ public class SchemaUtil
 
 	private static final String ITEMS = "items";
 
-	private static Logger logger = LogManager.getLogger(SchemaUtil.class);
+	private static Logger LOGGER = LogManager.getLogger(SchemaUtil.class);
 
 	public static List<String> getSchemaUrls(String json)
 	{
 		if (json == null || "".equals(json)) {
-			return null;
+
 		}
 
 		HashSet<String> urlSet = new HashSet<String>();
@@ -389,7 +391,7 @@ public class SchemaUtil
 		}
 		catch (Exception e) {
 
-			logger.error("an error occureed while getting schema name", e);
+			LOGGER.error("an error occureed while getting schema name", e);
 			return null;
 		}
 		List<String> urls = new ArrayList<String>();
@@ -416,7 +418,7 @@ public class SchemaUtil
 		}
 		catch (IOException e) {
 
-			logger.error("an error occureed while getting schema name", e);
+			LOGGER.error("an error occureed while getting schema name", e);
 		}
 		return null;
 	}

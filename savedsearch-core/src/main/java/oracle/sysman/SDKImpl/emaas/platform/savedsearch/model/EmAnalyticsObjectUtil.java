@@ -50,25 +50,21 @@ class EmAnalyticsObjectUtil
 		}
 
 		if (em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder)
-				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList().size() > 0) {
+				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList().isEmpty()) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with categories",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
 
-		try {
 			EmAnalyticsFolder folderObj = folder;
 			String parentFolder = "parentFolder";
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
 			.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 
-			if (folderList.size() > 0) {
+			if (folderList.isEmpty()) {
 				throw new EMAnalyticsFwkException("Sub folders founds", EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 			}
-		}
-		catch (NoResultException e) {
 
-		}
 		return true;
 	}
 
@@ -76,7 +72,6 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsCategory cateObj = null;
-		try {
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null) {
@@ -93,10 +88,6 @@ class EmAnalyticsObjectUtil
 
 			}
 
-		}
-		catch (Exception nre) {
-			// do nothing
-		}
 		return cateObj;
 	}
 
@@ -104,7 +95,6 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsCategory cateObj = null;
-		try {
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null
@@ -117,16 +107,11 @@ class EmAnalyticsObjectUtil
 				cateObj = null;
 			}
 
-		}
-		catch (Exception nre) {
-			// do nothing
-		}
 		return cateObj;
 	}
 
 	public static EmAnalyticsCategory getCategoryByName(String categoryName, EntityManager em)
 	{
-		try {
 			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
 				return (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByNameForTenant")
 						.setParameter("categoryName", categoryName).getSingleResult();
@@ -137,11 +122,6 @@ class EmAnalyticsObjectUtil
 						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 						.getSingleResult();
 			}
-		}
-		catch (NoResultException e) {
-			return null;
-
-		}
 	}
 
 	public static EmAnalyticsCategory getEmAnalyticsCategoryForAdd(Category category, EntityManager em)
@@ -169,7 +149,7 @@ class EmAnalyticsObjectUtil
 		}
 		List<Parameter> params = category.getParameters();
 		//Set<EmAnalyticsCategoryParam> paramSet = new HashSet<EmAnalyticsCategoryParam>();
-		if (params != null && params.size() != 0) {
+		if (params != null && params.isEmpty()) {
 			Iterator<Parameter> paramIter = params.iterator();
 			while (paramIter.hasNext()) {
 				Parameter param = paramIter.next();
@@ -269,14 +249,10 @@ class EmAnalyticsObjectUtil
 				if (folder.getParentId() != null) {
 					EmAnalyticsFolder parentFolderObj = null;
 					if (folder.getParentId() == 1) {
-						try {
 							parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
 									.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 									.getSingleResult();
-						}
-						catch (NoResultException e) {
-							parentFolderObj = null;
-						}
+
 					}
 					else {
 						parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId().longValue(), em);
@@ -292,12 +268,6 @@ class EmAnalyticsObjectUtil
 				}
 			}
 
-		}
-		catch (NoResultException nre) {
-			folderObj = null;
-		}
-		catch (Exception e) {
-			folderObj = null;
 		}
 		finally {
 			if (em != null) {
@@ -355,15 +325,11 @@ class EmAnalyticsObjectUtil
 				EmAnalyticsFolder parentFolderObj = null;
 
 				if (folder.getParentId() == 1) { //get root for folder for tenant-id  vb
-					try {
 						parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
 						/*parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
 								.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 								.getSingleResult();*/
-					}
-					catch (NoResultException e) {
-						parentFolderObj = null;
-					}
+
 				}
 				if (parentFolderObj == null) {
 					parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
@@ -426,7 +392,7 @@ class EmAnalyticsObjectUtil
 		List<SearchParameter> params = search.getParameters();
 		//move values from search_params table to search table
 		EmAnalyticsObjectUtil.moveParamsToSearchAdd(searchEntity, params);
-		if (params != null && params.size() != 0) {
+		if (params != null && params.isEmpty()) {
 			for (SearchParameter param : params) {
 				EmAnalyticsSearchParam searchParamEntity = new EmAnalyticsSearchParam();
 				searchParamEntity.setEmAnalyticsSearch(searchEntity);
@@ -553,7 +519,6 @@ class EmAnalyticsObjectUtil
 
 		EmAnalyticsFolder folderObj = null;
 
-		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
 			if (folderObj != null
@@ -568,11 +533,6 @@ class EmAnalyticsObjectUtil
 				folderObj = null;
 			}
 
-		}
-		catch (Exception nre) {
-			//do nothing
-
-		}
 		return folderObj;
 	}
 
@@ -581,7 +541,6 @@ class EmAnalyticsObjectUtil
 
 		EmAnalyticsFolder folderObj = null;
 
-		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
 			if (folderObj != null
@@ -594,21 +553,16 @@ class EmAnalyticsObjectUtil
 				folderObj = null;
 			}
 
-		}
-		catch (Exception nre) {
-			//do nothing
-
-		}
 		return folderObj;
 	}
 
 	public static EmAnalyticsFolder getRootFolder()
 	{
-		final String ROOT_FOLDER_NAME = "All Searches";
+		final String ROOTFOLDERNAME = "All Searches";
 		EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
 		Date utcNow = DateUtil.getCurrentUTCTime();
-		folderObj.setDescription(ROOT_FOLDER_NAME);
-		folderObj.setName(ROOT_FOLDER_NAME);
+		folderObj.setDescription(ROOTFOLDERNAME);
+		folderObj.setName(ROOTFOLDERNAME);
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		folderObj.setOwner(currentUser);
 		folderObj.setCreationDate(utcNow);
@@ -626,7 +580,6 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsSearch searchObj = null;
-		try {
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null) {
@@ -641,10 +594,6 @@ class EmAnalyticsObjectUtil
 					searchObj = null;
 				}
 			}
-		}
-		catch (Exception nre) {
-			//don nothing
-		}
 		return searchObj;
 	}
 
@@ -652,7 +601,6 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsSearch searchObj = null;
-		try {
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null
@@ -665,10 +613,6 @@ class EmAnalyticsObjectUtil
 				searchObj = null;
 			}
 
-		}
-		catch (Exception nre) {
-			//don nothing
-		}
 		return searchObj;
 	}
 
@@ -739,82 +683,82 @@ class EmAnalyticsObjectUtil
 
 	private static void moveParamsToSearchAdd(EmAnalyticsSearch searchEntity, List<SearchParameter> params)
 	{
-		if (params != null && params.size() != 0) {
+		if (params != null && params.isEmpty()) {
 			Iterator<SearchParameter> paramIter = params.iterator();
 			while (paramIter.hasNext()) {
 				SearchParameter param = paramIter.next();
 				if ("NAME_WIDGET_SOURCE".equals(param.getName())) {
-					searchEntity.setNAME_WIDGET_SOURCE(param.getValue());
+					searchEntity.setNAMEWIDGETSOURCE(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_GROUP_NAME".equals(param.getName())) {
-					searchEntity.setWIDGET_GROUP_NAME(param.getValue());
+					searchEntity.setWIDGETGROUPNAME(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_SCREENSHOT_HREF".equals(param.getName())) {
-					searchEntity.setWIDGET_SCREENSHOT_HREF(param.getValue());
+					searchEntity.setWIDGETSCREENSHOTHREF(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_ICON".equals(param.getName())) {
-					searchEntity.setWIDGET_ICON(param.getValue());
+					searchEntity.setWIDGETICON(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_KOC_NAME".equals(param.getName())) {
-					searchEntity.setWIDGET_KOC_NAME(param.getValue());
+					searchEntity.setWIDGETKOCNAME(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_VIEWMODEL".equals(param.getName())) {
-					searchEntity.setWIDGET_VIEWMODEL(param.getValue());
+					searchEntity.setWIDGETVIEWMODEL(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_TEMPLATE".equals(param.getName())) {
-					searchEntity.setWIDGET_TEMPLATE(param.getValue());
+					searchEntity.setWIDGETTEMPLATE(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_SUPPORT_TIME_CONTROL".equals(param.getName())) {
-					searchEntity.setWIDGET_SUPPORT_TIME_CONTROL(param.getValue());
+					searchEntity.setWIDGETSUPPORTTIMECONTROL(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_LINKED_DASHBOARD".equals(param.getName())) {
-					searchEntity.setWIDGET_LINKED_DASHBOARD(Long.valueOf(param.getValue()));
+					searchEntity.setWIDGETLINKEDDASHBOARD(Long.valueOf(param.getValue()));
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_DEFAULT_WIDTH".equals(param.getName())) {
-					searchEntity.setWIDGET_DEFAULT_WIDTH(Long.valueOf(param.getValue()));
+					searchEntity.setWIDGETDEFAULTWIDTH(Long.valueOf(param.getValue()));
 					paramIter.remove();
 					continue;
 				}
 				if ("WIDGET_DEFAULT_HEIGHT".equals(param.getName())) {
-					searchEntity.setWIDGET_DEFAULT_HEIGHT(Long.valueOf(param.getValue()));
+					searchEntity.setWIDGETDEFAULTHEIGHT(Long.valueOf(param.getValue()));
 					paramIter.remove();
 					continue;
 				}
 				if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
-					searchEntity.setDASHBOARD_INELIGIBLE(param.getValue());
+					searchEntity.setDASHBOARDINELIGIBLE(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("PROVIDER_NAME".equals(param.getName())) {
-					searchEntity.setPROVIDER_NAME(param.getValue());
+					searchEntity.setPROVIDERNAME(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("PROVIDER_VERSION".equals(param.getName())) {
-					searchEntity.setPROVIDER_VERSION(param.getValue());
+					searchEntity.setPROVIDERVERSION(param.getValue());
 					paramIter.remove();
 					continue;
 				}
 				if ("PROVIDER_ASSET_ROOT".equals(param.getName())) {
-					searchEntity.setPROVIDER_ASSET_ROOT(param.getValue());
+					searchEntity.setPROVIDERASSETROOT(param.getValue());
 					paramIter.remove();
 					continue;
 				}
@@ -828,77 +772,77 @@ class EmAnalyticsObjectUtil
 		while (paramIter.hasNext()) {
 			EmAnalyticsSearchParam param = paramIter.next();
 			if ("NAME_WIDGET_SOURCE".equals(param.getName())) {
-				searchEntity.setNAME_WIDGET_SOURCE(param.getParamValueStr());
+				searchEntity.setNAMEWIDGETSOURCE(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_GROUP_NAME".equals(param.getName())) {
-				searchEntity.setWIDGET_GROUP_NAME(param.getParamValueStr());
+				searchEntity.setWIDGETGROUPNAME(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_SCREENSHOT_HREF".equals(param.getName())) {
-				searchEntity.setWIDGET_SCREENSHOT_HREF(param.getParamValueStr());
+				searchEntity.setWIDGETSCREENSHOTHREF(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_ICON".equals(param.getName())) {
-				searchEntity.setWIDGET_ICON(param.getParamValueStr());
+				searchEntity.setWIDGETICON(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_KOC_NAME".equals(param.getName())) {
-				searchEntity.setWIDGET_KOC_NAME(param.getParamValueStr());
+				searchEntity.setWIDGETKOCNAME(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_VIEWMODEL".equals(param.getName())) {
-				searchEntity.setWIDGET_VIEWMODEL(param.getParamValueStr());
+				searchEntity.setWIDGETVIEWMODEL(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_TEMPLATE".equals(param.getName())) {
-				searchEntity.setWIDGET_TEMPLATE(param.getParamValueStr());
+				searchEntity.setWIDGETTEMPLATE(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_SUPPORT_TIME_CONTROL".equals(param.getName())) {
-				searchEntity.setWIDGET_SUPPORT_TIME_CONTROL(param.getParamValueStr());
+				searchEntity.setWIDGETSUPPORTTIMECONTROL(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_LINKED_DASHBOARD".equals(param.getName())) {
-				searchEntity.setWIDGET_LINKED_DASHBOARD(Long.valueOf(param.getParamValueStr()));
+				searchEntity.setWIDGETLINKEDDASHBOARD(Long.valueOf(param.getParamValueStr()));
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_DEFAULT_WIDTH".equals(param.getName())) {
-				searchEntity.setWIDGET_DEFAULT_WIDTH(Long.valueOf(param.getParamValueStr()));
+				searchEntity.setWIDGETDEFAULTWIDTH(Long.valueOf(param.getParamValueStr()));
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_DEFAULT_HEIGHT".equals(param.getName())) {
-				searchEntity.setWIDGET_DEFAULT_HEIGHT(Long.valueOf(param.getParamValueStr()));
+				searchEntity.setWIDGETDEFAULTHEIGHT(Long.valueOf(param.getParamValueStr()));
 				paramIter.remove();
 				continue;
 			}
 			if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
-				searchEntity.setDASHBOARD_INELIGIBLE(param.getParamValueStr());
+				searchEntity.setDASHBOARDINELIGIBLE(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("PROVIDER_NAME".equals(param.getName())) {
-				searchEntity.setPROVIDER_NAME(param.getParamValueStr());
+				searchEntity.setPROVIDERNAME(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("PROVIDER_VERSION".equals(param.getName())) {
-				searchEntity.setPROVIDER_VERSION(param.getParamValueStr());
+				searchEntity.setPROVIDERVERSION(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("PROVIDER_ASSET_ROOT".equals(param.getName())) {
-				searchEntity.setPROVIDER_ASSET_ROOT(param.getParamValueStr());
+				searchEntity.setPROVIDERASSETROOT(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}

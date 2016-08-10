@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by xidai on 3/7/2016.
  */
-@Test(groups={"s2"})
+@Test(groups = {"s2"})
 
 public class EmAnalyticsObjectUtilTest {
     @Mocked
@@ -56,8 +56,8 @@ public class EmAnalyticsObjectUtilTest {
     SearchParameter searchParameter;
 
 
-    @Test
-    public void testCanDeleteFolder() throws Exception {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testCanDeleteFolder() throws EMAnalyticsFwkException {
         new Expectations() {
             {
                 entityManager.createNamedQuery(anyString);
@@ -68,18 +68,20 @@ public class EmAnalyticsObjectUtilTest {
                 result = 1;
                 TenantContext.getContext();
                 result = tenantInfo;
+                entityManager.find(EmAnalyticsFolder.class, anyLong);
+                result = emAnalyticsFolder;
+                emAnalyticsFolder.getDeleted();
+                result = 0;
+                emAnalyticsFolder.getSystemFolder();
+                result = 1;
             }
         };
-        try {
-            EmAnalyticsObjectUtil.canDeleteFolder(10L, entityManager);
-
-        }catch(EMAnalyticsFwkException e){
-            Assert.assertTrue(true);
-        }
+        EmAnalyticsObjectUtil.canDeleteFolder(10L, entityManager);
     }
 
-    @Test
-    public void testCanDeleteFolder2nd() throws Exception {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testCanDeleteFolder2nd() throws EMAnalyticsFwkException {
+
         new Expectations() {
             {
                 entityManager.createNamedQuery(anyString);
@@ -90,19 +92,20 @@ public class EmAnalyticsObjectUtilTest {
                 result = -1;
                 TenantContext.getContext();
                 result = tenantInfo;
+                entityManager.find(EmAnalyticsFolder.class, anyLong);
+                result = emAnalyticsFolder;
+                emAnalyticsFolder.getDeleted();
+                result = 0;
+                emAnalyticsFolder.getSystemFolder();
+                result = 1;
             }
         };
-        try {
-            EmAnalyticsObjectUtil.canDeleteFolder(10L, entityManager);
-
-        }catch(EMAnalyticsFwkException e){
-            Assert.assertTrue(true);
-        }
+        EmAnalyticsObjectUtil.canDeleteFolder(10L, entityManager);
     }
 
 
     @Test
-    public void testGetCategoryByName() throws Exception {
+    public void testGetCategoryByName() {
         new Expectations() {
             {
                 entityManager.createNamedQuery(anyString);
@@ -115,342 +118,335 @@ public class EmAnalyticsObjectUtilTest {
                 result = tenantInfo;
             }
         };
-        EmAnalyticsObjectUtil.getCategoryByName("name",entityManager);
+        EmAnalyticsObjectUtil.getCategoryByName("name", entityManager);
     }
 
-    @Test
-    public void testGetEmAnalyticsCategoryForEdit() throws Exception {
+    @Test(expectedExceptions = {NullPointerException.class})
+    public void testGetEmAnalyticsCategoryForEdit() {
         final List<Parameter> newParams = new ArrayList<Parameter>();
         newParams.add(parameter);
         new Expectations() {
             {
                 category.getId();
                 result = 1;
-                category.getName();
-                result = "name";
                 entityManager.find(EmAnalyticsCategory.class, anyLong);
                 result = emAnalyticsCategory;
-                category.getParameters();
-                result = newParams;
             }
         };
-        try {
-            EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, entityManager);
-        }catch(Exception e){
-
-        }
+        EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, entityManager);
     }
 
 
     @Test
-    public void testGetEmAnalyticsFolderByFolderObject() throws Exception {
-        new Expectations(){
+    public void testGetEmAnalyticsFolderByFolderObject() {
+        new Expectations() {
             {
                 TenantContext.getContext();
                 result = tenantInfo;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-            }
-        };
-        EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(folder);
-    }
-    @Test
-    public void testGetEmAnalyticsFolderByFolderObject2nd() throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                persistenceManager.getEntityManager(withAny(tenantInfo));
-                result = entityManager;
-                folder.getParentId();
-                result =null;
-            }
-        };
-        EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(folder);
-    }
-
-    @Test
-    public void testGetEmAnalyticsFolderByFolderObject3th() throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                persistenceManager.getEntityManager(withAny(tenantInfo));
-                result = entityManager;
-                folder.getParentId();
-                result =1;
-            }
-        };
-        EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(folder);
-    }
-
-    @Test
-    public void testGetEmAnalyticsFolderByFolderObject4th() throws Exception {
-        new Expectations(){
-            {
-                TenantContext.getContext();
-                result = tenantInfo;
-                persistenceManager.getEntityManager(withAny(tenantInfo));
-                result = entityManager;
-                folder.getParentId();
-                result =new NoResultException();
-            }
-        };
-        EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(folder);
-    }
-
-    @Test
-    public void testGetEmAnalyticsFolderForEdit() throws Exception {
-        new Expectations(){
-            {
-                entityManager.find(EmAnalyticsFolder.class,anyLong);
+                entityManager.find(EmAnalyticsFolder.class, anyLong);
                 result = emAnalyticsFolder;
+                emAnalyticsFolder.getDeleted();
+                result = 0;
+                emAnalyticsFolder.getSystemFolder();
+                result = 0;
+                emAnalyticsFolder.getOwner();
+                result ="owner";
+            }
+        };
+        EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(folder);
+    }
+
+    @Test
+    public void testGetEmAnalyticsFolderByFolderObject2nd() {
+        new Expectations() {
+            {
+                TenantContext.getContext();
+                result = tenantInfo;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                result = entityManager;
+                folder.getParentId();
+                result = null;
+            }
+        };
+        EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(folder);
+    }
+
+    @Test
+    public void testGetEmAnalyticsFolderByFolderObject3th() {
+        new Expectations() {
+            {
+                TenantContext.getContext();
+                result = tenantInfo;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                result = entityManager;
                 folder.getParentId();
                 result = 1;
             }
         };
-        EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder,entityManager);
+        EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(folder);
     }
 
-    @Test
-    public void testGetEmAnalyticsSearchForEdit() throws Exception {
+    @Test(expectedExceptions = {NoResultException.class})
+    public void testGetEmAnalyticsFolderByFolderObject4th() {
+        new Expectations() {
+            {
+                TenantContext.getContext();
+                result = tenantInfo;
+                persistenceManager.getEntityManager(withAny(tenantInfo));
+                result = entityManager;
+                folder.getParentId();
+                result = new NoResultException();
+            }
+        };
+        EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(folder);
+    }
+
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testGetEmAnalyticsFolderForEdit() throws EMAnalyticsFwkException {
+        new Expectations() {
+            {
+                entityManager.find(EmAnalyticsFolder.class, anyLong);
+                result = emAnalyticsFolder;
+                emAnalyticsFolder.getDeleted();
+                result = 0;
+                emAnalyticsFolder.getSystemFolder();
+                result = 0;
+                emAnalyticsFolder.getOwner();
+                result ="owner";
+            }
+        };
+        EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, entityManager);
+    }
+
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testGetEmAnalyticsSearchForEdit() throws EMAnalyticsFwkException {
         final List<SearchParameter> searchParameters = new ArrayList<>();
         searchParameters.add(searchParameter);
-        new Expectations(){
+        new Expectations() {
             {
-                entityManager.find(EmAnalyticsSearch.class,anyLong);
+                entityManager.find(EmAnalyticsSearch.class, anyLong);
                 result = emAnalyticsSearch;
-                entityManager.find(EmAnalyticsFolder.class,anyLong);
+                emAnalyticsSearch.getDeleted();
+                result = 0;
+                emAnalyticsSearch.getSystemSearch();
+                result =1;
+                entityManager.find(EmAnalyticsFolder.class, anyLong);
                 result = emAnalyticsFolder;
-                entityManager.find(EmAnalyticsCategory.class, anyLong);
-                result = emAnalyticsCategory;
-                search.getParameters();
-                result = searchParameters;
-                searchParameter.getType();
-                result = ParameterType.CLOB;
-                emAnalyticsSearch.getEmAnalyticsSearchParams();
-                result = new HashSet<>();
+                emAnalyticsFolder.getDeleted();
+                result = 0;
+                emAnalyticsFolder.getSystemFolder();
+                result = 0;
+                emAnalyticsFolder.getOwner();
+                result ="owner";
 
             }
         };
-        EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search,entityManager);
+        EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, entityManager);
 
     }
 
-    @Test
-    public void testGetEmAnalyticsSearchForAdd() throws Exception {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testGetEmAnalyticsSearchForAdd() throws EMAnalyticsFwkException {
         final List<SearchParameter> searchParameters = new ArrayList<>();
         searchParameters.add(searchParameter);
-        new Expectations(){
+        new Expectations() {
             {
-                entityManager.find(EmAnalyticsFolder.class,anyLong);
+                entityManager.find(EmAnalyticsFolder.class, anyLong);
                 result = emAnalyticsFolder;
-                entityManager.find(EmAnalyticsCategory.class, anyLong);
-                result = emAnalyticsCategory;
-                search.getParameters();
-                result = searchParameters;
-                searchParameter.getType();
-                result = ParameterType.CLOB;
-                emAnalyticsSearch.getEmAnalyticsSearchParams();
-                result = new HashMap<>();
-
+                emAnalyticsFolder.getDeleted();
+                result = 0;
+                emAnalyticsFolder.getSystemFolder();
+                result = 0;
+                emAnalyticsFolder.getOwner();
+                result ="owner";
             }
         };
-        EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search,entityManager);
+        EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, entityManager);
 
     }
 
-    @Test
-    public void testGetEmAnalyticsSearchForAdd2nd() throws Exception {
-        final List<SearchParameter> searchParameters = new ArrayList<>();
-        searchParameters.add(searchParameter);
-        new Expectations(){
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testGetEmAnalyticsSearchForAdd2nd() throws EMAnalyticsFwkException {
+        new Expectations() {
             {
-                entityManager.find(EmAnalyticsFolder.class,anyLong);
+                entityManager.find(EmAnalyticsFolder.class, anyLong);
                 result = emAnalyticsFolder;
-                entityManager.find(EmAnalyticsCategory.class, anyLong);
-                result = emAnalyticsCategory;
-                search.getParameters();
-                result = searchParameters;
-                emAnalyticsSearch.getEmAnalyticsSearchParams();
-                result = new HashMap<>();
-
+                emAnalyticsFolder.getDeleted();
+                result = 1;
             }
         };
-        EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search,entityManager);
+        EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, entityManager);
 
     }
 
 
     @Test
-    public void testGetRootFolder() throws Exception {
+    public void testGetRootFolder() {
 
         EmAnalyticsObjectUtil.getRootFolder();
     }
 
 
-
     @Test
-    public void testGetFolderById() throws Exception {
-        new Expectations(){
+    public void testGetFolderById() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsFolder.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsFolder.class), anyLong);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(1);
             }
         };
-        EmAnalyticsObjectUtil.getFolderById(10L,entityManager);
+        EmAnalyticsObjectUtil.getFolderById(10L, entityManager);
     }
 
     @Test
-    public void testGetCategoryById2nd() throws Exception {
-        new Expectations(){
+    public void testGetCategoryById2nd() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsCategory.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsCategory.class), anyLong);
                 result = emAnalyticsCategory;
                 emAnalyticsCategory.getDeleted();
                 result = 1;
             }
         };
-        EmAnalyticsObjectUtil.getCategoryById(10L,entityManager);
+        EmAnalyticsObjectUtil.getCategoryById(10L, entityManager);
     }
 
 
     @Test
-    public void testGetFolderById2nd() throws Exception {
-        new Expectations(){
+    public void testGetFolderById2nd() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsFolder.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsFolder.class), anyLong);
                 result = null;
             }
         };
-        EmAnalyticsObjectUtil.getFolderById(10L,entityManager);
+        EmAnalyticsObjectUtil.getFolderById(10L, entityManager);
     }
 
     @Test
-    public void testGetSearchById() throws Exception {
-        new Expectations(){
+    public void testGetSearchById() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsSearch.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsSearch.class), anyLong);
                 result = emAnalyticsSearch;
                 emAnalyticsSearch.getSystemSearch();
                 result = new BigDecimal(1);
             }
         };
-        EmAnalyticsObjectUtil.getSearchById(10L,entityManager);
+        EmAnalyticsObjectUtil.getSearchById(10L, entityManager);
 
     }
+
     @Test
-    public void testGetSearchById2nd() throws Exception {
-        new Expectations(){
+    public void testGetSearchById2nd() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsSearch.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsSearch.class), anyLong);
                 result = emAnalyticsSearch;
                 emAnalyticsSearch.getDeleted();
                 result = 2;
             }
         };
-        EmAnalyticsObjectUtil.getSearchById(10L,entityManager);
+        EmAnalyticsObjectUtil.getSearchById(10L, entityManager);
 
     }
 
     @Test
-    public void testGetCategoryByIdForDelete() throws Exception {
-        new Expectations(){
+    public void testGetCategoryByIdForDelete() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsCategory.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsCategory.class), anyLong);
                 result = emAnalyticsCategory;
                 emAnalyticsCategory.getOwner();
                 result = "ORACLE";
             }
         };
-        EmAnalyticsObjectUtil.getCategoryByIdForDelete(10l,entityManager);
+        EmAnalyticsObjectUtil.getCategoryByIdForDelete(10L, entityManager);
 
     }
 
     @Test
-    public void testGetCategoryByIdForDelete2nd() throws Exception {
-        new Expectations(){
+    public void testGetCategoryByIdForDelete2nd() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsCategory.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsCategory.class), anyLong);
                 result = null;
             }
         };
-        EmAnalyticsObjectUtil.getCategoryByIdForDelete(10l,entityManager);
+        EmAnalyticsObjectUtil.getCategoryByIdForDelete(10L, entityManager);
 
     }
 
     @Test
-    public void testGetFolderByIdForDelete() throws Exception {
-        new Expectations(){
+    public void testGetFolderByIdForDelete() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsFolder.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsFolder.class), anyLong);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(1);
             }
         };
-        EmAnalyticsObjectUtil.getFolderByIdForDelete(10l,entityManager);
+        EmAnalyticsObjectUtil.getFolderByIdForDelete(10L, entityManager);
 
     }
+
     @Test
-    public void testGetFolderByIdForDelete2nd() throws Exception {
-        new Expectations(){
+    public void testGetFolderByIdForDelete2nd() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsFolder.class),anyLong);
-                result =  null;
+                entityManager.find(withAny(EmAnalyticsFolder.class), anyLong);
+                result = null;
             }
         };
-        EmAnalyticsObjectUtil.getFolderByIdForDelete(10l,entityManager);
+        EmAnalyticsObjectUtil.getFolderByIdForDelete(10L, entityManager);
 
     }
 
     @Test
-    public void testGetSearchByIdForDelete() throws Exception {
-        new Expectations(){
+    public void testGetSearchByIdForDelete() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsSearch.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsSearch.class), anyLong);
                 result = emAnalyticsSearch;
                 emAnalyticsSearch.getSystemSearch();
                 result = new BigDecimal(1);
             }
         };
-        EmAnalyticsObjectUtil.getSearchByIdForDelete(10l,entityManager);
+        EmAnalyticsObjectUtil.getSearchByIdForDelete(10L, entityManager);
 
     }
+
     @Test
-    public void testGetSearchByIdForDelete2nd() throws Exception {
-        new Expectations(){
+    public void testGetSearchByIdForDelete2nd() {
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsSearch.class),anyLong);
-                result =  null;
+                entityManager.find(withAny(EmAnalyticsSearch.class), anyLong);
+                result = null;
             }
         };
-        EmAnalyticsObjectUtil.getSearchByIdForDelete(10l,entityManager);
+        EmAnalyticsObjectUtil.getSearchByIdForDelete(10L, entityManager);
 
     }
 
     @Test
-    public void testGetEmAnalyticsCategoryForAdd(){
+    public void testGetEmAnalyticsCategoryForAdd() throws EMAnalyticsFwkException {
         final List<Parameter> parameters = new ArrayList<>();
         parameters.add(parameter);
-        new Expectations(){
+        new Expectations() {
             {
-                entityManager.find(withAny(EmAnalyticsFolder.class),anyLong);
+                entityManager.find(withAny(EmAnalyticsFolder.class), anyLong);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
-                result  = new BigDecimal(1);
+                result = new BigDecimal(1);
                 category.getParameters();
                 result = parameters;
-                emAnalyticsCategory.getEmAnalyticsCategoryParams();
-                result = new HashSet<>();
             }
         };
-        try {
-            EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category,entityManager);
-        } catch (EMAnalyticsFwkException e) {
-
-        }
+        EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, entityManager);
     }
 }

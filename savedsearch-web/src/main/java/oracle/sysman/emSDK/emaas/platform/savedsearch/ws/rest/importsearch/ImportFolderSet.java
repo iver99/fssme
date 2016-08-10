@@ -36,8 +36,8 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("importfolders")
 public class ImportFolderSet
 {
-	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/folder.xsd";
-	private static final Logger _logger = LogManager.getLogger(ImportFolderSet.class);
+	private static final String RESOURCE_PATH = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/folder.xsd";
+	private static final Logger LOGGER = LogManager.getLogger(ImportFolderSet.class);
 
 	/**
 	 * Import the folders with defined XML file<br>
@@ -131,8 +131,7 @@ public class ImportFolderSet
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes("application/xml")
-	public Response importsFolders(String xml)
-	{
+	public Response importsFolders(String xml) throws IOException {
 
 		Response res = null;
 		InputStream stream = null;
@@ -143,12 +142,12 @@ public class ImportFolderSet
 		String msg = "";
 		try {
 			JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
-			stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath);
+			stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(RESOURCE_PATH);
 			StringBuffer xmlStr = new StringBuffer(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			FolderSet folders = (FolderSet) JAXBUtil.unmarshal(sReader, stream, jaxbContext);
 			List<FolderDetails> list = folders.getFolderSet();
-			if (list.size() == 0) {
+			if (list.isEmpty()) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 			}
 			if (validateData(list)) {
@@ -165,13 +164,13 @@ public class ImportFolderSet
 			res = Response.status(Status.OK).entity(jsonArray).build();
 		}
 		catch (ImportException e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to import folders (1)", e);
 			msg = e.getMessage();
 			res = Response.status(Status.BAD_REQUEST).entity(msg).build();
 		}
 		catch (Exception e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to import folders (2)", e);
 			msg = "An internal error has occurred  while importing folder ";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
@@ -179,12 +178,8 @@ public class ImportFolderSet
 		}
 		finally {
 			if (stream != null) {
-				try {
 					stream.close();
-				}
-				catch (IOException e) {
 
-				}
 			}
 		}
 		return res;
@@ -205,4 +200,4 @@ public class ImportFolderSet
 
 /*FolderSet fSet = new FolderSet();
 fSet.setFolderSet(rejectedList);
-result=result+JAXBUtil.marshal(jaxbContext,ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath), fSet);*/
+result=result+JAXBUtil.marshal(jaxbContext,ImportFolderSet.class.getClassLoader().getResourceAsStream(RESOURCE_PATH), fSet);*/

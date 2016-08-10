@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.utils;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -25,7 +26,7 @@ public class RestRequestUtil {
 	public static final String TENANT_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
 	public static final String AUTHORIZATION_HEADER = "Authorization";
 	
-	public static String restGet(String baseUrl) throws Exception {
+	public static String restGet(String baseUrl) throws URISyntaxException, EMAnalyticsFwkException, HttpException {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();
 
@@ -35,7 +36,7 @@ public class RestRequestUtil {
 		return sendRequest(request);
 	}
 	
-	public static String restDelete(String baseUrl) throws Exception {
+	public static String restDelete(String baseUrl) throws URISyntaxException, EMAnalyticsFwkException, HttpException {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();
 
@@ -45,7 +46,7 @@ public class RestRequestUtil {
 		return sendRequest(request);
 	}
 	
-	public static String restPost(String baseUrl, String json) throws Exception {
+	public static String restPost(String baseUrl, String json) throws URISyntaxException, EMAnalyticsFwkException, HttpException {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();
 
@@ -66,7 +67,7 @@ public class RestRequestUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	private static String sendRequest(HttpRequestBase request) throws Exception {
+	private static String sendRequest(HttpRequestBase request) throws HttpException, EMAnalyticsFwkException {
 		HttpClient client = HttpClientBuilder.create().build();
 		
 		// Set Request Headers

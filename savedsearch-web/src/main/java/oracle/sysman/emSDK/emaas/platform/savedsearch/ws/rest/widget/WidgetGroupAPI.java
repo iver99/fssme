@@ -32,7 +32,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/widgetgroups")
 public class WidgetGroupAPI
 {
-	private static final Logger _logger = LogManager.getLogger(WidgetGroupAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(WidgetGroupAPI.class);
 	@Context
 	UriInfo uri;
 
@@ -117,13 +117,13 @@ public class WidgetGroupAPI
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to get all widget groups, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		catch (Exception e) {
 			message = e.getMessage();
 			statusCode = 500;
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Unknow error when retrieving all widget groups, statusCode:" + statusCode + " ,err:" + message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
@@ -131,18 +131,18 @@ public class WidgetGroupAPI
 
 	private Response checkQueryParam(String param)
 	{
-		final String PARAM_INCLUDE_DSB_INELIGIBLE = "includeDashboardIneligible";
-		final String ERROR_MSG_INVALID_PARAM = "Please give one and only one query parameter of " + PARAM_INCLUDE_DSB_INELIGIBLE;
+		final String includeDashboardIneligible = "includeDashboardIneligible";
+		final String errorMsgInvalidParam = "Please give one and only one query parameter of " + includeDashboardIneligible;
 		String[] input = param.split("=");
 		String key = input[0];
-		if (!key.equals(PARAM_INCLUDE_DSB_INELIGIBLE)) {
-			return Response.status(400).entity(ERROR_MSG_INVALID_PARAM).build();
+		if (!key.equals(includeDashboardIneligible)) {
+			return Response.status(400).entity(errorMsgInvalidParam).build();
 		}
 		else {
 			if (input.length >= 2) {
 				String value = input[1];
-				if (value != null && PARAM_INCLUDE_DSB_INELIGIBLE.equals(key)) {
-					if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
+				if (value != null && includeDashboardIneligible.equals(key)) {
+					if (!"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
 						return Response.status(400).entity("Please specify " + key + " true or false").build();
 					}
 				}

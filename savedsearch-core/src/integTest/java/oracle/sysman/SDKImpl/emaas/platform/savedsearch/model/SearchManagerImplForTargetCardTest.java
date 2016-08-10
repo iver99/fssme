@@ -1,15 +1,14 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import mockit.Expectations;
-import mockit.Mock;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -20,7 +19,6 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static org.testng.Assert.*;
 
 /**
  * Created by xidai on 6/29/2016.
@@ -52,7 +50,7 @@ public class SearchManagerImplForTargetCardTest {
     }
 
     @Test
-    public void testDeleteTargetCard() throws Exception {
+    public void testDeleteTargetCard() throws EMAnalyticsFwkException {
         new Expectations(){
             {
                 PersistenceManager.getInstance();
@@ -78,7 +76,7 @@ public class SearchManagerImplForTargetCardTest {
     }
 
     @Test
-    public void testSaveTargetCard() throws Exception {
+    public void testSaveTargetCard() throws EMAnalyticsFwkException {
         new Expectations(){
             {
                 PersistenceManager.getInstance();
@@ -122,7 +120,7 @@ public class SearchManagerImplForTargetCardTest {
     }
 
     @Test
-    public void testGetTargetCard() throws Exception {
+    public void testGetTargetCard() throws EMAnalyticsFwkException {
         final ArrayList<Search> searches = new ArrayList<>();
         final ArrayList<EmAnalyticsSearch> emAnalyticsSearches = new ArrayList<>();
         searches.add(search);

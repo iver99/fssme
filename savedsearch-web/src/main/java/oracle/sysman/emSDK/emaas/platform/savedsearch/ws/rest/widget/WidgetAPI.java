@@ -314,26 +314,26 @@ public class WidgetAPI
 
 	private Response checkQueryParam(String param) throws NumberFormatException
 	{
-		final String PARAM_WIDGET_GROUP_ID = "widgetGroupId";
-		final String PARAM_INCLUDE_DSB_INELIGIBLE = "includeDashboardIneligible";
-		final String ERROR_MSG_INVALID_PARAM = "Please give query parameter by one of " + PARAM_WIDGET_GROUP_ID + ", "
-				+ PARAM_INCLUDE_DSB_INELIGIBLE;
+		final String widgetGroupId = "widgetGroupId";
+		final String includeDashboardIneligible = "includeDashboardIneligible";
+		final String errorMsgInvalidParam = "Please give query parameter by one of " + widgetGroupId + ", "
+				+ includeDashboardIneligible;
 		String[] input = param.split("=");
 		String key = input[0];
-		if (!key.equals(PARAM_WIDGET_GROUP_ID) && !key.equals(PARAM_INCLUDE_DSB_INELIGIBLE)) {
-			return Response.status(400).entity(ERROR_MSG_INVALID_PARAM).build();
+		if (!key.equals(widgetGroupId) && !key.equals(includeDashboardIneligible)) {
+			return Response.status(400).entity(errorMsgInvalidParam).build();
 		}
 		else {
 			if (input.length >= 2) {
 				String value = input[1];
-				if (value != null && PARAM_WIDGET_GROUP_ID.equals(key)) {
+				if (value != null && widgetGroupId.equals(key)) {
 					int groupId = Integer.parseInt(value);
 					if (groupId < 0) {
 						throw new NumberFormatException();
 					}
 				}
-				else if (value != null && PARAM_INCLUDE_DSB_INELIGIBLE.equals(key)) {
-					if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
+				else if (value != null && includeDashboardIneligible.equals(key)) {
+					if (!"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
 						return Response.status(400).entity("Please specify " + key + " true or false").build();
 					}
 				}

@@ -33,14 +33,14 @@ public class FolderSetTest
 	public void testObjectSet()
 	{
 		FolderSet t = new FolderSet();
-		List<FolderDetails> Folder = t.getFolderSet();
-		Assert.assertNotNull(Folder);
-		t.setFolderSet(Folder);
+		List<FolderDetails> folderSet = t.getFolderSet();
+		Assert.assertNotNull(folderSet);
+		t.setFolderSet(folderSet);
 
 		CategorySet c = new CategorySet();
-		List<ImportCategoryImpl> Category = c.getCategorySet();
-		Assert.assertNotNull(Category);
-		c.setCategorySet(Category);
+		List<ImportCategoryImpl> categorySet = c.getCategorySet();
+		Assert.assertNotNull(categorySet);
+		c.setCategorySet(categorySet);
 
 		SearchSet s = new SearchSet();
 		List<ImportSearchImpl> search = s.getSearchSet();

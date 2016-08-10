@@ -43,7 +43,7 @@ public class FolderAPI
 	@Context
 	private HttpHeaders headers;
 
-	private static final Logger _logger = LogManager.getLogger(FolderAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(FolderAPI.class);
 
 	/**
 	 * Create a folder<br>
@@ -139,8 +139,7 @@ public class FolderAPI
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response createFolder(JSONObject folderObj)
-	{
+	public Response createFolder(JSONObject folderObj) throws JSONException {
 		LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/folder");
 		Folder objFld = null;
 		String msg = "";
@@ -156,14 +155,14 @@ public class FolderAPI
 		catch (EMAnalyticsFwkException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Fail to create folder object", e);
 
 		}
 		catch (EMAnalyticsWSException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Fail to create folder object", e);
 		}
 		return Response.status(statusCode).entity(msg).build();
@@ -186,7 +185,7 @@ public class FolderAPI
 	 * savePath to distinguish the path save mkdir-p option !! objFld =
 	 * mgrFolder.savePath(objFld); folderObj.put("parentId", objFld.getId());
 	 *
-	 * msg = JSONUtil.ObjectToJSONString(objFld); } catch
+	 * msg = JSONUtil.objectToJSONString(objFld); } catch
 	 * (EMAnalyticsFwkException e) { msg = e.getMessage(); statusCode =
 	 * e.getStatusCode(); } catch (EMAnalyticsWSException e) { msg =
 	 * e.getMessage(); statusCode = e.getStatusCode(); } catch (JSONException e)
@@ -241,7 +240,7 @@ public class FolderAPI
 
 		}
 		catch (EMAnalyticsFwkException e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Fail to delete folder object", e);
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
@@ -335,14 +334,14 @@ public class FolderAPI
 		catch (EMAnalyticsFwkException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Fail to update folder object", e);
 
 		}
 		catch (EMAnalyticsWSException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Fail to update folder object", e);
 		}
 
@@ -414,15 +413,14 @@ public class FolderAPI
 		catch (EMAnalyticsFwkException e) {
 			msg = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Fail to read folder object", e);
 		}
 
 		return Response.status(statusCode).entity(msg).build();
 	}
 
-	private Folder getFolderFromJsonForCreate(JSONObject folderObj) throws EMAnalyticsWSException
-	{
+	private Folder getFolderFromJsonForCreate(JSONObject folderObj) throws EMAnalyticsWSException, JSONException {
 		Folder objFld = FolderManager.getInstance().createNewFolder();
 		try {
 			String name = folderObj.getString("name");
@@ -430,7 +428,7 @@ public class FolderAPI
 			//				throw new EMAnalyticsWSException("The name key for folder can not be null in the input JSON Object",
 			//						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
 			//			}
-			if (name != null && name.trim().equals("")) {
+			if (name != null && StringUtil.isEmpty(name)) {
 				throw new EMAnalyticsWSException("The name key for folder can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
 			}
@@ -455,7 +453,6 @@ public class FolderAPI
 		}
 		// nullables !!
 		String desc = "";
-		try {
 			desc = folderObj.getString("description");
 			if (StringUtil.isSpecialCharFound(desc)) {
 				throw new EMAnalyticsWSException(
@@ -463,10 +460,7 @@ public class FolderAPI
 						EMAnalyticsWSException.JSON_INVALID_CHAR);
 			}
 
-		}
-		catch (JSONException je) {
-			//ignore the description if not provided by user
-		}
+
 
 		try {
 			validationUtil.validateLength("description", desc, 256);
@@ -502,7 +496,7 @@ public class FolderAPI
 			//				throw new EMAnalyticsWSException("The name key for folder can not be null in the input JSON Object",
 			//						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
 			//			}
-			if (name != null && name.trim().equals("")) {
+			if (name != null && "".equals(name.trim())) {
 				throw new EMAnalyticsWSException("The name key for folder can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_FOLDER_NAME_MISSING);
 			}

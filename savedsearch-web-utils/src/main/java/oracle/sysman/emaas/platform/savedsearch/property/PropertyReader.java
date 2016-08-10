@@ -24,17 +24,10 @@ public class PropertyReader
 			prop.load(input);
 
 		}
-		catch (IOException ex) {
-			ex.printStackTrace();
-		}
 		finally {
 			if (input != null) {
-				try {
 					input.close();
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
+
 			}
 		}
 
@@ -54,9 +47,9 @@ public class PropertyReader
 
 	public static final boolean getRunningInContainer()
 	{
-		final String JNDI_INITIAL_CONTEXT = System.getProperty("java.naming.factory.initial");
-		return JNDI_INITIAL_CONTEXT != null
-				&& JNDI_INITIAL_CONTEXT.startsWith("weblogic")
+		final String jndiInitialContext = System.getProperty("java.naming.factory.initial");
+		return jndiInitialContext != null
+				&& jndiInitialContext.startsWith("weblogic")
 				&& (System.getProperty("weblogic.home") != null || System.getProperty("wls.home") != null || System
 						.getProperty("weblogic.management.startmode") != null);
 	}

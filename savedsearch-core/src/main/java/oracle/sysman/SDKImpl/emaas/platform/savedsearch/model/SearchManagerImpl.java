@@ -49,12 +49,9 @@ public class SearchManagerImpl extends SearchManager
 {
 
 	//  LoggergetSearchListByCategoryId
-	private static final Logger _logger = LogManager.getLogger(SearchManagerImpl.class);
+	private static final Logger LOGGER = LogManager.getLogger(SearchManagerImpl.class);
 
-	public static final SearchManagerImpl _instance = new SearchManagerImpl();
-	private static final String FOLDER_ORDERBY = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.deleted=0 ";
-	private static final String FILTER_BY_CATEGORY = "and e.emAnalyticsCategory = :category ";
-	private static final String SEARCH_ENT_PREFIX = "e.";
+	public static final SearchManagerImpl SEARCH_MANAGER = new SearchManagerImpl();
 	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 and e.owner in ('ORACLE',:userName) order by e.lastAccess.accessDate DESC ";
 	private static final String LASTACCESS_ORDERBY_FOR_INTERNAL_TENANT = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.lastAccess.accessDate DESC ";
 
@@ -79,13 +76,13 @@ public class SearchManagerImpl extends SearchManager
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
 	/**
-	 * Get SearchManagerImpl singleton instance.
+	 * Get SearchManagerImpl singleton INSTANCE.
 	 *
 	 * @return Instance of SearchManagerImpl
 	 */
 	public static SearchManagerImpl getInstance()
 	{
-		return _instance;
+		return SEARCH_MANAGER;
 	}
 
 	/**
@@ -105,7 +102,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public void deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException
 	{
-		_logger.info("Deleting search with id: " + searchId);
+		LOGGER.info("Deleting search with id: " + searchId);
 		EntityManager em = null;
 		EmAnalyticsSearch searchObj = null;
 		try {
@@ -136,13 +133,13 @@ public class SearchManagerImpl extends SearchManager
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Search with Id: " + searchId + " does not exist", eme);
+			LOGGER.error("Search with Id: " + searchId + " does not exist", eme);
 			throw eme;
 		}
 		catch (Exception e) {
 
 			EmAnalyticsProcessingException.processSearchPersistantException(e, searchObj.getName());
-			_logger.error("Error while getting the search object by ID: " + searchId, e);
+			LOGGER.error("Error while getting the search object by ID: " + searchId, e);
 			throw new EMAnalyticsFwkException("Error while deleting the search object by ID: " + searchId,
 					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { searchId }, e);
 
@@ -158,7 +155,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public void deleteTargetCard(long targetCardId, boolean permanently) throws EMAnalyticsFwkException
 	{
-		_logger.info("Deleting target card with id: " + targetCardId);
+		LOGGER.info("Deleting target card with id: " + targetCardId);
 		EntityManager em = null;
 		EmAnalyticsSearch targetCardObj = null;
 		try {
@@ -189,12 +186,12 @@ public class SearchManagerImpl extends SearchManager
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Target Card with Id: " + targetCardId + " does not exist", eme);
+			LOGGER.error("Target Card with Id: " + targetCardId + " does not exist", eme);
 			throw eme;
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, targetCardObj.getName());
-			_logger.error("Error while getting the Target Card object by ID: " + targetCardId, e);
+			LOGGER.error("Error while getting the Target Card object by ID: " + targetCardId, e);
 			throw new EMAnalyticsFwkException("Error while deleting the Target Card object by ID: " + targetCardId,
 					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { targetCardId }, e);
 
@@ -215,7 +212,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public Search editSearch(Search search, boolean canEditSysSearch) throws EMAnalyticsFwkException
 	{
-		_logger.info("Editing search with id : " + search.getId());
+		LOGGER.info("Editing search with id : " + search.getId());
 		EntityManager em = null;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
@@ -232,19 +229,19 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (EMAnalyticsFwkException eme) {
 
-			_logger.error("Search with name " + search.getName() + " was updated but could not be retrieved back", eme);
+			LOGGER.error("Search with name " + search.getName() + " was updated but could not be retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
 			processUniqueConstraints(search, em, dmlce);
 			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, null);
-			_logger.error("Persistence Error while updating the search: " + search.getName(), dmlce);
+			LOGGER.error("Persistence Error while updating the search: " + search.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
 					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, dmlce);
 
 		}
 		catch (Exception e) {
-			_logger.error("Error while updating the search: " + search.getName(), e);
+			LOGGER.error("Error while updating the search: " + search.getName(), e);
 			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
 					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, e);
 		}
@@ -266,7 +263,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public Search getSearchByName(String name, long folderId) throws EMAnalyticsFwkException
 	{
-		_logger.info("Retrieving search with name " + name + " in folder id: " + folderId);
+		LOGGER.info("Retrieving search with name " + name + " in folder id: " + folderId);
 		EntityManager em = null;
 		EmAnalyticsSearch searchEntity = null;
 		try {
@@ -279,11 +276,12 @@ public class SearchManagerImpl extends SearchManager
 			return createSearchObject(searchEntity, null);
 		}
 		catch (NoResultException nre) {
+			LOGGER.error("no result");
 			return null;
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			_logger.error("Error while retrieving the list of searches for the parent folder: " + folderId, e);
+			LOGGER.error("Error while retrieving the list of searches for the parent folder: " + folderId, e);
 			throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the parent folder: " + folderId,
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 
@@ -300,7 +298,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public int getSearchCountByFolderId(long folderId) throws EMAnalyticsFwkException
 	{
-		throw new RuntimeException("getSearchCountByFolderId is not ready to use");
+//		throw new RuntimeException("getSearchCountByFolderId is not ready to use");
 		//Not used now, uncomment below when necessary
 		//		EntityManager em = null;
 		//		int count;
@@ -314,13 +312,13 @@ public class SearchManagerImpl extends SearchManager
 		//		}
 		//		catch (Exception e) {
 		//			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-		//				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
+		//				LOGGER.error("Error while acquiring the data source" + e.getMessage(), e);
 		//				throw new EMAnalyticsFwkException(
 		//						"Error while connecting to data source, please check the data source details: ",
 		//						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 		//			}
 		//			else {
-		//				_logger.error("Error while retrieving the count of searches for the parent folder: " + folderId, e);
+		//				LOGGER.error("Error while retrieving the count of searches for the parent folder: " + folderId, e);
 		//				throw new EMAnalyticsFwkException("Error while retrieving the count of searches for the parent folder: "
 		//						+ folderId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
 		//			}
@@ -330,7 +328,7 @@ public class SearchManagerImpl extends SearchManager
 		//				em.close();
 		//			}
 		//		}
-
+		return 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -360,7 +358,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			_logger.error("Error while retrieving the list of searches for the categoryD : " + categoryId, e);
+			LOGGER.error("Error while retrieving the list of searches for the categoryD : " + categoryId, e);
 			throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the categoryId : " + categoryId,
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 
@@ -402,7 +400,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			_logger.error("Error while retrieving the list of searches for the parent folder: " + folderId, e);
+			LOGGER.error("Error while retrieving the list of searches for the parent folder: " + folderId, e);
 			throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the parent folder: " + folderId,
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 
@@ -448,7 +446,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			_logger.error("Error while retrieving the list of searches ");
+			LOGGER.error("Error while retrieving the list of searches ");
 			throw new EMAnalyticsFwkException("Error while retrieving the list of searches ",
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 
@@ -465,7 +463,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public String getSearchParamByName(long searchId, String paramName) throws EMAnalyticsFwkException
 	{
-		_logger.debug("get param value by searchId: " + searchId + ", param name: " + paramName);
+		LOGGER.debug("get param value by searchId: " + searchId + ", param name: " + paramName);
 		EntityManager em = null;
 		String paramValue = null;
 		try {
@@ -476,7 +474,7 @@ public class SearchManagerImpl extends SearchManager
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
 			String errorMessage = "Error while retrieving the value of search parameter for the searchId: " + searchId
 					+ ", parameter name: " + paramName;
-			_logger.error(errorMessage, e);
+			LOGGER.error(errorMessage, e);
 			throw new EMAnalyticsFwkException(errorMessage, EMAnalyticsFwkException.ERR_GENERIC, null, e);
 		}
 		finally {
@@ -508,7 +506,7 @@ public class SearchManagerImpl extends SearchManager
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
 
-			_logger.error("Error while retrieving the list of searches for the categoryD : " + categoryId, e);
+			LOGGER.error("Error while retrieving the list of searches for the categoryD : " + categoryId, e);
 			throw new EMAnalyticsFwkException("Error while retrieving the list of searches for the categoryId : " + categoryId,
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 
@@ -545,7 +543,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			_logger.error("Error while retrieving the list of target card for the targetType : " + name, e);
+			LOGGER.error("Error while retrieving the list of target card for the targetType : " + name, e);
 			throw new EMAnalyticsFwkException("Error while retrieving the list of target card for the targetType : " + name,
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 		}
@@ -577,7 +575,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			_logger.error("Error while retrieving the list of widgets for the categoryId : " + categoryId, e);
+			LOGGER.error("Error while retrieving the list of widgets for the categoryId : " + categoryId, e);
 			throw new EMAnalyticsFwkException("Error while retrieving the list of widgets for the categoryId : " + categoryId,
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 
@@ -639,7 +637,7 @@ public class SearchManagerImpl extends SearchManager
 			//			em.flush();
 			//			em.getTransaction().commit();
 			String jql = sb.toString();
-			_logger.debug("The JQL to query all widget is {}", jql);
+			LOGGER.debug("The JQL to query all widget is {}", jql);
 			long start = System.currentTimeMillis();
 			Query query = em.createQuery(jql).setHint("eclipselink.left-join-fetch", "e.emAnalyticsSearchParams")
 					.setHint("eclipselink.join-fetch", "e.emAnalyticsCategory")
@@ -652,21 +650,21 @@ public class SearchManagerImpl extends SearchManager
 			if (widgetGroupId != null) {
 				query.setParameter("widgetGroupId", Long.valueOf(widgetGroupId));
 			}
-			if (_logger.isDebugEnabled()) {
+			if (LOGGER.isDebugEnabled()) {
 				try {
 					Session session = em.unwrap(JpaEntityManager.class).getActiveSession();
 					DatabaseQuery databaseQuery = ((EJBQueryImpl) query).getDatabaseQuery();
 					databaseQuery.prepareCall(session, new DatabaseRecord());
 					String sqlString = databaseQuery.getSQLString();
 					//				String sqlString = databaseQuery.getTranslatedSQLString(session, new DatabaseRecord());
-					_logger.debug("The SQL statement to retrieve all widget is: [{}]", sqlString);
+					LOGGER.debug("The SQL statement to retrieve all widget is: [{}]", sqlString);
 				}
 				catch (Exception e) {
-					_logger.error("Error when printing debug sql: ", e);
+					LOGGER.error("Error when printing debug sql: ", e);
 				}
 			}
 			List<EmAnalyticsSearch> searchList = query.getResultList();
-			_logger.debug("Querying to get all widgets takes {} ms, and retrieved {} widgets",
+			LOGGER.debug("Querying to get all widgets takes {} ms, and retrieved {} widgets",
 					System.currentTimeMillis() - start, searchList == null ? 0 : searchList.size());
 			for (EmAnalyticsSearch searchObj : searchList) {
 				//				em.refresh(searchObj);
@@ -677,7 +675,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			_logger.error("Error while retrieving the list of widgets for providerNames : " + providerNames, e);
+			LOGGER.error("Error while retrieving the list of widgets for providerNames : " + providerNames, e);
 			throw new EMAnalyticsFwkException("Error while retrieving the list of widgets for providerNames : " + providerNames,
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 
@@ -704,7 +702,7 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 		if (StringUtil.isEmpty(screenshot)) {
-			_logger.debug("Screenshot for widget with id={} is null or empty. Use default widget screenshot instead", widgetId);
+			LOGGER.debug("Screenshot for widget with id={} is null or empty. Use default widget screenshot instead", widgetId);
 			screenshot = SearchManager.DEFAULT_WIDGET_SCREENSHOT;
 		}
 		ScreenshotData ssd = new ScreenshotData(screenshot, search.getCreatedOn(), search.getLastModifiedOn());
@@ -742,7 +740,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			_logger.error("Error while retrieving the list of searches ");
+			LOGGER.error("Error while retrieving the list of searches ");
 			throw new EMAnalyticsFwkException("Error while retrieving the list of searches ",
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 
@@ -755,17 +753,14 @@ public class SearchManagerImpl extends SearchManager
 		}
 	}
 
-	public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList) throws Exception
-	{
+	public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList) throws EMAnalyticsFwkException {
 		return saveMultipleSearch(searchList, false);
 	}
 
-	public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList, boolean isOobSearch) throws Exception
-	{
+	public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList, boolean isOobSearch) throws EMAnalyticsFwkException {
 
 		EntityManager em = null;
 		boolean bCommit = true;
-		boolean bResult = false;
 		List<Search> importedList = new ArrayList<Search>();
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
@@ -924,7 +919,7 @@ public class SearchManagerImpl extends SearchManager
 														TenantContext.getContext().getUsername()).getSingleResult();
 									}
 									catch (NoResultException e) {
-
+	                                    LOGGER.error("no result");
 									}
 									if (categoryObj != null) {
 
@@ -947,7 +942,7 @@ public class SearchManagerImpl extends SearchManager
 														TenantContext.getContext().getUsername()).getSingleResult();
 									}
 									catch (NoResultException e) {
-
+										LOGGER.error("no result");
 									}
 									if (searchEntity != null) {
 										tmpImportSrImpl.setId((int) searchEntity.getId());
@@ -983,7 +978,7 @@ public class SearchManagerImpl extends SearchManager
 				}
 				catch (PersistenceException eme) {
 					bCommit = false;
-					_logger.error("Error while importing the search: " + search.getName(), eme);
+					LOGGER.error("Error while importing the search: " + search.getName(), eme);
 					throw eme;
 				}
 			}
@@ -994,12 +989,7 @@ public class SearchManagerImpl extends SearchManager
 				em.getTransaction().rollback();
 			}
 		}
-		catch (Exception e) {
-			importedList.clear();
-			_logger.error("Error in saveMultipleSearches", e);
-			e.printStackTrace();
-			throw e;
-		}
+
 		finally {
 			if (em != null) {
 				em.close();
@@ -1025,18 +1015,18 @@ public class SearchManagerImpl extends SearchManager
 			return createSearchObject(searchEntity, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Search with name " + search.getName() + " was saved but could not bve retrieved back", eme);
+			LOGGER.error("Search with name " + search.getName() + " was saved but could not bve retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
 			processUniqueConstraints(search, em, dmlce);
 			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, search.getName());
-			_logger.error("Persistence error while saving the search: " + search.getName(), dmlce);
+			LOGGER.error("Persistence error while saving the search: " + search.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, dmlce);
 		}
 		catch (Exception e) {
-			_logger.error("Error while saving the search: " + search.getName(), e);
+			LOGGER.error("Error while saving the search: " + search.getName(), e);
 			throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, e);
 		}
@@ -1062,18 +1052,18 @@ public class SearchManagerImpl extends SearchManager
 			return createSearchObject(targetCardEntity, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Target card with name " + targetCard.getName() + " was saved but could not be retrieved back", eme);
+			LOGGER.error("Target card with name " + targetCard.getName() + " was saved but could not be retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
 			processUniqueConstraints(targetCard, em, dmlce);
 			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, targetCard.getName());
-			_logger.error("Persistence error while saving the target card: " + targetCard.getName(), dmlce);
+			LOGGER.error("Persistence error while saving the target card: " + targetCard.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the target card: " + targetCard.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, dmlce);
 		}
 		catch (Exception e) {
-			_logger.error("Error while saving the target card: " + targetCard.getName(), e);
+			LOGGER.error("Error while saving the target card: " + targetCard.getName(), e);
 			throw new EMAnalyticsFwkException("Error while saving the target card: " + targetCard.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, e);
 		}
@@ -1181,7 +1171,6 @@ public class SearchManagerImpl extends SearchManager
 					param.setType(ParameterType.fromIntValue(paramVORow.getParamType().intValue()));
 
 					if (ParameterType.CLOB.equals(param.getType())) {
-						System.out.println("Clob value =" + paramVORow.getParamValueClob());
 						if (paramVORow.getParamValueClob() != null) {
 							char[] charArr = new char[paramVORow.getParamValueClob().length()];
 							Reader reader = new StringReader(new String(paramVORow.getParamValueClob()));
@@ -1205,7 +1194,7 @@ public class SearchManagerImpl extends SearchManager
 			return rtnObj;
 		}
 		catch (Exception e) {
-			_logger.error("Error while getting the search object", e);
+			LOGGER.error("Error while getting the search object", e);
 			throw new EMAnalyticsFwkException("Error while getting the search object", EMAnalyticsFwkException.ERR_GET_SEARCH,
 					null, e);
 		}
@@ -1269,7 +1258,6 @@ public class SearchManagerImpl extends SearchManager
 				}
 				else if (loadScreenshot && EntityJsonUtil.NAME_WIDGET_VISUAL.equals(param.getName())
 						&& ParameterType.CLOB.equals(param.getType())) {
-					System.out.println("Clob value =" + paramVORow.getParamValueClob());
 					if (paramVORow.getParamValueClob() != null) {
 						char[] charArr = new char[paramVORow.getParamValueClob().length()];
 						Reader reader = new StringReader(new String(paramVORow.getParamValueClob()));
@@ -1292,7 +1280,7 @@ public class SearchManagerImpl extends SearchManager
 			return rtnObj;
 		}
 		catch (Exception e) {
-			_logger.error("Error while getting the widget object", e);
+			LOGGER.error("Error while getting the widget object", e);
 			throw new EMAnalyticsFwkException("Error while getting the widget object", EMAnalyticsFwkException.ERR_GET_SEARCH,
 					null, e);
 		}
@@ -1351,7 +1339,7 @@ public class SearchManagerImpl extends SearchManager
 								.getSingleResult();
 					}
 					catch (NoResultException e) {
-
+						LOGGER.error("no result");
 						category = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd((Category) search.getCategoryDetails(), em);
 						em.persist(category);
 					}
@@ -1361,6 +1349,7 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 		catch (Exception e) {
+			LOGGER.error("no result");
 			category = null;
 		}
 		return category;
@@ -1385,12 +1374,13 @@ public class SearchManagerImpl extends SearchManager
 
 					}
 					catch (NoResultException e) {
-
+						LOGGER.error("no result");
 					}
 				}
 			}
 		}
 		catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
 			folder = null;
 		}
 		return folder;
@@ -1398,7 +1388,7 @@ public class SearchManagerImpl extends SearchManager
 
 	private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException
 	{
-		_logger.info("Retrieving search with id: " + searchId);
+		LOGGER.info("Retrieving search with id: " + searchId);
 		EntityManager em = null;
 		Search search = null;
 		try {
@@ -1417,7 +1407,7 @@ public class SearchManagerImpl extends SearchManager
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
 			String errMsg = "Error while getting the search object by ID: " + searchId;
-			_logger.error(errMsg, e);
+			LOGGER.error(errMsg, e);
 			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId }, e);
 
 		}
@@ -1429,7 +1419,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		if (search == null) {
 			String errMsg = "Search identified by ID: " + searchId + " does not exist";
-			_logger.error(errMsg);
+			LOGGER.error(errMsg);
 			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId });
 		}
 		return search;
@@ -1437,114 +1427,114 @@ public class SearchManagerImpl extends SearchManager
 
 	private void handleParamsInSearch(EmAnalyticsSearch searchObj, List<SearchParameter> searchParams)
 	{
-		if (searchObj.getNAME_WIDGET_SOURCE() != null && !DEFAULT_DB_VALUE.equals(searchObj.getNAME_WIDGET_SOURCE())) {
+		if (searchObj.getNAMEWIDGETSOURCE() != null && !DEFAULT_DB_VALUE.equals(searchObj.getNAMEWIDGETSOURCE())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("NAME_WIDGET_SOURCE");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getNAME_WIDGET_SOURCE());
+			param.setValue(searchObj.getNAMEWIDGETSOURCE());
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_GROUP_NAME() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_GROUP_NAME())) {
+		if (searchObj.getWIDGETGROUPNAME() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGETGROUPNAME())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_GROUP_NAME");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getWIDGET_GROUP_NAME());
+			param.setValue(searchObj.getWIDGETGROUPNAME());
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_SCREENSHOT_HREF() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_SCREENSHOT_HREF())) {
+		if (searchObj.getWIDGETSCREENSHOTHREF() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGETSCREENSHOTHREF())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_SCREENSHOT_HREF");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getWIDGET_SCREENSHOT_HREF());
+			param.setValue(searchObj.getWIDGETSCREENSHOTHREF());
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_ICON() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_ICON())) {
+		if (searchObj.getWIDGETICON() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGETICON())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_ICON");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getWIDGET_ICON());
+			param.setValue(searchObj.getWIDGETICON());
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_KOC_NAME() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_KOC_NAME())) {
+		if (searchObj.getWIDGETKOCNAME() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGETKOCNAME())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_KOC_NAME");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getWIDGET_KOC_NAME());
+			param.setValue(searchObj.getWIDGETKOCNAME());
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_VIEWMODEL() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_VIEWMODEL())) {
+		if (searchObj.getWIDGETVIEWMODEL() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGETVIEWMODEL())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_VIEWMODEL");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getWIDGET_VIEWMODEL());
+			param.setValue(searchObj.getWIDGETVIEWMODEL());
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_TEMPLATE() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_TEMPLATE())) {
+		if (searchObj.getWIDGETTEMPLATE() != null && !DEFAULT_DB_VALUE.equals(searchObj.getWIDGETTEMPLATE())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_TEMPLATE");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getWIDGET_TEMPLATE());
+			param.setValue(searchObj.getWIDGETTEMPLATE());
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_SUPPORT_TIME_CONTROL() != null
-				&& !DEFAULT_DB_VALUE.equals(searchObj.getWIDGET_SUPPORT_TIME_CONTROL())) {
+		if (searchObj.getWIDGETSUPPORTTIMECONTROL() != null
+				&& !DEFAULT_DB_VALUE.equals(searchObj.getWIDGETSUPPORTTIMECONTROL())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_SUPPORT_TIME_CONTROL");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getWIDGET_SUPPORT_TIME_CONTROL());
+			param.setValue(searchObj.getWIDGETSUPPORTTIMECONTROL());
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_LINKED_DASHBOARD() != 0L
-				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getNAME_WIDGET_SOURCE()))) {
+		if (searchObj.getWIDGETLINKEDDASHBOARD() != 0L
+				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getNAMEWIDGETSOURCE()))) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_LINKED_DASHBOARD");
 			param.setType(ParameterType.STRING);
-			param.setValue(String.valueOf(searchObj.getWIDGET_LINKED_DASHBOARD()));
+			param.setValue(String.valueOf(searchObj.getWIDGETLINKEDDASHBOARD()));
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_DEFAULT_WIDTH() != 0L
-				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getWIDGET_DEFAULT_WIDTH()))) {
+		if (searchObj.getWIDGETDEFAULTWIDTH() != 0L
+				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getWIDGETDEFAULTWIDTH()))) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_DEFAULT_WIDTH");
 			param.setType(ParameterType.STRING);
-			param.setValue(String.valueOf(searchObj.getWIDGET_DEFAULT_WIDTH()));
+			param.setValue(String.valueOf(searchObj.getWIDGETDEFAULTWIDTH()));
 			searchParams.add(param);
 		}
-		if (searchObj.getWIDGET_DEFAULT_HEIGHT() != 0L
-				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getWIDGET_DEFAULT_HEIGHT()))) {
+		if (searchObj.getWIDGETDEFAULTHEIGHT() != 0L
+				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getWIDGETDEFAULTHEIGHT()))) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_DEFAULT_HEIGHT");
 			param.setType(ParameterType.STRING);
-			param.setValue(String.valueOf(searchObj.getWIDGET_DEFAULT_HEIGHT()));
+			param.setValue(String.valueOf(searchObj.getWIDGETDEFAULTHEIGHT()));
 			searchParams.add(param);
 		}
-		if (searchObj.getDASHBOARD_INELIGIBLE() != null && !DEFAULT_DB_VALUE.equals(searchObj.getDASHBOARD_INELIGIBLE())) {
+		if (searchObj.getDASHBOARDINELIGIBLE() != null && !DEFAULT_DB_VALUE.equals(searchObj.getDASHBOARDINELIGIBLE())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("DASHBOARD_INELIGIBLE");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getDASHBOARD_INELIGIBLE());
+			param.setValue(searchObj.getDASHBOARDINELIGIBLE());
 			searchParams.add(param);
 		}
 		//handle 3 provider information
-		if (searchObj.getPROVIDER_VERSION() != null && !DEFAULT_DB_VALUE.equals(searchObj.getPROVIDER_VERSION())) {
+		if (searchObj.getPROVIDERVERSION() != null && !DEFAULT_DB_VALUE.equals(searchObj.getPROVIDERVERSION())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("PROVIDER_VERSION");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getPROVIDER_VERSION());
+			param.setValue(searchObj.getPROVIDERVERSION());
 			searchParams.add(param);
 		}
-		if (searchObj.getPROVIDER_ASSET_ROOT() != null && !DEFAULT_DB_VALUE.equals(searchObj.getPROVIDER_ASSET_ROOT())) {
+		if (searchObj.getPROVIDERASSETROOT() != null && !DEFAULT_DB_VALUE.equals(searchObj.getPROVIDERASSETROOT())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("PROVIDER_ASSET_ROOT");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getPROVIDER_ASSET_ROOT());
+			param.setValue(searchObj.getPROVIDERASSETROOT());
 			searchParams.add(param);
 		}
-		if (searchObj.getPROVIDER_NAME() != null && !DEFAULT_DB_VALUE.equals(searchObj.getPROVIDER_NAME())) {
+		if (searchObj.getPROVIDERNAME() != null && !DEFAULT_DB_VALUE.equals(searchObj.getPROVIDERNAME())) {
 			SearchParameter param = new SearchParameter();
 			param.setName("PROVIDER_NAME");
 			param.setType(ParameterType.STRING);
-			param.setValue(searchObj.getPROVIDER_NAME());
+			param.setValue(searchObj.getPROVIDERNAME());
 			searchParams.add(param);
 		}
 	}

@@ -18,7 +18,7 @@ public class ScreenshotDataTest {
     Date now = new Date();
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp()  {
         String screenshot = "screenshotxx";
         Date creationDate = now;
         Date modificationDate = now;
@@ -26,19 +26,19 @@ public class ScreenshotDataTest {
     }
 
     @Test
-    public void testGetCreationDate() throws Exception {
+    public void testGetCreationDate()  {
         screenshotData.setCreationDate(now);
         Assert.assertEquals(screenshotData.getCreationDate(), now);
     }
 
     @Test
-    public void testGetModificationDate() throws Exception {
+    public void testGetModificationDate()  {
         screenshotData.setModificationDate(now);
         Assert.assertEquals(screenshotData.getModificationDate(), now);
     }
 
     @Test
-    public void testGetScreenshot() throws Exception {
+    public void testGetScreenshot()  {
         String screenshot = "screenshotyy";
         screenshotData.setScreenshot(screenshot);
         Assert.assertEquals(screenshotData.getScreenshot(),screenshot);

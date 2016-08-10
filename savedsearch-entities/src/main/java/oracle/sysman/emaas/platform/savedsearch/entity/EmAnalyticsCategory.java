@@ -128,7 +128,7 @@ public class EmAnalyticsCategory implements Serializable
 	/**
 	 * @return the dASHBOARD_INELIGIBLE
 	 */
-	public String getDASHBOARD_INELIGIBLE()
+	public String getDASHBOARDINELIGIBLE()
 	{
 		return DASHBOARD_INELIGIBLE;
 	}

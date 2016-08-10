@@ -3,7 +3,6 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.targetcard;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
@@ -28,7 +27,7 @@ import java.util.List;
  */
 @Path("targetcardlinks")
 public class TargetCardLinksFilterAPI {
-    private static final Logger _logger = LogManager.getLogger(TargetCardLinksFilterAPI.class);
+    private static final Logger LOGGER = LogManager.getLogger(TargetCardLinksFilterAPI.class);
     @Context
     UriInfo uri;
 
@@ -39,14 +38,14 @@ public class TargetCardLinksFilterAPI {
         String message  = null;
         int statusCode = 200;
         JSONArray jsonArray = new JSONArray();
-        if(name==null||name.trim().equals("")){
+        if(name==null||"".equals(name.trim())){
             return Response.status(400).entity("Please give one and only one query parameter of targetType").build();
         }
 
         SearchManager searchManager = SearchManager.getInstance();
         try{
             List<Search> searches = searchManager.getTargetCard(name);
-            if(searches.size()<=0){
+            if(searches.isEmpty()){
                 return Response.status(statusCode).entity("NOT FOUND").build();
             }
             for(Search search : searches){
@@ -57,7 +56,7 @@ public class TargetCardLinksFilterAPI {
         }catch(EMAnalyticsFwkException e){
             statusCode = e.getStatusCode();
             message = e.getMessage();
-            _logger.error((TenantContext.getContext()!=null ? TenantContext.getContext() : "")
+            LOGGER.error((TenantContext.getContext()!=null ? TenantContext.getContext() : "")
                     +"An error occurred while retrieving search by targetType,statusCode:"+e.getStatusCode()
                     +" ,err:"+e.getMessage(),e);
         }
@@ -76,6 +75,7 @@ public class TargetCardLinksFilterAPI {
             sman.deleteTargetCard(searchId, false);
             message = "Delete TargetCard with id: " + searchId +" Successfully!";
         } catch(EMAnalyticsFwkException e) {
+            LOGGER.error(e.getLocalizedMessage());
             return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
         }
         return Response.status(statusCode).entity(message).build();
@@ -99,18 +99,19 @@ public class TargetCardLinksFilterAPI {
         catch (EMAnalyticsFwkException e) {
             message = e.getMessage();
             statusCode = e.getStatusCode();
-            _logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+            LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
         }
         catch (EMAnalyticsWSException e) {
             message = e.getMessage();
             statusCode = e.getStatusCode();
-            _logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+            LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+        } catch (JSONException e) {
+            LOGGER.error(e.getLocalizedMessage());
         }
         return Response.status(statusCode).entity(message).build();
     }
 
-    private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException
-    {
+    private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException, JSONException {
         //copy from the SearchAPI xidai 4/13/2016
         Search searchObj = new SearchImpl();
         // Data population !
@@ -121,7 +122,7 @@ public class TargetCardLinksFilterAPI {
             //				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
             //						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
             //			}
-            if (name != null && name.trim().equals("")) {
+            if (name != null && StringUtil.isEmpty(name)) {
                 throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
                         EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
             }
@@ -132,12 +133,8 @@ public class TargetCardLinksFilterAPI {
                         EMAnalyticsWSException.JSON_INVALID_CHAR);
             }
 
-            try {
                 validationUtil.validateLength("name", name, 64);
-            }
-            catch (EMAnalyticsWSException e) {
-                throw e;
-            }
+
 
             searchObj.setName(name);
         }
@@ -146,7 +143,6 @@ public class TargetCardLinksFilterAPI {
                     EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING, je);
         }
         String desc = "";
-        try {
             desc = json.getString("description");
             if (StringUtil.isSpecialCharFound(desc)) {
                 throw new EMAnalyticsWSException(
@@ -154,34 +150,13 @@ public class TargetCardLinksFilterAPI {
                         EMAnalyticsWSException.JSON_INVALID_CHAR);
             }
 
-        }
-        catch (JSONException je) {
-            //ignore the description if not provided by user
-        }
 
-        try {
             validationUtil.validateLength("description", desc, 256);
-        }
-        catch (EMAnalyticsWSException e) {
-            throw e;
-        }
 
-        try {
             JSONObject jsonObj = json.getJSONObject("category");
             searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
-        }
-        catch (JSONException je) {
-            throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",
-                    EMAnalyticsWSException.JSON_SEARCH_CATEGORY_ID_MISSING, je);
-        }
-        try {
             JSONObject jsonFold = json.getJSONObject("folder");
             searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id")));
-        }
-        catch (JSONException je) {
-            throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",
-                    EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING, je);
-        }
 
         // Nullable properties !
         searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));
@@ -207,7 +182,7 @@ public class TargetCardLinksFilterAPI {
                 }
                 try {
                     String name = jsonParam.getString("name");
-                    if (name != null && name.trim().equals("")) {
+                    if (name != null && StringUtil.isEmpty(name)) {
                         throw new EMAnalyticsWSException(
                                 "The name key for search param can not be empty in the input JSON Object",
                                 EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
@@ -226,7 +201,7 @@ public class TargetCardLinksFilterAPI {
                     throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
                             EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
                 }
-                if (type.equals("STRING") | type.equals("CLOB")) {
+                if ("STRING".equals(type) || "CLOB".equals(type)) {
                     searchParam.setType(ParameterType.valueOf(type));
                 }
                 else {

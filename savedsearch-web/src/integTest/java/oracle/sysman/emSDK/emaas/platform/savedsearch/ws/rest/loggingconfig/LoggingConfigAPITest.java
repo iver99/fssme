@@ -2,6 +2,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.loggingconfig;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -13,13 +14,13 @@ import org.testng.annotations.Test;
 public class LoggingConfigAPITest {
     private LoggingConfigAPI loggingConfigAPI  = new LoggingConfigAPI();
     @Test
-    public void testChangeRootLoggerLevel() throws Exception {
+    public void testChangeRootLoggerLevel()  {
         JSONObject inputJson = new JSONObject();
         Assert.assertNotNull(loggingConfigAPI.changeRootLoggerLevel(inputJson));
     }
 
     @Test
-    public void testChangeSpecificLoggerLevel() throws Exception {
+    public void testChangeSpecificLoggerLevel() throws JSONException {
         JSONObject inputJson = new JSONObject();
         final UpdatedLoggerLevel updatedLoggerLevel = new UpdatedLoggerLevel();
         updatedLoggerLevel.setLevel("Level1");
@@ -29,7 +30,7 @@ public class LoggingConfigAPITest {
         Assert.assertNotNull(loggingConfigAPI.changeSpecificLoggerLevel("loggerName",inputJson));
     }
     @Test
-    public void testChangeSpecificLoggerLevel2nd() throws Exception {
+    public void testChangeSpecificLoggerLevel2nd() throws JSONException {
         JSONObject inputJson = new JSONObject();
         final UpdatedLoggerLevel updatedLoggerLevel = new UpdatedLoggerLevel();
         updatedLoggerLevel.setLevel("Level1");
@@ -39,7 +40,7 @@ public class LoggingConfigAPITest {
     }
 
     @Test
-    public void testGetAllLoggerLevels() throws Exception {
+    public void testGetAllLoggerLevels()  {
         TenantContext.setContext(new TenantInfo("user",11L));
         Assert.assertNotNull(loggingConfigAPI.getAllLoggerLevels());
     }

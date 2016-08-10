@@ -79,43 +79,42 @@ public class WidgetManagerImplTest
 			}
 
 		};
-		final String SEARCH_ID = "SEARCH_ID";
-		final String WIDGET_NAME = "NAME";
-		final String WIDGET_DESCRIPTION = "DESCRIPTION";
-		final String WIDGET_OWNER = "OWNER";
+		final String searchId = "SEARCH_ID";
+		final String widgetName = "NAME";
+		final String widgetDescription = "DESCRIPTION";
+		final String widgetOwner = "OWNER";
 		//		final String WIDGET_CREATION_TIME = "CREATION_DATE";
 		//		final String WIDGET_LAST_MODIFICATION_DATE = "LAST_MODIFICATION_DATE";
-		final String WIDGET_GROUP_NAME = "CATOGORY_NAME";
+		final String catogoryName = "CATOGORY_NAME";
 		//		final String WIDGET_SCREENSHOT_HREF = "WIDGET_SCREENSHOT_HREF";
-		final String WIDGET_SUPPORT_TIME_CONTROL = "WIDGET_SUPPORT_TIME_CONTROL";
-		final String WIDGET_KOC_NAME = "WIDGET_KOC_NAME";
-		final String WIDGET_TEMPLATE = "WIDGET_TEMPLATE";
-		final String WIDGET_VIEWMODEL = "WIDGET_VIEWMODEL";
-		final String PROVIDER_NAME = "PROVIDER_NAME";
-		final String PROVIDER_VERSION = "PROVIDER_VERSION";
-		final String PROVIDER_ASSET_ROOT = "PROVIDER_ASSET_ROOT";
+		final String widgetSupportTimeControl = "WIDGET_SUPPORT_TIME_CONTROL";
+		final String widgetKocName = "WIDGET_KOC_NAME";
+		final String widgetTemplate = "WIDGET_TEMPLATE";
+		final String widgetViewmodel = "WIDGET_VIEWMODEL";
+		final String providerName = "PROVIDER_NAME";
+		final String providerVersion = "PROVIDER_VERSION";
+		final String providerAssetRoot = "PROVIDER_ASSET_ROOT";
 
 		List<Map<String, Object>> widgets = new ArrayList<Map<String, Object>>();
 		Map<String, Object> widget1 = new HashMap<String, Object>();
-		widget1.put(SEARCH_ID, 2000);
-		widget1.put(WIDGET_NAME, "My_widget");
-		widget1.put(WIDGET_DESCRIPTION, "my desc");
-		widget1.put(WIDGET_OWNER, "emcsadmin");
+		widget1.put(searchId, 2000);
+		widget1.put(widgetName, "My_widget");
+		widget1.put(widgetDescription, "my desc");
+		widget1.put(widgetOwner, "emcsadmin");
 		//		widget1.put(WIDGET_CREATION_TIME, "2016-07-25 04:21:02");
 		//		widget1.put(WIDGET_LAST_MODIFICATION_DATE, "2016-07-25 04:21:02");
-		widget1.put(WIDGET_GROUP_NAME, "Data Explorer");
+		widget1.put(catogoryName, "Data Explorer");
 		//		widget1.put(WIDGET_SCREENSHOT_HREF, "/image/001.png");
-		widget1.put(WIDGET_SUPPORT_TIME_CONTROL, "1");
-		widget1.put(WIDGET_KOC_NAME, "MY_WIDGET");
-		widget1.put(WIDGET_TEMPLATE, "/template.html");
-		widget1.put(WIDGET_VIEWMODEL, "/viewmodel.js");
-		widget1.put(PROVIDER_NAME, "TargetAnalytics");
-		widget1.put(PROVIDER_VERSION, "1.0");
-		widget1.put(PROVIDER_ASSET_ROOT, "assetRoot");
+		widget1.put(widgetSupportTimeControl, "1");
+		widget1.put(widgetKocName, "MY_WIDGET");
+		widget1.put(widgetTemplate, "/template.html");
+		widget1.put(widgetViewmodel, "/viewmodel.js");
+		widget1.put(providerName, "TargetAnalytics");
+		widget1.put(providerVersion, "1.0");
+		widget1.put(providerAssetRoot, "assetRoot");
 		widgets.add(widget1);
 
 		String json = WidgetManagerImpl.getInstance().getSpelledJsonFromQueryResult(widgets);
-		System.out.println(json);
 		Assert.assertEquals(
 				json,
 				"[{\"WIDGET_UNIQUE_ID\":2000,\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_CREATION_TIME\":\"null\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SCREENSHOT_HREF\":\"null\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");

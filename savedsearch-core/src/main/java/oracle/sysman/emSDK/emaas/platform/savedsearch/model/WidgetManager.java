@@ -22,9 +22,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 public abstract class WidgetManager
 {
 	/**
-	 * Returns an instance of the manager.
+	 * Returns an INSTANCE of the manager.
 	 *
-	 * @return instance of the manager
+	 * @return INSTANCE of the manager
 	 */
 	public static WidgetManager getInstance()
 	{

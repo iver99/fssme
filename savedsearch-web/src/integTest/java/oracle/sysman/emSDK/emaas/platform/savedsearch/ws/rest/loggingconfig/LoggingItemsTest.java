@@ -15,20 +15,20 @@ public class LoggingItemsTest {
     private LoggingItems loggingItems = new LoggingItems();
 
     @Test
-    public void testAddLoggerConfig() throws Exception {
+    public void testAddLoggerConfig() {
         LoggerConfig loggerConfig = new LoggerConfig();
         Long timestamp = 1234L;
         loggingItems.addLoggerConfig(loggerConfig, timestamp);
     }
 
-    public void testAddLoggerConfig2nd() throws Exception {
+    public void testAddLoggerConfig2nd() {
         LoggerConfig loggerConfig = null;
         Long timestamp = 1234L;
         loggingItems.addLoggerConfig(loggerConfig, timestamp);
     }
 
     @Test
-    public void testGetItems() throws Exception {
+    public void testGetItems() {
         LoggerConfig loggerConfig = new LoggerConfig();
         Long timestamp = 1234L;
         List<LoggingItem> list = new ArrayList<LoggingItem>();
@@ -38,19 +38,19 @@ public class LoggingItemsTest {
     }
 
     @Test
-    public void testGetTotal() throws Exception {
+    public void testGetTotal() {
         loggingItems.setTotal(10);
         Assert.assertEquals(10, loggingItems.getTotal());
     }
 }
 
 //    @Test
-//    public void testSetItems() throws Exception {
+//    public void testSetItems() {
 //
 //    }
 //
 //    @Test
-//    public void testSetTotal() throws Exception {
+//    public void testSetTotal() {
 //
 //    }
 //}

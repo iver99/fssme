@@ -8,6 +8,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -21,14 +22,9 @@ public class PropertyReaderTest {
     @Mocked
     IOException ioEx;
 
-    @Test
-    public void testLoadProperty(@Injectable FileInputStream fileInputStream) throws Exception {
+    @Test(expectedExceptions = {FileNotFoundException.class})
+    public void testLoadProperty(@Injectable FileInputStream fileInputStream) throws IOException {
 
-        new Expectations(){
-            {
-
-            }
-        };
         Properties properties = PropertyReader.loadProperty("MockFile");
         Assert.assertEquals(properties.size(),0);
 
@@ -38,7 +34,7 @@ public class PropertyReaderTest {
     }
 
     @Test
-    public void testGetInstallDir_true() throws Exception {
+    public void testGetInstallDirTrue(){
         new Expectations(PropertyReader.class){
             {
                 Deencapsulation.setField(PropertyReader.class,"RUNNING_IN_CONTAINER",true);
@@ -48,7 +44,7 @@ public class PropertyReaderTest {
     }
 
     @Test
-    public void testGetInstallDir_false() throws Exception {
+    public void testGetInstallDirFalse(){
         new Expectations(PropertyReader.class){
             {
                 Deencapsulation.setField(PropertyReader.class,"RUNNING_IN_CONTAINER",false);
@@ -59,7 +55,7 @@ public class PropertyReaderTest {
 
 
     @Test
-    public void testGetRunningInContainer() throws Exception {
+    public void testGetRunningInContainer(){
         PropertyReader.getRunningInContainer();
     }
 }

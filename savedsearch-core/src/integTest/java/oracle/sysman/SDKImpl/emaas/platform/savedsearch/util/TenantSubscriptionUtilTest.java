@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -72,8 +74,7 @@ public class TenantSubscriptionUtilTest
     @Mocked
     AppMappingEntity.AppMappingValue appMappingValue;
 	@Test
-	public void testGetTenantSubscribedCategories() throws Exception
-	{
+	public void testGetTenantSubscribedCategories() throws EMAnalyticsFwkException {
         final ArrayList<Category> categories = new ArrayList<>();
         categories.add(category);
         final ArrayList<String> cachedApps = new ArrayList<>();
@@ -86,16 +87,13 @@ public class TenantSubscriptionUtilTest
                 result = categories;
                 cacheManager.getCacheable(withAny(tenant), anyString, anyString);
                 result = cachedApps;
-                category.getProviderName();
-                result = "TargetAnalytics";
             }
         };
         TenantSubscriptionUtil.getTenantSubscribedCategories("testtenant", true);
 	}
 
 	@Test
-	public void testGetTenantSubscribedServices() throws Exception
-	{
+	public void testGetTenantSubscribedServices() throws IOException {
 		final char[] authToken = { 'a', 'b', 'c' };
 		final List<DomainEntity> list = new ArrayList<>();
 		list.add(domainEntity);

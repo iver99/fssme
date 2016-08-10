@@ -6,15 +6,15 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class ImportFolderSetTest {
     @Mocked
     JAXBContext jaxbContext;
     @Test
-    public void testImportsFolders(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+    public void testImportsFolders(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
         final FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("name");
@@ -44,7 +44,6 @@ public class ImportFolderSetTest {
         folder.setName("name");
         folder.setId(10);
         folderlist.add(folder);
-        final FolderManagerImpl folderManager = FolderManagerImpl.getInstance();
         new Expectations(){
             {
                 anyJaxbutil.getJAXBContext(ObjectFactory.class);
@@ -60,7 +59,7 @@ public class ImportFolderSetTest {
 
     }
     @Test
-    public void testImportsFolders2nd(@Mocked final JAXBUtil anyJaxbutil, @Mocked final Exception exception) throws Exception {
+    public void testImportsFolders2nd(@Mocked final JAXBUtil anyJaxbutil, @Mocked final Exception exception) throws JAXBException, IOException {
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
         FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("name");
@@ -70,7 +69,6 @@ public class ImportFolderSetTest {
         folder.setName("name");
         folder.setId(10);
         folderlist.add(folder);
-        final FolderManagerImpl folderManager = FolderManagerImpl.getInstance();
         new Expectations(){
             {
                 anyJaxbutil.getJAXBContext(ObjectFactory.class);
@@ -87,7 +85,7 @@ public class ImportFolderSetTest {
     }
 
     @Test
-    public void testImportsFolders3th(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+    public void testImportsFolders3th(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
         FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("name");
@@ -97,7 +95,6 @@ public class ImportFolderSetTest {
         folder.setName("name");
         folder.setId(10);
         folderlist.add(folder);
-        final FolderManagerImpl folderManager = FolderManagerImpl.getInstance();
         new Expectations() {
             {
                 anyJaxbutil.getJAXBContext(ObjectFactory.class);

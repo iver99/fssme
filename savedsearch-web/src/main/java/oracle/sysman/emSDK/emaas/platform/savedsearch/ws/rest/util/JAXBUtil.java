@@ -3,6 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,16 +28,12 @@ public class JAXBUtil
 			"categoryId", "metadata", "defaultFolderId", "queryStr", "locked", "uiHidden", "isWidget", "providerName",
 			"providerVersion", "providerDiscovery", "providerAssetRoot" };
 
-	public static JAXBContext getJAXBContext(Class<?> cls) throws Exception
-	{
+	public static JAXBContext getJAXBContext(Class<?> cls) throws JAXBException {
 		JAXBContext jaxbcontext = null;
 
-		try {
+
 			jaxbcontext = JAXBContext.newInstance(cls);
-		}
-		catch (JAXBException ex) {
-			throw new Exception(ex);
-		}
+
 
 		return jaxbcontext;
 	}
@@ -109,11 +106,9 @@ public class JAXBUtil
 		return object;
 	}*/
 
-	public static Object unmarshal(Reader reader, InputStream schemaFile, JAXBContext jaxbcontext) throws ImportException
-	{
-		final ArrayList<String> errorList = new ArrayList<String>();
+	public static Object unmarshal(Reader reader, InputStream schemaFile, JAXBContext jaxbcontext) throws ImportException, JAXBException, SAXException {
+		final List<String> errorList = new ArrayList<String>();
 		Object object = null;
-		try {
 			StreamSource xsdSource = null;
 			Unmarshaller u = jaxbcontext.createUnmarshaller();
 			SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -181,11 +176,11 @@ public class JAXBUtil
 								}
 
 							}
-							if (!bResult && !errorList.contains(VALID_ERR_MESSAGE) && errorList.size() == 0) {
+							if (!bResult && !errorList.contains(VALID_ERR_MESSAGE) && errorList.isEmpty()) {
 								errorList.add(VALID_ERR_MESSAGE + System.getProperty("line.separator"));
 							}
 						}
-						else if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.size() == 0) {
+						else if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.isEmpty()) {
 							errorList.add(VALID_ERR_MESSAGE + System.getProperty("line.separator"));
 						}
 
@@ -196,17 +191,7 @@ public class JAXBUtil
 			});
 			StreamSource br = new StreamSource(reader);
 			object = u.unmarshal(br);
-		}
-		catch (UnmarshalException e) {
-			e.printStackTrace();
-			if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.size() == 0) {
-				errorList.add(VALID_ERR_MESSAGE);
-			}
-		}
-		catch (JAXBException | SAXException e) {
-			e.printStackTrace();
-		}
-		if (errorList.size() > 0) {
+		if (errorList.isEmpty()) {
 			StringBuffer errMsg = new StringBuffer();
 			for (String sError : errorList) {
 				errMsg.append(sError);
