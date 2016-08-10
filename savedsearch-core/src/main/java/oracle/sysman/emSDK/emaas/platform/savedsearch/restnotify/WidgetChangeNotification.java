@@ -40,6 +40,10 @@ public class WidgetChangeNotification
 		logger.debug("/getInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
 		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
 		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(rel, "http");
+		if (instanceList == null) {
+			logger.warn("Found no instances with specified http rel {}", rel);
+			return null;
+		}
 		Map<String, Link> serviceLinksMap = new HashMap<String, Link>();
 		for (InstanceInfo ii : instanceList) {
 			List<Link> links = null;
@@ -62,7 +66,7 @@ public class WidgetChangeNotification
 			}
 		}
 		if (serviceLinksMap.isEmpty()) {
-			logger.warn("Found no internal widget notification links");
+			logger.warn("Found no internal widget notification links for rel {}", rel);
 			return null;
 		}
 		else {
