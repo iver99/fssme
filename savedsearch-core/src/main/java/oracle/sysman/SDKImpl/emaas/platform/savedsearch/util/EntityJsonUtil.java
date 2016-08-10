@@ -238,7 +238,9 @@ public class EntityJsonUtil
 		sb.append("{");
 		sb.append("\"WIDGET_UNIQUE_ID\":").append(Integer.valueOf(m.get("SEARCH_ID").toString())).append(",");
 		sb.append("\"WIDGET_NAME\":").append("\"" + m.get("NAME") + "\"").append(",");
-		sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
+		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
+			sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
+		}
 		sb.append("\"WIDGET_OWNER\":").append("\"" + m.get("OWNER") + "\"").append(",");
 
 		String createdOn = null;

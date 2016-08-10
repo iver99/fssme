@@ -28,6 +28,7 @@ public class SearchesCRUD
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases
 	 */
+
 	static String HOSTNAME;
 	static String portno;
 	static String serveruri;
@@ -198,7 +199,7 @@ public class SearchesCRUD
 	 */
 	public void lastaccessedSearches_invalidObjects4()
 	{
-		
+
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
@@ -206,7 +207,7 @@ public class SearchesCRUD
 			.put("/search/100000000087?updateLastAccessTime=true");
 			Assert.assertEquals(res.asString(), "Search identified by ID: 100000000087 does not exist");
 			Assert.assertTrue(res.getStatusCode() == 404);
-		
+
 	}
 
 	@Test
@@ -373,7 +374,7 @@ public class SearchesCRUD
 
 			Assert.assertTrue(res1.getStatusCode() == 400);
 			Assert.assertEquals(res1.asString(), "The name key for search param can not be empty in the input JSON Object");
-	
+
 	}
 
 	@Test
@@ -382,7 +383,7 @@ public class SearchesCRUD
 	 */
 	public void search_create_invalidCategory()
 	{
-		
+
 
 			String jsonString = "{\"name\":\"TestSearch\",\"category\":{\"id\":12000},\"folder\":{\"id\":"
 					+ folderid1
@@ -403,7 +404,7 @@ public class SearchesCRUD
 	 */
 	public void search_create_invalidfolderId()
 	{
-		
+
 			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":3000},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
@@ -770,7 +771,7 @@ public class SearchesCRUD
 					+ 1
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3000");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
 			Assert.assertTrue(res1.getStatusCode() == 400);
 			Assert.assertEquals(
 					"The search name contains at least one invalid character ('<' or '>'), please correct search name and retry",
@@ -789,7 +790,7 @@ public class SearchesCRUD
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3000");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
 			Assert.assertTrue(res1.getStatusCode() == 400);
 			Assert.assertEquals(
 					"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
@@ -852,7 +853,7 @@ public class SearchesCRUD
 					+ 1
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3000");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
 			Assert.assertTrue(res1.getStatusCode() == 400);
 			Assert.assertEquals("The maximum length of a name is 64 bytes.Please enter valid name.", res1.getBody().asString());
 
@@ -869,7 +870,7 @@ public class SearchesCRUD
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3000");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
 			Assert.assertTrue(res1.getStatusCode() == 400);
 			Assert.assertEquals("The maximum length of a description is 256 bytes.Please enter valid description.", res1
 					.getBody().asString());
@@ -1000,7 +1001,7 @@ public class SearchesCRUD
 	 * Delete system Search
 	 */
 	/*public void systemSearch_delete()
-	{		
+	{
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to delete a system search");
 			System.out.println("                                      ");
@@ -1047,7 +1048,7 @@ public class SearchesCRUD
 	/*	@Test
 		public void SearchUtfTest()
 		{
-			
+
 
 				String result = new String("\u7537" + "\u6027");
 				System.out.println("Result:::::::::::::" + result);
@@ -1110,7 +1111,7 @@ public class SearchesCRUD
 	 */
 	public void setlastaccesstime_Tosearch()
 	{
-		
+
 			String jsonString1 = "{\"name\":\"SearchSet1\",\"category\":{\"id\":" + catid1 + "},\"folder\":{\"id\":" + folderid1
 					+ "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
@@ -1213,7 +1214,7 @@ public class SearchesCRUD
 	@Test
 	public void setlastaccesstime_Tosearch_badParameter()
 	{
-		
+
 			String jsonString1 = "{\"name\":\"SearchSetLastAccess\",\"category\":{\"id\":" + catid1 + "},\"folder\":{\"id\":"
 					+ folderid + "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
