@@ -119,7 +119,7 @@ public class WidgetManagerImplTest
 		System.out.println(json);
 		Assert.assertEquals(
 				json,
-				"[{\"WIDGET_UNIQUE_ID\":2000,\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_CREATION_TIME\":\"null\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SCREENSHOT_HREF\":\"null\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
+				"[{\"WIDGET_UNIQUE_ID\":\"2000\",\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_CREATION_TIME\":\"null\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SCREENSHOT_HREF\":\"null\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
 	}
 
 	@Test

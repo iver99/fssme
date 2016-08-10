@@ -15,7 +15,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
 import org.codehaus.jackson.node.ObjectNode;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -320,7 +318,7 @@ public class EntityJsonUtilTest extends BaseTest
 		catch (EMAnalyticsFwkException e) {
 			e.printStackTrace();
 		}
-		final String VERIFY_STRING1 = "\"WIDGET_UNIQUE_ID\":1000";
+		final String VERIFY_STRING1 = "\"WIDGET_UNIQUE_ID\":\"1000\"";
 		final String VERIFY_STRING2 = "\"WIDGET_KOC_NAME\":\"TestKOC\"";
 		final String VERIFY_STRING3 = "\"WIDGET_VIEWMODEL\":\"TestViewModel\"";
 		final String VERIFY_STRING4 = "\"WIDGET_TEMPLATE\":\"TestTemplate\"";
