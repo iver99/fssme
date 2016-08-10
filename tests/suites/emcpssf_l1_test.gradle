@@ -114,7 +114,7 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/SavedSearchCORSF
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/search/SearchAPITest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/TenantSubscriptionUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/loggingconfig/UpdatedLoggerLevelTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/validationUtilTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/ValidationUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPITest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGroupAPITest.class"
 
