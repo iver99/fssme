@@ -124,6 +124,7 @@ task QATest(type:EMTest,dependsOn: DEVTest2){
 	ext.set("testType", "integration")
 }
 
-
-omcTeardown.mustRunAfter(QATest)
-task emcpssf_test_3n (dependsOn: [QATest,omcTeardown])
+task emcpssf_test_3n (dependsOn: [QATest,omcTeardown]) {
+    omcTeardown.mustRunAfter(QATest)
+    apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
+}

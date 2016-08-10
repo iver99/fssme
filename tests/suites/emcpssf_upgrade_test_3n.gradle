@@ -1,4 +1,3 @@
-                               
 buildscript {
    apply from: 'test-buildscript-apply.gradle'  
    dependencies { 
@@ -12,7 +11,7 @@ apply from: 'test-project-apply.gradle'
 apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")                             
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest     
 apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")                                                                     
-                                                                  
+           
 /******* ExtraProperties declaration ******/
 
 dependencies {
@@ -39,56 +38,41 @@ dependencies {
   configurations{
 		restAssured.exclude module: 'groovy'
 	}
- 
 }
 
 //Add data population(pre-upgrade) tests or tasks here
 //task omcUpgradeDataPopulation (type: EMTest, overwrite: true){
 task pre_upgrade (type: EMTest, dependsOn: omcSetup){
 println "Customizing the UpgradeDataPopulation"
-  options.suiteXmlBuilder().suite('name': 'PreUpg') {
-           test('name': 'pre_upg') {
-               classes([:]) {
-                      'class'('name':'oracle.sysman.emSDK.emaas.platform.savedsearch.test.upgrade.CategoryCRUDBeforeUpgradeTest')
-          
-             
-   }
-   }
- }
-
-
-
+    options.suiteXmlBuilder().suite('name': 'PreUpg') {
+        test('name': 'pre_upg') {
+            classes([:]) {
+                'class'('name':'oracle.sysman.emSDK.emaas.platform.savedsearch.test.upgrade.CategoryCRUDBeforeUpgradeTest')
+            }
+        }
+    }
     useWebdriver = true
     useRestAssured = true
-   
 }
 
 //task omcUpgradeDataValidation  (type: EMTest, overwrite: true){
-
 task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup]){
-
     println "Overriding the UpgradeDataValidation"
-       options.suiteXmlBuilder().suite('name': 'PostUpg') {
+    options.suiteXmlBuilder().suite('name': 'PostUpg') {
         test('name': 'post_upg') {
             classes([:]) {
-                   'class'('name':'oracle.sysman.emSDK.emaas.platform.savedsearch.test.upgrade.FolderCRUDAfterUpgradeTest')
-} 
-	               
-	    }
-	    }
-
- 
+                'class'('name':'oracle.sysman.emSDK.emaas.platform.savedsearch.test.upgrade.FolderCRUDAfterUpgradeTest')
+            }
+        }
+    }
     useWebdriver = true
     useRestAssured = true
-
 }
 
-post_upgrade.mustRunAfter pre_upgrade
-omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
-
 task emcpssf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown]){
-    apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
-    //apply from: getAbsoluteFilePath("omctf_taskprocessor")
+    post_upgrade.mustRunAfter pre_upgrade
+    omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
+    apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
 }
 
 
