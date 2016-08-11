@@ -24,17 +24,17 @@
  */
 buildscript {
  apply from: 'test-buildscript-apply.gradle' 
- dependencies { 
-         
-        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"                
-        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}"              
-    }      
 }
-apply from: 'setup.gradle'
-
 apply from: 'test-project-apply.gradle'
-apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_commontasks")
-apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
+
+/***************** OMCTF Plugin **********************/
+configurations { omctfPluginConfig }
+dependencies {
+	omctfPluginConfig group: "com.oracle.omc.omctf.testsdk", name: "OMCTFPlugin", version: "${omctfPluginVersion}"
+}
+apply from: getAbsoluteFilePath(project.configurations.omctfPluginConfig,"OMCTFPlugin")
+/************** End of OMCTFPlugin *******************/
+
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -124,6 +124,7 @@ task QATest(type:EMTest,dependsOn: DEVTest2){
 	ext.set("testType", "integration")
 }
 
-
-omcTeardown.mustRunAfter(QATest)
-task emcpssf_test_3n (dependsOn: [QATest,omcTeardown])
+task emcpssf_test_3n (dependsOn: [QATest,omcTeardown]) {
+    omcTeardown.mustRunAfter(QATest)
+    apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
+}
