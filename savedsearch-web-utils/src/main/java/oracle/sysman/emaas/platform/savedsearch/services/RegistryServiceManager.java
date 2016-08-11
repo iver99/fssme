@@ -212,6 +212,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String REL_LOG_CONFIG = "log/configuration";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
+
 	static {
 		try {
 			WLS_RUNTIME_SERVICE_NAME = ObjectName
@@ -222,14 +223,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private static String getApplicationUrl(UrlType urlType)
+	private static String getApplicationUrl(UrlType urlType) throws Exception
 	{
-		InitialContext ctx = null;
-		try {
-			ctx = new InitialContext();
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		InitialContext ctx = new InitialContext();
 		try {
 			MBeanServer runtimeServer = (MBeanServer) ctx.lookup("java:comp/jmx/runtime");
 			ObjectName serverRuntimeName = (ObjectName) runtimeServer.getAttribute(WLS_RUNTIME_SERVICE_NAME, "ServerRuntime");
@@ -243,23 +239,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				default:
 					throw new IllegalStateException("Unknown UrlType, ServerRuntime URL lookup failed");
 			}
-		} catch (ReflectionException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		} catch (InstanceNotFoundException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		} catch (NamingException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		} catch (AttributeNotFoundException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		} catch (MBeanException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		} finally {
-			try {
-				ctx.close();
-			} catch (NamingException e) {
-				LOGGER.error(e.getLocalizedMessage());;
-			}
-			return "";
+		}
+		finally {
+			ctx.close();
 		}
 	}
 

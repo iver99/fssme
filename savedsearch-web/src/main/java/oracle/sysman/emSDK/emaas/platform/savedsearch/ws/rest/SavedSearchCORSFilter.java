@@ -137,10 +137,10 @@ public class SavedSearchCORSFilter implements Filter
 	private static final String PARAM_NAME = "updateLastAccessTime";
 	private static final Logger LOGGER = LogManager.getLogger(SavedSearchCORSFilter.class);
 
-//	@Override
-//	public void destroy()
-//	{
-//	}
+	@Override
+	public void destroy()
+	{
+	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
@@ -168,8 +168,12 @@ public class SavedSearchCORSFilter implements Filter
 		}
 
 		if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) request).getMethod())) {
+			try {
 				chain.doFilter(oamRequest, response);
-
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		else {
 			try {
@@ -214,9 +218,12 @@ public class SavedSearchCORSFilter implements Filter
 				else {
 					chain.doFilter(oamRequest, response);
 				}
-			} catch (EMAnalyticsFwkException e) {
-				LOGGER.error(e.getLocalizedMessage());
-			} finally {
+			}
+			catch (Exception e) {
+				hRes.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+				return;
+			}
+			finally {
 				//always remove tenant-id from thradlocal when request completed or on error
 				TenantContext.clearContext();
 				RequestContext.clearContext();
@@ -226,14 +233,8 @@ public class SavedSearchCORSFilter implements Filter
 	}
 
 	@Override
-	public void destroy() {
-		//TODO
-	}
-
-	@Override
 	public void init(FilterConfig config) throws ServletException
 	{
-		//TODO
 	}
 
 	private boolean isParameterPresent(HttpServletRequest hReq)

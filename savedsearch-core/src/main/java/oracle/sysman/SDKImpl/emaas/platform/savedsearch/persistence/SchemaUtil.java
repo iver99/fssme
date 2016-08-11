@@ -30,8 +30,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  */
 public class SchemaUtil
 {
-	private SchemaUtil() {
-	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeployment
@@ -362,7 +360,7 @@ public class SchemaUtil
 	public static List<String> getSchemaUrls(String json)
 	{
 		if (json == null || "".equals(json)) {
-
+			return null;
 		}
 
 		HashSet<String> urlSet = new HashSet<String>();

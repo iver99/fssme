@@ -57,14 +57,10 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#postStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt)
+	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 		URL url = LoggingServiceManager.class.getResource("/log4j2_ssf.xml");
-		try {
-			Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
-		} catch (URISyntaxException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		}
+		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
 		LogUtil.initializeLoggersUpdateTime();
 		LOGGER.info("Saved search log4j2 logging configuration has been initialized");
 
@@ -79,37 +75,11 @@ public class LoggingServiceManager implements ApplicationServiceManager
 			catch (Exception ex) {
 				LOGGER.error(ex);
 				// failed to unregister with name 'MBEAN_NAME', register with a temporary name
-				try {
-					registerMBean(MBEAN_NAME_TMP);
-				} catch (InstanceAlreadyExistsException e1) {
-					LOGGER.error(e.getLocalizedMessage());
-				} catch (MBeanRegistrationException e1) {
-					LOGGER.error(e.getLocalizedMessage());
-				} catch (NotCompliantMBeanException e1) {
-					LOGGER.error(e.getLocalizedMessage());
-				} catch (MalformedObjectNameException e1) {
-					LOGGER.error(e.getLocalizedMessage());
-				}
+				registerMBean(MBEAN_NAME_TMP);
 				tempMBeanExists = true;
 				return;
 			}
-			try {
-				registerMBean(MBEAN_NAME);
-			} catch (InstanceAlreadyExistsException e1) {
-				LOGGER.error(e.getLocalizedMessage());
-			} catch (MBeanRegistrationException e1) {
-				LOGGER.error(e.getLocalizedMessage());
-			} catch (NotCompliantMBeanException e1) {
-				LOGGER.error(e.getLocalizedMessage());
-			} catch (MalformedObjectNameException e1) {
-				LOGGER.error(e.getLocalizedMessage());
-			}
-		} catch (MalformedObjectNameException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		} catch (NotCompliantMBeanException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		} catch (MBeanRegistrationException e) {
-			LOGGER.error(e.getLocalizedMessage());
+			registerMBean(MBEAN_NAME);
 		}
 	}
 

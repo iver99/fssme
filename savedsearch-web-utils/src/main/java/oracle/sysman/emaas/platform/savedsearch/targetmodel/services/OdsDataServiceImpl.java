@@ -55,36 +55,24 @@ public class OdsDataServiceImpl implements OdsDataService
 		LOGGER.info("base URL is:" + baseUrl);
 		String meId = null;
 		// see if there is already an ODS entity created
-		String result = null;
 		try {
-			result = RestRequestUtil.restGet(baseUrl + "?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId);
-		} catch (URISyntaxException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		} catch (HttpException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		}
-		LOGGER.info("result is" + result);
-		JSONObject jsonObj = null;
-		try {
-			jsonObj = new JSONObject(result);
-		} catch (JSONException e) {
-			LOGGER.error(e.getLocalizedMessage());
-		}
-		try {
+			String result = RestRequestUtil.restGet(baseUrl + "?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId);
+			LOGGER.info("result is" + result);
+			JSONObject jsonObj = new JSONObject(result);
 			if (jsonObj.getInt("count") > 0) {
-                    JSONObject entity = (JSONObject) jsonObj.getJSONArray("items").get(0);
-                    meId = entity.getString(ENTITY_ID);
-                }
-		} catch (JSONException e) {
-			LOGGER.error(e.getLocalizedMessage());
+				JSONObject entity = (JSONObject) jsonObj.getJSONArray("items").get(0);
+				meId = entity.getString(ENTITY_ID);
+			}
 		}
-
+		catch (Exception e) {
+			// do nothing
+		}
 		// no existing ODS entity then create one
 		if (meId == null || meId.isEmpty()) {
 			try {
-				result = RestRequestUtil.restPost(baseUrl, odsEntity);
+				String result = RestRequestUtil.restPost(baseUrl, odsEntity);
 				LOGGER.info("RestRequestUtil.restPost(baseUrl, odsEntity) is executed,and result is " + result);
-				jsonObj = new JSONObject(result);
+				JSONObject jsonObj = new JSONObject(result);
 				meId = jsonObj.getString(ENTITY_ID);
 			}
 			catch (Exception e) {

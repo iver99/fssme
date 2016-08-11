@@ -45,7 +45,8 @@ public class PersistenceManager
 
 	private EntityManagerFactory emf;
 
-	private PersistenceManager() {
+	private PersistenceManager()
+	{
 		createEntityManagerFactory();
 	}
 
@@ -61,7 +62,8 @@ public class PersistenceManager
 	 * If EntityManagerFactory is closed by closeEntityManagerFactory(), you have to create it explicitly by this method,
 	 * otherwise getEntityManager
 	 */
-	public synchronized void createEntityManagerFactory(){
+	public synchronized void createEntityManagerFactory()
+	{
 		if (IS_TEST_ENV == null) {
 			String testEnvVal = System.getProperty(TESTENV_PROP, "false");
 			IS_TEST_ENV = "true".equalsIgnoreCase(testEnvVal);

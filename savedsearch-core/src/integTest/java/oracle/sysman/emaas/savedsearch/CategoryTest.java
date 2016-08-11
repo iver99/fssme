@@ -40,7 +40,10 @@ public class CategoryTest extends BaseTest
 	}
 
 	@BeforeClass
-	public static void testSaveCategory() throws EMAnalyticsFwkException {
+	public static void testSaveCategory()
+	{
+		try {
+
 			CategoryManager catMan = CategoryManager.getInstance();
 			Category category = catMan.createNewCategory();
 			category.setName("CategoryName");
@@ -79,7 +82,10 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals("ProviderAssetRootTest", category.getProviderAssetRoot());
 			// Assert.assertEquals("MyCategory", category.getDisplayName());
 			AssertJUnit.assertNotNull(category.getCreatedOn());
-
+		}
+		catch (Exception e) {
+			AssertJUnit.fail(e.getLocalizedMessage());
+		}
 
 	}
 

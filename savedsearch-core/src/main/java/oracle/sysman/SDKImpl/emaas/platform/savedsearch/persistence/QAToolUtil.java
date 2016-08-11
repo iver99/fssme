@@ -40,6 +40,7 @@ public class QAToolUtil
 	private static final String DEPLOY_URL = "/instances?servicename=LifecycleInventoryService";
 	private static final String SSF_DEPLOY_URL = "/instances?servicename=SavedSearch";
 	private static final String DEPLY_SCHEMA = "/schemaDeployments?softwareName=SavedSearchService";
+	private static final String SERVICE_NAME = "SavedSearchService";
 	private static final String PASSWORD = "welcome1";
 	public static final String JDBC_URL = "jdbc:oracle:thin:@";
 	private static final String SCHEMA_USER = "schemaUser";
@@ -63,10 +64,8 @@ public class QAToolUtil
 
 	private static Logger LOGGER = LogManager.getLogger(QAToolUtil.class);
 
-	private QAToolUtil() {
-	}
-
-	public static Properties getDbProperties()  {
+	public static Properties getDbProperties()
+	{
 		Properties props = new Properties();
 		String url = JDBC_URL + Utils.getProperty(ODS_HOSTNAME) + ":" + Utils.getProperty(ODS_PORT) + ":"
 				+ Utils.getProperty(ODS_SID);
@@ -120,7 +119,8 @@ public class QAToolUtil
 		return result;
 	}
 
-	private static String getDetaildByUrl(String url) {
+	private static String getDetaildByUrl(String url)
+	{
 		BufferedReader in = null;
 		InputStreamReader inReader = null;
 		StringBuffer response = new StringBuffer();
@@ -139,23 +139,17 @@ public class QAToolUtil
 		catch (IOException e) {
 			LOGGER.error("an error occureed while getting details by url" + ":: " + url, e);
 		} finally {
+			try {
 				if (in != null) {
-					try {
-						in.close();
-					} catch (IOException e) {
-						LOGGER.error(e.getLocalizedMessage());
-						e.printStackTrace();
-					}
+					in.close();
 				}
 				if (inReader != null) {
-					try {
-						inReader.close();
-					} catch (IOException e) {
-						LOGGER.error(e.getLocalizedMessage());
-						e.printStackTrace();
-					}
+					inReader.close();
 				}
-
+			}
+			catch (IOException ioEx) {
+				//ignore
+			}
 		}
 		return response.toString();
 
@@ -164,7 +158,8 @@ public class QAToolUtil
 	/**
 	 * @return
 	 */
-	private static String getSchemaDeploymentDetails() {
+	private static String getSchemaDeploymentDetails()
+	{
 		String username = null;
 		String data = QAToolUtil.getDetaildByUrl(Utils.getProperty(SERVICE_MANAGER_URL) + DEPLOY_URL);
 		//String data = QAToolUtil.getDetaildByUrl("http://slc04lec.us.oracle.com:7001//registry/servicemanager/registry/v1"

@@ -34,7 +34,8 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	private static final String M_TARGET_TYPE = EMTargetConstants.m_target_type;
 	private static final String SVR_MBEAN_NAME_PREFIX = "EMDomain:Type=EMIntegration,EMTargetType=" + M_TARGET_TYPE + ",Name=";
 
-
+	@Resource(lookup = "java:module/ModuleName")
+	private String moduleName;
 
 	@Resource(lookup = "java:app/AppName")
 	private String appName;
