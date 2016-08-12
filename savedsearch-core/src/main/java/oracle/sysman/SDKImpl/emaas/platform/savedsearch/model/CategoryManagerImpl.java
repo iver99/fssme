@@ -115,7 +115,7 @@ public class CategoryManagerImpl extends CategoryManager
 
 			Set<EmAnalyticsCategoryParam> params = category.getEmAnalyticsCategoryParams();
 			List<Parameter> categoryParams = new ArrayList<Parameter>();
-			if (params != null && params.isEmpty()) {
+			if (params != null && !params.isEmpty()) {
 				for (EmAnalyticsCategoryParam paramObj : params) {
 					Parameter param = new Parameter();
 					param.setName(paramObj.getName());
@@ -136,7 +136,7 @@ public class CategoryManagerImpl extends CategoryManager
 					categoryParams.add(param);
 				}
 			}
-			if (categoryParams.isEmpty()) {
+			if (!categoryParams.isEmpty()) {
 				LOGGER.debug("Category's parameter number is > 0!");
 				rtnObj.setParameters(categoryParams);
 			}

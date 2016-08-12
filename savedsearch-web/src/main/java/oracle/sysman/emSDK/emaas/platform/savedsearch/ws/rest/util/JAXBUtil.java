@@ -191,7 +191,7 @@ public class JAXBUtil
 			});
 			StreamSource br = new StreamSource(reader);
 			object = u.unmarshal(br);
-		if (errorList.isEmpty()) {
+		if (!errorList.isEmpty()) {
 			StringBuffer errMsg = new StringBuffer();
 			for (String sError : errorList) {
 				errMsg.append(sError);

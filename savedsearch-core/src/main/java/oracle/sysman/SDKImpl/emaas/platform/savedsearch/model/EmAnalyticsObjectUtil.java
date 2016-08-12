@@ -61,7 +61,7 @@ class EmAnalyticsObjectUtil
 			List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
 			.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 
-			if (folderList.isEmpty()) {
+			if (!folderList.isEmpty()) {
 				throw new EMAnalyticsFwkException("Sub folders founds", EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 			}
 
@@ -149,7 +149,7 @@ class EmAnalyticsObjectUtil
 		}
 		List<Parameter> params = category.getParameters();
 		//Set<EmAnalyticsCategoryParam> paramSet = new HashSet<EmAnalyticsCategoryParam>();
-		if (params != null && params.isEmpty()) {
+		if (params != null && !params.isEmpty()) {
 			Iterator<Parameter> paramIter = params.iterator();
 			while (paramIter.hasNext()) {
 				Parameter param = paramIter.next();
@@ -392,7 +392,7 @@ class EmAnalyticsObjectUtil
 		List<SearchParameter> params = search.getParameters();
 		//move values from search_params table to search table
 		EmAnalyticsObjectUtil.moveParamsToSearchAdd(searchEntity, params);
-		if (params != null && params.isEmpty()) {
+		if (params != null && !params.isEmpty()) {
 			for (SearchParameter param : params) {
 				EmAnalyticsSearchParam searchParamEntity = new EmAnalyticsSearchParam();
 				searchParamEntity.setEmAnalyticsSearch(searchEntity);
@@ -683,7 +683,7 @@ class EmAnalyticsObjectUtil
 
 	private static void moveParamsToSearchAdd(EmAnalyticsSearch searchEntity, List<SearchParameter> params)
 	{
-		if (params != null && params.isEmpty()) {
+		if (params != null && !params.isEmpty()) {
 			Iterator<SearchParameter> paramIter = params.iterator();
 			while (paramIter.hasNext()) {
 				SearchParameter param = paramIter.next();

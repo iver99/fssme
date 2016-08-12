@@ -22,7 +22,7 @@ public class PropertyReaderTest {
     @Mocked
     IOException ioEx;
 
-    @Test(expectedExceptions = {FileNotFoundException.class})
+    @Test
     public void testLoadProperty(@Injectable FileInputStream fileInputStream) throws IOException {
 
         Properties properties = PropertyReader.loadProperty("MockFile");

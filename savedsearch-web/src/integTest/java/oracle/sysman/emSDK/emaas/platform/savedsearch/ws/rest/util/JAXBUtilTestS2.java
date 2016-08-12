@@ -35,7 +35,7 @@ public class JAXBUtilTestS2 {
         JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
     }
 
-    @Test(expectedExceptions = {ImportException.class})
+    @Test
     public void testUnmarshal() throws JAXBException, ImportException, SAXException {
 
         new Expectations(){

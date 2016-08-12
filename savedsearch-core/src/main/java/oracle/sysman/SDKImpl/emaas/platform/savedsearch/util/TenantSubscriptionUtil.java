@@ -127,7 +127,7 @@ public class TenantSubscriptionUtil
 		CategoryManager catMan = CategoryManager.getInstance();
 		List<Category> catList = catMan.getAllCategories();
 		List<String> subscribedServices = TenantSubscriptionUtil.getTenantSubscribedServices(tenant);
-		if (catList != null && catList.isEmpty()) {
+		if (catList != null && !catList.isEmpty()) {
 			if (subscribedServices != null && subscribedServices.size() > 0) {
 				for (Category cat : catList) {
 					//EMCPDF-997 If a widget group has special parameter DASHBOARD_INELIGIBLE=true,
@@ -278,7 +278,7 @@ public class TenantSubscriptionUtil
 		boolean hiddenInWidgetSelector = false;
 		if (!includeDashboardIneligible) {
 			List<Parameter> params = category.getParameters();
-			if (params != null && params.isEmpty()) {
+			if (params != null && !params.isEmpty()) {
 				for (Parameter param : params) {
 					if (PARAM_NAME_DASHBOARD_INELIGIBLE.equals(param.getName()) && "1".equals(param.getValue())) {
 						hiddenInWidgetSelector = true;

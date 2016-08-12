@@ -164,7 +164,7 @@ public class RegistryLookupUtil
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 				ITR_LOGGER.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result, info);
 			}
-			if (result != null && result.isEmpty()) {
+			if (result != null && !result.isEmpty()) {
 
 				//find https link first
 				for (InstanceInfo internalInstance : result) {
@@ -308,7 +308,7 @@ public class RegistryLookupUtil
 		Link lk = null;
 		try {
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-			if (result != null && result.isEmpty()) {
+			if (result != null && !result.isEmpty()) {
 
 				//find https link first
 				if(!httpOnly) {
@@ -392,7 +392,7 @@ public class RegistryLookupUtil
 		map = new HashMap<String, String>();
 		try {
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-			if (result != null && result.isEmpty()) {
+			if (result != null && !result.isEmpty()) {
 				for (InstanceInfo internalInstance : result) {
 					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)
 							&& map.containsKey(MONITORING_SERVICE)) {
@@ -402,7 +402,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/apm", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.isEmpty()) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							LOGGER.debug("Retrieved base vanity URL for apm: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -414,7 +414,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/ita", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.isEmpty()) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							LOGGER.debug("Retrieved base vanity URL for ita: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -428,7 +428,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/la", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.isEmpty()) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							LOGGER.debug("Retrieved base vanity URL for la: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
@@ -440,7 +440,7 @@ public class RegistryLookupUtil
 						List<Link> links = internalInstance.getLinksWithProtocol("vanity/monitoring", "https");
 						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
 
-						if (links != null && links.isEmpty()) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							LOGGER.debug("Retrieved base vanity URL for monitoring service: {} ", lk.getHref());
 							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());

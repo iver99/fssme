@@ -433,7 +433,7 @@ public class EmAnalyticsObjectUtilTest {
 
     }
 
-    @Test
+    @Test(expectedExceptions = {UnsupportedOperationException.class})
     public void testGetEmAnalyticsCategoryForAdd() throws EMAnalyticsFwkException {
         final List<Parameter> parameters = new ArrayList<>();
         parameters.add(parameter);

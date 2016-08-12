@@ -73,7 +73,7 @@ public class TenantSubscriptionUtilTest
     Tenant tenant;
     @Mocked
     AppMappingEntity.AppMappingValue appMappingValue;
-	@Test
+	@Test(expectedExceptions = {NullPointerException.class})
 	public void testGetTenantSubscribedCategories() throws EMAnalyticsFwkException {
         final ArrayList<Category> categories = new ArrayList<>();
         categories.add(category);
