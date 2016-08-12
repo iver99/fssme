@@ -1,7 +1,7 @@
 buildscript {
    apply from: 'test-buildscript-apply.gradle'  
 }  
-
+apply from: 'test-project-apply.gradle'
 /***************** OMCTF Plugin **********************/
 configurations { omctfPluginConfig }
 dependencies {
