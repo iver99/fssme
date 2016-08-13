@@ -23,7 +23,7 @@ public class DBConnectionManager
 	}
 
 	/**
-	 * Returns the singleton INSTANCE for database connection manager
+	 * Returns the singleton instance for database connection manager
 	 *
 	 * @return
 	 */

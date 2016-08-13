@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-import javax.management.*;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -245,7 +245,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private static final Logger LOGGER = LogManager
+	private final Logger LOGGER = LogManager
 			.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM + ".serviceregistry");
 
 	private Boolean registrationComplete = null;
@@ -280,7 +280,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	}
 
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt)
+	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 		LOGGER.info("Post-starting 'Service Registry' application service");
 		registerService();
@@ -288,18 +288,18 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	}
 
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt)
+	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
 
 	}
 
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt)
+	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 	}
 
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt)
+	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
 		LOGGER.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();

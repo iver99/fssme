@@ -61,7 +61,7 @@ public class CategoryManagerImpl extends CategoryManager
 
 	private static final String DB_DEFAULT_VALUE = "0";
 
-	public static Category createCategoryObject(EmAnalyticsCategory category, Category categoryObj)
+	public static Category createCategoryObject(EmAnalyticsCategory category, Category categoryObj) throws Exception
 	{
 		CategoryImpl rtnObj = null;
 		try {
@@ -242,6 +242,10 @@ public class CategoryManagerImpl extends CategoryManager
 			em.merge(categoryEntity);
 			em.getTransaction().commit();
 			return CategoryManagerImpl.createCategoryObject(categoryEntity, null);
+		}
+		catch (EMAnalyticsFwkException eme) {
+			LOGGER.error("Category with name " + category.getName() + " was saved but could not bve retrieved back", eme);
+			throw eme;
 		}
 		catch (PersistenceException dmlce) {
 			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId(),

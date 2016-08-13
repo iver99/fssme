@@ -445,7 +445,7 @@ public class SearchNonGroupsTest {
                 objSearch.deleteSearch(searchObj.getId(), true);
     }
         @Test
-        public void testSaveMultipleSearch() throws EMAnalyticsFwkException {
+        public void testSaveMultipleSearch() throws Exception {
             SearchManagerImpl searchMgr = SearchManagerImpl.getInstance();
             List<ImportSearchImpl> list = null;
             List<Search> listResult = null;

@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogDirection;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -251,13 +250,13 @@ public class SavedSearchCORSFilter implements Filter
 /*Enumeration headerNames = hReq.getHeaderNames();
 if (headerNames.hasMoreElements()) {
 
-LOGGER.info("More elements");
+_logger.info("More elements");
 }
 else {
-LOGGER.info("There is no more element");
+_logger.info("There is no more element");
 }
 while (headerNames.hasMoreElements()) {
 Object elem = headerNames.nextElement();
 String paramName = (String) elem;
-LOGGER.info("Name=" + paramName);
+_logger.info("Name=" + paramName);
 }*/

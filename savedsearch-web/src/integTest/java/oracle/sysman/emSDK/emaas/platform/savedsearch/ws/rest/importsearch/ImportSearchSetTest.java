@@ -35,7 +35,7 @@ public class ImportSearchSetTest {
     @Mocked
     JAXBContext jaxbContext;
     @Test
-    public void testImportSearches(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
+    public void testImportSearches(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         final ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");
@@ -62,7 +62,7 @@ public class ImportSearchSetTest {
     }
 
     @Test
-    public void testImportSearches2nd(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
+    public void testImportSearches2nd(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");
@@ -88,7 +88,7 @@ public class ImportSearchSetTest {
     }
 
     @Test
-    public void testImportSearches3th(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
+    public void testImportSearches3th(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
         ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");

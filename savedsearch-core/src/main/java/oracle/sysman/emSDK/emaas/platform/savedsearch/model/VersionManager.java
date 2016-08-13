@@ -59,7 +59,7 @@ public class VersionManager
 			else {
 				final String errMsg = "Invalid Schema Version are detected: ";
 				LOGGER.error(errMsg);
-
+				throw new RuntimeException(errMsg + vers);
 			}
 		}
 		finally {

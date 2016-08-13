@@ -121,7 +121,7 @@ public class EmAnalyticsObjectUtilTest {
         EmAnalyticsObjectUtil.getCategoryByName("name", entityManager);
     }
 
-    @Test(expectedExceptions = {NullPointerException.class})
+    @Test
     public void testGetEmAnalyticsCategoryForEdit() {
         final List<Parameter> newParams = new ArrayList<Parameter>();
         newParams.add(parameter);
@@ -188,7 +188,7 @@ public class EmAnalyticsObjectUtilTest {
         EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(folder);
     }
 
-    @Test(expectedExceptions = {NoResultException.class})
+    @Test
     public void testGetEmAnalyticsFolderByFolderObject4th() {
         new Expectations() {
             {

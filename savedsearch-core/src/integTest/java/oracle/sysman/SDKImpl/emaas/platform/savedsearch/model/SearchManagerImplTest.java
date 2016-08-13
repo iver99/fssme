@@ -179,7 +179,6 @@ public class SearchManagerImplTest {
                 result = entityManager;
                 EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
                 result = emAnalyticsSearch;
-                entityManager.refresh(any);
 
             }
         };
@@ -263,12 +262,12 @@ public class SearchManagerImplTest {
         };
         searchManager.getSearchByName("name", 1234);
     }
-
-    @Test
-    public void testGetSearchCountByFolderId() throws EMAnalyticsFwkException {
-        searchManager.getSearchCountByFolderId(1234);
-
-    }
+//
+//    @Test
+//    public void testGetSearchCountByFolderId() throws EMAnalyticsFwkException {
+//        searchManager.getSearchCountByFolderId(1234);
+//
+//    }
 
     @Test
     public void testGetSearchListByCategoryId(@Mocked final PersistenceManager persistenceManager,
@@ -598,7 +597,7 @@ public class SearchManagerImplTest {
         searchManager.getWidgetListByProviderNames(false, null, null);
     }
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testGetWidgetScreenshotById(@Mocked final PersistenceManager persistenceManager,
                                             @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
                                             @Mocked final EmAnalyticsSearch emAnalyticsSearch) throws EMAnalyticsFwkException {
@@ -608,8 +607,6 @@ public class SearchManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getSearchById(anyLong, (EntityManager) any);
-                result = emAnalyticsSearch;
             }
         };
         searchManager.getWidgetScreenshotById(1234);
@@ -700,7 +697,7 @@ public class SearchManagerImplTest {
                                                           @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
                                                           @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
                                                           @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-                                                          @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                          @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -749,7 +746,7 @@ public class SearchManagerImplTest {
                                                      @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
                                                      @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
                                                      @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-                                                     @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                     @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -788,7 +785,7 @@ public class SearchManagerImplTest {
                                                              @Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
                                                              @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
                                                              @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-                                                             @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                             @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -824,7 +821,7 @@ public class SearchManagerImplTest {
                                                                 @Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
                                                                 @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
                                                                 @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-                                                                @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                                @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -858,7 +855,7 @@ public class SearchManagerImplTest {
     public void testSaveMultipleSearchObjFolderImpl(@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
                                                     @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
                                                     @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-                                                    @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                    @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -892,7 +889,7 @@ public class SearchManagerImplTest {
     public void testSaveMultipleSearchObjInteger(@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
                                                  @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
                                                  @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-                                                 @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                 @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -932,7 +929,7 @@ public class SearchManagerImplTest {
                                                      @Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
                                                      @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
                                                      @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-                                                     @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                     @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -967,7 +964,7 @@ public class SearchManagerImplTest {
                                                      @Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
                                                      @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
                                                      @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-                                                     @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                     @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -1002,7 +999,7 @@ public class SearchManagerImplTest {
                                                                    @Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
                                                                    @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
                                                                    @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final TenantContext tenantContext,
-                                                                   @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                                   @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -1033,7 +1030,7 @@ public class SearchManagerImplTest {
                                                                 @Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
                                                                 @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
                                                                 @Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final TenantContext tenantContext,
-                                                                @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                                @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -1064,7 +1061,7 @@ public class SearchManagerImplTest {
                                                                                      @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
                                                                                      @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
                                                                                      @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-                                                                                     @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                                                     @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -1106,7 +1103,7 @@ public class SearchManagerImplTest {
                                                                                                                      @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
                                                                                                                      @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
                                                                                                                      @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-                                                                                                                     @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                                                                                     @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -1152,7 +1149,7 @@ public class SearchManagerImplTest {
                                                                @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
                                                                @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
                                                                @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-                                                               @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                               @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);
@@ -1194,7 +1191,7 @@ public class SearchManagerImplTest {
                                                                                 @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
                                                                                 @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
                                                                                 @Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-                                                                                @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+                                                                                @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
         List<ImportSearchImpl> importSearchList = new ArrayList<>();
         importSearchList.add(importSearchImpl);
         importSearchList.add(importSearchImpl);

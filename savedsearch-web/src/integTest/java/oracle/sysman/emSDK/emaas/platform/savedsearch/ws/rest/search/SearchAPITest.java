@@ -768,15 +768,6 @@ public class SearchAPITest {
             {
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
-                result = search;
-                FolderManager.getInstance();
-                result = folderManager;
-                search.getFolderId();
-                result = 1;
-                folderManager.getPathForFolderId(anyLong);
-                result = path;
-
             }
         };
         Assert.assertNotNull(api.getSearch(10L, true));
@@ -792,8 +783,6 @@ public class SearchAPITest {
             {
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
-                result = new EMAnalyticsFwkException(new Throwable());
             }
         };
         Assert.assertNotNull(api.getSearch(10L, true));

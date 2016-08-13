@@ -23,5 +23,5 @@ public interface ICacheFetchFactory
 	 * @throws Exception
 	 *             On failure creating the object.
 	 */
-	Object fetchCachable(Object key);
+	Object fetchCachable(Object key) throws Exception;
 }

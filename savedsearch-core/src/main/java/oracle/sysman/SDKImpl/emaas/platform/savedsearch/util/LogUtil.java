@@ -35,10 +35,6 @@ public class LogUtil
 		private String serviceInvoked;
 		private String direction;
 
-		private InteractionLogContext(String tenantId) {
-			this.tenantId = tenantId;
-		}
-
 		public InteractionLogContext(String tenantId, String serviceInvoked, String direction)
 		{
 			this.tenantId = tenantId;
@@ -152,7 +148,7 @@ public class LogUtil
 	}
 
 	/**
-	 * Retrieve the long timestamp for update time for specified LOGGER
+	 * Retrieve the long timestamp for update time for specified logger
 	 *
 	 * @param cfg
 	 * @param lc
@@ -218,7 +214,7 @@ public class LogUtil
 	}
 
 	/**
-	 * Sets the update timestamp for specified LOGGER
+	 * Sets the update timestamp for specified logger
 	 *
 	 * @param cfg
 	 * @param lc

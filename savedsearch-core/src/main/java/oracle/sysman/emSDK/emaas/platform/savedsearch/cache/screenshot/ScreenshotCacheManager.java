@@ -43,8 +43,7 @@ public class ScreenshotCacheManager
 		cm = CacheManager.getInstance();
 	}
 
-	public ScreenshotElement getScreenshotFromCache(Tenant tenant, Long widgetId, String fileName)
-	{
+	public ScreenshotElement getScreenshotFromCache(Tenant tenant, Long widgetId, String fileName) throws Exception {
 		if (widgetId == null || widgetId <= 0) {
 			LOGGER.error("Unexpected widget id to get screenshot from cache for tenant={}, widget id={}, fileName={}", tenant,
 					widgetId, fileName);

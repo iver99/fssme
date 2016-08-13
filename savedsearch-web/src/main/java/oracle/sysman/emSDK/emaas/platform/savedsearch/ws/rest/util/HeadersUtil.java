@@ -124,14 +124,14 @@ public class HeadersUtil
 
 		userTenant = request.getHeader(HEADER_REMORE_USER);
 		if (userTenant == null) {
-			LOGGER.error(HEADER_REMORE_USER + " header value missing.");
+			_logger.error(HEADER_REMORE_USER + " header value missing.");
 			throw new EMAnalyticsFwkException(HEADER_REMORE_USER + " header value missing.",
 					EMAnalyticsFwkException.ERR_VALID_USER_NAME, null);
 		}
 		int idx = userTenant.indexOf(".");
 		if (idx <= 0) {
 
-			LOGGER.error("Tenant name was  not provided , Please provide " + HEADER_REMORE_USER
+			_logger.error("Tenant name was  not provided , Please provide " + HEADER_REMORE_USER
 					+ " header value in following format <tenant_name>.<user_name>");
 			throw new EMAnalyticsFwkException("Tenant name was not provided ,Please provide " + HEADER_REMORE_USER
 					+ " header value in following format <tenant_name>.<user_name>", EMAnalyticsFwkException.ERR_VALID_USER_NAME,
@@ -140,7 +140,7 @@ public class HeadersUtil
 
 		userName = userTenant.substring(idx + 1, userTenant.length());
 		if (userName == null || "".equalsIgnoreCase(userName.trim())) {
-			LOGGER.error("User name was not provided , Please provide " + HEADER_REMORE_USER
+			_logger.error("User name was not provided , Please provide " + HEADER_REMORE_USER
 					+ " header value in following format <tenant_name>.<user_name>");
 			throw new EMAnalyticsFwkException("User name was not provided , Please provide " + HEADER_REMORE_USER
 					+ " header value in following format <tenant_name>.<user_name>", EMAnalyticsFwkException.ERR_VALID_USER_NAME,

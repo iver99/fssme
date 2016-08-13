@@ -399,7 +399,7 @@ public class FolderManagerImplTest {
     @Test
     public void testSaveMultipleFoldersEMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
                                                                @Mocked final Folder folder, @Mocked final FolderDetails folderDetails,
-                                                               @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
+                                                               @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
@@ -424,7 +424,7 @@ public class FolderManagerImplTest {
     @Test
     public void testSaveMultipleFoldersHasfolderId(@Mocked final FolderImpl folder, @Mocked final EmAnalyticsFolder emAnalyticsFolder,
                                                    @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final FolderDetails folderDetails,
-                                                   @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
+                                                   @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
 
         new Expectations() {
             {
@@ -453,7 +453,7 @@ public class FolderManagerImplTest {
                                                   @Mocked final Query query, @Mocked final FolderImpl folder,
                                                   @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
                                                   @Mocked final FolderDetails folderDetails, @Mocked final PersistenceManager persistenceManager,
-                                                  @Mocked final EntityManager entityManager) {
+                                                  @Mocked final EntityManager entityManager) throws Exception {
 
         new Expectations() {
             {
@@ -494,7 +494,7 @@ public class FolderManagerImplTest {
                                                          @Mocked final Query query, @Mocked final FolderImpl folder,
                                                          @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
                                                          @Mocked final FolderDetails folderDetails, @Mocked final PersistenceManager persistenceManager,
-                                                         @Mocked final EntityManager entityManager) {
+                                                         @Mocked final EntityManager entityManager) throws Exception {
 
         new Expectations() {
             {
@@ -531,7 +531,7 @@ public class FolderManagerImplTest {
     }
 
     @Test(expectedExceptions = {Exception.class})
-    public void testSaveMultipleFoldersException(@Mocked final PersistenceManager persistenceManager) {
+    public void testSaveMultipleFoldersException(@Mocked final PersistenceManager persistenceManager) throws Exception {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
@@ -545,7 +545,7 @@ public class FolderManagerImplTest {
     @Test
     public void testSaveMultipleFoldersPersistenceException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
                                                             @Mocked final Folder folder, @Mocked final FolderDetails folderDetails,
-                                                            @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
+                                                            @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
         new Expectations() {
             {
                 PersistenceManager.getInstance();

@@ -30,7 +30,7 @@ public class FolderManagerImpl extends FolderManager
 	private static final FolderManagerImpl INSTANCE = new FolderManagerImpl();
 
 	/**
-	 * Get FolderManagerImpl singleton INSTANCE.
+	 * Get FolderManagerImpl singleton instance.
 	 * 
 	 * @return Instance of FolderManagerImpl
 	 */
@@ -391,19 +391,19 @@ public class FolderManagerImpl extends FolderManager
 		}
 
 		catch (EMAnalyticsFwkException eme) {
-			LOGGER.error("Folder with name " + folder.getName() + " was saved but could not bve retrieved back", eme);
+			_logger.error("Folder with name " + folder.getName() + " was saved but could not bve retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
 			EmAnalyticsProcessingException.processFolderPersistantException(dmlce, -1, folder.getParentId(), folder.getName());
-			LOGGER.error("Error while saving the folder: " + folder.getName(), dmlce);
+			_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null);
 
 		}
 		catch (Exception e) {
 
-			LOGGER.error("Error while saving the folder: " + folder.getName(), e);
+			_logger.error("Error while saving the folder: " + folder.getName(), e);
 			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null, e);
 

@@ -77,7 +77,9 @@ public class QAToolUtil
 		return props;
 	}
 
-	public static String getSavedSearchDeploymentDet() throws IOException {
+	public static String getSavedSearchDeploymentDet()
+	{
+		String username = null;
 		String data = QAToolUtil.getDetaildByUrl(Utils.getProperty(SERVICE_MANAGER_URL) + SSF_DEPLOY_URL);
 		//String data = QAToolUtil.getDetaildByUrl("http://slc08twq.us.oracle.com:7001//registry/servicemanager/registry/v1"
 		//	+ SSF_DEPLOY_URL);

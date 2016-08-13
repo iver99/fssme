@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.util;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
@@ -11,10 +12,10 @@ public class JAXBUtilTest
 {
 
 	@Test(expectedExceptions = { Exception.class, JAXBException.class },groups = {"s1"})
-	public void getJAXBContext() throws JAXBException
+	public void getJAXBContext() throws Exception
 	{
 
-		JAXBUtil.getJAXBContext(ObjectFactory.class);
+		JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
 
 	}
 }

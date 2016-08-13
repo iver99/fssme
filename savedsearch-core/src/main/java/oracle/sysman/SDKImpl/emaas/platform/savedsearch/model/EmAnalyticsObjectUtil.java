@@ -55,6 +55,7 @@ class EmAnalyticsObjectUtil
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
 
+		try {
 			EmAnalyticsFolder folderObj = folder;
 			String parentFolder = "parentFolder";
 			@SuppressWarnings("unchecked")
@@ -64,7 +65,10 @@ class EmAnalyticsObjectUtil
 			if (!folderList.isEmpty()) {
 				throw new EMAnalyticsFwkException("Sub folders founds", EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 			}
+		}
+		catch (NoResultException e) {
 
+		}
 		return true;
 	}
 
@@ -72,6 +76,7 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsCategory cateObj = null;
+		try {
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null) {
@@ -88,6 +93,10 @@ class EmAnalyticsObjectUtil
 
 			}
 
+		}
+		catch (Exception nre) {
+			// do nothing
+		}
 		return cateObj;
 	}
 

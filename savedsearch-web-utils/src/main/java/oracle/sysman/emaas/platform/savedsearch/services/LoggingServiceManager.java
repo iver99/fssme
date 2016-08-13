@@ -11,7 +11,6 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
 import java.lang.management.ManagementFactory;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -87,7 +86,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#postStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt) 
+	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
 		// no impl
 	}
@@ -96,7 +95,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#preStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt) 
+	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 	}
 
@@ -104,7 +103,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.services.ApplicationService#preStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt) 
+	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
 		LOGGER.info("Pre-stopping logging service");
 		try {

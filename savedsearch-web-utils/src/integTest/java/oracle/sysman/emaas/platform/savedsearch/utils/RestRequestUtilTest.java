@@ -36,7 +36,7 @@ public class RestRequestUtilTest {
 	
 	public void testRestGet(@Mocked final CloseableHttpClient client, @Mocked final LookupManager lm, 
 			@Mocked final MyHttpResponseProxy proxy, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws IOException, HttpException, EMAnalyticsFwkException, URISyntaxException {
+			@Mocked final TenantInfo info) throws Exception {
 		
 		new Expectations() {
 			{
@@ -60,7 +60,7 @@ public class RestRequestUtilTest {
 	
 	public void testRestPost(@Mocked final CloseableHttpClient client, @Mocked final LookupManager lm, 
 			@Mocked final MyHttpResponseProxy proxy, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws IOException, HttpException, EMAnalyticsFwkException, URISyntaxException {
+			@Mocked final TenantInfo info) throws Exception {
 		
 		new Expectations() {
 			{
@@ -84,7 +84,7 @@ public class RestRequestUtilTest {
 	
 	public void testRestDelete(@Mocked final CloseableHttpClient client, @Mocked final LookupManager lm, 
 			@Mocked final MyHttpResponseProxy proxy, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws IOException, HttpException, EMAnalyticsFwkException, URISyntaxException {
+			@Mocked final TenantInfo info) throws Exception {
 		
 		new Expectations() {
 			{

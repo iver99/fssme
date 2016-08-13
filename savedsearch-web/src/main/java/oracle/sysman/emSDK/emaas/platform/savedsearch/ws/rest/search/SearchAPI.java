@@ -664,7 +664,7 @@ public class SearchAPI
 		SearchManager sman = SearchManager.getInstance();
 		try {
 
-			Search searchObj = sman.getSearch(searchid);
+			Search searchObj = sman.getSearchWithoutOwner(searchid);
 			String[] pathArray = null;
 			if (bPath) {
 				FolderManager folderMgr = FolderManager.getInstance();

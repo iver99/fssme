@@ -35,7 +35,7 @@ public class ImportCategorySetTest {
     @Mocked
     JAXBContext jaxbContext;
     @Test
-    public void testImportsCategories(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
+    public void testImportsCategories(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<ImportCategoryImpl> list = new ArrayList<ImportCategoryImpl>();
         ImportCategoryImpl importCategory =new ImportCategoryImpl();
         importCategory.setId(10);
@@ -62,7 +62,7 @@ public class ImportCategorySetTest {
         Assert.assertNotNull(importCategorySet.importsCategories(xml));
     }
     @Test
-    public void testImportsCategories2nd(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
+    public void testImportsCategories2nd(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<ImportCategoryImpl> list = new ArrayList<ImportCategoryImpl>();
         ImportCategoryImpl importCategory =new ImportCategoryImpl();
         importCategory.setId(10);
@@ -90,7 +90,7 @@ public class ImportCategorySetTest {
     }
 
     @Test
-    public void testImportsCategories3th(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
+    public void testImportsCategories3th(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<ImportCategoryImpl> list = new ArrayList<ImportCategoryImpl>();
         ImportCategoryImpl importCategory =new ImportCategoryImpl();
         importCategory.setId(10);

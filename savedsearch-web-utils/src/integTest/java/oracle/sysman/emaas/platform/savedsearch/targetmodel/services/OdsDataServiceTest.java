@@ -23,7 +23,7 @@ public class OdsDataServiceTest {
 	
 	public void testCreateOdsEntity(@Mocked final RegistryLookupUtil registryLookupUtil, @Mocked final Link link,
 			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws HttpException, EMAnalyticsFwkException, URISyntaxException {
+			@Mocked final TenantInfo info) throws Exception {
 		new Expectations() {
 			{
 				TenantContext.getContext();
@@ -46,7 +46,7 @@ public class OdsDataServiceTest {
 	
 	public void testDeleteOdsEntity(@Mocked final SearchManager sman, @Mocked final RegistryLookupUtil registryLookupUtil, 
 			@Mocked final Link link, @Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws EMAnalyticsFwkException, URISyntaxException, HttpException {
+			@Mocked final TenantInfo info) throws Exception {
 		new Expectations() {
 			{
 				TenantContext.getContext();
@@ -69,7 +69,7 @@ public class OdsDataServiceTest {
 	
 	public void testCreateOdsEntityType(@Mocked final RegistryLookupUtil registryLookupUtil, @Mocked final Link link,
 			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws HttpException, EMAnalyticsFwkException, URISyntaxException {
+			@Mocked final TenantInfo info) throws Exception {
 		new Expectations() {
 			{
 				TenantContext.getContext();

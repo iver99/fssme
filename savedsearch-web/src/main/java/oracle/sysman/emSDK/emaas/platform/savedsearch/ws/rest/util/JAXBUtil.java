@@ -28,12 +28,16 @@ public class JAXBUtil
 			"categoryId", "metadata", "defaultFolderId", "queryStr", "locked", "uiHidden", "isWidget", "providerName",
 			"providerVersion", "providerDiscovery", "providerAssetRoot" };
 
-	public static JAXBContext getJAXBContext(Class<?> cls) throws JAXBException {
+	public static JAXBContext getJAXBContext(Class<?> cls) throws Exception
+	{
 		JAXBContext jaxbcontext = null;
 
-
+		try {
 			jaxbcontext = JAXBContext.newInstance(cls);
-
+		}
+		catch (JAXBException ex) {
+			throw new Exception(ex);
+		}
 
 		return jaxbcontext;
 	}
@@ -106,9 +110,11 @@ public class JAXBUtil
 		return object;
 	}*/
 
-	public static Object unmarshal(Reader reader, InputStream schemaFile, JAXBContext jaxbcontext) throws ImportException, JAXBException, SAXException {
-		final List<String> errorList = new ArrayList<String>();
+	public static Object unmarshal(Reader reader, InputStream schemaFile, JAXBContext jaxbcontext) throws ImportException
+	{
+		final ArrayList<String> errorList = new ArrayList<String>();
 		Object object = null;
+		try {
 			StreamSource xsdSource = null;
 			Unmarshaller u = jaxbcontext.createUnmarshaller();
 			SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -191,7 +197,17 @@ public class JAXBUtil
 			});
 			StreamSource br = new StreamSource(reader);
 			object = u.unmarshal(br);
-		if (!errorList.isEmpty()) {
+		}
+		catch (UnmarshalException e) {
+			e.printStackTrace();
+			if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.size() == 0) {
+				errorList.add(VALID_ERR_MESSAGE);
+			}
+		}
+		catch (JAXBException | SAXException e) {
+			e.printStackTrace();
+		}
+		if (errorList.size() > 0) {
 			StringBuffer errMsg = new StringBuffer();
 			for (String sError : errorList) {
 				errMsg.append(sError);

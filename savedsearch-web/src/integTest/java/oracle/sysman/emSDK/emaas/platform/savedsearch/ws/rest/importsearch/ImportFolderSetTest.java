@@ -34,7 +34,7 @@ public class ImportFolderSetTest {
     @Mocked
     JAXBContext jaxbContext;
     @Test
-    public void testImportsFolders(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
+    public void testImportsFolders(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
         final FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("name");
@@ -59,7 +59,7 @@ public class ImportFolderSetTest {
 
     }
     @Test
-    public void testImportsFolders2nd(@Mocked final JAXBUtil anyJaxbutil, @Mocked final Exception exception) throws JAXBException, IOException {
+    public void testImportsFolders2nd(@Mocked final JAXBUtil anyJaxbutil, @Mocked final Exception exception) throws Exception {
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
         FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("name");
@@ -85,7 +85,7 @@ public class ImportFolderSetTest {
     }
 
     @Test
-    public void testImportsFolders3th(@Mocked final JAXBUtil anyJaxbutil) throws JAXBException, IOException {
+    public void testImportsFolders3th(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
         FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("name");

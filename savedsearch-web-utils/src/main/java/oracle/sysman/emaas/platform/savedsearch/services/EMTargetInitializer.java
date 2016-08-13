@@ -53,7 +53,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager#postStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStart(ApplicationLifecycleEvent evt)
+	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 		String emTargetMBeanName = "";
 		try {
@@ -81,7 +81,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void postStop(ApplicationLifecycleEvent evt)
+	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
 		// TODO Auto-generated method stub
 
@@ -91,7 +91,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager#preStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStart(ApplicationLifecycleEvent evt)
+	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 		// TODO Auto-generated method stub
 
@@ -101,7 +101,7 @@ public class EMTargetInitializer implements ApplicationServiceManager
 	 * @see oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager#preStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
-	public void preStop(ApplicationLifecycleEvent evt)
+	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
 		String emTargetMBeanName = SVR_MBEAN_NAME_PREFIX + appName;
 		try {

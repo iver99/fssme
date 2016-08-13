@@ -16,7 +16,6 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -41,6 +40,7 @@ public class CategoryAPI
 
 	@Context
 	private UriInfo uri;
+	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
 	private static final Logger LOGGER = LogManager.getLogger(CategoryAPI.class);
 
 	/*	@DELETE
@@ -336,7 +336,7 @@ public class CategoryAPI
 		if (name == null) {
 			return Response.status(400).entity("please give category name").build();
 		}
-		else if (StringUtil.isEmpty(name)) {
+		else if (name.equals("")) {
 			return Response.status(400).entity("please give category name").build();
 		}
 		CategoryManager catMan = CategoryManager.getInstance();

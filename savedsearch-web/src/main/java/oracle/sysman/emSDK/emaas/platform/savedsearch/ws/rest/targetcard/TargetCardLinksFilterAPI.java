@@ -3,6 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.targetcard;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
@@ -105,13 +106,12 @@ public class TargetCardLinksFilterAPI {
             message = e.getMessage();
             statusCode = e.getStatusCode();
             LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
-        } catch (JSONException e) {
-            LOGGER.error(e.getLocalizedMessage());
         }
         return Response.status(statusCode).entity(message).build();
     }
 
-    private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException, JSONException {
+    private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException
+    {
         //copy from the SearchAPI xidai 4/13/2016
         Search searchObj = new SearchImpl();
         // Data population !
@@ -143,6 +143,7 @@ public class TargetCardLinksFilterAPI {
                     EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING, je);
         }
         String desc = "";
+        try {
             desc = json.getString("description");
             if (StringUtil.isSpecialCharFound(desc)) {
                 throw new EMAnalyticsWSException(
@@ -150,13 +151,34 @@ public class TargetCardLinksFilterAPI {
                         EMAnalyticsWSException.JSON_INVALID_CHAR);
             }
 
+        }
+        catch (JSONException je) {
+            //ignore the description if not provided by user
+        }
 
+        try {
             validationUtil.validateLength("description", desc, 256);
+        }
+        catch (EMAnalyticsWSException e) {
+            throw e;
+        }
 
+        try {
             JSONObject jsonObj = json.getJSONObject("category");
             searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
+        }
+        catch (JSONException je) {
+            throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",
+                    EMAnalyticsWSException.JSON_SEARCH_CATEGORY_ID_MISSING, je);
+        }
+        try {
             JSONObject jsonFold = json.getJSONObject("folder");
             searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id")));
+        }
+        catch (JSONException je) {
+            throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",
+                    EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING, je);
+        }
 
         // Nullable properties !
         searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));

@@ -74,7 +74,7 @@ public class TenantSubscriptionUtilTest
     @Mocked
     AppMappingEntity.AppMappingValue appMappingValue;
 	@Test(expectedExceptions = {NullPointerException.class})
-	public void testGetTenantSubscribedCategories() throws EMAnalyticsFwkException {
+	public void testGetTenantSubscribedCategories() throws Exception {
         final ArrayList<Category> categories = new ArrayList<>();
         categories.add(category);
         final ArrayList<String> cachedApps = new ArrayList<>();

@@ -84,30 +84,26 @@ public class RegistryServiceManagerTest
 	}
 
 	@Test
-	public void testPostStart()
-	{
+	public void testPostStart() throws Exception {
 		registryServiceManager = new RegistryServiceManager();
 		registryServiceManager.postStart(applicationLifecycleEvent);
 	}
 
 	@Test
-	public void testPostStop()
-	{
+	public void testPostStop() throws Exception {
 		registryServiceManager = new RegistryServiceManager();
 		registryServiceManager.postStop(applicationLifecycleEvent);
 	}
 
 	@Test
-	public void testPreStart()
-	{
+	public void testPreStart() throws Exception {
 		registryServiceManager = new RegistryServiceManager();
 		registryServiceManager.preStart(applicationLifecycleEvent);
 	}
 
 	@Test
 	public void testPreStop(@Mocked final RegistrationManager registrationManager,
-			@Mocked final RegistrationClient registrationClient)
-	{
+			@Mocked final RegistrationClient registrationClient) throws Exception {
 		new Expectations() {
 			{
 				RegistrationManager.getInstance();

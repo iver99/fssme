@@ -160,7 +160,8 @@ public class ImportCategorySet
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes("application/xml")
-	public Response importsCategories(String xml) throws IOException {
+	public Response importsCategories(String xml)
+	{
 		Response res = null;
 		InputStream stream = null;
 		if (xml != null && xml.length() == 0) {
@@ -206,8 +207,12 @@ public class ImportCategorySet
 		}
 		finally {
 			if (stream != null) {
+				try {
 					stream.close();
+				}
+				catch (IOException e) {
 
+				}
 			}
 		}
 		return res;

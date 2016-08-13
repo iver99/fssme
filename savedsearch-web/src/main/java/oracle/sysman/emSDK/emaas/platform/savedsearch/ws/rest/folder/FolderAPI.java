@@ -186,7 +186,7 @@ public class FolderAPI
 	 * savePath to distinguish the path save mkdir-p option !! objFld =
 	 * mgrFolder.savePath(objFld); folderObj.put("parentId", objFld.getId());
 	 *
-	 * msg = JSONUtil.objectToJSONString(objFld); } catch
+	 * msg = JSONUtil.ObjectToJSONString(objFld); } catch
 	 * (EMAnalyticsFwkException e) { msg = e.getMessage(); statusCode =
 	 * e.getStatusCode(); } catch (EMAnalyticsWSException e) { msg =
 	 * e.getMessage(); statusCode = e.getStatusCode(); } catch (JSONException e)

@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The interface <code>DashboardComponent</code> represents a component INSTANCE which can be used in Em Analytics dashboard
+ * The interface <code>DashboardComponent</code> represents a component instance which can be used in Em Analytics dashboard
  * creation.
  * 
  * @version $Header:
@@ -101,7 +101,7 @@ public interface DashboardComponent
 	//searchables
 
 	/**
-	 * Returns the list of named parameters defined for the component INSTANCE.
+	 * Returns the list of named parameters defined for the component instance.
 	 * 
 	 * @return list of parameters
 	 */

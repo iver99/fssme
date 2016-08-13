@@ -131,7 +131,8 @@ public class ImportFolderSet
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes("application/xml")
-	public Response importsFolders(String xml) throws IOException {
+	public Response importsFolders(String xml)
+	{
 
 		Response res = null;
 		InputStream stream = null;
@@ -178,8 +179,12 @@ public class ImportFolderSet
 		}
 		finally {
 			if (stream != null) {
+				try {
 					stream.close();
+				}
+				catch (IOException e) {
 
+				}
 			}
 		}
 		return res;
@@ -200,4 +205,4 @@ public class ImportFolderSet
 
 /*FolderSet fSet = new FolderSet();
 fSet.setFolderSet(rejectedList);
-result=result+JAXBUtil.marshal(jaxbContext,ImportFolderSet.class.getClassLoader().getResourceAsStream(RESOURCE_PATH), fSet);*/
+result=result+JAXBUtil.marshal(jaxbContext,ImportFolderSet.class.getClassLoader().getResourceAsStream(resourcePath), fSet);*/

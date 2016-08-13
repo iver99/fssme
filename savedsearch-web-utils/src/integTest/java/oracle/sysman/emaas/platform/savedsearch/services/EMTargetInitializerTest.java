@@ -48,13 +48,13 @@ public class EMTargetInitializerTest {
     }
 
     @Test
-    public void testPostStart_Exception(@Mocked final MBeanServer mbs,@Mocked final Exception e){
+    public void testPostStart_Exception(@Mocked final MBeanServer mbs,@Mocked final Exception e) throws Exception {
         emTargetInitializer = new EMTargetInitializer();
         emTargetInitializer.postStart(new ApplicationLifecycleEvent(null,null,false));
     }
 
     @Test
-    public void testPostStart_noneExceptionAndInstanceAlreadyExistsException(@Mocked final MBeanServer mbs, @Mocked final InitialContext initialContext, @Mocked final InstanceAlreadyExistsException e) throws NamingException {
+    public void testPostStart_noneExceptionAndInstanceAlreadyExistsException(@Mocked final MBeanServer mbs, @Mocked final InitialContext initialContext, @Mocked final InstanceAlreadyExistsException e) throws Exception {
         new Expectations(){
             {
                 InitialContext.doLookup(anyString);
@@ -75,7 +75,7 @@ public class EMTargetInitializerTest {
     }
 
     @Test
-    public void testPostStart_MalformedObjectNameException(@Mocked final MBeanServer mbs,@Mocked final InitialContext initialContext) throws NamingException {
+    public void testPostStart_MalformedObjectNameException(@Mocked final MBeanServer mbs,@Mocked final InitialContext initialContext) throws Exception {
         new Expectations(){
             {
                 InitialContext.doLookup(anyString);
@@ -90,18 +90,18 @@ public class EMTargetInitializerTest {
 
 
     @Test
-    public void testPostStop(){
+    public void testPostStop() throws Exception {
         emTargetInitializer.postStop(null);
     }
 
     @Test
-    public void testPreStart(){
+    public void testPreStart() throws Exception {
         emTargetInitializer.preStart(null);
     }
 
 
     @Test
-    public void testPreStop_isRegistered(@Mocked final ManagementFactory managementFactory, @Mocked final MBeanServer mbs, @Mocked final JMXUtil jmxUtil) throws MalformedObjectNameException, InstanceNotFoundException, MBeanRegistrationException {
+    public void testPreStop_isRegistered(@Mocked final ManagementFactory managementFactory, @Mocked final MBeanServer mbs, @Mocked final JMXUtil jmxUtil) throws Exception {
         new Expectations(){
             {
                 ManagementFactory.getPlatformMBeanServer();
@@ -119,7 +119,7 @@ public class EMTargetInitializerTest {
     }
 
     @Test
-    public void testPreStop_notRegistered(@Mocked final ManagementFactory managementFactory, @Mocked final MBeanServer mbs, @Mocked final JMXUtil jmxUtil) throws MalformedObjectNameException, InstanceNotFoundException, MBeanRegistrationException {
+    public void testPreStop_notRegistered(@Mocked final ManagementFactory managementFactory, @Mocked final MBeanServer mbs, @Mocked final JMXUtil jmxUtil) throws Exception {
         new Expectations(){
             {
                 ManagementFactory.getPlatformMBeanServer();

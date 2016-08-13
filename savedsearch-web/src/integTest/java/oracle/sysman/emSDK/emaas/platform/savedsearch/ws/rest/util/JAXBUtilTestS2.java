@@ -31,7 +31,7 @@ public class JAXBUtilTestS2 {
     @Mocked
     SchemaFactory schemaFactory;
     @Test
-    public void testGetJAXBContext() throws JAXBException {
+    public void testGetJAXBContext() throws Exception {
         JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
     }
 
@@ -49,7 +49,7 @@ public class JAXBUtilTestS2 {
 
     @Mocked
     Throwable throwable;
-    @Test(expectedExceptions = {UnmarshalException.class})
+    @Test(expectedExceptions = {ImportException.class})
     public void testUnmarshalFFor() throws JAXBException, ImportException, SAXException {
 
         new Expectations(){
@@ -62,7 +62,7 @@ public class JAXBUtilTestS2 {
             JAXBUtil.unmarshal(reader, inputStream, jaxbContext);
     }
 
-    @Test(expectedExceptions = {JAXBException.class})
+    @Test
     public void testUnmarshalFForValidationEventHandler() throws JAXBException, ImportException, SAXException {
         new Expectations() {
             {

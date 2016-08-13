@@ -72,27 +72,27 @@ public class CacheManager
 		return getInternalCache(cacheName);
 	}
 
-	public Object getCacheable(String cacheName, Keys keys) 
+	public Object getCacheable(String cacheName, Keys keys) throws Exception
 	{
 		return getCacheable(null, cacheName, keys);
 	}
 
-	public Object getCacheable(String cacheName, Keys keys, ICacheFetchFactory ff) 
+	public Object getCacheable(String cacheName, Keys keys, ICacheFetchFactory ff) throws Exception
 	{
 		return getCacheable(null, cacheName, keys, ff);
 	}
 
-	public Object getCacheable(String cacheName, String key) 
+	public Object getCacheable(String cacheName, String key) throws Exception
 	{
 		return getCacheable(cacheName, new Keys(key));
 	}
 
-	public Object getCacheable(Tenant tenant, String cacheName, Keys keys)
+	public Object getCacheable(Tenant tenant, String cacheName, Keys keys) throws Exception
 	{
 		return getCacheable(tenant, cacheName, keys, null);
 	}
 
-	public Object getCacheable(Tenant tenant, String cacheName, Keys keys, ICacheFetchFactory ff)
+	public Object getCacheable(Tenant tenant, String cacheName, Keys keys, ICacheFetchFactory ff) throws Exception
 	{
 		CacheUnit cache = getInternalCache(cacheName);
 		if (cache == null) {
@@ -119,12 +119,12 @@ public class CacheManager
 		return value;
 	}
 
-	public Object getCacheable(Tenant tenant, String cacheName, String key)
+	public Object getCacheable(Tenant tenant, String cacheName, String key) throws Exception
 	{
 		return getCacheable(tenant, cacheName, new Keys(key));
 	}
 
-	public Object getCacheable(Tenant tenant, String cacheName, String key, ICacheFetchFactory ff) 
+	public Object getCacheable(Tenant tenant, String cacheName, String key, ICacheFetchFactory ff) throws Exception
 	{
 		return getCacheable(tenant, cacheName, new Keys(key), ff);
 	}

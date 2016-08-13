@@ -82,7 +82,7 @@ public class ImportTest extends BaseTest
 	}
 
 	//@Test
-	public static void testImportFolderSet() throws EMAnalyticsFwkException {
+	public static void testImportFolderSet() throws Exception {
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			FolderDetails folder = new FolderDetails();
 			folder.setName("ImportFolderTest_g3");
@@ -110,7 +110,7 @@ public class ImportTest extends BaseTest
 	}
 
 	@Test 
-	public static void testImportSearchSet() throws EMAnalyticsFwkException {
+	public static void testImportSearchSet() throws Exception {
 		Integer folderId = 0;
 		Integer categoryId = 0;
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
