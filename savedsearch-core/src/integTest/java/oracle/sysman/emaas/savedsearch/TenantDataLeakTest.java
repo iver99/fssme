@@ -325,6 +325,9 @@ public class TenantDataLeakTest extends BaseTest
 			CategoryManager objSearch = CategoryManagerImpl.getInstance();
 			category = objSearch.getCategory(id);
 		}
+		catch (Exception e) {
+			category = null;
+		}
 		finally {
 			TenantContext.clearContext();
 		}
@@ -340,6 +343,9 @@ public class TenantDataLeakTest extends BaseTest
 
 			folder = objSearch.getFolder(id);
 
+		}
+		catch (Exception e) {
+			folder = null;
 		}
 		finally {
 			TenantContext.clearContext();
