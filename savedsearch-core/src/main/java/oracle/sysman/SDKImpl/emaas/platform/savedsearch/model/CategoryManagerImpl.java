@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceException;
 
@@ -438,12 +439,17 @@ public class CategoryManagerImpl extends CategoryManager
 					}
 					else {
 						EmAnalyticsCategory categoryObj = null;
+						try {
 							categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
 									.setParameter("categoryName", category.getName())
 									.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 									.getSingleResult();
 							categorytmp.setId((int) categoryObj.getCategoryId());
 							importedList.add(CategoryManagerImpl.createCategoryObject(categoryObj, null));
+						}
+						catch (NoResultException e) {
+							categoryObj = null;
+						}
 						if (categoryObj == null) {
 							if (categorytmp instanceof ImportCategoryImpl) {
 								Object obj = categorytmp.getFolderDetails();
