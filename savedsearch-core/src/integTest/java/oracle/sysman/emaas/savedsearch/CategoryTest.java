@@ -40,9 +40,8 @@ public class CategoryTest extends BaseTest
 	}
 
 	@BeforeClass
-	public static void testSaveCategory()
-	{
-		try {
+	public static void testSaveCategory() throws EMAnalyticsFwkException {
+
 
 			CategoryManager catMan = CategoryManager.getInstance();
 			Category category = catMan.createNewCategory();
@@ -82,11 +81,6 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals("ProviderAssetRootTest", category.getProviderAssetRoot());
 			// Assert.assertEquals("MyCategory", category.getDisplayName());
 			AssertJUnit.assertNotNull(category.getCreatedOn());
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-
 	}
 
 	@BeforeClass
@@ -113,7 +107,7 @@ public class CategoryTest extends BaseTest
 
 	}*/
 
-	@Test 
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
 	public void testDeleteCategoryInvalidId() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
 			catMan.deleteCategory(99898987898L, true);
@@ -216,7 +210,7 @@ public class CategoryTest extends BaseTest
 		}
 	}*/
 
-        @Test 
+        @Test(expectedExceptions = {EMAnalyticsFwkException.class})
 	public void testgetCategoryInvalidId() throws EMAnalyticsFwkException {
 
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -225,14 +219,14 @@ public class CategoryTest extends BaseTest
 
 	}
 
-	@Test
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
 	public void testgetCategoryInvalidName() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
 			catMan.getCategory("this is invalid name");
 
 	}
 
-	@Test 
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
 	public void testInvalidData() throws EMAnalyticsFwkException {
 
 		CategoryManager catMan = CategoryManager.getInstance();

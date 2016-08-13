@@ -49,7 +49,7 @@ class EmAnalyticsObjectUtil
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
 
-		if (em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder)
+		if (!em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder)
 				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList().isEmpty()) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with categories",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);

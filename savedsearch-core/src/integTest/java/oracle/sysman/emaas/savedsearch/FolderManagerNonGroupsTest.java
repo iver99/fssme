@@ -157,7 +157,7 @@ public class FolderManagerNonGroupsTest {
 
     }
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testDeleteInvalidFolderId() throws EMAnalyticsFwkException {
         FolderManager foldMan = FolderManager.getInstance();
         TenantContext.setContext(
@@ -225,7 +225,7 @@ public class FolderManagerNonGroupsTest {
         }
     }
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testDuplicate() throws EMAnalyticsFwkException {
         TenantContext.setContext(
                 new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
@@ -280,7 +280,7 @@ public class FolderManagerNonGroupsTest {
         }
     }
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testGetInvalidFolderId() throws EMAnalyticsFwkException {
         TenantContext.setContext(
                 new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
@@ -362,7 +362,7 @@ public class FolderManagerNonGroupsTest {
 
     }
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testInvalidParentFolder() throws EMAnalyticsFwkException {
 
         FolderManager fman = FolderManager.getInstance();
