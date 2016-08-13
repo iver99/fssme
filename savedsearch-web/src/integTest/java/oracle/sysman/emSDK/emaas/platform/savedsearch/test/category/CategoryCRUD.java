@@ -215,7 +215,7 @@ public class CategoryCRUD {
                     .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/categories/");
             JsonPath jp1 = res1.jsonPath();
             Assert.assertTrue(res1.getStatusCode() == 200);
-            Assert.assertTrue(jp1.getList("name").isEmpty());
+            Assert.assertTrue(!jp1.getList("name").isEmpty());
             Assert.assertNotNull(jp1.getList("href").get(0));
             Assert.assertTrue(String.valueOf(jp1.getList("href").get(0)).contains("/savedsearch/v1/category/"));
     }

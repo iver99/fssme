@@ -216,7 +216,8 @@ public class ImportSearchSet
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes("application/xml")
-	public Response importSearches(String xml, @HeaderParam("SSF_OOB") String oobSearch) throws IOException {
+	public Response importSearches(String xml, @HeaderParam("SSF_OOB") String oobSearch)
+	{
 
 		Response res = null;
 		InputStream stream = null;
@@ -272,9 +273,12 @@ public class ImportSearchSet
 		}
 		finally {
 			if (stream != null) {
-
+				try {
 					stream.close();
+				}
+				catch (IOException e) {
 
+				}
 			}
 		}
 		return res;

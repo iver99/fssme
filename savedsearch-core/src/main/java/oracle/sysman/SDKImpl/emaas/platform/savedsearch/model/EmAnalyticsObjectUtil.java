@@ -95,6 +95,7 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsCategory cateObj = null;
+		try {
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null
@@ -107,11 +108,16 @@ class EmAnalyticsObjectUtil
 				cateObj = null;
 			}
 
+		}
+		catch (Exception nre) {
+			// do nothing
+		}
 		return cateObj;
 	}
 
 	public static EmAnalyticsCategory getCategoryByName(String categoryName, EntityManager em)
 	{
+		try {
 			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
 				return (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByNameForTenant")
 						.setParameter("categoryName", categoryName).getSingleResult();
@@ -122,6 +128,11 @@ class EmAnalyticsObjectUtil
 						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 						.getSingleResult();
 			}
+		}
+		catch (NoResultException e) {
+			return null;
+
+		}
 	}
 
 	public static EmAnalyticsCategory getEmAnalyticsCategoryForAdd(Category category, EntityManager em)
@@ -249,10 +260,14 @@ class EmAnalyticsObjectUtil
 				if (folder.getParentId() != null) {
 					EmAnalyticsFolder parentFolderObj = null;
 					if (folder.getParentId() == 1) {
+						try {
 							parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
 									.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 									.getSingleResult();
-
+						}
+						catch (NoResultException e) {
+							parentFolderObj = null;
+						}
 					}
 					else {
 						parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId().longValue(), em);
@@ -268,6 +283,12 @@ class EmAnalyticsObjectUtil
 				}
 			}
 
+		}
+		catch (NoResultException nre) {
+			folderObj = null;
+		}
+		catch (Exception e) {
+			folderObj = null;
 		}
 		finally {
 			if (em != null) {
@@ -325,11 +346,15 @@ class EmAnalyticsObjectUtil
 				EmAnalyticsFolder parentFolderObj = null;
 
 				if (folder.getParentId() == 1) { //get root for folder for tenant-id  vb
+					try {
 						parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
 						/*parentFolderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolders")
 								.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 								.getSingleResult();*/
-
+					}
+					catch (NoResultException e) {
+						parentFolderObj = null;
+					}
 				}
 				if (parentFolderObj == null) {
 					parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
@@ -519,6 +544,7 @@ class EmAnalyticsObjectUtil
 
 		EmAnalyticsFolder folderObj = null;
 
+		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
 			if (folderObj != null
@@ -533,6 +559,11 @@ class EmAnalyticsObjectUtil
 				folderObj = null;
 			}
 
+		}
+		catch (Exception nre) {
+			//do nothing
+
+		}
 		return folderObj;
 	}
 
@@ -541,6 +572,7 @@ class EmAnalyticsObjectUtil
 
 		EmAnalyticsFolder folderObj = null;
 
+		try {
 
 			folderObj = em.find(EmAnalyticsFolder.class, id);
 			if (folderObj != null
@@ -553,6 +585,11 @@ class EmAnalyticsObjectUtil
 				folderObj = null;
 			}
 
+		}
+		catch (Exception nre) {
+			//do nothing
+
+		}
 		return folderObj;
 	}
 
@@ -580,6 +617,7 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsSearch searchObj = null;
+		try {
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null) {
@@ -594,6 +632,10 @@ class EmAnalyticsObjectUtil
 					searchObj = null;
 				}
 			}
+		}
+		catch (Exception nre) {
+			//don nothing
+		}
 		return searchObj;
 	}
 
@@ -601,6 +643,7 @@ class EmAnalyticsObjectUtil
 	{
 
 		EmAnalyticsSearch searchObj = null;
+		try {
 
 			searchObj = em.find(EmAnalyticsSearch.class, id);
 			if (searchObj != null
@@ -613,6 +656,10 @@ class EmAnalyticsObjectUtil
 				searchObj = null;
 			}
 
+		}
+		catch (Exception nre) {
+			//don nothing
+		}
 		return searchObj;
 	}
 

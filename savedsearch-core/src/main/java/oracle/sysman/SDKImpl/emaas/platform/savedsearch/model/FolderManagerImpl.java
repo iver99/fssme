@@ -286,7 +286,7 @@ public class FolderManagerImpl extends FolderManager
 
 	}
 
-	public List<FolderImpl> saveMultipleFolders(List<FolderDetails> folders)
+	public List<FolderImpl> saveMultipleFolders(List<FolderDetails> folders) throws Exception
 	{
 		int iCount = 0;
 		boolean bCommit = true;

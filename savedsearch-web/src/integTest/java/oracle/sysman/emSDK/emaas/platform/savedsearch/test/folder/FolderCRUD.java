@@ -9,6 +9,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.appender.SyslogAppender;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -105,7 +106,7 @@ public class FolderCRUD {
         TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
         TENANT_ID_OPC1 = ct.getTenant();
 
-        FolderCRUD.importCategories();
+//        FolderCRUD.importCategories();
 
 
     }
@@ -205,6 +206,7 @@ public class FolderCRUD {
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when()
                 .post("/folder");
         Assert.assertTrue(res2.getStatusCode() == 400);
+        System.out.println(res2.jsonPath().toString());
         String message = res2.jsonPath().getString("message");
         Assert.assertEquals(message, "The folder name 'Custom_Folder' already exist");
         Assert.assertEquals(res1.jsonPath().getInt("id"), res2.jsonPath().getInt("id"));

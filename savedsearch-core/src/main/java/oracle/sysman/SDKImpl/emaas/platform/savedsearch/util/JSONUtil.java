@@ -131,7 +131,12 @@ public class JSONUtil
 		String result = "";
 		JSONObject json1 = new JSONObject(jsonString);
 
+		try {
 			result = json1.getString(field);
+		}
+		catch (Exception e) {
+			return null;
+		}
 		return (List<T>) JSONUtil.fromJson(mapper, result, JSONUtil.constructParametricType(mapper, List.class, classMeta));
 	}
 

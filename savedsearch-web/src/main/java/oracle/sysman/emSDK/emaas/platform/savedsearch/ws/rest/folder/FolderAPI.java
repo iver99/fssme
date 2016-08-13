@@ -139,7 +139,8 @@ public class FolderAPI
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response createFolder(JSONObject folderObj) throws JSONException {
+	public Response createFolder(JSONObject folderObj)
+	{
 		LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/folder");
 		Folder objFld = null;
 		String msg = "";
@@ -420,7 +421,8 @@ public class FolderAPI
 		return Response.status(statusCode).entity(msg).build();
 	}
 
-	private Folder getFolderFromJsonForCreate(JSONObject folderObj) throws EMAnalyticsWSException, JSONException {
+	private Folder getFolderFromJsonForCreate(JSONObject folderObj) throws EMAnalyticsWSException
+	{
 		Folder objFld = FolderManager.getInstance().createNewFolder();
 		try {
 			String name = folderObj.getString("name");
@@ -453,6 +455,7 @@ public class FolderAPI
 		}
 		// nullables !!
 		String desc = "";
+		try {
 			desc = folderObj.getString("description");
 			if (StringUtil.isSpecialCharFound(desc)) {
 				throw new EMAnalyticsWSException(
@@ -460,7 +463,10 @@ public class FolderAPI
 						EMAnalyticsWSException.JSON_INVALID_CHAR);
 			}
 
-
+		}
+		catch (JSONException je) {
+			//ignore the description if not provided by user
+		}
 
 		try {
 			validationUtil.validateLength("description", desc, 256);
