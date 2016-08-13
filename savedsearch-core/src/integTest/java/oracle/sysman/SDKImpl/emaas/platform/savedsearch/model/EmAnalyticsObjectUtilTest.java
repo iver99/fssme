@@ -79,7 +79,7 @@ public class EmAnalyticsObjectUtilTest {
         EmAnalyticsObjectUtil.canDeleteFolder(10L, entityManager);
     }
 
-    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    @Test
     public void testCanDeleteFolder2nd() throws EMAnalyticsFwkException {
 
         new Expectations() {
