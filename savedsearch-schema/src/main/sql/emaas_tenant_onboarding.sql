@@ -114,6 +114,7 @@ COMMIT;
 @&EMSAAS_SQL_ROOT/1.9.0/emaas_savesearch_seed_data_targetcard.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.9.0/emaas_savesearch_seed_data_params.sql  &TENANT_ID
 
+@&EMSAAS_SQL_ROOT/1.9.1/emaas_savesearch_seed_data_remove_brownfield.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.9.1/emaas_savesearch_seed_data_ocs.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.9.1/emaas_savesearch_seed_data_ui_gallery.sql  &TENANT_ID
 
