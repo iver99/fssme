@@ -355,6 +355,9 @@ public class TenantDataLeakTest extends BaseTest
 			SearchManager objSearch = SearchManagerImpl.getInstance();
 			search = objSearch.getSearch(id);
 		}
+		catch (Exception e) {
+			search = null;
+		}
 		finally {
 			TenantContext.clearContext();
 		}

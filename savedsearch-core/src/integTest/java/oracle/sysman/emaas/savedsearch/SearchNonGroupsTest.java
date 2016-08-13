@@ -167,7 +167,7 @@ public class SearchNonGroupsTest {
             }
     }
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testDeleteInvalidSearchId() throws EMAnalyticsFwkException {
         SearchManager sman = SearchManager.getInstance();
             sman.deleteSearch(99898987898L, true);
@@ -176,7 +176,7 @@ public class SearchNonGroupsTest {
 //                    EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
     }
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testDeleteSystemSearch() throws EMAnalyticsFwkException {
             SearchManager objSearch = SearchManagerImpl.getInstance();
             objSearch.deleteSearch(TA_SEARCH_ID, true);
@@ -312,7 +312,7 @@ public class SearchNonGroupsTest {
 
     }
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testGetSearchListByLastAccessDate() throws EMAnalyticsFwkException {
         SearchManager searchMgr = SearchManager.getInstance();
         FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
@@ -397,7 +397,7 @@ public class SearchNonGroupsTest {
             objFolder.deleteFolder(folderId4, true);
     }
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testInvalidDataForEdit() throws EMAnalyticsFwkException {
         SearchManager objSearch = SearchManager.getInstance();
         Search searchObj = null;
@@ -422,7 +422,7 @@ public class SearchNonGroupsTest {
     }
 
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testInvalidDataForSave() throws EMAnalyticsFwkException {
         SearchManager objSearch = SearchManager.getInstance();
         Search searchObj = null;
@@ -621,7 +621,7 @@ public class SearchNonGroupsTest {
 
 
 
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testSaveSearch() throws EMAnalyticsFwkException {
         //saveSearch() has been tested in initialization(), here only test search with invalid data
         SearchManager searchMgr = SearchManager.getInstance();
