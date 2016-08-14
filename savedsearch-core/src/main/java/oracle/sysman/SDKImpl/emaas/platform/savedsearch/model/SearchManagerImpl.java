@@ -318,13 +318,13 @@ public class SearchManagerImpl extends SearchManager
 		//		}
 		//		catch (Exception e) {
 		//			if (e.getCause() != null && e.getCause().getMessage().contains("Cannot acquire data source")) {
-		//				LOGGER.error("Error while acquiring the data source" + e.getMessage(), e);
+		//				_logger.error("Error while acquiring the data source" + e.getMessage(), e);
 		//				throw new EMAnalyticsFwkException(
 		//						"Error while connecting to data source, please check the data source details: ",
 		//						EMAnalyticsFwkException.ERR_DATA_SOURCE_DETAILS, null);
 		//			}
 		//			else {
-		//				LOGGER.error("Error while retrieving the count of searches for the parent folder: " + folderId, e);
+		//				_logger.error("Error while retrieving the count of searches for the parent folder: " + folderId, e);
 		//				throw new EMAnalyticsFwkException("Error while retrieving the count of searches for the parent folder: "
 		//						+ folderId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
 		//			}

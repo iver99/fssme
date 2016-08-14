@@ -106,7 +106,14 @@ public class FolderCRUD {
         TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
         TENANT_ID_OPC1 = ct.getTenant();
 
-//        FolderCRUD.importCategories();
+        try {
+
+            FolderCRUD.importCategories();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -754,6 +761,7 @@ public class FolderCRUD {
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
                 .post("/folder");
         JsonPath jp1 = res1.jsonPath();
+        System.out.print(res1.getStatusCode());
         Assert.assertTrue(res1.getStatusCode() == 201);
         Response res = RestAssured.given().log().everything().header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/folder/" + jp1.get("id"));
@@ -774,6 +782,7 @@ public class FolderCRUD {
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when()
                 .post("/search");
         JsonPath jp2 = res2.jsonPath();
+        System.out.println(res2.getStatusCode());
         Assert.assertTrue(res2.getStatusCode() == 201);
         Response res10 = RestAssured.given().log().everything().header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?folderId=" + jp1.get("id"));
