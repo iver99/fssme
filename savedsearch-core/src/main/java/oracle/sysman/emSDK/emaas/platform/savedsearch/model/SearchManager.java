@@ -89,14 +89,6 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Search getSearch(long searchId) throws EMAnalyticsFwkException;
-	
-	/**
-	 * Return the search in tenant scope. Don't care the owner of this search.
-	 * @param searchId
-	 * @return
-	 * @throws EMAnalyticsFwkException
-	 */
-	public abstract Search getSearchWithoutOwner(long searchId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Return the search in tenant scope. Don't care the owner of this search.

@@ -393,7 +393,7 @@ public class SearchManagerImplTest
 		};
 		searchManager.getSearchListByFolderId(1234);
 	}
-
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
 	public void testGetSearchListByFolderIdException(@Mocked final PersistenceManager persistenceManager,
 			@Mocked final EntityManager entityManager, @Mocked final Query query,
 			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
