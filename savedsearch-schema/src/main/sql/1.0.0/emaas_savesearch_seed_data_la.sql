@@ -1411,6 +1411,33 @@ V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
 
+ V_SEARCH_ID             :=  2006;
+ V_NAME                  :=  'WIDGET_VIEWMODEL';
+ V_PARAM_ATTRIBUTES      :=  null;
+ V_PARAM_TYPE            :=  1;
+ V_PARAM_VALUE_STR       :=  '/js/viewmodel/search/visualization/loganVisStatsViewModel.js';
+ V_PARAM_VALUE_CLOB      :=  null;
+ V_TENANT_ID             :=  '&TENANT_ID';
+
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+) values (
+V_SEARCH_ID,
+V_NAME,
+V_PARAM_ATTRIBUTES,
+V_PARAM_TYPE,
+V_PARAM_VALUE_STR,
+V_PARAM_VALUE_CLOB,
+V_TENANT_ID
+);
+
   V_SEARCH_ID            :=   2006;
  V_NAME                  :=   'WIDGET_TEMPLATE';
  V_PARAM_ATTRIBUTES      :=   null;
@@ -1994,6 +2021,33 @@ V_TENANT_ID
  V_PARAM_VALUE_STR       :=   'LA_WIDGET_PIE';
  V_PARAM_VALUE_CLOB      :=   null;
  V_TENANT_ID             :=   '&TENANT_ID';
+
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+) values (
+V_SEARCH_ID,
+V_NAME,
+V_PARAM_ATTRIBUTES,
+V_PARAM_TYPE,
+V_PARAM_VALUE_STR,
+V_PARAM_VALUE_CLOB,
+V_TENANT_ID
+);
+
+ V_SEARCH_ID             :=  2009;
+ V_NAME                  :=  'WIDGET_VIEWMODEL';
+ V_PARAM_ATTRIBUTES      :=  null;
+ V_PARAM_TYPE            :=  1;
+ V_PARAM_VALUE_STR       :=  '/js/viewmodel/search/visualization/loganVisStatsViewModel.js';
+ V_PARAM_VALUE_CLOB      :=  null;
+ V_TENANT_ID             :=  '&TENANT_ID';
 
 Insert into EMS_ANALYTICS_SEARCH_PARAMS
 (
@@ -5905,6 +5959,33 @@ V_TENANT_ID
  V_PARAM_VALUE_STR       :=   'LA_WIDGET_PIE';
  V_PARAM_VALUE_CLOB      :=   null;
  V_TENANT_ID             :=   '&TENANT_ID';
+
+Insert into EMS_ANALYTICS_SEARCH_PARAMS
+(
+SEARCH_ID,
+NAME,
+PARAM_ATTRIBUTES,
+PARAM_TYPE,
+PARAM_VALUE_STR,
+PARAM_VALUE_CLOB,
+TENANT_ID
+) values (
+V_SEARCH_ID,
+V_NAME,
+V_PARAM_ATTRIBUTES,
+V_PARAM_TYPE,
+V_PARAM_VALUE_STR,
+V_PARAM_VALUE_CLOB,
+V_TENANT_ID
+);
+
+ V_SEARCH_ID             :=  2026;
+ V_NAME                  :=  'WIDGET_VIEWMODEL';
+ V_PARAM_ATTRIBUTES      :=  null;
+ V_PARAM_TYPE            :=  1;
+ V_PARAM_VALUE_STR       :=  '/js/viewmodel/search/visualization/loganVisStatsViewModel.js';
+ V_PARAM_VALUE_CLOB      :=  null;
+ V_TENANT_ID             :=  '&TENANT_ID';
 
 Insert into EMS_ANALYTICS_SEARCH_PARAMS
 (

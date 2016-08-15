@@ -142,6 +142,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/LogUtilTest.class
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/ParameterDetailsTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/SchemaVersionTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/WidgetChangeNotificationTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/SearchPaurameterDetailsTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/DBConnectionManagerTest.class"
@@ -162,6 +163,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/QAToolUtil
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/LogUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RegistryLookupUtilTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RestClientTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptionUtilTest.class"
 	useRestAssured =true
 ext.set("testType", "unit")

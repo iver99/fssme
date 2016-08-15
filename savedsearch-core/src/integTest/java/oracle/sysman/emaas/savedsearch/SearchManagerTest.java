@@ -7,6 +7,13 @@ import java.util.Random;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import org.testng.AssertJUnit;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
@@ -27,13 +34,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
-
-import org.testng.AssertJUnit;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 public class SearchManagerTest extends BaseTest
 {
@@ -164,9 +167,9 @@ public class SearchManagerTest extends BaseTest
 	public void initTenantDetails()
 	{
 
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_NAME).toString())));
+		TenantContext.setContext(
+				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
 
 	}
 
@@ -446,7 +449,8 @@ public class SearchManagerTest extends BaseTest
 	}
 
 	@Test
-	public void testGetWidgetListByProviderNames() throws EMAnalyticsFwkException
+	public void testGetWidgetListByProviderNames(@Mocked final WidgetChangeNotification anyWidgetChangeNotification)
+			throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl fm = FolderManagerImpl.getInstance();
 		Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest" + System.currentTimeMillis());
@@ -532,6 +536,11 @@ public class SearchManagerTest extends BaseTest
 		wp1.setType(ParameterType.STRING);
 		wp1.setValue("1");
 		widget2.getParameters().add(wp1);
+		new Expectations() {
+			{// as there is no 3n environment for unit test cases
+				anyWidgetChangeNotification.notifyChange((Search) any);
+			}
+		};
 		sm.editSearch(widget2);
 		savedWidget1 = null;
 
@@ -586,8 +595,8 @@ public class SearchManagerTest extends BaseTest
 
 		SearchManager sm = SearchManager.getInstance();
 		String screenshot = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAYKklEQVR4AdxSBRIDIQy8";
-		Search widget1 = SearchManagerTest.createTestWidget(sm, folder, cat,
-				"WidgetWithScreenshot " + System.currentTimeMillis(), screenshot);
+		Search widget1 = SearchManagerTest.createTestWidget(sm, folder, cat, "WidgetWithScreenshot " + System.currentTimeMillis(),
+				screenshot);
 		Search widget2 = SearchManagerTest.createTestWidget(sm, folder, cat,
 				"WidgetWithoutScreenshot " + System.currentTimeMillis(), null);
 

@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by xidai on 6/28/2016.
  */
-public class SearchNonGroupsTest {
+public class SearchNonGroupsTest extends BaseTest{
 
     private static Integer folderId;
 
