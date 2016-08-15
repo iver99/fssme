@@ -492,9 +492,12 @@ public class EntityJsonUtilTest extends BaseTest
 			Assert.assertEquals(jsonObject.has("categoryId"), false);
 
 		}
-		catch (Exception e) {
-            throw new RuntimeException("context", e);
-        }
+		catch (EMAnalyticsFwkException e) {
+			e.printStackTrace();
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(groups = { "s1" })
