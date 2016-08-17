@@ -845,4 +845,8 @@ public class SearchAPITest {
         Assert.assertEquals(200,api.getAssetRoot(1L).getStatus());
     }
 
+    @Test
+    public void testEditLastAccess() {
+        Assert.assertNotNull(api.editLastAccess(10L));
+    }
 }

@@ -288,6 +288,10 @@ public class EntityJsonUtil
 		if (m.get("WIDGET_DEFAULT_WIDTH") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_WIDTH").toString())) {
 			sb.append("\"WIDGET_DEFAULT_WIDTH\":").append("\"" + m.get("WIDGET_DEFAULT_WIDTH") + "\"");
 		}
+		
+		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
+			sb.append("\"WIDGET_EDITABLE\":").append("\"" + m.get("WIDGET_EDITABLE") + "\"");
+		}
 
 		if (sb.toString().endsWith(",")) {
 			//remove the extra comma
