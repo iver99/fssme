@@ -128,6 +128,9 @@ public class EntityJsonUtil
 
 	private static final String DEFAULT_DB_VALUE = "0";
 
+	private EntityJsonUtil() {
+	}
+
 	public static JSONObject getErrorJsonObject(long id, String message, long errorcode) throws EMAnalyticsFwkException
 	{
 		JSONObject errorObj = new JSONObject();
@@ -521,7 +524,7 @@ public class EntityJsonUtil
 			widgetObj.put(NAME_WIDGET_GROUP_NAME, category.getName());
 			widgetObj.put(NAME_WIDGET_SCREENSHOT_HREF, screenshotUrl);
 			List<SearchParameter> paramList = search.getParameters();
-			if (paramList != null && paramList.size() > 0) {
+			if (paramList != null && !paramList.isEmpty()) {
 				for (SearchParameter param : paramList) {
 					if (NAME_WIDGET_ICON.equals(param.getName())) {
 						widgetObj.put(NAME_WIDGET_ICON, param.getValue());

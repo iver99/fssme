@@ -361,8 +361,6 @@ public class EmAnalyticsObjectUtilTest {
             {
                 entityManager.find(withAny(EmAnalyticsCategory.class), anyLong);
                 result = emAnalyticsCategory;
-                emAnalyticsCategory.getOwner();
-                result = "ORACLE";
             }
         };
         EmAnalyticsObjectUtil.getCategoryByIdForDelete(10L, entityManager);

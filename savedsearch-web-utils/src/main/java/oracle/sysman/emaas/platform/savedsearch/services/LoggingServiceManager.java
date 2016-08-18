@@ -37,7 +37,7 @@ import weblogic.application.ApplicationLifecycleEvent;
  */
 public class LoggingServiceManager implements ApplicationServiceManager
 {
-	private final Logger LOGGER = LogManager.getLogger(LoggingServiceManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(LoggingServiceManager.class);
 	public static final String MBEAN_NAME = "oracle.sysman.emaas.platform.savedsearch.logging.beans:type=AppLoggingManageMXBean";
 	public static final String MBEAN_NAME_TMP = "oracle.sysman.emaas.platform.savedsearch.logging.beans:type=AppLoggingManageMXBean"
 			+ System.currentTimeMillis();

@@ -2,7 +2,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
 
 
 public class TimeUtil {
-	public TimeUtil()
+	private TimeUtil()
     {
     }
 

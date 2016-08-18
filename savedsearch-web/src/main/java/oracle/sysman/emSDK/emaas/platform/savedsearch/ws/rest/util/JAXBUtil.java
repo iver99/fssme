@@ -28,6 +28,9 @@ public class JAXBUtil
 			"categoryId", "metadata", "defaultFolderId", "queryStr", "locked", "uiHidden", "isWidget", "providerName",
 			"providerVersion", "providerDiscovery", "providerAssetRoot" };
 
+	private JAXBUtil() {
+	}
+
 	public static JAXBContext getJAXBContext(Class<?> cls) throws Exception
 	{
 		JAXBContext jaxbcontext = null;
@@ -112,7 +115,7 @@ public class JAXBUtil
 
 	public static Object unmarshal(Reader reader, InputStream schemaFile, JAXBContext jaxbcontext) throws ImportException
 	{
-		final ArrayList<String> errorList = new ArrayList<String>();
+		final List<String> errorList = new ArrayList<String>();
 		Object object = null;
 		try {
 			StreamSource xsdSource = null;
@@ -200,15 +203,15 @@ public class JAXBUtil
 		}
 		catch (UnmarshalException e) {
 			e.printStackTrace();
-			if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.size() == 0) {
+			if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.isEmpty()) {
 				errorList.add(VALID_ERR_MESSAGE);
 			}
 		}
 		catch (JAXBException | SAXException e) {
 			e.printStackTrace();
 		}
-		if (errorList.size() > 0) {
-			StringBuffer errMsg = new StringBuffer();
+		if (!errorList.isEmpty()) {
+			StringBuilder errMsg = new StringBuilder();
 			for (String sError : errorList) {
 				errMsg.append(sError);
 			}

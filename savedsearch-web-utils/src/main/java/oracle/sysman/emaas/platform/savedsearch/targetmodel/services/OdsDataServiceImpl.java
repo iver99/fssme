@@ -24,7 +24,7 @@ public class OdsDataServiceImpl implements OdsDataService
 
 	static private String generateOdsEntityJson(String searchId, String searchName, String meClass)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		sb.append("\"entityType\" : \"").append(ENTITY_TYPE_NAME).append("\",");
 		sb.append("\"entityName\" : \"").append(searchId).append("\",");
@@ -118,7 +118,7 @@ public class OdsDataServiceImpl implements OdsDataService
 		}
 
 		// send the meid to ODS for deleting
-		StringBuffer baseUrl = new StringBuffer();
+		StringBuilder baseUrl = new StringBuilder();
 		baseUrl.append(retriveEndpoint(REL_DATA_RESOURCE, DATA_MES)).append(HTTP_DELIMITER).append(meid);
 		try {
 			RestRequestUtil.restDelete(baseUrl.toString());
@@ -137,7 +137,7 @@ public class OdsDataServiceImpl implements OdsDataService
 	{
 		Link link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, TenantContext.getContext()
 				.gettenantName());
-		StringBuffer mesUrl = new StringBuffer();
+		StringBuilder mesUrl = new StringBuilder();
 		mesUrl.append(link.getHref()).append(HTTP_DELIMITER).append(resource);
 		return mesUrl.toString();
 	}

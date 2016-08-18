@@ -704,7 +704,7 @@ public class SearchManagerImpl extends SearchManager
 		String screenshot = null;
 		Search search = getSearchWithoutOwner(widgetId, true);
 		List<SearchParameter> paramList = search.getParameters();
-		if (paramList != null && paramList.size() > 0) {
+		if (paramList != null && !paramList.isEmpty()) {
 			for (SearchParameter param : paramList) {
 				if (EntityJsonUtil.NAME_WIDGET_VISUAL.equals(param.getName())) {
 					screenshot = param.getValue();
@@ -862,7 +862,6 @@ public class SearchManagerImpl extends SearchManager
 						try {
 							if (obj != null && obj instanceof Integer) {
 								Integer id = null;
-								EmAnalyticsFolder pFolderObj = null;
 								searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
 										.setParameter("folderId", id).setParameter("searchName", search.getName())
 										.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
@@ -1174,7 +1173,7 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setLastAccessDate(searchObj.getAccessDate());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
 
-			{
+
 				List<SearchParameter> searchParams = new ArrayList<SearchParameter>();
 				// get parameters
 				Set<EmAnalyticsSearchParam> params = searchObj.getEmAnalyticsSearchParams();
@@ -1207,7 +1206,7 @@ public class SearchManagerImpl extends SearchManager
 				//handle params in search
 				handleParamsInSearch(searchObj, searchParams);
 				rtnObj.setParameters(searchParams);
-			}
+
 
 			return rtnObj;
 		}

@@ -31,16 +31,7 @@ public class AvailabilityServiceManagerTest {
     ApplicationLifecycleEvent applicationLifecycleEvent;
 
 
-    @BeforeMethod
-    public void setUp()  {
 
-        new NonStrictExpectations(){
-            {
-                logManager.getLogger(AvailabilityServiceManager.class);
-                result = logger;
-            }
-        };
-    }
 
     @Test(groups = {"s1"})
     public void testGetName()  {
@@ -63,10 +54,6 @@ public class AvailabilityServiceManagerTest {
                 returns(null,false,false,true);
                 rsm.registerService();
                 returns(false);
-                logger.debug(anyString,anyLong,anyInt);
-                times = 3;
-                logger.info(anyString);
-                times = 1;
             }
         };
 
@@ -97,10 +84,6 @@ public class AvailabilityServiceManagerTest {
                 returns(null,false,false,true);
                 rsm.registerService();
                 returns(false);
-                logger.debug(anyString,anyLong,anyInt);
-                times = 3;
-                logger.info(anyString);
-                times = 1;
                 rsm.makeServiceUp();
                 times = 1;
             }

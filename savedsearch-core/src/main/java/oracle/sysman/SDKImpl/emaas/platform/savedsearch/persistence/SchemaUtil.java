@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 
@@ -30,6 +31,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  */
 public class SchemaUtil
 {
+	private SchemaUtil() {
+	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeployment
@@ -355,7 +358,7 @@ public class SchemaUtil
 
 	private static final String ITEMS = "items";
 
-	private static Logger LOGGER = LogManager.getLogger(SchemaUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(SchemaUtil.class);
 
 	public static List<String> getSchemaUrls(String json)
 	{
@@ -363,7 +366,8 @@ public class SchemaUtil
 			return null;
 		}
 
-		HashSet<String> urlSet = new HashSet<String>();
+
+		Set<String> urlSet = new HashSet<String>();
 
 		try {
 

@@ -39,7 +39,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class ImportSearchSet
 {
 	private static final Logger LOGGER = LogManager.getLogger(ImportSearchSet.class);
-	private final String RESOURCE_PATH = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
+	private static final String RESOURCE_PATH = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
 
 	/**
 	 * Import the searches with defined XML file<br>

@@ -245,7 +245,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private final Logger LOGGER = LogManager
+	private static final Logger LOGGER = LogManager
 			.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM + ".serviceregistry");
 
 	private Boolean registrationComplete = null;

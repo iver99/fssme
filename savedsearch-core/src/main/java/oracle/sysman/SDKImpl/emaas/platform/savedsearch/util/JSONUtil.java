@@ -37,6 +37,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 public class JSONUtil
 {
 
+	private JSONUtil() {
+	}
+
 	private static class SSFBeanSerializerFactory extends BeanSerializerFactory
 	{
 		private Object filterId;
@@ -188,13 +191,13 @@ public class JSONUtil
 			mapper.setSerializationInclusion(Inclusion.NON_NULL);
 			mapper.setDateFormat(DateUtil.getDateFormatter());
 			if (excludedFieldItems != null) {
-				final String EXCLUDEFILTER = "exclude_filter";
-				FilterProvider filters = new SimpleFilterProvider().addFilter(EXCLUDEFILTER,
+				final String excludeFilter = "exclude_filter";
+				FilterProvider filters = new SimpleFilterProvider().addFilter(excludeFilter,
 						SimpleBeanPropertyFilter.serializeAllExcept(excludedFieldItems));
 				mapper.setFilters(filters);
 				JsonGenerator generator = mapper.getJsonFactory().createJsonGenerator(os, JsonEncoding.UTF8);
 				SSFBeanSerializerFactory bbFactory = new SSFBeanSerializerFactory(null);
-				bbFactory.setFilterId(EXCLUDEFILTER);
+				bbFactory.setFilterId(excludeFilter);
 				mapper.setSerializerFactory(bbFactory);
 				mapper.writeValue(generator, object);
 				return ((ByteArrayOutputStream) os).toString("UTF-8");

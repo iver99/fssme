@@ -11,11 +11,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +49,10 @@ public class TenantSubscriptionUtil
 	private static String SERVICE_PROVIDER_NAME_OCS = "Orchestration";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
-	private static Map<String, String> providerToServiceMap = new Hashtable<String, String>();
+	private static Map<String, String> providerToServiceMap = new HashMap<>();
+
+	private TenantSubscriptionUtil() {
+	}
 
 	static {
 		providerToServiceMap.put(SERVICE_PROVIDER_NAME_LA, SUBSCRIBED_SERVICE_NAME_LA);
@@ -80,6 +79,8 @@ public class TenantSubscriptionUtil
 				return Arrays.asList(SERVICE_PROVIDER_NAME_SA);
 			case SUBSCRIBED_SERVICE_NAME_OCS:
 				return Arrays.asList(SERVICE_PROVIDER_NAME_OCS);
+			default:
+				break;
 		}
 		return null;
 	}
@@ -95,7 +96,7 @@ public class TenantSubscriptionUtil
 		List<Category> catList = catMan.getAllCategories();
 		List<String> subscribedServices = TenantSubscriptionUtil.getTenantSubscribedServices(tenant);
 		if (catList != null && !catList.isEmpty()) {
-			if (subscribedServices != null && subscribedServices.size() > 0) {
+			if (subscribedServices != null && !subscribedServices.isEmpty()) {
 				for (Category cat : catList) {
 					//EMCPDF-997 If a widget group has special parameter DASHBOARD_INELIGIBLE=true,
 					//we do NOT show all widgets of this group inside widget selector

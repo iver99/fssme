@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class XSDErrorUtil
 {
+	private XSDErrorUtil() {
+	}
 
 	private static final Map<String, String> STRING_STRING_MAP;
 	static {

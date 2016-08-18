@@ -8,13 +8,12 @@ import org.testng.annotations.Test;
  */
 @Test(groups = {"s1"})
 public class ValidationUtilTest {
-    private validationUtil validationUtil = new validationUtil();
 
     @Test
     public void testValidateLength() throws EMAnalyticsWSException {
-        oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil.validateLength(null, null, 0);
+        ValidationUtil.validateLength(null, null, 0);
 
-        oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil.validateLength("name", "a", 1);
+        ValidationUtil.validateLength("name", "a", 1);
 
     }
 }

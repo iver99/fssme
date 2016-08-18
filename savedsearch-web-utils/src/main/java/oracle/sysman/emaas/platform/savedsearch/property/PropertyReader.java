@@ -8,6 +8,8 @@ import java.util.Properties;
 
 public class PropertyReader
 {
+	private PropertyReader() {
+	}
 
 	private static final boolean RUNNING_IN_CONTAINER = getRunningInContainer();
 	public static final String CONFIG_DIR = "/opt/ORCLemaas/Applications/SavedSearchService/init/";//getInstallDir() + "config";

@@ -525,12 +525,12 @@ public class EmAnalyticsSearch implements Serializable
 	}
 
 	/**
-	 * @param dASHBOARD_INELIGIBLE
+	 * @param dashboardIneligible
 	 *            the dASHBOARD_INELIGIBLE to set
 	 */
-	public void setDASHBOARDINELIGIBLE(String dASHBOARD_INELIGIBLE)
+	public void setDASHBOARDINELIGIBLE(String dashboardIneligible)
 	{
-		DASHBOARD_INELIGIBLE = dASHBOARD_INELIGIBLE;
+		DASHBOARD_INELIGIBLE = dashboardIneligible;
 	}
 
 	public void setDeleted(long deleted)
@@ -613,12 +613,12 @@ public class EmAnalyticsSearch implements Serializable
 	}
 
 	/**
-	 * @param nAME_WIDGET_SOURCE
+	 * @param nameWidgetSource
 	 *            the nAME_WIDGET_SOURCE to set
 	 */
-	public void setNAMEWIDGETSOURCE(String nAME_WIDGET_SOURCE)
+	public void setNAMEWIDGETSOURCE(String nameWidgetSource)
 	{
-		NAME_WIDGET_SOURCE = nAME_WIDGET_SOURCE;
+		NAME_WIDGET_SOURCE = nameWidgetSource;
 	}
 
 	public void setNameNlsid(String nameNlsid)
@@ -637,30 +637,30 @@ public class EmAnalyticsSearch implements Serializable
 	}
 
 	/**
-	 * @param pROVIDER_ASSET_ROOT
+	 * @param providerAssetRoot
 	 *            the pROVIDER_ASSET_ROOT to set
 	 */
-	public void setPROVIDERASSETROOT(String pROVIDER_ASSET_ROOT)
+	public void setPROVIDERASSETROOT(String providerAssetRoot)
 	{
-		PROVIDER_ASSET_ROOT = pROVIDER_ASSET_ROOT;
+		PROVIDER_ASSET_ROOT = providerAssetRoot;
 	}
 
 	/**
-	 * @param pROVIDER_NAME
+	 * @param providerName
 	 *            the pROVIDER_NAME to set
 	 */
-	public void setPROVIDERNAME(String pROVIDER_NAME)
+	public void setPROVIDERNAME(String providerName)
 	{
-		PROVIDER_NAME = pROVIDER_NAME;
+		PROVIDER_NAME = providerName;
 	}
 
 	/**
-	 * @param pROVIDER_VERSION
+	 * @param providerVersion
 	 *            the pROVIDER_VERSION to set
 	 */
-	public void setPROVIDERVERSION(String pROVIDER_VERSION)
+	public void setPROVIDERVERSION(String providerVersion)
 	{
-		PROVIDER_VERSION = pROVIDER_VERSION;
+		PROVIDER_VERSION = providerVersion;
 	}
 
 	public void setSearchDisplayStr(String searchDisplayStr)
@@ -684,93 +684,93 @@ public class EmAnalyticsSearch implements Serializable
 	}
 
 	/**
-	 * @param wIDGET_DEFAULT_HEIGHT
+	 * @param widgetDefaultHeight
 	 *            the wIDGET_DEFAULT_HEIGHT to set
 	 */
-	public void setWIDGETDEFAULTHEIGHT(long wIDGET_DEFAULT_HEIGHT)
+	public void setWIDGETDEFAULTHEIGHT(long widgetDefaultHeight)
 	{
-		WIDGET_DEFAULT_HEIGHT = wIDGET_DEFAULT_HEIGHT;
+		WIDGET_DEFAULT_HEIGHT = widgetDefaultHeight;
 	}
 
 	/**
-	 * @param wIDGET_DEFAULT_WIDTH
+	 * @param widgetDefaultWidth
 	 *            the wIDGET_DEFAULT_WIDTH to set
 	 */
-	public void setWIDGETDEFAULTWIDTH(long wIDGET_DEFAULT_WIDTH)
+	public void setWIDGETDEFAULTWIDTH(long widgetDefaultWidth)
 	{
-		WIDGET_DEFAULT_WIDTH = wIDGET_DEFAULT_WIDTH;
+		WIDGET_DEFAULT_WIDTH = widgetDefaultWidth;
 	}
 
 	/**
-	 * @param wIDGET_GROUP_NAME
+	 * @param widgetGroupName
 	 *            the wIDGET_GROUP_NAME to set
 	 */
-	public void setWIDGETGROUPNAME(String wIDGET_GROUP_NAME)
+	public void setWIDGETGROUPNAME(String widgetGroupName)
 	{
-		WIDGET_GROUP_NAME = wIDGET_GROUP_NAME;
+		WIDGET_GROUP_NAME = widgetGroupName;
 	}
 
 	/**
-	 * @param wIDGET_ICON
+	 * @param widgetIcon
 	 *            the wIDGET_ICON to set
 	 */
-	public void setWIDGETICON(String wIDGET_ICON)
+	public void setWIDGETICON(String widgetIcon)
 	{
-		WIDGET_ICON = wIDGET_ICON;
+		WIDGET_ICON = widgetIcon;
 	}
 
 	/**
-	 * @param wIDGET_KOC_NAME
+	 * @param widgetKocName
 	 *            the wIDGET_KOC_NAME to set
 	 */
-	public void setWIDGETKOCNAME(String wIDGET_KOC_NAME)
+	public void setWIDGETKOCNAME(String widgetKocName)
 	{
-		WIDGET_KOC_NAME = wIDGET_KOC_NAME;
+		WIDGET_KOC_NAME = widgetKocName;
 	}
 
 	/**
-	 * @param wIDGET_LINKED_DASHBOARD
+	 * @param widgetLinkedDashboard
 	 *            the wIDGET_LINKED_DASHBOARD to set
 	 */
-	public void setWIDGETLINKEDDASHBOARD(long wIDGET_LINKED_DASHBOARD)
+	public void setWIDGETLINKEDDASHBOARD(long widgetLinkedDashboard)
 	{
-		WIDGET_LINKED_DASHBOARD = wIDGET_LINKED_DASHBOARD;
+		WIDGET_LINKED_DASHBOARD = widgetLinkedDashboard;
 	}
 
 	/**
-	 * @param wIDGET_SCREENSHOT_HREF
+	 * @param widgetScreenshotHref
 	 *            the wIDGET_SCREENSHOT_HREF to set
 	 */
-	public void setWIDGETSCREENSHOTHREF(String wIDGET_SCREENSHOT_HREF)
+	public void setWIDGETSCREENSHOTHREF(String widgetScreenshotHref)
 	{
-		WIDGET_SCREENSHOT_HREF = wIDGET_SCREENSHOT_HREF;
+		WIDGET_SCREENSHOT_HREF = widgetScreenshotHref;
 	}
 
 	/**
-	 * @param wIDGET_SUPPORT_TIME_CONTROL
+	 * @param widgetSupportTimeControl
 	 *            the wIDGET_SUPPORT_TIME_CONTROL to set
 	 */
-	public void setWIDGETSUPPORTTIMECONTROL(String wIDGET_SUPPORT_TIME_CONTROL)
+	public void setWIDGETSUPPORTTIMECONTROL(String widgetSupportTimeControl)
 	{
-		WIDGET_SUPPORT_TIME_CONTROL = wIDGET_SUPPORT_TIME_CONTROL;
+		WIDGET_SUPPORT_TIME_CONTROL = widgetSupportTimeControl;
 	}
 
 	/**
-	 * @param wIDGET_TEMPLATE
+	 * @param widgetTemplate
 	 *            the wIDGET_TEMPLATE to set
 	 */
-	public void setWIDGETTEMPLATE(String wIDGET_TEMPLATE)
+	public void setWIDGETTEMPLATE(String widgetTemplate)
 	{
-		WIDGET_TEMPLATE = wIDGET_TEMPLATE;
+		WIDGET_TEMPLATE = widgetTemplate;
 	}
 
 	/**
-	 * @param wIDGET_VIEWMODEL
+	 * @param widgetViewmodel
 	 *            the wIDGET_VIEWMODEL to set
 	 */
-	public void setWIDGETVIEWMODEL(String wIDGET_VIEWMODEL)
+	public void setWIDGETVIEWMODEL(String widgetViewmodel)
 	{
-		WIDGET_VIEWMODEL = wIDGET_VIEWMODEL;
+		WIDGET_VIEWMODEL = widgetViewmodel;
 	}
 
 }

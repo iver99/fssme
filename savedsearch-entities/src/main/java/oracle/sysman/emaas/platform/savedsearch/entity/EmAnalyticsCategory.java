@@ -227,12 +227,12 @@ public class EmAnalyticsCategory implements Serializable
 	}
 
 	/**
-	 * @param dASHBOARD_INELIGIBLE
+	 * @param dashboardIneligible
 	 *            the dASHBOARD_INELIGIBLE to set
 	 */
-	public void setDASHBOARD_INELIGIBLE(String dASHBOARD_INELIGIBLE)
+	public void setdashboardIneligible(String dashboardIneligible)
 	{
-		DASHBOARD_INELIGIBLE = dASHBOARD_INELIGIBLE;
+		DASHBOARD_INELIGIBLE = dashboardIneligible;
 	}
 
 	public void setDeleted(long deleted)

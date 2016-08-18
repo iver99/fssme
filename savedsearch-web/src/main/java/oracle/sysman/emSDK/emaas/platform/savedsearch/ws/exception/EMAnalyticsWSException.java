@@ -156,6 +156,8 @@ public class EMAnalyticsWSException extends Exception
 			case JSON_INVALID_LENGTH:
 				statusCode = 400;
 				break;
+			default:
+				break;
 		}
 		return statusCode;
 	}

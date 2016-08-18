@@ -37,6 +37,9 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
 class EmAnalyticsObjectUtil
 {
+	private EmAnalyticsObjectUtil() {
+	}
+
 	public static boolean canDeleteFolder(long folderId, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
@@ -81,7 +84,7 @@ class EmAnalyticsObjectUtil
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null) {
 				if (cateObj.getDeleted() == 0
-						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
+						&& (RequestContext.getContext().equals(RequestType.INTERNAL_TENANT)
 								|| cateObj.getOwner().equals("ORACLE") || cateObj.getOwner().equals(
 										TenantContext.getContext().getUsername()))) {
 
@@ -108,7 +111,7 @@ class EmAnalyticsObjectUtil
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null
-					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext()) || cateObj.getOwner().equals("ORACLE") || cateObj
+					&& (RequestContext.getContext().equals(RequestType.INTERNAL_TENANT) || cateObj.getOwner().equals("ORACLE") || cateObj
 							.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 				return cateObj;
@@ -175,7 +178,7 @@ class EmAnalyticsObjectUtil
 				Parameter param = paramIter.next();
 				//parameter DASHBOARD_INELIGIBLE has been move into Category table as a column
 				if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
-					categoryObj.setDASHBOARD_INELIGIBLE(param.getValue());
+					categoryObj.setdashboardIneligible(param.getValue());
 					paramIter.remove();
 					continue;
 				}
@@ -243,7 +246,7 @@ class EmAnalyticsObjectUtil
 		while (paramIter.hasNext()) {
 			EmAnalyticsCategoryParam paramObj = paramIter.next();
 			if ("DASHBOARD_INELIGIBLE".equals(paramObj.getName())) {
-				categoryEntity.setDASHBOARD_INELIGIBLE(paramObj.getValue());
+				categoryEntity.setdashboardIneligible(paramObj.getValue());
 				paramIter.remove();
 				break;
 			}
@@ -604,11 +607,11 @@ class EmAnalyticsObjectUtil
 
 	public static EmAnalyticsFolder getRootFolder()
 	{
-		final String ROOTFOLDERNAME = "All Searches";
+		final String rootfoldername = "All Searches";
 		EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
 		Date utcNow = DateUtil.getCurrentUTCTime();
-		folderObj.setDescription(ROOTFOLDERNAME);
-		folderObj.setName(ROOTFOLDERNAME);
+		folderObj.setDescription(rootfoldername);
+		folderObj.setName(rootfoldername);
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		folderObj.setOwner(currentUser);
 		folderObj.setCreationDate(utcNow);

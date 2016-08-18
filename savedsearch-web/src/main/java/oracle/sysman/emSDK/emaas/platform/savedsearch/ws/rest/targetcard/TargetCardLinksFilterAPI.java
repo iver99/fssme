@@ -3,12 +3,11 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.targetcard;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -133,7 +132,7 @@ public class TargetCardLinksFilterAPI {
                         EMAnalyticsWSException.JSON_INVALID_CHAR);
             }
 
-                validationUtil.validateLength("name", name, 64);
+                ValidationUtil.validateLength("name", name, 64);
 
 
             searchObj.setName(name);
@@ -157,7 +156,7 @@ public class TargetCardLinksFilterAPI {
         }
 
         try {
-            validationUtil.validateLength("description", desc, 256);
+            ValidationUtil.validateLength("description", desc, 256);
         }
         catch (EMAnalyticsWSException e) {
             throw e;

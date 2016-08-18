@@ -28,7 +28,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
 
@@ -230,7 +230,7 @@ public class SearchAPI
 			// see if an ODS entity needs to be create
 			if(searchObj != null && searchObj.getParameters() != null) {
 				for (SearchParameter param : searchObj.getParameters()) {
-					if (OdsDataService.ENTITY_FLAG.equalsIgnoreCase(param.getName())
+					if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
 							&& "TRUE".equalsIgnoreCase(param.getValue())) {
 						OdsDataService ods = OdsDataServiceImpl.getInstance();
 						String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
@@ -493,7 +493,7 @@ public class SearchAPI
 		
 		if(savedSearch != null) {
 			for (SearchParameter param : savedSearch.getParameters()) {
-				if(OdsDataService.ENTITY_ID.equalsIgnoreCase(param.getName())) {
+				if(param.getName().equalsIgnoreCase(OdsDataService.ENTITY_ID)) {
 					statusCode = 400;
 					message = "Exist Entity ID: " + param.getValue();
 					LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message);
@@ -768,7 +768,7 @@ public class SearchAPI
 			}
 
 			try {
-				validationUtil.validateLength("name", name, 64);
+				ValidationUtil.validateLength("name", name, 64);
 			}
 			catch (EMAnalyticsWSException e) {
 				throw e;
@@ -795,7 +795,7 @@ public class SearchAPI
 		}
 
 		try {
-			validationUtil.validateLength("description", desc, 256);
+			ValidationUtil.validateLength("description", desc, 256);
 		}
 		catch (EMAnalyticsWSException e) {
 			throw e;
@@ -913,7 +913,7 @@ public class SearchAPI
 			}
 
 			try {
-				validationUtil.validateLength("name", name, 64);
+				ValidationUtil.validateLength("name", name, 64);
 			}
 			catch (EMAnalyticsWSException e) {
 				throw e;
@@ -930,7 +930,7 @@ public class SearchAPI
 					EMAnalyticsWSException.JSON_INVALID_CHAR);
 		}
 		try {
-			validationUtil.validateLength("description", desc, 256);
+			ValidationUtil.validateLength("description", desc, 256);
 		}
 		catch (EMAnalyticsWSException e) {
 			throw e;

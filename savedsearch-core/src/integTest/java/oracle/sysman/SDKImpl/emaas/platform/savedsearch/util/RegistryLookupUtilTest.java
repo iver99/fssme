@@ -81,7 +81,6 @@ public class RegistryLookupUtilTest
 			}
 		};
 
-		registryLookupUtil = new RegistryLookupUtil();
 		oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil.getServiceInternalLink("a", "b", "c", "d");
 	}
 

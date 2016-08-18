@@ -15,6 +15,9 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
  */
 public class StringUtil
 {
+	private StringUtil() {
+	}
+
 	public static boolean isEmpty(String s)
 	{
 		if (s == null) {
@@ -40,6 +43,8 @@ public class StringUtil
 				case '<':
 				case '>':
 					specialCharFound = true;
+					default:
+						break;
 			}
 		}
 

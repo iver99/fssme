@@ -42,6 +42,9 @@ public class LogUtil
 			this.direction = direction;
 		}
 
+		private InteractionLogContext() {
+		}
+
 		public String getDirection()
 		{
 			return direction;

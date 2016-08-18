@@ -24,7 +24,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 {
 	private static final long PERIOD = Timer.ONE_MINUTE;
 
-	private final Logger LOGGER = LogManager.getLogger(AvailabilityServiceManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(AvailabilityServiceManager.class);
 	private Timer timer;
 	private Integer notificationId;
 	private final RegistryServiceManager rsm;

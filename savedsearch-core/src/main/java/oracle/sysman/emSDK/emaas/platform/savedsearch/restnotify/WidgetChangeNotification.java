@@ -32,16 +32,16 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupM
  */
 public class WidgetChangeNotification
 {
-	private static Logger logger = LogManager.getLogger(WidgetChangeNotification.class);
-	private final String WIDGET_CHANGE_SERVICE_REL = "ssf.widget.changed";
+	private static final Logger LOGGER = LogManager.getLogger(WidgetChangeNotification.class);
+	private static final String WIDGET_CHANGE_SERVICE_REL = "ssf.widget.changed";
 
 	public List<Link> getInternalLinksByRel(String rel)
 	{
-		logger.debug("/getInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
+		LOGGER.debug("/getInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
 		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
 		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(rel, "http");
 		if (instanceList == null) {
-			logger.warn("Found no instances with specified http rel {}", rel);
+			LOGGER.warn("Found no instances with specified http rel {}", rel);
 			return null;
 		}
 		Map<String, Link> serviceLinksMap = new HashMap<String, Link>();
@@ -50,10 +50,10 @@ public class WidgetChangeNotification
 			try {
 				links = ii.getLinksWithRelPrefix(rel);
 				if (links == null || links.isEmpty()) {
-					logger.warn("Found no links for InstanceInfo for service {}", ii.getServiceName());
+					LOGGER.warn("Found no links for InstanceInfo for service {}", ii.getServiceName());
 					continue;
 				}
-				logger.debug("Retrieved {} links for service {}. Links list: {}", links == null ? 0 : links.size(),
+				LOGGER.debug("Retrieved {} links for service {}. Links list: {}", links == null ? 0 : links.size(),
 						ii.getServiceName(), StringUtil.arrayToCommaDelimitedString(links.toArray()));
 				for (Link link : links) {
 					if (link.getHref().startsWith("http://")) {
@@ -62,15 +62,15 @@ public class WidgetChangeNotification
 				}
 			}
 			catch (Exception e) {
-				logger.error("Error to get links!", e);
+				LOGGER.error("Error to get links!", e);
 			}
 		}
 		if (serviceLinksMap.isEmpty()) {
-			logger.warn("Found no internal widget notification links for rel {}", rel);
+			LOGGER.warn("Found no internal widget notification links for rel {}", rel);
 			return null;
 		}
 		else {
-			logger.info("Widget notification links: {}", serviceLinksMap);
+			LOGGER.info("Widget notification links: {}", serviceLinksMap);
 			return new ArrayList<Link>(serviceLinksMap.values());
 		}
 	}
@@ -86,15 +86,15 @@ public class WidgetChangeNotification
 	public void notifyChange(WidgetNotifyEntity wne)
 	{
 		if (wne == null) {
-			logger.info("Didn't notify of widget change for null widget notify entity object");
+			LOGGER.info("Didn't notify of widget change for null widget notify entity object");
 			return;
 		}
-		logger.info("Notify to end points with rel={} of widget changes. Widget unique ID={}, widget name={}",
+		LOGGER.info("Notify to end points with rel={} of widget changes. Widget unique ID={}, widget name={}",
 				WIDGET_CHANGE_SERVICE_REL, wne.getUniqueId(), wne.getName());
 		long start = System.currentTimeMillis();
 		List<Link> links = getInternalLinksByRel(WIDGET_CHANGE_SERVICE_REL);
 		if (links == null || links.isEmpty()) {
-			logger.info("Didn't notify of widget change for finding no link for rel={}", WIDGET_CHANGE_SERVICE_REL);
+			LOGGER.info("Didn't notify of widget change for finding no link for rel={}", WIDGET_CHANGE_SERVICE_REL);
 			return;
 		}
 		RestClient rc = new RestClient();
@@ -106,12 +106,12 @@ public class WidgetChangeNotification
 					TenantContext.getContext().gettenantName());
 			long innerEnd = System.currentTimeMillis();
 			if (rtn != null) {
-				logger.info(
+				LOGGER.info(
 						"Notification of widget change to link {} affacted {} objects (might always be 1 for eclipse 2.4). It takes {} ms",
 						link.getHref(), rtn.getAffactedObjects(), innerEnd - innerStart);
 			}
 		}
-		logger.info("Completed notify of widget change for widget unique ID={} and widget name={}, totally it takes {} ms",
+		LOGGER.info("Completed notify of widget change for widget unique ID={} and widget name={}, totally it takes {} ms",
 				wne.getUniqueId(), wne.getName(), System.currentTimeMillis() - start);
 	}
 }

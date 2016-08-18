@@ -17,4 +17,6 @@ public class QueryParameterConstant
 {
 	public static final String USER_NAME = "userName";
 
+	private QueryParameterConstant() {
+	}
 }

@@ -40,7 +40,6 @@ public class CategoryAPI
 
 	@Context
 	private UriInfo uri;
-	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
 	private static final Logger LOGGER = LogManager.getLogger(CategoryAPI.class);
 
 	/*	@DELETE
@@ -336,7 +335,7 @@ public class CategoryAPI
 		if (name == null) {
 			return Response.status(400).entity("please give category name").build();
 		}
-		else if (name.equals("")) {
+		else if ("".equals(name)) {
 			return Response.status(400).entity("please give category name").build();
 		}
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -489,8 +488,7 @@ public class CategoryAPI
 	 * lastAccessDate,systemSearch,parameters,queryStr,locked,uiHidden,isWidget
 	 *
 	 * @since 0.1
-	 * @param uri
-	 * @param catId
+	 * 
 	 *            The category Id which user wants to get the details
 	 * @return Lists all the searches <br>
 	 *         If category Id is given as the parameter, it will list all the searches present in the category whose id is the

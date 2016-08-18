@@ -22,7 +22,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,8 +40,6 @@ public class FolderAPI
 	@Context
 	private UriInfo uri;
 
-	@Context
-	private HttpHeaders headers;
 
 	private static final Logger LOGGER = LogManager.getLogger(FolderAPI.class);
 
@@ -441,7 +439,7 @@ public class FolderAPI
 						EMAnalyticsWSException.JSON_INVALID_CHAR);
 			}
 			try {
-				validationUtil.validateLength("name", name, 64);
+				ValidationUtil.validateLength("name", name, 64);
 			}
 			catch (EMAnalyticsWSException e) {
 				throw e;
@@ -469,7 +467,7 @@ public class FolderAPI
 		}
 
 		try {
-			validationUtil.validateLength("description", desc, 256);
+			ValidationUtil.validateLength("description", desc, 256);
 		}
 		catch (EMAnalyticsWSException e) {
 			throw e;
@@ -512,7 +510,7 @@ public class FolderAPI
 						EMAnalyticsWSException.JSON_INVALID_CHAR);
 			}
 			try {
-				validationUtil.validateLength("name", name, 64);
+				ValidationUtil.validateLength("name", name, 64);
 			}
 			catch (EMAnalyticsWSException e) {
 				throw e;
@@ -530,7 +528,7 @@ public class FolderAPI
 					EMAnalyticsWSException.JSON_INVALID_CHAR);
 		}
 		try {
-			validationUtil.validateLength("description", desc, 256);
+			ValidationUtil.validateLength("description", desc, 256);
 		}
 		catch (EMAnalyticsWSException e) {
 			throw e;

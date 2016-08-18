@@ -73,7 +73,7 @@ public class TenantSubscriptionUtilTest
     Tenant tenant;
     @Mocked
     AppMappingEntity.AppMappingValue appMappingValue;
-	@Test(expectedExceptions = {NullPointerException.class})
+	@Test
 	public void testGetTenantSubscribedCategories() throws Exception {
         final ArrayList<Category> categories = new ArrayList<>();
         categories.add(category);

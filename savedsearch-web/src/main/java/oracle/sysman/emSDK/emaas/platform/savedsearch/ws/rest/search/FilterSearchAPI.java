@@ -184,7 +184,7 @@ public class FilterSearchAPI
 		LogUtil.getInteractionLogger().info(
 				"Service calling to (GET) /savedsearch/v1/searches?categoryId={}&categoryName={}&lastAccessCount={}&folderId={}",
 				catId, name, lastAccessCount, foldId);
-		final String ERRMSG = "Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount";
+		final String errmsg = "Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount";
 		CategoryManager catMan = CategoryManager.getInstance();
 		int categId = 0;
 		int folId = 0;
@@ -195,7 +195,7 @@ public class FilterSearchAPI
 		if (query == null) {
 			//now we disallow to return all searches
 			//			return getLastAccessSearch(0);
-			return Response.status(400).entity(ERRMSG).build();
+			return Response.status(400).entity(errmsg).build();
 		}
 		String[] param = query.split("&");
 		if (param.length > 0) {
@@ -247,7 +247,7 @@ public class FilterSearchAPI
 
 				}
 				else {
-					return Response.status(400).entity(ERRMSG).build();
+					return Response.status(400).entity(errmsg).build();
 				}
 			}
 			catch (NumberFormatException e) {
@@ -255,7 +255,7 @@ public class FilterSearchAPI
 			}
 		}
 		else {
-			return Response.status(400).entity(ERRMSG).build();
+			return Response.status(400).entity(errmsg).build();
 		}
 
 	}

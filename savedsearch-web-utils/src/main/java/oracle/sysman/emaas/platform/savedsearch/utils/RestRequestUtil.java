@@ -24,7 +24,10 @@ import org.apache.http.util.EntityUtils;
 public class RestRequestUtil {
 	public static final String TENANT_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
 	public static final String AUTHORIZATION_HEADER = "Authorization";
-	
+
+	private RestRequestUtil() {
+	}
+
 	public static String restGet(String baseUrl) throws Exception {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();

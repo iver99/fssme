@@ -46,6 +46,9 @@ public class HeadersUtil
 
 	private static final Logger LOGGER = LogManager.getLogger(HeadersUtil.class);
 
+	private HeadersUtil() {
+	}
+
 	public static TenantInfo getTenantInfo(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
 		HeadersUtil.validateOAMHeader(request);

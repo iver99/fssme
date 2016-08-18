@@ -40,7 +40,6 @@ public class QAToolUtil
 	private static final String DEPLOY_URL = "/instances?servicename=LifecycleInventoryService";
 	private static final String SSF_DEPLOY_URL = "/instances?servicename=SavedSearch";
 	private static final String DEPLY_SCHEMA = "/schemaDeployments?softwareName=SavedSearchService";
-	private static final String SERVICE_NAME = "SavedSearchService";
 	private static final String PASSWORD = "welcome1";
 	public static final String JDBC_URL = "jdbc:oracle:thin:@";
 	private static final String SCHEMA_USER = "schemaUser";
@@ -50,9 +49,6 @@ public class QAToolUtil
 	public static final String ODS_HOSTNAME = "ODS_HOSTNAME";
 	public static final String ODS_PORT = "ODS_PORT";
 	public static final String ODS_SID = "ODS_SID";
-	public static final String NODE_NAME1 = "EMCS_NODE1_HOSTNAME";
-	public static final String NODE_NAME2 = "EMCS_NODE2_HOSTNAME";
-	public static final String NODE_NAME3 = "EMCS_NODE3_HOSTNAME";
 
 	public static final String JDBC_PARAM_URL = "javax.persistence.jdbc.url";
 	public static final String JDBC_PARAM_USER = "javax.persistence.jdbc.user";
@@ -62,7 +58,10 @@ public class QAToolUtil
 	public static final String TENANT_USER_NAME = "TENANT_USER_NAME";
 	public static final String TENANT_NAME = "TENANT_NAME";
 
-	private static Logger LOGGER = LogManager.getLogger(QAToolUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(QAToolUtil.class);
+
+	private QAToolUtil() {
+	}
 
 	public static Properties getDbProperties()
 	{
@@ -79,7 +78,6 @@ public class QAToolUtil
 
 	public static String getSavedSearchDeploymentDet()
 	{
-		String username = null;
 		String data = QAToolUtil.getDetaildByUrl(Utils.getProperty(SERVICE_MANAGER_URL) + SSF_DEPLOY_URL);
 		//String data = QAToolUtil.getDetaildByUrl("http://slc08twq.us.oracle.com:7001//registry/servicemanager/registry/v1"
 		//	+ SSF_DEPLOY_URL);
@@ -125,7 +123,7 @@ public class QAToolUtil
 	{
 		BufferedReader in = null;
 		InputStreamReader inReader = null;
-		StringBuffer response = new StringBuffer();
+		StringBuilder response = new StringBuilder();
 		try {
 			URL schemaDepUrl = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) schemaDepUrl.openConnection();

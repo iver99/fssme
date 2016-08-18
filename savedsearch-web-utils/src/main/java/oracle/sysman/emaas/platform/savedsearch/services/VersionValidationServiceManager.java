@@ -28,7 +28,7 @@ import weblogic.application.ApplicationLifecycleEvent;
  */
 public class VersionValidationServiceManager implements ApplicationServiceManager
 {
-	private final Logger LOGGER = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
+	private static final Logger LOGGER = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceversionvalidation");
 	public static final String SERVICE_NAME_VERSION_VALIDATION = "Version Validation Service";
 	public static final int SSF_CODE_VERSION_MAJOR = 1;

@@ -1,3 +1,4 @@
+
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
@@ -171,7 +172,7 @@ public class ImportCategorySet
 		String msg = "";
 		try {
 			stream = ImportCategorySet.class.getClassLoader().getResourceAsStream(RESOURCE_PATH);
-			StringBuffer xmlStr = new StringBuffer(xml);
+			StringBuilder xmlStr = new StringBuilder(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			CategorySet categories = (CategorySet) JAXBUtil.unmarshal(sReader, stream,
 					JAXBUtil.getJAXBContext(ObjectFactory.class));

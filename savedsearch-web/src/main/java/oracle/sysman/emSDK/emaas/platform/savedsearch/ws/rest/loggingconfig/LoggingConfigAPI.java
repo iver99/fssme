@@ -43,13 +43,13 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/_logging/configs")
 public class LoggingConfigAPI
 {
-	private static final Logger logger = LogManager.getLogger(LoggingConfigAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(LoggingConfigAPI.class);
 
 	/**
-	 * Change the log4j2 logging level for ROOT logger<br>
+	 * Change the log4j2 logging level for ROOT LOGGER<br>
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port number&gt;/savedsearch/v1/_logging/configs</font><br>
-	 * The string "_logging/configs" in the URL signifies update operation on logging level for ROOT logger
+	 * The string "_logging/configs" in the URL signifies update operation on logging level for ROOT LOGGER
 	 *
 	 * @since 0.1
 	 * @param inputJson
@@ -58,7 +58,7 @@ public class LoggingConfigAPI
 	 *            <font color="DarkCyan"> {<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "level": "DEBUG"<br>
 	 *            }</font><br>
-	 * @return returns the updated logging level for the logger<br>
+	 * @return returns the updated logging level for the LOGGER<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan"> {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "loggerName": "",<br>
@@ -76,23 +76,23 @@ public class LoggingConfigAPI
 	}
 
 	/**
-	 * Change the log4j2 logging level for specific logger<br>
+	 * Change the log4j2 logging level for specific LOGGER<br>
 	 * <br>
 	 * URL: <font color="blue">http://&lthost-name&gt:&lt;port
 	 * number&gt;/savedsearch/v1/_logging/configs/&lt;loggerName&gt;</font><br>
-	 * The string "_logging/configs/&lt;loggerName&gt;" in the URL signifies update operation on logging level for logger
+	 * The string "_logging/configs/&lt;loggerName&gt;" in the URL signifies update operation on logging level for LOGGER
 	 * specified by loggerName.
 	 *
 	 * @since 0.1
 	 * @param loggerName
-	 *            the name of a logger for which the logging level is to be updated.
+	 *            the name of a LOGGER for which the logging level is to be updated.
 	 * @param inputJson
 	 *            JSON string which contains new log4j2 logging level to be updated<br>
 	 *            Input Sample:<br>
 	 *            <font color="DarkCyan"> {<br>
 	 *            &nbsp;&nbsp;&nbsp;&nbsp; "level": "DEBUG"<br>
 	 *            }</font><br>
-	 * @return returns the updated logging level for the logger<br>
+	 * @return returns the updated logging level for the LOGGER<br>
 	 *         Response Sample:<br>
 	 *         <font color="DarkCyan"> {<br>
 	 *         &nbsp;&nbsp;&nbsp;&nbsp; "loggerName": "oracle.sysman.emaas.platform.savedsearch",<br>
@@ -110,14 +110,14 @@ public class LoggingConfigAPI
 		try {
 			input = getJsonUtil().fromJson(inputJson.toString(), UpdatedLoggerLevel.class);
 			if (input == null || StringUtil.isEmpty(input.getLevel())) {
-				String errorMessage = "Specified new level: \"" + input.getLevel() + "\" for logger \"" + loggerName
+				String errorMessage = "Specified new level: \"" + input.getLevel() + "\" for LOGGER \"" + loggerName
 						+ "\" does not exist";
 				return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(errorMessage))
 						.build();
 			}
 			Level level = Level.getLevel(input.getLevel().toUpperCase());
 			if (level == null) {
-				String errorMessage = "Specified new level: \"" + input.getLevel() + "\" for logger \"" + loggerName
+				String errorMessage = "Specified new level: \"" + input.getLevel() + "\" for LOGGER \"" + loggerName
 						+ "\" does not exist";
 				return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(errorMessage))
 						.build();
@@ -136,20 +136,20 @@ public class LoggingConfigAPI
 					LogUtil.setLoggerUpdateTime(cfg, lc, timestamp);
 					ctx.updateLoggers();
 					li = new LoggingItem(lc, timestamp);
-					logger.info("Level for logger \"{}\" has been updated to \"{}\" by user \"{}\" from REST interface",
+					LOGGER.info("Level for LOGGER \"{}\" has been updated to \"{}\" by user \"{}\" from REST interface",
 							loggerName, input.getLevel(), TenantContext.getContext().getUsername());
 					break;
 				}
 			}
 			if (li == null) {
-				String errorMessage = "Specified logger: " + loggerName + " does not exist";
+				String errorMessage = "Specified LOGGER: " + loggerName + " does not exist";
 				return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(errorMessage))
 						.build();
 			}
 			return Response.ok(getJsonUtil().toJson(li)).build();
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 			return Response.status(Status.SERVICE_UNAVAILABLE)
 					.entity(JsonUtil.buildNormalMapper().toJson(e.getLocalizedMessage())).build();
 		}
@@ -204,14 +204,14 @@ public class LoggingConfigAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllLoggerLevels()
 	{
-		logger.info("User \"{}\" is getting all logger levels", TenantContext.getContext().getUsername());
+		LOGGER.info("User \"{}\" is getting all LOGGER levels", TenantContext.getContext().getUsername());
 		LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
 		Configuration cfg = loggerContext.getConfiguration();
 		Map<String, LoggerConfig> loggers = cfg.getLoggers();
 		LoggingItems items = new LoggingItems();
-		for (LoggerConfig logger : loggers.values()) {
-			Long timestamp = LogUtil.getLoggerUpdateTime(cfg, logger);
-			items.addLoggerConfig(logger, timestamp);
+		for (LoggerConfig loggerConfig : loggers.values()) {
+			Long timestamp = LogUtil.getLoggerUpdateTime(cfg, loggerConfig);
+			items.addLoggerConfig(loggerConfig, timestamp);
 		}
 		return Response.ok(getJsonUtil().toJson(items)).build();
 	}

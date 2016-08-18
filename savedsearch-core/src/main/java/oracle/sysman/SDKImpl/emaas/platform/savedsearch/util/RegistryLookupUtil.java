@@ -42,6 +42,10 @@ public class RegistryLookupUtil
 	public static final String LA_SERVICE = "LoganService";
 	public static final String TA_SERVICE = "TargetAnalytics";
 	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
+
+	private RegistryLookupUtil() {
+	}
+
 	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
@@ -205,7 +209,7 @@ public class RegistryLookupUtil
 					catch (Exception e) {
 						LOGGER.error(e.getLocalizedMessage(), e);
 					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 								new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
@@ -260,7 +264,7 @@ public class RegistryLookupUtil
 					catch (Exception e) {
 						LOGGER.error(e.getLocalizedMessage(), e);
 					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 								new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
@@ -321,7 +325,7 @@ public class RegistryLookupUtil
 							links = internalInstance.getLinksWithProtocol(rel, "https");
 						}
 
-						if (links != null && links.size() > 0) {
+						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 									new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch), new CachedLink(lk));
@@ -343,7 +347,7 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
-					if (links != null && links.size() > 0) {
+					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 								new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch), new CachedLink(lk));
