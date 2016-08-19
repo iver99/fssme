@@ -313,24 +313,20 @@ public class SearchManagerTest extends BaseTest
 			queried = sm.getSearchListByFolderId(folder.getId());
 		}
 		catch (EMAnalyticsFwkException e) {
-			AssertJUnit.fail();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 
 		AssertJUnit.assertNotNull(queried);
 		if (queried != null) {
 			AssertJUnit.assertEquals(2, queried.size());
-			BigInteger searchId1 = queried.get(0).getId();
-			BigInteger searchId2 = queried.get(1).getId();
-			if (searchId1.compareTo(searchId2) < 0) {
+			String searchName = queried.get(0).getName();
+			if (searchName != null && searchName.equals(search1.getName())) {
 				assertSearchEquals(search1, queried.get(0));
 				assertSearchEquals(search2, queried.get(1));
 			}
-			else if (searchId1.compareTo(searchId2) > 0) {
+			else {
 				assertSearchEquals(search2, queried.get(0));
 				assertSearchEquals(search1, queried.get(1));
-			}
-			else {
-				AssertJUnit.assertTrue("Same search id of two searches: search_id=" + searchId1, false);
 			}
 		}
 
