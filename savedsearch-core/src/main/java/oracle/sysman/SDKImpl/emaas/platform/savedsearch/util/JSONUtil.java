@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.util.Collections;
 import java.util.List;
 
 import org.codehaus.jackson.JsonEncoding;
@@ -138,7 +139,7 @@ public class JSONUtil
 			result = json1.getString(field);
 		}
 		catch (Exception e) {
-			return null;
+			return Collections.emptyList();
 		}
 		return (List<T>) JSONUtil.fromJson(mapper, result, JSONUtil.constructParametricType(mapper, List.class, classMeta));
 	}

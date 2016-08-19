@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -107,7 +108,7 @@ public class QAToolUtil
 	{
 
 		if (value == null) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> result = new ArrayList<String>();
 

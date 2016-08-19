@@ -141,10 +141,8 @@ public class WidgetGroupAPI
 		else {
 			if (input.length >= 2) {
 				String value = input[1];
-				if (value != null && includeDashboardIneligible.equals(key)) {
-					if (!"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
-						return Response.status(400).entity("Please specify " + key + " true or false").build();
-					}
+				if (value != null && includeDashboardIneligible.equals(key) && !"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
+					return Response.status(400).entity("Please specify " + key + " true or false").build();
 				}
 			}
 			else {

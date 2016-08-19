@@ -226,12 +226,10 @@ public class ImportCategorySet
 				return true;
 			}
 
-			if (obj.getFolderDet() != null) {
-				if (obj.getFolderDetails() instanceof FolderImpl) {
-					FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
-					if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
-						return true;
-					}
+			if (obj.getFolderDet() != null && obj.getFolderDetails() instanceof FolderImpl) {
+				FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
+				if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
+					return true;
 				}
 			}
 		}

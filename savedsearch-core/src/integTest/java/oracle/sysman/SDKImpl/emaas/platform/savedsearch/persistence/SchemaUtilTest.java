@@ -20,7 +20,7 @@ public class SchemaUtilTest {
 
     @Test
     public void testGetSchemaUrlsNull(){
-        Assert.assertNull(SchemaUtil.getSchemaUrls(null));
+        Assert.assertTrue(SchemaUtil.getSchemaUrls(null).isEmpty());
 
         SchemaUtil.getSchemaUrls("{\"items\":[{\"virtualEndpoints\":[\"https\",\"xxx\"],\"canonicalEndpoints\":[\"https\",\"xxx\"]},{\"virtualEndpoints\":[\"https\",\"xxx\"],\"canonicalEndpoints\":[\"https\",\"xxx\"]}]}");
     }
@@ -33,7 +33,7 @@ public class SchemaUtilTest {
                 result = new ArrayList<>();
             }
         };
-        Assert.assertNull(SchemaUtil.getSchemaUrls("json"));
+        Assert.assertTrue(SchemaUtil.getSchemaUrls("json").isEmpty());
     }
 
 //    @Test

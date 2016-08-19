@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -139,7 +140,7 @@ public abstract class SearchManager
 	public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptyList();
 	}
 
 	public abstract List<Search> getSystemSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException;

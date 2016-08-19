@@ -332,10 +332,8 @@ public class WidgetAPI
 						throw new NumberFormatException();
 					}
 				}
-				else if (value != null && includeDashboardIneligible.equals(key)) {
-					if (!"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
-						return Response.status(400).entity("Please specify " + key + " true or false").build();
-					}
+				else if (value != null && includeDashboardIneligible.equals(key) && !"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
+					return Response.status(400).entity("Please specify " + key + " true or false").build();
 				}
 			}
 			else {

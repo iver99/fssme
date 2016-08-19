@@ -10,10 +10,7 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +39,7 @@ public class WidgetChangeNotification
 		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(rel, "http");
 		if (instanceList == null) {
 			LOGGER.warn("Found no instances with specified http rel {}", rel);
-			return null;
+			return Collections.emptyList();
 		}
 		Map<String, Link> serviceLinksMap = new HashMap<String, Link>();
 		for (InstanceInfo ii : instanceList) {
@@ -67,7 +64,7 @@ public class WidgetChangeNotification
 		}
 		if (serviceLinksMap.isEmpty()) {
 			LOGGER.warn("Found no internal widget notification links for rel {}", rel);
-			return null;
+			return Collections.emptyList();
 		}
 		else {
 			LOGGER.info("Widget notification links: {}", serviceLinksMap);

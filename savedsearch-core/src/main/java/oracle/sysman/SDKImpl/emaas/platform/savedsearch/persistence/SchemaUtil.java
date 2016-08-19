@@ -15,10 +15,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
  *
  */
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 
@@ -363,7 +360,7 @@ public class SchemaUtil
 	public static List<String> getSchemaUrls(String json)
 	{
 		if (json == null || "".equals(json)) {
-			return null;
+			return Collections.emptyList();
 		}
 
 
@@ -373,7 +370,7 @@ public class SchemaUtil
 
 			List<SchemaDeploymentUrls> sdlist = JSONUtil.fromJsonToList(json, SchemaDeploymentUrls.class, ITEMS);
 			if (sdlist == null | sdlist.isEmpty()) {
-				return null;
+				return Collections.emptyList();
 			}
 			for (SchemaDeploymentUrls sd : sdlist) {
 				for (String temp : sd.getCanonicalEndpoints()) {
@@ -394,7 +391,7 @@ public class SchemaUtil
 		catch (Exception e) {
 
 			LOGGER.error("an error occureed while getting schema name", e);
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
 		urls.addAll(urlSet);

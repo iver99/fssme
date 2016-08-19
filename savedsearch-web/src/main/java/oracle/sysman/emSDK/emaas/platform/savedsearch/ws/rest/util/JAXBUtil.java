@@ -133,39 +133,31 @@ public class JAXBUtil
 						String msg = validationevent.getMessage();
 						Pattern pattern = Pattern.compile("(cvc.*)(:)");
 						Matcher matcher = pattern.matcher(msg);
-						if (msg.contains("cvc-complex-type.2.4.a") || msg.contains("cvc-complex-type.2.4.b")) {
-							if (matcher.find()) {
-								errLocation = "Error at line " + validationevent.getLocator().getLineNumber() + " , column "
-										+ validationevent.getLocator().getColumnNumber();
-								errorList.add(errLocation + "  " + msg.substring(matcher.end()) + " "
-										+ System.getProperty("line.separator"));
-
-							}
+						if ((msg.contains("cvc-complex-type.2.4.a") || msg.contains("cvc-complex-type.2.4.b")) && matcher.find()) {
+							errLocation = "Error at line " + validationevent.getLocator().getLineNumber() + " , column "
+									+ validationevent.getLocator().getColumnNumber();
+							errorList.add(errLocation + "  " + msg.substring(matcher.end()) + " "
+									+ System.getProperty("line.separator"));
 
 						}
 
-						if (msg.contains("cvc-complex-type.2.4.d")) {
-							if (matcher.find()) {
-								errLocation = "Error at line " + validationevent.getLocator().getLineNumber() + " , column "
-										+ validationevent.getLocator().getColumnNumber();
-								if (msg.contains("'Folder'")) {
+						if (msg.contains("cvc-complex-type.2.4.d") && matcher.find()) {
+							errLocation = "Error at line " + validationevent.getLocator().getLineNumber() + " , column "
+									+ validationevent.getLocator().getColumnNumber();
+							if (msg.contains("'Folder'")) {
 
-									errorList.add(errLocation + "  "
-											+ " Please specify either folder details or folder id not both" + " "
-											+ System.getProperty("line.separator"));
+								errorList.add(errLocation + "  "
+										+ " Please specify either folder details or folder id not both" + " "
+										+ System.getProperty("line.separator"));
 
-								}
-								else if (msg.contains("'Category'")) {
-									errorList.add(errLocation + "  "
-											+ " Please specify either category details or category id not both" + " "
-											+ System.getProperty("line.separator"));
+							} else if (msg.contains("'Category'")) {
+								errorList.add(errLocation + "  "
+										+ " Please specify either category details or category id not both" + " "
+										+ System.getProperty("line.separator"));
 
-								}
-								else {
-									errorList.add(errLocation + "  " + msg.substring(matcher.end()) + " "
-											+ System.getProperty("line.separator"));
-								}
-
+							} else {
+								errorList.add(errLocation + "  " + msg.substring(matcher.end()) + " "
+										+ System.getProperty("line.separator"));
 							}
 
 						}

@@ -2,10 +2,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -608,7 +605,7 @@ public class SearchManagerImpl extends SearchManager
 			String widgetGroupId) throws EMAnalyticsFwkException
 	{
 		if (providerNames == null || providerNames.isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -800,17 +797,14 @@ public class SearchManagerImpl extends SearchManager
 							continue;
 						}
 
-						if (obj != null) {
-							if (obj instanceof Integer) {
-								EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(), em);
-								if (tmpfld != null) {
-									search.setFolderId((Integer) obj);
-								}
-								else {
-									continue;
-								}
-
+						if (obj != null && obj instanceof Integer) {
+							EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(), em);
+							if (tmpfld != null) {
+								search.setFolderId((Integer) obj);
+							} else {
+								continue;
 							}
+
 						}
 
 						if (obj != null && obj instanceof FolderImpl) {
@@ -826,12 +820,10 @@ public class SearchManagerImpl extends SearchManager
 
 						}
 
-						if (obj instanceof FolderImpl) {
-							if (search.getFolderId() == null) {
-								EmAnalyticsFolder folderObj = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
-								em.persist(folderObj);
-								search.setFolderId((int) folderObj.getFolderId());
-							}
+						if (obj instanceof FolderImpl && search.getFolderId() == null) {
+							EmAnalyticsFolder folderObj = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
+							em.persist(folderObj);
+							search.setFolderId((int) folderObj.getFolderId());
 						}
 
 						if (cateObj instanceof Integer) {
@@ -845,11 +837,9 @@ public class SearchManagerImpl extends SearchManager
 							}
 						}
 
-						if (cateObj instanceof CategoryImpl) {
-							if (search.getCategoryId() == null) {
-								EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
-								search.setCategoryId((int) iCategory.getCategoryId());
-							}
+						if (cateObj instanceof CategoryImpl && search.getCategoryId() == null) {
+							EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
+							search.setCategoryId((int) iCategory.getCategoryId());
 						}
 
 						emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
@@ -881,17 +871,14 @@ public class SearchManagerImpl extends SearchManager
 
 								continue;
 							}
-							if (obj != null) {
-								if (obj instanceof Integer) {
-									EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(),
-											em);
-									if (tmpfld != null) {
-										search.setFolderId((Integer) obj);
-									}
-									else {
-										importedList.add(search);
-										continue;
-									}
+							if (obj != null && obj instanceof Integer) {
+								EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(),
+										em);
+								if (tmpfld != null) {
+									search.setFolderId((Integer) obj);
+								} else {
+									importedList.add(search);
+									continue;
 								}
 							}
 							if (cateObj == null) {
@@ -921,63 +908,52 @@ public class SearchManagerImpl extends SearchManager
 								}
 							}
 							EmAnalyticsCategory categoryObj = null;
-							if (cateObj != null) {
-								if (cateObj instanceof CategoryImpl) {
-									try {
-										categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
-												.setParameter("categoryName", ((Category) cateObj).getName())
-												.setParameter(QueryParameterConstant.USER_NAME,
-														TenantContext.getContext().getUsername())
-												.getSingleResult();
-									}
-									catch (NoResultException e) {
-	                                    LOGGER.error("no result");
-									}
-									if (categoryObj != null) {
+							if (cateObj != null && cateObj instanceof CategoryImpl) {
+								try {
+									categoryObj = (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByName")
+											.setParameter("categoryName", ((Category) cateObj).getName())
+											.setParameter(QueryParameterConstant.USER_NAME,
+													TenantContext.getContext().getUsername())
+											.getSingleResult();
+								} catch (NoResultException e) {
+									LOGGER.error("no result");
+								}
+								if (categoryObj != null) {
 
-										search.setCategoryId((int) categoryObj.getCategoryId());
-									}
-
+									search.setCategoryId((int) categoryObj.getCategoryId());
 								}
 
 							}
 
-							if (search != null) {
-								if (search.getFolderId() != null) {
-									try {
+							if (search != null && search.getFolderId() != null) {
+								try {
 
-										searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
-												.setParameter("folderId", search.getFolderId())
-												.setParameter("searchName", search.getName())
-												.setParameter(QueryParameterConstant.USER_NAME,
-														TenantContext.getContext().getUsername())
-												.getSingleResult();
-									}
-									catch (NoResultException e) {
-										LOGGER.error("no result");
-									}
-									if (searchEntity != null) {
-										tmpImportSrImpl.setId((int) searchEntity.getId());
-										importedList.add(createSearchObject(searchEntity, null));
-										continue;
-									}
+									searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
+											.setParameter("folderId", search.getFolderId())
+											.setParameter("searchName", search.getName())
+											.setParameter(QueryParameterConstant.USER_NAME,
+													TenantContext.getContext().getUsername())
+											.getSingleResult();
+								} catch (NoResultException e) {
+									LOGGER.error("no result");
+								}
+								if (searchEntity != null) {
+									tmpImportSrImpl.setId((int) searchEntity.getId());
+									importedList.add(createSearchObject(searchEntity, null));
+									continue;
 								}
 							}
 
-							if (obj instanceof FolderImpl) {
-								if (search.getFolderId() == null) {
-									folder = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
-									em.persist(folder);
-									search.setFolderId((int) folder.getFolderId());
-								}
+							if (obj instanceof FolderImpl && search.getFolderId() == null) {
+								folder = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
+								em.persist(folder);
+								search.setFolderId((int) folder.getFolderId());
 							}
 
-							if (cateObj instanceof CategoryImpl) {
-								if (search.getCategoryId() == null) {
-									EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
-									em.persist(iCategory);
-									search.setCategoryId((int) iCategory.getCategoryId());
-								}
+							if (cateObj instanceof CategoryImpl && search.getCategoryId() == null) {
+								EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
+								em.persist(iCategory);
+								search.setCategoryId((int) iCategory.getCategoryId());
 							}
 
 							EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);

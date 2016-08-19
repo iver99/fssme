@@ -290,20 +290,16 @@ public class ImportSearchSet
 			if (!(obj.getName() != null && obj.getName().trim().length() > 0)) {
 				return true;
 			}
-			if (obj.getCategoryDetails() != null) {
-				if (obj.getCategoryDetails() instanceof CategoryImpl) {
-					CategoryImpl objCat = (CategoryImpl) obj.getCategoryDetails();
-					if (!(objCat.getName() != null && objCat.getName().trim().length() > 0)) {
-						return true;
-					}
+			if (obj.getCategoryDetails() != null && obj.getCategoryDetails() instanceof CategoryImpl) {
+				CategoryImpl objCat = (CategoryImpl) obj.getCategoryDetails();
+				if (!(objCat.getName() != null && objCat.getName().trim().length() > 0)) {
+					return true;
 				}
 			}
-			if (obj.getFolderDetails() != null) {
-				if (obj.getFolderDetails() instanceof FolderImpl) {
-					FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
-					if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
-						return true;
-					}
+			if (obj.getFolderDetails() != null && obj.getFolderDetails() instanceof FolderImpl) {
+				FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
+				if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
+					return true;
 				}
 			}
 		}
