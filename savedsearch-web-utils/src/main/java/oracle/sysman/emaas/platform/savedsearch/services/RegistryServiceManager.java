@@ -290,12 +290,13 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-
+		// Do nothing
 	}
 
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
+		// Do nothing
 	}
 
 	@Override

@@ -756,7 +756,7 @@ public class SearchAPI
 			//				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
 			//						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			//			}
-			if (name != null && name.trim().equals("")) {
+			if (name != null && "".equals(name.trim())) {
 				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			}
@@ -866,7 +866,7 @@ public class SearchAPI
 					throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
 							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
 				}
-				if (type.equals("STRING") | type.equals("CLOB")) {
+				if ("STRING".equals(type) | "CLOB".equals(type)) {
 					searchParam.setType(ParameterType.valueOf(type));
 				}
 				else {
@@ -902,7 +902,7 @@ public class SearchAPI
 			//				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
 			//						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			//			}
-			if (name != null && name.trim().equals("")) {
+			if (name != null && "".equals(name.trim())) {
 				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			}

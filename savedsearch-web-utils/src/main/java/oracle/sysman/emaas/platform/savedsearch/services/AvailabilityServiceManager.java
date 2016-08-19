@@ -103,6 +103,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
+		// Do nothing
 	}
 
 	/* (non-Javadoc)
@@ -111,6 +112,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
+		// Do nothing
 	}
 
 	/* (non-Javadoc)

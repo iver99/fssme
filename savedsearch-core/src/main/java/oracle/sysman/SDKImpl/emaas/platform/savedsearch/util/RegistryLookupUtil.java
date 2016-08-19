@@ -35,7 +35,7 @@ import org.apache.logging.log4j.Logger;
 public class RegistryLookupUtil
 {
 	private static final Logger LOGGER = LogManager.getLogger(RegistryLookupUtil.class);
-	private static final Logger ITR_LOGGER = LogUtil.getInteractionLogger();
+	private static final Logger LOGGERITR = LogUtil.getInteractionLogger();
 
 	public static final String APM_SERVICE = "ApmUI";
 	public static final String ITA_SERVICE = "emcitas-ui-apps";
@@ -149,13 +149,13 @@ public class RegistryLookupUtil
 
 			if (!StringUtil.isEmpty(tenantName)) {
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
-				ITR_LOGGER.debug("Retrieved INSTANCE {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				LOGGERITR.debug("Retrieved INSTANCE {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
 					LOGGER.warn(
 							"retrieved null INSTANCE info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
 							serviceName, version, tenantName);
 					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-					ITR_LOGGER.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result,
+					LOGGERITR.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result,
 							info);
 				}
 				else {
@@ -166,7 +166,7 @@ public class RegistryLookupUtil
 			}
 			else {
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-				ITR_LOGGER.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result, info);
+				LOGGERITR.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result, info);
 			}
 			if (result != null && !result.isEmpty()) {
 
@@ -185,7 +185,7 @@ public class RegistryLookupUtil
 						if (!StringUtil.isEmpty(tenantName)) {
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance, tenantName);
-							ITR_LOGGER.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+							LOGGERITR.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 									sanitizedInstance, tenantName);
 						}
 						else {
@@ -193,7 +193,7 @@ public class RegistryLookupUtil
 									"Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized INSTANCE");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
-							ITR_LOGGER.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
+							LOGGERITR.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
 									sanitizedInstance);
 						}
 						if (sanitizedInstance != null) {
@@ -239,7 +239,7 @@ public class RegistryLookupUtil
 						if (!StringUtil.isEmpty(tenantName)) {
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance, tenantName);
-							ITR_LOGGER.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+							LOGGERITR.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 									sanitizedInstance, tenantName);
 						}
 						else {
@@ -247,7 +247,7 @@ public class RegistryLookupUtil
 									"Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized INSTANCE");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
-							ITR_LOGGER.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
+							LOGGERITR.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
 									sanitizedInstance);
 						}
 						if (sanitizedInstance != null) {

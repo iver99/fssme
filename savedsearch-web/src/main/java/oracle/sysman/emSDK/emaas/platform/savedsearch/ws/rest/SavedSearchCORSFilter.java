@@ -139,6 +139,7 @@ public class SavedSearchCORSFilter implements Filter
 	@Override
 	public void destroy()
 	{
+		// Do nothing
 	}
 
 	@Override
@@ -234,6 +235,7 @@ public class SavedSearchCORSFilter implements Filter
 	@Override
 	public void init(FilterConfig config) throws ServletException
 	{
+		// Do nothing because of X and Y.
 	}
 
 	private boolean isParameterPresent(HttpServletRequest hReq)

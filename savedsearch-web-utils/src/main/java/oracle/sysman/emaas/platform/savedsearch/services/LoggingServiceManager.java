@@ -97,6 +97,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
+		// no impl
 	}
 
 	/* (non-Javadoc)

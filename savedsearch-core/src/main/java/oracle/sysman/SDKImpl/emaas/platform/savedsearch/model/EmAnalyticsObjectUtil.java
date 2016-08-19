@@ -85,7 +85,7 @@ class EmAnalyticsObjectUtil
 			if (cateObj != null) {
 				if (cateObj.getDeleted() == 0
 						&& (RequestContext.getContext().equals(RequestType.INTERNAL_TENANT)
-								|| cateObj.getOwner().equals("ORACLE") || cateObj.getOwner().equals(
+								|| "ORACLE".equals(cateObj.getOwner()) || cateObj.getOwner().equals(
 										TenantContext.getContext().getUsername()))) {
 
 					return cateObj;
@@ -111,7 +111,7 @@ class EmAnalyticsObjectUtil
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null
-					&& (RequestContext.getContext().equals(RequestType.INTERNAL_TENANT) || cateObj.getOwner().equals("ORACLE") || cateObj
+					&& (RequestContext.getContext().equals(RequestType.INTERNAL_TENANT) || "ORACLE".equals(cateObj.getOwner()) || cateObj
 							.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 				return cateObj;

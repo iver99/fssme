@@ -34,7 +34,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.R
 public class RestClient
 {
 	private static final Logger LOGGER = LogManager.getLogger(RestClient.class);
-	private static final Logger ITRLOGGER = LogUtil.getInteractionLogger();
+	private static final Logger LOGGERITR = LogUtil.getInteractionLogger();
 
 	public RestClient()
 	{
@@ -60,7 +60,7 @@ public class RestClient
 		}
 		else {
 			LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-			ITRLOGGER.info(
+			LOGGERITR.info(
 					"RestClient is connecting to get response after getting authorization token from registration manager.");
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
@@ -99,7 +99,7 @@ public class RestClient
 		}
 		else {
 			LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-			ITRLOGGER.info(
+			LOGGERITR.info(
 					"RestClient is connecting to get response after getting authorization token from registration manager.");
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)

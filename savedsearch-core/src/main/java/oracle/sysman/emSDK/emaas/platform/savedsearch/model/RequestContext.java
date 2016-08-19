@@ -27,27 +27,27 @@ public class RequestContext
 		ERRONEOUS
 	}
 
-	private static final ThreadLocal<RequestType> threadLocal = new ThreadLocal<RequestType>();
+	private static final ThreadLocal<RequestType> THREAD_LOCAL = new ThreadLocal<RequestType>();
 
 	/**
 	 * clear context to avoid memory leak
 	 */
 	public static void clearContext()
 	{
-		RequestType current = threadLocal.get();
+		RequestType current = THREAD_LOCAL.get();
 		if (current != null) {
-			threadLocal.remove();
+			THREAD_LOCAL.remove();
 		}
 	}
 
 	public static RequestType getContext()
 	{
-		return threadLocal.get();
+		return THREAD_LOCAL.get();
 	}
 
 	public static void setContext(RequestType reqType)
 	{
-		threadLocal.set(reqType);
+		THREAD_LOCAL.set(reqType);
 
 	}
 

@@ -89,7 +89,7 @@ public class VersionValidationServiceManager implements ApplicationServiceManage
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) 
 	{
-
+		//no impl
 	}
 
 	/* (non-Javadoc)

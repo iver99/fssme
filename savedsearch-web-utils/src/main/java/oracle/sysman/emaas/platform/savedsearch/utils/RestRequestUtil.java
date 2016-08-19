@@ -74,8 +74,9 @@ public class RestRequestUtil {
 		
 		// Set Request Headers
 		String tenantName = TenantContext.getContext().gettenantName();
-		if (tenantName != null && !tenantName.isEmpty())
+		if (tenantName != null && !tenantName.isEmpty()) {
 			request.setHeader(TENANT_HEADER, tenantName);
+		}
 
 		request.setHeader(AUTHORIZATION_HEADER, new String(LookupManager.getInstance().getAuthorizationToken()));
 		

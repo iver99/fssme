@@ -228,7 +228,7 @@ public class ImportSearchSet
 		String msg = "";
 		try {
 			stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(RESOURCE_PATH);
-			StringBuffer xmlStr = new StringBuffer(xml);
+			StringBuilder xmlStr = new StringBuilder(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			SearchSet searches = (SearchSet) JAXBUtil.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(ObjectFactory.class));
 			List<ImportSearchImpl> list = searches.getSearchSet();

@@ -27,7 +27,6 @@ import java.util.Map;
 @Test(groups = {"s1"})
 public class LogUtilTest {
 
-    LogUtil logUtil= new LogUtil();
 
 	@BeforeMethod
 	public void beforeMethod() throws URISyntaxException

@@ -35,7 +35,7 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.Applicati
  */
 public class TenantSubscriptionUtil
 {
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
+	private static Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
 	private static final String SUBSCRIBED_SERVICE_NAME_APM = "APM";
 	private static final String SUBSCRIBED_SERVICE_NAME_ITA = "ITAnalytics";
 	private static final String SUBSCRIBED_SERVICE_NAME_LA = "LogAnalytics";
@@ -113,7 +113,7 @@ public class TenantSubscriptionUtil
 	{
 		List<String> subscribedApps = TenantSubscriptionUtil.getTenantSubscribedServices(tenant);
 		if (subscribedApps == null) {
-			logger.debug("Get empty(null) subscribed APPs");
+			LOGGER.debug("Get empty(null) subscribed APPs");
 			return Collections.emptyList();
 		}
 		List<String> providers = new ArrayList<String>();
@@ -123,7 +123,7 @@ public class TenantSubscriptionUtil
 				providers.addAll(providerList);
 			}
 		}
-		logger.debug("Get subscribed provider names: {} for tenant {}",
+		LOGGER.debug("Get subscribed provider names: {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), tenant);
 		return providers;
 	}
@@ -140,31 +140,31 @@ public class TenantSubscriptionUtil
 					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 		}
 		catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 			return Collections.emptyList();
 		}
 		if (cachedApps != null) {
-			logger.debug("retrieved subscribed apps for tenant {} from subscribe cache: "
+			LOGGER.debug("retrieved subscribed apps for tenant {} from subscribe cache: "
 					+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
 			return cachedApps;
 		}
 
 		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenant);
 		if (domainLink == null || StringUtil.isEmpty(domainLink.getHref())) {
-			logger.warn("Checking tenant (" + tenant
+			LOGGER.warn("Checking tenant (" + tenant
 					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
 			return Collections.emptyList();
 		}
-		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
+		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
 		RestClient rc = new RestClient();
 		String domainsResponse = rc.get(domainHref);
-		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
+		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		ObjectMapper mapper = JSONUtil.buildNormalMapper();
 		try {
 			DomainsEntity de = JSONUtil.fromJson(mapper, domainsResponse, DomainsEntity.class);//ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().isEmpty()) {
-				logger.warn(
+				LOGGER.warn(
 						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
 				return Collections.emptyList();
 			}
@@ -176,21 +176,21 @@ public class TenantSubscriptionUtil
 				}
 			}
 			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
-				logger.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
+				LOGGER.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
 				return Collections.emptyList();
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			logger.info(
+			LOGGER.info(
 					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
 			String appMappingJson = rc.get(appMappingUrl);
-			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
+			LOGGER.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return Collections.emptyList();
 			}
 			AppMappingCollection amec = JSONUtil.fromJson(mapper, appMappingJson, AppMappingCollection.class);//.fromJsonToList(appMappingJson, AppMappingCollection.class);
 			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
-				logger.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
-				return null;
+				LOGGER.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
+				return Collections.emptyList();
 			}
 			AppMappingEntity ame = null;
 			for (AppMappingEntity entity : amec.getItems()) {
@@ -206,7 +206,7 @@ public class TenantSubscriptionUtil
 				}
 			}
 			if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
-				logger.error("Checking tenant (" + tenant
+				LOGGER.error("Checking tenant (" + tenant
 						+ ") subscriptions. Failed to get an application mapping for the specified tenant");
 				return Collections.emptyList();
 			}
@@ -217,7 +217,7 @@ public class TenantSubscriptionUtil
 					break;
 				}
 			}
-			logger.info("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
+			LOGGER.info("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
 			if (apps == null || "".equals(apps)) {
 				return Collections.emptyList();
 			}
@@ -226,13 +226,13 @@ public class TenantSubscriptionUtil
 			//put into cache
 			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
 					origAppsList);
-			logger.debug("Store subscribed apps for tenant {} to subscribe cache: "
+			LOGGER.debug("Store subscribed apps for tenant {} to subscribe cache: "
 					+ StringUtil.arrayToCommaDelimitedString(origAppsList.toArray()), tenant);
 			return origAppsList;
 
 		}
 		catch (IOException e) {
-			logger.error(e);
+			LOGGER.error(e);
 			return Collections.emptyList();
 		}
 	}

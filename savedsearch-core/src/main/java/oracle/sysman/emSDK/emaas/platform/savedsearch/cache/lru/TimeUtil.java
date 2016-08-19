@@ -18,10 +18,12 @@ public class TimeUtil {
 
     public static int convertTimeToInt(long seconds)
     {
-        if(seconds > 2147483647L)
+        if(seconds > 2147483647L) {
             return 2147483647;
-        else
-            return (int)seconds;
+        }
+        else {
+            return (int) seconds;
+        }
     }
 
     static final long ONE_SECOND = 1000L;

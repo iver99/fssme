@@ -144,7 +144,7 @@ public class ImportFolderSet
 		try {
 			JAXBContext jaxbContext = JAXBUtil.getJAXBContext(ObjectFactory.class);
 			stream = ImportFolderSet.class.getClassLoader().getResourceAsStream(RESOURCE_PATH);
-			StringBuffer xmlStr = new StringBuffer(xml);
+			StringBuilder xmlStr = new StringBuilder(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			FolderSet folders = (FolderSet) JAXBUtil.unmarshal(sReader, stream, jaxbContext);
 			List<FolderDetails> list = folders.getFolderSet();

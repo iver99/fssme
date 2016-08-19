@@ -76,6 +76,9 @@ public class LogUtil
 		}
 	}
 
+	private LogUtil() {
+	}
+
 	/**
 	 * Direction for interaction log
 	 *
