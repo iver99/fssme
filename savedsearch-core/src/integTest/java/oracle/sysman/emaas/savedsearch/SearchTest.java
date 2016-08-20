@@ -39,6 +39,7 @@ public class SearchTest extends BaseTest
 	private static int initialSearchCnt = 0;
 
 
+	@BeforeClass
 	public static void initialization() throws Exception
 	{
 
@@ -99,6 +100,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
+	@AfterClass
 	public static void testDelete() throws Exception
 	{
 
@@ -124,6 +126,7 @@ public class SearchTest extends BaseTest
 	}
 
 
+	@Test (groups = {"s1"})
 	public void testEditSystemSearch() throws Exception
 	{
 		boolean bresult = false;
@@ -146,6 +149,7 @@ public class SearchTest extends BaseTest
 		Assert.assertEquals(bresult, true);
 	}
 
+	@Test (groups = {"s1"})
 	public void testGetInstance()
 	{
 		try {
@@ -160,6 +164,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
+	@Test (groups = {"s1"})
 	public void testGetSearch() throws Exception
 	{
 		try {
@@ -187,6 +192,7 @@ public class SearchTest extends BaseTest
 	}*/
 
 
+	@Test (groups = {"s1"})
 	public void testGetSearchByInvalidFolderId(@Mocked final Persistence persistence) throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();
@@ -246,6 +252,7 @@ public class SearchTest extends BaseTest
 		}
 	}*/
 
+	@Test (groups = {"s1"})
 	public void testSearchNotExist() throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();
