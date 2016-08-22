@@ -171,15 +171,19 @@ public class CategoryCRUD {
                     + "},\"folder\":{\"id\":"
                     + folderid
                     + "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
-            RestAssured.given().contentType(ContentType.JSON).log().everything()
-                    .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
-                    .post("/search");
+            Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+                .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
+                .post("/search");
+            JsonPath jp1 = res1.jsonPath();
             Response res = RestAssured.given().log().everything().header("Authorization", authToken)
                     .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + catid + "/searches");
             Assert.assertTrue(res.getStatusCode() == 200);
             String output = res.getBody().asString();
             JSONArray newJArray = new JSONArray(output);
             Assert.assertTrue(newJArray.length() > 0);
+            RestAssured.given().contentType(ContentType.JSON).log().everything()
+                .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+                .delete("/search/" + jp1.get("id"));
             Assert.assertTrue(res.getStatusCode() == 200);
     }
 
