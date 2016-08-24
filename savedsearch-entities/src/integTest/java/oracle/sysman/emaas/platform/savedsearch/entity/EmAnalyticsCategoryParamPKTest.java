@@ -60,4 +60,10 @@ public class EmAnalyticsCategoryParamPKTest
 		emAnalyticsCategoryParamPK2.setTenantId(1L);
 		Assert.assertEquals(emAnalyticsCategoryParamPK.hashCode(), emAnalyticsCategoryParamPK2.hashCode());
 	}
+
+	@Test(groups = { "s1" })
+	public void testGetTenantId(){
+		emAnalyticsCategoryParamPK.setTenantId(1L);
+		Assert.assertEquals((Long)1L, emAnalyticsCategoryParamPK.getTenantId());
+	}
 }

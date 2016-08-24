@@ -179,6 +179,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptio
 		 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchSummaryImplTest.class"
 		 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/EntityJsonUtilTest.class"
 		 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/CategoryDetailsTest.class"
+		 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplForTargetCardTest.class"
 	useRestAssured =true
 ext.set("testType", "unit")
 
