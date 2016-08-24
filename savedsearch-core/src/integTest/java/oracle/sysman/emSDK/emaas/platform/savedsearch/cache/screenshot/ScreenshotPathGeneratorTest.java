@@ -32,4 +32,15 @@ public class ScreenshotPathGeneratorTest {
         Assert.assertNull(screenshotPathGenerator.generateScreenshotUrl("",widgetId,creation,modification));
         Assert.assertNull(screenshotPathGenerator.generateScreenshotUrl(baseUrl,null,creation,modification));
     }
+
+    @Test
+    public void testValidFileName(){
+        Assert.assertTrue(screenshotPathGenerator.validFileName(10000L, "20160821_10000.png","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10000L, "","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10000L, "invalid","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10001L, "20160821_10000.png","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10001L, "20160821_10000.png","20160921_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10000L, "20160821_10000.png","invalid"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10000L, "20160821_10000.png","invalid_10000.png"));
+    }
 }

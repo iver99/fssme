@@ -46,4 +46,18 @@ public class DBConnectionManagerTestS2 {
         };
         Assert.assertTrue(dbConenctionManager.isDatabaseConnectionAvailable());
     }
+
+    @Test
+    public void testIsDatabaseConnectionAvailableException(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManagerFactoryImpl entityManagerFactoryImpl, @Mocked final EntityManager entityManager, @Mocked final EJBQueryImpl ejbQuery) {
+
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManagerFactory();
+                result = new Exception();
+            }
+        };
+        Assert.assertFalse(dbConenctionManager.isDatabaseConnectionAvailable());
+    }
 }

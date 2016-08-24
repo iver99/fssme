@@ -1,15 +1,16 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emaas.platform.savedsearch.entity.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -23,10 +24,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 
 /**
  * @author qianqi
@@ -37,6 +34,17 @@ public class SearchManagerImplTest
 {
 
 	SearchManagerImpl searchManager;
+	@Mocked
+	PersistenceManager persistenceManager;
+	@Mocked
+	EntityManager entityManager;
+	@Mocked
+	EmAnalyticsObjectUtil emAnalyticsObjectUtil;
+	@Mocked
+	EmAnalyticsSearch emAnalyticsSearch;
+	@Mocked
+	WidgetChangeNotification anyWidgetChangeNotification;
+
 
     @Test
     public void testCreateNewSearch() {
@@ -44,9 +52,7 @@ public class SearchManagerImplTest
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-    public void testDeleteSearchException(@Mocked final PersistenceManager persistenceManager,
-                                          @Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
-                                          @Mocked final EmAnalyticsSearch emAnalyticsSearch) throws EMAnalyticsFwkException {
+    public void testDeleteSearchException() throws EMAnalyticsFwkException {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
@@ -66,9 +72,7 @@ public class SearchManagerImplTest
     }
 
 	@Test
-	public void testDeleteSearchMocked(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch) throws EMAnalyticsFwkException
+	public void testDeleteSearchMocked() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -86,9 +90,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testDeleteSearchMockednull(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch) throws EMAnalyticsFwkException
+	public void testDeleteSearchMockednull() throws EMAnalyticsFwkException
     {
 		new Expectations() {
 			{
@@ -107,9 +109,7 @@ public class SearchManagerImplTest
 
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testEditSearchEMAnalyticsFwkException(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch) throws EMAnalyticsFwkException
+	public void testEditSearchEMAnalyticsFwkException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -128,7 +128,7 @@ public class SearchManagerImplTest
     }
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testEditSearchExceptio(@Mocked final PersistenceManager persistenceManager) throws EMAnalyticsFwkException
+	public void testEditSearchExceptio() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -140,9 +140,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testEditSearchNormal(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final WidgetChangeNotification anyWidgetChangeNotification)
+	public void testEditSearchNormal()
 					throws Exception
 	{
 		new Expectations() {
@@ -164,7 +162,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testEditSearchPersistenceException(@Mocked final PersistenceManager persistenceManager) throws EMAnalyticsFwkException
+	public void testEditSearchPersistenceException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -182,8 +180,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testGetSearch(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final EmAnalyticsSearch emAnalyticsSearch)
+	public void testGetSearch()
 					throws EMAnalyticsFwkException
 	{
 		new Expectations() {
@@ -198,10 +195,41 @@ public class SearchManagerImplTest
 		};
 		searchManager.getSearch(1234);
 	}
+	@Mocked
+	Throwable throwable;
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetSearchException()throws EMAnalyticsFwkException
+	{
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				result = new Exception(throwable);
+			}
+		};
+		searchManager.getSearch(1234);
+	}
 
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetSearchNullException()throws EMAnalyticsFwkException
+	{
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				result = null;
+			}
+		};
+		searchManager.getSearch(1234);
+	}
 	@Test
-	public void testGetSearchWithoutOwner(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final EmAnalyticsSearch emAnalyticsSearch)
+	public void testGetSearchWithoutOwner()
 					throws Exception
 	{
 		new Expectations() {
@@ -220,10 +248,31 @@ public class SearchManagerImplTest
 	}
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testGetSearchByNameException(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchWithoutOwnerNullException()
+			throws Exception
+	{
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				entityManager.find(EmAnalyticsSearch.class, anyLong);
+				result = emAnalyticsSearch;
+				emAnalyticsSearch.getDeleted();
+				result = 1L;
+			}
+		};
+		searchManager.getSearchWithoutOwner(1234);
+	}
+	@Mocked
+	TenantContext tenantContext;
+	@Mocked
+	TenantInfo tenantInfo;
+	@Mocked
+	Query query;
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetSearchByNameException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -247,10 +296,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testGetSearchByNameNoResultException(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchByNameNoResultException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -274,10 +320,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testGetSearchByNameNormal(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchByNameNormal() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -312,10 +355,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testGetSearchListByCategoryId(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchListByCategoryId() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -339,10 +379,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testGetSearchListByCategoryIdException(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchListByCategoryIdException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -368,10 +405,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testGetSearchListByFolderId(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchListByFolderId() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -394,10 +428,7 @@ public class SearchManagerImplTest
 		searchManager.getSearchListByFolderId(1234);
 	}
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testGetSearchListByFolderIdException(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchListByFolderIdException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -423,10 +454,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testGetSearchListByLastAccessDate(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchListByLastAccessDate() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -452,10 +480,7 @@ public class SearchManagerImplTest
 	}
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testGetSearchListByLastAccessDate_EMAnalyticsFwkException(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchListByLastAccessDateEMAnalyticsFwkException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -470,7 +495,7 @@ public class SearchManagerImplTest
 				query.setParameter(anyString, anyString);
 				result = query;
 				query.getResultList();
-				result = new EMAnalyticsFwkException(new Throwable());
+				result = new EMAnalyticsFwkException(throwable);
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getUsername();
@@ -481,10 +506,7 @@ public class SearchManagerImplTest
 	}
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testGetSearchListByLastAccessDate_Exception(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSearchListByLastAccessDate_Exception() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -510,10 +532,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testGetSystemSearchListByCategoryId(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSystemSearchListByCategoryId() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -535,10 +554,7 @@ public class SearchManagerImplTest
 	}
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testGetSystemSearchListByCategoryId_Exception(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetSystemSearchListByCategoryId_Exception() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -560,10 +576,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testGetWidgetListByCategoryId(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetWidgetListByCategoryId() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -587,10 +600,7 @@ public class SearchManagerImplTest
 	}
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testGetWidgetListByCategoryIdException(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException
+	public void testGetWidgetListByCategoryIdException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -614,21 +624,15 @@ public class SearchManagerImplTest
 	}
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testGetWidgetListByProviderNames(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager em, @Mocked final TenantContext tc, @Mocked final Query query)
+	public void testGetWidgetListByProviderNames()
 					throws EMAnalyticsFwkException
 	{
 		final List<EmAnalyticsSearch> wgtList = new ArrayList<EmAnalyticsSearch>();
 		new Expectations() {
 			{
 				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = em;
+				result = entityManager;
 				TenantContext.getContext();
-				result = new TenantInfo("user", 1L);
-				em.createQuery(anyString);
-				result = query;
-				query.getResultList();
-				result = wgtList;
 			}
 		};
 		searchManager.getWidgetListByProviderNames(false, Arrays.asList("LoganService"), null);
@@ -665,37 +669,11 @@ public class SearchManagerImplTest
 		searchManager.getWidgetScreenshotById(1234);
 	}
 
-	//// TODO: 16-3-4
-	//    for the if branch
-	//    @Test
-	//    public void testGetWidgetScreenshotById_getSearchMocked(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,@Mocked final EmAnalyticsSearch emAnalyticsSearch,@Mocked final Search search, @Mocked final SearchParameter searchParameter) throws Exception {
-	//        final List<SearchParameter> paramList = new ArrayList<>();
-	//        paramList.add(searchParameter);
-	//        paramList.add(searchParameter);
-	//        new Expectations(){
-	//            {
-	//                PersistenceManager.getInstance();
-	//                result = persistenceManager;
-	//                persistenceManager.getEntityManager((TenantInfo) any);
-	//                result = entityManager;
-	//                EmAnalyticsObjectUtil.getSearchById(anyLong,(EntityManager)any);
-	//                result = emAnalyticsSearch;
-	//                withAny(search).getParameters();
-	//                result = paramList;
-	//                searchParameter.getName();
-	//                result = "WIDGET_VISUAL";
-	//                searchParameter.getValue();
-	//                result = "WIDGET_VISUAL";
-	//            }
-	//        };
-	//        searchManager.getWidgetScreenshotById(1234);
-	//    }
 
+	@Mocked
+	EmAnalyticsLastAccess emAnalyticsLastAccess;
 	@Test
-	public void testModifyLastAccessDate(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final EmAnalyticsLastAccess emAnalyticsLastAccess)
+	public void testModifyLastAccessDate()
 					throws EMAnalyticsFwkException
 	{
 		List<EmAnalyticsSearch> searchList = new ArrayList<>();
@@ -725,10 +703,7 @@ public class SearchManagerImplTest
 	}
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testModifyLastAccessDateException(@Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-			@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil) throws EMAnalyticsFwkException
+	public void testModifyLastAccessDateException() throws EMAnalyticsFwkException
 	{
 		List<EmAnalyticsSearch> searchList = new ArrayList<>();
 		searchList.add(emAnalyticsSearch);
@@ -749,11 +724,7 @@ public class SearchManagerImplTest
 	}
 
     @Test(expectedExceptions = {NullPointerException.class})
-	public void testSaveMultipleSearchCateObjCategoryImpl(@Mocked final EmAnalyticsCategory emAnalyticsCategory,
-			@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
-			@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchCateObjCategoryImpl() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -781,13 +752,6 @@ public class SearchManagerImplTest
 				result = null;
 			}
 		};
-		new MockUp<Throwable>() {
-			@Mock
-			public void printStackTrace()
-			{
-
-			}
-		};
 		new MockUp<Exception>() {
 			@Mock
 			public void printStackTrace()
@@ -798,13 +762,10 @@ public class SearchManagerImplTest
 			searchManager.saveMultipleSearch(importSearchList);
 
 	}
-
+	@Mocked
+	EmAnalyticsCategory emAnalyticsCategory;
 	@Test
-	public void testSaveMultipleSearchCateObjInteger(@Mocked final EmAnalyticsCategory emAnalyticsCategory,
-			@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
-			@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchCateObjInteger() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -839,11 +800,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchGetSystemSearchEquals1(@Mocked final ImportSearchImpl importSearchImpl,
-			@Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchGetSystemSearchEquals1() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -875,11 +832,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchGetSystemSearchNotEquals1(@Mocked final ImportSearchImpl importSearchImpl,
-			@Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchGetSystemSearchNotEquals1() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -911,10 +864,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchObjFolderImpl(@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
-			@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchObjFolderImpl() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -946,10 +896,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchObjInteger(@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
-			@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchObjInteger() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -976,7 +923,6 @@ public class SearchManagerImplTest
 				emAnalyticsSearch.getSystemSearch();
 				result = new BigDecimal(1333);
 				EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
-				returns(new EmAnalyticsFolder(), null);
 			}
 		};
 		searchManager.saveMultipleSearch(importSearchList);
@@ -984,11 +930,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchSearchGetIdLT0(@Mocked final ImportSearchImpl importSearchImpl,
-			@Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchSearchGetIdLT0() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -1020,11 +962,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchSearchGetIdST0(@Mocked final ImportSearchImpl importSearchImpl,
-			@Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchSearchGetIdST0() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -1056,11 +994,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchSearchGetIdST0CateObjInteger(@Mocked final ImportSearchImpl importSearchImpl,
-			@Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchSearchGetIdST0CateObjInteger() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -1088,11 +1022,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchSearchGetIdST0CateObjNull(@Mocked final ImportSearchImpl importSearchImpl,
-			@Mocked final Search search, @Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil eABU,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final TenantContext tenantContext,
-			@Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchSearchGetIdST0CateObjNull() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -1120,11 +1050,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchSearchGetIdST0ObjFolderImplCateObjCategoryImpl(@Mocked final Query query,
-			@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
-			@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchSearchGetIdST0ObjFolderImplCateObjCategoryImpl() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -1163,11 +1089,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchSearchGetIdST0ObjFolderImplCateObjCategoryImplGetFolderIdNullGetCategoryIdNull(
-			@Mocked final Query query, @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
-			@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchSearchGetIdST0ObjFolderImplCateObjCategoryImplGetFolderIdNullGetCategoryIdNull() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -1210,11 +1132,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearchSearchGetIdST0ObjInteger(@Mocked final Query query,
-			@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
-			@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchSearchGetIdST0ObjInteger() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -1251,13 +1169,12 @@ public class SearchManagerImplTest
 		};
 		searchManager.saveMultipleSearch(importSearchList);
 	}
-
+	@Mocked
+	Search search;
+	@Mocked
+	ImportSearchImpl importSearchImpl;
 	@Test
-	public void testSaveMultipleSearchSearchGetIdST0ObjIntegerNoResultException(@Mocked final Query query,
-			@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
-			@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-			@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearchSearchGetIdST0ObjIntegerNoResultException() throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
@@ -1296,9 +1213,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveSearch(@Mocked final EmAnalyticsSearch emAnalyticsSearch,
-			@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager) throws EMAnalyticsFwkException
+	public void testSaveSearch() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -1314,12 +1229,12 @@ public class SearchManagerImplTest
 	}
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testSaveSearchEMAnalyticsFwkException(@Mocked final PersistenceManager persistenceManager) throws EMAnalyticsFwkException
+	public void testSaveSearchEMAnalyticsFwkException() throws EMAnalyticsFwkException
     {
 		new Expectations() {
 			{
 				PersistenceManager.getInstance();
-				result = new EMAnalyticsFwkException(new Throwable());
+				result = new EMAnalyticsFwkException(throwable);
 			}
 		};
 			searchManager.saveSearch(new SearchImpl());
@@ -1327,19 +1242,19 @@ public class SearchManagerImplTest
 
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testSaveSearchException(@Mocked final PersistenceManager persistenceManager) throws EMAnalyticsFwkException
+	public void testSaveSearchException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
 				PersistenceManager.getInstance();
-				result = new Exception();
+				result = new Exception(throwable);
 			}
 		};
 			searchManager.saveSearch(new SearchImpl());
 	}
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testSaveSearchPersistenceException(@Mocked final PersistenceManager persistenceManager) throws EMAnalyticsFwkException
+	public void testSaveSearchPersistenceException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -1348,5 +1263,140 @@ public class SearchManagerImplTest
 			}
 		};
 			searchManager.saveSearch(new SearchImpl());
+	}
+
+	@Test
+	public void testGetSearchParamByName() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+ 				PersistenceManager.getInstance();
+				result = persistenceManager;
+				TenantContext.getContext();
+				result = tenantInfo;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				EmAnalyticsObjectUtil.getSearchParamByName(anyLong, anyString, entityManager);
+				result = "param_value";
+			}
+		};
+		searchManager.getSearchParamByName(1L, "widget_viewmodel");
+	}
+
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetSearchParamByNameException() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				TenantContext.getContext();
+				result = new Exception();
+			}
+		};
+		searchManager.getSearchParamByName(1L, "widget_viewmodel");
+	}
+
+	@Mocked
+	EmAnalyticsFolder emAnalyticsFolder;
+	@Mocked
+	CategoryManagerImpl categoryManager;
+	@Mocked
+	Category category;
+	@Test
+	public void testGetWidgetScreenshotByIdNotNull() throws Exception {
+		final Set<EmAnalyticsSearchParam> emAnalyticsSearchParamSet = new HashSet<>();
+		EmAnalyticsSearchParam emAnalyticsSearchParam = new EmAnalyticsSearchParam();
+		emAnalyticsSearchParam.setName("NAME_WIDGET_SOURCE");
+		emAnalyticsSearchParam.setParamValueStr("name_widget_source");
+		emAnalyticsSearchParamSet.add(emAnalyticsSearchParam);
+		emAnalyticsSearchParam = new EmAnalyticsSearchParam();
+		emAnalyticsSearchParam.setName("New_PARAMNAME");
+		emAnalyticsSearchParam.setParamValueStr("new_ParamValue");
+		emAnalyticsSearchParam.setParamType(new BigDecimal(0));
+		emAnalyticsSearchParamSet.add(emAnalyticsSearchParam);
+		emAnalyticsSearchParam = new EmAnalyticsSearchParam();
+		emAnalyticsSearchParam.setName("WIDGET_VISUAL");
+		emAnalyticsSearchParam.setParamValueClob("new_ParamValue");
+		emAnalyticsSearchParam.setParamType(new BigDecimal(1));
+		emAnalyticsSearchParamSet.add(emAnalyticsSearchParam);
+		emAnalyticsSearchParam = new EmAnalyticsSearchParam();
+		emAnalyticsSearchParam.setName("WIDGET_VISUAL");
+		emAnalyticsSearchParam.setParamType(new BigDecimal(1));
+		emAnalyticsSearchParamSet.add(emAnalyticsSearchParam);
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				TenantContext.getContext();
+				result = tenantInfo;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				entityManager.find(EmAnalyticsSearch.class, anyLong);
+				result = emAnalyticsSearch;
+				emAnalyticsSearch.getDeleted();
+				result = 0;
+				emAnalyticsSearch.getId();
+				result = 1L;
+				emAnalyticsSearch.getNameNlsid();
+				result = "des_nlsid";
+				emAnalyticsSearch.getNameSubsystem();
+				result = "name_subsystem";
+				emAnalyticsSearch.getDescriptionNlsid();
+				result = "des_nlsid";
+				emAnalyticsSearch.getDescriptionSubsystem();
+				result = "des_subsystem";
+				emAnalyticsSearch.getOwner();
+				result = "Oracle";
+				emAnalyticsSearch.getCreationDate();
+				result = new Date();
+				emAnalyticsSearch.getLastModifiedBy();
+				result = "Oracle";
+				emAnalyticsSearch.getEmAnalyticsCategory();
+				result = emAnalyticsCategory;
+				emAnalyticsCategory.getCategoryId();
+				result = 1L;
+				emAnalyticsSearch.getEmAnalyticsFolder();
+				result = emAnalyticsFolder;
+				emAnalyticsFolder.getFolderId();
+				result = 1L;
+				emAnalyticsSearch.getAccessDate();
+				result = new  Date();
+				emAnalyticsSearch.getIsWidget();
+				result =1;
+				emAnalyticsSearch.getEmAnalyticsSearchParams();
+				result = emAnalyticsSearchParamSet;
+				emAnalyticsSearch.getNAMEWIDGETSOURCE();
+				result = "name_widget_source";
+				emAnalyticsSearch.getWIDGETGROUPNAME();
+				result = "widget_group_name";
+				emAnalyticsSearch.getWIDGETSCREENSHOTHREF();
+				result = "wodget_screen_shot_href";
+				emAnalyticsSearch.getWIDGETICON();
+				result = "widget_icon";
+				emAnalyticsSearch.getWIDGETKOCNAME();
+				result = "widget_koc_name";
+				emAnalyticsSearch.getWIDGETVIEWMODEL();
+				result ="widget_view_model";
+				emAnalyticsSearch.getWIDGETTEMPLATE();
+				result = "widget_template";
+				emAnalyticsSearch.getWIDGETSUPPORTTIMECONTROL();
+				result = "widget_support";
+				emAnalyticsSearch.getWIDGETLINKEDDASHBOARD();
+				result = 1L;
+				emAnalyticsSearch.getWIDGETDEFAULTWIDTH();
+				result = 1L;
+				emAnalyticsSearch.getWIDGETDEFAULTHEIGHT();
+				result = 1L;
+				emAnalyticsSearch.getDASHBOARDINELIGIBLE();
+				result = "dashboard_ineligible";
+				emAnalyticsSearch.getPROVIDERVERSION();
+				result = "provider_version";
+				emAnalyticsSearch.getPROVIDERASSETROOT();
+				result = "provider_assetroot";
+				emAnalyticsSearch.getPROVIDERNAME();
+				result = "provider_name";
+				CategoryManagerImpl.createCategoryObject((EmAnalyticsCategory)any, null);
+				result = category;
+			}
+		};
+		searchManager.getWidgetScreenshotById(1L);
 	}
 }

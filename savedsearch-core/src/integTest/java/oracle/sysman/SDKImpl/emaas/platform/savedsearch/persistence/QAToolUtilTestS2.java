@@ -7,10 +7,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -65,5 +67,22 @@ public class QAToolUtilTestS2 {
             }
         };
         Assert.assertNotNull(QAToolUtil.getTenantDetails());
+    }
+
+    @Test
+    public void testGetSavedSearchDeploymentDet() throws IOException {
+        final List<String> urlList = new ArrayList<>();
+        urlList.add("url1");
+        new Expectations(){
+            {
+                Utils.getProperty("SERVICE_MANAGER_URL");
+                result = "savedsearch/v1";
+                url.openConnection();
+                result = httpURLConnection;
+                SchemaUtil.getSchemaUrls(anyString);
+                result = urlList;
+            }
+        };
+        QAToolUtil.getSavedSearchDeploymentDet();
     }
 }
