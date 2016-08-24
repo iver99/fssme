@@ -121,6 +121,7 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/loggingconfig/Up
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/ValidationUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPITest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGroupAPITest.class"
+		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/XSDErrorUtilTest.class"
 
 
 

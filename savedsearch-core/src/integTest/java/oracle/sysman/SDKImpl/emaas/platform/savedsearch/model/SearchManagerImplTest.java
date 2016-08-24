@@ -127,13 +127,14 @@ public class SearchManagerImplTest
         searchManager.editSearch(new SearchImpl());
     }
 
+
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testEditSearchExceptio() throws EMAnalyticsFwkException
+	public void testEditSearchException() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
 				PersistenceManager.getInstance();
-				result = new Exception();
+				result = new Exception(throwable);
 			}
 		};
         searchManager.editSearch(new SearchImpl());
@@ -167,7 +168,7 @@ public class SearchManagerImplTest
 		new Expectations() {
 			{
 				PersistenceManager.getInstance();
-				result = new PersistenceException();
+				result = new PersistenceException(throwable);
 			}
 		};
 			searchManager.editSearch(new SearchImpl());
@@ -229,9 +230,7 @@ public class SearchManagerImplTest
 		searchManager.getSearch(1234);
 	}
 	@Test
-	public void testGetSearchWithoutOwner()
-					throws Exception
-	{
+	public void testGetSearchWithoutOwner() throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				PersistenceManager.getInstance();
@@ -248,9 +247,7 @@ public class SearchManagerImplTest
 	}
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
-	public void testGetSearchWithoutOwnerNullException()
-			throws Exception
-	{
+	public void testGetSearchWithoutOwnerNullException() throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				PersistenceManager.getInstance();
@@ -309,7 +306,7 @@ public class SearchManagerImplTest
 				query.setParameter(anyString, anyLong);
 				result = query;
 				query.getSingleResult();
-				result = new NoResultException();
+				result = new NoResultException("");
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getUsername();
@@ -398,7 +395,7 @@ public class SearchManagerImplTest
 				tenantInfo.getUsername();
 				result = "userName";
 				entityManager.refresh(any);
-				result = new Exception();
+				result = new Exception(throwable);
 			}
 		};
 			searchManager.getSearchListByCategoryId(1234);
@@ -447,7 +444,7 @@ public class SearchManagerImplTest
 				tenantInfo.getUsername();
 				result = "userName";
 				entityManager.refresh(any);
-				result = new Exception();
+				result = new Exception(throwable);
 			}
 		};
 			searchManager.getSearchListByFolderId(1234);
@@ -521,7 +518,7 @@ public class SearchManagerImplTest
 				query.setParameter(anyString, anyString);
 				result = query;
 				query.getResultList();
-				result = new Exception();
+				result = new Exception(throwable);
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getUsername();
@@ -567,7 +564,7 @@ public class SearchManagerImplTest
 				query.setParameter(anyString, anyLong);
 				result = query;
 				query.getResultList();
-				result = new Exception();
+				result = new Exception(throwable);
 				TenantContext.getContext();
 				result = tenantInfo;
 			}
@@ -613,7 +610,7 @@ public class SearchManagerImplTest
 				query.setParameter(anyString, anyLong);
 				result = query;
 				query.getResultList();
-				result = new Exception();
+				result = new Exception(throwable);
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getUsername();
@@ -627,7 +624,6 @@ public class SearchManagerImplTest
 	public void testGetWidgetListByProviderNames()
 					throws EMAnalyticsFwkException
 	{
-		final List<EmAnalyticsSearch> wgtList = new ArrayList<EmAnalyticsSearch>();
 		new Expectations() {
 			{
 				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
@@ -641,7 +637,7 @@ public class SearchManagerImplTest
 		new Expectations() {
 			{
 				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = new Exception(new Exception("Cannot acquire data source"));
+				result = new Exception(throwable);
 			}
 		};
 			searchManager.getWidgetListByProviderNames(false, Arrays.asList("LoganService"), null);
@@ -1259,7 +1255,7 @@ public class SearchManagerImplTest
 		new Expectations() {
 			{
 				PersistenceManager.getInstance();
-				result = new PersistenceException();
+				result = new PersistenceException(throwable);
 			}
 		};
 			searchManager.saveSearch(new SearchImpl());
@@ -1288,7 +1284,7 @@ public class SearchManagerImplTest
 				PersistenceManager.getInstance();
 				result = persistenceManager;
 				TenantContext.getContext();
-				result = new Exception();
+				result = new Exception(throwable);
 			}
 		};
 		searchManager.getSearchParamByName(1L, "widget_viewmodel");

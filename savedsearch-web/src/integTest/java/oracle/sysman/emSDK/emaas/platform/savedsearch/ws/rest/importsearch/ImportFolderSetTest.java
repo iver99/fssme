@@ -6,6 +6,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.testng.Assert;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,7 +52,10 @@ public class ImportFolderSetTest {
                 result = jaxbContext;
                 Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(inputStream),withAny(jaxbContext));
                 result = folderSet;
+                FolderManagerImpl.getInstance();
+                result = folderManagerImpl;
                 folderManagerImpl.saveMultipleFolders(folderDetailses);
+                result = folderlist;
                 folderSet.getFolderSet();
                 result = folderDetails;
             }
@@ -108,5 +113,57 @@ public class ImportFolderSetTest {
         };
         Assert.assertNotNull(importFolderSet.importsFolders(xml));
          }
+
+
+    @Test
+    public void testImportsFoldersEmpty(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+        final List<FolderDetails> folderDetailses = new ArrayList<FolderDetails>();
+        final FolderDetails folderDetails = new FolderDetails();
+        folderDetails.setName("name");
+        folderDetailses.add(folderDetails);
+        new Expectations(){
+            {
+                anyJaxbutil.getJAXBContext(ObjectFactory.class);
+                result = jaxbContext;
+                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(inputStream),withAny(jaxbContext));
+                result = folderSet;
+                folderSet.getFolderSet();
+                result = Collections.emptyList();
+            }
+        };
+        Assert.assertNotNull(importFolderSet.importsFolders(xml));
     }
+
+    @Mocked
+    Throwable throwable;
+    @Test
+    public void testImportsFoldersImportException(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+        new Expectations(){
+            {
+                anyJaxbutil.getJAXBContext(ObjectFactory.class);
+                result = jaxbContext;
+                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(inputStream),withAny(jaxbContext));
+                result = folderSet;
+                folderSet.getFolderSet();
+                result = new ImportException(throwable);
+            }
+        };
+        Assert.assertNotNull(importFolderSet.importsFolders(xml));
+    }
+
+    @Test
+    public void testImportsFolderstException(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+        new Expectations(){
+            {
+                anyJaxbutil.getJAXBContext(ObjectFactory.class);
+                result = jaxbContext;
+                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(inputStream),withAny(jaxbContext));
+                result = folderSet;
+                folderSet.getFolderSet();
+                result = new Exception(throwable);
+            }
+        };
+        Assert.assertNotNull(importFolderSet.importsFolders(xml));
+    }
+}
 

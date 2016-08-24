@@ -51,6 +51,23 @@ public class FolderAPITest {
         Assert.assertNotNull(folderAPI.createFolder(folderoj));
     }
 
+    public void testCreateFolderEMAnalyticsFwkException() throws JSONException, EMAnalyticsFwkException {
+        final JSONObject folderoj = new JSONObject();
+        JSONObject parentFolder = new JSONObject();
+        folderoj.append("name","name");
+        folderoj.append("description","desctription");
+        parentFolder.append("id",10);
+        folderoj.put("parentFolder",parentFolder);
+        new Expectations(){
+            {
+                folderManager.saveFolder((Folder)any);
+                result = new EMAnalyticsFwkException(throwable);
+            }
+        };
+
+        Assert.assertNotNull(folderAPI.createFolder(folderoj));
+    }
+
     @Test
     public void testDelete() throws EMAnalyticsFwkException {
         new Expectations(){
