@@ -13,13 +13,12 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.zdt;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
-import mockit.Deencapsulation;
-import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.Mocked;
+import mockit.Verifications;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,7 +31,7 @@ public class DataManagerTest
 {
 	private final long count = 666L;
 	@Mocked
-	private List list;
+	private List<Map<String, Object>> list;
 
 	/*@Mocked
 	private DataManager dataManager;*/
@@ -108,65 +107,83 @@ public class DataManagerTest
 		}
 	}
 
-	//	@Test
-	/*public void testGetAllCategoryCount(@Mocked final TenantInfo tenant, @Mocked final DataManager dataManager,
-			@Mocked final EntityManager entityManager, @Mocked final Query query, @Mocked final Number number)
+	@Test
+	public void testGetAllCategoryCount()
 	{
-		new Expectations() {
+		new MockUp<DataManager>() {
+			@Mock
+			public long getAllCategoryCount()
 			{
-				Deencapsulation.invoke(dataManager, "getEntityManager");
-				result = entityManager;
-				entityManager.createNativeQuery(anyString);
-				result = query;
-				query.getSingleResult();
-				result = 666;
-				number.toString();
-				result = 666L;
+				return count;
 			}
 		};
-
-		long dbCount = dataManager.getAllCategoryCount();
+		new Verifications() {
+			{
+				DataManager.getInstance().getAllCategoryCount();
+			}
+		};
+		long dbCount = DataManager.getInstance().getAllCategoryCount();
 		Assert.assertEquals(dbCount, count);
-	}*/
-
-	//	@Test
-	/*public void testGetDatabaseTableData(@Mocked final EntityManager entityManager, @Mocked final DataManager dataManager,
-			@Mocked final Query query)
-	{
-		//		List list = new ArrayList();
-
-		new Expectations() {
-			{
-				Deencapsulation.invoke(dataManager, "getEntityManager");
-				result = entityManager;
-				entityManager.createNativeQuery(anyString);
-				query.getResultList();
-				result = list;
-			}
-		};
-
-		//		DataManager.getInstance().getDatabaseTableData("sql");
-
-	}*/
+	}
 
 	@Test
-	public void testGetAllFolderCount(@Mocked final DataManager dataManager, @Mocked final EntityManager em,
-			@Mocked final Query query, @Mocked final Number number)
+	public void testGetAllFolderCount()
 	{
-		new Expectations() {
+		new MockUp<DataManager>() {
+			@Mock
+			public long getAllFolderCount()
 			{
-				Deencapsulation.invoke(dataManager, "getEntityManager");
-				result = em;
-				em.createNativeQuery(anyString);
-				result = query;
-				query.getSingleResult();
-				result = number;
-				number.longValue();
-				result = count;
-
+				return count;
+			}
+		};
+		new Verifications() {
+			{
+				DataManager.getInstance().getAllFolderCount();
 			}
 		};
 		long dbCount = DataManager.getInstance().getAllFolderCount();
 		Assert.assertEquals(dbCount, count);
+	}
+
+	@Test
+	public void testGetAllSearchCount()
+	{
+		new MockUp<DataManager>() {
+			@Mock
+			public long getAllSearchCount()
+			{
+				return count;
+			}
+		};
+		new Verifications() {
+			{
+				DataManager.getInstance().getAllSearchCount();
+			}
+		};
+		long dbCount = DataManager.getInstance().getAllSearchCount();
+		Assert.assertEquals(dbCount, count);
+	}
+
+	@Test
+	public void testGetDatabaseTableData()
+	{
+		new MockUp<DataManager>() {
+			@Mock
+			private List<Map<String, Object>> getDatabaseTableData(String nativeSql)
+			{
+				return list;
+			}
+		};
+		Object o = null;
+		try {
+			Method method = DataManager.class.getDeclaredMethod("getDatabaseTableData", new Class[] { String.class });
+			method.setAccessible(true);
+			o = method.invoke(new DataManager(), "testSql");
+		}
+		catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		Assert.assertEquals(o, list);
 	}
 }
