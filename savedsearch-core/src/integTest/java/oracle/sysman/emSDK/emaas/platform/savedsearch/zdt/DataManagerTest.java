@@ -14,6 +14,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import mockit.Deencapsulation;
+import mockit.Expectations;
 import mockit.Mocked;
 
 import org.testng.Assert;
@@ -143,4 +148,25 @@ public class DataManagerTest
 		//		DataManager.getInstance().getDatabaseTableData("sql");
 
 	}*/
+
+	@Test
+	public void testGetAllFolderCount(@Mocked final DataManager dataManager, @Mocked final EntityManager em,
+			@Mocked final Query query, @Mocked final Number number)
+	{
+		new Expectations() {
+			{
+				Deencapsulation.invoke(dataManager, "getEntityManager");
+				result = em;
+				em.createNativeQuery(anyString);
+				result = query;
+				query.getSingleResult();
+				result = number;
+				number.longValue();
+				result = count;
+
+			}
+		};
+		long dbCount = DataManager.getInstance().getAllFolderCount();
+		Assert.assertEquals(dbCount, count);
+	}
 }
