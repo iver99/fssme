@@ -1517,7 +1517,7 @@ public class SearchManagerImpl extends SearchManager
 			searchParams.add(param);
 		}
 		if (searchObj.getWIDGETLINKEDDASHBOARD() != 0L
-				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getNAMEWIDGETSOURCE()))) {
+				&& !DEFAULT_DB_VALUE.equals(String.valueOf(searchObj.getWIDGETLINKEDDASHBOARD()))) {
 			SearchParameter param = new SearchParameter();
 			param.setName("WIDGET_LINKED_DASHBOARD");
 			param.setType(ParameterType.STRING);
