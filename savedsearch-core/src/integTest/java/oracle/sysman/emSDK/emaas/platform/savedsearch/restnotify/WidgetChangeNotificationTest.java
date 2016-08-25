@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -59,6 +61,66 @@ public class WidgetChangeNotificationTest
 		Assert.assertEquals(linkList.get(0), link);
 	}
 
+	@Test
+	public void testGetInternalLinksByRelListNull(@Mocked final LookupManager anyLookupManager,
+										  @Mocked final LookupClient anyLookupClient)
+	{
+		new Expectations() {
+			{
+				LookupManager.getInstance().getLookupClient();
+				result = anyLookupClient;
+				anyLookupClient.getInstancesWithLinkRelPrefix(anyString, anyString);
+				result = null;
+			}
+		};
+		List<Link> linkList = new WidgetChangeNotification().getInternalLinksByRel("ssf.widget.changed");
+		Assert.assertNotNull(linkList);
+	}
+
+	@Test
+	public void testGetInternalLinksByRelLinksNull(@Mocked final LookupManager anyLookupManager,
+										  @Mocked final LookupClient anyLookupClient, @Mocked final InstanceInfo anyInstanceInfo,
+										  @Mocked final List<InstanceInfo> anyInstanceInfoList)
+	{
+		final List<InstanceInfo> iiList = new ArrayList<InstanceInfo>();
+		iiList.add(anyInstanceInfo);
+		new Expectations() {
+			{
+				LookupManager.getInstance().getLookupClient();
+				result = anyLookupClient;
+				anyLookupClient.getInstancesWithLinkRelPrefix(anyString, anyString);
+				result = iiList;
+				anyInstanceInfo.getLinksWithRelPrefix(anyString);
+				result = null;
+			}
+		};
+		List<Link> linkList = new WidgetChangeNotification().getInternalLinksByRel("ssf.widget.changed");
+		Assert.assertNotNull(linkList);
+	}
+	@Mocked
+	Throwable throwable;
+	@Test
+	public void testGetInternalLinksByRelException(@Mocked final LookupManager anyLookupManager,
+												   @Mocked final LookupClient anyLookupClient, @Mocked final InstanceInfo anyInstanceInfo,
+												   @Mocked final List<InstanceInfo> anyInstanceInfoList)
+	{
+		final List<InstanceInfo> iiList = new ArrayList<InstanceInfo>();
+		iiList.add(anyInstanceInfo);
+		new Expectations() {
+			{
+				LookupManager.getInstance().getLookupClient();
+				result = anyLookupClient;
+				anyLookupClient.getInstancesWithLinkRelPrefix(anyString, anyString);
+				result = iiList;
+				anyInstanceInfo.getLinksWithRelPrefix(anyString);
+				result = new Exception(throwable);
+			}
+		};
+		List<Link> linkList = new WidgetChangeNotification().getInternalLinksByRel("ssf.widget.changed");
+		Assert.assertNotNull(linkList);
+	}
+
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testNotifyChange(@Mocked final RestClient anyRestClient, @Mocked final TenantContext anyTenantContext)
@@ -83,5 +145,29 @@ public class WidgetChangeNotificationTest
 			}
 		};
 		wcn.notifyChange(wne);
+	}
+	@Test
+	public void testNotifyChangeSearchNull(){
+		final WidgetChangeNotification wcn = new WidgetChangeNotification();
+		wcn.notifyChange((Search)null);
+	}
+
+	@Test
+	public void testNotifyChangeSearch(@Mocked final LookupManager anyLookupManager,
+									   @Mocked final LookupClient anyLookupClient){
+
+		new Expectations() {
+			{
+				LookupManager.getInstance().getLookupClient();
+				result = anyLookupClient;
+				anyLookupClient.getInstancesWithLinkRelPrefix(anyString, anyString);
+				result = null;
+			}
+		};
+		SearchImpl search = new SearchImpl();
+		final WidgetChangeNotification wcn = new WidgetChangeNotification();
+		search.setId(1);
+		search.setName("name");
+		wcn.notifyChange(search);
 	}
 }

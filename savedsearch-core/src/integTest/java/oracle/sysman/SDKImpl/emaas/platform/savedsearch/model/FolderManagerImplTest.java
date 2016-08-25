@@ -29,7 +29,8 @@ import java.util.List;
 public class FolderManagerImplTest {
 
     FolderManagerImpl folderManager;
-
+    @Mocked
+    Throwable throwable;
     @BeforeMethod
     public void testGetInstance() {
         folderManager = FolderManagerImpl.getInstance();
@@ -60,7 +61,7 @@ public class FolderManagerImplTest {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
 
@@ -116,7 +117,7 @@ public class FolderManagerImplTest {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
         folderManager.getFolder(1234);
@@ -188,7 +189,7 @@ public class FolderManagerImplTest {
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
                 EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
         folderManager.getPathForFolderId(1234);
@@ -333,7 +334,7 @@ public class FolderManagerImplTest {
                 query.getResultList();
                 result = folderList;
                 emAnalyticsFolder.getSystemFolder();
-                result = new EMAnalyticsFwkException(new Throwable());
+                result = new EMAnalyticsFwkException(throwable);
             }
         };
         folderManager.getSubFolders(1);
@@ -360,7 +361,7 @@ public class FolderManagerImplTest {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
-                result = new PersistenceException();
+                result = new PersistenceException(throwable);
             }
         };
         folderManager.saveFolder(new FolderImpl());
@@ -389,7 +390,7 @@ public class FolderManagerImplTest {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
         folderManager.saveFolder(new FolderImpl());
@@ -535,7 +536,7 @@ public class FolderManagerImplTest {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
         List<FolderDetails> folderDetailsList = new ArrayList<>();
@@ -589,8 +590,8 @@ public class FolderManagerImplTest {
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
-    public void testUpdateFolderProcessUniqueConstraints(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
-                                                         @Mocked final Query query, @Mocked final PersistenceException pe,
+    public void testUpdateFolderProcessUniqueConstraints(@Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+                                                         @Mocked final Query query,
                                                          @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
                                                          @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
         new Expectations() {
@@ -600,29 +601,7 @@ public class FolderManagerImplTest {
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
                 EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder) any, entityManager);
-                result = pe;
-                ;
-                pe.getCause();
-                result = "ANALYTICS_FOLDERS_U01";
-                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
-                result = emAnalyticsFolder;
-                entityManager.createNamedQuery(anyString);
-                result = query;
-                query.setParameter(anyString, emAnalyticsFolder);
-                result = query;
-                query.setParameter(anyString, anyString);
-                result = query;
-                query.getSingleResult();
-                result = emAnalyticsFolder;
-                emAnalyticsFolder.getFolderId();
-                result = 1234L;
-                emAnalyticsFolder.getName();
-                result = "namexx";
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getUsername();
-                result = "userName";
-
+                result = new PersistenceException(throwable);  
             }
         };
         FolderImpl folder = new FolderImpl();
@@ -643,7 +622,6 @@ public class FolderManagerImplTest {
                 result = entityManager;
                 EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder) any, entityManager);
                 result = pe;
-                ;
                 pe.getCause();
                 result = null;
             }
@@ -684,7 +662,7 @@ public class FolderManagerImplTest {
                 EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder) any, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
         FolderImpl folder = new FolderImpl();

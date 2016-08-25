@@ -63,4 +63,10 @@ public class EmAnalyticsSearchParamPKTest
 		emAnalyticsSearchParamPK2.setTenantId(1234L);
 		Assert.assertEquals(emAnalyticsSearchParamPK2.hashCode(), emAnalyticsSearchParamPK.hashCode());
 	}
+
+	@Test(groups = { "s1" })
+	public void testGetTenantId(){
+		emAnalyticsSearchParamPK.setTenantId(1L);
+		emAnalyticsSearchParamPK.getTenantId();
+	}
 }

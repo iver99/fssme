@@ -461,7 +461,38 @@ public class SearchAPITest {
         };
         api.createSearch(inputJson);
     }
-    
+
+    @Mocked
+    Throwable throwable;
+    @Test
+    public void testCreateSearchEMAnalyticsFwkException() throws JSONException, EMAnalyticsFwkException {
+        JSONObject category = new JSONObject();
+        category.put("id","999");
+        JSONObject folder = new JSONObject();
+        folder.put("id","999");
+        JSONObject p = new JSONObject();
+        p.put("name","ODS_ENTITY");
+        p.put("type","STRING");
+        p.put("value","TRUE");
+        JSONArray parameter = new JSONArray();
+        parameter.put(p);
+
+        JSONObject inputJson = new JSONObject();
+        inputJson.put("name","Demo Search");
+        inputJson.put("category",category);
+        inputJson.put("folder",folder);
+        inputJson.put("parameters",parameter);
+        new Expectations(){
+            {
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.saveSearch(withAny(search));
+                result = new EMAnalyticsFwkException(throwable);
+            }
+        };
+        api.createSearch(inputJson);
+    }
+
     @Test
     public void testDeleteSearch() throws JSONException, EMAnalyticsFwkException {
         new Expectations() {
@@ -484,7 +515,7 @@ public class SearchAPITest {
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.deleteSearch(anyLong,anyBoolean);
-                result = new EMAnalyticsFwkException(new Throwable());
+                result = new EMAnalyticsFwkException(throwable);
                 OdsDataServiceImpl.getInstance();
                 result = odsDataServiceImpl;
                 odsDataServiceImpl.deleteOdsEntity(anyLong);
@@ -630,7 +661,7 @@ public class SearchAPITest {
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.getSearch(anyLong);
-                result =new EMAnalyticsWSException(new Throwable());
+                result =new EMAnalyticsWSException(throwable);
             }
         };
         Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",10L));
@@ -712,6 +743,21 @@ public class SearchAPITest {
         };
         Assert.assertNotNull(api.editSearchAccessDate(10L,false));
     }
+
+    @Test
+    public void testEditSearchAccessDateEMAnalyticsFwkException() throws JSONException {
+        new Expectations() {
+            {
+                uriInfo.getRequestUri();
+                result = uri;
+                uri.getQuery();
+                result = "searchId = 1";
+                SearchManager.getInstance();
+                result = new EMAnalyticsFwkException(throwable);
+            }
+        };
+        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
+    }
     @Test
     public void testEditSearchAccessDate5th() throws JSONException {
         new Expectations() {
@@ -761,7 +807,22 @@ public class SearchAPITest {
         Assert.assertNotNull(api.getSearch(10L,true));
     }
 
-
+    @Test
+    public void testGetSearchEMAnalyticsFwkException() throws JSONException, EMAnalyticsFwkException {
+        final List<Search> searches = new ArrayList<Search>();
+        for (int i = 0; i <= 2; i++) {
+            searches.add(new SearchImpl());
+        }
+        new Expectations() {
+            {
+                SearchManager.getInstance();
+                result = searchManager;
+                FolderManager.getInstance();
+                result = new EMAnalyticsFwkException(throwable);
+            }
+        };
+        Assert.assertNotNull(api.getSearch(10L,true));
+    }
 
     /**
      * test createOdsEntity

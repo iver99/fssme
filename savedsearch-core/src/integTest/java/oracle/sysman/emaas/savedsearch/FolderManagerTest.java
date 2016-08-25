@@ -31,53 +31,6 @@ public class FolderManagerTest extends BaseTest
 
 
 
-
-	@AfterClass
-	public static void DeleteFolder() throws EMAnalyticsFwkException {
-
-		try {
-			TenantContext.setContext(new TenantInfo(
-					TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
-					TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			objFolder.deleteFolder(folderId, true);
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-	}
-
-	@BeforeClass
-	public static void testSaveFolder() throws EMAnalyticsFwkException {
-		try {
-
-			TenantContext.setContext(new TenantInfo(
-					TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
-					TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			Folder folder = new FolderImpl();
-			folder.setName("FolderTest");
-			folder.setDescription("TestFolderDescription");
-			folder.setUiHidden(false);
-			folder = objFolder.saveFolder(folder);
-			folderId = folder.getId();
-			AssertJUnit.assertFalse(folderId == 0);
-			AssertJUnit.assertNotNull(folder.getOwner());
-			// cross check the content of the folder being saves
-			folder = objFolder.getFolder(folderId);
-			AssertJUnit.assertTrue("FolderTest".equals(folder.getName()));
-			AssertJUnit.assertTrue("TestFolderDescription".equals(folder.getDescription()));
-			AssertJUnit.assertTrue(folder.isUiHidden() == false);
-			AssertJUnit.assertTrue(folder.isSystemFolder() == false);
-			AssertJUnit.assertNotNull(folder.getCreatedOn());
-			AssertJUnit.assertNotNull(folder.getLastModifiedOn());
-			AssertJUnit.assertEquals(folder.getCreatedOn(), folder.getLastModifiedOn());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-	}
-
 	@Test(groups = { "s1" })
 	public void entityClassTest()
 	{

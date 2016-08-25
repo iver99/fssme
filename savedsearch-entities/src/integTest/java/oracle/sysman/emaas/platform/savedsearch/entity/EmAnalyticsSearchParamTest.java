@@ -30,6 +30,7 @@ public class EmAnalyticsSearchParamTest {
     public void testEquals(){
         Assert.assertTrue(emAnalyticsSearchParam.equals(emAnalyticsSearchParam));
 
+        Assert.assertFalse(emAnalyticsSearchParam.equals(null));
         Assert.assertFalse(emAnalyticsSearchParam == null);
         Assert.assertFalse(emAnalyticsSearchParam.equals(new String("astring")));
 
@@ -133,5 +134,11 @@ public class EmAnalyticsSearchParamTest {
     @Test (groups = {"s1"})
     public void testHashCode(){
         Assert.assertEquals(-454604205,emAnalyticsSearchParam.hashCode());
+    }
+
+    @Test (groups = {"s1"})
+    public void testGetTenantId(){
+        emAnalyticsSearchParam.setTenantId(1L);
+        emAnalyticsSearchParam.getTenantId();
     }
 }

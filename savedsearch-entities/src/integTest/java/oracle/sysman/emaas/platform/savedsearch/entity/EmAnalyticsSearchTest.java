@@ -17,14 +17,14 @@ public class EmAnalyticsSearchTest {
     private EmAnalyticsSearch emAnalyticsSearch;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp(){
         emAnalyticsSearch = new EmAnalyticsSearch();
         emAnalyticsSearch.setId(123412341234L);
         emAnalyticsSearch.setOwner("ownerxx");
     }
 
     @Test (groups = {"s1"})
-    public void testGetAccessDate() throws Exception {
+    public void testGetAccessDate(){
         Assert.assertNull(emAnalyticsSearch.getAccessDate());
 
         Date now = new Date();
@@ -33,7 +33,7 @@ public class EmAnalyticsSearchTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetAccessedBy() throws Exception {
+    public void testGetAccessedBy(){
         Assert.assertNull(emAnalyticsSearch.getAccessedBy());
 
         Date now = new Date();
@@ -42,56 +42,56 @@ public class EmAnalyticsSearchTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetCreationDate() throws Exception {
+    public void testGetCreationDate(){
         Date now = new Date();
         emAnalyticsSearch.setCreationDate(now);
         Assert.assertEquals(now,emAnalyticsSearch.getCreationDate());
     }
 
     @Test (groups = {"s1"})
-    public void testGetDeleted() throws Exception {
+    public void testGetDeleted(){
         long deleted = 123412341234L;
         emAnalyticsSearch.setDeleted(deleted);
         Assert.assertEquals(deleted,emAnalyticsSearch.getDeleted());
     }
 
     @Test (groups = {"s1"})
-    public void testGetDescription() throws Exception {
+    public void testGetDescription(){
         String description = "descriptionxx";
         emAnalyticsSearch.setDescription(description);
         Assert.assertEquals(description,emAnalyticsSearch.getDescription());
     }
 
     @Test (groups = {"s1"})
-    public void testGetDescriptionNlsid() throws Exception {
+    public void testGetDescriptionNlsid(){
         String descriptionNlsid = "descriptionNlsidxx";
         emAnalyticsSearch.setDescriptionNlsid(descriptionNlsid);
         Assert.assertEquals(descriptionNlsid,emAnalyticsSearch.getDescriptionNlsid());
     }
 
     @Test (groups = {"s1"})
-    public void testGetDescriptionSubsystem() throws Exception {
+    public void testGetDescriptionSubsystem(){
         String descriptionSubsystem = "descriptionSubsystemxx";
         emAnalyticsSearch.setDescriptionSubsystem(descriptionSubsystem);
         Assert.assertEquals(descriptionSubsystem,emAnalyticsSearch.getDescriptionSubsystem());
     }
 
     @Test (groups = {"s1"})
-    public void testGetEmAnalyticsCategory() throws Exception {
+    public void testGetEmAnalyticsCategory(){
         EmAnalyticsCategory emAnalyticsCategory = new EmAnalyticsCategory();
         emAnalyticsSearch.setEmAnalyticsCategory(emAnalyticsCategory);
         Assert.assertEquals(emAnalyticsCategory,emAnalyticsSearch.getEmAnalyticsCategory());
     }
 
     @Test (groups = {"s1"})
-    public void testGetEmAnalyticsFolder() throws Exception {
+    public void testGetEmAnalyticsFolder(){
         EmAnalyticsFolder emaFolder = new EmAnalyticsFolder();
         emAnalyticsSearch.setEmAnalyticsFolder(emaFolder);
         Assert.assertEquals(emaFolder,emAnalyticsSearch.getEmAnalyticsFolder());
     }
 
     @Test (groups = {"s1"})
-    public void testGetEmAnalyticsSearchParams() throws Exception {
+    public void testGetEmAnalyticsSearchParams(){
         emAnalyticsSearch.setEmAnalyticsSearchParams(null);
         Assert.assertNotNull(emAnalyticsSearch.getEmAnalyticsSearchParams());
 
@@ -101,35 +101,35 @@ public class EmAnalyticsSearchTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetEmPluginId() throws Exception {
+    public void testGetEmPluginId(){
         String plugid = "pluginidxx";
         emAnalyticsSearch.setEmPluginId(plugid);
         Assert.assertEquals(plugid,emAnalyticsSearch.getEmPluginId());
     }
 
     @Test (groups = {"s1"})
-    public void testGetId() throws Exception {
+    public void testGetId(){
         long id = 1234123412341234L;
         emAnalyticsSearch.setId(id);
         Assert.assertEquals(id,emAnalyticsSearch.getId());
     }
 
     @Test (groups = {"s1"})
-    public void testGetIsLocked() throws Exception {
+    public void testGetIsLocked(){
         BigDecimal isLocked = BigDecimal.valueOf(1.22);
         emAnalyticsSearch.setIsLocked(isLocked);
         Assert.assertEquals(isLocked,emAnalyticsSearch.getIsLocked());
     }
 
     @Test (groups = {"s1"})
-    public void testGetIsWidget() throws Exception {
+    public void testGetIsWidget(){
         long isWidget = 333L;
         emAnalyticsSearch.setIsWidget(isWidget);
         Assert.assertEquals(isWidget,emAnalyticsSearch.getIsWidget());
     }
 
     @Test (groups = {"s1"})
-    public void testGetLastAccess() throws Exception {
+    public void testGetLastAccess(){
         Assert.assertNull(emAnalyticsSearch.getLastAccess());
 
         Date now = new Date();
@@ -138,49 +138,49 @@ public class EmAnalyticsSearchTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetLastModificationDate() throws Exception {
+    public void testGetLastModificationDate(){
         Date now = new Date();
         emAnalyticsSearch.setLastModificationDate(now);
         Assert.assertEquals(now,emAnalyticsSearch.getLastModificationDate());
     }
 
     @Test (groups = {"s1"})
-    public void testGetLastModifiedBy() throws Exception {
+    public void testGetLastModifiedBy(){
         String lastModifiedBy = "lastModifiedByxx";
         emAnalyticsSearch.setLastModifiedBy(lastModifiedBy);
         Assert.assertEquals(lastModifiedBy,emAnalyticsSearch.getLastModifiedBy());
     }
 
     @Test (groups = {"s1"})
-    public void testGetMetadataClob() throws Exception {
+    public void testGetMetadataClob(){
         String metadataClob = "metadataClobxx";
         emAnalyticsSearch.setMetadataClob(metadataClob);
         Assert.assertEquals(metadataClob,emAnalyticsSearch.getMetadataClob());
     }
 
     @Test (groups = {"s1"})
-    public void testGetName() throws Exception {
+    public void testGetName(){
         String name = "namexx";
         emAnalyticsSearch.setName(name);
         Assert.assertEquals(name,emAnalyticsSearch.getName());
     }
 
     @Test (groups = {"s1"})
-    public void testGetNameNlsid() throws Exception {
+    public void testGetNameNlsid(){
         String nameNlsid = "nameMlsidxx";
         emAnalyticsSearch.setNameNlsid(nameNlsid);
         Assert.assertEquals(nameNlsid,emAnalyticsSearch.getNameNlsid());
     }
 
     @Test (groups = {"s1"})
-    public void testGetNameSubsystem() throws Exception {
+    public void testGetNameSubsystem(){
         String nameSubsystem = "nameSubsystemxx";
         emAnalyticsSearch.setNameSubsystem(nameSubsystem);
         Assert.assertEquals(nameSubsystem,emAnalyticsSearch.getNameSubsystem());
     }
 
     @Test (groups = {"s1"})
-    public void testGetObjectId() throws Exception {
+    public void testGetObjectId(){
         Assert.assertNull(emAnalyticsSearch.getObjectId());
 
         Date now = new Date();
@@ -190,7 +190,7 @@ public class EmAnalyticsSearchTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetObjectType() throws Exception {
+    public void testGetObjectType(){
         Assert.assertNull(emAnalyticsSearch.getObjectType());
 
         Date now = new Date();
@@ -200,37 +200,90 @@ public class EmAnalyticsSearchTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetOwner() throws Exception {
+    public void testGetOwner(){
         String owner = "ownerxx";
         emAnalyticsSearch.setOwner(owner);
         Assert.assertEquals(owner,emAnalyticsSearch.getOwner());
     }
 
     @Test (groups = {"s1"})
-    public void testGetSearchDisplayStr() throws Exception {
+    public void testGetSearchDisplayStr(){
         String searchDisplayStr = "searchDisplayStrxx";
         emAnalyticsSearch.setSearchDisplayStr(searchDisplayStr);
         Assert.assertEquals(searchDisplayStr,emAnalyticsSearch.getSearchDisplayStr());
     }
 
     @Test (groups = {"s1"})
-    public void testGetSearchGuid() throws Exception {
+    public void testGetSearchGuid(){
         byte[] searchGuid = {1,1,2,2,3,3};
         emAnalyticsSearch.setSearchGuid(searchGuid);
         Assert.assertEquals(searchGuid,emAnalyticsSearch.getSearchGuid());
     }
 
     @Test (groups = {"s1"})
-    public void testGetSystemSearch() throws Exception {
+    public void testGetSystemSearch(){
         BigDecimal systemSearch = BigDecimal.valueOf(123412341234L);
         emAnalyticsSearch.setSystemSearch(systemSearch);
         Assert.assertEquals(systemSearch,emAnalyticsSearch.getSystemSearch());
     }
 
     @Test (groups = {"s1"})
-    public void testGetUiHidden() throws Exception {
+    public void testGetUiHidden(){
         BigDecimal uiHidden = BigDecimal.valueOf(123412341234L);
         emAnalyticsSearch.setUiHidden(uiHidden);
         Assert.assertEquals(uiHidden,emAnalyticsSearch.getUiHidden());
+    }
+
+    @Test (groups = {"s1"})
+    public void testGetDASHBOARDINELIGIBLE(){
+        emAnalyticsSearch.setDASHBOARDINELIGIBLE("1");
+        Assert.assertEquals("1", emAnalyticsSearch.getDASHBOARDINELIGIBLE());
+    }
+
+    @Test (groups = {"s1"})
+    public void testGetNAMEWIDGETSOURCE(){
+        emAnalyticsSearch.setNAMEWIDGETSOURCE("namesource");
+        Assert.assertEquals("namesource", emAnalyticsSearch.getNAMEWIDGETSOURCE());
+    }
+
+    @Test (groups = {"s1"})
+    public void testGetPROVIDERASSETROOT(){
+        emAnalyticsSearch.setPROVIDERASSETROOT("assetroot");
+        Assert.assertEquals("assetroot", emAnalyticsSearch.getPROVIDERASSETROOT());
+    }
+
+    @Test (groups = {"s1"})
+    public void testGetPROVIDERNAME(){
+        emAnalyticsSearch.setPROVIDERNAME("name");
+        Assert.assertEquals("name", emAnalyticsSearch.getPROVIDERNAME());
+    }
+
+    @Test (groups = {"s1"})
+    public void testGetPROVIDERVERSION(){
+        emAnalyticsSearch.setPROVIDERVERSION("version");
+        Assert.assertEquals("version", emAnalyticsSearch.getPROVIDERVERSION());
+    }
+    @Test(groups = {"s1"})
+    public void testGetWidgetParams(){
+        emAnalyticsSearch.setWIDGETDEFAULTHEIGHT(1L);
+        emAnalyticsSearch.getWIDGETDEFAULTHEIGHT();
+        emAnalyticsSearch.setWIDGETDEFAULTWIDTH(1L);
+        emAnalyticsSearch.getWIDGETDEFAULTWIDTH();
+        emAnalyticsSearch.setWIDGETGROUPNAME("groupname");
+        emAnalyticsSearch.getWIDGETGROUPNAME();
+        emAnalyticsSearch.setWIDGETICON("icon");
+        emAnalyticsSearch.getWIDGETICON();
+        emAnalyticsSearch.setWIDGETKOCNAME("kocname");
+        emAnalyticsSearch.getWIDGETKOCNAME();
+        emAnalyticsSearch.setWIDGETLINKEDDASHBOARD(1L);
+        emAnalyticsSearch.getWIDGETLINKEDDASHBOARD();
+        emAnalyticsSearch.setWIDGETSCREENSHOTHREF("href");
+        emAnalyticsSearch.getWIDGETSCREENSHOTHREF();
+        emAnalyticsSearch.setWIDGETSUPPORTTIMECONTROL("control");
+        emAnalyticsSearch.getWIDGETSUPPORTTIMECONTROL();
+        emAnalyticsSearch.setWIDGETTEMPLATE("widget_template");
+        emAnalyticsSearch.getWIDGETTEMPLATE();
+        emAnalyticsSearch.setWIDGETVIEWMODEL("model");
+        emAnalyticsSearch.getWIDGETVIEWMODEL();
     }
 }
