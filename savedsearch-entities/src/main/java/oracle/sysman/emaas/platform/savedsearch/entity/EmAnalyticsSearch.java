@@ -39,15 +39,15 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_SEARCH")
 @NamedQueries({
-		@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSearchListByFolderForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0 "),
-		@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSystemSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0  AND (e.owner in ('ORACLE') OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSearchListByCategoryForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 "),
-		@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.name = :searchName  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1)"),
-		@NamedQuery(name = "Search.getWidgetListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 AND e.isWidget = 1 AND (e.owner in (:userName) OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSearchListByTargetType", query = "SELECT e FROM EmAnalyticsSearch e WHERE e.name like :searchName AND (e.owner in (:userName) OR e.systemSearch =1) AND e.deleted=0") })
+	@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSearchListByFolderForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0 "),
+	@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSystemSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0  AND (e.owner in ('ORACLE') OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSearchListByCategoryForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 "),
+	@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.name = :searchName  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1)"),
+	@NamedQuery(name = "Search.getWidgetListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 AND e.isWidget = 1 AND (e.owner in (:userName) OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSearchListByTargetType", query = "SELECT e FROM EmAnalyticsSearch e WHERE e.name like :searchName AND (e.owner in (:userName) OR e.systemSearch =1) AND e.deleted=0") })
 @SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
 public class EmAnalyticsSearch implements Serializable
 {
@@ -119,8 +119,8 @@ public class EmAnalyticsSearch implements Serializable
 	@Column(name = "IS_WIDGET")
 	private long isWidget;
 
-	@Column(name = "NAME_WIDGET_SOURCE")
-	private String NAME_WIDGET_SOURCE;
+	@Column(name = "WIDGET_SOURCE")
+	private String WIDGET_SOURCE;
 
 	@Column(name = "WIDGET_GROUP_NAME")
 	private String WIDGET_GROUP_NAME;
@@ -167,14 +167,14 @@ public class EmAnalyticsSearch implements Serializable
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID"),
-			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
+		@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	//	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID")
 	private EmAnalyticsCategory emAnalyticsCategory;
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "FOLDER_ID", referencedColumnName = "FOLDER_ID"),
-			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
+		@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	//bi-directional many-to-one association to EmAnalyticsSearchParam
@@ -324,14 +324,6 @@ public class EmAnalyticsSearch implements Serializable
 		return name;
 	}
 
-	/**
-	 * @return the nAME_WIDGET_SOURCE
-	 */
-	public String getNAMEWIDGETSOURCE()
-	{
-		return NAME_WIDGET_SOURCE;
-	}
-
 	public String getNameNlsid()
 	{
 		return nameNlsid;
@@ -412,6 +404,14 @@ public class EmAnalyticsSearch implements Serializable
 	}
 
 	/**
+	 * @return the wIDGET_SOURCE
+	 */
+	public String getWIDGET_SOURCE()
+	{
+		return WIDGET_SOURCE;
+	}
+
+	/**
 	 * @return the wIDGET_DEFAULT_HEIGHT
 	 */
 	public long getWIDGETDEFAULTHEIGHT()
@@ -459,14 +459,6 @@ public class EmAnalyticsSearch implements Serializable
 		return WIDGET_LINKED_DASHBOARD;
 	}
 
-	/**
-	 * @return the wIDGET_SCREENSHOT_HREF
-	 */
-	public String getWIDGETSCREENSHOTHREF()
-	{
-		return WIDGET_SCREENSHOT_HREF;
-	}
-
 	//	/**
 	//	 * @param lastAccess
 	//	 *            the lastAccess to set
@@ -475,6 +467,14 @@ public class EmAnalyticsSearch implements Serializable
 	//	{
 	//		this.lastAccess = lastAccess;
 	//	}
+
+	/**
+	 * @return the wIDGET_SCREENSHOT_HREF
+	 */
+	public String getWIDGETSCREENSHOTHREF()
+	{
+		return WIDGET_SCREENSHOT_HREF;
+	}
 
 	/**
 	 * @return the wIDGET_SUPPORT_TIME_CONTROL
@@ -500,15 +500,6 @@ public class EmAnalyticsSearch implements Serializable
 		return WIDGET_VIEWMODEL;
 	}
 
-	public void setAccessDate(Date accessDate)
-	{
-		if (lastAccess == null) {
-			lastAccess = new EmAnalyticsSearchLastAccess(getId(), getOwner());
-			lastAccess.setEmAnalyticsSearch(this);
-		}
-		lastAccess.setAccessDate(accessDate);
-	}
-
 	//	public void setObjectId(long objectId)
 	//	{
 	//		this.objectId = objectId;
@@ -518,6 +509,15 @@ public class EmAnalyticsSearch implements Serializable
 	//	{
 	//		this.objectType = objectType;
 	//	}
+
+	public void setAccessDate(Date accessDate)
+	{
+		if (lastAccess == null) {
+			lastAccess = new EmAnalyticsSearchLastAccess(getId(), getOwner());
+			lastAccess.setEmAnalyticsSearch(this);
+		}
+		lastAccess.setAccessDate(accessDate);
+	}
 
 	public void setCreationDate(Date creationDate)
 	{
@@ -612,15 +612,6 @@ public class EmAnalyticsSearch implements Serializable
 		this.name = name;
 	}
 
-	/**
-	 * @param nameWidgetSource
-	 *            the nAME_WIDGET_SOURCE to set
-	 */
-	public void setNAMEWIDGETSOURCE(String nameWidgetSource)
-	{
-		NAME_WIDGET_SOURCE = nameWidgetSource;
-	}
-
 	public void setNameNlsid(String nameNlsid)
 	{
 		this.nameNlsid = nameNlsid;
@@ -681,6 +672,15 @@ public class EmAnalyticsSearch implements Serializable
 	public void setUiHidden(BigDecimal uiHidden)
 	{
 		this.uiHidden = uiHidden;
+	}
+
+	/**
+	 * @param wIDGET_SOURCE
+	 *            the wIDGET_SOURCE to set
+	 */
+	public void setWIDGET_SOURCE(String wIDGET_SOURCE)
+	{
+		WIDGET_SOURCE = wIDGET_SOURCE;
 	}
 
 	/**

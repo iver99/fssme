@@ -37,9 +37,6 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
 class EmAnalyticsObjectUtil
 {
-	private EmAnalyticsObjectUtil() {
-	}
-
 	public static boolean canDeleteFolder(long folderId, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
@@ -53,7 +50,8 @@ class EmAnalyticsObjectUtil
 		}
 
 		if (!em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder)
-				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList().isEmpty()) {
+				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList()
+				.isEmpty()) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with categories",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
@@ -63,7 +61,7 @@ class EmAnalyticsObjectUtil
 			String parentFolder = "parentFolder";
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
-			.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 
 			if (!folderList.isEmpty()) {
 				throw new EMAnalyticsFwkException("Sub folders founds", EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
@@ -86,7 +84,7 @@ class EmAnalyticsObjectUtil
 				if (cateObj.getDeleted() == 0
 						&& (RequestContext.getContext().equals(RequestType.INTERNAL_TENANT)
 								|| "ORACLE".equals(cateObj.getOwner()) || cateObj.getOwner().equals(
-										TenantContext.getContext().getUsername()))) {
+								TenantContext.getContext().getUsername()))) {
 
 					return cateObj;
 				}
@@ -563,7 +561,7 @@ class EmAnalyticsObjectUtil
 					&& folderObj.getDeleted() == 0
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+									TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -636,7 +634,7 @@ class EmAnalyticsObjectUtil
 				if (searchObj.getDeleted() == 0
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 								|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-								TenantContext.getContext().getUsername()))) {
+										TenantContext.getContext().getUsername()))) {
 
 					return searchObj;
 				}
@@ -661,7 +659,7 @@ class EmAnalyticsObjectUtil
 			if (searchObj != null
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+									TenantContext.getContext().getUsername()))) {
 				return searchObj;
 			}
 			else {
@@ -700,54 +698,14 @@ class EmAnalyticsObjectUtil
 		return false;
 	}
 
-	/* DEAD CODE
-	public static boolean isFolderExist(Folder folder)
-	{
-		EntityManager em = null;
-		EmAnalyticsFolder folderObj = null;
-		boolean bResult = false;
-		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
-			if (folder.getParentId() == null || folder.getParentId() == 0) {
-				folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolderByName")
-						.setParameter("foldername", folder.getName()).getSingleResult();
-
-			}
-			else {
-				if (folder.getParentId() != null) {
-					EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId().longValue(), em);
-					String parentFolder = "parentFolder";
-					folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getSubFolderByName")
-							.setParameter(parentFolder, parentFolderObj).setParameter("foldername", folder.getName())
-							.getSingleResult();
-				}
-			}
-			bResult = true;
-		}
-		catch (NoResultException nre) {
-			bResult = false;
-		}
-		catch (Exception e) {
-			bResult = false;
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-		return bResult;
-	}
-	 */
-
 	private static void moveParamsToSearchAdd(EmAnalyticsSearch searchEntity, List<SearchParameter> params)
 	{
 		if (params != null && !params.isEmpty()) {
 			Iterator<SearchParameter> paramIter = params.iterator();
 			while (paramIter.hasNext()) {
 				SearchParameter param = paramIter.next();
-				if ("NAME_WIDGET_SOURCE".equals(param.getName())) {
-					searchEntity.setNAMEWIDGETSOURCE(param.getValue());
+				if ("WIDGET_SOURCE".equals(param.getName())) {
+					searchEntity.setWIDGET_SOURCE(param.getValue());
 					paramIter.remove();
 					continue;
 				}
@@ -825,13 +783,53 @@ class EmAnalyticsObjectUtil
 		}
 	}
 
+	/* DEAD CODE
+	public static boolean isFolderExist(Folder folder)
+	{
+		EntityManager em = null;
+		EmAnalyticsFolder folderObj = null;
+		boolean bResult = false;
+		try {
+			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+			em = emf.createEntityManager();
+			if (folder.getParentId() == null || folder.getParentId() == 0) {
+				folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getRootFolderByName")
+						.setParameter("foldername", folder.getName()).getSingleResult();
+
+			}
+			else {
+				if (folder.getParentId() != null) {
+					EmAnalyticsFolder parentFolderObj = EmAnalyticsObjectUtil.getFolderById(folder.getParentId().longValue(), em);
+					String parentFolder = "parentFolder";
+					folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getSubFolderByName")
+							.setParameter(parentFolder, parentFolderObj).setParameter("foldername", folder.getName())
+							.getSingleResult();
+				}
+			}
+			bResult = true;
+		}
+		catch (NoResultException nre) {
+			bResult = false;
+		}
+		catch (Exception e) {
+			bResult = false;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		return bResult;
+	}
+	 */
+
 	private static void moveParamsToSearchEdit(EmAnalyticsSearch searchEntity, Set<EmAnalyticsSearchParam> existingParams)
 	{
 		Iterator<EmAnalyticsSearchParam> paramIter = existingParams.iterator();
 		while (paramIter.hasNext()) {
 			EmAnalyticsSearchParam param = paramIter.next();
-			if ("NAME_WIDGET_SOURCE".equals(param.getName())) {
-				searchEntity.setNAMEWIDGETSOURCE(param.getParamValueStr());
+			if ("WIDGET_SOURCE".equals(param.getName())) {
+				searchEntity.setWIDGET_SOURCE(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
@@ -906,5 +904,9 @@ class EmAnalyticsObjectUtil
 				continue;
 			}
 		}
+	}
+
+	private EmAnalyticsObjectUtil()
+	{
 	}
 }
