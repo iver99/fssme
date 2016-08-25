@@ -794,7 +794,7 @@ public class SearchManagerImplTest
 				result = 1;
 				emAnalyticsSearch.getEmAnalyticsSearchParams();
 				result = emAnalyticsSearchParamSet;
-				emAnalyticsSearch.getNAMEWIDGETSOURCE();
+				emAnalyticsSearch.getWIDGET_SOURCE();
 				result = "widget_source";
 				emAnalyticsSearch.getWIDGETGROUPNAME();
 				result = "widget_group_name";
