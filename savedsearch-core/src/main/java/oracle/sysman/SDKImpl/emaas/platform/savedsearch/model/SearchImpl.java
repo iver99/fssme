@@ -24,6 +24,17 @@ public class SearchImpl extends SearchSummaryImpl implements Search
 	protected boolean locked;
 	protected boolean uiHidden;
 	protected boolean isWidget;
+	protected boolean isEditable;
+
+	@Override
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+	@Override
+	public void setEditable(boolean isEditable) {
+		this.isEditable = isEditable;
+	}
 
 	@Override
 	public boolean getIsWidget()

@@ -723,12 +723,11 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException
 	{
-
 		EntityManager em = null;
 		try {
 			Date tmp = null;
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			EmAnalyticsSearch searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
+			EmAnalyticsSearch searchObj = EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(searchId, em);
 			EmAnalyticsLastAccess accessObj = null;
 			if (searchObj != null) {
 				EmAnalyticsLastAccessPK pk = new EmAnalyticsLastAccessPK();
@@ -751,10 +750,9 @@ public class SearchManagerImpl extends SearchManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			LOGGER.error("Error while retrieving the list of searches ");
-			throw new EMAnalyticsFwkException("Error while retrieving the list of searches ",
-					EMAnalyticsFwkException.ERR_GENERIC, null, e);
-
+			LOGGER.error("Invalid search id: " + searchId);
+			throw new EMAnalyticsFwkException("Invalid search id: " + searchId, EMAnalyticsFwkException.ERR_GENERIC,
+					null, e);
 		}
 		finally {
 			if (em != null) {
@@ -1154,6 +1152,10 @@ public class SearchManagerImpl extends SearchManager
 					: false);
 			rtnObj.setLastAccessDate(searchObj.getAccessDate());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
+			
+			if (TenantContext.getContext() != null && TenantContext.getContext().getUsername() != null) {
+				rtnObj.setEditable(TenantContext.getContext().getUsername().equals(searchObj.getOwner()));
+			}
 
 			List<SearchParameter> searchParams = new ArrayList<SearchParameter>();
 			// get parameters
@@ -1434,16 +1436,13 @@ public class SearchManagerImpl extends SearchManager
 		EmAnalyticsSearch searchObj = null;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			searchObj = em.find(EmAnalyticsSearch.class, searchId);
-		}
-		catch (Exception e) {
+			searchObj = EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(searchId, em);
+		} catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
 			String errMsg = "Error while getting the search object by ID: " + searchId;
 			LOGGER.error(errMsg, e);
 			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId }, e);
-
-		}
-		finally {
+		} finally {
 			if (em != null) {
 				em.close();
 			}
