@@ -886,6 +886,10 @@ public class SearchAPITest {
         };
         Assert.assertEquals(200,api.getAssetRoot(1L).getStatus());
     }
+    @Test
+    public void testEditLastAccess() {
+        Assert.assertNotNull(api.editLastAccess(10L));
+    }
 
     @Test
     public void testDeleteSearchName() throws EMAnalyticsFwkException {
@@ -912,6 +916,6 @@ public class SearchAPITest {
                 result = new EMAnalyticsFwkException(throwable);
             }
         };
-        api.deleteSearchByName("searchName", "true"); 
+        api.deleteSearchByName("searchName", "true");
     }
 }
