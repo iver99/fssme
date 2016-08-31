@@ -1476,7 +1476,6 @@ public class SearchManagerImplTest
 			}
 		};
 		searchManager.deleteSearchByName("searchName", true);
-		searchManager.deleteSearchByName("searchName", false);
 	}
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
 	public void testDeleteSearchByNameResultEmpty() throws EMAnalyticsFwkException {

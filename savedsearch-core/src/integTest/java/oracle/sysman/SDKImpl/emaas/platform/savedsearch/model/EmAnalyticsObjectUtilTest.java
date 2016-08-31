@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import mockit.Expectations;
@@ -1021,7 +1022,7 @@ public class EmAnalyticsObjectUtilTest
 		new Expectations(){
 			{
 				RequestContext.getContext();
-				result = new NoResultException();
+				result = new NonUniqueResultException();
 			}
 		};
 		EmAnalyticsObjectUtil.getSearchByNameForDelete("", entityManager);
@@ -1058,17 +1059,6 @@ public class EmAnalyticsObjectUtilTest
 				result = query;
 				query.getResultList();
 				result = emAnalyticsSearchList;
-			}
-		};
-		EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete("", entityManager);
-	}
-
-	@Test
-	public void testGetSearchListByNameForDeleteNoResultException(){
-		new Expectations(){
-			{
-				RequestContext.getContext();
-				result = new NoResultException();
 			}
 		};
 		EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete("", entityManager);

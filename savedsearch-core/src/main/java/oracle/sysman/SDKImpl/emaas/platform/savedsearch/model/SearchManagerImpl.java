@@ -158,41 +158,27 @@ public class SearchManagerImpl extends SearchManager
 	public void deleteSearchByName(String searchName, boolean isExactly)throws EMAnalyticsFwkException{
 		LOGGER.info("Deleting search with Name: {}, Exactly {}", searchName, isExactly);
 		EntityManager entityManager = null;
-		EmAnalyticsSearch emAnalyticsSearch = null;
-		List<EmAnalyticsSearch> emAnalyticsSearchList = null;
+		List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<>();
 		try{
 			entityManager = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			if (isExactly) {
 				LOGGER.debug("DELETE {} SOFTLY EXACTLY", searchName);
-				emAnalyticsSearch = EmAnalyticsObjectUtil.getSearchByNameForDelete(searchName, entityManager);
-				if (emAnalyticsSearch == null) {
-					LOGGER.error("Search with Name: " + searchName + " does not exist");
-					throw new EMAnalyticsFwkException("Search with  Name: " + searchName + " does not exist please check if it's a system search or you're not the owner",
-							EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME, null);
-				}
+				emAnalyticsSearchList.add(EmAnalyticsObjectUtil.getSearchByNameForDelete(searchName, entityManager));
 			} else {
 				LOGGER.debug("DELETE {} SOFTLY NONEXACTLY", searchName);
 				emAnalyticsSearchList = EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete(searchName, entityManager);
-				if (emAnalyticsSearchList.isEmpty()) {
-					LOGGER.error("Search with Name: " + searchName + " does not exist");
-					throw new EMAnalyticsFwkException("Search with Name Pattern: " + searchName + " does not exist please check if it's a system search or you're not the owner",
-							EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME, null);
-				}
+			}
+			if (emAnalyticsSearchList.isEmpty()||emAnalyticsSearchList.get(0)==null) {
+				throw new EMAnalyticsFwkException("Search with Name : " + searchName + " does not exist please check if it's a system search or you're not the owner",
+						EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME, null);
 			}
 			entityManager.getTransaction().begin();
-			if (isExactly) {
-				LOGGER.debug("START TRANSACTION DELETE {} EXACTLY", searchName);
-				emAnalyticsSearch.setDeleted(emAnalyticsSearch.getId());
-				entityManager.merge(emAnalyticsSearch);
-				LOGGER.info("DELETED SEARCH WITH ID: {}", emAnalyticsSearch.getId());
-			} else {
-				LOGGER.debug("START TRANSACTION DELETE {} NONEXACTLY", searchName);
-				for (EmAnalyticsSearch temp : emAnalyticsSearchList) {
-					LOGGER.debug("START DELETE {} NONEXACTLY", temp.getId());
-					temp.setDeleted(temp.getId());
-					entityManager.merge(temp);
-					LOGGER.info("DELETED SEARCH WITH ID: {}", temp.getId());
-				}
+			LOGGER.debug("START TRANSACTION DELETE {}", searchName);
+			for (EmAnalyticsSearch temp : emAnalyticsSearchList) {
+				LOGGER.debug("START DELETE {}", temp.getId());
+				temp.setDeleted(temp.getId());
+				entityManager.merge(temp);
+				LOGGER.info("DELETED SEARCH WITH ID: {}", temp.getId());
 			}
 			LOGGER.debug("TRANSACTION COMMITTING");
 			entityManager.getTransaction().commit();

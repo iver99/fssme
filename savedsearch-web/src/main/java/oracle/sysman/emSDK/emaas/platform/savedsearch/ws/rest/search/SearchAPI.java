@@ -330,22 +330,22 @@ public class SearchAPI
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteSearchByName(@QueryParam("searchName")String name, @QueryParam("isExactly")String isExactly){
-		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/search/{}", name);
+		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/search?searchName={}&isExactly={}", name, isExactly);
 		SearchManager searchManager = SearchManager.getInstance();
 		if(isExactly == null){
-			LOGGER.debug("isExactly is null and set true default");
+			LOGGER.debug("isExactly is null and set the default value true");
 			isExactly = "true";
 		}
 		if(!"true".equalsIgnoreCase(isExactly)&&!"false".equalsIgnoreCase(isExactly)){
-			LOGGER.error("Missing the param isExactly");
-			return Response.status(Response.Status.BAD_REQUEST).entity("Missing the param isExactly").build();
+			LOGGER.error("The param isExactly is invalid");
+			return Response.status(Response.Status.BAD_REQUEST).entity("The param isExactly is invalid").build();
 		}
 		try{
 			LOGGER.debug("isExactly is {}, calling searchManager.deleteSearchByName");
 			searchManager.deleteSearchByName(name, Boolean.valueOf(isExactly));
 		}catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());
-			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
 		}
 		return Response.status(Response.Status.OK).build();
 	}
