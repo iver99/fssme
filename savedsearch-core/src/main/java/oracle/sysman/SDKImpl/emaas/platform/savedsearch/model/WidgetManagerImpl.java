@@ -56,11 +56,12 @@ public class WidgetManagerImpl extends WidgetManager
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_1 = "SELECT s.SEARCH_ID,s.CREATION_DATE,s.LAST_MODIFICATION_DATE, s.NAME, s.DESCRIPTION, s.OWNER, "
 			+ "s.NAME_WIDGET_SOURCE, s.WIDGET_GROUP_NAME, s.WIDGET_SCREENSHOT_HREF, s.WIDGET_ICON, s.WIDGET_KOC_NAME, s.WIDGET_VIEWMODEL, s.WIDGET_TEMPLATE, "
 			+ "s.WIDGET_SUPPORT_TIME_CONTROL,s.WIDGET_LINKED_DASHBOARD,s.WIDGET_DEFAULT_WIDTH, s.WIDGET_DEFAULT_HEIGHT,s.DASHBOARD_INELIGIBLE,s.PROVIDER_NAME,s.PROVIDER_VERSION, s.PROVIDER_ASSET_ROOT, "
-			+ "s.CREATION_DATE, s.LAST_MODIFICATION_DATE, c.NAME as CATOGORY_NAME, c.PROVIDER_NAME as C_PROVIDER_NAME, c.PROVIDER_VERSION as C_PROVIDER_VERSION, c.PROVIDER_ASSET_ROOT as C_PROVIDER_ASSET_ROOT "
+			+ "s.CREATION_DATE, s.LAST_MODIFICATION_DATE, c.NAME as CATOGORY_NAME, c.PROVIDER_NAME as C_PROVIDER_NAME, c.PROVIDER_VERSION as C_PROVIDER_VERSION, c.PROVIDER_ASSET_ROOT as C_PROVIDER_ASSET_ROOT, "
+			+ "CASE WHEN s.owner = ? THEN 'true' ELSE 'false' END as WIDGET_EDITABLE "
 			+ "FROM EMS_ANALYTICS_SEARCH s, EMS_ANALYTICS_CATEGORY c ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_2 = "WHERE c.provider_name in (";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_3 = ") "
-			+ "AND (s.owner=? OR s.system_search=1) AND s.deleted=0 AND s.IS_WIDGET=1 AND s.TENANT_ID=? ";
+			+ "AND s.deleted=0 AND s.IS_WIDGET=1 AND s.TENANT_ID=? ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4 = "AND s.category_id=c.category_id And c.tenant_id=? ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_5 = "AND c.CATEGORY_ID=? ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_6 = "AND (s.DASHBOARD_INELIGIBLE IS NULL OR s.DASHBOARD_INELIGIBLE <>'1') ORDER BY s.SEARCH_ID ASC ";
@@ -196,7 +197,9 @@ public class WidgetManagerImpl extends WidgetManager
 	{
 		List<Object> paramList = new ArrayList<Object>();
 		Long tenantId = TenantContext.getContext().getTenantInternalId();
+		String username = TenantContext.getContext().getUsername();
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_1);
+		paramList.add(username);
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_2);
 		for (int i = 0; i < providerNames.size(); i++) {
 			if (i != 0) {
@@ -206,9 +209,7 @@ public class WidgetManagerImpl extends WidgetManager
 			sb.append(providerNames.get(i));
 			sb.append("'");
 		}
-		String userName = TenantContext.getContext().getUsername();
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_3);
-		paramList.add(userName);
 		paramList.add(tenantId);
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4);
 		paramList.add(tenantId);

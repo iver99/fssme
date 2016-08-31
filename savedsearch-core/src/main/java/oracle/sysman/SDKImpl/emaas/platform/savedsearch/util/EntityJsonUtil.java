@@ -238,7 +238,9 @@ public class EntityJsonUtil
 		sb.append("{");
 		sb.append("\"WIDGET_UNIQUE_ID\":").append(Integer.valueOf(m.get("SEARCH_ID").toString())).append(",");
 		sb.append("\"WIDGET_NAME\":").append("\"" + m.get("NAME") + "\"").append(",");
-		sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
+		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
+			sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
+		}
 		sb.append("\"WIDGET_OWNER\":").append("\"" + m.get("OWNER") + "\"").append(",");
 
 		String createdOn = null;
@@ -285,6 +287,10 @@ public class EntityJsonUtil
 		}
 		if (m.get("WIDGET_DEFAULT_WIDTH") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_WIDTH").toString())) {
 			sb.append("\"WIDGET_DEFAULT_WIDTH\":").append("\"" + m.get("WIDGET_DEFAULT_WIDTH") + "\"");
+		}
+		
+		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
+			sb.append("\"WIDGET_EDITABLE\":").append("\"" + m.get("WIDGET_EDITABLE") + "\"");
 		}
 
 		if (sb.toString().endsWith(",")) {
