@@ -367,14 +367,12 @@ WHEN OTHERS THEN
   DBMS_OUTPUT.PUT_LINE('Failed to update Category provider name: [LoganService] to [LogAnalyticsUI] for tenant: '||V_TENANT_ID||'due to '||SQLERRM);   
   RAISE;  
 END;
-/
 
 BEGIN
 SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE TENANT_ID=V_TENANT_ID AND NAME='PROVIDER_NAME' AND PARAM_VALUE_STR='LoganService';
 IF (v_count>0) THEN
   UPDATE EMS_ANALYTICS_SEARCH_PARAMS SET PARAM_VALUE_STR='LogAnalyticsUI' WHERE TENANT_ID=V_TENANT_ID AND NAME='PROVIDER_NAME' AND PARAM_VALUE_STR='LoganService';
-  COMMIT;
-  DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics widgets has been upgraded from [LoganService] to [LogAnalyticsUI] successfully for tenant: '||V_TENANT_ID||' ! Upgraded records: '||V_COUNT);
+  DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics widgets has been upgraded from [LoganService] to [LogAnalyticsUI] successfully for tenant: '||V_TENANT_ID||' ! Upgraded records: '||v_count);
 ELSE
   DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics widgets has been upgraded from [LoganService] to [LogAnalyticsUI] for tenant: '||V_TENANT_ID||' before, no need to upgrade again');
 END IF;
@@ -385,7 +383,6 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('Failed to upgrade provider name of LogAnalytics widgets from [LoganService] to [LogAnalyticsUI] for tenant: '||V_TENANT_ID||' due to '||SQLERRM);
     RAISE;
 END;
-/
 
      IF (V_TID<>-1) THEN
         EXIT;
