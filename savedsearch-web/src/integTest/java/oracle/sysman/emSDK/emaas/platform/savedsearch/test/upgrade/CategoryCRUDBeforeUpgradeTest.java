@@ -2,10 +2,6 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.test.upgrade;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -18,6 +14,9 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
+
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 public class CategoryCRUDBeforeUpgradeTest
 {
@@ -280,10 +279,7 @@ public class CategoryCRUDBeforeUpgradeTest
 	{
 		try {
 
-			String jsonString1 = "{\"name\":\"Search_Bycat\",\"category\":{\"id\":"
-					+ catid
-					+ "},\"folder\":{\"id\":"
-					+ folderid
+			String jsonString1 = "{\"name\":\"Search_Bycat\",\"category\":{\"id\":" + catid + "},\"folder\":{\"id\":" + folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
@@ -400,8 +396,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	{
 		try {
 			System.out.println("------------------------------------------");
-			System.out
-					.println("This test is to validate the response & status with categoryName, categoryId & folderId combinations");
+			System.out.println(
+					"This test is to validate the response & status with categoryName, categoryId & folderId combinations");
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.get("/searches?categoryId=" + catid + "&categoryname=" + catName + "&folderId=" + folderid);
@@ -470,8 +466,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	public void searchesbyCategory_id_negativeNumber()
 	{
 		try {
-			System.out
-					.println("This test is to validate the response when the search by category with category ID which is negative number");
+			System.out.println(
+					"This test is to validate the response when the search by category with category ID which is negative number");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=-1");
 
@@ -496,8 +492,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	public void searchesbyCategory_id_notExist()
 	{
 		try {
-			System.out
-					.println("This test is to validate the response when the search by category with category ID which is not exist");
+			System.out.println(
+					"This test is to validate the response when the search by category with category ID which is not exist");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=4567890");
 
@@ -521,8 +517,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	public void searchesbyCategory_invalid_name()
 	{
 		try {
-			System.out
-					.println("This test is to validate the response when the searches by category with category name which is not exist");
+			System.out.println(
+					"This test is to validate the response when the searches by category with category name which is not exist");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryName=MyAnalytics");
 
@@ -547,8 +543,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	public void searchesbyCategory_invalid_nameANDid()
 	{
 		try {
-			System.out
-					.println("This test is to validate the response when the search by category whose category name & id are not exist");
+			System.out.println(
+					"This test is to validate the response when the search by category whose category name & id are not exist");
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.get("/searches?categoryName=invalidCategory&categoryId=200000");
@@ -629,10 +625,7 @@ public class CategoryCRUDBeforeUpgradeTest
 			System.out.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;
-			String jsonString1 = "{\"name\":\"Search_A\",\"category\":{\"id\":"
-					+ catid
-					+ "},\"folder\":{\"id\":"
-					+ folderid
+			String jsonString1 = "{\"name\":\"Search_A\",\"category\":{\"id\":" + catid + "},\"folder\":{\"id\":" + folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
@@ -696,10 +689,7 @@ public class CategoryCRUDBeforeUpgradeTest
 			System.out.println("Now creation of searches in the specified category with POST method");
 			System.out.println("											");
 			int position = -1;
-			String jsonString1 = "{\"name\":\"Search_B\",\"category\":{\"id\":"
-					+ catid
-					+ "},\"folder\":{\"id\":"
-					+ folderid
+			String jsonString1 = "{\"name\":\"Search_B\",\"category\":{\"id\":" + catid + "},\"folder\":{\"id\":" + folderid
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
@@ -783,4 +773,3 @@ public class CategoryCRUDBeforeUpgradeTest
 	}
 
 }
-

@@ -749,7 +749,7 @@ public class SearchAPITest {
             {
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearchWithoutOwner(anyLong);
                 result = search;
                 FolderManager .getInstance();
                 result = folderManager;
@@ -772,7 +772,7 @@ public class SearchAPITest {
             {
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearchWithoutOwner(anyLong);
                 result = new EMAnalyticsFwkException(new Throwable());
             }
         };
@@ -845,4 +845,8 @@ public class SearchAPITest {
         Assert.assertEquals(200,api.getAssetRoot(1L).getStatus());
     }
 
+    @Test
+    public void testEditLastAccess() {
+        Assert.assertNotNull(api.editLastAccess(10L));
+    }
 }

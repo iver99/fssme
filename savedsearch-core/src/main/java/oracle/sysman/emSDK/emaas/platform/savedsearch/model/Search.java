@@ -158,4 +158,7 @@ public interface Search extends SearchSummary
 	 *            hidden behavior of search
 	 */
 	public void setUiHidden(boolean uiHidden);
+	
+	public boolean isEditable();
+	public void setEditable(boolean isEditable);
 }

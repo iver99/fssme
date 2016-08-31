@@ -517,6 +517,41 @@ public class SearchAPI
 		
 		return Response.status(statusCode).entity(message).build();
 	}
+	
+	/**
+	 * update last access time & return the whole search
+	 * @param searchId
+	 * @return
+	 */
+	@PUT
+	@Path("{id: [0-9]*}/updatelastaccess")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editLastAccess(@PathParam("id") long searchId) {
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}/updatelastaccess", searchId);
+		
+		String message = null;
+		int statusCode = 200;
+		JSONObject jsonObj = null;
+		
+		// update firstly
+		updateLastAccessTime(searchId);
+		
+		// find and return the whole object
+		SearchManager sman = SearchManager.getInstance();
+		try {
+			Search searchObj = sman.getSearchWithoutOwner(searchId);
+			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj);
+			message = jsonObj.toString();
+		}
+		catch (EMAnalyticsFwkException e) {
+			statusCode = e.getStatusCode();
+			message = e.getMessage();
+			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+					e.getStatusCode());
+		}
+
+		return Response.status(statusCode).entity(message).build();
+	}
 
 	/**
 	 * Set last access time to the saved search with given search Id<br>
@@ -663,7 +698,7 @@ public class SearchAPI
 		SearchManager sman = SearchManager.getInstance();
 		try {
 
-			Search searchObj = sman.getSearch(searchid);
+			Search searchObj = sman.getSearchWithoutOwner(searchid);
 			String[] pathArray = null;
 			if (bPath) {
 				FolderManager folderMgr = FolderManager.getInstance();
@@ -682,24 +717,22 @@ public class SearchAPI
 		return Response.status(statusCode).entity(message).build();
 	}
 
-	public Response updateLastAccessTime(long searchId)
+	private Response updateLastAccessTime(long searchId)
 	{
 		String message = null;
 		int statusCode = 200;
 		try {
 			SearchManager sman = SearchManager.getInstance();
-			sman.getSearch(searchId);
 			java.util.Date date = sman.modifyLastAccessDate(searchId);
 			message = String.valueOf(DateUtil.getDateFormatter().format(date));
-
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
-			statusCode = e.getStatusCode();
+			statusCode = 404;
 		}
 		return Response.status(statusCode).entity(message).build();
-
 	}
+	
 	@GET
 	@Path("{id: [0-9]*}/assetroot")
 	public Response getAssetRoot(@PathParam("id") long searchid){

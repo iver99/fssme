@@ -647,6 +647,20 @@ class EmAnalyticsObjectUtil
 		}
 		return searchObj;
 	}
+	
+	public static EmAnalyticsSearch findEmSearchByIdWithoutOwner(long searchId, EntityManager em) {
+		EmAnalyticsSearch searchObj = null;
+		try {
+			searchObj = em.find(EmAnalyticsSearch.class, searchId);
+			// return null if the search has been deleted
+			if(searchObj != null && searchObj.getDeleted() != 0) {
+				searchObj = null;
+			}
+		} catch (Exception ex) {
+			// do nothing
+		}
+		return searchObj;
+	}
 
 	public static EmAnalyticsSearch getSearchByIdForDelete(long id, EntityManager em)
 	{

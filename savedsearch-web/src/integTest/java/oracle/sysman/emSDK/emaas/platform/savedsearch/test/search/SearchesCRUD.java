@@ -294,7 +294,7 @@ public class SearchesCRUD
 			.put("/search/100000000087?updateLastAccessTime=true");
 			System.out.println(res.asString());
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertEquals(res.asString(), "Search identified by ID: 100000000087 does not exist");
+			Assert.assertEquals(res.asString(), "Invalid search id: 100000000087");
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -1240,7 +1240,7 @@ public class SearchesCRUD
 					+ 1
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3040");
 			System.out.println(res1.asString());
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 400);
@@ -1261,7 +1261,7 @@ public class SearchesCRUD
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3040");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -1344,7 +1344,7 @@ public class SearchesCRUD
 					+ 1
 					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3040");
 			System.out.println(res1.asString());
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 400);
@@ -1363,7 +1363,7 @@ public class SearchesCRUD
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3029");
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3040");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -1986,4 +1986,17 @@ public class SearchesCRUD
 						.get("search/2000/assetroot").getStatusCode());
 	}
 
+	@Test
+	/**
+	 * Test verify the status and response with invalid objects on a correct url path
+	 */
+	public void testNotExistSearchEditLastAccess()
+	{
+		Response res = RestAssured.given().contentType(ContentType.JSON)
+				.log().everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+				.put("/search/100000000087/updatelastaccess");
+		Assert.assertEquals(res.asString(), "Search identified by ID: 100000000087 does not exist");
+		Assert.assertTrue(res.getStatusCode() == 404);
+	}
 }

@@ -22,6 +22,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
@@ -168,7 +169,8 @@ public class SearchManagerImplTest
 	@Test
 	public void testEditSearch_normal(@Mocked final PersistenceManager persistenceManager,
 			@Mocked final EntityManager entityManager, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
-			@Mocked final EmAnalyticsSearch emAnalyticsSearch) throws Exception
+			@Mocked final EmAnalyticsSearch emAnalyticsSearch, @Mocked final WidgetChangeNotification anyWidgetChangeNotification)
+					throws Exception
 	{
 		new Expectations() {
 			{
@@ -180,7 +182,9 @@ public class SearchManagerImplTest
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getSystemSearch();
 				result = new BigDecimal(10);
-
+				emAnalyticsSearch.getIsWidget();
+				result = 1L;
+				new WidgetChangeNotification().notifyChange((Search) any);
 			}
 		};
 		searchManager.editSearch(new SearchImpl());
@@ -222,11 +226,29 @@ public class SearchManagerImplTest
 				result = entityManager;
 				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
 				result = emAnalyticsSearch;
-				entityManager.refresh(any);
-
 			}
 		};
 		searchManager.getSearch(1234);
+	}
+	
+	@Test
+	public void testGetSearchWithoutOwner(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+			@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final EmAnalyticsSearch emAnalyticsSearch)
+					throws Exception
+	{
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
+				result = emAnalyticsSearch;
+				emAnalyticsSearch.getDeleted();
+				result = 0L;
+			}
+		};
+		searchManager.getSearchWithoutOwner(1234);
 	}
 
 	@Test
@@ -710,8 +732,8 @@ public class SearchManagerImplTest
 			}
 		};
 		searchManager.getWidgetListByProviderNames(false, Arrays.asList("LoganService"), null);
-		searchManager.getWidgetListByProviderNames(true, Arrays.asList("LoganService","LoganService"), "22");
-		searchManager.getWidgetListByProviderNames(false, Arrays.asList("LoganService","LoganService"), "22");
+		searchManager.getWidgetListByProviderNames(true, Arrays.asList("LoganService", "LoganService"), "22");
+		searchManager.getWidgetListByProviderNames(false, Arrays.asList("LoganService", "LoganService"), "22");
 		new Expectations() {
 			{
 				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
@@ -729,7 +751,7 @@ public class SearchManagerImplTest
 	@Test
 	public void testGetWidgetListByProviderNames_emptyNames() throws EMAnalyticsFwkException
 	{
-		searchManager.getWidgetListByProviderNames(false,null, null);
+		searchManager.getWidgetListByProviderNames(false, null, null);
 	}
 
 	@Test
@@ -743,8 +765,10 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, (EntityManager) any);
+				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
 				result = emAnalyticsSearch;
+				emAnalyticsSearch.getDeleted();
+				result = 0L;
 			}
 		};
 		searchManager.getWidgetScreenshotById(1234);
@@ -794,7 +818,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				TenantContext.getContext();
 				result = tenantInfo;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getAccessedBy();
 				result = "accessedbyxx";
@@ -826,7 +850,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				TenantContext.getContext();
 				result = tenantInfo;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
 				result = null;
 			}
 		};
@@ -1258,11 +1282,11 @@ public class SearchManagerImplTest
 	}
 
 	@Test
-	public void testSaveMultipleSearch_searchGetIdST0_objFolderImpl_cateObjCategoryImpl_getFolderIdNull_getCategoryIdNull(@Mocked final Query query,
-																						@Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
-																						@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
-																						@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
-																						@Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
+	public void testSaveMultipleSearch_searchGetIdST0_objFolderImpl_cateObjCategoryImpl_getFolderIdNull_getCategoryIdNull(
+			@Mocked final Query query, @Mocked final ImportSearchImpl importSearchImpl, @Mocked final Search search,
+			@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+			@Mocked EmAnalyticsObjectUtil eABU, @Mocked final EmAnalyticsSearch emAnalyticsSearch,
+			@Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception
 	{
 		List<ImportSearchImpl> importSearchList = new ArrayList<>();
 		importSearchList.add(importSearchImpl);
