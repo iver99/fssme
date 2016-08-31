@@ -53,6 +53,7 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_DELETE_SEARCH = 20040;
 	public static final int ERR_GET_SEARCH = 20050;
 	public static final int ERR_GET_SEARCH_FOR_ID = 20060;
+	public static final int ERR_GET_SEARCH_BY_NAME = 20070;
 
 
 

@@ -145,6 +145,42 @@ class EmAnalyticsObjectUtil
 		}
 	}
 
+	public static EmAnalyticsSearch getSearchByNameForDelete(String searchName, EntityManager entityManager){
+		try {
+			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+				return (EmAnalyticsSearch) entityManager.createNamedQuery("Search.getSearchByNameExcludeOOBAndNonDeletedFORTenant")
+						.setParameter("searchName",  searchName)
+						.getSingleResult();
+			}
+			else{
+				return (EmAnalyticsSearch) entityManager.createNamedQuery("Search.getSearchByNameExcludeOOBAndNonDeleted")
+						.setParameter("searchName",  searchName)
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getSingleResult();
+			}
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public static List getSearchListByNamePatternForDelete(String searchNamePattern, EntityManager entityManager) {
+		try {
+			searchNamePattern = searchNamePattern.replace("%", "\\%");
+			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+				return entityManager.createNamedQuery("Search.getSearchByNamePatternExcludeOOBAndNonDeletedFORTenant")
+						.setParameter("searchName", "%" + searchNamePattern + "%")
+						.getResultList();
+			} else {
+				return entityManager.createNamedQuery("Search.getSearchByNamePatternExcludeOOBAndNonDeleted")
+						.setParameter("searchName", "%" + searchNamePattern + "%")
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getResultList();
+			}
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
+	}
+
 	public static EmAnalyticsCategory getEmAnalyticsCategoryForAdd(Category category, EntityManager em)
 			throws EMAnalyticsFwkException
 	{

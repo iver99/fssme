@@ -327,6 +327,29 @@ public class SearchAPI
 		return Response.status(statusCode).build();
 	}
 
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteSearchByName(@QueryParam("searchName")String name, @QueryParam("isExactly")String isExactly){
+		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/search/{}", name);
+		SearchManager searchManager = SearchManager.getInstance();
+		if(isExactly == null){
+			LOGGER.debug("isExactly is null and set true default");
+			isExactly = "true";
+		}
+		if(!"true".equalsIgnoreCase(isExactly)&&!"false".equalsIgnoreCase(isExactly)){
+			LOGGER.error("Missing the param isExactly");
+			return Response.status(Response.Status.BAD_REQUEST).entity("Missing the param isExactly").build();
+		}
+		try{
+			LOGGER.debug("isExactly is {}, calling searchManager.deleteSearchByName");
+			searchManager.deleteSearchByName(name, Boolean.valueOf(isExactly));
+		}catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+		}
+		return Response.status(Response.Status.OK).build();
+	}
+
 	/**
 	 * Edit the search with given search Id <br>
 	 * <br>

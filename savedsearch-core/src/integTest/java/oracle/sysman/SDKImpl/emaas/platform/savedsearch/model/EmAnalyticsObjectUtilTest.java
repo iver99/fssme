@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.awt.image.RescaleOp;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,18 +12,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import mockit.Expectations;
+import mockit.Mock;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParamPK;
@@ -983,5 +978,99 @@ public class EmAnalyticsObjectUtilTest
 			}
 		};
 		EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, entityManager);
+	}
+
+	@Mocked
+	RequestContext requestContext;
+	@Test
+	public void testGetSearchByNameForDeleteInternal(){
+		new Expectations(){
+			{
+				RequestContext.getContext();
+				result = RequestContext.RequestType.INTERNAL_TENANT;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, anyString);
+				result = query;
+				query.getSingleResult();
+				result = emAnalyticsSearch;
+			}
+		};
+		EmAnalyticsObjectUtil.getSearchByNameForDelete("", entityManager);
+	}
+
+	@Test
+	public void testGetSearchByNameForDelete(){
+		new Expectations(){
+			{
+				RequestContext.getContext();
+				result = RequestContext.RequestType.EXTERNAL;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, anyString);
+				result = query;
+				query.getSingleResult();
+				result = emAnalyticsSearch;
+			}
+		};
+		EmAnalyticsObjectUtil.getSearchByNameForDelete("", entityManager);
+	}
+
+	@Test
+	public void testGetSearchByNameForDeleteNoResultException(){
+		new Expectations(){
+			{
+				RequestContext.getContext();
+				result = new NoResultException();
+			}
+		};
+		EmAnalyticsObjectUtil.getSearchByNameForDelete("", entityManager);
+	}
+
+	@Test
+	public void testGetSearchListByNameForDeleteInternal(){
+		final List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<>();
+		new Expectations(){
+			{
+				RequestContext.getContext();
+				result = RequestContext.RequestType.INTERNAL_TENANT;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, anyString);
+				result = query;
+				query.getResultList();
+				result = emAnalyticsSearchList;
+			}
+		};
+		EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete("", entityManager);
+	}
+
+	@Test
+	public void testGetSearchListByNameForDelete(){
+		final List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<>();
+		new Expectations(){
+			{
+				RequestContext.getContext();
+				result = RequestContext.RequestType.EXTERNAL;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, anyString);
+				result = query;
+				query.getResultList();
+				result = emAnalyticsSearchList;
+			}
+		};
+		EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete("", entityManager);
+	}
+
+	@Test
+	public void testGetSearchListByNameForDeleteNoResultException(){
+		new Expectations(){
+			{
+				RequestContext.getContext();
+				result = new NoResultException();
+			}
+		};
+		EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete("", entityManager);
 	}
 }

@@ -54,6 +54,14 @@ public abstract class SearchManager
 	 */
 	public abstract void deleteTargetCard(long searchId, boolean permanently) throws EMAnalyticsFwkException;
 	/**
+	 *
+	 * @param searchName
+	 * @param isExactly
+	 * @param permanently
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract void deleteSearchByName(String searchName, boolean isExactly)throws EMAnalyticsFwkException;
+	/**
 	 * Resturns the search by its name dxy
 	 * @param searchName
 	 * @return search

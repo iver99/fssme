@@ -1,12 +1,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -33,10 +28,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * @author qianqi
- * @since 16-3-2.
- */
+
 @Test(groups = { "s2" })
 public class SearchManagerImplTest
 {
@@ -1417,5 +1409,78 @@ public class SearchManagerImplTest
 			}
 		};
 		searchManager.saveSearch(new SearchImpl());
+	}
+
+	@Test
+	public void testDeleteSearchByName() throws EMAnalyticsFwkException {
+		final List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<>();
+		emAnalyticsSearchList.add(emAnalyticsSearch);
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				TenantContext.getContext();
+				result = tenantInfo;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				EmAnalyticsObjectUtil.getSearchByNameForDelete(anyString, (EntityManager)any);
+				result = emAnalyticsSearch;
+				entityManager.getTransaction().begin();
+				emAnalyticsSearch.getId();
+				result =1L;
+				entityManager.merge((EmAnalyticsSearch)any);
+				entityManager.getTransaction().commit();;
+				entityManager.close();
+				EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete(anyString, (EntityManager)any);
+				result = emAnalyticsSearchList;
+			}
+		};
+		searchManager.deleteSearchByName("searchName", true);
+		searchManager.deleteSearchByName("searchName", false);
+	}
+
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testDeleteSearchByNameResultNull() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				TenantContext.getContext();
+				result = tenantInfo;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				EmAnalyticsObjectUtil.getSearchByNameForDelete(anyString, (EntityManager)any);
+				result = null;
+			}
+		};
+		searchManager.deleteSearchByName("searchName", true);
+		searchManager.deleteSearchByName("searchName", false);
+	}
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testDeleteSearchByNameResultEmpty() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				TenantContext.getContext();
+				result = tenantInfo;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete(anyString, (EntityManager)any);
+				result = Collections.emptyList();
+			}
+		};
+		searchManager.deleteSearchByName("searchName", false);
+	}
+
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testDeleteSearchByNameException() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = new Exception(throwable);
+			}
+		};
+		searchManager.deleteSearchByName("searchName", false);
 	}
 }
