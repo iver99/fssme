@@ -3,7 +3,7 @@ Rem    MODIFIED   (MM/DD/YY)
 Rem    ADUAN      07/05/2016 - created
 Rem
 
-DEFINE TENANT_ID = '&1'
+--DEFINE TENANT_ID = '&1'
 
 --update OOB Category, since OOB category can be referenced by both normal and OOB search, don't use delete from ...
 
