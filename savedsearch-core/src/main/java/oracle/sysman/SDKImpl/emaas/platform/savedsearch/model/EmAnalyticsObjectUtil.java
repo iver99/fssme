@@ -141,7 +141,7 @@ class EmAnalyticsObjectUtil
 		}
 	}
 
-	public static EmAnalyticsSearch getSearchByNameForDelete(String searchName, EntityManager entityManager){
+	public static EmAnalyticsSearch getSearchByNameForDelete(String searchName, EntityManager entityManager) {
 		EmAnalyticsSearch result = null;
 		try {
 			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
@@ -154,9 +154,9 @@ class EmAnalyticsObjectUtil
 						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 						.getSingleResult();
 			}
-		}catch(NonUniqueResultException e){
+		} catch (NonUniqueResultException e) {
 			LOGGER.error("The result is not unique");
-		}catch (NoResultException e) {
+		} catch (NoResultException e) {
 			LOGGER.error("There is not result");
 		}
 		return result;
@@ -176,7 +176,7 @@ class EmAnalyticsObjectUtil
 						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 						.getResultList();
 			}
-		}catch (NoResultException e) {
+		} catch (NoResultException e) {
 			LOGGER.error("There is not result");
 		}
 		return result;

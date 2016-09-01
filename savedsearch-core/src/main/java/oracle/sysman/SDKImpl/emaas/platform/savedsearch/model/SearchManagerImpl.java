@@ -155,11 +155,11 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public void deleteSearchByName(String searchName, boolean isExactly)throws EMAnalyticsFwkException{
+	public void deleteSearchByName(String searchName, boolean isExactly) throws EMAnalyticsFwkException {
 		LOGGER.info("Deleting search with Name: {}, Exactly {}", searchName, isExactly);
 		EntityManager entityManager = null;
 		List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<>();
-		try{
+		try {
 			entityManager = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			if (isExactly) {
 				LOGGER.debug("DELETE {} SOFTLY EXACTLY", searchName);
@@ -168,7 +168,7 @@ public class SearchManagerImpl extends SearchManager
 				LOGGER.debug("DELETE {} SOFTLY NONEXACTLY", searchName);
 				emAnalyticsSearchList = EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete(searchName, entityManager);
 			}
-			if (emAnalyticsSearchList.isEmpty()||emAnalyticsSearchList.get(0)==null) {
+			if (emAnalyticsSearchList.isEmpty() || emAnalyticsSearchList.get(0) == null) {
 				throw new EMAnalyticsFwkException("Search with Name : " + searchName + " does not exist please check if it's a system search or you're not the owner",
 						EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME, null);
 			}
@@ -182,15 +182,15 @@ public class SearchManagerImpl extends SearchManager
 			}
 			LOGGER.debug("TRANSACTION COMMITTING");
 			entityManager.getTransaction().commit();
-		}catch (EMAnalyticsFwkException eme){
+		} catch (EMAnalyticsFwkException eme) {
 			LOGGER.error("Search with Name: " + searchName + " does not exist", eme);
 			throw eme;
-		}catch (Exception e){
+		} catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, searchName);
 			LOGGER.error("Error while getting the search object by Name: " + searchName, e);
 			throw new EMAnalyticsFwkException("Error while deleting the search object by Name: " + searchName,
-					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { searchName }, e);
-		}finally {
+					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[]{searchName}, e);
+		} finally {
 			if (entityManager != null) {
 				LOGGER.debug("TRANSACTION CLOSING");
 				entityManager.close();
