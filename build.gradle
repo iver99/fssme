@@ -51,8 +51,7 @@ def disBuildTests = System.getenv("DISABLE_BUILD_TESTS")
 ext.disableBuildTests = (disBuildTests == null ? false : disBuildTests.toBoolean())
 allprojects {  
 	ext.dependenciesDir = new File(rootDir, 'common') 
-	
-	
+
 	configurations.all {
       // Exclude findbugs annotations from all configurations.
       // In the current world, this is being brought in
@@ -267,7 +266,7 @@ apply from: "${project.ext.source_cc}/codeCoverage.gradle"
 if(project.plugins.hasPlugin('sonar-runner')) {
   sonarRunner {
     sonarProperties {
-      property "sonar.branch", 'master'
+      property "sonar.branch", 'greenchannel'
     }
   }
 }
