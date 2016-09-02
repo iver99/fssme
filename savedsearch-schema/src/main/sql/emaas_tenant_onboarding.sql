@@ -48,7 +48,7 @@ DECLARE
 	  DBMS_OUTPUT.PUT_LINE('INSERING OOB searches for &TENANT_ID ');
     END;
 /
-
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_insert_column.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_la.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
