@@ -30,7 +30,7 @@ public class JPAEntityTest
 {
 
 	@Test(groups = { "s1" })
-	public void testEntityCategory() throws Exception
+	public void testEntityCategory()
 	{
 		EmAnalyticsCategory cat = new EmAnalyticsCategory();
 		cat.setCategoryId(1);
@@ -84,7 +84,7 @@ public class JPAEntityTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testEntityFolder() throws Exception
+	public void testEntityFolder()
 	{
 
 		EmAnalyticsFolder fld = new EmAnalyticsFolder();

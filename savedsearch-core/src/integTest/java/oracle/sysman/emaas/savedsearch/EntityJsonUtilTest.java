@@ -30,6 +30,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
@@ -44,18 +46,17 @@ public class EntityJsonUtilTest extends BaseTest
 	private static URI uri = null;
 	private static String currentUser = "SYSMAN";
 	private static final String HOST_PORT = "slc04pxi.us.oracle.com:7001";
+	private static final Logger LOGGER = LogManager.getLogger( EntityJsonUtilTest.class);
 
 	static {
 		try {
 			uri = new URL("http://" + HOST_PORT + "/savedsearch/v1/").toURI();
 		}
 		catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getLocalizedMessage());
 		}
 		catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getLocalizedMessage());
 		}
 		long time = 1406040533048L;
 		Date d = new Date(time);
@@ -185,35 +186,34 @@ public class EntityJsonUtilTest extends BaseTest
 	{
 		JSONObject fullCategoryObj = EntityJsonUtil.getFullCategoryJsonObj(uri, category);
 		String output = fullCategoryObj.toString();
-		//		System.out.println(output);
 
-		final String VERIFY_STRING1 = "\"id\":100";
-		final String VERIFY_STRING2 = "\"name\":\"Category for UT\"";
-		final String VERIFY_STRING3 = "\"description\":\"desc for UT\"";
-		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
+		final String verifyString1 = "\"id\":100";
+		final String verifyString2 = "\"name\":\"Category for UT\"";
+		final String verifyString3 = "\"description\":\"desc for UT\"";
+		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
+		final String verifyString5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
 				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
-		final String VERIFY_STRING6 = "\"defaultFolderId\"";
-		final String VERIFY_STRING7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
-		final String VERIFY_STRING9 = "\"href\":\"http:\\/\\/" + HOST_PORT + "\\/savedsearch\\/v1\\/category\\/100\"}";
-		final String VERIFY_STRING10 = "\"providerName\":\"Provider name for UT\"";
-		final String VERIFY_STRING11 = "\"providerVersion\":\"Provider version for UT\"";
-		final String VERIFY_STRING12 = "\"providerDiscovery\":\"Provider discovery for UT\"";
-		final String VERIFY_STRING13 = "\"providerAssetRoot\":\"Provider asset root for UT\"";
+		final String verifyString6 = "\"defaultFolderId\"";
+		final String verifyString7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
+		final String verifyString9 = "\"href\":\"http:\\/\\/" + HOST_PORT + "\\/savedsearch\\/v1\\/category\\/100\"}";
+		final String verifyString10 = "\"providerName\":\"Provider name for UT\"";
+		final String verifyString11 = "\"providerVersion\":\"Provider version for UT\"";
+		final String verifyString12 = "\"providerDiscovery\":\"Provider discovery for UT\"";
+		final String verifyString13 = "\"providerAssetRoot\":\"Provider asset root for UT\"";
 
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString1), verifyString1 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString2), verifyString2 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString3), verifyString3 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString4), verifyString4 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString5), verifyString5 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString6), verifyString6 + " is found unexpected");
+		Assert.assertTrue(output.contains(verifyString7), verifyString7 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString9), verifyString9 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString10), verifyString10 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString11), verifyString11 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString12), verifyString12 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString13), verifyString13 + " is NOT found as expected");
 	}
 
 	@Test(groups = { "s1" })
@@ -221,31 +221,30 @@ public class EntityJsonUtilTest extends BaseTest
 	{
 		JSONObject fullFolderObj = EntityJsonUtil.getFullFolderJsonObj(uri, folder);
 		String output = fullFolderObj.toString();
-		//		System.out.println(output);
 
-		final String VERIFY_STRING1 = "\"id\":1000";
-		final String VERIFY_STRING2 = "\"name\":\"Folder for UT\"";
-		final String VERIFY_STRING3 = "\"systemFolder\":false";
-		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
+		final String verifyString1 = "\"id\":1000";
+		final String verifyString2 = "\"name\":\"Folder for UT\"";
+		final String verifyString3 = "\"systemFolder\":false";
+		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
+		final String verifyString5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
 				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
-		final String VERIFY_STRING6 = "\"parentFolderId\"";
-		final String VERIFY_STRING7 = "\"uiHidden\":false";
-		final String VERIFY_STRING8 = "\"systemFolder\":false";
-		final String VERIFY_STRING9 = "\"owner\":\"SYSMAN\"";
-		final String VERIFY_STRING10 = "\"lastModifiedBy\":\"SYSMAN\"";
+		final String verifyString6 = "\"parentFolderId\"";
+		final String verifyString7 = "\"uiHidden\":false";
+		final String verifyString8 = "\"systemFolder\":false";
+		final String verifyString9 = "\"owner\":\"SYSMAN\"";
+		final String verifyString10 = "\"lastModifiedBy\":\"SYSMAN\"";
 
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString1), verifyString1 + " is NOT found unexpected");
+		Assert.assertTrue(output.contains(verifyString2), verifyString2 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString3), verifyString3 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString4), verifyString4 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString5), verifyString5 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString6), verifyString6 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString7), verifyString7 + " is found unexpected");
+		Assert.assertTrue(output.contains(verifyString8), verifyString8 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString9), verifyString9 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString10), verifyString10 + " is NOT found as expected");
 	}
 
 	@Test(groups = { "s1" })
@@ -254,53 +253,50 @@ public class EntityJsonUtilTest extends BaseTest
 	{
 		JSONObject fullSearchObj = EntityJsonUtil.getFullSearchJsonObj(uri, search);
 		String output = fullSearchObj.toString();
-		//		System.out.println(output);
 
 		JSONObject fullSearchObjWithFolderPath = EntityJsonUtil.getFullSearchJsonObj(uri, search, new String[] { "parent Folder",
 		"Root Folder" });
 		String output2 = fullSearchObjWithFolderPath.toString();
-		//		System.out.println(output2);
 
-		final String VERIFY_STRING1 = "\"id\":10000";
-		final String VERIFY_STRING2 = "\"queryStr\":\"*\"";
-		final String VERIFY_STRING3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
-		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
+		final String verifyString1 = "\"id\":10000";
+		final String verifyString2 = "\"queryStr\":\"*\"";
+		final String verifyString3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
+		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
+		final String verifyString5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
 				+ "\\/savedsearch\\/v1\\/folder\\/999\"}";
-		final String VERIFY_STRING6 = "\"folderId\"";
-		final String VERIFY_STRING7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
+		final String verifyString6 = "\"folderId\"";
+		final String verifyString7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
 				+ "\\/savedsearch\\/v1\\/category\\/999\"}";
-		final String VERIFY_STRING8 = "\"categoryId\"";
-		final String VERIFY_STRING9 = "\"locked\":false";
-		final String VERIFY_STRING10 = "\"uiHidden\":false";
-		final String VERIFY_STRING11 = "\"flattenedFolderPath\":[\"parent Folder\",\"Root Folder\"]";
-		final String VERIFY_STRING12 = "\"guid\":";
-		final String VERIFY_STRING13 = "\"systemSearch\":true";
-		final String VERIFY_STRING14 = "\"isWidget\":false";
+		final String verifyString8 = "\"categoryId\"";
+		final String verifyString9 = "\"locked\":false";
+		final String verifyString10 = "\"uiHidden\":false";
+		final String verifyString11 = "\"flattenedFolderPath\":[\"parent Folder\",\"Root Folder\"]";
+		final String verifyString12 = "\"guid\":";
+		final String verifyString13 = "\"systemSearch\":true";
+		final String verifyString14 = "\"isWidget\":false";
 
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString1), verifyString1 + " is NOT found unexpected");
+		Assert.assertTrue(output.contains(verifyString2), verifyString2 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString3), verifyString3 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString4), verifyString4 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString5), verifyString5 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString6), verifyString6 + " is found unexpected");
+		Assert.assertTrue(output.contains(verifyString7), verifyString7 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString8), verifyString8 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString9), verifyString9 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString10), verifyString10 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString11), verifyString11 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString12), verifyString12 + " is found unexpected");
+		Assert.assertTrue(output.contains(verifyString13), verifyString13 + " is NOT found as expected");
 
-		Assert.assertTrue(output2.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
-		Assert.assertFalse(output2.contains(VERIFY_STRING12), VERIFY_STRING12 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING14), VERIFY_STRING14 + " is found unexpected");
+		Assert.assertTrue(output2.contains(verifyString11), verifyString11 + " is NOT found as expected");
+		Assert.assertFalse(output2.contains(verifyString12), verifyString12 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString14), verifyString14 + " is found unexpected");
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetJsonString()
-	{
+	public void testGetJsonString() throws EMAnalyticsFwkException {
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("SEARCH_ID", 1000);
 		m.put("WIDGET_KOC_NAME", "TestKOC");
@@ -319,41 +315,36 @@ public class EntityJsonUtilTest extends BaseTest
 		m.put("PROVIDER_VERSION", "TestProviderVersion");
 		m.put("PROVIDER_ASSET_ROOT", "TestProviderAssetRoot");
 		String result = null;
-		try {
-			result = EntityJsonUtil.getJsonString(m, "testScreenshotUrl");
-		}
-		catch (EMAnalyticsFwkException e) {
-			e.printStackTrace();
-		}
-		final String VERIFY_STRING1 = "\"WIDGET_UNIQUE_ID\":1000";
-		final String VERIFY_STRING2 = "\"WIDGET_KOC_NAME\":\"TestKOC\"";
-		final String VERIFY_STRING3 = "\"WIDGET_VIEWMODEL\":\"TestViewModel\"";
-		final String VERIFY_STRING4 = "\"WIDGET_TEMPLATE\":\"TestTemplate\"";
-		final String VERIFY_STRING5 = "\"WIDGET_LINKED_DASHBOARD\":\"1\"";
-		final String VERIFY_STRING6 = "\"WIDGET_DEFAULT_WIDTH\":\"1\"";
-		final String VERIFY_STRING7 = "\"WIDGET_DEFAULT_HEIGHT\":\"1\"";
-		final String VERIFY_STRING8 = "\"DASHBOARD_INELIGIBLE\":\"1\"";
-		final String VERIFY_STRING9 = "\"WIDGET_NAME\":\"TestName\"";
-		final String VERIFY_STRING10 = "\"WIDGET_DESCRIPTION\":\"TestDesc\"";
-		final String VERIFY_STRING11 = "\"WIDGET_OWNER\":\"Test\"";
-		final String VERIFY_STRING14 = "\"PROVIDER_NAME\":\"TestProviderName\"";
-		final String VERIFY_STRING15 = "\"PROVIDER_VERSION\":\"TestProviderVersion\"";
-		final String VERIFY_STRING16 = "\"PROVIDER_ASSET_ROOT\":\"TestProviderAssetRoot\"";
+		result = EntityJsonUtil.getJsonString(m, "testScreenshotUrl");
+		final String verifyString1 = "\"WIDGET_UNIQUE_ID\":1000";
+		final String verifyString2 = "\"WIDGET_KOC_NAME\":\"TestKOC\"";
+		final String verifyString3 = "\"WIDGET_VIEWMODEL\":\"TestViewModel\"";
+		final String verifyString4 = "\"WIDGET_TEMPLATE\":\"TestTemplate\"";
+		final String verifyString5 = "\"WIDGET_LINKED_DASHBOARD\":\"1\"";
+		final String verifyString6 = "\"WIDGET_DEFAULT_WIDTH\":\"1\"";
+		final String verifyString7 = "\"WIDGET_DEFAULT_HEIGHT\":\"1\"";
+		final String verifyString8 = "\"DASHBOARD_INELIGIBLE\":\"1\"";
+		final String verifyString9 = "\"WIDGET_NAME\":\"TestName\"";
+		final String verifyString10 = "\"WIDGET_DESCRIPTION\":\"TestDesc\"";
+		final String verifyString11 = "\"WIDGET_OWNER\":\"Test\"";
+		final String verifyString14 = "\"PROVIDER_NAME\":\"TestProviderName\"";
+		final String verifyString15 = "\"PROVIDER_VERSION\":\"TestProviderVersion\"";
+		final String verifyString16 = "\"PROVIDER_ASSET_ROOT\":\"TestProviderAssetRoot\"";
 		Assert.assertNotNull(result);
-		Assert.assertTrue(result.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(VERIFY_STRING5), VERIFY_STRING5 + " is found unexpected");
-		Assert.assertTrue(result.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
-		Assert.assertTrue(result.contains(VERIFY_STRING7), VERIFY_STRING7 + " is found unexpected");
-		Assert.assertTrue(result.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
-		Assert.assertTrue(result.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(VERIFY_STRING14), VERIFY_STRING14 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(VERIFY_STRING15), VERIFY_STRING15 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(VERIFY_STRING16), VERIFY_STRING16 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString1), verifyString1 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString2), verifyString2 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString3), verifyString3 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString4), verifyString4 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString5), verifyString5 + " is found unexpected");
+		Assert.assertTrue(result.contains(verifyString6), verifyString6 + " is found unexpected");
+		Assert.assertTrue(result.contains(verifyString7), verifyString7 + " is found unexpected");
+		Assert.assertTrue(result.contains(verifyString8), verifyString8 + " is found unexpected");
+		Assert.assertTrue(result.contains(verifyString9), verifyString9 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString10), verifyString10 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString11), verifyString11 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString14), verifyString14 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString15), verifyString15 + " is NOT found as expected");
+		Assert.assertTrue(result.contains(verifyString16), verifyString16 + " is NOT found as expected");
 	}
 
 	@Test(groups = { "s1" })
@@ -362,37 +353,36 @@ public class EntityJsonUtilTest extends BaseTest
 	{
 		JSONObject simpleCategoryObj = EntityJsonUtil.getSimpleCategoryJsonObj(uri, category);
 		String output = simpleCategoryObj.toString();
-		//		System.out.println(output);
 
-		final String VERIFY_STRING1 = "\"id\":100";
-		final String VERIFY_STRING2 = "\"name\":\"Category for UT\"";
-		final String VERIFY_STRING3 = "\"description\":\"desc for UT\"";
-		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
+		final String verifyString1 = "\"id\":100";
+		final String verifyString2 = "\"name\":\"Category for UT\"";
+		final String verifyString3 = "\"description\":\"desc for UT\"";
+		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
+		final String verifyString5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
 				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
-		final String VERIFY_STRING6 = "\"defaultFolderId\"";
-		final String VERIFY_STRING7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
-		final String VERIFY_STRING8 = "\"owner\":\"SYSMAN\"";
-		final String VERIFY_STRING9 = "\"href\":\"http:\\/\\/" + HOST_PORT + "\\/savedsearch\\/v1\\/category\\/100\"}";
-		final String VERIFY_STRING10 = "\"providerName\":\"Provider name for UT\"";
-		final String VERIFY_STRING11 = "\"providerVersion\":\"Provider version for UT\"";
-		final String VERIFY_STRING12 = "\"providerDiscovery\":\"Provider discovery for UT\"";
-		final String VERIFY_STRING13 = "\"providerAssetRoot\":\"Provider asset root for UT\"";
+		final String verifyString6 = "\"defaultFolderId\"";
+		final String verifyString7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
+		final String verifyString8 = "\"owner\":\"SYSMAN\"";
+		final String verifyString9 = "\"href\":\"http:\\/\\/" + HOST_PORT + "\\/savedsearch\\/v1\\/category\\/100\"}";
+		final String verifyString10 = "\"providerName\":\"Provider name for UT\"";
+		final String verifyString11 = "\"providerVersion\":\"Provider version for UT\"";
+		final String verifyString12 = "\"providerDiscovery\":\"Provider discovery for UT\"";
+		final String verifyString13 = "\"providerAssetRoot\":\"Provider asset root for UT\"";
 
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString1), verifyString1 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString2), verifyString2 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString3), verifyString3 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString4), verifyString4 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString5), verifyString5 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString6), verifyString6 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString7), verifyString7 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString8), verifyString8 + " is found unexpected");
+		Assert.assertTrue(output.contains(verifyString9), verifyString9 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString10), verifyString10 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString11), verifyString11 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString12), verifyString12 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString13), verifyString13 + " is NOT found as expected");
 	}
 
 	@Test(groups = { "s1" })
@@ -401,38 +391,36 @@ public class EntityJsonUtilTest extends BaseTest
 	{
 		JSONObject simpleFolderObj = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder);
 		String output = simpleFolderObj.toString();
-		//		System.out.println(output);
 		JSONObject simpleFolderObjWithType = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder, true);
 		String output2 = simpleFolderObjWithType.toString();
-		//		System.out.println(output2);
 
-		final String VERIFY_STRING1 = "\"id\":1000";
-		final String VERIFY_STRING2 = "\"name\":\"Folder for UT\"";
-		final String VERIFY_STRING3 = "\"systemFolder\":false";
-		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
+		final String verifyString1 = "\"id\":1000";
+		final String verifyString2 = "\"name\":\"Folder for UT\"";
+		final String verifyString3 = "\"systemFolder\":false";
+		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
+		final String verifyString5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
 				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
-		final String VERIFY_STRING6 = "\"parentId\"";
-		final String VERIFY_STRING7 = "\"uiHidden\":false";
-		final String VERIFY_STRING8 = "\"type\":\"folder\"";
-		final String VERIFY_STRING9 = "\"owner\":\"SYSMAN\"";
-		final String VERIFY_STRING10 = "\"lastModifiedBy\":\"SYSMAN\"";
-		final String VERIFY_STRING11 = "\"systemFolder\":false";
+		final String verifyString6 = "\"parentId\"";
+		final String verifyString7 = "\"uiHidden\":false";
+		final String verifyString8 = "\"type\":\"folder\"";
+		final String verifyString9 = "\"owner\":\"SYSMAN\"";
+		final String verifyString10 = "\"lastModifiedBy\":\"SYSMAN\"";
+		final String verifyString11 = "\"systemFolder\":false";
 
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString1), verifyString1 + " is NOT found unexpected");
+		Assert.assertTrue(output.contains(verifyString2), verifyString2 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString3), verifyString3 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString4), verifyString4 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString5), verifyString5 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString6), verifyString6 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString7), verifyString7 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString8), verifyString8 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString9), verifyString9 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString10), verifyString10 + " is found unexpected");
+		Assert.assertTrue(output.contains(verifyString11), verifyString11 + " is NOT found as expected");
 
-		Assert.assertTrue(output2.contains(VERIFY_STRING8), VERIFY_STRING8 + " is NOT found as expected");
+		Assert.assertTrue(output2.contains(verifyString8), verifyString8 + " is NOT found as expected");
 	}
 
 	@Test(groups = { "s1" })
@@ -441,67 +429,62 @@ public class EntityJsonUtilTest extends BaseTest
 	{
 		JSONObject simpleSearchObj = EntityJsonUtil.getSimpleSearchJsonObj(uri, search);
 		String output = simpleSearchObj.toString();
-		//		System.out.println(output);
 
 		JSONObject simpleSearchObjWithFolderPath = EntityJsonUtil.getSimpleSearchJsonObj(uri, search, new String[] {
 				"parent Folder", "Root Folder" }, false);
 		String output2 = simpleSearchObjWithFolderPath.toString();
-		//		System.out.println(output2);
 
 		JSONObject simpleSearchObjWithType = EntityJsonUtil.getSimpleSearchJsonObj(uri, search, null, true);
 		String output3 = simpleSearchObjWithType.toString();
-		//		System.out.println(output3);
 
-		final String VERIFY_STRING1 = "\"id\":10000";
-		final String VERIFY_STRING2 = "\"queryStr\":\"*\"";
-		final String VERIFY_STRING3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
-		final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
+		final String verifyString1 = "\"id\":10000";
+		final String verifyString2 = "\"queryStr\":\"*\"";
+		final String verifyString3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
+		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
+		final String verifyString5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
 				+ "\\/savedsearch\\/v1\\/folder\\/999\"}";
-		final String VERIFY_STRING6 = "\"folderId\"";
-		final String VERIFY_STRING7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
+		final String verifyString6 = "\"folderId\"";
+		final String verifyString7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
 				+ "\\/savedsearch\\/v1\\/category\\/999\"}";
-		final String VERIFY_STRING8 = "\"categoryId\"";
-		final String VERIFY_STRING9 = "\"locked\":false";
-		final String VERIFY_STRING10 = "\"uiHidden\":false";
-		final String VERIFY_STRING11 = "\"flattenedFolderPath\":[\"parent Folder\",\"Root Folder\"]";
-		final String VERIFY_STRING12 = "\"guid\":";
-		final String VERIFY_STRING13 = "\"type\":\"search\"";
-		final String VERIFY_STRING14 = "\"systemSearch\":true";
-		final String VERIFY_STRING15 = "\"isWidget\":false";
+		final String verifyString8 = "\"categoryId\"";
+		final String verifyString9 = "\"locked\":false";
+		final String verifyString10 = "\"uiHidden\":false";
+		final String verifyString11 = "\"flattenedFolderPath\":[\"parent Folder\",\"Root Folder\"]";
+		final String verifyString12 = "\"guid\":";
+		final String verifyString13 = "\"type\":\"search\"";
+		final String verifyString14 = "\"systemSearch\":true";
+		final String verifyString15 = "\"isWidget\":false";
 
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is found unexpected");
-		Assert.assertFalse(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is found unexpected");
-		Assert.assertTrue(output.contains(VERIFY_STRING14), VERIFY_STRING14 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString1), verifyString1 + " is NOT found unexpected");
+		Assert.assertFalse(output.contains(verifyString2), verifyString2 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString3), verifyString3 + " is found unexpected");
+		Assert.assertTrue(output.contains(verifyString4), verifyString4 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString5), verifyString5 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString6), verifyString6 + " is found unexpected");
+		Assert.assertTrue(output.contains(verifyString7), verifyString7 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString8), verifyString8 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString9), verifyString9 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString10), verifyString10 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString11), verifyString11 + " is found unexpected");
+		Assert.assertFalse(output.contains(verifyString12), verifyString12 + " is found unexpected");
+		Assert.assertTrue(output.contains(verifyString14), verifyString14 + " is NOT found as expected");
 
-		Assert.assertTrue(output2.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
-		Assert.assertFalse(output2.contains(VERIFY_STRING12), VERIFY_STRING12 + " is found unexpected");
-		Assert.assertFalse(output2.contains(VERIFY_STRING13), VERIFY_STRING13 + " is found unexpected");
+		Assert.assertTrue(output2.contains(verifyString11), verifyString11 + " is NOT found as expected");
+		Assert.assertFalse(output2.contains(verifyString12), verifyString12 + " is found unexpected");
+		Assert.assertFalse(output2.contains(verifyString13), verifyString13 + " is found unexpected");
 
-		Assert.assertTrue(output3.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING15), VERIFY_STRING15 + " is found unexpected");
+		Assert.assertTrue(output3.contains(verifyString13), verifyString13 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString15), verifyString15 + " is found unexpected");
 	}
 
 	@Test(groups = { "s1" })
 	public void testGetTargetCardJsonObj()
 	{
-		Search search = new SearchImpl();
 		search.setFolderId(1);
 		search.setCategoryId(1);
 		try {
 			JSONObject jsonObject = EntityJsonUtil.getTargetCardJsonObj(uri, search, null);
-			System.out.println(jsonObject);
 			Assert.assertNotNull(jsonObject);
 			Assert.assertNotNull(jsonObject.get("folder"));
 			Assert.assertNotNull(jsonObject.get("category"));
@@ -523,22 +506,22 @@ public class EntityJsonUtilTest extends BaseTest
 		JSONObject widgetGroupObj = EntityJsonUtil.getWidgetGroupJsonObj(uri, category);
 		String output = widgetGroupObj.toString();
 
-		final String VERIFY_STRING1 = "\"WIDGET_GROUP_ID\":100";
-		final String VERIFY_STRING2 = "\"WIDGET_GROUP_NAME\":\"Category for UT\"";
-		final String VERIFY_STRING3 = "\"WIDGET_GROUP_DESCRIPTION\":\"desc for UT\"";
-		final String VERIFY_STRING4 = "\"PROVIDER_NAME\":\"Provider name for UT\"";
-		final String VERIFY_STRING5 = "\"PROVIDER_VERSION\":\"Provider version for UT\"";
-		final String VERIFY_STRING6 = "\"PROVIDER_DISCOVERY\":\"Provider discovery for UT\"";
-		final String VERIFY_STRING7 = "\"PROVIDER_ASSET_ROOT\":\"Provider asset root for UT\"";
+		final String verifyString1 = "\"WIDGET_GROUP_ID\":100";
+		final String verifyString2 = "\"WIDGET_GROUP_NAME\":\"Category for UT\"";
+		final String verifyString3 = "\"WIDGET_GROUP_DESCRIPTION\":\"desc for UT\"";
+		final String verifyString4 = "\"PROVIDER_NAME\":\"Provider name for UT\"";
+		final String verifyString5 = "\"PROVIDER_VERSION\":\"Provider version for UT\"";
+		final String verifyString6 = "\"PROVIDER_DISCOVERY\":\"Provider discovery for UT\"";
+		final String verifyString7 = "\"PROVIDER_ASSET_ROOT\":\"Provider asset root for UT\"";
 
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString1), verifyString1 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString2), verifyString2 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString3), verifyString3 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString4), verifyString4 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString5), verifyString5 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString6), verifyString6 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString7), verifyString7 + " is NOT found as expected");
 	}
 
 	@Test(groups = { "s1" })
@@ -546,42 +529,42 @@ public class EntityJsonUtilTest extends BaseTest
 	{
 		JSONObject widgetObj = EntityJsonUtil.getWidgetJsonObj(widget, category, null);
 		String output = widgetObj.toString();
-		final String VERIFY_STRING1 = "\"WIDGET_UNIQUE_ID\":10001";
-		final String VERIFY_STRING2 = "\"WIDGET_NAME\":\"Widget for UT\"";
-		final String VERIFY_STRING3 = "\"WIDGET_DESCRIPTION\":\"Widget desc for UT\"";
-		final String VERIFY_STRING4 = "\"WIDGET_OWNER\":\"SYSMAN\"";
-		final String VERIFY_STRING5 = "\"WIDGET_CREATION_TIME\":\"2014-07-22T14:48:53.048Z\"";
-		final String VERIFY_STRING6 = "\"WIDGET_SOURCE\":1";
-		final String VERIFY_STRING7 = "\"WIDGET_GROUP_NAME\":\"Category for UT\"";
-		final String VERIFY_STRING8 = "\"WIDGET_VIEWMODEL\":\"dependencies\\/widgets\\/iFrame\\/js\\/widget-iframe\"";
-		final String VERIFY_STRING9 = "\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\"";
-		final String VERIFY_STRING10 = "\"WIDGET_TEMPLATE\":\"dependencies\\/widgets\\/iFrame\\/widget-iframe.html\"";
-		final String VERIFY_STRING11 = "\"PROVIDER_VERSION\":\"0.1\"";
-		final String VERIFY_STRING12 = "\"PROVIDER_NAME\":\"DB Analytics\"";
-		final String VERIFY_STRING13 = "\"PROVIDER_ASSET_ROOT\":\"home\"";
-		final String VERIFY_STRING14 = "\"PROVIDER_VERSION\":\"Provider version for UT\"";
-		final String VERIFY_STRING15 = "\"PROVIDER_NAME\":\"Provider name for UT\"";
-		final String VERIFY_STRING16 = "\"PROVIDER_ASSET_ROOT\":\"Provider asset root for UT\"";
-		final String VERIFY_STRING17 = "\"WIDGET_VISUAL\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAYKklEQVR4AdxSBRIDIQy8\"";
-		final String VERIFY_STRING18 = "\"WIDGET_DEFAULT_WIDTH\":8";
-		final String VERIFY_STRING19 = "\"WIDGET_DEFAULT_HEIGHT\":1";
+		final String verifyString1 = "\"WIDGET_UNIQUE_ID\":10001";
+		final String verifyString2 = "\"WIDGET_NAME\":\"Widget for UT\"";
+		final String verifyString3 = "\"WIDGET_DESCRIPTION\":\"Widget desc for UT\"";
+		final String verifyString4 = "\"WIDGET_OWNER\":\"SYSMAN\"";
+		final String verifyString5 = "\"WIDGET_CREATION_TIME\":\"2014-07-22T14:48:53.048Z\"";
+		final String verifyString6 = "\"WIDGET_SOURCE\":1";
+		final String verifyString7 = "\"WIDGET_GROUP_NAME\":\"Category for UT\"";
+		final String verifyString8 = "\"WIDGET_VIEWMODEL\":\"dependencies\\/widgets\\/iFrame\\/js\\/widget-iframe\"";
+		final String verifyString9 = "\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\"";
+		final String verifyString10 = "\"WIDGET_TEMPLATE\":\"dependencies\\/widgets\\/iFrame\\/widget-iframe.html\"";
+		final String verifyString11 = "\"PROVIDER_VERSION\":\"0.1\"";
+		final String verifyString12 = "\"PROVIDER_NAME\":\"DB Analytics\"";
+		final String verifyString13 = "\"PROVIDER_ASSET_ROOT\":\"home\"";
+		final String verifyString14 = "\"PROVIDER_VERSION\":\"Provider version for UT\"";
+		final String verifyString15 = "\"PROVIDER_NAME\":\"Provider name for UT\"";
+		final String verifyString16 = "\"PROVIDER_ASSET_ROOT\":\"Provider asset root for UT\"";
+		final String verifyString17 = "\"WIDGET_VISUAL\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACMCAIAAABNpIRsAAAYKklEQVR4AdxSBRIDIQy8\"";
+		final String verifyString18 = "\"WIDGET_DEFAULT_WIDTH\":8";
+		final String verifyString19 = "\"WIDGET_DEFAULT_HEIGHT\":1";
 		Assert.assertNotNull(output);
-		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING5), VERIFY_STRING5 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING6), VERIFY_STRING6 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING7), VERIFY_STRING7 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING8), VERIFY_STRING8 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING9), VERIFY_STRING9 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING10), VERIFY_STRING10 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING11), VERIFY_STRING11 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING12), VERIFY_STRING12 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING13), VERIFY_STRING13 + " is NOT found as expected");
-		Assert.assertFalse(output.contains(VERIFY_STRING17), VERIFY_STRING17 + " is found NOT as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING18), VERIFY_STRING18 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING19), VERIFY_STRING19 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString1), verifyString1 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString2), verifyString2 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString3), verifyString3 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString4), verifyString4 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString5), verifyString5 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString6), verifyString6 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString7), verifyString7 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString8), verifyString8 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString9), verifyString9 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString10), verifyString10 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString11), verifyString11 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString12), verifyString12 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString13), verifyString13 + " is NOT found as expected");
+		Assert.assertFalse(output.contains(verifyString17), verifyString17 + " is found NOT as expected");
+		Assert.assertTrue(output.contains(verifyString18), verifyString18 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString19), verifyString19 + " is NOT found as expected");
 
 		widget.getParameters().remove(5);
 		widget.getParameters().remove(4);
@@ -589,9 +572,9 @@ public class EntityJsonUtilTest extends BaseTest
 		widgetObj = EntityJsonUtil.getWidgetJsonObj(widget, category, null);
 		Assert.assertNotNull(widgetObj);
 		output = widgetObj.toString();
-		Assert.assertTrue(output.contains(VERIFY_STRING14), VERIFY_STRING14 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING15), VERIFY_STRING15 + " is NOT found as expected");
-		Assert.assertTrue(output.contains(VERIFY_STRING16), VERIFY_STRING16 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString14), verifyString14 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString15), verifyString15 + " is NOT found as expected");
+		Assert.assertTrue(output.contains(verifyString16), verifyString16 + " is NOT found as expected");
 		widget.getParameters().remove(2);
 		widgetObj = EntityJsonUtil.getWidgetJsonObj(widget, category, null);
 		Assert.assertNull(widgetObj);
@@ -604,10 +587,10 @@ public class EntityJsonUtilTest extends BaseTest
 	//				.getWidgetScreenshotJsonObj("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACM...");
 	//		String output = widgetScreenshotObj.toString();
 	//
-	//		final String VERIFY_STRING1 = "\"screenShot\":\"data:image\\/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACM...\"";
+	//		final String verifyString1 = "\"screenShot\":\"data:image\\/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAACM...\"";
 	//
 	//		Assert.assertNotNull(output);
-	//		Assert.assertTrue(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
+	//		Assert.assertTrue(output.contains(verifyString1), verifyString1 + " is NOT found as expected");
 	//
 	//		widgetScreenshotObj = EntityJsonUtil.getWidgetScreenshotJsonObj(null);
 	//		output = widgetScreenshotObj.toString();

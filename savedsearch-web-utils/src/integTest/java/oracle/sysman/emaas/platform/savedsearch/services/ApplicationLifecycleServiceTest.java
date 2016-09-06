@@ -20,7 +20,7 @@ import static org.testng.Assert.*;
 public class ApplicationLifecycleServiceTest {
 
     @Test
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
 //        ApplicationLifecycleService applicationLifecycleService = new ApplicationLifecycleService();
 //
 //        List<ApplicationServiceManager> registeredServices =  Deencapsulation.getField(applicationLifecycleService,"registeredServices");
@@ -28,7 +28,7 @@ public class ApplicationLifecycleServiceTest {
     }
 
     @Test(groups = {"s2"})
-    public void testConstructor(@Mocked final AbstractApplicationLifecycleService applicationLifecycleService1) throws Exception {
+    public void testConstructor(@Mocked final AbstractApplicationLifecycleService applicationLifecycleService1) {
         new Expectations(){
             {
                 withAny(applicationLifecycleService1).addApplicationServiceManager((ApplicationServiceManager)any);

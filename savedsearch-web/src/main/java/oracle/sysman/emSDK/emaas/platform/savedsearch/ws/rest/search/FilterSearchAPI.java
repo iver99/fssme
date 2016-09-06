@@ -40,9 +40,8 @@ public class FilterSearchAPI
 	@Context
 	UriInfo uri;
 
-	private final String search = "search";
 
-	private static final Logger _logger = LogManager.getLogger(FilterSearchAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(FilterSearchAPI.class);
 
 	/**
 	 * List all the searches with given category Id/category name/folder Id<br>
@@ -185,19 +184,18 @@ public class FilterSearchAPI
 		LogUtil.getInteractionLogger().info(
 				"Service calling to (GET) /savedsearch/v1/searches?categoryId={}&categoryName={}&lastAccessCount={}&folderId={}",
 				catId, name, lastAccessCount, foldId);
-		final String ERR_MSG = "Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount";
+		final String errmsg = "Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount";
 		CategoryManager catMan = CategoryManager.getInstance();
 		int categId = 0;
 		int folId = 0;
 		Category category;
-		String message = "";
 		String key = "";
 		String value;
 		String query = uri.getRequestUri().getQuery();
 		if (query == null) {
 			//now we disallow to return all searches
 			//			return getLastAccessSearch(0);
-			return Response.status(400).entity(ERR_MSG).build();
+			return Response.status(400).entity(errmsg).build();
 		}
 		String[] param = query.split("&");
 		if (param.length > 0) {
@@ -212,21 +210,21 @@ public class FilterSearchAPI
 			}
 
 			try {
-				if (key.equals("categoryId") && value != null) {
+				if ("categoryId".equals(key) && value != null) {
 					categId = Integer.parseInt(value);
 					if (categId < 0) {
 						throw new NumberFormatException();
 					}
 					return getAllSearchByCategory(categId);
 				}
-				else if (key.equals("folderId") && value != null) {
+				else if ("folderId".equals(key) && value != null) {
 					folId = Integer.parseInt(value);
 					if (folId < 0) {
 						throw new NumberFormatException();
 					}
 					return getAllSearchByFolder(folId);
 				}
-				else if (key.equals("lastAccessCount") && value != null) {
+				else if ("lastAccessCount".equals(key) && value != null) {
 					int count = Integer.parseInt(value);
 					if (count < 0) {
 						throw new NumberFormatException();
@@ -236,20 +234,20 @@ public class FilterSearchAPI
 					}
 					return getLastAccessSearch(count);
 				}
-				else if (key.equals("categoryName") && value != null) {
+				else if ("categoryName".equals(key) && value != null) {
 					try {
 						category = catMan.getCategory(value);
 						categId = category.getId();
 						return getAllSearchByCategory(categId);
 					}
 					catch (EMAnalyticsFwkException e) {
-
+						LOGGER.error(e.getLocalizedMessage());
 						return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 					}
 
 				}
 				else {
-					return Response.status(400).entity(ERR_MSG).build();
+					return Response.status(400).entity(errmsg).build();
 				}
 			}
 			catch (NumberFormatException e) {
@@ -257,7 +255,7 @@ public class FilterSearchAPI
 			}
 		}
 		else {
-			return Response.status(400).entity(ERR_MSG).build();
+			return Response.status(400).entity(errmsg).build();
 		}
 
 	}
@@ -266,7 +264,7 @@ public class FilterSearchAPI
 	{
 		SearchManager searchMan = SearchManager.getInstance();
 		CategoryManager catMan = CategoryManager.getInstance();
-		Search search;
+		Search searchInstance;
 		int statusCode = 200;
 		String message = "";
 		JSONArray jsonArray = new JSONArray();
@@ -278,21 +276,22 @@ public class FilterSearchAPI
 			searchList = searchMan.getSearchListByCategoryId(catId);
 		}
 		catch (EMAnalyticsFwkException e) {
-
+			LOGGER.error(e.getLocalizedMessage());
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 
 		try {
 			for (int i = 0; i < searchList.size(); i++) {
-				search = searchList.get(i);
+				searchInstance = searchList.get(i);
 
-				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), search);
+				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchInstance);
 				jsonArray.put(jsonObj);
 
 			}
 			message = jsonArray.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 			return Response.status(statusCode).entity(message).build();
@@ -305,7 +304,7 @@ public class FilterSearchAPI
 	{
 		SearchManager searchMan = SearchManager.getInstance();
 		FolderManager foldMan = FolderManager.getInstance();
-		Search search;
+		Search searchInstance;
 
 		String message = "";
 		int statusCode = 200;
@@ -318,6 +317,7 @@ public class FilterSearchAPI
 			searchList = searchMan.getSearchListByFolderId(foldId);
 		}
 		catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 			return Response.status(statusCode).entity(message).build();
@@ -325,16 +325,16 @@ public class FilterSearchAPI
 
 		try {
 			for (int i = 0; i < searchList.size(); i++) {
-				search = searchList.get(i);
+				searchInstance = searchList.get(i);
 
-				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), search);
+				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchInstance);
 				jsonArray.put(jsonObj);
 
 			}
 			message = jsonArray.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-
+			LOGGER.error(e.getLocalizedMessage());
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 		return Response.status(statusCode).entity(message).build();
@@ -357,18 +357,18 @@ public class FilterSearchAPI
 		}
 		catch (EMAnalyticsFwkException e) {
 
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Fail to read folder/search object", e);
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 
 		}
 		catch (JSONException e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Fail to read folder/search object", e);
 			return Response.status(500).entity(e.getMessage()).build();
 		}
 		catch (Exception e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Fail to read folder/search object", e);
 			return Response.status(500).entity(e.getMessage()).build();
 		}

@@ -8,6 +8,8 @@ import java.util.Properties;
 
 public class PropertyReader
 {
+	private PropertyReader() {
+	}
 
 	private static final boolean RUNNING_IN_CONTAINER = getRunningInContainer();
 	public static final String CONFIG_DIR = "/opt/ORCLemaas/Applications/SavedSearchService/init/";//getInstallDir() + "config";
@@ -54,9 +56,9 @@ public class PropertyReader
 
 	public static final boolean getRunningInContainer()
 	{
-		final String JNDI_INITIAL_CONTEXT = System.getProperty("java.naming.factory.initial");
-		return JNDI_INITIAL_CONTEXT != null
-				&& JNDI_INITIAL_CONTEXT.startsWith("weblogic")
+		final String jndiInitialContext = System.getProperty("java.naming.factory.initial");
+		return jndiInitialContext != null
+				&& jndiInitialContext.startsWith("weblogic")
 				&& (System.getProperty("weblogic.home") != null || System.getProperty("wls.home") != null || System
 						.getProperty("weblogic.management.startmode") != null);
 	}

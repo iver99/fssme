@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 public class CacheUnit implements ICacheUnit{
 	
-private static final Logger logger = LogManager.getLogger(CacheUnit.class);
+private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 	
 	private CacheLinkedHashMap<String,Element> cacheLinkedHashMap;
 	private final int timeToLive;
@@ -47,16 +47,18 @@ private static final Logger logger = LogManager.getLogger(CacheUnit.class);
 		this.timeToLive=timeToLive;
 		this.cacheCapacity=capacity;
 		this.cacheLinkedHashMap=new CacheLinkedHashMap<String, Element>(capacity);
-		logger.debug("Creating a CacheUnit named {} and expiration time is {}"+name,timeToLive);
+		LOGGER.debug("Creating a CacheUnit named {} and expiration time is {}"+name,timeToLive);
 	}
 	
 	
 	@Override
 	public boolean put(String key,Element value){
-		if(key ==null)
+		if(key ==null) {
 			throw new IllegalArgumentException("cannot put into CacheUnit:key cannot be null!");
-		if(value ==null)
+		}
+		if(value ==null) {
 			throw new IllegalArgumentException("cannot put into CacheUnit:value cannot be null!");
+		}
 		value.setLastAccessTime(getCurrentTime());
 		cacheLinkedHashMap.put(key, value);
 		return true;
@@ -79,11 +81,13 @@ private static final Logger logger = LogManager.getLogger(CacheUnit.class);
 	 * @return
 	 */
 	private Object getElementValue(String key) {
-		if (key == null)
+		if (key == null) {
 			return null;
+		}
 		Element e = (Element) cacheLinkedHashMap.get(key);
-		if (e == null)
+		if (e == null) {
 			return null;
+		}
 		if(e.isExpired(timeToLive)){
 			//remove action
 			cacheLinkedHashMap.remove(key);
@@ -122,7 +126,7 @@ private static final Logger logger = LogManager.getLogger(CacheUnit.class);
 	}
 	
 	public boolean isEmpty(){
-		return this.cacheLinkedHashMap.getCacheMap().size()==0?true:false;
+		return this.cacheLinkedHashMap.getCacheMap().isEmpty()?true:false;
 	}
 
 	@Override

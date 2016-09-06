@@ -2,19 +2,17 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.StrictExpectations;
 import oracle.sysman.qatool.uifwk.utils.Utils;
-import org.apache.commons.collections.Buffer;
-import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -22,7 +20,6 @@ import java.util.Properties;
  */
 @Test(groups={"s2"})
 public class QAToolUtilTestS2 {
-    private  QAToolUtil qaToolUtil =new QAToolUtil();
     @Mocked
     Utils utils;
     @Mocked
@@ -53,7 +50,7 @@ public class QAToolUtilTestS2 {
             }
         };
         Assert.assertNotNull(QAToolUtil.getDbProperties());
-    };
+    }
 
     @Test
     public void testGetTenantDetails() throws Exception {
@@ -70,5 +67,22 @@ public class QAToolUtilTestS2 {
             }
         };
         Assert.assertNotNull(QAToolUtil.getTenantDetails());
+    }
+
+    @Test
+    public void testGetSavedSearchDeploymentDet() throws IOException {
+        final List<String> urlList = new ArrayList<>();
+        urlList.add("url1");
+        new Expectations(){
+            {
+                Utils.getProperty("SERVICE_MANAGER_URL");
+                result = "savedsearch/v1";
+                url.openConnection();
+                result = httpURLConnection;
+                SchemaUtil.getSchemaUrls(anyString);
+                result = urlList;
+            }
+        };
+        QAToolUtil.getSavedSearchDeploymentDet();
     }
 }

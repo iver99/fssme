@@ -28,8 +28,7 @@ import org.testng.annotations.Test;
 public class JSONUtilTest extends BaseTest
 {
 	@Test (groups = {"s1"})
-	public void testObjectToJSONObject()
-	{
+	public void testObjectToJSONObject() throws EMAnalyticsFwkException, JSONException {
 		SearchImpl search = new SearchImpl();
 		search.setId(10000);
 		search.setCategoryId(999);
@@ -47,57 +46,50 @@ public class JSONUtilTest extends BaseTest
 		p1.setValue("value1");
 		params.add(p1);
 		search.setParameters(params);
-		try {
-			String output = JSONUtil.ObjectToJSONString(search, new String[] { "id", "queryStr", "parameters" });
-			final String VERIFY_STRING1 = "\"id\":10000";
-			final String VERIFY_STRING2 = "\"queryStr\":\"*\"";
-			final String VERIFY_STRING3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
-			final String VERIFY_STRING4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
+			String output = JSONUtil.objectToJSONString(search, new String[] { "id", "queryStr", "parameters" });
+			final String verifyString1 = "\"id\":10000";
+			final String verifyString2 = "\"queryStr\":\"*\"";
+			final String verifyString3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
+			final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
 			//System.out.println(output);
 			Assert.assertNotNull(output);
-			Assert.assertFalse(output.contains(VERIFY_STRING1), VERIFY_STRING1 + " is found unexpected");
-			Assert.assertFalse(output.contains(VERIFY_STRING2), VERIFY_STRING2 + " is found unexpected");
-			Assert.assertFalse(output.contains(VERIFY_STRING3), VERIFY_STRING3 + " is found unexpected");
-			Assert.assertTrue(output.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as expected");
+			Assert.assertFalse(output.contains(verifyString1), verifyString1 + " is found unexpected");
+			Assert.assertFalse(output.contains(verifyString2), verifyString2 + " is found unexpected");
+			Assert.assertFalse(output.contains(verifyString3), verifyString3 + " is found unexpected");
+			Assert.assertTrue(output.contains(verifyString4), verifyString4 + " is NOT found as expected");
 
-			String output2 = JSONUtil.ObjectToJSONString(search, null);
+			String output2 = JSONUtil.objectToJSONString(search, null);
 			//			System.out.println(output2);
 			Assert.assertNotNull(output2);
-			Assert.assertTrue(output2.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
-			Assert.assertTrue(output2.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-			Assert.assertTrue(output2.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-			Assert.assertTrue(output2.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
+			Assert.assertTrue(output2.contains(verifyString1), verifyString1 + " is NOT found as expected");
+			Assert.assertTrue(output2.contains(verifyString2), verifyString2 + " is NOT found as expected");
+			Assert.assertTrue(output2.contains(verifyString3), verifyString3 + " is NOT found as expected");
+			Assert.assertTrue(output2.contains(verifyString4), verifyString4 + " is NOT found as sexpected");
 
-			String output3 = JSONUtil.ObjectToJSONString(search);
+			String output3 = JSONUtil.objectToJSONString(search);
 			Assert.assertNotNull(output3);
-			Assert.assertTrue(output3.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
-			Assert.assertTrue(output3.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-			Assert.assertTrue(output3.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-			Assert.assertTrue(output3.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
+			Assert.assertTrue(output3.contains(verifyString1), verifyString1 + " is NOT found as expected");
+			Assert.assertTrue(output3.contains(verifyString2), verifyString2 + " is NOT found as expected");
+			Assert.assertTrue(output3.contains(verifyString3), verifyString3 + " is NOT found as expected");
+			Assert.assertTrue(output3.contains(verifyString4), verifyString4 + " is NOT found as sexpected");
 
-			JSONObject json_output = JSONUtil.ObjectToJSONObject(search, new String[] { "id", "queryStr", "parameters" });
-			String output4 = json_output.toString();
-			Assert.assertNotNull(json_output);
-			Assert.assertFalse(output4.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
-			Assert.assertFalse(output4.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-			Assert.assertFalse(output4.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-			Assert.assertTrue(output4.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
+			JSONObject jsonObject = JSONUtil.objectToJSONObject(search, new String[] { "id", "queryStr", "parameters" });
+			String output4 = jsonObject.toString();
+			Assert.assertNotNull(jsonObject);
+			Assert.assertFalse(output4.contains(verifyString1), verifyString1 + " is NOT found as expected");
+			Assert.assertFalse(output4.contains(verifyString2), verifyString2 + " is NOT found as expected");
+			Assert.assertFalse(output4.contains(verifyString3), verifyString3 + " is NOT found as expected");
+			Assert.assertTrue(output4.contains(verifyString4), verifyString4 + " is NOT found as sexpected");
 
-			JSONObject json_output2 = JSONUtil.ObjectToJSONObject(search);
-			String output5 = json_output2.toString();
-			Assert.assertNotNull(json_output2);
-			Assert.assertTrue(output5.contains(VERIFY_STRING1), VERIFY_STRING1 + " is NOT found as expected");
-			Assert.assertTrue(output5.contains(VERIFY_STRING2), VERIFY_STRING2 + " is NOT found as expected");
-			Assert.assertTrue(output5.contains(VERIFY_STRING3), VERIFY_STRING3 + " is NOT found as expected");
-			Assert.assertTrue(output5.contains(VERIFY_STRING4), VERIFY_STRING4 + " is NOT found as sexpected");
+			JSONObject jsonObject1 = JSONUtil.objectToJSONObject(search);
+			String output5 = jsonObject1.toString();
+			Assert.assertNotNull(jsonObject1);
+			Assert.assertTrue(output5.contains(verifyString1), verifyString1 + " is NOT found as expected");
+			Assert.assertTrue(output5.contains(verifyString2), verifyString2 + " is NOT found as expected");
+			Assert.assertTrue(output5.contains(verifyString3), verifyString3 + " is NOT found as expected");
+			Assert.assertTrue(output5.contains(verifyString4), verifyString4 + " is NOT found as sexpected");
 
-		}
-		catch (EMAnalyticsFwkException e) {
-			Assert.assertTrue(false, "failed to convert due to: " + e.getMessage());
-		}
-		catch (JSONException e) {
-			Assert.assertTrue(false, "failed to convert due to: " + e.getMessage());
-		}
+
 	}
 
 	@Test(groups = {"s1"})

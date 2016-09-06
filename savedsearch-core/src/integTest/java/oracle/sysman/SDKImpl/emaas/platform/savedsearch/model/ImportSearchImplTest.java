@@ -20,13 +20,13 @@ public class ImportSearchImplTest {
     ImportSearchImpl importSearch;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp()  {
         importSearch = new ImportSearchImpl();
 
     }
 
     @Test
-    public void testGetCategoryDet() throws Exception {
+    public void testGetCategoryDet(){
         importSearch.setName("namexx");
         importSearch.setDescription("desxx");
         JAXBElement<?> jaxbElement = new JAXBElement(new QName("eee","ee"), ImportSearchImpl.class,importSearch);
@@ -35,7 +35,7 @@ public class ImportSearchImplTest {
     }
 
     @Test
-    public void testGetCategoryDetails() throws Exception {
+    public void testGetCategoryDetails(){
 //        importSearch.getCategoryDetails();
 
 //        importSearch.setName("namexx");
@@ -58,13 +58,13 @@ public class ImportSearchImplTest {
     }
 
     @Test
-    public void testGetDescription() throws Exception {
+    public void testGetDescription(){
         importSearch.setDescription("descriptionxx");
         Assert.assertEquals(importSearch.getDescription(),"descriptionxx");
     }
 
     @Test
-    public void testGetFolderDet() throws Exception {
+    public void testGetFolderDet(){
         importSearch.setName("namexx");
         importSearch.setDescription("desxx");
         JAXBElement<?> jaxbElement = new JAXBElement(new QName("eee","ee"), ImportSearchImpl.class,importSearch);
@@ -73,7 +73,7 @@ public class ImportSearchImplTest {
     }
 
     @Test
-    public void testGetFolderDetails() throws Exception {
+    public void testGetFolderDetails(){
         FolderDetails folderDetails = new FolderDetails();
         folderDetails.setName("namexx");
         folderDetails.setDescription("desxx");
@@ -83,38 +83,38 @@ public class ImportSearchImplTest {
     }
 
     @Test
-    public void testGetId() throws Exception {
+    public void testGetId(){
         Integer integer = new Integer(111);
         importSearch.setId(integer);
         Assert.assertEquals(importSearch.getId(),integer);
     }
 
     @Test
-    public void testGetIsWidget() throws Exception {
+    public void testGetIsWidget(){
         importSearch.setIsWidget(true);
         Assert.assertTrue(importSearch.getIsWidget());
     }
 
     @Test
-    public void testGetMetadata() throws Exception {
+    public void testGetMetadata(){
         importSearch.setMetadata("metadataxx");
         Assert.assertEquals(importSearch.getMetadata(),"metadataxx");
     }
 
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName(){
         importSearch.setName("namexx");
         Assert.assertEquals(importSearch.getName(),"namexx");
     }
 
     @Test
-    public void testGetQueryStr() throws Exception {
+    public void testGetQueryStr(){
         importSearch.setQueryStr("QueryStrxx");
         Assert.assertEquals(importSearch.getQueryStr(),"QueryStrxx");
     }
 
     @Test
-    public void testGetSearch() throws Exception {
+    public void testGetSearch(){
         ImportSearchImpl.SearchParameters searchParameter = new ImportSearchImpl.SearchParameters();
         searchParameter.getSearchParameter().add(new SearchParameterDetails());
         searchParameter.getSearchParameter().add(new SearchParameterDetails());
@@ -123,20 +123,20 @@ public class ImportSearchImplTest {
     }
 
     @Test
-    public void testGetSearchParameters() throws Exception {
+    public void testGetSearchParameters(){
         ImportSearchImpl.SearchParameters searchParameter = new ImportSearchImpl.SearchParameters();
         importSearch.setSearchParameters(searchParameter);
         Assert.assertEquals(importSearch.getSearchParameters(),searchParameter);
     }
 
     @Test
-    public void testIsLocked() throws Exception {
+    public void testIsLocked(){
         importSearch.setLocked(true);
         Assert.assertTrue(importSearch.isLocked());
     }
 
     @Test
-    public void testIsUiHidden() throws Exception {
+    public void testIsUiHidden(){
         importSearch.setUiHidden(true);
         Assert.assertTrue(importSearch.isUiHidden());
     }

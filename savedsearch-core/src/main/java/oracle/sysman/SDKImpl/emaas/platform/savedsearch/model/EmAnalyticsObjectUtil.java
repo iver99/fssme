@@ -49,8 +49,9 @@ class EmAnalyticsObjectUtil
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
 
-		if (em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder)
-				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList().size() > 0) {
+		if (!em.createNamedQuery("Category.getCategoryByFolder").setParameter("id", folder)
+				.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList()
+				.isEmpty()) {
 			throw new EMAnalyticsFwkException("The folder can not be deleted as folder is associated with categories",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 		}
@@ -60,9 +61,9 @@ class EmAnalyticsObjectUtil
 			String parentFolder = "parentFolder";
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsFolder> folderList = em.createNamedQuery("Folder.getSubFolder").setParameter(parentFolder, folderObj)
-			.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
+					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
 
-			if (folderList.size() > 0) {
+			if (!folderList.isEmpty()) {
 				throw new EMAnalyticsFwkException("Sub folders founds", EMAnalyticsFwkException.ERR_DELETE_FOLDER, null);
 			}
 		}
@@ -81,9 +82,9 @@ class EmAnalyticsObjectUtil
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null) {
 				if (cateObj.getDeleted() == 0
-						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
-								|| cateObj.getOwner().equals("ORACLE") || cateObj.getOwner().equals(
-										TenantContext.getContext().getUsername()))) {
+						&& (RequestContext.getContext().equals(RequestType.INTERNAL_TENANT)
+								|| "ORACLE".equals(cateObj.getOwner()) || cateObj.getOwner().equals(
+								TenantContext.getContext().getUsername()))) {
 
 					return cateObj;
 				}
@@ -108,7 +109,7 @@ class EmAnalyticsObjectUtil
 
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null
-					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext()) || cateObj.getOwner().equals("ORACLE") || cateObj
+					&& (RequestContext.getContext().equals(RequestType.INTERNAL_TENANT) || "ORACLE".equals(cateObj.getOwner()) || cateObj
 							.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 				return cateObj;
@@ -169,13 +170,13 @@ class EmAnalyticsObjectUtil
 		}
 		List<Parameter> params = category.getParameters();
 		//Set<EmAnalyticsCategoryParam> paramSet = new HashSet<EmAnalyticsCategoryParam>();
-		if (params != null && params.size() != 0) {
+		if (params != null && !params.isEmpty()) {
 			Iterator<Parameter> paramIter = params.iterator();
 			while (paramIter.hasNext()) {
 				Parameter param = paramIter.next();
 				//parameter DASHBOARD_INELIGIBLE has been move into Category table as a column
 				if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
-					categoryObj.setDASHBOARD_INELIGIBLE(param.getValue());
+					categoryObj.setdashboardIneligible(param.getValue());
 					paramIter.remove();
 					continue;
 				}
@@ -243,7 +244,7 @@ class EmAnalyticsObjectUtil
 		while (paramIter.hasNext()) {
 			EmAnalyticsCategoryParam paramObj = paramIter.next();
 			if ("DASHBOARD_INELIGIBLE".equals(paramObj.getName())) {
-				categoryEntity.setDASHBOARD_INELIGIBLE(paramObj.getValue());
+				categoryEntity.setdashboardIneligible(paramObj.getValue());
 				paramIter.remove();
 				break;
 			}
@@ -426,7 +427,7 @@ class EmAnalyticsObjectUtil
 		List<SearchParameter> params = search.getParameters();
 		//move values from search_params table to search table
 		EmAnalyticsObjectUtil.moveParamsToSearchAdd(searchEntity, params);
-		if (params != null && params.size() != 0) {
+		if (params != null && !params.isEmpty()) {
 			for (SearchParameter param : params) {
 				EmAnalyticsSearchParam searchParamEntity = new EmAnalyticsSearchParam();
 				searchParamEntity.setEmAnalyticsSearch(searchEntity);
@@ -560,7 +561,7 @@ class EmAnalyticsObjectUtil
 					&& folderObj.getDeleted() == 0
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+									TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -604,11 +605,11 @@ class EmAnalyticsObjectUtil
 
 	public static EmAnalyticsFolder getRootFolder()
 	{
-		final String ROOT_FOLDER_NAME = "All Searches";
+		final String rootfoldername = "All Searches";
 		EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
 		Date utcNow = DateUtil.getCurrentUTCTime();
-		folderObj.setDescription(ROOT_FOLDER_NAME);
-		folderObj.setName(ROOT_FOLDER_NAME);
+		folderObj.setDescription(rootfoldername);
+		folderObj.setName(rootfoldername);
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
 		folderObj.setOwner(currentUser);
 		folderObj.setCreationDate(utcNow);
@@ -633,7 +634,7 @@ class EmAnalyticsObjectUtil
 				if (searchObj.getDeleted() == 0
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 								|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-								TenantContext.getContext().getUsername()))) {
+										TenantContext.getContext().getUsername()))) {
 
 					return searchObj;
 				}
@@ -672,7 +673,7 @@ class EmAnalyticsObjectUtil
 			if (searchObj != null
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+									TenantContext.getContext().getUsername()))) {
 				return searchObj;
 			}
 			else {
@@ -709,6 +710,91 @@ class EmAnalyticsObjectUtil
 			}
 		}
 		return false;
+	}
+
+	private static void moveParamsToSearchAdd(EmAnalyticsSearch searchEntity, List<SearchParameter> params)
+	{
+		if (params != null && !params.isEmpty()) {
+			Iterator<SearchParameter> paramIter = params.iterator();
+			while (paramIter.hasNext()) {
+				SearchParameter param = paramIter.next();
+				if ("WIDGET_SOURCE".equals(param.getName())) {
+					searchEntity.setWIDGET_SOURCE(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_GROUP_NAME".equals(param.getName())) {
+					searchEntity.setWIDGETGROUPNAME(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_SCREENSHOT_HREF".equals(param.getName())) {
+					searchEntity.setWIDGETSCREENSHOTHREF(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_ICON".equals(param.getName())) {
+					searchEntity.setWIDGETICON(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_KOC_NAME".equals(param.getName())) {
+					searchEntity.setWIDGETKOCNAME(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_VIEWMODEL".equals(param.getName())) {
+					searchEntity.setWIDGETVIEWMODEL(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_TEMPLATE".equals(param.getName())) {
+					searchEntity.setWIDGETTEMPLATE(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_SUPPORT_TIME_CONTROL".equals(param.getName())) {
+					searchEntity.setWIDGETSUPPORTTIMECONTROL(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_LINKED_DASHBOARD".equals(param.getName())) {
+					searchEntity.setWIDGETLINKEDDASHBOARD(Long.valueOf(param.getValue()));
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_DEFAULT_WIDTH".equals(param.getName())) {
+					searchEntity.setWIDGETDEFAULTWIDTH(Long.valueOf(param.getValue()));
+					paramIter.remove();
+					continue;
+				}
+				if ("WIDGET_DEFAULT_HEIGHT".equals(param.getName())) {
+					searchEntity.setWIDGETDEFAULTHEIGHT(Long.valueOf(param.getValue()));
+					paramIter.remove();
+					continue;
+				}
+				if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
+					searchEntity.setDASHBOARDINELIGIBLE(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("PROVIDER_NAME".equals(param.getName())) {
+					searchEntity.setPROVIDERNAME(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("PROVIDER_VERSION".equals(param.getName())) {
+					searchEntity.setPROVIDERVERSION(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+				if ("PROVIDER_ASSET_ROOT".equals(param.getName())) {
+					searchEntity.setPROVIDERASSETROOT(param.getValue());
+					paramIter.remove();
+					continue;
+				}
+			}
+		}
 	}
 
 	/* DEAD CODE
@@ -751,171 +837,90 @@ class EmAnalyticsObjectUtil
 	}
 	 */
 
-	private static void moveParamsToSearchAdd(EmAnalyticsSearch searchEntity, List<SearchParameter> params)
-	{
-		if (params != null && params.size() != 0) {
-			Iterator<SearchParameter> paramIter = params.iterator();
-			while (paramIter.hasNext()) {
-				SearchParameter param = paramIter.next();
-				if ("NAME_WIDGET_SOURCE".equals(param.getName())) {
-					searchEntity.setNAME_WIDGET_SOURCE(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_GROUP_NAME".equals(param.getName())) {
-					searchEntity.setWIDGET_GROUP_NAME(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_SCREENSHOT_HREF".equals(param.getName())) {
-					searchEntity.setWIDGET_SCREENSHOT_HREF(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_ICON".equals(param.getName())) {
-					searchEntity.setWIDGET_ICON(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_KOC_NAME".equals(param.getName())) {
-					searchEntity.setWIDGET_KOC_NAME(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_VIEWMODEL".equals(param.getName())) {
-					searchEntity.setWIDGET_VIEWMODEL(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_TEMPLATE".equals(param.getName())) {
-					searchEntity.setWIDGET_TEMPLATE(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_SUPPORT_TIME_CONTROL".equals(param.getName())) {
-					searchEntity.setWIDGET_SUPPORT_TIME_CONTROL(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_LINKED_DASHBOARD".equals(param.getName())) {
-					searchEntity.setWIDGET_LINKED_DASHBOARD(Long.valueOf(param.getValue()));
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_DEFAULT_WIDTH".equals(param.getName())) {
-					searchEntity.setWIDGET_DEFAULT_WIDTH(Long.valueOf(param.getValue()));
-					paramIter.remove();
-					continue;
-				}
-				if ("WIDGET_DEFAULT_HEIGHT".equals(param.getName())) {
-					searchEntity.setWIDGET_DEFAULT_HEIGHT(Long.valueOf(param.getValue()));
-					paramIter.remove();
-					continue;
-				}
-				if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
-					searchEntity.setDASHBOARD_INELIGIBLE(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("PROVIDER_NAME".equals(param.getName())) {
-					searchEntity.setPROVIDER_NAME(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("PROVIDER_VERSION".equals(param.getName())) {
-					searchEntity.setPROVIDER_VERSION(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-				if ("PROVIDER_ASSET_ROOT".equals(param.getName())) {
-					searchEntity.setPROVIDER_ASSET_ROOT(param.getValue());
-					paramIter.remove();
-					continue;
-				}
-			}
-		}
-	}
-
 	private static void moveParamsToSearchEdit(EmAnalyticsSearch searchEntity, Set<EmAnalyticsSearchParam> existingParams)
 	{
 		Iterator<EmAnalyticsSearchParam> paramIter = existingParams.iterator();
 		while (paramIter.hasNext()) {
 			EmAnalyticsSearchParam param = paramIter.next();
-			if ("NAME_WIDGET_SOURCE".equals(param.getName())) {
-				searchEntity.setNAME_WIDGET_SOURCE(param.getParamValueStr());
+			if ("WIDGET_SOURCE".equals(param.getName())) {
+				searchEntity.setWIDGET_SOURCE(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_GROUP_NAME".equals(param.getName())) {
-				searchEntity.setWIDGET_GROUP_NAME(param.getParamValueStr());
+				searchEntity.setWIDGETGROUPNAME(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_SCREENSHOT_HREF".equals(param.getName())) {
-				searchEntity.setWIDGET_SCREENSHOT_HREF(param.getParamValueStr());
+				searchEntity.setWIDGETSCREENSHOTHREF(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_ICON".equals(param.getName())) {
-				searchEntity.setWIDGET_ICON(param.getParamValueStr());
+				searchEntity.setWIDGETICON(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_KOC_NAME".equals(param.getName())) {
-				searchEntity.setWIDGET_KOC_NAME(param.getParamValueStr());
+				searchEntity.setWIDGETKOCNAME(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_VIEWMODEL".equals(param.getName())) {
-				searchEntity.setWIDGET_VIEWMODEL(param.getParamValueStr());
+				searchEntity.setWIDGETVIEWMODEL(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_TEMPLATE".equals(param.getName())) {
-				searchEntity.setWIDGET_TEMPLATE(param.getParamValueStr());
+				searchEntity.setWIDGETTEMPLATE(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_SUPPORT_TIME_CONTROL".equals(param.getName())) {
-				searchEntity.setWIDGET_SUPPORT_TIME_CONTROL(param.getParamValueStr());
+				searchEntity.setWIDGETSUPPORTTIMECONTROL(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_LINKED_DASHBOARD".equals(param.getName())) {
-				searchEntity.setWIDGET_LINKED_DASHBOARD(Long.valueOf(param.getParamValueStr()));
+				searchEntity.setWIDGETLINKEDDASHBOARD(Long.valueOf(param.getParamValueStr()));
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_DEFAULT_WIDTH".equals(param.getName())) {
-				searchEntity.setWIDGET_DEFAULT_WIDTH(Long.valueOf(param.getParamValueStr()));
+				searchEntity.setWIDGETDEFAULTWIDTH(Long.valueOf(param.getParamValueStr()));
 				paramIter.remove();
 				continue;
 			}
 			if ("WIDGET_DEFAULT_HEIGHT".equals(param.getName())) {
-				searchEntity.setWIDGET_DEFAULT_HEIGHT(Long.valueOf(param.getParamValueStr()));
+				searchEntity.setWIDGETDEFAULTHEIGHT(Long.valueOf(param.getParamValueStr()));
 				paramIter.remove();
 				continue;
 			}
 			if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
-				searchEntity.setDASHBOARD_INELIGIBLE(param.getParamValueStr());
+				searchEntity.setDASHBOARDINELIGIBLE(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("PROVIDER_NAME".equals(param.getName())) {
-				searchEntity.setPROVIDER_NAME(param.getParamValueStr());
+				searchEntity.setPROVIDERNAME(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("PROVIDER_VERSION".equals(param.getName())) {
-				searchEntity.setPROVIDER_VERSION(param.getParamValueStr());
+				searchEntity.setPROVIDERVERSION(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 			if ("PROVIDER_ASSET_ROOT".equals(param.getName())) {
-				searchEntity.setPROVIDER_ASSET_ROOT(param.getParamValueStr());
+				searchEntity.setPROVIDERASSETROOT(param.getParamValueStr());
 				paramIter.remove();
 				continue;
 			}
 		}
+	}
+
+	private EmAnalyticsObjectUtil()
+	{
 	}
 }

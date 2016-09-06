@@ -3,6 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +27,9 @@ public class JAXBUtil
 	private static String[] fields = { "id", "name", "description", "parentId", "uiHidden", "value", "type", "folderId",
 			"categoryId", "metadata", "defaultFolderId", "queryStr", "locked", "uiHidden", "isWidget", "providerName",
 			"providerVersion", "providerDiscovery", "providerAssetRoot" };
+
+	private JAXBUtil() {
+	}
 
 	public static JAXBContext getJAXBContext(Class<?> cls) throws Exception
 	{
@@ -111,7 +115,7 @@ public class JAXBUtil
 
 	public static Object unmarshal(Reader reader, InputStream schemaFile, JAXBContext jaxbcontext) throws ImportException
 	{
-		final ArrayList<String> errorList = new ArrayList<String>();
+		final List<String> errorList = new ArrayList<String>();
 		Object object = null;
 		try {
 			StreamSource xsdSource = null;
@@ -129,39 +133,31 @@ public class JAXBUtil
 						String msg = validationevent.getMessage();
 						Pattern pattern = Pattern.compile("(cvc.*)(:)");
 						Matcher matcher = pattern.matcher(msg);
-						if (msg.contains("cvc-complex-type.2.4.a") || msg.contains("cvc-complex-type.2.4.b")) {
-							if (matcher.find()) {
-								errLocation = "Error at line " + validationevent.getLocator().getLineNumber() + " , column "
-										+ validationevent.getLocator().getColumnNumber();
-								errorList.add(errLocation + "  " + msg.substring(matcher.end()) + " "
-										+ System.getProperty("line.separator"));
-
-							}
+						if ((msg.contains("cvc-complex-type.2.4.a") || msg.contains("cvc-complex-type.2.4.b")) && matcher.find()) {
+							errLocation = "Error at line " + validationevent.getLocator().getLineNumber() + " , column "
+									+ validationevent.getLocator().getColumnNumber();
+							errorList.add(errLocation + "  " + msg.substring(matcher.end()) + " "
+									+ System.getProperty("line.separator"));
 
 						}
 
-						if (msg.contains("cvc-complex-type.2.4.d")) {
-							if (matcher.find()) {
-								errLocation = "Error at line " + validationevent.getLocator().getLineNumber() + " , column "
-										+ validationevent.getLocator().getColumnNumber();
-								if (msg.contains("'Folder'")) {
+						if (msg.contains("cvc-complex-type.2.4.d") && matcher.find()) {
+							errLocation = "Error at line " + validationevent.getLocator().getLineNumber() + " , column "
+									+ validationevent.getLocator().getColumnNumber();
+							if (msg.contains("'Folder'")) {
 
-									errorList.add(errLocation + "  "
-											+ " Please specify either folder details or folder id not both" + " "
-											+ System.getProperty("line.separator"));
+								errorList.add(errLocation + "  "
+										+ " Please specify either folder details or folder id not both" + " "
+										+ System.getProperty("line.separator"));
 
-								}
-								else if (msg.contains("'Category'")) {
-									errorList.add(errLocation + "  "
-											+ " Please specify either category details or category id not both" + " "
-											+ System.getProperty("line.separator"));
+							} else if (msg.contains("'Category'")) {
+								errorList.add(errLocation + "  "
+										+ " Please specify either category details or category id not both" + " "
+										+ System.getProperty("line.separator"));
 
-								}
-								else {
-									errorList.add(errLocation + "  " + msg.substring(matcher.end()) + " "
-											+ System.getProperty("line.separator"));
-								}
-
+							} else {
+								errorList.add(errLocation + "  " + msg.substring(matcher.end()) + " "
+										+ System.getProperty("line.separator"));
 							}
 
 						}
@@ -181,11 +177,11 @@ public class JAXBUtil
 								}
 
 							}
-							if (!bResult && !errorList.contains(VALID_ERR_MESSAGE) && errorList.size() == 0) {
+							if (!bResult && !errorList.contains(VALID_ERR_MESSAGE) && errorList.isEmpty()) {
 								errorList.add(VALID_ERR_MESSAGE + System.getProperty("line.separator"));
 							}
 						}
-						else if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.size() == 0) {
+						else if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.isEmpty()) {
 							errorList.add(VALID_ERR_MESSAGE + System.getProperty("line.separator"));
 						}
 
@@ -199,15 +195,15 @@ public class JAXBUtil
 		}
 		catch (UnmarshalException e) {
 			e.printStackTrace();
-			if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.size() == 0) {
+			if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.isEmpty()) {
 				errorList.add(VALID_ERR_MESSAGE);
 			}
 		}
 		catch (JAXBException | SAXException e) {
 			e.printStackTrace();
 		}
-		if (errorList.size() > 0) {
-			StringBuffer errMsg = new StringBuffer();
+		if (!errorList.isEmpty()) {
+			StringBuilder errMsg = new StringBuilder();
 			for (String sError : errorList) {
 				errMsg.append(sError);
 			}

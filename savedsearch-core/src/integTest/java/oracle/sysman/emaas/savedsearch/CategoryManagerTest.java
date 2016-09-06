@@ -61,9 +61,6 @@ public class CategoryManagerTest extends BaseTest
             {
                 entityManager.find(EmAnalyticsFolder.class,anyLong);
                 result = new EmAnalyticsFolder();
-
-                entityManager.find(EmAnalyticsCategory.class,anyLong);
-                result = new EmAnalyticsCategory();
             }
         };
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
@@ -97,24 +94,12 @@ public class CategoryManagerTest extends BaseTest
 		search = objSearch.saveSearch(search);
 
 		// soft deletion test
-		try {
 			objCategory.deleteCategory(cat.getId(), false);
-		}
-		catch (EMAnalyticsFwkException e) {
-			AssertJUnit.fail();
-		}
+
 
 		// hard deletion test
 		boolean catchExpectedException = false;
-		try {
 			objCategory.deleteCategory(cat.getId(), true);
-		}
-		catch (EMAnalyticsFwkException e) {
-			if ("Error while deleting the category as it has associated searches".equals(e.getMessage())
-					&& EMAnalyticsFwkException.ERR_DELETE_CATEGORY == e.getErrorCode()) {
-				catchExpectedException = true;
-			}
-		}
         Assert.assertFalse(catchExpectedException);
 
 		objSearch.deleteSearch(search.getId(), true);

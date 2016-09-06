@@ -39,15 +39,15 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_SEARCH")
 @NamedQueries({
-		@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSearchListByFolderForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0 "),
-		@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSystemSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0  AND (e.owner in ('ORACLE') OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSearchListByCategoryForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 "),
-		@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.name = :searchName  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1)"),
-		@NamedQuery(name = "Search.getWidgetListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 AND e.isWidget = 1 AND (e.owner in (:userName) OR e.systemSearch =1) "),
-		@NamedQuery(name = "Search.getSearchListByTargetType", query = "SELECT e FROM EmAnalyticsSearch e WHERE e.name like :searchName AND (e.owner in (:userName) OR e.systemSearch =1) AND e.deleted=0") })
+	@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSearchListByFolderForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0 "),
+	@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSystemSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0  AND (e.owner in ('ORACLE') OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSearchListByCategoryForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 "),
+	@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.name = :searchName  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1)"),
+	@NamedQuery(name = "Search.getWidgetListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 AND e.isWidget = 1 AND (e.owner in (:userName) OR e.systemSearch =1) "),
+	@NamedQuery(name = "Search.getSearchListByTargetType", query = "SELECT e FROM EmAnalyticsSearch e WHERE e.name like :searchName AND (e.owner in (:userName) OR e.systemSearch =1) AND e.deleted=0") })
 @SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
 public class EmAnalyticsSearch implements Serializable
 {
@@ -119,8 +119,8 @@ public class EmAnalyticsSearch implements Serializable
 	@Column(name = "IS_WIDGET")
 	private long isWidget;
 
-	@Column(name = "NAME_WIDGET_SOURCE")
-	private String NAME_WIDGET_SOURCE;
+	@Column(name = "WIDGET_SOURCE")
+	private String WIDGET_SOURCE;
 
 	@Column(name = "WIDGET_GROUP_NAME")
 	private String WIDGET_GROUP_NAME;
@@ -167,14 +167,14 @@ public class EmAnalyticsSearch implements Serializable
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID"),
-			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
+		@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	//	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID")
 	private EmAnalyticsCategory emAnalyticsCategory;
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "FOLDER_ID", referencedColumnName = "FOLDER_ID"),
-			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
+		@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	//bi-directional many-to-one association to EmAnalyticsSearchParam
@@ -230,7 +230,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the dASHBOARD_INELIGIBLE
 	 */
-	public String getDASHBOARD_INELIGIBLE()
+	public String getDASHBOARDINELIGIBLE()
 	{
 		return DASHBOARD_INELIGIBLE;
 	}
@@ -324,14 +324,6 @@ public class EmAnalyticsSearch implements Serializable
 		return name;
 	}
 
-	/**
-	 * @return the nAME_WIDGET_SOURCE
-	 */
-	public String getNAME_WIDGET_SOURCE()
-	{
-		return NAME_WIDGET_SOURCE;
-	}
-
 	public String getNameNlsid()
 	{
 		return nameNlsid;
@@ -366,7 +358,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the pROVIDER_ASSET_ROOT
 	 */
-	public String getPROVIDER_ASSET_ROOT()
+	public String getPROVIDERASSETROOT()
 	{
 		return PROVIDER_ASSET_ROOT;
 	}
@@ -374,7 +366,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the pROVIDER_NAME
 	 */
-	public String getPROVIDER_NAME()
+	public String getPROVIDERNAME()
 	{
 		return PROVIDER_NAME;
 	}
@@ -386,7 +378,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the pROVIDER_VERSION
 	 */
-	public String getPROVIDER_VERSION()
+	public String getPROVIDERVERSION()
 	{
 		return PROVIDER_VERSION;
 	}
@@ -412,9 +404,17 @@ public class EmAnalyticsSearch implements Serializable
 	}
 
 	/**
+	 * @return the wIDGET_SOURCE
+	 */
+	public String getWIDGET_SOURCE()
+	{
+		return WIDGET_SOURCE;
+	}
+
+	/**
 	 * @return the wIDGET_DEFAULT_HEIGHT
 	 */
-	public long getWIDGET_DEFAULT_HEIGHT()
+	public long getWIDGETDEFAULTHEIGHT()
 	{
 		return WIDGET_DEFAULT_HEIGHT;
 	}
@@ -422,7 +422,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_DEFAULT_WIDTH
 	 */
-	public long getWIDGET_DEFAULT_WIDTH()
+	public long getWIDGETDEFAULTWIDTH()
 	{
 		return WIDGET_DEFAULT_WIDTH;
 	}
@@ -430,7 +430,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_GROUP_NAME
 	 */
-	public String getWIDGET_GROUP_NAME()
+	public String getWIDGETGROUPNAME()
 	{
 		return WIDGET_GROUP_NAME;
 	}
@@ -438,7 +438,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_ICON
 	 */
-	public String getWIDGET_ICON()
+	public String getWIDGETICON()
 	{
 		return WIDGET_ICON;
 	}
@@ -446,7 +446,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_KOC_NAME
 	 */
-	public String getWIDGET_KOC_NAME()
+	public String getWIDGETKOCNAME()
 	{
 		return WIDGET_KOC_NAME;
 	}
@@ -454,17 +454,9 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_LINKED_DASHBOARD
 	 */
-	public long getWIDGET_LINKED_DASHBOARD()
+	public long getWIDGETLINKEDDASHBOARD()
 	{
 		return WIDGET_LINKED_DASHBOARD;
-	}
-
-	/**
-	 * @return the wIDGET_SCREENSHOT_HREF
-	 */
-	public String getWIDGET_SCREENSHOT_HREF()
-	{
-		return WIDGET_SCREENSHOT_HREF;
 	}
 
 	//	/**
@@ -477,9 +469,17 @@ public class EmAnalyticsSearch implements Serializable
 	//	}
 
 	/**
+	 * @return the wIDGET_SCREENSHOT_HREF
+	 */
+	public String getWIDGETSCREENSHOTHREF()
+	{
+		return WIDGET_SCREENSHOT_HREF;
+	}
+
+	/**
 	 * @return the wIDGET_SUPPORT_TIME_CONTROL
 	 */
-	public String getWIDGET_SUPPORT_TIME_CONTROL()
+	public String getWIDGETSUPPORTTIMECONTROL()
 	{
 		return WIDGET_SUPPORT_TIME_CONTROL;
 	}
@@ -487,7 +487,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_TEMPLATE
 	 */
-	public String getWIDGET_TEMPLATE()
+	public String getWIDGETTEMPLATE()
 	{
 		return WIDGET_TEMPLATE;
 	}
@@ -495,18 +495,9 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the wIDGET_VIEWMODEL
 	 */
-	public String getWIDGET_VIEWMODEL()
+	public String getWIDGETVIEWMODEL()
 	{
 		return WIDGET_VIEWMODEL;
-	}
-
-	public void setAccessDate(Date accessDate)
-	{
-		if (lastAccess == null) {
-			lastAccess = new EmAnalyticsSearchLastAccess(getId(), getOwner());
-			lastAccess.setEmAnalyticsSearch(this);
-		}
-		lastAccess.setAccessDate(accessDate);
 	}
 
 	//	public void setObjectId(long objectId)
@@ -519,18 +510,27 @@ public class EmAnalyticsSearch implements Serializable
 	//		this.objectType = objectType;
 	//	}
 
+	public void setAccessDate(Date accessDate)
+	{
+		if (lastAccess == null) {
+			lastAccess = new EmAnalyticsSearchLastAccess(getId(), getOwner());
+			lastAccess.setEmAnalyticsSearch(this);
+		}
+		lastAccess.setAccessDate(accessDate);
+	}
+
 	public void setCreationDate(Date creationDate)
 	{
 		this.creationDate = creationDate;
 	}
 
 	/**
-	 * @param dASHBOARD_INELIGIBLE
+	 * @param dashboardIneligible
 	 *            the dASHBOARD_INELIGIBLE to set
 	 */
-	public void setDASHBOARD_INELIGIBLE(String dASHBOARD_INELIGIBLE)
+	public void setDASHBOARDINELIGIBLE(String dashboardIneligible)
 	{
-		DASHBOARD_INELIGIBLE = dASHBOARD_INELIGIBLE;
+		DASHBOARD_INELIGIBLE = dashboardIneligible;
 	}
 
 	public void setDeleted(long deleted)
@@ -612,15 +612,6 @@ public class EmAnalyticsSearch implements Serializable
 		this.name = name;
 	}
 
-	/**
-	 * @param nAME_WIDGET_SOURCE
-	 *            the nAME_WIDGET_SOURCE to set
-	 */
-	public void setNAME_WIDGET_SOURCE(String nAME_WIDGET_SOURCE)
-	{
-		NAME_WIDGET_SOURCE = nAME_WIDGET_SOURCE;
-	}
-
 	public void setNameNlsid(String nameNlsid)
 	{
 		this.nameNlsid = nameNlsid;
@@ -637,30 +628,30 @@ public class EmAnalyticsSearch implements Serializable
 	}
 
 	/**
-	 * @param pROVIDER_ASSET_ROOT
+	 * @param providerAssetRoot
 	 *            the pROVIDER_ASSET_ROOT to set
 	 */
-	public void setPROVIDER_ASSET_ROOT(String pROVIDER_ASSET_ROOT)
+	public void setPROVIDERASSETROOT(String providerAssetRoot)
 	{
-		PROVIDER_ASSET_ROOT = pROVIDER_ASSET_ROOT;
+		PROVIDER_ASSET_ROOT = providerAssetRoot;
 	}
 
 	/**
-	 * @param pROVIDER_NAME
+	 * @param providerName
 	 *            the pROVIDER_NAME to set
 	 */
-	public void setPROVIDER_NAME(String pROVIDER_NAME)
+	public void setPROVIDERNAME(String providerName)
 	{
-		PROVIDER_NAME = pROVIDER_NAME;
+		PROVIDER_NAME = providerName;
 	}
 
 	/**
-	 * @param pROVIDER_VERSION
+	 * @param providerVersion
 	 *            the pROVIDER_VERSION to set
 	 */
-	public void setPROVIDER_VERSION(String pROVIDER_VERSION)
+	public void setPROVIDERVERSION(String providerVersion)
 	{
-		PROVIDER_VERSION = pROVIDER_VERSION;
+		PROVIDER_VERSION = providerVersion;
 	}
 
 	public void setSearchDisplayStr(String searchDisplayStr)
@@ -684,93 +675,102 @@ public class EmAnalyticsSearch implements Serializable
 	}
 
 	/**
-	 * @param wIDGET_DEFAULT_HEIGHT
+	 * @param wIDGET_SOURCE
+	 *            the wIDGET_SOURCE to set
+	 */
+	public void setWIDGET_SOURCE(String wIDGET_SOURCE)
+	{
+		WIDGET_SOURCE = wIDGET_SOURCE;
+	}
+
+	/**
+	 * @param widgetDefaultHeight
 	 *            the wIDGET_DEFAULT_HEIGHT to set
 	 */
-	public void setWIDGET_DEFAULT_HEIGHT(long wIDGET_DEFAULT_HEIGHT)
+	public void setWIDGETDEFAULTHEIGHT(long widgetDefaultHeight)
 	{
-		WIDGET_DEFAULT_HEIGHT = wIDGET_DEFAULT_HEIGHT;
+		WIDGET_DEFAULT_HEIGHT = widgetDefaultHeight;
 	}
 
 	/**
-	 * @param wIDGET_DEFAULT_WIDTH
+	 * @param widgetDefaultWidth
 	 *            the wIDGET_DEFAULT_WIDTH to set
 	 */
-	public void setWIDGET_DEFAULT_WIDTH(long wIDGET_DEFAULT_WIDTH)
+	public void setWIDGETDEFAULTWIDTH(long widgetDefaultWidth)
 	{
-		WIDGET_DEFAULT_WIDTH = wIDGET_DEFAULT_WIDTH;
+		WIDGET_DEFAULT_WIDTH = widgetDefaultWidth;
 	}
 
 	/**
-	 * @param wIDGET_GROUP_NAME
+	 * @param widgetGroupName
 	 *            the wIDGET_GROUP_NAME to set
 	 */
-	public void setWIDGET_GROUP_NAME(String wIDGET_GROUP_NAME)
+	public void setWIDGETGROUPNAME(String widgetGroupName)
 	{
-		WIDGET_GROUP_NAME = wIDGET_GROUP_NAME;
+		WIDGET_GROUP_NAME = widgetGroupName;
 	}
 
 	/**
-	 * @param wIDGET_ICON
+	 * @param widgetIcon
 	 *            the wIDGET_ICON to set
 	 */
-	public void setWIDGET_ICON(String wIDGET_ICON)
+	public void setWIDGETICON(String widgetIcon)
 	{
-		WIDGET_ICON = wIDGET_ICON;
+		WIDGET_ICON = widgetIcon;
 	}
 
 	/**
-	 * @param wIDGET_KOC_NAME
+	 * @param widgetKocName
 	 *            the wIDGET_KOC_NAME to set
 	 */
-	public void setWIDGET_KOC_NAME(String wIDGET_KOC_NAME)
+	public void setWIDGETKOCNAME(String widgetKocName)
 	{
-		WIDGET_KOC_NAME = wIDGET_KOC_NAME;
+		WIDGET_KOC_NAME = widgetKocName;
 	}
 
 	/**
-	 * @param wIDGET_LINKED_DASHBOARD
+	 * @param widgetLinkedDashboard
 	 *            the wIDGET_LINKED_DASHBOARD to set
 	 */
-	public void setWIDGET_LINKED_DASHBOARD(long wIDGET_LINKED_DASHBOARD)
+	public void setWIDGETLINKEDDASHBOARD(long widgetLinkedDashboard)
 	{
-		WIDGET_LINKED_DASHBOARD = wIDGET_LINKED_DASHBOARD;
+		WIDGET_LINKED_DASHBOARD = widgetLinkedDashboard;
 	}
 
 	/**
-	 * @param wIDGET_SCREENSHOT_HREF
+	 * @param widgetScreenshotHref
 	 *            the wIDGET_SCREENSHOT_HREF to set
 	 */
-	public void setWIDGET_SCREENSHOT_HREF(String wIDGET_SCREENSHOT_HREF)
+	public void setWIDGETSCREENSHOTHREF(String widgetScreenshotHref)
 	{
-		WIDGET_SCREENSHOT_HREF = wIDGET_SCREENSHOT_HREF;
+		WIDGET_SCREENSHOT_HREF = widgetScreenshotHref;
 	}
 
 	/**
-	 * @param wIDGET_SUPPORT_TIME_CONTROL
+	 * @param widgetSupportTimeControl
 	 *            the wIDGET_SUPPORT_TIME_CONTROL to set
 	 */
-	public void setWIDGET_SUPPORT_TIME_CONTROL(String wIDGET_SUPPORT_TIME_CONTROL)
+	public void setWIDGETSUPPORTTIMECONTROL(String widgetSupportTimeControl)
 	{
-		WIDGET_SUPPORT_TIME_CONTROL = wIDGET_SUPPORT_TIME_CONTROL;
+		WIDGET_SUPPORT_TIME_CONTROL = widgetSupportTimeControl;
 	}
 
 	/**
-	 * @param wIDGET_TEMPLATE
+	 * @param widgetTemplate
 	 *            the wIDGET_TEMPLATE to set
 	 */
-	public void setWIDGET_TEMPLATE(String wIDGET_TEMPLATE)
+	public void setWIDGETTEMPLATE(String widgetTemplate)
 	{
-		WIDGET_TEMPLATE = wIDGET_TEMPLATE;
+		WIDGET_TEMPLATE = widgetTemplate;
 	}
 
 	/**
-	 * @param wIDGET_VIEWMODEL
+	 * @param widgetViewmodel
 	 *            the wIDGET_VIEWMODEL to set
 	 */
-	public void setWIDGET_VIEWMODEL(String wIDGET_VIEWMODEL)
+	public void setWIDGETVIEWMODEL(String widgetViewmodel)
 	{
-		WIDGET_VIEWMODEL = wIDGET_VIEWMODEL;
+		WIDGET_VIEWMODEL = widgetViewmodel;
 	}
 
 }

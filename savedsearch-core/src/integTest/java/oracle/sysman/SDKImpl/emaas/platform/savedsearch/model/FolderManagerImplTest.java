@@ -29,20 +29,21 @@ import java.util.List;
 public class FolderManagerImplTest {
 
     FolderManagerImpl folderManager;
-
+    @Mocked
+    Throwable throwable;
     @BeforeMethod
-    public void testGetInstance() throws Exception {
+    public void testGetInstance() {
         folderManager = FolderManagerImpl.getInstance();
     }
 
     @Test
-    public void testCreateNewFolder() throws Exception {
+    public void testCreateNewFolder() {
         Assert.assertTrue(folderManager.createNewFolder() instanceof FolderImpl);
     }
 
-    @Test
-    public void testDeleteFolder_EMAnalyticsFwkException(@Mocked EMAnalyticsFwkException ee, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
-        new Expectations(){
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testDeleteFolder_EMAnalyticsFwkException(@Mocked EMAnalyticsFwkException ee, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -50,168 +51,155 @@ public class FolderManagerImplTest {
                 result = entityManager;
             }
         };
-        try {
-            folderManager.deleteFolder(1234, true);
-        }catch (Exception e){
-
-        }
+        folderManager.deleteFolder(1234, true);
     }
 
-    @Test
-    public void testDeleteFolder_Exception(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testDeleteFolderException(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
-        try {
-            folderManager.deleteFolder(1234, true);
-        }catch (Exception e){
 
-        }
+        folderManager.deleteFolder(1234, true);
+
     }
 
-    @Test
-    public void testDeleteFolder_EMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testDeleteFolderEMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                        @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+                                                        @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderByIdForDelete(anyLong,entityManager);
+                EmAnalyticsObjectUtil.getFolderByIdForDelete(anyLong, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(1);
             }
         };
-        try {
-            folderManager.deleteFolder(1234, true);
-        }catch (Exception e){
-
-        }
+        folderManager.deleteFolder(1234, true);
     }
 
     @Test
-    public void testDeleteFolder(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    public void testDeleteFolder(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                 @Mocked final PersistenceManager persistenceManager,
+                                 @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext,
+                                 @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderByIdForDelete(anyLong,entityManager);
+                EmAnalyticsObjectUtil.getFolderByIdForDelete(anyLong, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(100);
             }
         };
-            folderManager.deleteFolder(1234, true);
-            folderManager.deleteFolder(1234, false);
-
+        folderManager.deleteFolder(1234, true);
+        folderManager.deleteFolder(1234, false);
     }
 
-    @Test
-    public void testGetFolder_Exception(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testGetFolderException(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+                                       @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
-        try {
-            folderManager.getFolder(1234);
-        }catch (Exception e){
-
-        }
+        folderManager.getFolder(1234);
     }
 
-    @Test
-    public void testGetFolder_EMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testGetFolderEMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                     @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+                                                     @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderById(anyLong,entityManager);
+                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
                 result = null;
 //                emAnalyticsFolder.getSystemFolder();
 //                result = new BigDecimal(100);
             }
         };
-        try {
-            folderManager.getFolder(1234);
-        }catch (Exception e){
-
-        }
+        folderManager.getFolder(1234);
     }
 
     @Test
-    public void testGetFolder_noException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    public void testGetFolderNoException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                         @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+                                         @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderById(anyLong,entityManager);
+                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(100);
             }
         };
-        try {
-            folderManager.getFolder(1234);
-        }catch (Exception e){
-
-        }
+        folderManager.getFolder(1234);
     }
 
     @Test
-    public void testGetPathForFolderId(@Mocked final EmAnalyticsFolder emAnalyticsFolder,@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    public void testGetPathForFolderId(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                       @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+                                       @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderById(anyLong,entityManager);
+                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getEmAnalyticsFolder();
-                returns(emAnalyticsFolder,emAnalyticsFolder,emAnalyticsFolder,emAnalyticsFolder,null);
+                returns(emAnalyticsFolder, emAnalyticsFolder, emAnalyticsFolder, emAnalyticsFolder, null);
+            }
+        };
+        folderManager.getPathForFolderId(1234);
+    }
+
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testGetPathForFolderIdException(@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
+                result = new Exception(throwable);
             }
         };
         folderManager.getPathForFolderId(1234);
     }
 
     @Test
-    public void testGetPathForFolderId_Exception(@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
-        new Expectations(){
-            {
-                PersistenceManager.getInstance();
-                result = persistenceManager;
-                persistenceManager.getEntityManager((TenantInfo) any);
-                result = entityManager;
-                EmAnalyticsObjectUtil.getFolderById(anyLong,entityManager);
-                result = new Exception();
-            }
-        };
-        try {
-            folderManager.getPathForFolderId(1234);
-        }catch (Exception e){
-
-        }
-    }
-
-    @Test
-    public void testGetRootFolder(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked final Query query, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    public void testGetRootFolder(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked final Query query,
+                                  @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
+                                  @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -223,7 +211,7 @@ public class FolderManagerImplTest {
                 result = "userName";
                 entityManager.createNamedQuery(anyString);
                 result = query;
-                query.setParameter(anyString,anyString);
+                query.setParameter(anyString, anyString);
                 result = query;
                 query.getSingleResult();
                 result = emAnalyticsFolder;
@@ -236,8 +224,10 @@ public class FolderManagerImplTest {
 
 
     @Test
-    public void testGetRootFolder_NoResultException(@Mocked final Query query, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    public void testGetRootFolderNoResultException(@Mocked final Query query, @Mocked final PersistenceManager persistenceManager,
+                                                   @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext,
+                                                   @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -249,20 +239,21 @@ public class FolderManagerImplTest {
                 result = "userName";
                 entityManager.createNamedQuery(anyString);
                 result = query;
-                query.setParameter(anyString,anyString);
+                query.setParameter(anyString, anyString);
                 result = query;
                 query.getSingleResult();
                 result = new NoResultException();
             }
         };
-        try {
-            folderManager.getRootFolder();
-        }catch (Exception e){}
+        folderManager.getRootFolder();
     }
 
     @Test
-    public void testGetSubFolders_folderIdST0(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked final Query query, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
-        new Expectations(){
+    public void testGetSubFoldersFolderIdST0(@Mocked final EmAnalyticsFolder emAnalyticsFolder,
+                                             @Mocked final Query query, @Mocked final PersistenceManager persistenceManager,
+                                             @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext,
+                                             @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -274,7 +265,7 @@ public class FolderManagerImplTest {
                 result = "userName";
                 entityManager.createNamedQuery(anyString);
                 result = query;
-                query.setParameter(anyString,anyString);
+                query.setParameter(anyString, anyString);
                 result = query;
 //                query.getSingleResult();
 //                result = emAnalyticsFolder;
@@ -284,11 +275,14 @@ public class FolderManagerImplTest {
     }
 
     @Test
-    public void testGetSubFolders_folderIdLT0(@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked final Query query, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
+    public void testGetSubFoldersFolderIdLT0(@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final EmAnalyticsFolder emAnalyticsFolder,
+                                             @Mocked final Query query, @Mocked final PersistenceManager persistenceManager,
+                                             @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext,
+                                             @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
         final List<EmAnalyticsFolder> folderList = new ArrayList<>();
         folderList.add(emAnalyticsFolder);
         folderList.add(emAnalyticsFolder);
-        new Expectations(){
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -296,13 +290,13 @@ public class FolderManagerImplTest {
                 result = entityManager;
                 TenantContext.getContext();
                 result = tenantInfo;
-                EmAnalyticsObjectUtil.getFolderById(anyLong,entityManager);
+                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
                 result = emAnalyticsFolder;
                 tenantInfo.getUsername();
                 result = "userName";
                 entityManager.createNamedQuery(anyString);
                 result = query;
-                query.setParameter(anyString,anyString);
+                query.setParameter(anyString, anyString);
                 result = query;
                 query.getResultList();
                 result = folderList;
@@ -313,12 +307,15 @@ public class FolderManagerImplTest {
         folderManager.getSubFolders(1);
     }
 
-    @Test
-    public void testGetSubFolders_Exception(@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked final Query query, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws Exception {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testGetSubFoldersException(@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final EmAnalyticsFolder emAnalyticsFolder,
+                                           @Mocked final Query query, @Mocked final PersistenceManager persistenceManager,
+                                           @Mocked final EntityManager entityManager, @Mocked TenantContext tenantContext,
+                                           @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
         final List<EmAnalyticsFolder> folderList = new ArrayList<>();
         folderList.add(emAnalyticsFolder);
         folderList.add(emAnalyticsFolder);
-        new Expectations(){
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -326,91 +323,85 @@ public class FolderManagerImplTest {
                 result = entityManager;
                 TenantContext.getContext();
                 result = tenantInfo;
-                EmAnalyticsObjectUtil.getFolderById(anyLong,entityManager);
+                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
                 result = emAnalyticsFolder;
                 tenantInfo.getUsername();
                 result = "userName";
                 entityManager.createNamedQuery(anyString);
                 result = query;
-                query.setParameter(anyString,anyString);
+                query.setParameter(anyString, anyString);
                 result = query;
                 query.getResultList();
                 result = folderList;
                 emAnalyticsFolder.getSystemFolder();
-                result = new EMAnalyticsFwkException(new Throwable());
+                result = new EMAnalyticsFwkException(throwable);
             }
         };
-        try {
-            folderManager.getSubFolders(1);
-        }catch (Exception e){}
+        folderManager.getSubFolders(1);
     }
 
-    @Test
-    public void testSaveFolder_EMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
-        new Expectations(){
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testSaveFolderEMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                      @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd((Folder)any,entityManager);
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd((Folder) any, entityManager);
                 result = emAnalyticsFolder;
             }
         };
-        try {
-            folderManager.saveFolder(new FolderImpl());
-        }catch (Exception e){}
+        folderManager.saveFolder(new FolderImpl());
     }
 
-    @Test
-    public void testSaveFolder_PersistenceException(@Mocked final PersistenceManager persistenceManager) throws Exception {
-        new Expectations(){
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testSaveFolderPersistenceException(@Mocked final PersistenceManager persistenceManager) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
-                result = new PersistenceException();
+                result = new PersistenceException(throwable);
             }
         };
-        try {
-            folderManager.saveFolder(new FolderImpl());
-        }catch (Exception e){}
+        folderManager.saveFolder(new FolderImpl());
     }
 
     @Test
-    public void testSaveFolder_noneException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
-        new Expectations(){
+    public void testSaveFolderNoneException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                            @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd((Folder)any,entityManager);
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd((Folder) any, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(11);
             }
         };
-        try {
-            folderManager.saveFolder(new FolderImpl());
-        }catch (Exception e){}
+        folderManager.saveFolder(new FolderImpl());
     }
 
-    @Test
-    public void testSaveFolder_Exception(@Mocked final PersistenceManager persistenceManager) throws Exception {
-        new Expectations(){
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testSaveFolderException(@Mocked final PersistenceManager persistenceManager) throws EMAnalyticsFwkException {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
-        try {
-            folderManager.saveFolder(new FolderImpl());
-        }catch (Exception e){}
+        folderManager.saveFolder(new FolderImpl());
     }
 
 
     @Test
-    public void testSaveMultipleFolders_EMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final Folder folder, @Mocked final FolderDetails folderDetails, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
-        new Expectations(){
+    public void testSaveMultipleFoldersEMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                               @Mocked final Folder folder, @Mocked final FolderDetails folderDetails,
+                                                               @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -420,7 +411,7 @@ public class FolderManagerImplTest {
                 result = folder;
                 folder.getId();
                 result = 111;
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder,entityManager);
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, entityManager);
                 result = emAnalyticsFolder;
 
             }
@@ -432,9 +423,11 @@ public class FolderManagerImplTest {
     }
 
     @Test
-    public void testSaveMultipleFolders_hasfolderId(@Mocked final FolderImpl folder, @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final FolderDetails folderDetails, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+    public void testSaveMultipleFoldersHasfolderId(@Mocked final FolderImpl folder, @Mocked final EmAnalyticsFolder emAnalyticsFolder,
+                                                   @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final FolderDetails folderDetails,
+                                                   @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
 
-        new Expectations(){
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -444,7 +437,7 @@ public class FolderManagerImplTest {
                 result = folder;
                 folder.getId();
                 result = 111;
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder,entityManager);
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, entityManager);
                 result = emAnalyticsFolder;
                 withAny(emAnalyticsFolder).getSystemFolder();
                 result = new BigDecimal(1123);
@@ -457,9 +450,13 @@ public class FolderManagerImplTest {
     }
 
     @Test
-    public void testSaveMultipleFolders_nofolderId(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final Query query, @Mocked final FolderImpl folder, @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final FolderDetails folderDetails, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+    public void testSaveMultipleFoldersNofolderId(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+                                                  @Mocked final Query query, @Mocked final FolderImpl folder,
+                                                  @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                  @Mocked final FolderDetails folderDetails, @Mocked final PersistenceManager persistenceManager,
+                                                  @Mocked final EntityManager entityManager) throws Exception {
 
-        new Expectations(){
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -479,9 +476,9 @@ public class FolderManagerImplTest {
                 result = "userName";
                 entityManager.createNamedQuery(anyString);
                 result = query;
-                query.setParameter(anyString,anyString);
+                query.setParameter(anyString, anyString);
                 result = query;
-                query.setParameter(anyString,(EmAnalyticsFolder)any);
+                query.setParameter(anyString, (EmAnalyticsFolder) any);
                 result = query;
                 query.getSingleResult();
                 result = emAnalyticsFolder;
@@ -494,9 +491,13 @@ public class FolderManagerImplTest {
     }
 
     @Test
-    public void testSaveMultipleFolders_NoResultException(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final Query query, @Mocked final FolderImpl folder, @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final FolderDetails folderDetails, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+    public void testSaveMultipleFoldersNoResultException(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+                                                         @Mocked final Query query, @Mocked final FolderImpl folder,
+                                                         @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                         @Mocked final FolderDetails folderDetails, @Mocked final PersistenceManager persistenceManager,
+                                                         @Mocked final EntityManager entityManager) throws Exception {
 
-        new Expectations(){
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -516,9 +517,9 @@ public class FolderManagerImplTest {
                 result = "userName";
                 entityManager.createNamedQuery(anyString);
                 result = query;
-                query.setParameter(anyString,anyString);
+                query.setParameter(anyString, anyString);
                 result = query;
-                query.setParameter(anyString,(EmAnalyticsFolder)any);
+                query.setParameter(anyString, (EmAnalyticsFolder) any);
                 result = query;
                 query.getSingleResult();
                 result = new NoResultException();
@@ -530,23 +531,23 @@ public class FolderManagerImplTest {
         folderManager.saveMultipleFolders(folderDetailsList);
     }
 
-    @Test
-    public void testSaveMultipleFolders_Exception(@Mocked final PersistenceManager persistenceManager) throws Exception {
-        new Expectations(){
+    @Test(expectedExceptions = {Exception.class})
+    public void testSaveMultipleFoldersException(@Mocked final PersistenceManager persistenceManager) throws Exception {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
         List<FolderDetails> folderDetailsList = new ArrayList<>();
-        try {
-            folderManager.saveMultipleFolders(folderDetailsList);
-        }catch (Exception e){}
+        folderManager.saveMultipleFolders(folderDetailsList);
     }
 
     @Test
-    public void testSaveMultipleFolders_PersistenceException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final Folder folder, @Mocked final FolderDetails folderDetails, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
-        new Expectations(){
+    public void testSaveMultipleFoldersPersistenceException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                            @Mocked final Folder folder, @Mocked final FolderDetails folderDetails,
+                                                            @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+        new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
@@ -558,7 +559,7 @@ public class FolderManagerImplTest {
                 result = 111;
                 folder.getName();
                 result = "namexx";
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder,entityManager);
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, entityManager);
                 result = new PersistenceException();
 
             }
@@ -569,96 +570,77 @@ public class FolderManagerImplTest {
         folderManager.saveMultipleFolders(folderDetailsList);
     }
 
-    @Test
-    public void testUpdateFolder_EMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testUpdateFolderEMAnalyticsFwkException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                        @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder)any,entityManager);
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder) any, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(1);
             }
         };
         FolderImpl folder = new FolderImpl();
-        try {
-            folderManager.updateFolder(null);
-        }catch (Exception e){}
+        folderManager.updateFolder(null);
     }
 
-    @Test
-    public void testUpdateFolder_processUniqueConstraints(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final Query query, @Mocked final PersistenceException pe, @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testUpdateFolderProcessUniqueConstraints(@Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+                                                         @Mocked final Query query,
+                                                         @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                         @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder)any,entityManager);
-                result = pe;;
-                pe.getCause();
-                result = "ANALYTICS_FOLDERS_U01";
-                EmAnalyticsObjectUtil.getFolderById(anyLong,entityManager);
-                result = emAnalyticsFolder;
-                entityManager.createNamedQuery(anyString);
-                result = query;
-                query.setParameter(anyString,emAnalyticsFolder);
-                result = query;
-                query.setParameter(anyString,anyString);
-                result = query;
-                query.getSingleResult();
-                result = emAnalyticsFolder;
-                emAnalyticsFolder.getFolderId();
-                result = 1234L;
-                emAnalyticsFolder.getName();
-                result = "namexx";
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getUsername();
-                result = "userName";
-
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder) any, entityManager);
+                result = new PersistenceException(throwable);  
             }
         };
         FolderImpl folder = new FolderImpl();
         folder.setParentId(1234);
-        try {
-            folderManager.updateFolder(folder);
-        }catch (Exception e){}
+        folderManager.updateFolder(folder);
     }
 
-    @Test
-    public void testUpdateFolder_PersistenceException(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo, @Mocked final Query query, @Mocked final PersistenceException pe, @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testUpdateFolderPersistenceException(@Mocked TenantContext tenantContext, @Mocked final TenantInfo tenantInfo,
+                                                     @Mocked final Query query, @Mocked final PersistenceException pe,
+                                                     @Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                                     @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder)any,entityManager);
-                result = pe;;
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder) any, entityManager);
+                result = pe;
                 pe.getCause();
                 result = null;
             }
         };
         FolderImpl folder = new FolderImpl();
         folder.setParentId(1234);
-        try {
-            folderManager.updateFolder(folder);
-        }catch (Exception e){}
+        folderManager.updateFolder(folder);
     }
 
     @Test
-    public void testUpdateFolder(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+    public void testUpdateFolder(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                 @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder)any,entityManager);
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder) any, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(222);
@@ -668,24 +650,23 @@ public class FolderManagerImplTest {
         folderManager.updateFolder(null);
     }
 
-    @Test
-    public void testUpdateFolder_Exception(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws Exception {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testUpdateFolderException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
+                                          @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder)any,entityManager);
+                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit((Folder) any, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
-                result = new Exception();
+                result = new Exception(throwable);
             }
         };
         FolderImpl folder = new FolderImpl();
-        try {
-            folderManager.updateFolder(folder);
-        }catch (Exception e){}
+        folderManager.updateFolder(folder);
     }
 
 }

@@ -2,10 +2,9 @@ package oracle.sysman.emaas.platform.savedsearch.services;
 
 import java.util.List;
 
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
+import javax.management.*;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -29,16 +28,17 @@ import weblogic.application.ApplicationLifecycleEvent;
 public class RegistryServiceManagerTest
 {
 	RegistryServiceManager registryServiceManager;
-
+	@Mocked
+	ApplicationLifecycleEvent applicationLifecycleEvent;
 	@Test
-	public void testGetName() throws Exception
+	public void testGetName()
 	{
 		registryServiceManager = new RegistryServiceManager();
 		Assert.assertEquals(registryServiceManager.getName(), "Service Registry Service");
 	}
 
 	@Test
-	public void testIsRegistrationComplete() throws Exception
+	public void testIsRegistrationComplete()
 	{
 		registryServiceManager = new RegistryServiceManager();
 		registryServiceManager.setRegistrationComplete(true);
@@ -48,7 +48,7 @@ public class RegistryServiceManagerTest
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testMakeServiceOutOfService(@Mocked final RegistrationManager registrationManager,
-			@Mocked final RegistrationClient registrationClient) throws Exception
+			@Mocked final RegistrationClient registrationClient)
 	{
 		new Expectations() {
 			{
@@ -67,7 +67,7 @@ public class RegistryServiceManagerTest
 
 	@Test
 	public void testMakeServiceUp(@Mocked final RegistrationManager registrationManager,
-			@Mocked final RegistrationClient registrationClient) throws Exception
+			@Mocked final RegistrationClient registrationClient)
 	{
 		new Expectations() {
 			{
@@ -84,30 +84,26 @@ public class RegistryServiceManagerTest
 	}
 
 	@Test
-	public void testPostStart() throws Exception
-	{
+	public void testPostStart() throws Exception {
 		registryServiceManager = new RegistryServiceManager();
-		registryServiceManager.postStart(new ApplicationLifecycleEvent(null));
+		registryServiceManager.postStart(applicationLifecycleEvent);
 	}
 
 	@Test
-	public void testPostStop() throws Exception
-	{
+	public void testPostStop() throws Exception {
 		registryServiceManager = new RegistryServiceManager();
-		registryServiceManager.postStop(new ApplicationLifecycleEvent(null));
+		registryServiceManager.postStop(applicationLifecycleEvent);
 	}
 
 	@Test
-	public void testPreStart() throws Exception
-	{
+	public void testPreStart() throws Exception {
 		registryServiceManager = new RegistryServiceManager();
-		registryServiceManager.preStart(new ApplicationLifecycleEvent(null));
+		registryServiceManager.preStart(applicationLifecycleEvent);
 	}
 
 	@Test
 	public void testPreStop(@Mocked final RegistrationManager registrationManager,
-			@Mocked final RegistrationClient registrationClient) throws Exception
-	{
+			@Mocked final RegistrationClient registrationClient) throws Exception {
 		new Expectations() {
 			{
 				RegistrationManager.getInstance();
@@ -118,13 +114,12 @@ public class RegistryServiceManagerTest
 			}
 		};
 		registryServiceManager = new RegistryServiceManager();
-		registryServiceManager.preStop(new ApplicationLifecycleEvent(null));
+		registryServiceManager.preStop(applicationLifecycleEvent);
 	}
 
 	@Test
 	public void testRegisterService(@Mocked final InitialContext initialContext, @Mocked final MBeanServer mBeanServer,
-			@Mocked InstanceNotFoundException e, @Mocked PropertyReader propertyReader) throws Exception
-	{
+			@Mocked InstanceNotFoundException e, @Mocked PropertyReader propertyReader) throws NamingException, AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException {
 		new Expectations() {
 			{
 				initialContext.lookup(anyString);
@@ -140,7 +135,7 @@ public class RegistryServiceManagerTest
 
 	@Test
 	public void testRegisterService_S(/*@Mocked RegistryLookupUtil registryLookupUtil,*/ @Mocked PropertyReader propertyReader)
-			throws Exception
+			
 	{
 		new Expectations(RegistryServiceManager.class) {
 			{
@@ -161,7 +156,7 @@ public class RegistryServiceManagerTest
 	public void testRegisterService_ServiceInternalLinkNotNull(@Mocked final InfoManager infoManager,
 			@Mocked final InstanceInfo instanceInfo, @Mocked final RegistrationManager registrationManager,
 			@Mocked final InitialContext initialContext, @Mocked final MBeanServer mBeanServer,
-			/*@Mocked RegistryLookupUtil registryLookupUtil,*/ @Mocked PropertyReader propertyReader) throws Exception
+			/*@Mocked RegistryLookupUtil registryLookupUtil,*/ @Mocked PropertyReader propertyReader)
 	{
 		new Expectations(RegistryServiceManager.class) {
 			{

@@ -16,68 +16,68 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 public class TenantInfo
 {
 
-	private String m_username;
-	private String m_tenantName;
+	private String mUsername;
+	private String mTenantName;
 
-	private Long m_tenantInternalId;
+	private Long mTenantInternalId;
 
 	public TenantInfo(String user, Long id)
 	{
-		m_username = user;
-		m_tenantInternalId = id;
+		mUsername = user;
+		mTenantInternalId = id;
 
 	}
 
 	public TenantInfo(String user, Long id, String tname)
 	{
-		m_username = user;
-		m_tenantInternalId = id;
-		m_tenantName = tname;
+		mUsername = user;
+		mTenantInternalId = id;
+		mTenantName = tname;
 	}
 
 	public Long getTenantInternalId()
 	{
-		return m_tenantInternalId;
+		return mTenantInternalId;
 	}
 
 	/**
-	 * @return the m_tenantName
+	 * @return the mTenantName
 	 */
 	public String gettenantName()
 	{
-		return m_tenantName;
+		return mTenantName;
 	}
 
 	public String getUsername()
 	{
-		return m_username;
+		return mUsername;
 	}
 
 	public void setTenantInternalId(Long tenantInternalId)
 	{
-		m_tenantInternalId = tenantInternalId;
+		mTenantInternalId = tenantInternalId;
 	}
 
 	/**
-	 * @param m_tenantName
-	 *            the m_tenantName to set
+	 * @param mTenantName
+	 *            the mTenantName to set
 	 */
-	public void settenantName(String m_tenantName)
+	public void settenantName(String mTenantName)
 	{
-		this.m_tenantName = m_tenantName;
+		this.mTenantName = mTenantName;
 	}
 
 	public void setUsername(String username)
 	{
-		m_username = username;
+		mUsername = username;
 	}
 
 	@Override
 	public String toString()
 	{
-		String tName = m_tenantName != null && !m_tenantName.isEmpty() ? m_tenantName : "";
-		long id = m_tenantInternalId != null ? m_tenantInternalId : -1;
-		String uName = m_username != null && !m_username.isEmpty() ? m_username : "";
+		String tName = mTenantName != null && !mTenantName.isEmpty() ? mTenantName : "";
+		long id = mTenantInternalId != null ? mTenantInternalId : -1;
+		String uName = mUsername != null && !mUsername.isEmpty() ? mUsername : "";
 
 		String result = String.format("[TenantName:" + tName + "][InternalTenantId:" + id + "][UserName:" + uName + "]")
 				+ System.getProperty("line.separator");

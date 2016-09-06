@@ -15,6 +15,9 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
  */
 public class StringUtil
 {
+	private StringUtil() {
+	}
+
 	/**
 	 * Convert a {@code String} array into a comma delimited {@code String}.
 	 * <p>

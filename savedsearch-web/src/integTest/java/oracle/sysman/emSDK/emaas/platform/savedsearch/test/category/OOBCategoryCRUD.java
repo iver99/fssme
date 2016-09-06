@@ -28,11 +28,11 @@ public class OOBCategoryCRUD
 	static String TENANT_ID_OPC1;
 	static String TENANT_ID1;
 
-	@AfterClass
-	public static void afterTest()
-	{
-
-	}
+//	@AfterClass
+//	public static void afterTest()
+//	{
+//
+//	}
 
 	@BeforeClass
 	public static void setUp()
@@ -54,29 +54,13 @@ public class OOBCategoryCRUD
 
 	private void testCategory(int category, int defaultFolder)
 	{
-		try {
-			System.out.println("------------------------------------------");
-			System.out.println("Test OOB category " + category);
-			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + category);
 
-			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertEquals(res.getStatusCode(), 200);
 
-			System.out.println(res.asString());
 			JsonPath jp = res.jsonPath();
-			System.out.println("											");
-			System.out.println("Category Name :" + jp.get("name"));
-			System.out.println("Category Id   :" + jp.get("id"));
-			System.out.println("Description   :" + jp.get("description"));
-			System.out.println("defaultFolder :" + jp.get("defaultFolder"));
-			System.out.println("parameters :" + jp.get("parameters"));
-			System.out.println("providerName :" + jp.get("providerName"));
-			System.out.println("providerVersion :" + jp.get("providerVersion"));
-			System.out.println("providerAssetRoot :" + jp.get("providerAssetRoot"));
 			Assert.assertEquals(jp.get("id"), category);
 			Assert.assertEquals(jp.get("name"), "Target Card");
 			Assert.assertNotNull(jp.get("href"));
@@ -95,12 +79,6 @@ public class OOBCategoryCRUD
 			Assert.assertEquals(nameList.size(), 1);
 			Assert.assertEquals(valueList.get(0), "1");
 
-			System.out.println("										");
-			System.out.println("----------------------------------------");
-			System.out.println("										");
-		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
+
 	}
 }

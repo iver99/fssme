@@ -118,9 +118,11 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/SavedSearchCORSF
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/search/SearchAPITest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/TenantSubscriptionUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/loggingconfig/UpdatedLoggerLevelTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/validationUtilTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/ValidationUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPITest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGroupAPITest.class"
+		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/XSDErrorUtilTest.class"
+		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/targetcard/TargetCardLinksFilterAPITest.class"
 
 
 
@@ -170,6 +172,20 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/LogUtilTest.class
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RegistryLookupUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RestClientTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptionUtilTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheFactoryTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/CachedLinkTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/BinaryTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotCacheManagerTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotElementTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/common/ExecutionContextTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/CategorySetTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryImplTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderImplTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchImplTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchSummaryImplTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/EntityJsonUtilTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/CategoryDetailsTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplForTargetCardTest.class"
 	useRestAssured =true
 ext.set("testType", "unit")
 

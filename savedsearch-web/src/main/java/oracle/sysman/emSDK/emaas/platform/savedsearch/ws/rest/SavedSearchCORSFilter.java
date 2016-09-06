@@ -46,7 +46,7 @@ public class SavedSearchCORSFilter implements Filter
 			super(request);
 
 			oam_remote_user = request.getHeader(OAM_REMOTE_USER_HEADER);
-			_logger.debug(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
+			LOGGER.debug(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
 			//oamRemoteUser could be null in dev mode. In dev mode, there is no OHS configured
 			if (oam_remote_user != null) {
 				int pos = oam_remote_user.indexOf(".");
@@ -134,11 +134,12 @@ public class SavedSearchCORSFilter implements Filter
 	private static final String X_USER_IDENTITY_DOMAIN_NAME_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
 
 	private static final String PARAM_NAME = "updateLastAccessTime";
-	private static final Logger _logger = LogManager.getLogger(SavedSearchCORSFilter.class);
+	private static final Logger LOGGER = LogManager.getLogger(SavedSearchCORSFilter.class);
 
 	@Override
 	public void destroy()
 	{
+		// Do nothing
 	}
 
 	@Override
@@ -190,7 +191,7 @@ public class SavedSearchCORSFilter implements Filter
 							|| !p.getName().toLowerCase().endsWith(EMCS_GLOBAL_INTER_SERVICE_APPID.toLowerCase())) {
 						// no principal, erroneous request
 						RequestContext.setContext(RequestType.ERRONEOUS);
-						_logger.warn("Authorization failed: request has no principal with userIdentity " + tenantIdHeader
+						LOGGER.warn("Authorization failed: request has no principal with userIdentity " + tenantIdHeader
 								+ ", remoteUser " + xRemoteUserHeader);
 						hRes.sendError(HttpServletResponse.SC_FORBIDDEN, "Authorization failed: No principal.");
 						return;
@@ -234,6 +235,7 @@ public class SavedSearchCORSFilter implements Filter
 	@Override
 	public void init(FilterConfig config) throws ServletException
 	{
+		// Do nothing because of X and Y.
 	}
 
 	private boolean isParameterPresent(HttpServletRequest hReq)

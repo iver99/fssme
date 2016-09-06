@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DomainEntityTest {
     private DomainEntity domainEntity = new DomainEntity();
     @Test
-    public void testDomainEntity() throws Exception {
+    public void testDomainEntity()  {
         domainEntity.setCanonicalUrl("url");
         domainEntity.setUuid("id");
         domainEntity.setDomainName("name");
@@ -24,7 +24,7 @@ public class DomainEntityTest {
     }
 
     @Test
-    public void testGetDomainName() throws Exception {
+    public void testGetDomainName()  {
         DomainEntity.DomainKeyEntity domainKeyEntity = new DomainEntity.DomainKeyEntity();
         domainKeyEntity.setName("name");
         Assert.assertNotNull(domainKeyEntity.getName());

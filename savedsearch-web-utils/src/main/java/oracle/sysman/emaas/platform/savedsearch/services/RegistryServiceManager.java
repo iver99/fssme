@@ -245,7 +245,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private final Logger logger = LogManager
+	private static final Logger LOGGER = LogManager
 			.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM + ".serviceregistry");
 
 	private Boolean registrationComplete = null;
@@ -282,7 +282,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Post-starting 'Service Registry' application service");
+		LOGGER.info("Post-starting 'Service Registry' application service");
 		registerService();
 
 	}
@@ -290,41 +290,42 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-
+		// Do nothing
 	}
 
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
+		// Do nothing
 	}
 
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Pre-stopping 'Service Registry' application service");
+		LOGGER.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
-		logger.debug("Pre-stopped 'Service Regsitry'");
+		LOGGER.debug("Pre-stopped 'Service Regsitry'");
 	}
 
 	public boolean registerService()
 	{
 		try {
-			logger.info("Registering service...");
+			LOGGER.info("Registering service...");
 			String applicationUrl = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
 			String applicationUrlSSL = RegistryServiceManager.getApplicationUrl(UrlType.HTTPS);
-			logger.debug("Application URL to register with 'Service Registry': " + applicationUrl);
-			logger.debug("Application SSL URL to register with 'Service Registry': " + applicationUrlSSL);
+			LOGGER.debug("Application URL to register with 'Service Registry': " + applicationUrl);
+			LOGGER.debug("Application SSL URL to register with 'Service Registry': " + applicationUrlSSL);
 
-			logger.info("Building 'Service Registry' configuration");
+			LOGGER.info("Building 'Service Registry' configuration");
 			Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
 
-			logger.info("Initialize lookup manager");
+			LOGGER.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
-			//			logger.info("Checking RegistryService");
+			//			LOGGER.info("Checking RegistryService");
 			//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
 			//				setRegistrationComplete(Boolean.FALSE);
-			//				logger.error("Failed to found registryService. Saved search service registration is not complete.");
+			//				LOGGER.error("Failed to found registryService. Saved search service registration is not complete.");
 			//				return false;
 			//			}
 
@@ -350,7 +351,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 					.characteristics(serviceProps.getProperty("characteristics")).leaseRenewalInterval(3000, TimeUnit.SECONDS)
 					.serviceUrls(serviceProps.getProperty("serviceUrls"));
 
-			logger.info("Initializing RegistrationManager");
+			LOGGER.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
 
 			List<Link> links = new ArrayList<Link>();
@@ -388,18 +389,18 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 
-			logger.info("Registering service with 'Service Registry'");
+			LOGGER.info("Registering service with 'Service Registry'");
 			RegistrationManager.getInstance().getRegistrationClient().register();
 			RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 
 			setRegistrationComplete(Boolean.TRUE);
-			logger.info("Service manager is up. Completed saved search service registration");
+			LOGGER.info("Service manager is up. Completed saved search service registration");
 		}
 		catch (Exception e) {
 			setRegistrationComplete(Boolean.FALSE);
-			logger.error(
+			LOGGER.error(
 					"Errors occurrs in registration. Service manager might be down. Daved search service registration is not complete.");
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		return registrationComplete;
 	}

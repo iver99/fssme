@@ -20,7 +20,7 @@ public class SavedSearchServiceDefFactory
 	public static final String SERVICE_URLS = "serviceUrls";
 	public static final String SERVICE_NAME_SAVEDSEARCH = "SavedSearch";
 	public static final String SERVICE_VERSION_SAVEDSEARCH = "1.0+";
-	private static Logger _logger = UpdateSavedSearchLog.getLogger(SavedSearchServiceDefFactory.class);
+	private static Logger LOGGER = UpdateSavedSearchLog.getLogger(SavedSearchServiceDefFactory.class);
 
 	/*   public static IServiceDefinition getSavedSearchServiceDefV1(){
 	       InputStream is =
@@ -73,7 +73,7 @@ public class SavedSearchServiceDefFactory
 	               try {
 	                   is.close();
 	               } catch (IOException e) {
-	               	_logger.error("getSavedSearchServiceDefV1", e);                    
+	               	LOGGER.error("getSavedSearchServiceDefV1", e);
 	                   	
 	                   
 	               }
@@ -123,7 +123,7 @@ public class SavedSearchServiceDefFactory
 			return sd;
 		}
 		catch (Exception e) {
-			_logger.error("getSavedSearchServiceDefV1", e);
+			LOGGER.error("getSavedSearchServiceDefV1", e);
 			return null;
 		}
 	}

@@ -4,8 +4,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
@@ -13,10 +15,9 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchSummaryImpl;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
 
 import org.codehaus.jettison.json.JSONException;
@@ -27,554 +28,308 @@ import org.testng.annotations.Test;
 /**
  * Created by xidai on 2/24/2016.
  */
-@Test(groups={"s2"})
+@Test(groups = {"s2"})
 public class FilterSearchAPITest {
     private FilterSearchAPI filterSearchAPI = new FilterSearchAPI();
+
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp(){
         filterSearchAPI.uri = TestHelper.mockUriInfo();
     }
-    
+
+    @Mocked
+    CategoryManager categoryManager;
+    @Mocked
+    SearchManager searchManager;
+    @Mocked
+    Search search;
+    @Mocked
+    URI uri;
+    @Mocked
+    Category category;
+    @Mocked
+    FolderManager folderManager;
+    @Mocked
+    Folder folder;
+    @Mocked
+    SearchSummary searchSummary;
+    @Mocked
+    Throwable throwable;
     @Test
-    public void testGetAllSearches( ) throws Exception {
-        final CategoryImpl category = new CategoryImpl();
+    public void testGetAllSearches() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<CategoryManagerImpl>(){
-            @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+        for (int i = 0; i <= 2; i++) {
+            searches.add(new SearchImpl());
+        }
+        new Expectations() {
             {
-                return category;
+                CategoryManager.getInstance();
+                result = categoryManager;
+                uri.getQuery();
+                result = "categoryId=11";
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchListByCategoryId(anyLong);
+                result = searches;
             }
         };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "categoryId=11";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
-    }
-    @Test
-    public void testGetAllSearches2nd( ) throws Exception {
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
-    }
-    @Test
-    public void testGetAllSearches3th( ) throws Exception {
-        final CategoryImpl category = new CategoryImpl();
-        final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<CategoryManagerImpl>(){
-            @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
-            {   if(true)
-                throw new EMAnalyticsFwkException(new Throwable());
-                return category;
-            }
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "categoryId=11";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
-    }
-    @Test
-    public void testGetAllSearches4th( ) throws Exception {
-        final Folder folder = new FolderImpl();
-        final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<FolderManagerImpl>(){
-            @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
-            {
-                return folder;
-            }
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "folderId=11";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
-    }
-    @Test
-    public void testGetAllSearches5th( ) throws Exception {
-        final Folder folder = new FolderImpl();
-        final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<FolderManagerImpl>(){
-            @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
-            {
-                if(true){throw new EMAnalyticsFwkException(new Throwable());}
-                return folder;
-            }
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "folderId=11";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
 
     @Test
-    public void testGetAllSearches6th( ) throws Exception {
-        final Folder folder = new FolderImpl();
-        final List<Search> searches = new ArrayList<Search>();
-        final String[] path = {"path","path","path"};
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<FolderManagerImpl>(){
-            @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
-            {
-                return folder;
-            }
-            @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException
-            {
-                return path;
-            }
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
+    public void testGetAllSearches2nd(){
 
-        };
-        new MockUp<SearchSummaryImpl>(){
-            @Mock
-            public Integer getFolderId(){
-                return 1;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "lastAccessCount=11";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
 
     @Test
-    public void testGetAllSearches7th( ) throws Exception {
-        final Folder folder = new FolderImpl();
-        final List<Search> searches = new ArrayList<Search>();
-        final String[] path = {"path","path","path"};
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<FolderManagerImpl>(){
-            @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+    public void testGetAllSearches3th() throws EMAnalyticsFwkException {
+        new Expectations() {
             {
-                if(true){throw new EMAnalyticsFwkException(new Throwable());}
-                return folder;
-            }
-            @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException
-            {
-
-                if(true){throw new EMAnalyticsFwkException(new Throwable());}
-                return path;
-            }
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<SearchSummaryImpl>(){
-            @Mock
-            public Integer getFolderId(){
-                return 1;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "lastAccessCount=11";
+                CategoryManager.getInstance();
+                result = categoryManager;
+                categoryManager.getCategory(anyLong);
+                result = new EMAnalyticsFwkException(throwable);
+                uri.getQuery();
+                result = "categoryId=11";
+                SearchManager.getInstance();
+                result = searchManager;
             }
         };
-        new MockUp<Throwable>(){
-            @Mock
-            public void printStackTrace(){
-            }
-
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
-    }
-    @Test
-    public void testGetAllSearches8th( ) throws Exception {
-        final Folder folder = new FolderImpl();
-        final List<Search> searches = new ArrayList<Search>();
-        final String[] path = {"path","path","path"};
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<FolderManagerImpl>(){
-            @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
-            {
-                if(true){throw new EMAnalyticsFwkException(new Throwable());}
-                return folder;
-            }
-            @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException,JSONException
-            {
-                if(true){
-                    throw new JSONException("");
-                }
-                return path;
-            }
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<SearchSummaryImpl>(){
-            @Mock
-            public Integer getFolderId(){
-                return 1;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "lastAccessCount=11";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
 
     @Test
-    public void testGetAllSearches9th( ) throws Exception {
-        final Folder folder = new FolderImpl();
+    public void testGetAllSearches4th() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
-        final String[] path = {"path","path","path"};
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<FolderManagerImpl>(){
-            @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+        for (int i = 0; i <= 2; i++) {
+            searches.add(new SearchImpl());
+        }
+        new Expectations() {
             {
-                if(true){throw new EMAnalyticsFwkException(new Throwable());}
-                return folder;
-            }
-            @Mock
-            public String[] getPathForFolderId(long folderId) throws EMAnalyticsFwkException,Exception
-            {
-                if(true){
-                    throw new Exception("");
-                }
-                return path;
-            }
-
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<SearchSummaryImpl>(){
-            @Mock
-            public Integer getFolderId(){
-                return 1;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "lastAccessCount=11";
+                FolderManager.getInstance();
+                result = folderManager;
+                folderManager.getFolder(anyLong);
+                result = folder;
+                uri.getQuery();
+                result = "folderId=11";
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchListByFolderId(anyLong);
+                result = searches;
             }
         };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
 
     @Test
-    public void testGetAllSearches10th( ) throws Exception {
-        final CategoryImpl category = new CategoryImpl();
-        final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<CategoryManagerImpl>(){
-            @Mock
-            public Category getCategory(String categoryName) throws EMAnalyticsFwkException
+    public void testGetAllSearches5th() throws EMAnalyticsFwkException {
+        new Expectations(){
             {
-                return category;
-            }
-            @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
-            {
-                return category;
+                FolderManager.getInstance();
+                result = folderManager;
+                folderManager.getFolder(anyLong);
+                result = new EMAnalyticsFwkException(throwable);
+                uri.getQuery();
+                result = "folderId=11";
+                SearchManager.getInstance();
+                result =searchManager;
             }
         };
-        new MockUp<CategoryImpl>(){
-           @Mock
-            public Integer getId()
-            {
-                return 1;
-            }
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "categoryName=11";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
+
     @Test
-    public void testGetAllSearches11th( ) throws Exception {
-        final CategoryImpl category = new CategoryImpl();
+    public void testGetAllSearches6th() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<CategoryManagerImpl>(){
-            @Mock
-            public Category getCategory(String categoryName) throws EMAnalyticsFwkException
+        final String[] path = {"path", "path", "path"};
+        for (int i = 0; i <= 2; i++) {
+            searches.add(search);
+        }
+        new Expectations() {
             {
-                if(true){throw new EMAnalyticsFwkException(new Throwable());}
-                return category;
-            }
-            @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
-            {
-                if(true){throw new EMAnalyticsFwkException(new Throwable());}
-                return category;
+                FolderManager.getInstance();
+                result = folderManager;
+                folderManager.getPathForFolderId(anyLong);
+                result = path;
+                uri.getQuery();
+                result = "lastAccessCount=11";
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchListByLastAccessDate(anyInt);
+                result = searches;
             }
         };
-        new MockUp<CategoryImpl>(){
-            @Mock
-            public Integer getId()
-            {
-                return 1;
-            }
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "categoryName=11";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
+
     @Test
-    public void testGetAllSearches12th( ) throws Exception {
-        final Folder folder = new FolderImpl();
-        final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<FolderManagerImpl>(){
-            @Mock
-            public Folder getFolder(long folderId) throws EMAnalyticsFwkException
+    public void testGetAllSearches7th() throws EMAnalyticsFwkException {
+        final List<Search> searches = new ArrayList<>();
+        final String[] path = {"path", "path", "path"};
+        for (int i = 0; i <= 2; i++) {
+            searches.add(search);
+        }
+        new Expectations() {
             {
-                return folder;
-            }
-        };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "folderId=-11";
+                FolderManager.getInstance();
+                result = folderManager;
+                folderManager.getPathForFolderId(anyLong);
+                result =  new EMAnalyticsFwkException(throwable);
+                uri.getQuery();
+                result = "lastAccessCount=11";
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchListByLastAccessDate(anyInt);
+                result = searches;
             }
         };
 
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
+
     @Test
-    public void testGetAllSearches13th( ) throws Exception {
-        final CategoryImpl category = new CategoryImpl();
+    public void testGetAllSearches8th() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<CategoryManagerImpl>(){
-            @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+        final String[] path = {"path", "path", "path"};
+        for (int i = 0; i <= 2; i++) {
+            searches.add(search);
+        }
+        new Expectations() {
             {
-                return category;
+                FolderManager.getInstance();
+                result = folderManager;
+                folderManager.getPathForFolderId(anyLong);
+                result =  new JSONException("");
+                uri.getQuery();
+                result = "lastAccessCount=11";
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchListByLastAccessDate(anyInt);
+                result = searches;
             }
         };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "categoryId=-11";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
+
     @Test
-    public void testGetAllSearches14th( ) throws Exception {
-        final CategoryImpl category = new CategoryImpl();
+    public void testGetAllSearches9th() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<CategoryManagerImpl>(){
-            @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+        final String[] path = {"path", "path", "path"};
+        for (int i = 0; i <= 2; i++) {
+            searches.add(search);
+        }
+        new Expectations() {
             {
-                return category;
+                FolderManager.getInstance();
+                result = folderManager;
+                folderManager.getPathForFolderId(anyLong);
+                result =  new Exception("");
+                uri.getQuery();
+                result = "lastAccessCount=11";
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchListByLastAccessDate(anyInt);
+                result = searches;
             }
         };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return null;
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
+
     @Test
-    public void testGetAllSearches15th( ) throws Exception {
-        final CategoryImpl category = new CategoryImpl();
+    public void testGetAllSearches10th() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<CategoryManagerImpl>(){
-            @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+        for (int i = 0; i <= 2; i++) {
+            searches.add(search);
+        }
+        new Expectations() {
             {
-                return category;
+                CategoryManager.getInstance();
+                result = categoryManager;
+                categoryManager.getCategory(anyString);
+                result = category;
+//                categoryManager.getCategory(anyLong);
+//                result = category;
+                category.getId();
+                result = 1;
+                uri.getQuery();
+                result = "categoryName=11";
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchListByCategoryId(anyLong);
+                result = searches;
             }
         };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
-            {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "query";
-            }
-        };
-
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
+
     @Test
-    public void testGetAllSearches16th( ) throws Exception {
-        final CategoryImpl category = new CategoryImpl();
-        final List<Search> searches = new ArrayList<Search>();
-        for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
-        new MockUp<CategoryManagerImpl>(){
-            @Mock
-            public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+    public void testGetAllSearches11th() throws EMAnalyticsFwkException {
+        new Expectations() {
             {
-                return category;
+                CategoryManager.getInstance();
+                result = categoryManager;
+                categoryManager.getCategory(anyString);
+                result = new EMAnalyticsFwkException(throwable);
+                uri.getQuery();
+                result = "categoryName=11";
             }
         };
-        new MockUp<SearchManagerImpl>(){
-            @Mock
-            public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
+    }
+
+    @Test
+    public void testGetAllSearches12th(){
+        new Expectations() {
             {
-                return searches;
-            }
-
-        };
-        new MockUp<URI>(){
-            @Mock
-            public String getQuery() {
-                return "cateGoryNam=11";
+                uri.getQuery();
+                result = "folderId=-11";
             }
         };
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
+    }
 
-        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri,"","","",""));
+    @Test
+    public void testGetAllSearches13th(){
+        new Expectations() {
+            {
+                uri.getQuery();
+                result = "categoryId=-11";
+            }
+        };
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
+    }
+
+    @Test
+    public void testGetAllSearches14th(){
+        new Expectations() {
+            {
+                uri.getQuery();
+                result = null;
+            }
+        };
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
+    }
+
+    @Test
+    public void testGetAllSearches15th(){
+        new Expectations() {
+            {
+                uri.getQuery();
+                result = "query";
+            }
+        };
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
+    }
+
+    @Test
+    public void testGetAllSearches16th(){
+        new Expectations() {
+            {
+                uri.getQuery();
+                result = null;
+            }
+        };
+        Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
 }

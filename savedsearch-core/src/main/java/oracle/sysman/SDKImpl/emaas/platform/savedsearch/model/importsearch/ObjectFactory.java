@@ -30,16 +30,16 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _Category_QNAME = new QName("", "Category");
-    private final static QName _Folder_QNAME = new QName("", "Folder");
-    private final static QName _CategoryId_QNAME = new QName("", "CategoryId");
-    private final static QName _CategoryDet_QNAME = new QName("", "categoryDet");
-    private final static QName _FolderDet_QNAME = new QName("", "folderDet");
-    private final static QName _SearchSet_QNAME = new QName("", "SearchSet");
-    private final static QName _FolderId_QNAME = new QName("", "FolderId");
-    private final static QName _FolderSet_QNAME = new QName("", "FolderSet");
-    private final static QName _CategorySet_QNAME = new QName("", "CategorySet");
-    private final static QName _DefaultFolderId_QNAME = new QName("", "DefaultFolderId");
+    private final static QName CATEGORY_QNAME = new QName("", "Category");
+    private final static QName FOLDER_QNAME = new QName("", "Folder");
+    private final static QName CATEGORY_ID_QNAME = new QName("", "CategoryId");
+    private final static QName CATEGORY_DET_QNAME = new QName("", "categoryDet");
+    private final static QName FOLDER_DET_QNAME = new QName("", "folderDet");
+    private final static QName SEARCH_SET_QNAME = new QName("", "SearchSet");
+    private final static QName FOLDER_ID_QNAME = new QName("", "FolderId");
+    private final static QName FOLDER_SET_QNAME = new QName("", "FolderSet");
+    private final static QName CATEGORY_SET_QNAME = new QName("", "CategorySet");
+    private final static QName DEFAULT_FOLDER_ID_QNAME = new QName("", "DefaultFolderId");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: sr2
@@ -49,7 +49,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ImportSearchImpl }
+     * Create an INSTANCE of {@link ImportSearchImpl }
      * 
      */
     public ImportSearchImpl createImportSearchImpl() {
@@ -57,7 +57,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CategoryDetails }
+     * Create an INSTANCE of {@link CategoryDetails }
      * 
      */
     public CategoryDetails createCategoryDetails() {
@@ -65,7 +65,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FolderImpl }
+     * Create an INSTANCE of {@link FolderImpl }
      * 
      */
     public FolderDetails createFolderDetails() {
@@ -73,7 +73,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SearchSet }
+     * Create an INSTANCE of {@link SearchSet }
      * 
      */
     public SearchSet createSearchSet() {
@@ -81,7 +81,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SearchParameter }
+     * Create an INSTANCE of {@link SearchParameter }
      * 
      */
     public SearchParameterDetails createSearchParameterDetails() {
@@ -89,7 +89,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Parameter }
+     * Create an INSTANCE of {@link Parameter }
      * 
      */
     public Parameter createParameter() {
@@ -97,7 +97,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ImportSearchImpl.SearchParameters }
+     * Create an INSTANCE of {@link ImportSearchImpl.SearchParameters }
      * 
      */
     public ImportSearchImpl.SearchParameters createImportSearchImplSearchParameters() {
@@ -105,7 +105,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CategoryDetails.Parameters }
+     * Create an INSTANCE of {@link CategoryDetails.Parameters }
      * 
      */
     public CategoryDetails.Parameters createCategoryDetailsParameters() {
@@ -113,74 +113,74 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link CategoryDetails }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link CategoryDetails }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "Category", substitutionHeadNamespace = "", substitutionHeadName = "categoryDet")
     public JAXBElement<CategoryDetails> createCategory(CategoryDetails value) {
-        return new JAXBElement<CategoryDetails>(_Category_QNAME, CategoryDetails.class, null, value);
+        return new JAXBElement<CategoryDetails>(CATEGORY_QNAME, CategoryDetails.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link FolderImpl }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link FolderImpl }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "Folder", substitutionHeadNamespace = "", substitutionHeadName = "folderDet")
     public JAXBElement<FolderDetails> createFolder(FolderDetails value) {
-        return new JAXBElement<FolderDetails>(_Folder_QNAME, FolderDetails.class, null, value);
+        return new JAXBElement<FolderDetails>(FOLDER_QNAME, FolderDetails.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Integer }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link Integer }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "CategoryId", substitutionHeadNamespace = "", substitutionHeadName = "categoryDet")
     public JAXBElement<Integer> createCategoryId(Integer value) {
-        return new JAXBElement<Integer>(_CategoryId_QNAME, Integer.class, null, value);
+        return new JAXBElement<Integer>(CATEGORY_ID_QNAME, Integer.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Object }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link Object }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "categoryDet")
     public JAXBElement<Object> createCategoryDet(Object value) {
-        return new JAXBElement<Object>(_CategoryDet_QNAME, Object.class, null, value);
+        return new JAXBElement<Object>(CATEGORY_DET_QNAME, Object.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Object }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link Object }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "folderDet")
     public JAXBElement<Object> createFolderDet(Object value) {
-        return new JAXBElement<Object>(_FolderDet_QNAME, Object.class, null, value);
+        return new JAXBElement<Object>(FOLDER_DET_QNAME, Object.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SearchSet }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link SearchSet }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "SearchSet")
     public JAXBElement<SearchSet> createSearchSet(SearchSet value) {
-        return new JAXBElement<SearchSet>(_SearchSet_QNAME, SearchSet.class, null, value);
+        return new JAXBElement<SearchSet>(SEARCH_SET_QNAME, SearchSet.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Integer }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link Integer }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "FolderId", substitutionHeadNamespace = "", substitutionHeadName = "folderDet")
     public JAXBElement<Integer> createFolderId(Integer value) {
-        return new JAXBElement<Integer>(_FolderId_QNAME, Integer.class, null, value);
+        return new JAXBElement<Integer>(FOLDER_ID_QNAME, Integer.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
     /**
-     * Create an instance of {@link FolderSet }
+     * Create an INSTANCE of {@link FolderSet }
      * 
      */
 
@@ -190,16 +190,16 @@ public FolderSet createFolderSet() {
 
 
 /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link FolderSet }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link FolderSet }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "FolderSet")
     public JAXBElement<FolderSet> createFolderSet(FolderSet value) {
-        return new JAXBElement<FolderSet>(_FolderSet_QNAME, FolderSet.class, null, value);
+        return new JAXBElement<FolderSet>(FOLDER_SET_QNAME, FolderSet.class, null, value);
     }
     
     /**
-     * Create an instance of {@link CategorySet }
+     * Create an INSTANCE of {@link CategorySet }
      * 
      */
 
@@ -209,22 +209,22 @@ public FolderSet createFolderSet() {
 
 
 /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link CategorySet }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link CategorySet }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "CategorySet")
     public JAXBElement<CategorySet> createCategorySet(CategorySet value) {
-        return new JAXBElement<CategorySet>(_CategorySet_QNAME, CategorySet.class, null, value);
+        return new JAXBElement<CategorySet>(CATEGORY_SET_QNAME, CategorySet.class, null, value);
     }
     
     
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Integer }{@code >}}
+     * Create an INSTANCE of {@link JAXBElement }{@code <}{@link Integer }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "DefaultFolderId", substitutionHeadNamespace = "", substitutionHeadName = "folderDet")
     public JAXBElement<Integer> createDefaultFolderId(Integer value) {
-        return new JAXBElement<Integer>(_DefaultFolderId_QNAME, Integer.class, null, value);
+        return new JAXBElement<Integer>(DEFAULT_FOLDER_ID_QNAME, Integer.class, null, value);
     }
 
 }

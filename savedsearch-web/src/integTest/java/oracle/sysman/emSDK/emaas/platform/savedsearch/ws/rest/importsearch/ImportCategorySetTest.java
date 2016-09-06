@@ -6,7 +6,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImp
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportCategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
@@ -14,10 +13,12 @@ import org.eclipse.persistence.jaxb.JAXBContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -117,5 +118,51 @@ public class ImportCategorySetTest {
         Assert.assertNotNull(importCategorySet.importsCategories(xml));
     }
 
+    @Test
+    public void testImportsCategoriesXLEmpty() throws Exception {
+        Assert.assertNotNull(importCategorySet.importsCategories(""));
+    }
+
+    @Test
+    public void testImportsCategoriesEmpty(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+        new Expectations(){
+            {
+                anyJaxbutil.getJAXBContext(ObjectFactory.class);
+                result = jaxbContext;
+                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(inputStream),withAny(jaxbContext));
+                result = categorySet;
+                categorySet.getCategorySet();
+                result = Collections.emptyList();
+            }
+        };
+
+        Assert.assertNotNull(importCategorySet.importsCategories(xml));
+    }
+
+    @Mocked
+    Throwable throwable;
+    @Test
+    public void testImportsCategoriesImportException(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+        new Expectations(){
+            {
+                anyJaxbutil.getJAXBContext(ObjectFactory.class);
+                result = new ImportException(throwable);
+            }
+        };
+
+        Assert.assertNotNull(importCategorySet.importsCategories(xml));
+    }
+
+    @Test
+    public void testImportsCategoriestException(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
+        new Expectations(){
+            {
+                anyJaxbutil.getJAXBContext(ObjectFactory.class);
+                result = new Exception(throwable);
+            }
+        };
+
+        Assert.assertNotNull(importCategorySet.importsCategories(xml));
+    }
 
 }

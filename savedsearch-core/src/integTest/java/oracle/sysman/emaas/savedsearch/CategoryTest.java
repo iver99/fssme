@@ -18,15 +18,12 @@ public class CategoryTest extends BaseTest
 {
 	private static Integer categoryId;
 
-	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
 	//@Mocked
     //PersistenceManager persistenceManager;
 
 	@AfterClass
-	public static void testDelete()
-	{
-		try {
+	public static void testDelete() throws EMAnalyticsFwkException {
 			CategoryManager catMan = CategoryManager.getInstance();
 
 			Category category = catMan.getCategory(categoryId);
@@ -39,16 +36,12 @@ public class CategoryTest extends BaseTest
 			// now delete the category
 			catMan.deleteCategory(categoryId, true);
 			// here the assertion not required or required
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+
 	}
 
 	@BeforeClass
-	public static void testSaveCategory()
-	{
-		try {
+	public static void testSaveCategory() throws EMAnalyticsFwkException {
+
 
 			CategoryManager catMan = CategoryManager.getInstance();
 			Category category = catMan.createNewCategory();
@@ -88,12 +81,6 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals("ProviderAssetRootTest", category.getProviderAssetRoot());
 			// Assert.assertEquals("MyCategory", category.getDisplayName());
 			AssertJUnit.assertNotNull(category.getCreatedOn());
-
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	@BeforeClass
@@ -112,7 +99,7 @@ public class CategoryTest extends BaseTest
 	}*/
 
 	/*@Test
-	public void testDefaultFolder() throws Exception
+	public void testDefaultFolder() 
 	{
 
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -120,25 +107,17 @@ public class CategoryTest extends BaseTest
 
 	}*/
 
-	@Test 
-	public void testDeleteCategoryInvalidId() throws Exception
-	{
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testDeleteCategoryInvalidId() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
-		try {
 			catMan.deleteCategory(99898987898L, true);
 
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST));
-		}
+		 
 	}
 
 	@Test 
-	public void testEditCategory() throws Exception
-	{
+	public void testEditCategory() throws EMAnalyticsFwkException {
 
-		try {
 			CategoryManager obj = CategoryManagerImpl.getInstance();
 			Category category = obj.getCategory(categoryId);
 
@@ -176,14 +155,10 @@ public class CategoryTest extends BaseTest
 			// Assert.assertEquals("displayTestName",
 			// category.getDisplayName());
 
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
 	}
 
 	/*@Test
-	public void testGetAllCategories() throws Exception
+	public void testGetAllCategories() 
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
 		// TODO Harsh .. fix this !!
@@ -197,7 +172,7 @@ public class CategoryTest extends BaseTest
 	}*/
 
 	/*@Test
-	public void testGetCategoryById() throws Exception
+	public void testGetCategoryById() 
 	{
 		TenantContext.setContext(TENANT_ID_OPC2);
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -206,7 +181,7 @@ public class CategoryTest extends BaseTest
 	}*/
 
 	/*@Test
-	public void testGetCategoryByName() throws Exception
+	public void testGetCategoryByName() 
 	{
 		TenantContext.setContext(TENANT_ID_OPC2);
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -215,7 +190,7 @@ public class CategoryTest extends BaseTest
 	}*/
 
 	/*@Test
-	public void testEditCategory_DuplicateName() throws Exception
+	public void testEditCategory_DuplicateName() 
 	{
 
 		try {
@@ -235,57 +210,36 @@ public class CategoryTest extends BaseTest
 		}
 	}*/
 
-        @Test 
-	public void testgetCategoryInvalidId() throws Exception
-	{
+        @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testgetCategoryInvalidId() throws EMAnalyticsFwkException {
 
 		CategoryManager catMan = CategoryManager.getInstance();
-		try {
 			catMan.getCategory(99898987898L);
 
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST));
-		}
 
 	}
 
-	@Test
-	public void testgetCategoryInvalidName() throws Exception
-	{
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testgetCategoryInvalidName() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
-		try {
 			catMan.getCategory("this is invalid name");
 
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME));
-		}
 	}
 
-	@Test 
-	public void testInvalidData() throws Exception
-	{
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testInvalidData() throws EMAnalyticsFwkException {
 
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("CategoryName");
 		category.setDescription("CategoryTest");
 		category.setDefaultFolderId(9878787);
-		try {
 			catMan.saveCategory(category);
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER));
-		}
+
 	}
 
 	@Test 
-	public void testSaveCategory_DuplicateName() throws Exception
-	{
+	public void testSaveCategory_DuplicateName() throws EMAnalyticsFwkException {
 
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
@@ -294,13 +248,8 @@ public class CategoryTest extends BaseTest
 		category.setProviderVersion("ProviderVersionUT");
 		category.setProviderDiscovery("ProviderDiscoveryUT");
 		category.setProviderAssetRoot("ProviderAssetRootUT");
-		try {
 			category = catMan.saveCategory(category);
 
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(emanfe.getErrorCode(), EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME);
-		}
 
 	}
 }

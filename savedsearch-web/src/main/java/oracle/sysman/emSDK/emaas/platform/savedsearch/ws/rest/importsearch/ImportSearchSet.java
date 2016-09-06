@@ -38,8 +38,8 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("importsearches")
 public class ImportSearchSet
 {
-	private static final Logger _logger = LogManager.getLogger(ImportSearchSet.class);
-	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
+	private static final Logger LOGGER = LogManager.getLogger(ImportSearchSet.class);
+	private static final String RESOURCE_PATH = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
 
 	/**
 	 * Import the searches with defined XML file<br>
@@ -227,12 +227,12 @@ public class ImportSearchSet
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(resourcePath);
-			StringBuffer xmlStr = new StringBuffer(xml);
+			stream = ImportSearchSet.class.getClassLoader().getResourceAsStream(RESOURCE_PATH);
+			StringBuilder xmlStr = new StringBuilder(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			SearchSet searches = (SearchSet) JAXBUtil.unmarshal(sReader, stream, JAXBUtil.getJAXBContext(ObjectFactory.class));
 			List<ImportSearchImpl> list = searches.getSearchSet();
-			if (list.size() == 0) {
+			if (list.isEmpty()) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 			}
 			if (validateData(list)) {
@@ -243,7 +243,7 @@ public class ImportSearchSet
 			if (oobSearch == null) {
 				bResult = false;
 			}
-			if (oobSearch != null && oobSearch.equalsIgnoreCase("true")) {
+			if (oobSearch != null && "true".equalsIgnoreCase(oobSearch)) {
 				bResult = true;
 			}
 
@@ -259,14 +259,14 @@ public class ImportSearchSet
 
 		}
 		catch (ImportException e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to import searches (1)", e);
 			msg = e.getMessage();
 			e.printStackTrace();
 			res = Response.status(Status.BAD_REQUEST).entity(msg).build();
 		}
 		catch (Exception e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to import searches (2)", e);
 			msg = "An internal error has occurred" + e.getMessage();
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
@@ -290,20 +290,16 @@ public class ImportSearchSet
 			if (!(obj.getName() != null && obj.getName().trim().length() > 0)) {
 				return true;
 			}
-			if (obj.getCategoryDetails() != null) {
-				if (obj.getCategoryDetails() instanceof CategoryImpl) {
-					CategoryImpl objCat = (CategoryImpl) obj.getCategoryDetails();
-					if (!(objCat.getName() != null && objCat.getName().trim().length() > 0)) {
-						return true;
-					}
+			if (obj.getCategoryDetails() != null && obj.getCategoryDetails() instanceof CategoryImpl) {
+				CategoryImpl objCat = (CategoryImpl) obj.getCategoryDetails();
+				if (!(objCat.getName() != null && objCat.getName().trim().length() > 0)) {
+					return true;
 				}
 			}
-			if (obj.getFolderDetails() != null) {
-				if (obj.getFolderDetails() instanceof FolderImpl) {
-					FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
-					if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
-						return true;
-					}
+			if (obj.getFolderDetails() != null && obj.getFolderDetails() instanceof FolderImpl) {
+				FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
+				if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
+					return true;
 				}
 			}
 		}

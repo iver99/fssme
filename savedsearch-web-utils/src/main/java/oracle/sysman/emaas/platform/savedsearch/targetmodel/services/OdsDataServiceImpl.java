@@ -14,17 +14,17 @@ import org.codehaus.jettison.json.JSONObject;
 public class OdsDataServiceImpl implements OdsDataService
 {
 
-	private static final Logger logger = LogManager.getLogger(OdsDataServiceImpl.class);
-	private static final OdsDataServiceImpl instance = new OdsDataServiceImpl();
+	private static final Logger LOGGER = LogManager.getLogger(OdsDataServiceImpl.class);
+	private static final OdsDataServiceImpl INSTANCE = new OdsDataServiceImpl();
 
 	public static OdsDataServiceImpl getInstance()
 	{
-		return instance;
+		return INSTANCE;
 	}
 
 	static private String generateOdsEntityJson(String searchId, String searchName, String meClass)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		sb.append("\"entityType\" : \"").append(ENTITY_TYPE_NAME).append("\",");
 		sb.append("\"entityName\" : \"").append(searchId).append("\",");
@@ -45,15 +45,15 @@ public class OdsDataServiceImpl implements OdsDataService
 	{
 		// get ODS entity
 		String odsEntity = OdsDataServiceImpl.generateOdsEntityJson(searchId, searchName, ENTITY_CLASS);
-		logger.info("ODS Entity's string value is:" + odsEntity);
+		LOGGER.info("ODS Entity's string value is:" + odsEntity);
 		// send to ODS
 		String baseUrl = retriveEndpoint(REL_DATA_RESOURCE, DATA_MES);
-		logger.info("base URL is:" + baseUrl);
+		LOGGER.info("base URL is:" + baseUrl);
 		String meId = null;
 		// see if there is already an ODS entity created
 		try {
 			String result = RestRequestUtil.restGet(baseUrl + "?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId);
-			logger.info("result is" + result);
+			LOGGER.info("result is" + result);
 			JSONObject jsonObj = new JSONObject(result);
 			if (jsonObj.getInt("count") > 0) {
 				JSONObject entity = (JSONObject) jsonObj.getJSONArray("items").get(0);
@@ -67,7 +67,7 @@ public class OdsDataServiceImpl implements OdsDataService
 		if (meId == null || meId.isEmpty()) {
 			try {
 				String result = RestRequestUtil.restPost(baseUrl, odsEntity);
-				logger.info("RestRequestUtil.restPost(baseUrl, odsEntity) is executed,and result is " + result);
+				LOGGER.info("RestRequestUtil.restPost(baseUrl, odsEntity) is executed,and result is " + result);
 				JSONObject jsonObj = new JSONObject(result);
 				meId = jsonObj.getString(ENTITY_ID);
 			}
@@ -75,7 +75,7 @@ public class OdsDataServiceImpl implements OdsDataService
 				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
 			}
 		}
-		logger.info("meId before return is " + meId);
+		LOGGER.info("meId before return is " + meId);
 		return meId;
 	}
 
@@ -118,7 +118,7 @@ public class OdsDataServiceImpl implements OdsDataService
 		}
 
 		// send the meid to ODS for deleting
-		StringBuffer baseUrl = new StringBuffer();
+		StringBuilder baseUrl = new StringBuilder();
 		baseUrl.append(retriveEndpoint(REL_DATA_RESOURCE, DATA_MES)).append(HTTP_DELIMITER).append(meid);
 		try {
 			RestRequestUtil.restDelete(baseUrl.toString());
@@ -137,7 +137,7 @@ public class OdsDataServiceImpl implements OdsDataService
 	{
 		Link link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, TenantContext.getContext()
 				.gettenantName());
-		StringBuffer mesUrl = new StringBuffer();
+		StringBuilder mesUrl = new StringBuilder();
 		mesUrl.append(link.getHref()).append(HTTP_DELIMITER).append(resource);
 		return mesUrl.toString();
 	}

@@ -19,13 +19,13 @@ public class AppLoggingManageMXBeanTest {
     AppLoggingManageMXBean appLoggingManageMXBean;
 
     @Test
-    public void testGetLogLevels_null() throws Exception {
+    public void testGetLogLevels_null(){
         appLoggingManageMXBean = new AppLoggingManageMXBean();
         appLoggingManageMXBean.getLogLevels();
     }
 
     @Test
-    public void testGetLogLevels(@Mocked LogManager logManager,@Mocked final LoggerContext loggerContext, @Mocked final Configuration cfg) throws Exception {
+    public void testGetLogLevels(@Mocked LogManager logManager,@Mocked final LoggerContext loggerContext, @Mocked final Configuration cfg){
 
 
 
@@ -50,13 +50,13 @@ public class AppLoggingManageMXBeanTest {
     }
 
     @Test
-    public void testSetLogLevel() throws Exception {
+    public void testSetLogLevel(){
         appLoggingManageMXBean = new AppLoggingManageMXBean();
         appLoggingManageMXBean.setLogLevel("logger","level");
     }
 
     @Test
-    public void testSetLogLevel_lcEqualsNull(@Mocked LogManager logManager,@Mocked final LoggerContext loggerContext, @Mocked final Configuration cfg) throws Exception {
+    public void testSetLogLevel_lcEqualsNull(@Mocked LogManager logManager,@Mocked final LoggerContext loggerContext, @Mocked final Configuration cfg){
         new Expectations(){
             {
                 LogManager.getContext(false);
@@ -72,7 +72,7 @@ public class AppLoggingManageMXBeanTest {
     }
 
     @Test
-    public void testSetLogLevel_Debug() throws Exception {
+    public void testSetLogLevel_Debug(){
         appLoggingManageMXBean = new AppLoggingManageMXBean();
         appLoggingManageMXBean.setLogLevel("logger","DEBUG");
         appLoggingManageMXBean.setLogLevel("logger","INFO");

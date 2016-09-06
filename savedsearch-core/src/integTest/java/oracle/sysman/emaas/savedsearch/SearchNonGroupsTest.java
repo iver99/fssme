@@ -34,10 +34,8 @@ public class SearchNonGroupsTest extends BaseTest{
     private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
     @BeforeClass
-    public static void initialization() throws Exception
-    {
+    public static void initialization() throws EMAnalyticsFwkException {
 
-        try {
             //create a folder to insert search into it
             TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
                     .get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
@@ -88,10 +86,6 @@ public class SearchNonGroupsTest extends BaseTest{
             AssertJUnit.assertEquals("Dummy Search", s2.getName());
             AssertJUnit.assertEquals("testing purpose", s2.getDescription());
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @AfterClass
@@ -129,8 +123,8 @@ public class SearchNonGroupsTest extends BaseTest{
         }
         final String BIG_QUERYSTR = sb.toString(); //length=10000
         Integer sid = 0;
-        int categoryId = 0;
-        int folderId = 0;
+        int categoryId1 = 0;
+        int folderId1 = 0;
         SearchManager searchMgr = SearchManager.getInstance();
         CategoryManager objCategory = CategoryManagerImpl.getInstance();
         FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
@@ -141,7 +135,7 @@ public class SearchNonGroupsTest extends BaseTest{
             folder.setDescription("Test Parameter Description");
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
-            folderId = folder.getId();
+            folderId1 = folder.getId();
 
             Category cat = new CategoryImpl();
             cat.setName("CategoryTestOneTest1");
@@ -151,15 +145,15 @@ public class SearchNonGroupsTest extends BaseTest{
             cat.setProviderVersion("ProviderVersionTest");
             cat.setProviderDiscovery("ProviderDiscoveryTest");
             cat.setProviderAssetRoot("ProviderAssetRootTest");
-            cat.setDefaultFolderId(folderId);
+            cat.setDefaultFolderId(folderId1);
             cat = objCategory.saveCategory(cat);
-            categoryId = cat.getId();
+            categoryId1 = cat.getId();
 
             Search search = searchMgr.createNewSearch();
             search.setDescription("testing big query str");
             search.setName("Search with big query str");
-            search.setFolderId(folderId);
-            search.setCategoryId(categoryId);
+            search.setFolderId(folderId1);
+            search.setCategoryId(categoryId1);
             search.setQueryStr(BIG_QUERYSTR);
             Search savedSearch = searchMgr.saveSearch(search);
             Assert.assertNotNull(savedSearch, "Get NULL search from saveeSearch()");
@@ -180,46 +174,32 @@ public class SearchNonGroupsTest extends BaseTest{
         finally {
             if (sid != null && sid > 0) {
                 searchMgr.deleteSearch(sid, true);
-                objCategory.deleteCategory(categoryId, true);
-                objFolder.deleteFolder(folderId, true);
+                objCategory.deleteCategory(categoryId1, true);
+                objFolder.deleteFolder(folderId1, true);
             }
         }
     }
 
-    @Test
-    public void testDeleteInvalidSearchId() throws Exception
-    {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testDeleteInvalidSearchId() throws EMAnalyticsFwkException {
         SearchManager sman = SearchManager.getInstance();
-        try {
             sman.deleteSearch(99898987898L, true);
 
-        }
-        catch (EMAnalyticsFwkException emanfe) {
-            AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-                    EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
-        }
+//            AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
+//                    EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID));
     }
 
-    @Test
-    public void testDeleteSystemSearch() throws Exception
-    {
-        boolean bResult = false;
-        try {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testDeleteSystemSearch() throws EMAnalyticsFwkException {
             SearchManager objSearch = SearchManagerImpl.getInstance();
             objSearch.deleteSearch(TA_SEARCH_ID, true);
             Assert.assertTrue(false, "A system search with id:" + TA_SEARCH_ID + " is deleted unexpectedly");
-        }
-        catch (EMAnalyticsFwkException e) {
-            bResult = true;
-        }
-        Assert.assertEquals(bResult, true);
     }
 
 
     @Test
-    public void testDuplicate() throws Exception
-    {
-        int folderId = 0;
+    public void testDuplicate() throws EMAnalyticsFwkException {
+        int folderId2 = 0;
         FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
         SearchManager objSearch = SearchManager.getInstance();
         CategoryManager objCategory = CategoryManagerImpl.getInstance();
@@ -230,13 +210,13 @@ public class SearchNonGroupsTest extends BaseTest{
             folder.setDescription("Test Parameter Description");
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
-            folderId = folder.getId();
+            folderId2 = folder.getId();
 
             Category cat = new CategoryImpl();
             cat.setName("CategoryTestOne1");
             String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
             cat.setOwner(currentUser);
-            cat.setDefaultFolderId(folderId);
+            cat.setDefaultFolderId(folderId2);
             cat.setProviderName("ProviderNameTest");
             cat.setProviderVersion("ProviderVersionTest");
             cat.setProviderDiscovery("ProviderDiscoveryTest");
@@ -248,7 +228,7 @@ public class SearchNonGroupsTest extends BaseTest{
             search.setDescription("temporary search");
             search.setName("My Search");
 
-            search.setFolderId(folderId);
+            search.setFolderId(folderId2);
             search.setCategoryId(categoryId);
             dupSearch = objSearch.saveSearch(search);
 
@@ -256,7 +236,7 @@ public class SearchNonGroupsTest extends BaseTest{
             search.setDescription("temporary search");
             search.setName("My Search");
 
-            search.setFolderId(folderId);
+            search.setFolderId(folderId2);
             search.setCategoryId(categoryId);
             try {
                 objSearch.saveSearch(search);
@@ -270,7 +250,7 @@ public class SearchNonGroupsTest extends BaseTest{
             ///delete the search created before
             objSearch.deleteSearch(dupSearch.getId(), true);
             objCategory.deleteCategory(categoryId, true);
-            objFolder.deleteFolder(folderId, true);
+            objFolder.deleteFolder(folderId2, true);
         }
 
     }
@@ -310,29 +290,22 @@ public class SearchNonGroupsTest extends BaseTest{
     }
 
     @Test
-    public void testGetSearchByInvalidCategoryId() throws Exception
-    {
+    public void testGetSearchByInvalidCategoryId() throws EMAnalyticsFwkException {
         SearchManager search = SearchManager.getInstance();
-        try {
             search.getSearchListByCategoryId(9999999999L);
-        }
-        catch (EMAnalyticsFwkException emanfe) {
-            AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(EMAnalyticsFwkException.ERR_GENERIC));
-        }
     }
 
 
     @Test
-    public void testGetSearchListByFolderId() throws Exception
-    {
+    public void testGetSearchListByFolderId() throws EMAnalyticsFwkException {
 
         List<Search> searchList = new ArrayList<Search>();
         SearchManager objSearch = SearchManager.getInstance();
         FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
         CategoryManager objCategory = CategoryManagerImpl.getInstance();
         Search snew = null;
-        int folderId = 0;
-        int categoryId = 0;
+        int folderId3 = 0;
+        int categoryId2 = 0;
         try {
 
             Folder folder = new FolderImpl();
@@ -340,30 +313,30 @@ public class SearchNonGroupsTest extends BaseTest{
             folder.setDescription("Test Parameter Description");
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
-            folderId = folder.getId();
+            folderId3 = folder.getId();
 
             Category cat = new CategoryImpl();
             cat.setName("CategoryTest_1");
             String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
             cat.setOwner(currentUser);
-            cat.setDefaultFolderId(folderId);
+            cat.setDefaultFolderId(folderId3);
             cat.setProviderName("ProviderNameTest");
             cat.setProviderVersion("ProviderVersionTest");
             cat.setProviderDiscovery("ProviderDiscoveryTest");
             cat.setProviderAssetRoot("ProviderAssetRootTest");
             cat = objCategory.saveCategory(cat);
-            categoryId = cat.getId();
+            categoryId2 = cat.getId();
 
             Search search = objSearch.createNewSearch();
             search.setDescription("search");
             search.setName("MySearch");
 
-            search.setFolderId(folderId);
-            search.setCategoryId(categoryId);
+            search.setFolderId(folderId3);
+            search.setCategoryId(categoryId2);
             snew = objSearch.saveSearch(search);
 
             //now get the list of the search inside this folder
-            searchList = objSearch.getSearchListByFolderId(folderId);
+            searchList = objSearch.getSearchListByFolderId(folderId3);
 
             //now check the length of list and content of search
             AssertJUnit.assertEquals(new Integer(1), new Integer(searchList.size()));
@@ -381,8 +354,8 @@ public class SearchNonGroupsTest extends BaseTest{
             if (snew != null) {
                 objSearch.deleteSearch(snew.getId(), true);
             }
-            objCategory.deleteCategory(categoryId, true);
-            objFolder.deleteFolder(folderId, true);
+            objCategory.deleteCategory(categoryId2, true);
+            objFolder.deleteFolder(folderId3, true);
         }
 
     }
@@ -395,6 +368,8 @@ public class SearchNonGroupsTest extends BaseTest{
         CategoryManager objCategory = CategoryManagerImpl.getInstance();
         int searchid1 = 0;
         int searchid2 = 0;
+        int folderId4 = 0;
+        int categoryId3 = 0;
         try {
 
             Folder folder = new FolderImpl();
@@ -402,26 +377,26 @@ public class SearchNonGroupsTest extends BaseTest{
             folder.setDescription("Test Parameter Description");
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
-            int folderId = folder.getId();
+            folderId4 = folder.getId();
 
             Category cat = new CategoryImpl();
             cat.setName("CategoryTestlast");
             String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
             cat.setOwner(currentUser);
-            cat.setDefaultFolderId(folderId);
+            cat.setDefaultFolderId(folderId4);
             cat.setProviderName("ProviderNameTest");
             cat.setProviderVersion("ProviderVersionTest");
             cat.setProviderDiscovery("ProviderDiscoveryTest");
             cat.setProviderAssetRoot("ProviderAssetRootTest");
             cat = objCategory.saveCategory(cat);
-            int categoryId = cat.getId();
+            categoryId3 = cat.getId();
 
             Search search = searchMgr.createNewSearch();
             search.setDescription("searchlast1");
             search.setName("searchlast1");
 
-            search.setFolderId(folderId);
-            search.setCategoryId(categoryId);
+            search.setFolderId(folderId4);
+            search.setCategoryId(categoryId3);
             search = searchMgr.saveSearch(search);
             searchid1 = search.getId();
 
@@ -429,8 +404,8 @@ public class SearchNonGroupsTest extends BaseTest{
             search1.setDescription("searchlast1");
             search1.setName("searchlast2");
 
-            search1.setFolderId(folderId);
-            search1.setCategoryId(categoryId);
+            search1.setFolderId(folderId4);
+            search1.setCategoryId(categoryId3);
             search1 = searchMgr.saveSearch(search1);
             searchid2 = search1.getId();
 
@@ -438,10 +413,10 @@ public class SearchNonGroupsTest extends BaseTest{
             AssertJUnit.assertNotNull(list);
             AssertJUnit.assertSame(2, list.size());
             //NOTE: assume that OOB searches are less than 100. If real OOB search count is greater than 100, we need to update below expected number
-            final int MORE_THAN_MAX_COUNT = 10000;
-            List<Search> list2 = searchMgr.getSearchListByLastAccessDate(MORE_THAN_MAX_COUNT);
+            final int MORETHANMAXCOUNT = 10000;
+            List<Search> list2 = searchMgr.getSearchListByLastAccessDate(MORETHANMAXCOUNT);
             AssertJUnit.assertNotNull(list2);
-            AssertJUnit.assertNotSame(MORE_THAN_MAX_COUNT, list2.size());
+            AssertJUnit.assertNotSame(MORETHANMAXCOUNT, list2.size());
 
             Search search9998 = searchMgr.getSearch(search.getId());
             AssertJUnit.assertNotNull(search9998);
@@ -466,8 +441,8 @@ public class SearchNonGroupsTest extends BaseTest{
             searchMgr.editSearch(search9999);
             searchMgr.deleteSearch(searchid1, true);
             searchMgr.deleteSearch(searchid2, true);
-            objCategory.deleteCategory(categoryId, true);
-            objFolder.deleteFolder(folderId, true);
+            objCategory.deleteCategory(categoryId3, true);
+            objFolder.deleteFolder(folderId4, true);
 
         }
         catch (Exception e) {
@@ -475,8 +450,8 @@ public class SearchNonGroupsTest extends BaseTest{
             AssertJUnit.assertTrue(e.getMessage(), false);
             searchMgr.deleteSearch(searchid1, true);
             searchMgr.deleteSearch(searchid2, true);
-            objCategory.deleteCategory(categoryId, true);
-            objFolder.deleteFolder(folderId, true);
+            objCategory.deleteCategory(categoryId3, true);
+            objFolder.deleteFolder(folderId4, true);
         }
     }
 
@@ -565,8 +540,7 @@ public class SearchNonGroupsTest extends BaseTest{
 
     }
         @Test
-        public void testSaveMultipleSearch() throws Exception
-        {
+        public void testSaveMultipleSearch() throws Exception {
             SearchManagerImpl searchMgr = SearchManagerImpl.getInstance();
             List<ImportSearchImpl> list = null;
             List<Search> listResult = null;
@@ -594,19 +568,19 @@ public class SearchNonGroupsTest extends BaseTest{
             cat = objCategory.saveCategory(cat);
             int cId = cat.getId();
 
-            JAXBElement folderId = objectFac.createFolderId(fId);
-            JAXBElement categoryId = objectFac.createCategoryId(cId);
+            JAXBElement objectFacFolderId = objectFac.createFolderId(fId);
+            JAXBElement objectFacCategoryId = objectFac.createCategoryId(cId);
 
             try {
                 list = new ArrayList<ImportSearchImpl>();
                 ImportSearchImpl search1 = new ImportSearchImpl();
-                search1.setFolderDet(folderId);
-                search1.setCategoryDet(categoryId);
+                search1.setFolderDet(objectFacFolderId);
+                search1.setCategoryDet(objectFacCategoryId);
                 search1.setName("ImportSearch1");
                 list.add(search1);
                 ImportSearchImpl search2 = new ImportSearchImpl();
-                search2.setFolderDet(folderId);
-                search2.setCategoryDet(categoryId);
+                search2.setFolderDet(objectFacFolderId);
+                search2.setCategoryDet(objectFacCategoryId);
                 search2.setName("ImportSearch2");
                 list.add(search2);
                 listResult = searchMgr.saveMultipleSearch(list);

@@ -15,6 +15,8 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.exception;
  */
 public class EmAnalyticsProcessingException
 {
+	private EmAnalyticsProcessingException() {
+	}
 
 	public static void processCategoryPersistantException(Exception ex, long defaultFolderId, String name)
 			throws EMAnalyticsFwkException

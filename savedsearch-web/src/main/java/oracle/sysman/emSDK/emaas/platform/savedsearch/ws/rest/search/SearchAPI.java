@@ -28,7 +28,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.validationUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
 
@@ -48,7 +48,7 @@ public class SearchAPI
 {
 
 	//private static final String FOLDER_PATH = "flattenedFolderPath";
-	private static final Logger _logger = LogManager.getLogger(SearchAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(SearchAPI.class);
 	@Context
 	UriInfo uri;
 
@@ -230,7 +230,7 @@ public class SearchAPI
 			// see if an ODS entity needs to be create
 			if(searchObj != null && searchObj.getParameters() != null) {
 				for (SearchParameter param : searchObj.getParameters()) {
-					if (OdsDataService.ENTITY_FLAG.equalsIgnoreCase(param.getName())
+					if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
 							&& "TRUE".equalsIgnoreCase(param.getValue())) {
 						OdsDataService ods = OdsDataServiceImpl.getInstance();
 						String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
@@ -252,12 +252,12 @@ public class SearchAPI
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -320,6 +320,7 @@ public class SearchAPI
 			sman.deleteSearch(searchId, false);
 		}
 		catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 
@@ -445,7 +446,7 @@ public class SearchAPI
 		Search searchObj;
 		SearchManager sman = SearchManager.getInstance();
 		try {
-			if (updateCategory != null && updateCategory.equals("ORACLE_INTERNAL")) {
+			if (updateCategory != null && "ORACLE_INTERNAL".equals(updateCategory)) {
 				searchObj = createSearchObjectForEdit(inputJsonObj, sman.getSearch(searchId), true);
 
 			}
@@ -460,12 +461,12 @@ public class SearchAPI
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 		catch (EMAnalyticsWSException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 
 		return Response.status(statusCode).entity(message).build();
@@ -487,15 +488,15 @@ public class SearchAPI
 		} catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 		}
 		
 		if(savedSearch != null) {
 			for (SearchParameter param : savedSearch.getParameters()) {
-				if(OdsDataService.ENTITY_ID.equalsIgnoreCase(param.getName())) {
+				if(param.getName().equalsIgnoreCase(OdsDataService.ENTITY_ID)) {
 					statusCode = 400;
 					message = "Exist Entity ID: " + param.getValue();
-					_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message);
+					LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message);
 				}
 			}
 			
@@ -510,7 +511,7 @@ public class SearchAPI
 				} catch (EMAnalyticsFwkException e) {
 					statusCode = e.getStatusCode();
 					message = e.getMessage();
-					_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+					LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
 				}
 			}
 		}
@@ -546,7 +547,7 @@ public class SearchAPI
 		catch (EMAnalyticsFwkException e) {
 			statusCode = e.getStatusCode();
 			message = e.getMessage();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
 					e.getStatusCode());
 		}
 
@@ -708,9 +709,10 @@ public class SearchAPI
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
 			statusCode = e.getStatusCode();
 			message = e.getMessage();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
 					e.getStatusCode());
 		}
 
@@ -727,6 +729,7 @@ public class SearchAPI
 			message = String.valueOf(DateUtil.getDateFormatter().format(date));
 		}
 		catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
 			message = e.getMessage();
 			statusCode = 404;
 		}
@@ -757,7 +760,7 @@ public class SearchAPI
 				return Response.status(Response.Status.NOT_FOUND).entity("Category not found").build();
 			}
 			if(!version.endsWith("+")){
-				_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + "The version is wrong",version);
+				LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + "The version is wrong",version);
 				version +="+";
 			}
 			oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link link = RegistryLookupUtil.getServiceExternalLink(serviceName,version,rel, TenantContext.getContext().gettenantName());
@@ -770,7 +773,7 @@ public class SearchAPI
 			}
 			return Response.status(Response.Status.OK).entity(JsonUtil.buildNormalMapper().toJson(link)).build();
 		}catch (EMAnalyticsFwkException e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
 					e.getStatusCode());
 			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
 		}
@@ -786,7 +789,7 @@ public class SearchAPI
 			//				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
 			//						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			//			}
-			if (name != null && name.trim().equals("")) {
+			if (name != null && "".equals(name.trim())) {
 				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			}
@@ -798,7 +801,7 @@ public class SearchAPI
 			}
 
 			try {
-				validationUtil.validateLength("name", name, 64);
+				ValidationUtil.validateLength("name", name, 64);
 			}
 			catch (EMAnalyticsWSException e) {
 				throw e;
@@ -821,11 +824,11 @@ public class SearchAPI
 
 		}
 		catch (JSONException je) {
-			//ignore the description if not provided by user
+			LOGGER.error(je.getLocalizedMessage());
 		}
 
 		try {
-			validationUtil.validateLength("description", desc, 256);
+			ValidationUtil.validateLength("description", desc, 256);
 		}
 		catch (EMAnalyticsWSException e) {
 			throw e;
@@ -877,7 +880,7 @@ public class SearchAPI
 					//								"The name key for search param can not be null in the input JSON Object",
 					//								EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
 					//					}
-					if (name != null && name.trim().equals("")) {
+					if (name != null && "".equals(name.trim())) {
 						throw new EMAnalyticsWSException(
 								"The name key for search param can not be empty in the input JSON Object",
 								EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
@@ -896,7 +899,7 @@ public class SearchAPI
 					throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
 							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
 				}
-				if (type.equals("STRING") | type.equals("CLOB")) {
+				if ("STRING".equals(type) | "CLOB".equals(type)) {
 					searchParam.setType(ParameterType.valueOf(type));
 				}
 				else {
@@ -932,7 +935,7 @@ public class SearchAPI
 			//				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
 			//						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			//			}
-			if (name != null && name.trim().equals("")) {
+			if (name != null && "".equals(name.trim())) {
 				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			}
@@ -943,7 +946,7 @@ public class SearchAPI
 			}
 
 			try {
-				validationUtil.validateLength("name", name, 64);
+				ValidationUtil.validateLength("name", name, 64);
 			}
 			catch (EMAnalyticsWSException e) {
 				throw e;
@@ -960,7 +963,7 @@ public class SearchAPI
 					EMAnalyticsWSException.JSON_INVALID_CHAR);
 		}
 		try {
-			validationUtil.validateLength("description", desc, 256);
+			ValidationUtil.validateLength("description", desc, 256);
 		}
 		catch (EMAnalyticsWSException e) {
 			throw e;
@@ -1022,7 +1025,7 @@ public class SearchAPI
 					//								"The name key for search param can not be null in the input JSON Object",
 					//								EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 					//					}
-					if (name != null && name.trim().equals("")) {
+					if (name != null && "".equals(name.trim())) {
 						throw new EMAnalyticsWSException(
 								"The name key for search param can not be empty in the input JSON Object",
 								EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
@@ -1040,7 +1043,7 @@ public class SearchAPI
 					throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
 							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
 				}
-				if (type.equals("STRING") | type.equals("CLOB")) {
+				if ("STRING".equals(type) | "CLOB".equals(type)) {
 					searchParam.setType(ParameterType.valueOf(type));
 				}
 				else {

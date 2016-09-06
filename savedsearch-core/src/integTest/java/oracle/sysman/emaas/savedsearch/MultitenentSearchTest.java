@@ -13,6 +13,7 @@ package oracle.sysman.emaas.savedsearch;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -45,11 +46,9 @@ public class MultitenentSearchTest extends BaseTest
 	private static String username2 = null;
 	private static String username3 = null;
 
-	public static int createCategory()
-	{
+	public static int createCategory() throws EMAnalyticsFwkException {
 		int id = 0;
 
-		try {
 			CategoryManager fmger = CategoryManager.getInstance();
 			Category catObj = new CategoryImpl();
 			catObj.setName("TestMultitencyCat");
@@ -60,34 +59,24 @@ public class MultitenentSearchTest extends BaseTest
 			catObj.setProviderAssetRoot("ProviderAssetRootTest");
 			catObj = fmger.saveCategory(catObj);
 			id = catObj.getId();
-		}
-		catch (Exception e) {
-			//do nothing	
-		}
 
 		return id;
 	}
 
-	public static int createfolder()
-	{
+	public static int createfolder() throws EMAnalyticsFwkException {
 		int id = 0;
 
-		try {
 			FolderManager fmger = FolderManager.getInstance();
 			Folder fld = new FolderImpl();
 			fld.setName("TestMultitencyFld");
 			fld.setDescription("TestMultitency Desc");
 			fld = fmger.saveFolder(fld);
 			id = fld.getId();
-		}
-		catch (Exception e) {
-			//do nothing	
-		}
+
 		return id;
 	}
 
-	public static int createSearch(Long value, String username)
-	{
+	public static int createSearch(Long value, String username) throws EMAnalyticsFwkException {
 		int id = 0;
 		TenantContext.setContext(new TenantInfo(username, value));
 		try {
@@ -100,49 +89,32 @@ public class MultitenentSearchTest extends BaseTest
 			search = fmger.saveSearch(search);
 			id = search.getId();
 		}
-		catch (Exception e) {
-			//do nothing	
-		}
 		finally {
 			TenantContext.clearContext();
 		}
 		return id;
 	}
 
-	public static boolean deleteCategory(int id)
-	{
+	public static boolean deleteCategory(int id) throws EMAnalyticsFwkException {
 		boolean bResult = false;
-		try {
 
 			CategoryManager fmger = CategoryManager.getInstance();
 			fmger.deleteCategory(id, true);
 			bResult = true;
-		}
-		catch (Exception e) {
-			bResult = false;
-		}
 
 		return bResult;
 	}
 
-	public static boolean deleteFolder(int id)
-	{
+	public static boolean deleteFolder(int id) throws EMAnalyticsFwkException {
 		boolean bResult = false;
-		try {
-
 			FolderManager fmger = FolderManager.getInstance();
 			fmger.deleteFolder(id, true);
 			bResult = true;
-		}
-		catch (Exception e) {
-			bResult = false;
-		}
 
 		return bResult;
 	}
 
-	public static boolean deleteSearch(int id, Long value, String username)
-	{
+	public static boolean deleteSearch(int id, Long value, String username) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		boolean bResult1 = false;
 		boolean bResult2 = false;
@@ -157,25 +129,18 @@ public class MultitenentSearchTest extends BaseTest
 			bResult2 = MultitenentSearchTest.deleteCategory(catid);
 			bResult = true;
 		}
-		catch (Exception e) {
-			bResult = false;
-		}
 		finally {
 			TenantContext.clearContext();
 		}
 		return bResult && bResult1 && bResult2;
 	}
 
-	public static Search getSearch(int id, Long value, String username)
-	{
+	public static Search getSearch(int id, Long value, String username) throws EMAnalyticsFwkException {
 		Search fld = null;
 		try {
 			TenantContext.setContext(new TenantInfo(username, value));
 			SearchManager fmger = SearchManager.getInstance();
 			fld = fmger.getSearch(id);
-		}
-		catch (Exception e) {
-			fld = null;
 		}
 		finally {
 			TenantContext.clearContext();
@@ -183,14 +148,12 @@ public class MultitenentSearchTest extends BaseTest
 		return fld;
 	}
 
-	public static void main(String args[])
-	{
+	public static void main(String args[]) throws EMAnalyticsFwkException {
 		MultitenentSearchTest.searchTest();
 	}
 
 	//@Test
-	public static void searchTest()
-	{
+	public static void searchTest() throws EMAnalyticsFwkException {
 		opc1 = TestUtils.getInternalTenantId(TENANT_OPC1);
 		opc2 = TestUtils.getInternalTenantId(TENANT_OPC2);
 		opc3 = TestUtils.getInternalTenantId(TENANT_OPC3);

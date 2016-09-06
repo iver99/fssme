@@ -240,11 +240,9 @@ public class ImportTest
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
-			System.out.println("verifying categoryids");
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Assert.assertTrue(verifyCategory(jsonObj.getInt("id"), jsonObj.getString("name")) == true);
 			Assert.assertTrue(jsonObj.getInt("id") > 1);
-			System.out.println("verified categoryids");
 		}
 	}
 
@@ -296,12 +294,9 @@ public class ImportTest
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
-			System.out.println("Verifying folders");
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Assert.assertTrue(verifyFolder(jsonObj.getInt("id"), jsonObj.getString("name")) == true);
-			System.out.println("Deleting folders");
 			Assert.assertTrue(deleteFolder(jsonObj.getInt("id")) == true);
-			System.out.println("Deleted folders");
 		}
 	}
 
@@ -320,15 +315,12 @@ public class ImportTest
 		Set<Integer> searchList1 = new HashSet<Integer>();
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
-			System.out.println("deleteing folders and  searches::");
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 
-			System.out.println("deleteing folders and  searches::::" + res.getBody().asString());
 			if (res.getStatusCode() == 200) {
-				System.out.println("deleteing folders and  searches::::::::" + jp.getMap("folder").get("id"));
 				Assert.assertTrue(deleteSearch(jsonObj.getInt("id")) == true);
 
 				searchList1.add(jsonObj.getInt("id"));
@@ -339,7 +331,6 @@ public class ImportTest
 					}
 				}
 			}
-			System.out.println("deleted folders and  searches");
 		}
 
 		Set<Integer> folderList = new HashSet<Integer>();
@@ -435,7 +426,6 @@ public class ImportTest
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + myfolderID);
-		System.out.println("											");
 		return res1.getStatusCode() == 204;
 
 	}
@@ -444,7 +434,6 @@ public class ImportTest
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + mySearchId);
-		System.out.println("											");
 		return res1.getStatusCode() == 204;
 
 	}
@@ -523,19 +512,15 @@ public class ImportTest
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + mycatID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {
-			System.out.println(res1.getStatusCode());
 			return false;
 		}
 		if (!jp.get("name").equals(mycatName)) {
-			System.out.println(jp.get("name"));
 			return false;
 		}
 		if (jp.get("href").equals(serveruri + "/category/" + mycatID)) {
-			System.out.println(jp.get("href"));
 			return false;
 		}
 		if (jp.get("createdOn") == null || "".equals(jp.get("createdOn"))) {
-			System.out.println(jp.get("createdOn"));
 			return false;
 		}
 		return true;
@@ -548,24 +533,18 @@ public class ImportTest
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/folder/" + myfolderID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {
-			System.out.println(res1.getStatusCode());
 			return false;
 		}
 		if (!jp.get("name").equals(myfolderName)) {
-			System.out.println(jp.get("name"));
 			return false;
 		}
 		if (jp.get("href").equals(serveruri + "/folder/" + myfolderID)) {
-			System.out.println(jp.get("href"));
 			return false;
 		}
 		if (!jp.get("createdOn").equals(jp.get("lastModifiedOn"))) {
-			System.out.println(jp.get("createdOn"));
-			System.out.println(jp.get("lastModifiedOn"));
 			return false;
 		}
 		if (jp.get("systemFolder").equals(true)) {
-			System.out.println(jp.get("systemFolder"));
 			return false;
 		}
 		return true;

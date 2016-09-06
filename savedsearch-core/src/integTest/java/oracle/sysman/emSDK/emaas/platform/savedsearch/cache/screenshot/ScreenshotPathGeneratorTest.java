@@ -14,7 +14,7 @@ public class ScreenshotPathGeneratorTest {
     Date now = new Date();
 
     @Test
-    public void testGenerateFileName() throws Exception {
+    public void testGenerateFileName(){
         Assert.assertTrue(screenshotPathGenerator.generateFileName(1234L, now, now) instanceof String);
         Assert.assertNull(screenshotPathGenerator.generateFileName(null, now, now));
         screenshotPathGenerator.generateFileName(1234L,null, now);
@@ -23,7 +23,7 @@ public class ScreenshotPathGeneratorTest {
     }
 
     @Test
-    public void testGenerateScreenshotUrl() throws Exception {
+    public void testGenerateScreenshotUrl(){
         String baseUrl = "baseUrlxx";
         Long widgetId = 1234L;
         Date creation = now;
@@ -31,5 +31,16 @@ public class ScreenshotPathGeneratorTest {
         Assert.assertTrue(screenshotPathGenerator.generateScreenshotUrl(baseUrl,widgetId,creation,modification) instanceof String);
         Assert.assertNull(screenshotPathGenerator.generateScreenshotUrl("",widgetId,creation,modification));
         Assert.assertNull(screenshotPathGenerator.generateScreenshotUrl(baseUrl,null,creation,modification));
+    }
+
+    @Test
+    public void testValidFileName(){
+        Assert.assertTrue(screenshotPathGenerator.validFileName(10000L, "20160821_10000.png","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10000L, "","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10000L, "invalid","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10001L, "20160821_10000.png","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10001L, "20160821_10000.png","20160921_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10000L, "20160821_10000.png","invalid"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(10000L, "20160821_10000.png","invalid_10000.png"));
     }
 }

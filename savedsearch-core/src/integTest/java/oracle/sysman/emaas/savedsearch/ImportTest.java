@@ -16,6 +16,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.Objec
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ParameterDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.SearchParameterDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -33,12 +34,9 @@ import org.testng.annotations.Test;
 public class ImportTest extends BaseTest
 {
 
-	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
 	@Test
-	public static void testImportCategorySet() throws Exception
-	{
-		try {
+	public static void testImportCategorySet() throws EMAnalyticsFwkException {
 			CategoryManager catImpl = CategoryManager.getInstance();
 			Category category = catImpl.createNewCategory();
 			category.setName("ImportCategory");
@@ -81,18 +79,10 @@ public class ImportTest extends BaseTest
 				AssertJUnit.assertNotNull("Imported category has NULL creation date", obj.getCreatedOn());
 				catImpl.deleteCategory(obj.getId(), true);
 			}
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-
 	}
 
 	//@Test
-	public static void testImportFolderSet() throws Exception
-	{
-		try {
-
+	public static void testImportFolderSet() throws Exception {
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			FolderDetails folder = new FolderDetails();
 			folder.setName("ImportFolderTest_g3");
@@ -117,34 +107,20 @@ public class ImportTest extends BaseTest
 
 				objFolder.deleteFolder(obj.getId(), true);
 			}
-
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
 	}
 
 	@Test 
-	public static void testImportSearchSet() throws Exception
-	{
+	public static void testImportSearchSet() throws Exception {
 		Integer folderId = 0;
 		Integer categoryId = 0;
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		CategoryManager catImpl = CategoryManager.getInstance();
 		SearchManagerImpl obj = SearchManagerImpl.getInstance();
 		List<Search> listobj = new ArrayList<Search>();
-		try {
-
-			System.out.println("Start to create folder for search importing");
-
 			Folder folder = objFolder.createNewFolder();
 			folder.setName("ImportFolderTest");
 			folder.setDescription("testing purpose folder");
 			folderId = objFolder.saveFolder(folder).getId();
-			System.out.println("The folder ID is " + folderId);
-			System.out.println("create folder for search importing finished");
-
-			System.out.println("Start to create category for search importing");
 
 			Category category = catImpl.createNewCategory();
 			category.setName("ImportCategoryName");
@@ -168,11 +144,8 @@ public class ImportTest extends BaseTest
 			category.setParameters(catParams);
 			category = catImpl.saveCategory(category);
 			categoryId = category.getId();
-			System.out.println("The category ID is " + categoryId);
-			System.out.println("create category for search importing finished");
 
 			//SearchManagerImpl objSearch = SearchManagerImpl.getInstance();
-			System.out.println("Start to create the first search for search importing");
 
 			ImportSearchImpl search = new ImportSearchImpl();
 			search.setDescription("testing purpose");
@@ -180,11 +153,9 @@ public class ImportTest extends BaseTest
 			search.setIsWidget(false);
 			ObjectFactory objFactory = new ObjectFactory();
 			JAXBElement<Integer> catId = objFactory.createCategoryId(category.getId());
-			System.out.println("The Category ID is " + catId.toString());
 			search.setCategoryDet(catId);
 			JAXBElement<Integer> fldId = objFactory.createFolderId(folderId);
 			search.setFolderDet(fldId);
-			System.out.println("The folder ID is " + fldId.toString());
 
 			ImportSearchImpl.SearchParameters param = search.getSearchParameters();
 			if (param == null) {
@@ -195,10 +166,8 @@ public class ImportTest extends BaseTest
 			tmpDetails.setName("Param1");
 			tmpDetails.setType(ParameterType.STRING);
 			tmpDetails.setValue("Value");
-			System.out.println("Set the parameters of Search");
 			param.getSearchParameter().add(tmpDetails);
 
-			System.out.println("Start to create second search for search importing");
 			ImportSearchImpl search1 = new ImportSearchImpl();
 			search1.setDescription("testing import purpose");
 			search1.setName("Import Dummy Search");
@@ -222,11 +191,7 @@ public class ImportTest extends BaseTest
 			list.add(search);
 			list.add(search1);
 
-			System.out.println("create search for search importing finished");
-
-			System.out.println("Start to importing search");
 			listobj = obj.saveMultipleSearch(list);
-			System.out.println("Verify the importing");
 			for (Search objSearch1 : listobj) {
 				AssertJUnit.assertNotNull(objSearch1);
 				AssertJUnit.assertNotNull(objSearch1.getCreatedOn());
@@ -234,52 +199,32 @@ public class ImportTest extends BaseTest
 				AssertJUnit.assertNotNull(objSearch1.getLastAccessDate());
 				AssertJUnit.assertEquals(objSearch1.getCreatedOn(), objSearch1.getLastModifiedOn());
 				AssertJUnit.assertEquals(objSearch1.getCreatedOn(), objSearch1.getLastAccessDate());
-				System.out.println("Verify data passed!");
-				if (objSearch1.getName().equals("Dummy Search")) {
-					System.out.println("Start verify search parameter--String");
-					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getName().equals("Param1"));
-					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getValue().equals("Value"));
-					System.out.println("Parameter Type is " + objSearch1.getParameters().get(0).getType());
-					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getType().toString().equals("STRING"));
-					System.out.println("Verify search parameter passed");
+				if ("Dummy Search".equals(objSearch1.getName())) {
+					AssertJUnit.assertTrue("Param1".equals(objSearch1.getParameters().get(0).getName()));
+					AssertJUnit.assertTrue("Value".equals(objSearch1.getParameters().get(0).getValue()));
+					AssertJUnit.assertTrue("STRING".equals(objSearch1.getParameters().get(0).getType().toString()));
 				}
-				if (objSearch1.getName().equals("Import Dummy Search")) {
-					System.out.println("Start verify search parameter--clob");
-					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getName().equals("Param2"));
+				if ("Import Dummy Search".equals(objSearch1.getName())) {
+					AssertJUnit.assertTrue("Param2".equals(objSearch1.getParameters().get(0).getName()));
 					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getValue() == null);
-					AssertJUnit.assertTrue(objSearch1.getParameters().get(0).getType().toString().equals("CLOB"));
-					System.out.println("Verify search parameter passed");
+					AssertJUnit.assertTrue("CLOB".equals(objSearch1.getParameters().get(0).getType().toString()));
 				}
 			}
-			System.out.println("search importing finished");
 
 			//catImpl.deleteCategory(category.getId(), true);
 
 			//objFolder.deleteFolder(folderId, true);
-		}
-		catch (Exception e) {
-
-			AssertJUnit.fail(e.getMessage());
-		}
-		finally {
-
 			for (Search objSearch : listobj) {
 				if (objSearch.getId() != null) {
-					System.out.println("Delete the search");
 					obj.deleteSearch(objSearch.getId(), true);
-					System.out.println("Delete the search passed");
 				}
 			}
 			if (categoryId != 0) {
-				System.out.println("delete category ");
 				catImpl.deleteCategory(categoryId, true);
 			}
 			if (folderId != 0) {
-				System.out.println("delete folder");
 				objFolder.deleteFolder(folderId, true);
 			}
-
-		}
 	}
 
 	private static ImportCategoryImpl createImportCategoryImpl(Category cat)
@@ -304,7 +249,6 @@ public class ImportTest extends BaseTest
 		ParameterDetails tmpDetails = new ParameterDetails();
 		tmpDetails.setName("Param");
 		tmpDetails.setValue("ParamValue");
-		System.out.println("Set the parameters of category");
 		param.getParameter().add(tmpDetails);
 		return impCat;
 	}

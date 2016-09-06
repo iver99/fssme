@@ -10,8 +10,11 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
+import org.apache.http.HttpException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.net.URISyntaxException;
 
 @Test(groups = {"s2"})
 public class OdsDataServiceTest {

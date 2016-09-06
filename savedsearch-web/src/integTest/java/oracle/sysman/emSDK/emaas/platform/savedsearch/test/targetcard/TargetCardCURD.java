@@ -7,12 +7,11 @@ import com.jayway.restassured.response.Response;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by xidai on 6/29/2016.
@@ -22,7 +21,7 @@ public class TargetCardCURD {
     static String authToken;
     static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC0;
     static String TENANT_ID1 = TestConstant.TENANT_ID0;
-    private ArrayList<Long> searchIdToBeDelete = new ArrayList<Long>();
+    private List<Long> searchIdToBeDelete = new ArrayList<Long>();
     private String targetType = "host_loganalytics_test";
 
     @BeforeClass
@@ -76,18 +75,15 @@ public class TargetCardCURD {
                 "}";
         Response createResponse = getResponseForCreateNewSearch(inputCreateJson);
         JsonPath jsonPathForCreate  = createResponse.jsonPath();
-        System.out.println(createResponse.getStatusLine());
         Assert.assertTrue(createResponse.getStatusCode() == 201);
         searchIdToBeDelete.add(jsonPathForCreate.getLong("id"));
 
 
         Response getTargetCardByName = getResponseForTargetCardByName(targetType);
         JsonPath jsonPathForGetTargetCardByName = getTargetCardByName.jsonPath();
-        System.out.println(getTargetCardByName.getStatusLine());
         Assert.assertTrue(getTargetCardByName.getStatusCode()==200);
 
         Response deleteResponse = getResponseForDelete(jsonPathForCreate.getLong("id"));
-        System.out.println(deleteResponse.getStatusLine());
         Assert.assertTrue(deleteResponse.getStatusCode()==200);
     }
 

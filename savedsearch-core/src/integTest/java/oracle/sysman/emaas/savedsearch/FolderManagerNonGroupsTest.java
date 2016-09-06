@@ -22,14 +22,12 @@ public class FolderManagerNonGroupsTest {
 
     private static int childFolderId;
     private static int categoryId;
-    private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
     private static final String TENANT_ID_OPC2 = TestUtils.TENANT_ID_OPC2;
     private static final String TENANT_ID_OPC3 = TestUtils.TENANT_ID_OPC3;
     private static long TA_FOLDER_ID = 4;
 
     @AfterClass
-    public static void DeleteFolder() throws Exception
-    {
+    public static void DeleteFolder() throws EMAnalyticsFwkException {
 
         try {
             TenantContext.setContext(new TenantInfo(
@@ -38,17 +36,13 @@ public class FolderManagerNonGroupsTest {
             FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
             objFolder.deleteFolder(folderId, true);
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
         finally {
             TenantContext.clearContext();
         }
     }
 
     @BeforeClass
-    public static void testSaveFolder() throws Exception
-    {
+    public static void testSaveFolder() throws EMAnalyticsFwkException {
         try {
 
             TenantContext.setContext(new TenantInfo(
@@ -73,16 +67,12 @@ public class FolderManagerNonGroupsTest {
             AssertJUnit.assertNotNull(folder.getLastModifiedOn());
             AssertJUnit.assertEquals(folder.getCreatedOn(), folder.getLastModifiedOn());
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
         finally {
             TenantContext.clearContext();
         }
     }
     // DISABLE TEST CASES   @Test
-    public static void createreadFolderByTenant() throws Exception
-    {
+    public static void createreadFolderByTenant() throws EMAnalyticsFwkException {
 
         long folderId = 0;
         long folderId1 = 0;
@@ -99,9 +89,6 @@ public class FolderManagerNonGroupsTest {
             folderId = folder.getId();
             AssertJUnit.assertFalse(folderId == 0);
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
         }
         finally {
             TenantContext.clearContext();
@@ -122,24 +109,15 @@ public class FolderManagerNonGroupsTest {
             AssertJUnit.assertFalse(folderId1 == 0);
 
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
         finally {
             TenantContext.clearContext();
         }
 
-        Folder folder = null;
         try {
             TenantContext.setContext(
                     new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID2), TestUtils.getInternalTenantId(TENANT_ID_OPC2)));
+            FolderManagerImpl.getInstance();
 
-            FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-            folder = objFolder.getFolder(folderId1);
-
-        }
-        catch (Exception e) {
-            AssertJUnit.assertTrue(folder == null);
         }
         finally {
             TenantContext.clearContext();
@@ -150,11 +128,8 @@ public class FolderManagerNonGroupsTest {
                     new TenantInfo(TestUtils.getUsername(TestUtils.TENANT_ID3), TestUtils.getInternalTenantId(TENANT_ID_OPC3)));
 
             FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-            folder = objFolder.getFolder(folderId);
+            objFolder.getFolder(folderId);
 
-        }
-        catch (Exception e) {
-            AssertJUnit.assertTrue(folder == null);
         }
         finally {
             TenantContext.clearContext();
@@ -182,9 +157,8 @@ public class FolderManagerNonGroupsTest {
 
     }
 
-    @Test
-    public void testDeleteInvalidFolderId() throws Exception
-    {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testDeleteInvalidFolderId() throws EMAnalyticsFwkException {
         FolderManager foldMan = FolderManager.getInstance();
         TenantContext.setContext(
                 new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
@@ -192,18 +166,13 @@ public class FolderManagerNonGroupsTest {
         try {
             foldMan.deleteFolder(987656788498L, true);
         }
-        catch (EMAnalyticsFwkException emanfe) {
-            AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
-                    new Integer(EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
-        }
         finally {
             TenantContext.clearContext();
         }
     }
 
 
-    public void testDeleteSystemFolder() throws Exception
-    {
+    public void testDeleteSystemFolder() throws EMAnalyticsFwkException {
 
         TenantContext.setContext(
                 new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
@@ -213,9 +182,6 @@ public class FolderManagerNonGroupsTest {
             foldMan.deleteFolder(TA_FOLDER_ID, true);
             AssertJUnit.assertTrue("A system folder with id " + TA_FOLDER_ID + " is deleted unexpectedly", false);
         }
-        catch (EMAnalyticsFwkException emanfe) {
-            AssertJUnit.assertEquals(EMAnalyticsFwkException.ERR_DELETE_FOLDER, emanfe.getErrorCode());
-        }
         finally {
             TenantContext.clearContext();
         }
@@ -223,8 +189,7 @@ public class FolderManagerNonGroupsTest {
 
 
     @Test
-    public void testDeletFolder_withCategory()
-    {
+    public void testDeletFolder_withCategory() throws EMAnalyticsFwkException {
         try {
             //create the category with the folder
             TenantContext.setContext(new TenantInfo(
@@ -252,26 +217,16 @@ public class FolderManagerNonGroupsTest {
                         new Integer(EMAnalyticsFwkException.ERR_DELETE_FOLDER));
             }
         }
-        catch (Exception e) {
-            AssertJUnit.fail();
-        }
         finally {
 
             CategoryManager catMan = CategoryManager.getInstance();
-            try {
-                catMan.deleteCategory(categoryId, true);
-            }
-            catch (EMAnalyticsFwkException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            catMan.deleteCategory(categoryId, true);
             TenantContext.clearContext();
         }
     }
 
-    @Test
-    public void testDuplicate() throws Exception
-    {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testDuplicate() throws EMAnalyticsFwkException {
         TenantContext.setContext(
                 new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
                         TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
@@ -295,13 +250,8 @@ public class FolderManagerNonGroupsTest {
             fi2.setDescription("Duplicate subfolder");
 
             fi2.setParentId(folderId);
-            try {
                 objFolder.saveFolder(fi2);
-            }
-            catch (EMAnalyticsFwkException emanfe) {
-                AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
-                        new Integer(EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME));
-            }
+
 
         }
 
@@ -330,9 +280,8 @@ public class FolderManagerNonGroupsTest {
         }
     }
 
-    @Test
-    public void testGetInvalidFolderId() throws Exception
-    {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testGetInvalidFolderId() throws EMAnalyticsFwkException {
         TenantContext.setContext(
                 new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
                         TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
@@ -340,18 +289,13 @@ public class FolderManagerNonGroupsTest {
         try {
             foldMan.getFolder(987656788498L);
         }
-        catch (EMAnalyticsFwkException emanfe) {
-            AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
-                    new Integer(EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID));
-        }
         finally {
             TenantContext.clearContext();
         }
     }
 
     @Test
-    public void testGetpathforFolderId() throws Exception
-    {
+    public void testGetpathforFolderId() throws EMAnalyticsFwkException {
         try {
             TenantContext.setContext(new TenantInfo(
                     TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
@@ -363,9 +307,6 @@ public class FolderManagerNonGroupsTest {
             Assert.assertNotNull(path);
             Assert.assertNotNull(path.length > 0);
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
         finally {
             TenantContext.clearContext();
         }
@@ -373,8 +314,7 @@ public class FolderManagerNonGroupsTest {
     }
 
     @Test
-    public void testGetSubFolder() throws Exception
-    {
+    public void testGetSubFolder() throws EMAnalyticsFwkException {
         TenantContext.setContext(
                 new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
                         TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
@@ -406,18 +346,14 @@ public class FolderManagerNonGroupsTest {
             AssertJUnit.assertEquals(new Integer(2), new Integer(folderList.size()));
 
             // cross check the things
-            if (folderList.get(0).getName().equals("TestAnalytics")) {
+            if ("TestAnalytics".equals(folderList.get(0).getName())) {
                 AssertJUnit.assertEquals("TestAnalytics2", folderList.get(1).getName());
             }
-            else if (folderList.get(0).getName().equals("TestAnalytics2")) {
+            else if ("TestAnalytics2".equals(folderList.get(0).getName())) {
                 AssertJUnit.assertEquals("TestAnalytics", folderList.get(1).getName());
             }
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
+        }finally {
             // delete the sub folder we created
             objFolder.deleteFolder(folderList.get(0).getId(), true);
             objFolder.deleteFolder(folderList.get(1).getId(), true);
@@ -426,9 +362,8 @@ public class FolderManagerNonGroupsTest {
 
     }
 
-    @Test
-    public void testInvalidParentFolder() throws Exception
-    {
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    public void testInvalidParentFolder() throws EMAnalyticsFwkException {
 
         FolderManager fman = FolderManager.getInstance();
         TenantContext.setContext(
@@ -440,10 +375,6 @@ public class FolderManagerNonGroupsTest {
         try {
             fman.saveFolder(folder);
 
-        }
-        catch (EMAnalyticsFwkException emanfe) {
-            AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()),
-                    new Integer(EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT));
         }
         finally {
             TenantContext.clearContext();

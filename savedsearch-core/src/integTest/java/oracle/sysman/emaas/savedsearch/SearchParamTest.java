@@ -11,6 +11,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -31,11 +32,9 @@ public class SearchParamTest extends BaseTest
 	private static Integer folderId;
 	private static Integer categoryId;
 	private static Search searchObj;
-	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 
 	@AfterClass
-	public static void testEndSearchparam() throws Exception
-	{
+	public static void testEndSearchparam() throws EMAnalyticsFwkException {
 		Search tmpSearch = null;
 		try {
 			tmpSearch = SearchManagerImpl.getInstance().getSearch(searchObj.getId());
@@ -55,12 +54,7 @@ public class SearchParamTest extends BaseTest
 			tmpSearch = SearchManagerImpl.getInstance().editSearch(tmpSearch);
 			tmpSearch = SearchManagerImpl.getInstance().getSearch(searchObj.getId());
 			paraList = tmpSearch.getParameters();
-			System.out.println("paraList.size() " + paraList.size());
 			AssertJUnit.assertTrue(paraList.size() == 1);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
 		}
 		finally {
 			//now delete all the searchParams and search and folder
@@ -82,10 +76,8 @@ public class SearchParamTest extends BaseTest
 	}
 
 	@BeforeClass
-	public static void testInitSearchparam() throws Exception
-	{
+	public static void testInitSearchparam() throws EMAnalyticsFwkException {
 
-		try {
 
 			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
 					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
@@ -143,17 +135,11 @@ public class SearchParamTest extends BaseTest
 			List<SearchParameter> paraList = tmpSearch.getParameters();
 			AssertJUnit.assertTrue(paraList.size() == 2);
 
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
-		}
+
 	}
 
 	 @Test 
-	public void testSearchparamCRUD() throws Exception
-	{
-		try {
+	public void testSearchparamCRUD() throws EMAnalyticsFwkException {
 			Search tmpSearch = SearchManagerImpl.getInstance().getSearch(searchObj.getId());
 			List<SearchParameter> paraList = tmpSearch.getParameters();
 			AssertJUnit.assertTrue(paraList.size() == 2);
@@ -178,10 +164,6 @@ public class SearchParamTest extends BaseTest
 			List<SearchParameter> paraEditList = tmpSearch.getParameters();
 			AssertJUnit.assertTrue(paraEditList.size() == 4);
 
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
-		}
+
 	}
 }
