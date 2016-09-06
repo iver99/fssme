@@ -351,6 +351,39 @@ BEGIN
 ELSE
   DBMS_OUTPUT.PUT_LINE('LA OOB widgets for Enterprise Health have been added already, no need to add again.'); 
 END IF;
+
+BEGIN
+  SELECT PROVIDER_NAME INTO V_PROVIDER_NAME FROM EMS_ANALYTICS_CATEGORY WHERE CATEGORY_ID=1 AND TENANT_ID=V_TENANT_ID;
+  IF (V_PROVIDER_NAME='LoganService') THEN
+    UPDATE EMS_ANALYTICS_CATEGORY SET PROVIDER_NAME='LogAnalyticsUI' WHERE CATEGORY_ID=1 AND TENANT_ID=V_TENANT_ID;
+    DBMS_OUTPUT.PUT_LINE('Category provider name: [LoganService] has been changed to [LogAnalyticsUI] successfully for tenant: '||V_TENANT_ID);  
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Category provider name: [LoganService] has been changed to [LogAnalyticsUI] before, no need to update again for tenant: '||V_TENANT_ID);  
+  END IF;
+  
+EXCEPTION
+WHEN OTHERS THEN
+  ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('Failed to update Category provider name: [LoganService] to [LogAnalyticsUI] for tenant: '||V_TENANT_ID||'due to '||SQLERRM);   
+  RAISE;  
+END;
+
+BEGIN
+SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE TENANT_ID=V_TENANT_ID AND NAME='PROVIDER_NAME' AND PARAM_VALUE_STR='LoganService';
+IF (v_count>0) THEN
+  UPDATE EMS_ANALYTICS_SEARCH_PARAMS SET PARAM_VALUE_STR='LogAnalyticsUI' WHERE TENANT_ID=V_TENANT_ID AND NAME='PROVIDER_NAME' AND PARAM_VALUE_STR='LoganService';
+  DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics widgets has been upgraded from [LoganService] to [LogAnalyticsUI] successfully for tenant: '||V_TENANT_ID||' ! Upgraded records: '||v_count);
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Provider name of LogAnalytics widgets has been upgraded from [LoganService] to [LogAnalyticsUI] for tenant: '||V_TENANT_ID||' before, no need to upgrade again');
+END IF;
+
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to upgrade provider name of LogAnalytics widgets from [LoganService] to [LogAnalyticsUI] for tenant: '||V_TENANT_ID||' due to '||SQLERRM);
+    RAISE;
+END;
+
      IF (V_TID<>-1) THEN
         EXIT;
      END IF;
@@ -360,7 +393,7 @@ END IF;
 EXCEPTION
 WHEN OTHERS THEN
   ROLLBACK;
-  DBMS_OUTPUT.PUT_LINE('Failed to update TA OOB widgets for greenfield migration due to '||SQLERRM);   
+  DBMS_OUTPUT.PUT_LINE('Failed to update LA OOB seed data due to '||SQLERRM);   
   RAISE;  
 END;
 /
