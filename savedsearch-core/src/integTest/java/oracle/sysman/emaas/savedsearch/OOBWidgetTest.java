@@ -6,6 +6,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Test
@@ -25,11 +26,20 @@ public class OOBWidgetTest {
                     boolean isSystemSearch = search.isSystemSearch();
                     boolean isWidget = search.getIsWidget();
                     if (isSystemSearch && isWidget) {
+                        String value = null;
+                        List<String> nameList = new ArrayList<>();
                         for(SearchParameter searchParam : search.getParameters()){
                             if("WIDGET_KOC_NAME".equals(searchParam.getName())||"WIDGET_VIEWMODEL".equals(searchParam.getName())||"WIDGET_TEMPLATE".equals(searchParam.getName())){
-                                Assert.assertNotNull(searchParam.getValue());
+                                if (!nameList.contains(searchParam.getName())) {
+                                    nameList.add(searchParam.getName());
+                                    value = searchParam.getValue() != null ? searchParam.getValue() : value;
+                                } else {
+                                    Assert.fail();
+                                }
                             }
                         }
+                        Assert.assertEquals(3, nameList.size());
+                        Assert.assertNotNull(value);
                     }
                 }
             }
