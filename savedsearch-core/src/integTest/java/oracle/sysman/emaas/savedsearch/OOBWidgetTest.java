@@ -26,20 +26,18 @@ public class OOBWidgetTest {
                     boolean isSystemSearch = search.isSystemSearch();
                     boolean isWidget = search.getIsWidget();
                     if (isSystemSearch && isWidget) {
-                        String value = null;
                         List<String> nameList = new ArrayList<>();
                         for(SearchParameter searchParam : search.getParameters()){
                             if("WIDGET_KOC_NAME".equals(searchParam.getName())||"WIDGET_VIEWMODEL".equals(searchParam.getName())||"WIDGET_TEMPLATE".equals(searchParam.getName())){
                                 if (!nameList.contains(searchParam.getName())) {
                                     nameList.add(searchParam.getName());
-                                    value = searchParam.getValue() != null ? searchParam.getValue() : value;
+                                    Assert.assertNotNull(searchParam.getValue());
                                 } else {
-                                    Assert.fail();
+                                    Assert.fail("Duplicate Parameter: " + searchParam.getName());
                                 }
                             }
                         }
                         Assert.assertEquals(3, nameList.size());
-                        Assert.assertNotNull(value);
                     }
                 }
             }
