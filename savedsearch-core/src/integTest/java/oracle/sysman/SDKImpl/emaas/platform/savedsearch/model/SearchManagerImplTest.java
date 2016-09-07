@@ -788,14 +788,6 @@ public class SearchManagerImplTest
 				result = 0;
 				emAnalyticsSearch.getId();
 				result = 1L;
-				emAnalyticsSearch.getNameNlsid();
-				result = "des_nlsid";
-				emAnalyticsSearch.getNameSubsystem();
-				result = "name_subsystem";
-				emAnalyticsSearch.getDescriptionNlsid();
-				result = "des_nlsid";
-				emAnalyticsSearch.getDescriptionSubsystem();
-				result = "des_subsystem";
 				emAnalyticsSearch.getOwner();
 				result = "Oracle";
 				emAnalyticsSearch.getCreationDate();
