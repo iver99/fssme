@@ -140,16 +140,8 @@ public class SearchManagerImplForTargetCardTest {
                 entityTransaction.commit();
                 emAnalyticsSearch.getId();
                 result = 1L;
-                emAnalyticsSearch.getNameNlsid();
-                result = "mls";
-                emAnalyticsSearch.getNameSubsystem();
-                result = "NameSystem";
                 emAnalyticsSearch.getName();
                 result ="name";
-                emAnalyticsSearch.getDescriptionNlsid();
-                result = "nls";
-                emAnalyticsSearch.getNameSubsystem();
-                result = "DesSystem";
                 emAnalyticsSearch.getDescription();
                 result = "description";
                 emAnalyticsSearch.getOwner();

@@ -1148,31 +1148,9 @@ public class SearchManagerImpl extends SearchManager
 			if (searchObj.getSearchGuid() != null) {
 				rtnObj.setGuid(searchObj.getSearchGuid().toString());
 			}
-
-			// TODO : Abhinav Handle the internationalization via MGMT_MESSAGES
-			// handling name here
-			String nlsid = searchObj.getNameNlsid();
-			String subsystem = searchObj.getNameSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setName(searchObj.getName());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setName(searchObj.getName());
-			}
-
-			nlsid = searchObj.getDescriptionNlsid();
-			subsystem = searchObj.getDescriptionSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setDescription(searchObj.getDescription());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setDescription(searchObj.getDescription());
-			}
-
+			
+			rtnObj.setName(searchObj.getName());
+			rtnObj.setDescription(searchObj.getDescription());
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreatedOn(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
@@ -1249,31 +1227,8 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			rtnObj = new WidgetImpl();
 			rtnObj.setId((int) searchObj.getId());
-
-			// TODO : Handle the internationalization via MGMT_MESSAGES
-			// handling name here
-			String nlsid = searchObj.getNameNlsid();
-			String subsystem = searchObj.getNameSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setName(searchObj.getName());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setName(searchObj.getName());
-			}
-
-			nlsid = searchObj.getDescriptionNlsid();
-			subsystem = searchObj.getDescriptionSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setDescription(searchObj.getDescription());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setDescription(searchObj.getDescription());
-			}
-
+			rtnObj.setName(searchObj.getName());
+			rtnObj.setDescription(searchObj.getDescription());
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreatedOn(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());

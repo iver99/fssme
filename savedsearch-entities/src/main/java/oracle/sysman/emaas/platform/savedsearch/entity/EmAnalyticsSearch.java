@@ -69,15 +69,6 @@ public class EmAnalyticsSearch implements Serializable
 
 	private String description;
 
-	@Column(name = "DESCRIPTION_NLSID")
-	private String descriptionNlsid;
-
-	@Column(name = "DESCRIPTION_SUBSYSTEM")
-	private String descriptionSubsystem;
-
-	@Column(name = "EM_PLUGIN_ID")
-	private String emPluginId;
-
 	@Column(name = "IS_LOCKED")
 	private BigDecimal isLocked;
 
@@ -94,12 +85,6 @@ public class EmAnalyticsSearch implements Serializable
 	private String metadataClob;
 
 	private String name;
-
-	@Column(name = "NAME_NLSID")
-	private String nameNlsid;
-
-	@Column(name = "NAME_SUBSYSTEM")
-	private String nameSubsystem;
 
 	@Column(name = "OWNER")
 	private String owner;
@@ -250,16 +235,6 @@ public class EmAnalyticsSearch implements Serializable
 		return description;
 	}
 
-	public String getDescriptionNlsid()
-	{
-		return descriptionNlsid;
-	}
-
-	public String getDescriptionSubsystem()
-	{
-		return descriptionSubsystem;
-	}
-
 	public EmAnalyticsCategory getEmAnalyticsCategory()
 	{
 		return emAnalyticsCategory;
@@ -276,11 +251,6 @@ public class EmAnalyticsSearch implements Serializable
 			emAnalyticsSearchParams = new HashSet<EmAnalyticsSearchParam>();
 		}
 		return emAnalyticsSearchParams;
-	}
-
-	public String getEmPluginId()
-	{
-		return emPluginId;
 	}
 
 	/**
@@ -327,16 +297,6 @@ public class EmAnalyticsSearch implements Serializable
 	public String getName()
 	{
 		return name;
-	}
-
-	public String getNameNlsid()
-	{
-		return nameNlsid;
-	}
-
-	public String getNameSubsystem()
-	{
-		return nameSubsystem;
 	}
 
 	public Long getObjectId()
@@ -548,16 +508,6 @@ public class EmAnalyticsSearch implements Serializable
 		this.description = description;
 	}
 
-	public void setDescriptionNlsid(String descriptionNlsid)
-	{
-		this.descriptionNlsid = descriptionNlsid;
-	}
-
-	public void setDescriptionSubsystem(String descriptionSubsystem)
-	{
-		this.descriptionSubsystem = descriptionSubsystem;
-	}
-
 	public void setEmAnalyticsCategory(EmAnalyticsCategory emAnalyticsCategory)
 	{
 		this.emAnalyticsCategory = emAnalyticsCategory;
@@ -571,11 +521,6 @@ public class EmAnalyticsSearch implements Serializable
 	public void setEmAnalyticsSearchParams(Set<EmAnalyticsSearchParam> emAnalyticsSearchParams)
 	{
 		this.emAnalyticsSearchParams = emAnalyticsSearchParams;
-	}
-
-	public void setEmPluginId(String emPluginId)
-	{
-		this.emPluginId = emPluginId;
 	}
 
 	/**
@@ -615,16 +560,6 @@ public class EmAnalyticsSearch implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	public void setNameNlsid(String nameNlsid)
-	{
-		this.nameNlsid = nameNlsid;
-	}
-
-	public void setNameSubsystem(String nameSubsystem)
-	{
-		this.nameSubsystem = nameSubsystem;
 	}
 
 	public void setOwner(String owner)

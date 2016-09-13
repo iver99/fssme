@@ -48,6 +48,8 @@ DECLARE
 	  DBMS_OUTPUT.PUT_LINE('INSERING OOB searches for &TENANT_ID ');
     END;
 /
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_insert_column.sql
+@&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_add_column.sql
 
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_la.sql  &TENANT_ID
@@ -119,9 +121,13 @@ COMMIT;
 @&EMSAAS_SQL_ROOT/1.9.1/emaas_savesearch_seed_data_ocs.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.9.1/emaas_savesearch_seed_data_ui_gallery.sql  &TENANT_ID
 
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_drop_column.sql
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_savesearch_seed_data_la.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_savesearch_seed_data.sql  &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_drop_column.sql
+@&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_seed_data_ude.sql &TENANT_ID
 
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');

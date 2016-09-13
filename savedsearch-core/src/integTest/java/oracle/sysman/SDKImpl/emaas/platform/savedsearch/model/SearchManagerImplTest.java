@@ -28,7 +28,10 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-
+/**
+ * @author qianqi
+ * @since 16-3-2.
+ */
 @Test(groups = { "s2" })
 public class SearchManagerImplTest
 {
@@ -225,7 +228,7 @@ public class SearchManagerImplTest
 		};
 		searchManager.getSearch(1234);
 	}
-
+	
 	@Test
 	public void testGetSearchWithoutOwner(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager,
 			@Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil, @Mocked final EmAnalyticsSearch emAnalyticsSearch)
@@ -780,14 +783,6 @@ public class SearchManagerImplTest
 				result = 0;
 				emAnalyticsSearch.getId();
 				result = 1L;
-				emAnalyticsSearch.getNameNlsid();
-				result = "des_nlsid";
-				emAnalyticsSearch.getNameSubsystem();
-				result = "name_subsystem";
-				emAnalyticsSearch.getDescriptionNlsid();
-				result = "des_nlsid";
-				emAnalyticsSearch.getDescriptionSubsystem();
-				result = "des_subsystem";
 				emAnalyticsSearch.getOwner();
 				result = "Oracle";
 				emAnalyticsSearch.getCreationDate();

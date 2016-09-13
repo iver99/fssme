@@ -44,7 +44,7 @@ public class TenantSubscriptionUtil
 	private static String SERVICE_PROVIDER_NAME_APM = "ApmUI";
 	private static String SERVICE_PROVIDER_NAME_ITA = "emcitas-ui-apps";
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
-	private static String SERVICE_PROVIDER_NAME_LA = "LoganService";
+	private static String SERVICE_PROVIDER_NAME_LA = "LogAnalyticsUI";
 	private static String SERVICE_PROVIDER_NAME_SA = "SecurityAnalyticsUI";
 	private static String SERVICE_PROVIDER_NAME_OCS = "Orchestration";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
@@ -255,3 +255,4 @@ public class TenantSubscriptionUtil
 		return hiddenInWidgetSelector;
 	}
 }
+
