@@ -1,5 +1,5 @@
-DEFINE TENANT_ID ='&1'
-DEFINE EMSAAS_SQL_ROOT ='&2'
+DEFINE TENANT_ID ='&tenant_id'
+DEFINE EMSAAS_SQL_ROOT ='&log_root'
 SET SERVEROUTPUT ON
 spool '&EMSAAS_SQL_ROOT/oob_widget_verify.log';
 DECLARE
