@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
+//import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+//import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 
 import org.codehaus.jettison.json.JSONArray;
