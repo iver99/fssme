@@ -239,13 +239,11 @@ public class EntityJsonUtil
 		sb.append("\"WIDGET_UNIQUE_ID\":").append(Integer.valueOf(m.get("SEARCH_ID").toString())).append(",");
 		if(m.get("NAME")!=null){
 			String name = EntityJsonUtil.handleDoubleQuotation(m.get("NAME").toString());
-			//			sb.append("\"WIDGET_NAME\":").append("\"" + m.get("NAME") + "\"").append(",");
 			sb.append("\"WIDGET_NAME\":").append("\"" + name + "\"").append(",");
 
 		}
 		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
-			String description = EntityJsonUtil.handleDoubleQuotation(m.get("NAME").toString());
-			//			sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
+			String description = EntityJsonUtil.handleDoubleQuotation(m.get("DESCRIPTION").toString());
 			sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + description + "\"").append(",");
 
 		}
