@@ -1,0 +1,53 @@
+/* 
+ *NOTE that for version value of your test-dependency, you cannot use REPO_BID as that would be specific to
+ * repository where it is run. You need to use getRepoBuildIDInProduct api provided by DevTools to get the correct build id.
+ * Make sure to add <repoName> prefix to the variable to define the namespace so it does not conflict with any property
+ * created by LRG using your tasks file.
+ * NOTE that the below code expects SAAS_VERSION environment variable to be set correctly.
+ */
+ext.emcpssf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, emcpssf)
+import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
+ 
+dependencies {
+ testConfig group: 'com.oracle.emaas.emcpssf.testsdk', name: 'savedsearch-zdt-test-sdk', version: "${emcpssf_REPO_BID}"
+    
+}
+ 
+
+task emcpssf_zdtPlay(type: EMTest) {
+  
+      options.suiteXmlBuilder().suite('name': 'testSdk-test') {
+           test('name': 'testSdk-test') {
+               classes([:]) {
+                  'class'('name': 'oracle.sysman.emaas.platform.savedsearch.testsdk.SavedsearchOrderWriteCURD')
+                  
+               }
+           }
+       }
+  
+   }
+  
+  task emcpssf_zdtReplay(type: EMTest) {
+  
+      options.suiteXmlBuilder().suite('name': 'testSdk-test') {
+           test('name': 'testSdk-test') {
+               classes([:]) {
+                  'class'('name': 'oracle.sysman.emaas.platform.savedsearch.testsdk.SavedsearchOrderWriteCURD')
+                  
+               }
+           }
+       }
+  
+   }
+   
+
+
+
+
+//task emcpssf_zdtPlaySaveState(type: EMTest)
+ 
+//task emcpssf_zdtReplaySaveState(type: EMTest)
+ 
+//task emcpssf_zdtCompare(type: EMTest)
+
+
