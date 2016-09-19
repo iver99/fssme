@@ -1340,7 +1340,7 @@ public class SearchesCRUD
 				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
 				.post("/search");
 		Response resForDelete1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 				.delete("/search?searchName=SearchTestDeletedByName");
 		Assert.assertEquals(200, resForDelete1.getStatusCode());
 
@@ -1348,7 +1348,7 @@ public class SearchesCRUD
 				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
 				.post("/search");
 		Response resForDelete2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 				.delete("/search?searchName=SearchTestDeletedByName&isExactly=true");
 		Assert.assertEquals(200, resForDelete2.getStatusCode());
 
@@ -1356,7 +1356,7 @@ public class SearchesCRUD
 				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
 				.post("/search");
 		Response resForDelete3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 				.delete("/search?searchName=TestDeletedBy&isExactly=false");
 		Assert.assertEquals(200, resForDelete3.getStatusCode());
 
