@@ -26,11 +26,5 @@ public class TimeUtil {
         }
     }
 
-    static final long ONE_SECOND = 1000L;
-    
-    public static  long getCurrentTime()
-    {
-        return System.currentTimeMillis();
-    }
 }
 
