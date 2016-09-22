@@ -6,6 +6,9 @@
  * NOTE that the below code expects SAAS_VERSION environment variable to be set correctly.
  */
 ext.emcpssf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, emcpssf)
+apply plugin: 'DevInfraPlugin'
+apply plugin: 'TestInfraPlugin'
+
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  
 dependencies {
