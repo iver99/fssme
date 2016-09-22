@@ -21,12 +21,12 @@ buildscript {
 }
 apply plugin: 'DevInfraPlugin'
 apply plugin: 'TestInfraPlugin'
-ext.emcpssf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, 'emcpssf')
+//ext.emcpssf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, 'emcpssf')
 
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  
 dependencies {
- testConfig group: 'com.oracle.emaas.emcpssf.testsdk', name: 'savedsearch-zdt-test-sdk', version: "${emcpssf_REPO_BID}"
+ testConfig group: 'com.oracle.emaas.emcpssf.testsdk', name: 'savedsearch-zdt-test-sdk', version: "1.0.+"
     
 }
  
