@@ -240,6 +240,7 @@ public class SearchTest extends BaseTest
 		}
 	}*/
 
+	@Test (groups = {"s1"})
 	public void testSearchNotExist() throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();

@@ -235,7 +235,7 @@ public class CategoryTest extends BaseTest
 		category.setProviderVersion("ProviderVersionUT");
 		category.setProviderDiscovery("ProviderDiscoveryUT");
 		category.setProviderAssetRoot("ProviderAssetRootUT");
-//			category = catMan.saveCategory(category);
+			category = catMan.saveCategory(category);
 
 
 	}
