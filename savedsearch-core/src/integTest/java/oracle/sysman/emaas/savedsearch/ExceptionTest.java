@@ -21,23 +21,23 @@ import org.testng.annotations.Test;
 public class ExceptionTest
 {
 	@Test (groups = {"s1"})
-	public void test_EMAnalyticsFwkJsonException()
+	public void testEMAnalyticsFwkJsonException()
 	{
 		EMAnalyticsFwkException emjsonexception = new EMAnalyticsFwkException("JSON Exception", 70040, null, new Exception());
 		AssertJUnit.assertEquals(500, emjsonexception.getStatusCode());
 	}
 
 	@Test (groups = {"s1"})
-	public void testConstructor_EMAnalyticsFwkException()
+	public void testConstructorEMAnalyticsFwkException()
 	{
 		//EMAnalyticsFwkException emexception = new EMAnalyticsFwkException(30022, new Exception());
 
-		EMAnalyticsFwkException emexception = new EMAnalyticsFwkException(new Exception());
+		 new EMAnalyticsFwkException(new Exception());
 
 	}
 
 	@Test (groups = {"s1"})
-	public void testStatusCode_EMAnalyticsFwkException()
+	public void testStatusCodeEMAnalyticsFwkException()
 
 	{
 		EMAnalyticsFwkException emexception = new EMAnalyticsFwkException(30020, new Exception());

@@ -21,14 +21,14 @@ public class DBConnectionManagerTestS2 {
     private DBConnectionManager dbConenctionManager = DBConnectionManager.getInstance();
 
     @BeforeMethod
-    private void setUp() throws Exception
+    private void setUp()
     {
         System.setProperty("SSF.INTERNAL.HUDSON.TESTENV","true");
         Deencapsulation.setField(PersistenceManager.class,"IS_TEST_ENV",true);
     }
 
     @Test
-    public void testIsDatabaseConnectionAvailable(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManagerFactoryImpl entityManagerFactoryImpl, @Mocked final EntityManager entityManager, @Mocked final EJBQueryImpl ejbQuery) throws Exception {
+    public void testIsDatabaseConnectionAvailable(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManagerFactoryImpl entityManagerFactoryImpl, @Mocked final EntityManager entityManager, @Mocked final EJBQueryImpl ejbQuery) {
 
         new Expectations(){
             {
@@ -45,5 +45,19 @@ public class DBConnectionManagerTestS2 {
             }
         };
         Assert.assertTrue(dbConenctionManager.isDatabaseConnectionAvailable());
+    }
+
+    @Test
+    public void testIsDatabaseConnectionAvailableException(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManagerFactoryImpl entityManagerFactoryImpl, @Mocked final EntityManager entityManager, @Mocked final EJBQueryImpl ejbQuery) {
+
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManagerFactory();
+                result = new Exception();
+            }
+        };
+        Assert.assertFalse(dbConenctionManager.isDatabaseConnectionAvailable());
     }
 }

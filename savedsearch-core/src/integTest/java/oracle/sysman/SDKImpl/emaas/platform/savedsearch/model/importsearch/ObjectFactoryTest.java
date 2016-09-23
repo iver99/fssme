@@ -16,102 +16,102 @@ public class ObjectFactoryTest {
     private ObjectFactory objectFactory = new ObjectFactory();
 
     @Test
-    public void testCreateImportSearchImpl() throws Exception {
+    public void testCreateImportSearchImpl(){
         objectFactory.createImportSearchImpl();
     }
 
     @Test
-    public void testCreateCategoryDetails() throws Exception {
+    public void testCreateCategoryDetails(){
         objectFactory.createCategoryDetails();
     }
 
     @Test
-    public void testCreateFolderDetails() throws Exception {
+    public void testCreateFolderDetails(){
         objectFactory.createFolderDetails();
     }
 
     @Test
-    public void testCreateSearchSet() throws Exception {
+    public void testCreateSearchSet(){
         objectFactory.createSearchSet();
     }
 
     @Test
-    public void testCreateSearchParameterDetails() throws Exception {
+    public void testCreateSearchParameterDetails(){
         objectFactory.createSearchParameterDetails();
     }
 
     @Test
-    public void testCreateParameter() throws Exception {
+    public void testCreateParameter(){
         objectFactory.createParameter();
     }
 
     @Test
-    public void testCreateImportSearchImplSearchParameters() throws Exception {
+    public void testCreateImportSearchImplSearchParameters(){
         objectFactory.createImportSearchImplSearchParameters();
     }
 
     @Test
-    public void testCreateCategoryDetailsParameters() throws Exception {
+    public void testCreateCategoryDetailsParameters(){
         objectFactory.createCategoryDetailsParameters();
     }
 
     @Test
-    public void testCreateCategory() throws Exception {
+    public void testCreateCategory(){
         objectFactory.createCategory(new CategoryDetails());
     }
 
     @Test
-    public void testCreateFolder() throws Exception {
+    public void testCreateFolder(){
         objectFactory.createFolder(new FolderDetails());
     }
 
     @Test
-    public void testCreateCategoryId() throws Exception {
+    public void testCreateCategoryId() {
         objectFactory.createCategoryId(BigInteger.TEN);
     }
 
     @Test
-    public void testCreateCategoryDet() throws Exception {
+    public void testCreateCategoryDet(){
         objectFactory.createCategoryDet(new Object());
     }
 
     @Test
-    public void testCreateFolderDet() throws Exception {
+    public void testCreateFolderDet(){
         objectFactory.createFolderDet(new Object());
     }
 
     @Test
-    public void testCreateSearchSet1() throws Exception {
+    public void testCreateSearchSet1(){
         objectFactory.createSearchSet(new SearchSet());
     }
 
     @Test
-    public void testCreateFolderId() throws Exception {
+    public void testCreateFolderId() {
         objectFactory.createFolderId(BigInteger.TEN);
     }
 
     @Test
-    public void testCreateFolderSet() throws Exception {
+    public void testCreateFolderSet(){
         objectFactory.createFolderSet();
     }
 
     @Test
-    public void testCreateFolderSet1() throws Exception {
+    public void testCreateFolderSet1(){
         objectFactory.createFolderSet(new FolderSet());
     }
 
     @Test
-    public void testCreateCategorySet() throws Exception {
+    public void testCreateCategorySet(){
         objectFactory.createCategorySet(new CategorySet());
     }
 
     @Test
-    public void testCreateCategorySet1() throws Exception {
+    public void testCreateCategorySet1(){
         objectFactory.createCategorySet();
     }
 
     @Test
-    public void testCreateDefaultFolderId() throws Exception {
+    public void testCreateDefaultFolderId(){
         objectFactory.createDefaultFolderId(10);
     }
 }

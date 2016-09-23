@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -72,8 +74,7 @@ public class TenantSubscriptionUtilTest
     @Mocked
     AppMappingEntity.AppMappingValue appMappingValue;
 	@Test
-	public void testGetTenantSubscribedCategories() throws Exception
-	{
+	public void testGetTenantSubscribedCategories() throws Exception {
         final ArrayList<Category> categories = new ArrayList<>();
         categories.add(category);
         final ArrayList<String> cachedApps = new ArrayList<>();
@@ -86,16 +87,13 @@ public class TenantSubscriptionUtilTest
                 result = categories;
                 cacheManager.getCacheable(withAny(tenant), anyString, anyString);
                 result = cachedApps;
-                category.getProviderName();
-                result = "TargetAnalytics";
             }
         };
         TenantSubscriptionUtil.getTenantSubscribedCategories("testtenant", true);
 	}
 
 	@Test
-	public void testGetTenantSubscribedServices() throws Exception
-	{
+	public void testGetTenantSubscribedServices() throws IOException {
 		final char[] authToken = { 'a', 'b', 'c' };
 		final List<DomainEntity> list = new ArrayList<>();
 		list.add(domainEntity);
@@ -156,5 +154,61 @@ public class TenantSubscriptionUtilTest
 		TenantSubscriptionUtil.getProviderNameFromServiceName("APM");
 		TenantSubscriptionUtil.getProviderNameFromServiceName(null);
 		TenantSubscriptionUtil.getProviderNameFromServiceName("APMUI");
+	}
+
+	@Test
+	public void tesGetTenantSubscribedServiceProviders() throws IOException {
+		final char[] authToken = { 'a', 'b', 'c' };
+		final List<DomainEntity> list = new ArrayList<>();
+		list.add(domainEntity);
+		final List<AppMappingEntity> amecList = new ArrayList<>();
+		amecList.add(appMappingEntity);
+		final List<AppMappingEntity.AppMappingValue>  appMappingValues = new ArrayList<>();
+		appMappingValues.add(appMappingValue);
+		new Expectations() {
+			{
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
+				result = link;
+				StringUtil.isEmpty(anyString);
+				result = false;
+				RegistrationManager.getInstance();
+				result = registrationManager;
+				registrationManager.getAuthorizationToken();
+				result = authToken;
+				UriBuilder.fromUri(anyString);
+				result = uriBuilder;
+				uriBuilder.build();
+				result = uri;
+				client.resource(withAny(uri));
+				result = webSource;
+				webSource.header(anyString, anyString);
+				result = builder;
+				builder.type(anyString);
+				result = builder;
+				builder.accept(anyString);
+				result = builder;
+				builder.get(String.class);
+				result = "uri.uri";
+				JSONUtil.fromJson(mapper, anyString, DomainsEntity.class);
+				result = domainsEntity;
+				domainsEntity.getItems();
+				result = list;
+				domainEntity.getDomainName();
+				result = "TenantApplicationMapping";
+				domainEntity.getCanonicalUrl();
+				result = "httyp://";
+				JSONUtil.fromJson(mapper, anyString, AppMappingCollection.class);
+				result = appMappingCollection;
+				appMappingCollection.getItems();
+				result = amecList;
+				appMappingEntity.getValues();
+				result = appMappingValues;
+				appMappingValue.getOpcTenantId();
+				result = "testtenant";
+				appMappingValue.getApplicationNames();
+				result = "LogAnalytics,ITAnalytics,APM";
+			}
+		};
+		TenantSubscriptionUtil.getTenantSubscribedServiceProviders("testtenant");
 	}
 }

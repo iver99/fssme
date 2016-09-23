@@ -28,9 +28,9 @@ import org.apache.logging.log4j.Logger;
 public class FolderManagerImpl extends FolderManager
 {
 	// Logger
-	private static final Logger _logger = LogManager.getLogger(FolderManagerImpl.class);
+	private static final Logger LOGGER = LogManager.getLogger(FolderManagerImpl.class);
 
-	private static final FolderManagerImpl _instance = new FolderManagerImpl();
+	private static final FolderManagerImpl INSTANCE = new FolderManagerImpl();
 
 	/**
 	 * Get FolderManagerImpl singleton instance.
@@ -39,7 +39,7 @@ public class FolderManagerImpl extends FolderManager
 	 */
 	public static FolderManagerImpl getInstance()
 	{
-		return _instance;
+		return INSTANCE;
 
 	}
 
@@ -76,7 +76,7 @@ public class FolderManagerImpl extends FolderManager
 				folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			}
 			if (folderObj == null) {
-				_logger.error("Folder with id " + folderId + " does not exist");
+				LOGGER.error("Folder with id " + folderId + " does not exist");
 				throw new EMAnalyticsFwkException("Folder with Id " + folderId + " does not exist",
 						EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID, null);
 			}
@@ -99,12 +99,12 @@ public class FolderManagerImpl extends FolderManager
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Folder with Id: " + folderId + "is a system folder", eme);
+			LOGGER.error("Folder with Id: " + folderId + "is a system folder", eme);
 			throw eme;
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processFolderPersistantException(e, folderId.longValue(), -1, null);
-			_logger.error("Error while deleting the folder with Id:" + folderId, e);
+			LOGGER.error("Error while deleting the folder with Id:" + folderId, e);
 			throw new EMAnalyticsFwkException("Error occurred while deleting the folder",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null, e);
 
@@ -127,7 +127,7 @@ public class FolderManagerImpl extends FolderManager
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(folderId, em);
 			if (folderObj == null) {
-				_logger.error("Folder with Id" + folderId + "does not exist");
+				LOGGER.error("Folder with Id" + folderId + "does not exist");
 				throw new EMAnalyticsFwkException("Folder with the Id " + folderId + " " + "does not exist",
 						EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID, null);
 			}
@@ -135,12 +135,12 @@ public class FolderManagerImpl extends FolderManager
 			folder = createFolderObject(folderObj, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Folder with Id" + folderId + "does not exist", eme);
+			LOGGER.error("Folder with Id" + folderId + "does not exist", eme);
 			throw eme;
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processFolderPersistantException(e, folderId.longValue(), -1, null);
-			_logger.error("Error while getting the folder with Id:" + folderId, e);
+			LOGGER.error("Error while getting the folder with Id:" + folderId, e);
 			throw new EMAnalyticsFwkException("Folder with the Id " + folderId + " " + "does not exist",
 					EMAnalyticsFwkException.ERR_GET_FOLDER_FOR_ID, null, e);
 
@@ -171,7 +171,7 @@ public class FolderManagerImpl extends FolderManager
 			//folder= createFolderObject(folderObj,null);
 		}
 		catch (Exception e) {
-			_logger.error("Error while getting the path for folder with Id:" + folderId, e);
+			LOGGER.error("Error while getting the path for folder with Id:" + folderId, e);
 			throw new EMAnalyticsFwkException("Error occurred while getting path for the folder",
 					EMAnalyticsFwkException.ERR_DELETE_FOLDER, null, e);
 		}
@@ -194,6 +194,7 @@ public class FolderManagerImpl extends FolderManager
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
 		}
 		catch (NoResultException e) {
+			LOGGER.error(e.getLocalizedMessage());
 			parentFolderObj = null;
 		}
 		if (parentFolderObj != null) {
@@ -208,7 +209,7 @@ public class FolderManagerImpl extends FolderManager
 	{
 		EntityManager em = null;
 		try {
-			ArrayList<Folder> retList = new ArrayList<Folder>();
+			List<Folder> retList = new ArrayList<Folder>();
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			List<EmAnalyticsFolder> folderList;
 
@@ -232,7 +233,7 @@ public class FolderManagerImpl extends FolderManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processFolderPersistantException(e, -1, -1, null);
-			_logger.error("Error while retrieving the list of sub-folders for the parent folder: " + folderId, e);
+			LOGGER.error("Error while retrieving the list of sub-folders for the parent folder: " + folderId, e);
 			throw new EMAnalyticsFwkException(
 					"Error while retrieving the list of sub-folders for the parent folder: " + folderId,
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
@@ -265,20 +266,20 @@ public class FolderManagerImpl extends FolderManager
 
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Folder with name " + folder.getName() + " was saved but could not bve retrieved back", eme);
+			LOGGER.error("Folder with name " + folder.getName() + " was saved but could not bve retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
 			processUniqueConstraints(folder, em, dmlce);
 			EmAnalyticsProcessingException.processFolderPersistantException(dmlce, -1, -1, folder.getName());
-			_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
+			LOGGER.error("Error while saving the folder: " + folder.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null);
 
 		}
 		catch (Exception e) {
 
-			_logger.error("Error while saving the folder: " + folder.getName(), e);
+			LOGGER.error("Error while saving the folder: " + folder.getName(), e);
 			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null, e);
 
@@ -331,13 +332,13 @@ public class FolderManagerImpl extends FolderManager
 				catch (EMAnalyticsFwkException eme) {
 					bCommit = false;
 					importedList.clear();
-					_logger.error("Error while importing the folder: " + folder.getName(), eme);
+					LOGGER.error("Error while importing the folder: " + folder.getName(), eme);
 					break;
 				}
 				catch (PersistenceException eme) {
 					bCommit = false;
 					importedList.clear();
-					_logger.error("Error while importing the folder: " + folder.getName(), eme);
+					LOGGER.error("Error while importing the folder: " + folder.getName(), eme);
 					break;
 				}
 			}
@@ -350,7 +351,7 @@ public class FolderManagerImpl extends FolderManager
 		}
 		catch (Exception e) {
 			importedList.clear();
-			_logger.error("Error in saveMultipleFolders :", e);
+			LOGGER.error("Error in saveMultipleFolders :", e);
 			throw e;
 
 		}
@@ -441,11 +442,11 @@ public class FolderManagerImpl extends FolderManager
 			return createFolderObject(folderObj, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Folder  was saved but could not bve retrieved back", eme);
+			LOGGER.error("Folder  was saved but could not bve retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			_logger.error("Error while saving the folder: " + folder.getName(), dmlce);
+			LOGGER.error("Error while saving the folder: " + folder.getName(), dmlce);
 			processUniqueConstraints(folder, em, dmlce);
 			EmAnalyticsProcessingException.processFolderPersistantException(dmlce, -1, folder.getParentId().longValue(), folder.getName());
 			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
@@ -454,7 +455,7 @@ public class FolderManagerImpl extends FolderManager
 		}
 		catch (Exception e) {
 
-			_logger.error("Error while saving the folder: " + folder.getName(), e);
+			LOGGER.error("Error while saving the folder: " + folder.getName(), e);
 			throw new EMAnalyticsFwkException("Error while saving the folder: " + folder.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_FOLDER, null, e);
 
@@ -519,7 +520,7 @@ public class FolderManagerImpl extends FolderManager
 
 		}
 		catch (Exception e) {
-			_logger.error("Error while getting the folder object", e);
+			LOGGER.error("Error while getting the folder object", e);
 			throw new EMAnalyticsFwkException("Error while getting the folder object", EMAnalyticsFwkException.ERR_GET_FOLDER,
 					null, e);
 		}
@@ -547,10 +548,11 @@ public class FolderManagerImpl extends FolderManager
 
 		}
 		catch (NoResultException nre) {
+			LOGGER.error(nre.getLocalizedMessage());
 			return null;
 		}
 		catch (Exception e) {
-			_logger.error("Error while reading the folder with parent: " + parentId + " and name: " + name, e);
+			LOGGER.error("Error while reading the folder with parent: " + parentId + " and name: " + name, e);
 			throw new EMAnalyticsFwkException("Error occurred while  reading the folder", EMAnalyticsFwkException.ERR_GENERIC,
 					null, e);
 		}

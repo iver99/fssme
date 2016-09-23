@@ -1,13 +1,8 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 import java.util.Date
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
-apply plugin: 'artifactory-publish'
+
 
 dfversion = project.ext.getServiceVersion('SavedSearchService')
 def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
@@ -32,12 +27,12 @@ def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").
 publishing.publications {
     integTest(MavenPublication) {
 			setArtifactId(project.name + '-' + integTestJar.appendix)
-			setGroupId('com.oracle.emaas.emcpssf.test')
+			setGroupId("${publishGroup}")
 			artifact integTestJar.archivePath
     }
     thisJarPublication(MavenPublication) {
 			from project.components.java
-			setGroupId('com.oracle.emaas.emcpssf.test')
+			setGroupId("${publishGroup}")
     }
 }
 
@@ -102,7 +97,8 @@ dependencies {
 	compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
 	compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
 	compile(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
-	compile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17'){transitive = false}
+	compile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1'){transitive = false}
+	compile(group: 'com.sun.jersey', name: 'jersey-json', version: '1.17.1'){transitive = false}
 	compile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3'){transitive = false}
 	compile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){transitive = false}
 	compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: regClientVer)

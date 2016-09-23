@@ -2,11 +2,12 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
 
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CacheLinkedHashMap<K,V> {
 	private ReentrantLock lock=new ReentrantLock();
-	private LinkedHashMap<K,V> cacheMap;
+	private Map<K,V> cacheMap;
 	private int cacheCapacity;
 	
 	public CacheLinkedHashMap(int cacheCapacity){
@@ -17,7 +18,7 @@ public class CacheLinkedHashMap<K,V> {
             @Override  
             protected boolean removeEldestEntry(java.util.Map.Entry<K,V> eldest) {  
                 return size() >CacheLinkedHashMap.this.cacheCapacity ;  
-            };  
+            }
         }; 
 	}
 	
@@ -75,7 +76,7 @@ public class CacheLinkedHashMap<K,V> {
     }
     
     public boolean isEmpty(){
-    	return this.size()==0?true:false;
+    	return this.isEmpty()?true:false;
     }
     
     public boolean containsKey(K key){
@@ -86,11 +87,11 @@ public class CacheLinkedHashMap<K,V> {
     	return cacheMap.containsValue(value);
     }
 
-	public LinkedHashMap<K, V> getCacheMap() {
+	public Map<K, V> getCacheMap() {
 		return cacheMap;
 	}
 
-	public void setCacheMap(LinkedHashMap<K, V> cacheMap) {
+	public void setCacheMap(Map<K, V> cacheMap) {
 		this.cacheMap = cacheMap;
 	}
 

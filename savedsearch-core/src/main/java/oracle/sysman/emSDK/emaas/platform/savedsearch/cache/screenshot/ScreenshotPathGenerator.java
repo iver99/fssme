@@ -26,7 +26,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
  */
 public class ScreenshotPathGenerator
 {
-	private static final Logger logger = LogManager.getLogger(ScreenshotPathGenerator.class);
+	private static final Logger LOGGER = LogManager.getLogger(ScreenshotPathGenerator.class);
 	private static String DEFAULT_SCREENSHOT_EXT = ".png";
 	private static String SERVICE_VERSION_PROPERTY = "serviceVersion";
 
@@ -47,7 +47,7 @@ public class ScreenshotPathGenerator
 	public String generateFileName(BigInteger widgetId, Date creation, Date modification)
 	{
 		if (widgetId == null) {
-			logger.error("Unexpected null widget id to generate screenshot file name: widget id={}, creation={}, modification={}",
+			LOGGER.error("Unexpected null widget id to generate screenshot file name: widget id={}, creation={}, modification={}",
 					widgetId, creation, modification);
 			return null;
 		}
@@ -59,7 +59,7 @@ public class ScreenshotPathGenerator
 			sb.append(creation.getTime());
 		}
 		else {
-			logger.error("Unexpected widget with null values for both creation and modification date");
+			LOGGER.error("Unexpected widget with null values for both creation and modification date");
 			return null;
 		}
 		sb.append("_");
@@ -71,11 +71,11 @@ public class ScreenshotPathGenerator
 	public String generateScreenshotUrl(String baseUrl, BigInteger widgetId, Date creation, Date modification)
 	{
 		if (StringUtil.isEmpty(baseUrl)) {
-			logger.error("Unexpected null/empty base url to generate screenshot URL");
+			LOGGER.error("Unexpected null/empty base url to generate screenshot URL");
 			return null;
 		}
 		if (StringUtil.isEmpty(versionString)) {
-			logger.error("Unexpected null/empty versionString to generate screenshot URL");
+			LOGGER.error("Unexpected null/empty versionString to generate screenshot URL");
 			return null;
 		}
 		String fileName = generateFileName(widgetId, creation, modification);
@@ -84,7 +84,7 @@ public class ScreenshotPathGenerator
 		}
 		String url = baseUrl + (baseUrl.endsWith("/") ? "" : "/") + widgetId + "/screenshot/" + versionString + "/images/"
 				+ fileName;
-		logger.debug("The screenshot URL is {} for specified baseUrl={}, widgetId={}, creation={}, modification={}", baseUrl,
+		LOGGER.debug("The screenshot URL is {} for specified baseUrl={}, widgetId={}, creation={}, modification={}", baseUrl,
 				widgetId, creation, modification);
 		return url;
 	}
@@ -92,17 +92,17 @@ public class ScreenshotPathGenerator
 	public boolean validFileName(BigInteger dashboardId, String fileNameToValid, String fileNameFromCache)
 	{
 		if (StringUtil.isEmpty(fileNameToValid)) {
-			logger.warn("Invalid file name as it is empty");
+			LOGGER.warn("Invalid file name as it is empty");
 			return false;
 		}
 		//		String[] newStrs = StringUtils.split(fileNameToValid, '_');
 		String[] newStrs = fileNameToValid.split("_");
 		if (newStrs == null || newStrs.length != 2) {
-			logger.warn("Invalid file name not in proper format with only one char '_' inside");
+			LOGGER.warn("Invalid file name not in proper format with only one char '_' inside");
 			return false;
 		}
 		if (!newStrs[1].equals(String.valueOf(dashboardId) + DEFAULT_SCREENSHOT_EXT)) {
-			logger.warn("Invalid file name as dashboard id or image type does not match");
+			LOGGER.warn("Invalid file name as dashboard id or image type does not match");
 			return false;
 		}
 		Long newTime = null;
@@ -113,20 +113,20 @@ public class ScreenshotPathGenerator
 			if (cachedStrs != null && cachedStrs.length == 2) {
 				Long cachedTime = Long.valueOf(cachedStrs[0]);
 				if (newTime < cachedTime) {
-					logger.warn(
+					LOGGER.warn(
 							"Invalid file name as requested file name {} contains older timestamp than the timestamp from the cached screenshot file name {}",
 							newTime, cachedTime);
 				}
 				return newTime >= cachedTime;
 			}
 			else {
-				logger.warn("Invalid file name as cached file name is invalid: cached file name={}, splitted cached strings",
+				LOGGER.warn("Invalid file name as cached file name is invalid: cached file name={}, splitted cached strings",
 						fileNameFromCache, StringUtil.arrayToCommaDelimitedString(cachedStrs));
 				return false;
 			}
 		}
 		catch (NumberFormatException e) {
-			logger.warn(e);
+			LOGGER.warn(e);
 			return false;
 		}
 	}
@@ -139,10 +139,10 @@ public class ScreenshotPathGenerator
 			is = ScreenshotPathGenerator.class.getResourceAsStream("/savedsearch.properties");
 			properties.load(is);
 			versionString = (String) properties.get(SERVICE_VERSION_PROPERTY);
-			logger.debug("Initialize the screenshot path version string to {}", versionString);
+			LOGGER.debug("Initialize the screenshot path version string to {}", versionString);
 		}
 		catch (IOException e) {
-			logger.error(e);
+			LOGGER.error(e);
 		}
 		finally {
 			if (is != null) {
@@ -150,7 +150,7 @@ public class ScreenshotPathGenerator
 					is.close();
 				}
 				catch (IOException e) {
-					logger.error(e);
+					LOGGER.error(e);
 				}
 			}
 		}

@@ -20,54 +20,54 @@ public class EmAnalyticsCategoryTest {
     private EmAnalyticsCategory emAnalyticsCategory;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public void setUp(){
         emAnalyticsCategory = new EmAnalyticsCategory();
     }
 
     @Test (groups = {"s1"})
-    public void testGetCategoryId() throws Exception {
+    public void testGetCategoryId() {
         BigInteger id = new BigInteger("1234123412341234");
         emAnalyticsCategory.setCategoryId(id);
         Assert.assertEquals(id,emAnalyticsCategory.getCategoryId());
     }
 
     @Test (groups = {"s1"})
-    public void testGetCreationDate() throws Exception {
+    public void testGetCreationDate(){
         Date now = new Date();
         emAnalyticsCategory.setCreationDate(now);
         Assert.assertEquals(now,emAnalyticsCategory.getCreationDate());
     }
 
     @Test (groups = {"s1"})
-    public void testGetDeleted() throws Exception {
+    public void testGetDeleted(){
         BigInteger id = new BigInteger("1234123412341234");
         emAnalyticsCategory.setDeleted(id);
         Assert.assertEquals(id,emAnalyticsCategory.getDeleted());
     }
 
     @Test (groups = {"s1"})
-    public void testGetDescription() throws Exception {
+    public void testGetDescription(){
         String description = "descriptionxx";
         emAnalyticsCategory.setDescription(description);
         Assert.assertEquals(description,emAnalyticsCategory.getDescription());
     }
 
     @Test (groups = {"s1"})
-    public void testGetDescriptionNlsid() throws Exception {
+    public void testGetDescriptionNlsid(){
         String Nlsid = "nlsidxx";
         emAnalyticsCategory.setDescriptionNlsid(Nlsid);
         Assert.assertEquals(Nlsid,emAnalyticsCategory.getDescriptionNlsid());
     }
 
     @Test (groups = {"s1"})
-    public void testGetDescriptionSubsystem() throws Exception {
+    public void testGetDescriptionSubsystem(){
         String subsystem = "subsystemxx";
         emAnalyticsCategory.setDescriptionSubsystem(subsystem);
         Assert.assertEquals(subsystem,emAnalyticsCategory.getDescriptionSubsystem());
     }
 
     @Test (groups = {"s1"})
-    public void testGetEmAnalyticsCategoryParams() throws Exception {
+    public void testGetEmAnalyticsCategoryParams(){
         emAnalyticsCategory.setEmAnalyticsCategoryParams(null);
         Assert.assertFalse(CollectionUtils.hasElements(emAnalyticsCategory.getEmAnalyticsCategoryParams()));
 
@@ -77,79 +77,86 @@ public class EmAnalyticsCategoryTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetEmAnalyticsFolder() throws Exception {
+    public void testGetEmAnalyticsFolder(){
         EmAnalyticsFolder emaFolder = new EmAnalyticsFolder();
         emAnalyticsCategory.setEmAnalyticsFolder(emaFolder);
         Assert.assertEquals(emaFolder,emAnalyticsCategory.getEmAnalyticsFolder());
     }
 
     @Test (groups = {"s1"})
-    public void testGetEmAnalyticsSearches() throws Exception {
+    public void testGetEmAnalyticsSearches(){
         HashSet<EmAnalyticsSearch> emAnalyticsSearches = new HashSet<EmAnalyticsSearch>();
         emAnalyticsCategory.setEmAnalyticsSearches(emAnalyticsSearches);
         Assert.assertEquals(emAnalyticsSearches,emAnalyticsCategory.getEmAnalyticsSearches());
     }
 
     @Test (groups = {"s1"})
-    public void testGetEmPluginId() throws Exception {
+    public void testGetEmPluginId(){
         String plugid = "pluginidxx";
         emAnalyticsCategory.setEmPluginId(plugid);
         Assert.assertEquals(plugid,emAnalyticsCategory.getEmPluginId());
     }
 
     @Test (groups = {"s1"})
-    public void testGetName() throws Exception {
+    public void testGetName(){
         String name = "namexx";
         emAnalyticsCategory.setName(name);
         Assert.assertEquals(name,emAnalyticsCategory.getName());
     }
 
     @Test (groups = {"s1"})
-    public void testGetNameNlsid() throws Exception {
+    public void testGetNameNlsid(){
         String nameNlsid = "nameNlsidxx";
         emAnalyticsCategory.setNameNlsid(nameNlsid);
         Assert.assertEquals(nameNlsid,emAnalyticsCategory.getNameNlsid());
     }
 
     @Test (groups = {"s1"})
-    public void testGetNameSubsystem() throws Exception {
+    public void testGetNameSubsystem(){
         String nameSubsystem = "nameSubsystemxx";
         emAnalyticsCategory.setNameSubsystem(nameSubsystem);
         Assert.assertEquals(nameSubsystem,emAnalyticsCategory.getNameSubsystem());
     }
 
     @Test (groups = {"s1"})
-    public void testGetOwner() throws Exception {
+    public void testGetOwner(){
         String owner = "ownerxx";
         emAnalyticsCategory.setOwner(owner);
         Assert.assertEquals(owner,emAnalyticsCategory.getOwner());
     }
 
     @Test (groups = {"s1"})
-    public void testGetProviderAssetRoot() throws Exception {
+    public void testGetProviderAssetRoot(){
         String providerAssetRoot = "providerAssetRootxx";
         emAnalyticsCategory.setProviderAssetRoot(providerAssetRoot);
         Assert.assertEquals(providerAssetRoot,emAnalyticsCategory.getProviderAssetRoot());
     }
 
     @Test (groups = {"s1"})
-    public void testGetProviderDiscovery() throws Exception {
+    public void testGetProviderDiscovery(){
         String providerDiscovery = "providerdiscoveryxx";
         emAnalyticsCategory.setProviderDiscovery(providerDiscovery);
         Assert.assertEquals(providerDiscovery,emAnalyticsCategory.getProviderDiscovery());
     }
 
     @Test (groups = {"s1"})
-    public void testGetProviderName() throws Exception {
+    public void testGetProviderName(){
         String providerName = "providerNamexx";
         emAnalyticsCategory.setProviderName(providerName);
         Assert.assertEquals(providerName,emAnalyticsCategory.getProviderName());
     }
 
     @Test (groups = {"s1"})
-    public void testGetProviderVersion() throws Exception {
+    public void testGetProviderVersion(){
         String providerVersion = "providerVersion";
         emAnalyticsCategory.setProviderVersion(providerVersion);
         Assert.assertEquals(providerVersion,emAnalyticsCategory.getProviderVersion());
+    }
+    
+    @Test(groups = {"s1"})
+    public void testGetDASHBOARDINELIGIBLE(){
+        String dashboardIneligible = "1";
+        emAnalyticsCategory.setdashboardIneligible(dashboardIneligible);
+        Assert.assertEquals("1", emAnalyticsCategory.getDASHBOARDINELIGIBLE());
     }
 }

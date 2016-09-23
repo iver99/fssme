@@ -15,13 +15,13 @@ public class SavedSearchStatusTest {
     SavedSearchStatus savedSearchStatus;
 
     @Test
-    public void testGetStatus_StatusUp() throws Exception {
+    public void testGetStatus_StatusUp(){
         savedSearchStatus = new SavedSearchStatus();
         Assert.assertTrue(savedSearchStatus.getStatus() instanceof String);
     }
 
     @Test
-    public void testGetStatus_StatusDown(@Mocked final GlobalStatus globalStatus) throws Exception {
+    public void testGetStatus_StatusDown(@Mocked final GlobalStatus globalStatus){
         new Expectations(){
             {
                 globalStatus.isSavedSearchUp();
@@ -33,7 +33,7 @@ public class SavedSearchStatusTest {
     }
 
     @Test
-    public void testGetStatus_StatusOutOfService(@Mocked final GlobalStatus globalStatus) throws Exception {
+    public void testGetStatus_StatusOutOfService(@Mocked final GlobalStatus globalStatus){
         new Expectations(){
             {
                 globalStatus.isSavedSearchUp();
@@ -45,13 +45,13 @@ public class SavedSearchStatusTest {
     }
 
     @Test
-    public void testGetStatusMsg_UpAndRunning() throws Exception {
+    public void testGetStatusMsg_UpAndRunning(){
         savedSearchStatus = new SavedSearchStatus();
         Assert.assertEquals(savedSearchStatus.getStatusMsg(),"SavedSearch is up and running.");
     }
 
     @Test
-    public void testGetStatusMsg_Stopped(@Mocked final GlobalStatus globalStatus) throws Exception {
+    public void testGetStatusMsg_Stopped(@Mocked final GlobalStatus globalStatus){
         new Expectations(){
             {
                 globalStatus.isSavedSearchUp();
@@ -63,7 +63,7 @@ public class SavedSearchStatusTest {
     }
 
     @Test
-    public void testGetStatusMsg_OutOfService(@Mocked final GlobalStatus globalStatus) throws Exception {
+    public void testGetStatusMsg_OutOfService(@Mocked final GlobalStatus globalStatus){
         new Expectations(){
             {
                 globalStatus.isSavedSearchUp();

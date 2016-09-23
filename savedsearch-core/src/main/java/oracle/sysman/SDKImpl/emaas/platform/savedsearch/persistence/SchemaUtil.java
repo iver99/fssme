@@ -15,9 +15,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
  *
  */
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 
@@ -30,6 +28,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  */
 public class SchemaUtil
 {
+	private SchemaUtil() {
+	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeployment
@@ -355,21 +355,22 @@ public class SchemaUtil
 
 	private static final String ITEMS = "items";
 
-	private static Logger logger = LogManager.getLogger(SchemaUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(SchemaUtil.class);
 
 	public static List<String> getSchemaUrls(String json)
 	{
 		if (json == null || "".equals(json)) {
-			return null;
+			return Collections.emptyList();
 		}
 
-		HashSet<String> urlSet = new HashSet<String>();
+
+		Set<String> urlSet = new HashSet<String>();
 
 		try {
 
 			List<SchemaDeploymentUrls> sdlist = JSONUtil.fromJsonToList(json, SchemaDeploymentUrls.class, ITEMS);
 			if (sdlist == null | sdlist.isEmpty()) {
-				return null;
+				return Collections.emptyList();
 			}
 			for (SchemaDeploymentUrls sd : sdlist) {
 				for (String temp : sd.getCanonicalEndpoints()) {
@@ -389,8 +390,8 @@ public class SchemaUtil
 		}
 		catch (Exception e) {
 
-			logger.error("an error occureed while getting schema name", e);
-			return null;
+			LOGGER.error("an error occureed while getting schema name", e);
+			return Collections.emptyList();
 		}
 		List<String> urls = new ArrayList<String>();
 		urls.addAll(urlSet);
@@ -416,7 +417,7 @@ public class SchemaUtil
 		}
 		catch (IOException e) {
 
-			logger.error("an error occureed while getting schema name", e);
+			LOGGER.error("an error occureed while getting schema name", e);
 		}
 		return null;
 	}

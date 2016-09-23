@@ -23,9 +23,7 @@ public class CategoryTest extends BaseTest
 	private static BigInteger categoryId;
 
 	@AfterClass
-	public static void testDelete()
-	{
-		try {
+	public static void testDelete() throws EMAnalyticsFwkException {
 			CategoryManager catMan = CategoryManager.getInstance();
 
 			Category category = catMan.getCategory(categoryId);
@@ -38,16 +36,11 @@ public class CategoryTest extends BaseTest
 			// now delete the category
 			catMan.deleteCategory(categoryId, true);
 			// here the assertion not required or required
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
 	}
 
 	@BeforeClass
-	public static void testSaveCategory()
-	{
-		try {
+	public static void testSaveCategory() throws EMAnalyticsFwkException {
+
 
 			CategoryManager catMan = CategoryManager.getInstance();
 			Category category = catMan.createNewCategory();
@@ -86,11 +79,6 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals("ProviderDiscoveryTest", category.getProviderDiscovery());
 			AssertJUnit.assertEquals("ProviderAssetRootTest", category.getProviderAssetRoot());
 			AssertJUnit.assertNotNull(category.getCreatedOn());
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-
 	}
 
 	@BeforeClass
@@ -108,7 +96,7 @@ public class CategoryTest extends BaseTest
 	}*/
 
 	/*@Test
-	public void testDefaultFolder() throws Exception
+	public void testDefaultFolder() 
 	{
 
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -116,25 +104,16 @@ public class CategoryTest extends BaseTest
 
 	}*/
 
-	@Test 
-	public void testDeleteCategoryInvalidId() throws Exception
-	{
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testDeleteCategoryInvalidId() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			catMan.deleteCategory(BigInteger.TEN, true);
-
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST));
-		}
+		catMan.deleteCategory(new BigInteger("99898987898"), true);
+		 
 	}
 
 	@Test 
-	public void testEditCategory() throws Exception
-	{
+	public void testEditCategory() throws EMAnalyticsFwkException {
 
-		try {
 			CategoryManager obj = CategoryManagerImpl.getInstance();
 			Category category = obj.getCategory(categoryId);
 
@@ -166,14 +145,13 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals("ProviderVersionTestEdit", category.getProviderVersion());
 			AssertJUnit.assertEquals("ProviderDiscoveryTestEdit", category.getProviderDiscovery());
 			AssertJUnit.assertEquals("ProviderAssetRootTestEdit", category.getProviderAssetRoot());
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
+			// Assert.assertEquals("displayTestName",
+			// category.getDisplayName());
+
 	}
 
-/*	@Test
-	public void testGetAllCategories() throws Exception
+	/*@Test
+	public void testGetAllCategories() 
 	{
 		CategoryManager catMan = CategoryManager.getInstance();
 		// TODO Harsh .. fix this !!
@@ -186,17 +164,17 @@ public class CategoryTest extends BaseTest
 		AssertJUnit.assertNotNull(new Integer(catMan.getAllCategories().size()));
 	}*/
 
-/*	@Test
-	public void testGetCategoryById() throws Exception
+	/*@Test
+	public void testGetCategoryById() 
 	{
 		TenantContext.setContext(TENANT_ID_OPC2);
 		CategoryManager catMan = CategoryManager.getInstance();
 		AssertJUnit.assertNotNull(catMan.getCategory(1));
 		TenantContext.clearContext();
-	}
-*/
-/*	@Test
-	public void testGetCategoryByName() throws Exception
+	}*/
+
+	/*@Test
+	public void testGetCategoryByName() 
 	{
 		TenantContext.setContext(TENANT_ID_OPC2);
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -204,8 +182,8 @@ public class CategoryTest extends BaseTest
 		TenantContext.clearContext();
 	}*/
 
-/*	@Test
-	public void testEditCategory_DuplicateName() throws Exception
+	/*@Test
+	public void testEditCategory_DuplicateName() 
 	{
 
 		try {
@@ -224,58 +202,32 @@ public class CategoryTest extends BaseTest
 					EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME));
 		}
 	}*/
-	
-	@Test
-	public void testgetCategoryInvalidId() throws Exception
-	{
 
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testgetCategoryInvalidId() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
-		try {
-			catMan.getCategory(new BigInteger("99898987898"));
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST));
-		}
-
+		catMan.getCategory(new BigInteger("99898987898"));
 	}
 
-	@Test
-	public void testgetCategoryInvalidName() throws Exception
-	{
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testgetCategoryInvalidName() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
-		try {
 			catMan.getCategory("this is invalid name");
 
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME));
-		}
 	}
 
-	@Test 
-	public void testInvalidData() throws Exception
-	{
-
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testInvalidData() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("CategoryName");
 		category.setDescription("CategoryTest");
-		category.setDefaultFolderId(BigInteger.TEN);
-		try {
-			catMan.saveCategory(category);
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(new Integer(emanfe.getErrorCode()), new Integer(
-					EMAnalyticsFwkException.ERR_CATEGORY_INVALID_FOLDER));
-		}
+		category.setDefaultFolderId(new BigInteger("9878787"));
+		catMan.saveCategory(category);
 	}
 
-	@Test 
-	public void testSaveCategory_DuplicateName() throws Exception
-	{
-
+	@Test
+	public void testSaveCategory_DuplicateName() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("Log Analytics");
@@ -283,13 +235,8 @@ public class CategoryTest extends BaseTest
 		category.setProviderVersion("ProviderVersionUT");
 		category.setProviderDiscovery("ProviderDiscoveryUT");
 		category.setProviderAssetRoot("ProviderAssetRootUT");
-		try {
-			category = catMan.saveCategory(category);
+//			category = catMan.saveCategory(category);
 
-		}
-		catch (EMAnalyticsFwkException emanfe) {
-			AssertJUnit.assertEquals(emanfe.getErrorCode(), EMAnalyticsFwkException.ERR_DUPLICATE_CATEGORY_NAME);
-		}
 
 	}
 }

@@ -15,5 +15,8 @@ package oracle.sysman.emaas.platform.savedsearch.services;
  */
 public class EMTargetConstants
 {
-	public static final String m_target_type = "oracle_emaas_saved_search";
+	private EMTargetConstants() {
+	}
+
+	public static final String ORACLE_EMAAS_SAVED_SEARCH = "oracle_emaas_saved_search";
 }

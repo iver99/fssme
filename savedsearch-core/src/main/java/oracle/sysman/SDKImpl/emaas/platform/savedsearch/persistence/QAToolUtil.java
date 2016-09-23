@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -40,7 +41,6 @@ public class QAToolUtil
 	private static final String DEPLOY_URL = "/instances?servicename=LifecycleInventoryService";
 	private static final String SSF_DEPLOY_URL = "/instances?servicename=SavedSearch";
 	private static final String DEPLY_SCHEMA = "/schemaDeployments?softwareName=SavedSearchService";
-	private static final String SERVICE_NAME = "SavedSearchService";
 	private static final String PASSWORD = "welcome1";
 	public static final String JDBC_URL = "jdbc:oracle:thin:@";
 	private static final String SCHEMA_USER = "schemaUser";
@@ -50,9 +50,6 @@ public class QAToolUtil
 	public static final String ODS_HOSTNAME = "ODS_HOSTNAME";
 	public static final String ODS_PORT = "ODS_PORT";
 	public static final String ODS_SID = "ODS_SID";
-	public static final String NODE_NAME1 = "EMCS_NODE1_HOSTNAME";
-	public static final String NODE_NAME2 = "EMCS_NODE2_HOSTNAME";
-	public static final String NODE_NAME3 = "EMCS_NODE3_HOSTNAME";
 
 	public static final String JDBC_PARAM_URL = "javax.persistence.jdbc.url";
 	public static final String JDBC_PARAM_USER = "javax.persistence.jdbc.user";
@@ -62,7 +59,10 @@ public class QAToolUtil
 	public static final String TENANT_USER_NAME = "TENANT_USER_NAME";
 	public static final String TENANT_NAME = "TENANT_NAME";
 
-	private static Logger logger = LogManager.getLogger(QAToolUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(QAToolUtil.class);
+
+	private QAToolUtil() {
+	}
 
 	public static Properties getDbProperties()
 	{
@@ -79,7 +79,6 @@ public class QAToolUtil
 
 	public static String getSavedSearchDeploymentDet()
 	{
-		String username = null;
 		String data = QAToolUtil.getDetaildByUrl(Utils.getProperty(SERVICE_MANAGER_URL) + SSF_DEPLOY_URL);
 		//String data = QAToolUtil.getDetaildByUrl("http://slc08twq.us.oracle.com:7001//registry/servicemanager/registry/v1"
 		//	+ SSF_DEPLOY_URL);
@@ -94,9 +93,9 @@ public class QAToolUtil
 	public static Properties getTenantDetails()
 	{
 		Properties props = new Properties();
-		String TENANT_ID_INTERNAL= "TENANT_ID_INTERNAL_"+Utils.getProperty("TENANT_ID");
-		props.put(TENANT_USER_NAME, Utils.getProperty(TENANT_ID_INTERNAL) + "." + Utils.getProperty("SSO_USERNAME"));
-		props.put(TENANT_NAME, Utils.getProperty(TENANT_ID_INTERNAL));
+		String tenantIdInternal= "TENANT_ID_INTERNAL_"+Utils.getProperty("TENANT_ID");
+		props.put(TENANT_USER_NAME, Utils.getProperty(tenantIdInternal) + "." + Utils.getProperty("SSO_USERNAME"));
+		props.put(TENANT_NAME, Utils.getProperty(tenantIdInternal));
 		return props;
 	}
 
@@ -109,7 +108,7 @@ public class QAToolUtil
 	{
 
 		if (value == null) {
-			return null;
+			return Collections.emptyList();
 		}
 		List<String> result = new ArrayList<String>();
 
@@ -125,10 +124,10 @@ public class QAToolUtil
 	{
 		BufferedReader in = null;
 		InputStreamReader inReader = null;
-		StringBuffer response = new StringBuffer();
+		StringBuilder response = new StringBuilder();
 		try {
-			URL schema_dep_url = new URL(url);
-			HttpURLConnection con = (HttpURLConnection) schema_dep_url.openConnection();
+			URL schemaDepUrl = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) schemaDepUrl.openConnection();
 			con.setRequestProperty(AUTHORIZATION, AUTH_STRING);
 			//int responseCode = con.getResponseCode();
 			inReader = new InputStreamReader(con.getInputStream(), "UTF-8");
@@ -139,7 +138,7 @@ public class QAToolUtil
 			}
 		}
 		catch (IOException e) {
-			logger.error("an error occureed while getting details by url" + ":: " + url, e);
+			LOGGER.error("an error occureed while getting details by url" + ":: " + url, e);
 		} finally {
 			try {
 				if (in != null) {

@@ -16,7 +16,7 @@ public class EmAnalyticsSearchParamPKTest
 	private EmAnalyticsSearchParamPK emAnalyticsSearchParamPK;
 
 	@BeforeMethod
-	public void setUp() throws Exception
+	public void setUp()
 	{
 		emAnalyticsSearchParamPK = new EmAnalyticsSearchParamPK();
 		emAnalyticsSearchParamPK.setSearchId(BigInteger.TEN);
@@ -25,7 +25,7 @@ public class EmAnalyticsSearchParamPKTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testEquals() throws Exception
+	public void testEquals()
 	{
 		Assert.assertTrue(emAnalyticsSearchParamPK.equals(emAnalyticsSearchParamPK));
 
@@ -39,7 +39,7 @@ public class EmAnalyticsSearchParamPKTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetName() throws Exception
+	public void testGetName()
 	{
 		String name = "namexx";
 		emAnalyticsSearchParamPK.setName(name);
@@ -47,14 +47,14 @@ public class EmAnalyticsSearchParamPKTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetSearchId() throws Exception
+	public void testGetSearchId()
 	{
 		emAnalyticsSearchParamPK.setSearchId(BigInteger.TEN);
 		Assert.assertEquals(BigInteger.TEN, emAnalyticsSearchParamPK.getSearchId());
 	}
 
 	@Test(groups = { "s1" })
-	public void testHashCode() throws Exception
+	public void testHashCode()
 	{
 		Assert.assertEquals(emAnalyticsSearchParamPK.hashCode(), emAnalyticsSearchParamPK.hashCode());
 
@@ -63,5 +63,11 @@ public class EmAnalyticsSearchParamPKTest
 		emAnalyticsSearchParamPK2.setName("name1");
 		emAnalyticsSearchParamPK2.setTenantId(1234L);
 		Assert.assertEquals(emAnalyticsSearchParamPK2.hashCode(), emAnalyticsSearchParamPK.hashCode());
+	}
+
+	@Test(groups = { "s1" })
+	public void testGetTenantId(){
+		emAnalyticsSearchParamPK.setTenantId(1L);
+		emAnalyticsSearchParamPK.getTenantId();
 	}
 }

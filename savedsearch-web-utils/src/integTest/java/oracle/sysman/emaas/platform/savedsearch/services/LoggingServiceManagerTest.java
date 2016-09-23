@@ -47,21 +47,10 @@ public class LoggingServiceManagerTest {
         loggingServiceManager.postStop(new ApplicationLifecycleEvent(null,null,false));
     }
 
-    @Test
-    public void testPreStart() throws Exception {
-        loggingServiceManager = new LoggingServiceManager();
-        loggingServiceManager.preStart(new ApplicationLifecycleEvent(null));
-    }
+
 
     @Test
     public void testPreStop() throws Exception {
-        new Expectations() {
-            {
-                logger.info(anyString);
-                minTimes = 2;
-            }
-        };
-
         loggingServiceManager = new LoggingServiceManager();
         loggingServiceManager.preStop(new ApplicationLifecycleEvent(null,null,false));
 

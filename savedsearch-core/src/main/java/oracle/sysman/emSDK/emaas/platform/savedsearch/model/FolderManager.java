@@ -19,9 +19,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 public abstract class FolderManager
 {
 	/**
-	 * Returns an instance of the manager.
+	 * Returns an INSTANCE of the manager.
 	 * 
-	 * @return an instance of the manager
+	 * @return an INSTANCE of the manager
 	 */
 	public static FolderManager getInstance()
 	{

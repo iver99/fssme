@@ -16,7 +16,10 @@ public class PersistenceManager
 {
 	private static class PersistenceManagerHelper
 	{
-		private static final PersistenceManager singleton = new PersistenceManager();
+		private static final PersistenceManager SINGLETON = new PersistenceManager();
+
+		private PersistenceManagerHelper() {
+		}
 	}
 
 	/**
@@ -36,10 +39,12 @@ public class PersistenceManager
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
 	private static final String TENANT_ID_STR = "tenant";
 
+
+
 	public static PersistenceManager getInstance()
 	{
 
-		return PersistenceManagerHelper.singleton;
+		return PersistenceManagerHelper.SINGLETON;
 	}
 
 	private EntityManagerFactory emf;

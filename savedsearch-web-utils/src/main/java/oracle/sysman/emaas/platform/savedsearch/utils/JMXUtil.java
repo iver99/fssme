@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 public class JMXUtil
 {
 
-	private static final Logger _logger = LogManager.getLogger(JMXUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(JMXUtil.class);
 	private MBeanServer server = null;
 
 	private static volatile JMXUtil instance = null;
@@ -64,7 +64,7 @@ public class JMXUtil
 			server.registerMBean(savedSearchStatus, savedSearchStatusObjectName);
 		}
 
-		_logger.info("start MBeans...!");
+		LOGGER.info("start MBeans...!");
 	}
 
 	public void unregisterMBeans() throws MalformedObjectNameException, MBeanRegistrationException, InstanceNotFoundException
@@ -73,7 +73,7 @@ public class JMXUtil
 		if (server.isRegistered(savedSearchStatusObjectName)) {
 			server.unregisterMBean(savedSearchStatusObjectName);
 		}
-		_logger.info("stop MBeans!");
+		LOGGER.info("stop MBeans!");
 	}
 
 }

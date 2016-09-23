@@ -14,7 +14,6 @@ public class GlobalStatusTest {
 
     @Test
     public void testIsSavedSearchUp() throws Exception {
-        globalStatus = new GlobalStatus();
         globalStatus.setSavedSearchDownStatus();
         Assert.assertEquals(globalStatus.isSavedSearchUp(),false);
 

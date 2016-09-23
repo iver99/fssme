@@ -43,26 +43,11 @@ public class WidgetGroupAPITest
 	@Test
 	public void getAllWidgetsGroup()
 	{
-		try {
-			System.out.println("------------------------------------------");
-			System.out.println("GET ALL Widget Groups");
-			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/widgetgroups");
 
-			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			System.out.println(res.asString());
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-
-		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
 
 	}
 }

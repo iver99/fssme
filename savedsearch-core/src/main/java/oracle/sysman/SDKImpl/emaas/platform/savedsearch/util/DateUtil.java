@@ -35,6 +35,9 @@ public class DateUtil
 		}
 	}
 
+	private DateUtil() {
+	}
+
 	/**
 	 * Convert local time to UTC time and return
 	 *

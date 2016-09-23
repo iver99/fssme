@@ -1,20 +1,14 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Persistence;
-import javax.xml.bind.JAXBElement;
 
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
@@ -40,7 +34,6 @@ public class SearchTest extends BaseTest
 	private static BigInteger folderId;
 	private static BigInteger categoryId;
 	private static BigInteger searchId;
-	private static Search dupSearch;
 	private static final BigInteger TA_SEARCH_ID = new BigInteger("3000");//a system search that always exists
 
 	@BeforeClass
