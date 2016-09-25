@@ -124,6 +124,7 @@ COMMIT;
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_savesearch_seed_data.sql  &TENANT_ID
 
+@&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
 
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
