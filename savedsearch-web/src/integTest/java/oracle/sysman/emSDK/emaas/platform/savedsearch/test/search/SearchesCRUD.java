@@ -1314,7 +1314,6 @@ public class SearchesCRUD
 						.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 						.get("search/2000/assetroot").getStatusCode());
 	}
-
 	@Test
 	/**
 	 * Test verify the status and response with invalid objects on a correct url path
@@ -1327,5 +1326,41 @@ public class SearchesCRUD
 				.put("/search/100000000087/updatelastaccess");
 		Assert.assertEquals(res.asString(), "Search identified by ID: 100000000087 does not exist");
 		Assert.assertTrue(res.getStatusCode() == 404);
+	}
+
+	@Test
+	public void testDeleteSearchByName(){
+		String inputJson = "{\"name\":\"SearchTestDeletedByName\",\"category\":{\"id\":"
+				+ 5
+				+ "},\"folder\":{\"id\":"
+				+ 6
+				+ "}"
+				+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"deletedlater\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
+		RestAssured.given().contentType(ContentType.JSON).log().everything()
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
+				.post("/search");
+		Response resForDelete1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+				.delete("/search?searchName=SearchTestDeletedByName");
+		Assert.assertEquals(200, resForDelete1.getStatusCode());
+
+		RestAssured.given().contentType(ContentType.JSON).log().everything()
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
+				.post("/search");
+		Response resForDelete2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+				.delete("/search?searchName=SearchTestDeletedByName&isExactly=true");
+		Assert.assertEquals(200, resForDelete2.getStatusCode());
+
+		RestAssured.given().contentType(ContentType.JSON).log().everything()
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
+				.post("/search");
+		Response resForDelete3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+				.delete("/search?searchName=TestDeletedBy&isExactly=false");
+		Assert.assertEquals(200, resForDelete3.getStatusCode());
+
+
+
 	}
 }

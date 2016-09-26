@@ -82,25 +82,32 @@ public class WidgetManagerImpl extends WidgetManager
 	@Override
 	public String getSpelledJsonFromQueryResult(List<Map<String, Object>> l) throws EMAnalyticsFwkException
 	{
-		String tenantName = TenantContext.getContext().gettenantName();
-		String widgetAPIUrl = getWidgetAPIUrl(tenantName);
-		StringBuilder sb = new StringBuilder();
-		sb.append("[");
-		for (Map<String, Object> widget : l) {
-			Object widgetId = widget.get("SEARCH_ID");
-			String sId = String.valueOf(widgetId);
-			Long id = Long.valueOf(sId);
-			//generate ssUrl
-			String ssUrl = generateSSUrl(widgetAPIUrl, widget, id);
-			LOGGER.debug("Screenshot URL is generated for widget id={}, url={}", id, ssUrl);
-			String jsonString = EntityJsonUtil.getJsonString(widget, ssUrl);
-			sb.append(jsonString);
+		String message = null;
+		if(l == null || l.isEmpty()) {
+			message = "[]";
+			LOGGER.debug("No widgets retrieved");
+		} else {
+			String tenantName = TenantContext.getContext().gettenantName();
+			String widgetAPIUrl = getWidgetAPIUrl(tenantName);
+			StringBuilder sb = new StringBuilder();
+			sb.append("[");
+			for (Map<String, Object> widget : l) {
+				Object widgetId = widget.get("SEARCH_ID");
+				String sId = String.valueOf(widgetId);
+				Long id = Long.valueOf(sId);
+				//generate ssUrl
+				String ssUrl = generateSSUrl(widgetAPIUrl, widget, id);
+				LOGGER.debug("Screenshot URL is generated for widget id={}, url={}", id, ssUrl);
+				String jsonString = EntityJsonUtil.getJsonString(widget, ssUrl);
+				sb.append(jsonString);
+			}
+			//remove the extra comma
+			sb.deleteCharAt(sb.length() - 1);
+			sb.append("]");
+			message = sb.toString();
+			LOGGER.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
 		}
-		//remove the extra comma
-		sb.deleteCharAt(sb.length() - 1);
-		sb.append("]");
-		String message = sb.toString();
-		LOGGER.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
+		
 		return message;
 	}
 

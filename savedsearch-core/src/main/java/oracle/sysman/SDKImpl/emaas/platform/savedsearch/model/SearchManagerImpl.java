@@ -155,6 +155,50 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
+	public void deleteSearchByName(String searchName, boolean isExactly) throws EMAnalyticsFwkException {
+		LOGGER.info("Deleting search with Name: {}, Exactly {}", searchName, isExactly);
+		EntityManager entityManager = null;
+		List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<>();
+		try {
+			entityManager = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if (isExactly) {
+				LOGGER.debug("DELETE {} SOFTLY EXACTLY", searchName);
+				emAnalyticsSearchList.add(EmAnalyticsObjectUtil.getSearchByNameForDelete(searchName, entityManager));
+			} else {
+				LOGGER.debug("DELETE {} SOFTLY NONEXACTLY", searchName);
+				emAnalyticsSearchList = EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete(searchName, entityManager);
+			}
+			if (emAnalyticsSearchList.isEmpty() || emAnalyticsSearchList.get(0) == null) {
+				throw new EMAnalyticsFwkException("Search with Name : " + searchName + " does not exist please check if it's a system search or you're not the owner",
+						EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME, null);
+			}
+			entityManager.getTransaction().begin();
+			LOGGER.debug("START TRANSACTION DELETE {}", searchName);
+			for (EmAnalyticsSearch temp : emAnalyticsSearchList) {
+				LOGGER.debug("START DELETE {}", temp.getId());
+				temp.setDeleted(temp.getId());
+				entityManager.merge(temp);
+				LOGGER.info("DELETED SEARCH WITH ID: {}", temp.getId());
+			}
+			LOGGER.debug("TRANSACTION COMMITTING");
+			entityManager.getTransaction().commit();
+		} catch (EMAnalyticsFwkException eme) {
+			LOGGER.error("Search with Name: " + searchName + " does not exist", eme);
+			throw eme;
+		} catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, searchName);
+			LOGGER.error("Error while getting the search object by Name: " + searchName, e);
+			throw new EMAnalyticsFwkException("Error while deleting the search object by Name: " + searchName,
+					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[]{searchName}, e);
+		} finally {
+			if (entityManager != null) {
+				LOGGER.debug("TRANSACTION CLOSING");
+				entityManager.close();
+			}
+		}
+	}
+
+	@Override
 	public void deleteTargetCard(long targetCardId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		LOGGER.info("Deleting target card with id: " + targetCardId);
@@ -1104,31 +1148,9 @@ public class SearchManagerImpl extends SearchManager
 			if (searchObj.getSearchGuid() != null) {
 				rtnObj.setGuid(searchObj.getSearchGuid().toString());
 			}
-
-			// TODO : Abhinav Handle the internationalization via MGMT_MESSAGES
-			// handling name here
-			String nlsid = searchObj.getNameNlsid();
-			String subsystem = searchObj.getNameSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setName(searchObj.getName());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setName(searchObj.getName());
-			}
-
-			nlsid = searchObj.getDescriptionNlsid();
-			subsystem = searchObj.getDescriptionSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setDescription(searchObj.getDescription());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setDescription(searchObj.getDescription());
-			}
-
+			
+			rtnObj.setName(searchObj.getName());
+			rtnObj.setDescription(searchObj.getDescription());
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreatedOn(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
@@ -1152,7 +1174,7 @@ public class SearchManagerImpl extends SearchManager
 					: false);
 			rtnObj.setLastAccessDate(searchObj.getAccessDate());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
-			
+
 			if (TenantContext.getContext() != null && TenantContext.getContext().getUsername() != null) {
 				rtnObj.setEditable(TenantContext.getContext().getUsername().equals(searchObj.getOwner()));
 			}
@@ -1205,31 +1227,8 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			rtnObj = new WidgetImpl();
 			rtnObj.setId((int) searchObj.getId());
-
-			// TODO : Handle the internationalization via MGMT_MESSAGES
-			// handling name here
-			String nlsid = searchObj.getNameNlsid();
-			String subsystem = searchObj.getNameSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setName(searchObj.getName());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setName(searchObj.getName());
-			}
-
-			nlsid = searchObj.getDescriptionNlsid();
-			subsystem = searchObj.getDescriptionSubsystem();
-			if (nlsid == null || nlsid.trim().length() == 0 || subsystem == null || subsystem.trim().length() == 0) {
-				rtnObj.setDescription(searchObj.getDescription());
-			}
-			else {
-				// here the code should come !! get localized stuff from
-				// MGMT_MESSAGES
-				rtnObj.setDescription(searchObj.getDescription());
-			}
-
+			rtnObj.setName(searchObj.getName());
+			rtnObj.setDescription(searchObj.getDescription());
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreatedOn(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());

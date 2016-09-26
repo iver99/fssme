@@ -128,9 +128,6 @@ public class EntityJsonUtil
 
 	private static final String DEFAULT_DB_VALUE = "0";
 
-	private EntityJsonUtil() {
-	}
-
 	public static JSONObject getErrorJsonObject(long id, String message, long errorcode) throws EMAnalyticsFwkException
 	{
 		JSONObject errorObj = new JSONObject();
@@ -240,9 +237,15 @@ public class EntityJsonUtil
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		sb.append("\"WIDGET_UNIQUE_ID\":").append(Integer.valueOf(m.get("SEARCH_ID").toString())).append(",");
-		sb.append("\"WIDGET_NAME\":").append("\"" + m.get("NAME") + "\"").append(",");
+		if(m.get("NAME")!=null){
+			String name = EntityJsonUtil.handleDoubleQuotation(m.get("NAME").toString());
+			sb.append("\"WIDGET_NAME\":").append("\"" + name + "\"").append(",");
+
+		}
 		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
-			sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
+			String description = EntityJsonUtil.handleDoubleQuotation(m.get("DESCRIPTION").toString());
+			sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + description + "\"").append(",");
+
 		}
 		sb.append("\"WIDGET_OWNER\":").append("\"" + m.get("OWNER") + "\"").append(",");
 
@@ -291,7 +294,7 @@ public class EntityJsonUtil
 		if (m.get("WIDGET_DEFAULT_WIDTH") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_WIDTH").toString())) {
 			sb.append("\"WIDGET_DEFAULT_WIDTH\":").append("\"" + m.get("WIDGET_DEFAULT_WIDTH") + "\"");
 		}
-		
+
 		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
 			sb.append("\"WIDGET_EDITABLE\":").append("\"" + m.get("WIDGET_EDITABLE") + "\"");
 		}
@@ -316,7 +319,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-			EMAnalyticsFwkException
+	EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
@@ -481,26 +484,6 @@ public class EntityJsonUtil
 		return widgetGroupObj;
 	}
 
-	//	/**
-	//	 * Return simple JSON string for widget screen shot
-	//	 *
-	//	 * @param widgetScreenshot
-	//	 * @return
-	//	 * @throws JSONException
-	//	 */
-	//	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
-	//	{
-	//		JSONObject widgetScreenshotObj = new JSONObject();
-	//		try {
-	//			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
-	//		}
-	//		catch (JSONException ex) {
-	//			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
-	//					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
-	//		}
-	//		return widgetScreenshotObj;
-	//	}
-
 	/**
 	 * Return simple JSON string for widget
 	 *
@@ -625,6 +608,26 @@ public class EntityJsonUtil
 		}
 		return categoryObj;
 	}
+
+	//	/**
+	//	 * Return simple JSON string for widget screen shot
+	//	 *
+	//	 * @param widgetScreenshot
+	//	 * @return
+	//	 * @throws JSONException
+	//	 */
+	//	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
+	//	{
+	//		JSONObject widgetScreenshotObj = new JSONObject();
+	//		try {
+	//			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
+	//		}
+	//		catch (JSONException ex) {
+	//			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
+	//					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
+	//		}
+	//		return widgetScreenshotObj;
+	//	}
 
 	private static JSONObject getFolderJsonObj(URI baseUri, Folder folder, String[] excludedFields, boolean isSimple,
 			boolean includeType) throws EMAnalyticsFwkException
@@ -760,5 +763,29 @@ public class EntityJsonUtil
 			LOGGER.error(new MessageFormatMessage("Invalid widget default width \"{}\" for widget id={}", param.getValue(),
 					search.getId()), e);
 		}
+	}
+
+	private static String handleDoubleQuotation(String value)
+	{
+		if (value == null) {
+			LOGGER.error("Handling Double Quotation in String,but String is null!");
+			return null;
+		}
+		StringBuilder sb=new StringBuilder();
+		if (value.contains("\"")) {
+			String[] array = value.split("\"");
+			for (String element : array) {
+				sb.append(element);
+				sb.append("\\\"");
+			}
+			if (!value.endsWith("\"")) {
+				sb.delete(sb.lastIndexOf("\\\""), sb.length());
+			}
+			return sb.toString();
+		}
+		return value;
+	}
+
+	private EntityJsonUtil() {
 	}
 }
