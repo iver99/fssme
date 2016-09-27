@@ -938,7 +938,7 @@ BEGIN
   V_PARAM_TYPE            :=2;
   V_PARAM_VALUE_STR       :=null;
   V_PARAM_VALUE_CLOB      :=
-'{"id":null,"entityType":"omc_composite_target","widgets":null,"widgetRefs":[{"id":"10020","parameters":null,"entityCapability":null,"accessControl":{"userPrivilege":"USE_TARGET_ANALYTICS"}}]}';
+'{"id":null,"entityType":"omc_composite_target","widgets":null,"widgetRefs":[{"id":"3219","parameters":null,"entityCapability":null,"accessControl":{"userPrivilege":"USE_TARGET_ANALYTICS"}}]}';
 
   INSERT INTO EMS_ANALYTICS_SEARCH_PARAMS(SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) 
   VALUES(V_SEARCH_ID,V_NAME,V_PARAM_ATTRIBUTES,V_PARAM_TYPE,V_PARAM_VALUE_STR,V_PARAM_VALUE_CLOB,V_TENANT_ID);
