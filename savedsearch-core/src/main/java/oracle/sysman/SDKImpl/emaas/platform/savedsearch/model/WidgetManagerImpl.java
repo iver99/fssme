@@ -30,6 +30,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

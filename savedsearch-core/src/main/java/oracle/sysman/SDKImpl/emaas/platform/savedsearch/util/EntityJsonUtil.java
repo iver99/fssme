@@ -10,6 +10,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -245,17 +246,19 @@ public class EntityJsonUtil
 			emSearch.setDescription(m.get("DESCRIPTION").toString());
 
 		}
-		String createdOn = null;
 		if (m.get("CREATION_DATE") != null) {
-			createdOn = DateUtil.getDateFormatter().format(m.get("CREATION_DATE"));
+			emSearch.setCreationDate(Timestamp.valueOf(String.valueOf(m.get("CREATION_DATE"))));
 		}
-		emSearch.setCreationDate(new Date());//FIXME
-		emSearch.setOwner(m.get("OWNER").toString());
+		if (m.get("OWNER") != null) {
+			emSearch.setOwner(m.get("OWNER").toString());
+		}
 		emSearch.setWidgetSource(1L);
 		if (m.get("CATOGORY_NAME") != null) {
 			emSearch.setWidgetGroupName(m.get("CATOGORY_NAME").toString());
 		}
-		emSearch.setWidgetScreenshotHref(screenshotUrl);
+		if (m.get("WIDGET_SCREENSHOT_HREF") != null) {
+			emSearch.setWidgetScreenshotHref(screenshotUrl);
+		}
 		if (m.get("WIDGET_SUPPORT_TIME_CONTROL") != null) {
 			emSearch.setWidgetSupportTimeControl(m.get("WIDGET_SUPPORT_TIME_CONTROL").toString());
 		}
