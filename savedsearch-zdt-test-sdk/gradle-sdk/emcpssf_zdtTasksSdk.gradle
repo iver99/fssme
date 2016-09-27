@@ -28,12 +28,12 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 dependencies {
  //testConfig group: 'com.oracle.emaas.emcpssf.testsdk', name: 'savedsearch-zdt-test-sdk', version: "${emcpssf_REPO_BID}"
   testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy') }
-    testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
-   testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
-   testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
+    testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = true}
+   testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = true}
+   testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = true}
     testConfig group: 'com.oracle.emaas.emcpssf.test', name:'savedsearch-web-integ-tests', version: "${REPO_BID}"
    testConfig group: 'com.oracle.emaas.emcpssf.test', name:'savedsearch-core-integ-tests', version: "${REPO_BID}"
-   testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
+   testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = true}
 
     
 }
