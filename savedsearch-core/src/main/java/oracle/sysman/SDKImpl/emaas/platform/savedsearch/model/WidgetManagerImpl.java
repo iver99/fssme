@@ -29,8 +29,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProce
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emaas.platform.savedsearch.entity.AnalyticsSearchBean;
+import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -91,7 +90,7 @@ public class WidgetManagerImpl extends WidgetManager
 		} else {
 			String tenantName = TenantContext.getContext().gettenantName();
 			String widgetAPIUrl = getWidgetAPIUrl(tenantName);
-			List<AnalyticsSearchBean> list = new ArrayList<AnalyticsSearchBean>();
+			List<AnalyticsSearchModel> list = new ArrayList<AnalyticsSearchModel>();
 			for (Map<String, Object> widget : l) {
 				Object widgetId = widget.get("SEARCH_ID");
 				String sId = String.valueOf(widgetId);
@@ -99,10 +98,9 @@ public class WidgetManagerImpl extends WidgetManager
 				//generate ssUrl
 				String ssUrl = generateSSUrl(widgetAPIUrl, widget, id);
 				LOGGER.debug("Screenshot URL is generated for widget id={}, url={}", id, ssUrl);
-				AnalyticsSearchBean bean = EntityJsonUtil.getJsonString(widget, ssUrl);
-				list.add(bean);
+				AnalyticsSearchModel model = EntityJsonUtil.getJsonString(widget, ssUrl);
+				list.add(model);
 			}
-			//remove the extra comma
 			message = JSONUtil.objectToJSONString(list);
 			LOGGER.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
 		}

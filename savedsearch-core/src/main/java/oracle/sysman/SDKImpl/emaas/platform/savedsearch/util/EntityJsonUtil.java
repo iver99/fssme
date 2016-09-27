@@ -19,7 +19,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
-import oracle.sysman.emaas.platform.savedsearch.entity.AnalyticsSearchBean;
+import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -234,61 +234,75 @@ public class EntityJsonUtil
 		return obj;
 	}
 
-	public static AnalyticsSearchBean getJsonString(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
+	public static AnalyticsSearchModel getJsonString(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
 	{
-		AnalyticsSearchBean emSearch = new AnalyticsSearchBean();
+		AnalyticsSearchModel emSearch = new AnalyticsSearchModel();
 		if(m.get("NAME")!=null){
-			emSearch.setWIDGET_NAME(m.get("NAME").toString());
+			emSearch.setName(m.get("NAME").toString());
 
 		}
 		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
-			emSearch.setWIDGET_DESCRIPTION(m.get("DESCRIPTION").toString());
+			emSearch.setDescription(m.get("DESCRIPTION").toString());
 
 		}
 		String createdOn = null;
 		if (m.get("CREATION_DATE") != null) {
 			createdOn = DateUtil.getDateFormatter().format(m.get("CREATION_DATE"));
 		}
-		emSearch.setWIDGET_CREATION_TIME(new Date());//FIXME
-		emSearch.setWIDGET_SOURCE(1L);
-		emSearch.setWIDGET_GROUP_NAME(m.get("CATOGORY_NAME").toString());
-		emSearch.setWIDGET_SCREENSHOT_HREF(screenshotUrl);
-		emSearch.setWIDGET_SUPPORT_TIME_CONTROL(m.get("WIDGET_SUPPORT_TIME_CONTROL").toString());
-		emSearch.setWIDGET_KOC_NAME(m.get("WIDGET_KOC_NAME").toString());
-		emSearch.setWIDGET_TEMPLATE(m.get("WIDGET_TEMPLATE").toString());
-		emSearch.setWIDGET_VIEWMODEL(m.get("WIDGET_VIEWMODEL").toString());
+		emSearch.setCreationDate(new Date());//FIXME
+		emSearch.setOwner(m.get("OWNER").toString());
+		emSearch.setWidgetSource(1L);
+		if (m.get("CATOGORY_NAME") != null) {
+			emSearch.setWidgetGroupName(m.get("CATOGORY_NAME").toString());
+		}
+		emSearch.setWidgetScreenshotHref(screenshotUrl);
+		if (m.get("WIDGET_SUPPORT_TIME_CONTROL") != null) {
+			emSearch.setWidgetSupportTimeControl(m.get("WIDGET_SUPPORT_TIME_CONTROL").toString());
+		}
+		if (m.get("WIDGET_KOC_NAME") != null) {
+			emSearch.setWidgetKocName(m.get("WIDGET_KOC_NAME").toString());
+		}
+		if (m.get("WIDGET_TEMPLATE") != null) {
+			emSearch.setWidgetTemplate(m.get("WIDGET_TEMPLATE").toString());
+		}
+		if (m.get("WIDGET_TEMPLATE") != null) {
+			emSearch.setWidgetViewModel(m.get("WIDGET_VIEWMODEL").toString());
+		}
 		if (m.get("PROVIDER_NAME") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_NAME"))) {
-			emSearch.setPROVIDER_NAME(m.get("PROVIDER_NAME").toString());
+			emSearch.setProviderName(m.get("PROVIDER_NAME").toString());
 		}
 		else {
-			emSearch.setPROVIDER_NAME(m.get("C_PROVIDER_NAME").toString());
+			emSearch.setProviderName(m.get("C_PROVIDER_NAME").toString());
 		}
 		if (m.get("PROVIDER_VERSION") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_VERSION"))) {
-			emSearch.setPROVIDER_VERSION(m.get("PROVIDER_VERSION").toString());
+			emSearch.setProviderVersion(m.get("PROVIDER_VERSION").toString());
 		}
 		else {
-			emSearch.setPROVIDER_VERSION(m.get("C_PROVIDER_VERSION").toString());
+			emSearch.setProviderVersion(m.get("C_PROVIDER_VERSION").toString());
 		}
 		if (m.get("PROVIDER_ASSET_ROOT") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_ASSET_ROOT"))) {
-			emSearch.setPROVIDER_ASSET_ROOT(m.get("PROVIDER_ASSET_ROOT").toString());
+			emSearch.setProviderAssetRoot(m.get("PROVIDER_ASSET_ROOT").toString());
 		}
 		else {
-			emSearch.setPROVIDER_ASSET_ROOT(m.get("C_PROVIDER_ASSET_ROOT").toString());
+			emSearch.setProviderAssetRoot(m.get("C_PROVIDER_ASSET_ROOT").toString());
 		}
 
 		if (m.get("WIDGET_DEFAULT_HEIGHT") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_HEIGHT").toString())) {
-			emSearch.setWIDGET_DEFAULT_HEIGHT(Long.valueOf(m.get("WIDGET_DEFAULT_HEIGHT").toString()));
+			emSearch.setWidgetDefaultHeight(Long.valueOf(m.get("WIDGET_DEFAULT_HEIGHT").toString()));
 		}
 		if (m.get("DASHBOARD_INELIGIBLE") != null && !DEFAULT_DB_VALUE.equals(m.get("DASHBOARD_INELIGIBLE").toString())) {
-			emSearch.setDASHBOARD_INELIGIBLE(m.get("DASHBOARD_INELIGIBLE").toString());
+			emSearch.setDashboardIneligible(m.get("DASHBOARD_INELIGIBLE").toString());
 		}
 		if (m.get("WIDGET_LINKED_DASHBOARD") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_LINKED_DASHBOARD").toString())) {
-			emSearch.setWIDGET_LINKED_DASHBOARD(Long.valueOf(m.get("WIDGET_LINKED_DASHBOARD").toString()));
+			emSearch.setWidgetLinkedDashboard(Long.valueOf(m.get("WIDGET_LINKED_DASHBOARD").toString()));
 		}
 		if (m.get("WIDGET_DEFAULT_WIDTH") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_WIDTH").toString())) {
-			emSearch.setWIDGET_DEFAULT_WIDTH(Long.valueOf(m.get("WIDGET_DEFAULT_WIDTH").toString()));
+			emSearch.setWidgetDefaultWidth(Long.valueOf(m.get("WIDGET_DEFAULT_WIDTH").toString()));
 		}
-		emSearch.setWIDGET_UNIQUE_ID(Long.valueOf(m.get("SEARCH_ID").toString()));
+		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
+			emSearch.setWidgetEditable(m.get("WIDGET_EDITABLE").toString());
+		}
+		emSearch.setId(Long.valueOf(m.get("SEARCH_ID").toString()));
 
 		return emSearch;
 	}
