@@ -16,9 +16,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
@@ -27,7 +25,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
 import org.apache.logging.log4j.LogManager;
@@ -295,7 +292,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(verifyString14), verifyString14 + " is found unexpected");
 	}
 
-	@Test(groups = { "s1" })
+	/*@Test(groups = { "s1" })
 	public void testGetJsonString() throws EMAnalyticsFwkException {
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("SEARCH_ID", 1000);
@@ -345,7 +342,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(result.contains(verifyString14), verifyString14 + " is NOT found as expected");
 		Assert.assertTrue(result.contains(verifyString15), verifyString15 + " is NOT found as expected");
 		Assert.assertTrue(result.contains(verifyString16), verifyString16 + " is NOT found as expected");
-	}
+	}*/
 
 	@Test(groups = { "s1" })
 	public void testGetSimpleCategoryObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
