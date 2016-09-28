@@ -27,33 +27,34 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 /**
  * @author guochen
  */
-public class WidgetChangeNotification implements IWidgetNotification
+public class WidgetDeletionNotification implements IWidgetNotification
 {
-	private static final Logger LOGGER = LogManager.getLogger(WidgetChangeNotification.class);
-	public static final String WIDGET_CHANGE_SERVICE_REL = "ssf.widget.changed";
+	private static final Logger LOGGER = LogManager.getLogger(WidgetDeletionNotification.class);
+	// please note that widget update share the same rel, but will call different REST APIs with different http method
+	private static final String WIDGET_DELETION_SERVICE_REL = WidgetChangeNotification.WIDGET_CHANGE_SERVICE_REL;
 
 	@Override
-	public void notify(Search search, Date notifyTime)
+	public void notify(Search search, Date deletionTime)
 	{
 		if (search == null) {
 			return;
 		}
-		notify(new WidgetNotifyEntity(search, notifyTime, WidgetNotificationType.UPDATE_NAME));
+		notify(new WidgetNotifyEntity(search, deletionTime, WidgetNotificationType.DELETE));
 	}
 
 	@Override
 	public void notify(WidgetNotifyEntity wne)
 	{
 		if (wne == null) {
-			LOGGER.info("Didn't notify of widget change for null widget notify entity object");
+			LOGGER.info("Didn't notify of widget deletion for null widget notify entity object");
 			return;
 		}
-		LOGGER.info("Notify to end points with rel={} of widget changes. Widget unique ID={}, widget name={}",
-				WIDGET_CHANGE_SERVICE_REL, wne.getUniqueId(), wne.getName());
+		LOGGER.info("Notify to end points with rel={} of widget deletion. Widget unique ID={}, widget name={}",
+				WIDGET_DELETION_SERVICE_REL, wne.getUniqueId(), wne.getName());
 		long start = System.currentTimeMillis();
-		List<Link> links = RegistryLookupUtil.getAllServicesInternalLinksByRel(WIDGET_CHANGE_SERVICE_REL);
+		List<Link> links = RegistryLookupUtil.getAllServicesInternalLinksByRel(WIDGET_DELETION_SERVICE_REL);
 		if (links == null || links.isEmpty()) {
-			LOGGER.info("Didn't notify of widget change for finding no link for rel={}", WIDGET_CHANGE_SERVICE_REL);
+			LOGGER.info("Didn't notify of widget deletion for finding no link for rel={}", WIDGET_DELETION_SERVICE_REL);
 			return;
 		}
 		RestClient rc = new RestClient();
@@ -66,11 +67,11 @@ public class WidgetChangeNotification implements IWidgetNotification
 			long innerEnd = System.currentTimeMillis();
 			if (rtn != null) {
 				LOGGER.info(
-						"Notification of widget change to link {} affacted {} objects (might always be 1 for eclipse 2.4). It takes {} ms",
+						"Notification of widget deletion to link {} affacted {} objects (might always be 1 for eclipse 2.4). It takes {} ms",
 						link.getHref(), rtn.getAffactedObjects(), innerEnd - innerStart);
 			}
 		}
-		LOGGER.info("Completed notify of widget change for widget unique ID={} and widget name={}, totally it takes {} ms",
+		LOGGER.info("Completed notify of widget deletion for widget unique ID={} and widget name={}, totally it takes {} ms",
 				wne.getUniqueId(), wne.getName(), System.currentTimeMillis() - start);
 	}
 }

@@ -12,9 +12,13 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CachedLink;
@@ -24,10 +28,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * @author aduan
@@ -43,7 +45,48 @@ public class RegistryLookupUtil
 	public static final String TA_SERVICE = "TargetAnalytics";
 	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
 
-	private RegistryLookupUtil() {
+	private RegistryLookupUtil()
+	{
+	}
+
+	public static List<Link> getAllServicesInternalLinksByRel(String rel)
+	{
+		LOGGER.debug("/getInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
+		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
+		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(rel, "http");
+		if (instanceList == null) {
+			LOGGER.warn("Found no instances with specified http rel {}", rel);
+			return Collections.emptyList();
+		}
+		Map<String, Link> serviceLinksMap = new HashMap<String, Link>();
+		for (InstanceInfo ii : instanceList) {
+			List<Link> links = null;
+			try {
+				links = ii.getLinksWithRelPrefix(rel);
+				if (links == null || links.isEmpty()) {
+					LOGGER.warn("Found no links for InstanceInfo for service {}", ii.getServiceName());
+					continue;
+				}
+				LOGGER.debug("Retrieved {} links for service {}. Links list: {}", links == null ? 0 : links.size(),
+						ii.getServiceName(), StringUtil.arrayToCommaDelimitedString(links.toArray()));
+				for (Link link : links) {
+					if (link.getHref().startsWith("http://")) {
+						serviceLinksMap.put(ii.getServiceName(), links.get(0));
+					}
+				}
+			}
+			catch (Exception e) {
+				LOGGER.error("Error to get links!", e);
+			}
+		}
+		if (serviceLinksMap.isEmpty()) {
+			LOGGER.warn("Found no internal widget notification links for rel {}", rel);
+			return Collections.emptyList();
+		}
+		else {
+			LOGGER.info("Widget notification links: {}", serviceLinksMap);
+			return new ArrayList<Link>(serviceLinksMap.values());
+		}
 	}
 
 	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
@@ -55,7 +98,7 @@ public class RegistryLookupUtil
 	{
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, false);
 	}
-	
+
 	public static Link getServiceInternalHttpLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
@@ -63,7 +106,7 @@ public class RegistryLookupUtil
 
 	private static List<Link> getLinksWithProtocol(String protocol, List<Link> links)
 	{
-		if (protocol == null || links == null || protocol.isEmpty()|| links.isEmpty()) {
+		if (protocol == null || links == null || protocol.isEmpty() || links.isEmpty()) {
 			if (links == null) {
 				return new ArrayList<Link>();
 			}
@@ -136,7 +179,7 @@ public class RegistryLookupUtil
 		catch (Exception e) {
 			LOGGER.error("Error to retrieve external link from cache. Try to lookup the link", e);
 		}
-		
+
 		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
 		if (!StringUtil.isEmpty(version)) {
 			builder = builder.withVersion(version);
@@ -315,7 +358,7 @@ public class RegistryLookupUtil
 			if (result != null && !result.isEmpty()) {
 
 				//find https link first
-				if(!httpOnly) {
+				if (!httpOnly) {
 					for (InstanceInfo internalInstance : result) {
 						List<Link> links = null;
 						if (prefixMatch) {
@@ -328,7 +371,8 @@ public class RegistryLookupUtil
 						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
 							CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-									new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch), new CachedLink(lk));
+									new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch),
+									new CachedLink(lk));
 							break;
 						}
 					}
@@ -350,7 +394,8 @@ public class RegistryLookupUtil
 					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
 						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
-								new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch), new CachedLink(lk));
+								new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch),
+								new CachedLink(lk));
 						return lk;
 					}
 				}
@@ -474,8 +519,8 @@ public class RegistryLookupUtil
 
 	private static Link replaceVanityUrlDomainForLink(String domainPort, Link lk, String tenantName)
 	{
-		LOGGER.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"", lk != null ? lk.getHref()
-				: null, domainPort);
+		LOGGER.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"",
+				lk != null ? lk.getHref() : null, domainPort);
 		if (StringUtil.isEmpty(domainPort) || lk == null || StringUtil.isEmpty(lk.getHref())) {
 			return lk;
 		}

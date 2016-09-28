@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -538,7 +539,7 @@ public class SearchManagerTest extends BaseTest
 		widget2.getParameters().add(wp1);
 		new Expectations() {
 			{// as there is no 3n environment for unit test cases
-				anyWidgetChangeNotification.notifyChange((Search) any);
+				anyWidgetChangeNotification.notify((Search) any, (Date) any);
 			}
 		};
 		sm.editSearch(widget2);

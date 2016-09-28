@@ -189,7 +189,7 @@ public class SearchManagerImplTest
 				result = new BigDecimal(10);
 				emAnalyticsSearch.getIsWidget();
 				result = 1L;
-				new WidgetChangeNotification().notifyChange((Search) any);
+				new WidgetChangeNotification().notify((Search) any, (Date) any);
 			}
 		};
 		searchManager.editSearch(new SearchImpl());
