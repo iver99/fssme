@@ -42,8 +42,7 @@ public class CategoryAPI
 
 	@Context
 	private UriInfo uri;
-//	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/search.xsd";
-	private static final Logger _logger = LogManager.getLogger(CategoryAPI.class);
+	private static final Logger LOGGER = LogManager.getLogger(CategoryAPI.class);
 
 	/*	@DELETE
 		@Path("{id : [0-9]*}")
@@ -100,7 +99,7 @@ public class CategoryAPI
 			try {
 				Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(categoryId));
 				objCategory = catMan.editCategory(objCategory);
-				sMsg = JSONUtil.ObjectToJSONString(objCategory);
+				sMsg = JSONUtil.objectToJSONString(objCategory);
 			}
 			catch (EMAnalyticsFwkException e) {
 				sMsg = e.getMessage();
@@ -130,7 +129,7 @@ public class CategoryAPI
 			try {
 				Category objCategory = createCategoryObjectForEdit(inputJsonObj, catMan.getCategory(name));
 				objCategory = catMan.editCategory(objCategory);
-				sMsg = JSONUtil.ObjectToJSONString(objCategory);
+				sMsg = JSONUtil.objectToJSONString(objCategory);
 			}
 			catch (EMAnalyticsFwkException e) {
 				sMsg = e.getMessage();
@@ -162,7 +161,7 @@ public class CategoryAPI
 					for (int i = 0; i < catList.size(); i++) {
 						category = catList.get(i);
 						try {
-							jsonArray.put(JSONUtil.ObjectToJSONObject(category));
+							jsonArray.put(JSONUtil.objectToJSONObject(category));
 						}
 						catch (JSONException e) {
 							message = e.getMessage();
@@ -260,6 +259,7 @@ public class CategoryAPI
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
 			message = e.getMessage();
 			statusCode = e.getStatusCode();
 		}
@@ -337,7 +337,7 @@ public class CategoryAPI
 		if (name == null) {
 			return Response.status(400).entity("please give category name").build();
 		}
-		else if (name.equals("")) {
+		else if ("".equals(name)) {
 			return Response.status(400).entity("please give category name").build();
 		}
 		CategoryManager catMan = CategoryManager.getInstance();
@@ -350,7 +350,7 @@ public class CategoryAPI
 		catch (EMAnalyticsFwkException e) {
 			statusCode = e.getStatusCode();
 			message = e.getMessage();
-			_logger.error(
+			LOGGER.error(
 					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "An error occurredh while retrieving all category by name, statusCode:" + e.getStatusCode()
 					+ " ,err:" + e.getMessage(), e);
@@ -372,7 +372,7 @@ public class CategoryAPI
 		try {
 			Category category = createCategoryObjectForAdd(inputJsonObj);
 			category = catMan.saveCategory(category);
-			sMsg = JSONUtil.ObjectToJSONString(category);
+			sMsg = JSONUtil.objectToJSONString(category);
 
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -490,8 +490,7 @@ public class CategoryAPI
 	 * lastAccessDate,systemSearch,parameters,queryStr,locked,uiHidden,isWidget
 	 *
 	 * @since 0.1
-	 * @param uri
-	 * @param catId
+	 * 
 	 *            The category Id which user wants to get the details
 	 * @return Lists all the searches <br>
 	 *         If category Id is given as the parameter, it will list all the searches present in the category whose id is the
@@ -603,7 +602,7 @@ public class CategoryAPI
 			if (oobSearch == null) {
 				bResult = false;
 			}
-			if (oobSearch != null && oobSearch.equalsIgnoreCase("true")) {
+			if (oobSearch != null && "true".equalsIgnoreCase(oobSearch)) {
 				bResult = true;
 			}
 
@@ -617,7 +616,7 @@ public class CategoryAPI
 			}
 		}
 		catch (EMAnalyticsFwkException e) {
-
+			LOGGER.error(e.getLocalizedMessage());
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 
@@ -629,14 +628,14 @@ public class CategoryAPI
 					jsonArray.add(jsonObj);
 				}
 				catch (JSONException e) {
-
+					LOGGER.error(e.getLocalizedMessage());
 					return Response.status(500).entity(e.getMessage()).build();
 				}
 			}
 			message = jsonArray.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-
+			LOGGER.error(e.getLocalizedMessage());
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 		return Response.status(statusCode).entity(message).build();

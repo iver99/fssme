@@ -7,7 +7,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -29,11 +28,11 @@ public class OOBCategoryCRUD
 	static String TENANT_ID_OPC1;
 	static String TENANT_ID1;
 
-	@AfterClass
-	public static void afterTest()
-	{
-
-	}
+//	@AfterClass
+//	public static void afterTest()
+//	{
+//
+//	}
 
 	@BeforeClass
 	public static void setUp()
@@ -55,7 +54,6 @@ public class OOBCategoryCRUD
 	
 	private void testCategory(BigInteger category, BigInteger defaultFolder, String categoryName)
 	{
-		try {
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + category);
 
@@ -63,27 +61,21 @@ public class OOBCategoryCRUD
 
 			JsonPath jp = res.jsonPath();
 			Assert.assertEquals(jp.get("id"), category.toString());
-			Assert.assertEquals(jp.get("name"), categoryName);
+			Assert.assertEquals(jp.get("name"), "Target Card");
 			Assert.assertNotNull(jp.get("href"));
 			Assert.assertTrue(String.valueOf(jp.get("href")).contains("/savedsearch/v1/category/" + jp.get("id")));
 			
 			Assert.assertEquals(jp.get("defaultFolder.id"), defaultFolder.toString());
 			Assert.assertNotNull(jp.get("defaultFolder.href"));
-			Assert.assertTrue(String.valueOf(jp.get("defaultFolder.href")).contains("/savedsearch/v1/folder/" + jp.get("defaultFolder.id")));
-			
-			BigInteger five = new BigInteger("5");
-			if (five.compareTo(category) == 0) {
-				Assert.assertNotNull(jp.get("parameters"));
-				List<String> nameList = jp.getList("parameters.name");
-				Assert.assertEquals(nameList.size(), 1);
-				Assert.assertEquals(nameList.get(0), "DASHBOARD_INELIGIBLE");
-				List<String> valueList = jp.getList("parameters.value");
-				Assert.assertEquals(nameList.size(), 1);
-				Assert.assertEquals(valueList.get(0), "1");
-			}
-		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
+			Assert.assertTrue(String.valueOf(jp.get("defaultFolder.href")).contains(
+					"/savedsearch/v1/folder/" + jp.get("defaultFolder.id")));
+
+			Assert.assertNotNull(jp.get("parameters"));
+			List<String> nameList = jp.getList("parameters.name");
+			Assert.assertEquals(nameList.size(), 1);
+			Assert.assertEquals(nameList.get(0), "DASHBOARD_INELIGIBLE");
+			List<String> valueList = jp.getList("parameters.value");
+			Assert.assertEquals(nameList.size(), 1);
+			Assert.assertEquals(valueList.get(0), "1");
 	}
 }

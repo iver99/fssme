@@ -34,17 +34,17 @@ import org.apache.logging.log4j.ThreadContext;
 public class TenantContext
 {
 
-	private static final ThreadLocal<TenantInfo> _threadLocal = new ThreadLocal<TenantInfo>();
+	private static final ThreadLocal<TenantInfo> threadLocal = new ThreadLocal<TenantInfo>();
 
 	/**
 	 * clear context to avoid memory leak for TaasContext
 	 */
 	public static void clearContext()
 	{
-		TenantInfo current = _threadLocal.get();
+		TenantInfo current = threadLocal.get();
 		if (current != null) {
 
-			_threadLocal.remove();
+			threadLocal.remove();
 
 		}
 
@@ -53,12 +53,12 @@ public class TenantContext
 
 	public static TenantInfo getContext()
 	{
-		return _threadLocal.get();
+		return threadLocal.get();
 	}
 
 	public static void setContext(TenantInfo info)
 	{
-		_threadLocal.set(info);
+		threadLocal.set(info);
 
 	}
 

@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -92,6 +93,14 @@ public abstract class SearchManager
 	public abstract Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException;
 
 	/**
+	 * Return the search in tenant scope. Don't care the owner of this search.
+	 * @param searchId
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Search getSearchWithoutOwner(BigInteger searchId) throws EMAnalyticsFwkException;
+
+	/**
 	 * @param name
 	 * @param folderId
 	 * @return
@@ -132,7 +141,7 @@ public abstract class SearchManager
 	public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptyList();
 	}
 
 	public abstract List<Search> getSystemSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException;

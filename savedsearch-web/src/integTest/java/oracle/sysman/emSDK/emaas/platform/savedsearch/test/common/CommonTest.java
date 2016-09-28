@@ -15,7 +15,7 @@ import com.jayway.restassured.config.LogConfig;
 public class CommonTest
 {
 	private static final String DOMAIN = "www.";
-	private static Logger logger = LogManager.getLogger(CommonTest.class);
+	private static Logger LOGGER = LogManager.getLogger(CommonTest.class);
 
 	public static String getDomainName(String url) throws URISyntaxException
 	{
@@ -63,9 +63,7 @@ public class CommonTest
 			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 		}
 		catch (Exception e) {
-			System.out.println("an error occurred while retrving ssf deployment details" + " " + url + " " + portno
-					+ e.toString());
-			logger.error("an error occurred while retrving ssf deployment details" + " " + url + " " + portno + e.toString());
+			LOGGER.error("an error occurred while retrving ssf deployment details" + " " + url + " " + portno + e.toString());
 		}
 
 	}

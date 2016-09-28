@@ -19,13 +19,12 @@ import com.jayway.restassured.response.Response;
 public class UpdateSearchUtil
 {
 
-	private static Logger _logger = UpdateSavedSearchLog.getLogger(UpdateSearchUtil.class);
+	private static Logger LOGGER = UpdateSavedSearchLog.getLogger(UpdateSearchUtil.class);
 
 	public static void exportSearches(long categoryId, String endpoint, String outputfile, String authToken, String tenantid)
 	{
 
 		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken, tenantid)) {
-			System.out.println("The endpoint was not reachable.");
 			return;
 		}
 
@@ -42,18 +41,13 @@ public class UpdateSearchUtil
 				FileUtils.deleteFile(outputfile);
 			}
 			FileUtils.createOutputfile(outputfile, data);
-			System.out.println("The export process completed.");
 		}
 		catch (IOException e) {
-			System.out.println("Error : an error occurred while writing data to file : " + outputfile
-					+ " Please refer to the log file for more details.");
-			_logger.error("Error : an error occurred while writing data to file : ");
+			LOGGER.error("Error : an error occurred while writing data to file : ");
 			return;
 		}
 		catch (Exception e) {
-			System.out.println("Error : an error occurred exporting searches  "
-					+ " Please refer to the log file for more details.");
-			_logger.error("Error : an error occurred exporting searches  " + e.getMessage());
+			LOGGER.error("Error : an error occurred exporting searches  " + e.getMessage());
 			return;
 		}
 	}
@@ -64,7 +58,6 @@ public class UpdateSearchUtil
 		String outputData = "";
 
 		if (!UpdateSearchUtil.isEndpointReachable(endpoint, authToken, tenantid)) {
-			System.out.println("The endpoint was not reachable.");
 			return;
 		}
 
@@ -72,14 +65,11 @@ public class UpdateSearchUtil
 			data = FileUtils.readFile(inputfile);
 		}
 		catch (IOException e) {
-			_logger.error("Error : An error occurred while reading the input file : " + e.getMessage());
-			System.out.println("Error : An error occurred while reading the input file : " + inputfile
-					+ " Please refer to the log file for more details.");
+			LOGGER.error("Error : An error occurred while reading the input file : " + e.getMessage());
 			return;
 		}
 		catch (Exception ex) {
-			_logger.error("Error : An error occurred while updating searches" + ex.getMessage());
-			System.out.println("Error : An error occurred while updating searche Please refer to the log file for more details.");
+			LOGGER.error("Error : An error occurred while updating searches" + ex.getMessage());
 			return;
 		}
 		ImportSearchObject objUpdate = new ImportSearchObject();
@@ -87,21 +77,16 @@ public class UpdateSearchUtil
 			outputData = objUpdate.importSearches(endpoint, data, authToken, tenantid);
 		}
 		catch (Exception e1) {
-			_logger.error("Error : An error occurred while creating or updating search object" + e1.getMessage());
-			System.out.println("Error : An error occurred while creating or updating search object "
-					+ " Please refer to the log file for more details.");
+			LOGGER.error("Error : An error occurred while creating or updating search object" + e1.getMessage());
 			return;
 		}
 		try {
 			FileUtils.createOutputfile(outputfile, outputData);
 		}
 		catch (IOException e) {
-			System.out.println("an error occurred while writing data to file : " + outputfile
-					+ " Please refer to the log file for more details.");
-			_logger.error("an error occurred while writing data to file Please refer to the log file for more details.");
+			LOGGER.error("an error occurred while writing data to file Please refer to the log file for more details.");
 			return;
 		}
-		System.out.println("The import process completed.");
 	}
 
 	public static boolean isEndpointReachable(String endpoint, String authToken, String tenantid)
@@ -117,8 +102,7 @@ public class UpdateSearchUtil
 			}
 		}
 		catch (Exception e) {
-			System.out.println("Error (isEndpointReachable):" + e.getLocalizedMessage());
-			_logger.error("Error (isEndpointReachable):" + e.getLocalizedMessage()
+			LOGGER.error("Error (isEndpointReachable):" + e.getLocalizedMessage()
 					+ " Please refer to the log file for more details.");
 		}
 		return false;

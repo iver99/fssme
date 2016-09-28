@@ -3,9 +3,11 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
+import org.codehaus.jettison.json.JSONException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -17,25 +19,25 @@ public class SchemaUtilTest {
 
 
     @Test
-    public void testGetSchemaUrlsNull() throws Exception {
-        Assert.assertNull(SchemaUtil.getSchemaUrls(null));
+    public void testGetSchemaUrlsNull(){
+        Assert.assertTrue(SchemaUtil.getSchemaUrls(null).isEmpty());
 
         SchemaUtil.getSchemaUrls("{\"items\":[{\"virtualEndpoints\":[\"https\",\"xxx\"],\"canonicalEndpoints\":[\"https\",\"xxx\"]},{\"virtualEndpoints\":[\"https\",\"xxx\"],\"canonicalEndpoints\":[\"https\",\"xxx\"]}]}");
     }
 
     @Test
-    public void testGetSchemaUrlsNull1(@Mocked JSONUtil jsonUtil) throws Exception {
+    public void testGetSchemaUrlsNull1(@Mocked JSONUtil jsonUtil) throws IOException, JSONException {
         new Expectations(){
             {
                 JSONUtil.fromJsonToList(anyString,(Class)any,"items");
                 result = new ArrayList<>();
             }
         };
-        Assert.assertNull(SchemaUtil.getSchemaUrls("json"));
+        Assert.assertTrue(SchemaUtil.getSchemaUrls("json").isEmpty());
     }
 
 //    @Test
-//    public void testGetSchemaUrls_notNull(@Mocked JSONUtil jsonUtil,@Mocked final SchemaUtil.SchemaDeploymentUrls schemaDeploymentUrls) throws Exception {
+//    public void testGetSchemaUrls_notNull(@Mocked JSONUtil jsonUtil,@Mocked final SchemaUtil.SchemaDeploymentUrls schemaDeploymentUrls){
 //        final List<SchemaUtil.SchemaDeploymentUrls> sdlist = new ArrayList<>();
 //        sdlist.add(schemaDeploymentUrls);
 //        sdlist.add(schemaDeploymentUrls);
@@ -55,7 +57,7 @@ public class SchemaUtilTest {
 //    }
 
     @Test
-    public void testGetSchemaUrls() throws Exception {
+    public void testGetSchemaUrls(){
         String json = "{name:'name'}";
         try {
             SchemaUtil.getSchemaUrls(json);
@@ -67,7 +69,7 @@ public class SchemaUtilTest {
 
 
     @Test
-    public void testGetSchemaUserBySoftwareName_null() throws Exception {
+    public void testGetSchemaUserBySoftwareName_null(){
         SchemaUtil.getSchemaUserBySoftwareName(null,null);
 
         SchemaUtil.getSchemaUserBySoftwareName("json","softwareName");
@@ -77,7 +79,7 @@ public class SchemaUtilTest {
      }
 
     @Test
-    public void testGetSchemaUserBySoftwareName_null1(@Mocked JSONUtil jsonUtil) throws Exception {
+    public void testGetSchemaUserBySoftwareName_null1(@Mocked JSONUtil jsonUtil) throws IOException {
         new Expectations(){
             {
                 JSONUtil.fromJsonToList(anyString,(Class)any);
@@ -88,7 +90,7 @@ public class SchemaUtilTest {
     }
 
 //    @Test
-//    public void testGetSchemaUserBySoftwareName_notNull(@Mocked JSONUtil jsonUtil,@Mocked final SchemaUtil.SchemaDeployment schemaDeployment) throws Exception {
+//    public void testGetSchemaUserBySoftwareName_notNull(@Mocked JSONUtil jsonUtil,@Mocked final SchemaUtil.SchemaDeployment schemaDeployment){
 //        final List<SchemaUtil.SchemaDeployment> sdlist = new ArrayList<>();
 //        sdlist.add(schemaDeployment);
 //        sdlist.add(schemaDeployment);

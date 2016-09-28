@@ -17,7 +17,7 @@ public class EmAnalyticsCategoryParamPKTest
 	private EmAnalyticsCategoryParamPK emAnalyticsCategoryParamPK;
 
 	@BeforeClass
-	public void setUp() throws Exception
+	public void setUp()
 	{
 		emAnalyticsCategoryParamPK = new EmAnalyticsCategoryParamPK();
 		emAnalyticsCategoryParamPK.setCategoryId(BigInteger.ONE);
@@ -26,7 +26,7 @@ public class EmAnalyticsCategoryParamPKTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testEquals() throws Exception
+	public void testEquals()
 	{
 		Assert.assertTrue(emAnalyticsCategoryParamPK.equals(emAnalyticsCategoryParamPK));
 
@@ -40,19 +40,19 @@ public class EmAnalyticsCategoryParamPKTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetCategoryId() throws Exception
+	public void testGetCategoryId()
 	{
 		Assert.assertEquals(emAnalyticsCategoryParamPK.getCategoryId(), BigInteger.ONE);
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetName() throws Exception
+	public void testGetName()
 	{
 		Assert.assertEquals(emAnalyticsCategoryParamPK.getName(), "name1");
 	}
 
 	@Test(groups = { "s1" })
-	public void testHashCode() throws Exception
+	public void testHashCode()
 	{
 		Assert.assertEquals(emAnalyticsCategoryParamPK.hashCode(), emAnalyticsCategoryParamPK.hashCode());
 
@@ -61,5 +61,11 @@ public class EmAnalyticsCategoryParamPKTest
 		emAnalyticsCategoryParamPK2.setName("name1");
 		emAnalyticsCategoryParamPK2.setTenantId(1L);
 		Assert.assertEquals(emAnalyticsCategoryParamPK.hashCode(), emAnalyticsCategoryParamPK2.hashCode());
+	}
+
+	@Test(groups = { "s1" })
+	public void testGetTenantId(){
+		emAnalyticsCategoryParamPK.setTenantId(1L);
+		Assert.assertEquals((Long)1L, emAnalyticsCategoryParamPK.getTenantId());
 	}
 }

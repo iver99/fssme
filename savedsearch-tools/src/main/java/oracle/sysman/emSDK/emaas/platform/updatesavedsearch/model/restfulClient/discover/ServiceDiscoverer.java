@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  */
 public class ServiceDiscoverer
 {
-	private static Logger _logger = UpdateSavedSearchLog.getLogger(ServiceDiscoverer.class);
+	private static Logger LOGGER = UpdateSavedSearchLog.getLogger(ServiceDiscoverer.class);
 	private static final int MAX_TOTAL_RETRY = 8;
 	private static final int MAX_RETRY_ON_SAME = 4;
 
@@ -52,7 +52,7 @@ public class ServiceDiscoverer
 			lm.initComponent(lookupProps);
 		}
 		catch (Exception e) {
-			_logger.error("ServiceDiscoverer" + e);
+			LOGGER.error("ServiceDiscoverer" + e);
 		}
 	}
 

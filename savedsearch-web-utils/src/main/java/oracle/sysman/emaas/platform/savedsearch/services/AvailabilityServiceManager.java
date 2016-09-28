@@ -24,7 +24,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 {
 	private static final long PERIOD = Timer.ONE_MINUTE;
 
-	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(AvailabilityServiceManager.class);
 	private Timer timer;
 	private Integer notificationId;
 	private final RegistryServiceManager rsm;
@@ -49,15 +49,15 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void handleNotification(Notification notification, Object handback)
 	{
-		logger.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
+		LOGGER.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
 				notificationId);
 		if (rsm.isRegistrationComplete() == null) {
-			logger.info("RegistryServiceManager hasn't registered. Check registry service next time");
+			LOGGER.info("RegistryServiceManager hasn't registered. Check registry service next time");
 			return;
 		}
 		// check if service manager is up and registration is complete
 		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
-			logger.warn("Saved search service registration is not completed. Ignore dependant services availability checking");
+			LOGGER.warn("Saved search service registration is not completed. Ignore dependant services availability checking");
 			return;
 
 		}
@@ -69,16 +69,16 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			dbReasons.add("Saved search service is out of service because database is unavailable");
 			rsm.makeServiceOutOfService(null, null, dbReasons);
 			GlobalStatus.setSavedSearchDownStatus();
-			logger.error("Saved search service is out of service because database is unavailable");
+			LOGGER.error("Saved search service is out of service because database is unavailable");
 		}
 		else {
 			try {
 				rsm.makeServiceUp();
 				GlobalStatus.setSavedSearchUpStatus();
-				logger.debug("Saved search service is up");
+				LOGGER.debug("Saved search service is up");
 			}
 			catch (Exception e) {
-				logger.error(e.getLocalizedMessage(), e);
+				LOGGER.error(e.getLocalizedMessage(), e);
 			}
 		}
 	}
@@ -94,7 +94,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
 		notificationId = timer.addNotification("SavedSearchServiceTimer", null, this, timerTriggerAt, PERIOD, 0);
 		timer.start();
-		logger.info("Timer for saved search service dependencies checking started. notificationId={}", notificationId);
+		LOGGER.info("Timer for saved search service dependencies checking started. notificationId={}", notificationId);
 	}
 
 	/* (non-Javadoc)
@@ -103,6 +103,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
+		// Do nothing
 	}
 
 	/* (non-Javadoc)
@@ -111,6 +112,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws Exception
 	{
+		// Do nothing
 	}
 
 	/* (non-Javadoc)
@@ -119,14 +121,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Pre-stopping availability service");
+		LOGGER.info("Pre-stopping availability service");
 		try {
 			timer.stop();
 			timer.removeNotification(notificationId);
-			logger.info("Timer for dashboards dependencies checking stopped. notificationId={}", notificationId);
+			LOGGER.info("Timer for dashboards dependencies checking stopped. notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 	}
 

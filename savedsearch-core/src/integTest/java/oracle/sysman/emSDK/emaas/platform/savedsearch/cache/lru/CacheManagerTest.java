@@ -47,7 +47,7 @@ public class CacheManagerTest
 		Assert.assertNull(value);
 		value = (Integer) cm.getCacheable("eternalCache", new Keys("test"), new ICacheFetchFactory() {
 			@Override
-			public Object fetchCachable(Object key) throws Exception
+			public Object fetchCachable(Object key)
 			{
 				return cachedValue;
 			}
@@ -109,7 +109,7 @@ public class CacheManagerTest
 		Assert.assertNull(value);
 		value = (Integer) cm.getCacheable(tenant1, "eternalCache", new Keys("test"), new ICacheFetchFactory() {
 			@Override
-			public Object fetchCachable(Object key) throws Exception
+			public Object fetchCachable(Object key)
 			{
 				return cachedValue;
 			}

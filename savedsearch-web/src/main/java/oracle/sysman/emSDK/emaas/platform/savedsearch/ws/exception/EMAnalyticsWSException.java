@@ -3,8 +3,6 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception;
 public class EMAnalyticsWSException extends Exception
 {
 
-	private static final String ERROR_KEY_PREFIX = "EM_ANALYTICS_WS_EXCEPTION_";
-	private static final String EMAN_FWK_EXCEPTIONS_PROPERTIES_FILE = "location of properties file";
 	/**
 	 * 
 	 */
@@ -157,6 +155,8 @@ public class EMAnalyticsWSException extends Exception
 				break;
 			case JSON_INVALID_LENGTH:
 				statusCode = 400;
+				break;
+			default:
 				break;
 		}
 		return statusCode;

@@ -1,3 +1,4 @@
+
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
@@ -34,8 +35,8 @@ import java.util.List;
 @Path("importcategories")
 public class ImportCategorySet
 {
-	private static final Logger _logger = LogManager.getLogger(ImportCategorySet.class);
-	private final String resourcePath = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/category.xsd";
+	private static final Logger LOGGER = LogManager.getLogger(ImportCategorySet.class);
+	private static final String RESOURCE_PATH = "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/importsearch/category.xsd";
 
 	/**
 	 * Import the category with defined XML file<br>
@@ -170,13 +171,13 @@ public class ImportCategorySet
 		res = Response.ok().build();
 		String msg = "";
 		try {
-			stream = ImportCategorySet.class.getClassLoader().getResourceAsStream(resourcePath);
-			StringBuffer xmlStr = new StringBuffer(xml);
+			stream = ImportCategorySet.class.getClassLoader().getResourceAsStream(RESOURCE_PATH);
+			StringBuilder xmlStr = new StringBuilder(xml);
 			StringReader sReader = new StringReader(xmlStr.toString());
 			CategorySet categories = (CategorySet) JAXBUtil.unmarshal(sReader, stream,
 					JAXBUtil.getJAXBContext(ObjectFactory.class));
 			List<ImportCategoryImpl> list = categories.getCategorySet();
-			if (list.size() == 0) {
+			if (list.isEmpty()) {
 				return res = Response.status(Status.BAD_REQUEST).entity(JAXBUtil.VALID_ERR_MESSAGE).build();
 			}
 			if (validateData(list)) {
@@ -194,13 +195,13 @@ public class ImportCategorySet
 			res = Response.status(Status.OK).entity(jsonArray).build();
 		}
 		catch (ImportException e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to import categories (1)", e);
 			msg = e.getMessage();
 			res = Response.status(Status.BAD_REQUEST).entity(msg).build();
 		}
 		catch (Exception e) {
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to import categories (2)", e);
 			msg = "An internal error has occurred";
 			res = Response.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build();
@@ -225,12 +226,10 @@ public class ImportCategorySet
 				return true;
 			}
 
-			if (obj.getFolderDet() != null) {
-				if (obj.getFolderDetails() instanceof FolderImpl) {
-					FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
-					if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
-						return true;
-					}
+			if (obj.getFolderDet() != null && obj.getFolderDetails() instanceof FolderImpl) {
+				FolderImpl objFolder = (FolderImpl) obj.getFolderDetails();
+				if (!(objFolder.getName() != null && objFolder.getName().trim().length() > 0)) {
+					return true;
 				}
 			}
 		}

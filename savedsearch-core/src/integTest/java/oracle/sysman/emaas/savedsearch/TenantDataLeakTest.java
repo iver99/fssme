@@ -21,6 +21,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImp
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -38,17 +39,14 @@ import org.testng.annotations.Test;
  */
 public class TenantDataLeakTest extends BaseTest
 {
-	private static void closeConnection(Connection conn)
-	{
+	private static void closeConnection(Connection conn) throws SQLException {
 
-		try {
+
 			if (conn != null) {
 				conn.close();
 			}
-		}
-		catch (SQLException e) {
 
-		}
+
 	}
 
 	private static Connection createConnection() throws ClassNotFoundException, SQLException
@@ -62,8 +60,7 @@ public class TenantDataLeakTest extends BaseTest
 	}
 
 	@Test 
-	public void tenantLeakTest()
-	{
+	public void tenantLeakTest() throws SQLException, ClassNotFoundException, EMAnalyticsFwkException {
 		BigInteger id = new BigInteger("6666");
 		Connection conn = null;
 		try {
@@ -152,13 +149,6 @@ public class TenantDataLeakTest extends BaseTest
 			deleteSeedData(conn, 888);
 			deleteSeedData(conn, 999);
 		}
-		catch (ClassNotFoundException | SQLException e) {
-			AssertJUnit.fail(e.getMessage());
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getMessage());
-		}
-
 		finally {
 			if(conn != null)
 				TenantDataLeakTest.closeConnection(conn);
@@ -166,8 +156,7 @@ public class TenantDataLeakTest extends BaseTest
 	}
 
 	@Test
-	public void tenantLeakTest_softdelete()
-	{
+	public void tenantLeakTest_softdelete() throws SQLException, ClassNotFoundException, EMAnalyticsFwkException {
 		BigInteger id = new BigInteger("6666");
 		Connection conn = null;
 		try {
@@ -257,21 +246,13 @@ public class TenantDataLeakTest extends BaseTest
 			deleteSeedData(conn, 999);
 
 		}
-		catch (ClassNotFoundException | SQLException e) {
-			AssertJUnit.fail(e.getMessage());
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getMessage());
-		}
-
 		finally {
 			if(conn != null)
 				TenantDataLeakTest.closeConnection(conn);
 		}
 	}
 
-	private boolean deleteCategory(BigInteger id, long tenantid, boolean permanently)
-	{
+	private boolean deleteCategory(BigInteger id, long tenantid, boolean permanently) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -282,17 +263,13 @@ public class TenantDataLeakTest extends BaseTest
 			objSearch.deleteCategory(category.getId(), permanently);
 			bResult = true;
 		}
-		catch (Exception e) {
-			bResult = false;
-		}
 		finally {
 			TenantContext.clearContext();
 		}
 		return bResult;
 	}
 
-	private boolean deleteFolder(BigInteger id, long tenantid, boolean permanently)
-	{
+	private boolean deleteFolder(BigInteger id, long tenantid, boolean permanently) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -303,17 +280,13 @@ public class TenantDataLeakTest extends BaseTest
 			objFolder.deleteFolder(folder.getId(), permanently);
 			bResult = true;
 		}
-		catch (Exception e) {
-			bResult = false;
-		}
 		finally {
 			TenantContext.clearContext();
 		}
 		return bResult;
 	}
 
-	private boolean deleteSearch(BigInteger id, long tenantid, boolean permanently)
-	{
+	private boolean deleteSearch(BigInteger id, long tenantid, boolean permanently) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -324,27 +297,17 @@ public class TenantDataLeakTest extends BaseTest
 			objSearch.deleteSearch(search.getId(), permanently);
 			bResult = true;
 		}
-		catch (Exception e) {
-			bResult = false;
-			System.out.println(e);
-		}
 		finally {
 			TenantContext.clearContext();
 		}
 		return bResult;
 	}
 
-	private void deleteSeedData(Connection conn, long id)
-	{
-		try {
+	private void deleteSeedData(Connection conn, long id) throws SQLException {
 			conn.setAutoCommit(false);
 			Statement st = conn.createStatement();
 			st.execute(TenantLeakData.getDeleteSql(id));
 			conn.commit();
-		}
-		catch (SQLException e) {
-			//ignore it
-		}
 	}
 
 	private void generateSeedData(Connection conn, long id) throws SQLException
@@ -356,8 +319,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	}
 
-	private Category getCategory(BigInteger id, long tenantid)
-	{
+	private Category getCategory(BigInteger id, long tenantid) throws EMAnalyticsFwkException {
 		Category category = null;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -374,8 +336,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	}
 
-	private Folder getFolder(BigInteger id, long tenantid)
-	{
+	private Folder getFolder(BigInteger id, long tenantid) throws EMAnalyticsFwkException {
 		Folder folder = null;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -394,8 +355,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	}
 
-	private Search getSearch(BigInteger id, long tenantid)
-	{
+	private Search getSearch(BigInteger id, long tenantid) throws EMAnalyticsFwkException {
 		Search search = null;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {

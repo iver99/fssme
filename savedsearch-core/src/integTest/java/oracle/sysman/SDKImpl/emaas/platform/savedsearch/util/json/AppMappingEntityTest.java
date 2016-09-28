@@ -12,55 +12,55 @@ import java.util.ArrayList;
 public class AppMappingEntityTest {
     private AppMappingEntity appMappingEntity = new AppMappingEntity();
     @Test
-    public void testGetCanonicalUrl() throws Exception {
+    public void testGetCanonicalUrl(){
         appMappingEntity.setCanonicalUrl("url");
         Assert.assertEquals("url",appMappingEntity.getCanonicalUrl());
     }
 
     @Test
-    public void testGetDomainName() throws Exception {
+    public void testGetDomainName(){
         appMappingEntity.setDomainName("domainname");
         Assert.assertNotNull(appMappingEntity.getDomainName());
     }
 
     @Test
-    public void testGetDomainUuid() throws Exception {
+    public void testGetDomainUuid(){
         appMappingEntity.setDomainUuid("id");
         Assert.assertNotNull(appMappingEntity.getDomainUuid());
     }
 
     @Test
-    public void testGetHash() throws Exception {
+    public void testGetHash(){
         appMappingEntity.setHash(10L);
         Assert.assertNotNull(appMappingEntity.getHash());
     }
 
     @Test
-    public void testGetKeys() throws Exception {
+    public void testGetKeys(){
         appMappingEntity.setKeys(new ArrayList<AppMappingEntity.AppMappingKey>());
         Assert.assertNotNull(appMappingEntity.getKeys());
     }
 
     @Test
-    public void testGetUuid() throws Exception {
+    public void testGetUuid(){
         appMappingEntity.setUuid("id");
         Assert.assertNotNull(appMappingEntity.getUuid());
     }
 
     @Test
-    public void testGetValues() throws Exception {
+    public void testGetValues(){
         appMappingEntity.setValues(new ArrayList<AppMappingEntity.AppMappingValue>());
         Assert.assertNotNull(appMappingEntity.getValues());
     }
 
     @Test
-    public void testSetCanonicalUrl() throws Exception {
+    public void testSetCanonicalUrl(){
         appMappingEntity.setCanonicalUrl("url");
         Assert.assertNotNull(appMappingEntity.getCanonicalUrl());
     }
 
     @Test
-    public void testAppMappingValue() throws Exception {
+    public void testAppMappingValue(){
         AppMappingEntity.AppMappingValue appMappingValue = new AppMappingEntity.AppMappingValue();
         appMappingValue.setOpcTenantId("");
         appMappingValue.setApplicationNames("");
@@ -69,7 +69,7 @@ public class AppMappingEntityTest {
     }
 
     @Test
-    public void testAppMappingkey() throws Exception {
+    public void testAppMappingkey(){
         AppMappingEntity.AppMappingKey appMappingKey = new AppMappingEntity.AppMappingKey();
         appMappingKey.setName("");
         appMappingKey.setValue("");

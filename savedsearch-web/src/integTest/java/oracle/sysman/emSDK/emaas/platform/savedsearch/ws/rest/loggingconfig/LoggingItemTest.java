@@ -9,41 +9,40 @@ import org.testng.annotations.Test;
  */
 @Test(groups={"s1"})
 public class LoggingItemTest {
-    private LoggerConfig loggerConfig = new LoggerConfig();
     private LoggingItem loggingItem = new LoggingItem(new LoggerConfig(),123456L);
 
     @Test
-    public void testGetCurrentLoggingLevel() throws Exception {
+    public void testGetCurrentLoggingLevel()  {
         loggingItem.setCurrentLoggingLevel("level");
         Assert.assertEquals("level",loggingItem.getCurrentLoggingLevel());
     }
 
     @Test
-    public void testGetLastUpdatedEpoch() throws Exception {
+    public void testGetLastUpdatedEpoch()  {
         loggingItem.setLastUpdatedEpoch(1234L);
         Assert.assertEquals((Long)1234L,loggingItem.getLastUpdatedEpoch());
     }
 
     @Test
-    public void testGetLoggerName() throws Exception {
+    public void testGetLoggerName()  {
         loggingItem.setLoggerName("name");
         Assert.assertEquals("name",loggingItem.getLoggerName());
 
     }
 
 //    @Test
-//    public void testSetCurrentLoggingLevel() throws Exception {
+//    public void testSetCurrentLoggingLevel()  {
 //
 //
 //    }
 //
 //    @Test
-//    public void testSetLastUpdatedEpoch() throws Exception {
+//    public void testSetLastUpdatedEpoch()  {
 //
 //    }
 //
 //    @Test
-//    public void testSetLoggerName() throws Exception {
+//    public void testSetLoggerName()  {
 //
 //    }
 }

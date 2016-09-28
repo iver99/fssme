@@ -1,23 +1,24 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.category;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.UriInfo;
+
 import mockit.Deencapsulation;
 import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
+import mockit.Mocked;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 
-import org.testng.Assert;
+import org.codehaus.jackson.node.ObjectNode;
+import org.codehaus.jettison.json.JSONException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -26,82 +27,154 @@ import org.testng.annotations.Test;
  */
 @Test(groups={"s2"})
 public class CategoryAPITest {
+    @Mocked
+    UriInfo uriInfo;
+    @Mocked
+    CategoryManager categoryManager;
+    @Mocked
+    Category category;
+    @Mocked
+    URI uri;
+    @Mocked
+    EntityJsonUtil entityJsonUtil;
     private CategoryAPI categoryAPI = new CategoryAPI();
+
     @BeforeMethod
-	public void setUp() throws Exception {
-		Deencapsulation.setField(categoryAPI, "uri", TestHelper.mockUriInfo());
+	public void setUp(){
+		Deencapsulation.setField(categoryAPI, "uri", uriInfo);
 	}
-    
-    @Test
-    public void testGetCategory() throws Exception {
-
-        new Expectations(){{
-            new MockUp<CategoryManagerImpl>()
-            {
-                @Mock
-                public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
-                {
-                    return new CategoryImpl();
-                }
-            };
-            }
-        };
-        Assert.assertNotNull(categoryAPI.getCategory(new BigInteger("111")));
-    }
-
-    @Test    public void testGetCategoryByName() throws Exception {
-        new Expectations(){{
-            new MockUp<CategoryManagerImpl>()
-            {
-                @Mock
-                public Category getCategory(String name) throws EMAnalyticsFwkException
-                {
-                    return new CategoryImpl();
-                }
-            };
-        }
-        };
-        Assert.assertNotNull(categoryAPI.getCategoryByName("name"));
-        Assert.assertNotNull(categoryAPI.getCategoryByName(null));
-        Assert.assertNotNull(categoryAPI.getCategoryByName(""));
-
-    }
 
     @Test
-    public void testGetSearchesByCategory() throws Exception {
-        Assert.assertNotNull(categoryAPI.getSearchesByCategory(null,""));
-        Assert.assertNotNull(categoryAPI.getSearchesByCategory(BigInteger.ZERO,""));
-    }
-    @Test
-    public void testGetSearchesByCategory2nd() throws Exception {
-        final List<Search> searches= new ArrayList<Search>();
-        searches.add(new SearchImpl());
+    public void testGetCategory() throws EMAnalyticsFwkException {
         new Expectations(){
             {
-                new MockUp<CategoryManagerImpl>(){
-                    @Mock
-                    public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
-                    {
-                        return  new CategoryImpl();
-                    }
-                };
-
-                new MockUp<SearchManagerImpl>(){
-                    @Mock
-                    public List<Search> getSystemSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
-                    {
-                        return  searches;
-                    }
-                    @Mock
-                    public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
-                    {
-                        return  searches;
-                    }
-                };
+                CategoryManager.getInstance();
+                result = categoryManager;
+                categoryManager.getCategory((BigInteger) any);
+                result = category;
+                uriInfo.getBaseUri();
+                result = uri;
+                EntityJsonUtil.getFullCategoryJsonObj((URI)any, (Category)any);
+                result = new ObjectNode(null);
             }
         };
-        Assert.assertNotNull(categoryAPI.getSearchesByCategory(new BigInteger("1111"),""));
-        Assert.assertNotNull(categoryAPI.getSearchesByCategory(new BigInteger("1111"),null));
+        categoryAPI.getCategory(BigInteger.ONE);
+    }
+    @Mocked
+    Throwable throwable;
+    @Test
+    public void testGetCategoryEMAnalyticsFwkException() throws EMAnalyticsFwkException {
+        new Expectations(){
+            {
+                CategoryManager.getInstance();
+                result = categoryManager;
+                categoryManager.getCategory((BigInteger) any);
+                result = new EMAnalyticsFwkException(throwable);
+            }
+        };
+        categoryAPI.getCategory(BigInteger.ONE);
 
     }
+
+    @Test
+    public void getCategoryByName() throws EMAnalyticsFwkException {
+        categoryAPI.getCategoryByName(null);
+        categoryAPI.getCategoryByName("");
+        new Expectations(){
+            {
+                CategoryManager.getInstance();
+                result =categoryManager;
+                categoryManager.getCategory(anyString);
+                result = category;
+                uriInfo.getBaseUri();
+                result = uri;
+                EntityJsonUtil.getFullCategoryJsonObj((URI)any, (Category)any);
+                result = new ObjectNode(null);
+            }
+        };
+        categoryAPI.getCategoryByName("name");
+    }
+
+    @Test
+    public void testGetCategoryByNameEMAnalyticsFwkException() throws EMAnalyticsFwkException {
+        categoryAPI.getCategoryByName(null);
+        categoryAPI.getCategoryByName("");
+        new Expectations(){
+            {
+                CategoryManager.getInstance();
+                result =categoryManager;
+                categoryManager.getCategory(anyString);
+                result = new EMAnalyticsFwkException(throwable);
+            }
+        };
+        categoryAPI.getCategoryByName("name");
+    }
+    @Mocked
+    SearchManager searchManager;
+    @Mocked
+    Search search;
+    @Test
+    public void testGetSearchesByCategory() throws EMAnalyticsFwkException, JSONException {
+        categoryAPI.getSearchesByCategory(null, "true");
+        categoryAPI.getSearchesByCategory(BigInteger.ONE.negate(), "true");
+        final List<Search> searches = new ArrayList<>();
+        searches.add(search);
+        new Expectations(){
+            {
+                SearchManager.getInstance();
+                result = searchManager;
+                CategoryManager.getInstance();
+                result = categoryManager;
+                searchManager.getSystemSearchListByCategoryId((BigInteger) any);
+                result = searches;
+                searchManager.getSearchListByCategoryId((BigInteger) any);
+                result = searches;
+                uriInfo.getBaseUri();
+                result = uri;
+                EntityJsonUtil.getFullSearchJsonObj((URI)any, (Search)any, null, false);
+                result = new ObjectNode(null);
+            }
+        };
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, "true");
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, null);
+    }
+
+    @Test
+    public void testGetSearchesByCategoryEMAnalyticsFwkException() throws EMAnalyticsFwkException, JSONException {
+        new Expectations(){
+            {
+                SearchManager.getInstance();
+                result = searchManager;
+                CategoryManager.getInstance();
+                result = categoryManager;
+                searchManager.getSystemSearchListByCategoryId((BigInteger) any);
+                result =  new EMAnalyticsFwkException(throwable);
+            }
+        };
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, "true");
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, null);
+    }
+
+    @Test
+    public void testGetSearchesByCategoryEMAnalyticsFwkException2() throws EMAnalyticsFwkException, JSONException {
+        final List<Search> searches = new ArrayList<>();
+        searches.add(search);
+        new Expectations(){
+            {
+                SearchManager.getInstance();
+                result = searchManager;
+                CategoryManager.getInstance();
+                result = categoryManager;
+                searchManager.getSystemSearchListByCategoryId((BigInteger) any);
+                result = searches;
+                searchManager.getSearchListByCategoryId((BigInteger) any);
+                result = searches;
+                uriInfo.getBaseUri();
+                result =  new EMAnalyticsFwkException(throwable);
+            }
+        };
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, "true");
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, null);
+    }
+
 }

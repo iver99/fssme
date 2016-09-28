@@ -13,6 +13,7 @@ package oracle.sysman.emaas.savedsearch;
 import java.math.BigInteger;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -43,8 +44,7 @@ public class MultitenentCategoryTest extends BaseTest
 	private static String username3 = null;
 
 	//@Test
-	public static void categoryTest()
-	{
+	public static void categoryTest() throws EMAnalyticsFwkException {
 		opc1 = TestUtils.getInternalTenantId(TENANT_ID_OPC1);
 		opc2 = TestUtils.getInternalTenantId(TENANT_ID_OPC2);
 		opc3 = TestUtils.getInternalTenantId(TENANT_ID_OPC3);
@@ -76,8 +76,7 @@ public class MultitenentCategoryTest extends BaseTest
 		Assert.assertTrue(MultitenentCategoryTest.deleteCategory(id3, opc3, username3) == true);
 	}
 
-	public static BigInteger createCategory(String username, Long value)
-	{
+	public static BigInteger createCategory(String username, Long value) throws EMAnalyticsFwkException {
 		BigInteger id = BigInteger.ZERO;
 		TenantContext.setContext(new TenantInfo(username, value));
 		try {
@@ -92,17 +91,13 @@ public class MultitenentCategoryTest extends BaseTest
 			catObj = fmger.saveCategory(catObj);
 			id = catObj.getId();
 		}
-		catch (Exception e) {
-			//do nothing	
-		}
 		finally {
 			TenantContext.clearContext();
 		}
 		return id;
 	}
 
-	public static boolean deleteCategory(BigInteger id, Long value, String username)
-	{
+	public static boolean deleteCategory(BigInteger id, Long value, String username) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		try {
 			TenantContext.setContext(new TenantInfo(username, value));
@@ -110,25 +105,18 @@ public class MultitenentCategoryTest extends BaseTest
 			fmger.deleteCategory(id, true);
 			bResult = true;
 		}
-		catch (Exception e) {
-			bResult = false;
-		}
 		finally {
 			TenantContext.clearContext();
 		}
 		return bResult;
 	}
 
-	public static Category getCategory(BigInteger id, Long value, String username)
-	{
+	public static Category getCategory(BigInteger id, Long value, String username) throws EMAnalyticsFwkException {
 		Category catObj = null;
 		try {
 			TenantContext.setContext(new TenantInfo(username, value));
 			CategoryManager fmger = CategoryManager.getInstance();
 			catObj = fmger.getCategory(id);
-		}
-		catch (Exception e) {
-			catObj = null;
 		}
 		finally {
 			TenantContext.clearContext();

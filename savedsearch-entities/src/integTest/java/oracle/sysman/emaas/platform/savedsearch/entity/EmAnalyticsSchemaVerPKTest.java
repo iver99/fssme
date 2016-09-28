@@ -13,14 +13,14 @@ public class EmAnalyticsSchemaVerPKTest {
     private EmAnalyticsSchemaVerPK emAnalyticsSchemaVerPK;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public void setUp(){
         emAnalyticsSchemaVerPK = new EmAnalyticsSchemaVerPK();
         emAnalyticsSchemaVerPK.setMajor(111L);
         emAnalyticsSchemaVerPK.setMinor(222L);
     }
 
     @Test (groups = {"s1"})
-    public void testEquals() throws Exception {
+    public void testEquals(){
         Assert.assertTrue(emAnalyticsSchemaVerPK.equals(emAnalyticsSchemaVerPK));
 
         Assert.assertFalse(emAnalyticsSchemaVerPK.equals(new String("astring")));
@@ -32,17 +32,17 @@ public class EmAnalyticsSchemaVerPKTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetMajor() throws Exception {
+    public void testGetMajor(){
         Assert.assertEquals(111L,emAnalyticsSchemaVerPK.getMajor());
     }
 
     @Test (groups = {"s1"})
-    public void testGetMinor() throws Exception {
+    public void testGetMinor(){
         Assert.assertEquals(222L,emAnalyticsSchemaVerPK.getMinor());
     }
 
     @Test (groups = {"s1"})
-    public void testHashCode() throws Exception {
+    public void testHashCode(){
         Assert.assertEquals(emAnalyticsSchemaVerPK.hashCode(),20000);
     }
 }

@@ -22,7 +22,7 @@ package oracle.sysman.emaas.platform.savedsearch.services;
 public class EMTargetMXBeanImpl implements EMTargetMXBean
 {
 
-	private static final String m_target_type = EMTargetConstants.m_target_type;
+	private static final String ORACLE_EMAAS_SAVED_SEARCH = EMTargetConstants.ORACLE_EMAAS_SAVED_SEARCH;
 	private String m_name = null;
 
 	public EMTargetMXBeanImpl(String name)
@@ -33,7 +33,7 @@ public class EMTargetMXBeanImpl implements EMTargetMXBean
 	@Override
 	public String getEMTargetType() throws Exception
 	{
-		return m_target_type;
+		return ORACLE_EMAAS_SAVED_SEARCH;
 	}
 
 	@Override

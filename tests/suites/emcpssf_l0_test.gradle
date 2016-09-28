@@ -23,42 +23,16 @@
  * Run the buildscript{} configuration to pull the em-test-infraplugin.
  */
 buildscript {
-    repositories {
-
-	 maven {
-            url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-        }
-        maven {
-            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
-    }
-    dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-	classpath group:"com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "1.0+", transitive: true     
-    }
+apply from: 'test-buildscript-apply.gradle'
 }
-repositories {
-    maven {
-        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-    }
-}
-apply plugin: 'TestInfraPlugin'
-apply plugin: 'DevInfraPlugin'
+apply from: 'test-project-apply.gradle'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* ************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
  
  
-/* Your lrg specific code would come here */
 
-repositories {
-maven {
-        url = "${PUB_MAVEN_MY_MAVEN_REPO}"
-    }
-
-        maven {
-            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
-    }
 def regLookupClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 def regClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 dependencies {
@@ -144,9 +118,11 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/SavedSearchCORSF
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/search/SearchAPITest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/TenantSubscriptionUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/loggingconfig/UpdatedLoggerLevelTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/validationUtilTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/ValidationUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPITest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGroupAPITest.class"
+		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/XSDErrorUtilTest.class"
+		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/targetcard/TargetCardLinksFilterAPITest.class"
 
 
 
@@ -172,6 +148,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/LogUtilTest.class
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/ParameterDetailsTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/SchemaVersionTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/WidgetChangeNotificationTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/SearchPaurameterDetailsTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/DBConnectionManagerTest.class"
@@ -193,7 +170,22 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/QAToolUtil
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/LogUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RegistryLookupUtilTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RestClientTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptionUtilTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheFactoryTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/CachedLinkTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/BinaryTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotCacheManagerTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotElementTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/common/ExecutionContextTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/CategorySetTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryImplTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderImplTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchImplTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchSummaryImplTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/EntityJsonUtilTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/CategoryDetailsTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplForTargetCardTest.class"
 	useRestAssured =true
 ext.set("testType", "unit")
 

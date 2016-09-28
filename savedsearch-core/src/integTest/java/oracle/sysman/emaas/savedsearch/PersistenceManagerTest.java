@@ -15,10 +15,10 @@ public class PersistenceManagerTest extends BaseTest
 	{
 
 		PersistenceManager pm = PersistenceManager.getInstance();
-		Assert.assertNotNull(pm, "Got NULL PersistenceManager instance");
+		Assert.assertNotNull(pm, "Got NULL PersistenceManager INSTANCE");
 
 		EntityManagerFactory emf = pm.getEntityManagerFactory();
-		Assert.assertNotNull(emf, "Got NULL EntityManagerFactory instance");
+		Assert.assertNotNull(emf, "Got NULL EntityManagerFactory INSTANCE");
 
 		pm.closeEntityManagerFactory();
 
@@ -32,7 +32,7 @@ public class PersistenceManagerTest extends BaseTest
 		pm.createEntityManagerFactory();
 
 		emf = pm.getEntityManagerFactory();
-		Assert.assertNotNull(emf, "Got NULL EntityManagerFactory instance (2)");
+		Assert.assertNotNull(emf, "Got NULL EntityManagerFactory INSTANCE (2)");
 
 	}
 }

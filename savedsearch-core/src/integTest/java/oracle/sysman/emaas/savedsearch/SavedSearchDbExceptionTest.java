@@ -26,7 +26,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-//import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;

@@ -59,9 +59,9 @@ import org.apache.logging.log4j.Logger;
 public class CategoryManagerImpl extends CategoryManager
 {
 	// Logger
-	private static final Logger _logger = LogManager.getLogger(CategoryManagerImpl.class);
+	private static final Logger LOGGER = LogManager.getLogger(CategoryManagerImpl.class);
 
-	private static final CategoryManagerImpl _instance = new CategoryManagerImpl();
+	private static final CategoryManagerImpl INSTANCE = new CategoryManagerImpl();
 
 	private static final String DB_DEFAULT_VALUE = "0";
 
@@ -120,7 +120,7 @@ public class CategoryManagerImpl extends CategoryManager
 
 			Set<EmAnalyticsCategoryParam> params = category.getEmAnalyticsCategoryParams();
 			List<Parameter> categoryParams = new ArrayList<Parameter>();
-			if (params != null && params.size() > 0) {
+			if (params != null && !params.isEmpty()) {
 				for (EmAnalyticsCategoryParam paramObj : params) {
 					Parameter param = new Parameter();
 					param.setName(paramObj.getName());
@@ -131,32 +131,32 @@ public class CategoryManagerImpl extends CategoryManager
 
 			}
 			if (!CategoryManagerImpl.containsDashboardIneligible(categoryParams)) {
-				_logger.debug("Try to Get DASHBOARD_INELIGIBLE from category");
-				if (category.getDASHBOARD_INELIGIBLE() != null && !DB_DEFAULT_VALUE.equals(category.getDASHBOARD_INELIGIBLE())) {
-					_logger.debug("Getting DASHBOARD_INELIGIBLE from category");
+				LOGGER.debug("Try to Get DASHBOARD_INELIGIBLE from category");
+				if (category.getDASHBOARDINELIGIBLE() != null && !DB_DEFAULT_VALUE.equals(category.getDASHBOARDINELIGIBLE())) {
+					LOGGER.debug("Getting DASHBOARD_INELIGIBLE from category");
 					Parameter param = new Parameter();
 					param.setName("DASHBOARD_INELIGIBLE");
 					param.setType(ParameterType.STRING);
-					param.setValue(category.getDASHBOARD_INELIGIBLE());
+					param.setValue(category.getDASHBOARDINELIGIBLE());
 					categoryParams.add(param);
 				}
 			}
-			if (categoryParams.size() > 0) {
-				_logger.debug("Category's parameter number is > 0!");
+			if (!categoryParams.isEmpty()) {
+				LOGGER.debug("Category's parameter number is > 0!");
 				rtnObj.setParameters(categoryParams);
 			}
 
 			return rtnObj;
 		}
 		catch (Exception e) {
-			_logger.error("Error while creating the category object", e);
+			LOGGER.error("Error while creating the category object", e);
 			throw e;
 		}
 	}
 
 	public static CategoryManager getInstance()
 	{
-		return _instance;
+		return INSTANCE;
 	}
 
 	//check if param list contains DASHBOARD_INELIGIBLE
@@ -164,11 +164,11 @@ public class CategoryManagerImpl extends CategoryManager
 	{
 		for (Parameter param : params) {
 			if ("DASHBOARD_INELIGIBLE".equals(param.getName())) {
-				_logger.debug("List<Parameter> contains DASHBOARD_INELIGIBLE!");
+				LOGGER.debug("List<Parameter> contains DASHBOARD_INELIGIBLE!");
 				return true;
 			}
 		}
-		_logger.debug("List<Parameter> did not contains DASHBOARD_INELIGIBLE!");
+		LOGGER.debug("List<Parameter> did not contains DASHBOARD_INELIGIBLE!");
 		return false;
 	}
 
@@ -201,7 +201,7 @@ public class CategoryManagerImpl extends CategoryManager
 				categoryObj = EmAnalyticsObjectUtil.getCategoryById(categoryId, em);
 			}
 			if (categoryObj == null) {
-				_logger.error("Category object by Id: " + categoryId + " " + "does not exist");
+				LOGGER.error("Category object by Id: " + categoryId + " " + "does not exist");
 				throw new EMAnalyticsFwkException("Category object by Id: " + categoryId + " " + "does not exist",
 						EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, null);
 			}
@@ -218,12 +218,12 @@ public class CategoryManagerImpl extends CategoryManager
 			em.getTransaction().commit();
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error(eme.getMessage());
+			LOGGER.error(eme.getMessage());
 			throw eme;
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processCategoryPersistantException(e, -1, null);
-			_logger.error("Error while deleting the category with id:" + categoryId, e);
+			LOGGER.error("Error while deleting the category with id:" + categoryId, e);
 			throw new EMAnalyticsFwkException("Error occurred while deleting the category",
 					EMAnalyticsFwkException.ERR_DELETE_CATEGORY, null, e);
 
@@ -249,19 +249,19 @@ public class CategoryManagerImpl extends CategoryManager
 			return CategoryManagerImpl.createCategoryObject(categoryEntity, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("Category with name " + category.getName() + " was saved but could not bve retrieved back", eme);
+			LOGGER.error("Category with name " + category.getName() + " was saved but could not bve retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId().longValue(),
-					category.getName());
-			_logger.error("Error while updating the category: " + category.getName(), dmlce);
+			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId() == null ? -1
+					: category.getDefaultFolderId().longValue(), category.getName());
+			LOGGER.error("Error while updating the category: " + category.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
 					EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, dmlce);
 
 		}
 		catch (Exception e) {
-			_logger.error("Error while updating the category name: ", e);
+			LOGGER.error("Error while updating the category name: ", e);
 			throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
 					EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, e);
 		}
@@ -293,7 +293,7 @@ public class CategoryManagerImpl extends CategoryManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processCategoryPersistantException(e, -1, null);
-			_logger.error("Error while retrieving all the categories", e);
+			LOGGER.error("Error while retrieving all the categories", e);
 			throw new EMAnalyticsFwkException("Error while retrieving all the categories",
 					EMAnalyticsFwkException.ERR_GET_CATEGORIES, null, e);
 
@@ -316,7 +316,7 @@ public class CategoryManagerImpl extends CategoryManager
 		}
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processCategoryPersistantException(e, -1, null);
-			_logger.error("Error while getting the category object by ID: " + categoryId, e);
+			LOGGER.error("Error while getting the category object by ID: " + categoryId, e);
 			throw new EMAnalyticsFwkException("category object by ID: " + categoryId + " does not exist",
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID, new Object[] { categoryId }, e);
 
@@ -327,7 +327,7 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 		}
 		if (category == null) {
-			_logger.error("Category identified by ID: " + categoryId + " does not exist");
+			LOGGER.error("Category identified by ID: " + categoryId + " does not exist");
 			throw new EMAnalyticsFwkException("Category object by ID: " + categoryId + " does not exist",
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_ID_NOT_EXIST, new Object[] { categoryId });
 		}
@@ -362,12 +362,12 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 		}
 		catch (NonUniqueResultException nure) {
-			_logger.error("Error while getting the category object by Name ", nure);
+			LOGGER.error("Error while getting the category object by Name ", nure);
 			throw new EMAnalyticsFwkException("Multiple category objects with same name: \'" + categoryName + "\' exist.",
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName }, nure);
 		}
 		catch (Exception e) {
-			_logger.error("Error while getting the category object by Name ", e);
+			LOGGER.error("Error while getting the category object by Name ", e);
 			e.printStackTrace();
 			throw new EMAnalyticsFwkException("Category object by Name: " + categoryName + " does not exist",
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName }, e);
@@ -379,7 +379,7 @@ public class CategoryManagerImpl extends CategoryManager
 
 		}
 		if (category == null) {
-			_logger.error("Category object by name does not exist");
+			LOGGER.error("Category object by name does not exist");
 			throw new EMAnalyticsFwkException("Category object by name: " + categoryName + " does not exist",
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName });
 		}
@@ -402,20 +402,20 @@ public class CategoryManagerImpl extends CategoryManager
 			return CategoryManagerImpl.createCategoryObject(categoryObj, null);
 		}
 		catch (EMAnalyticsFwkException eme) {
-			_logger.error("category with name " + category.getName() + " was saved but could not be retrieved back", eme);
+			LOGGER.error("category with name " + category.getName() + " was saved but could not be retrieved back", eme);
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
 			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId() == null ? -1
 					: category.getDefaultFolderId().longValue(), category.getName());
 
-			_logger.error("Error while saving the category: " + category.getName(), dmlce);
+			LOGGER.error("Error while saving the category: " + category.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_CATEGORY, null, dmlce);
 
 		}
 		catch (Exception e) {
-			_logger.error("Error while saving the category: " + category.getName(), e);
+			LOGGER.error("Error while saving the category: " + category.getName(), e);
 			throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
 					EMAnalyticsFwkException.ERR_CREATE_CATEGORY, null, e);
 		}
@@ -501,7 +501,7 @@ public class CategoryManagerImpl extends CategoryManager
 					}
 				}
 				catch (PersistenceException eme) {
-					_logger.error("Error while importing the category: " + category.getName(), eme);
+					LOGGER.error("Error while importing the category: " + category.getName(), eme);
 					importedList.clear();
 					bCommit = false;
 					break;
@@ -517,7 +517,7 @@ public class CategoryManagerImpl extends CategoryManager
 		catch (Exception e) {
 			importedList.clear();
 			e.printStackTrace();
-			_logger.error("Error in saveMultipleCategory", e);
+			LOGGER.error("Error in saveMultipleCategory", e);
 			// throw e;
 		}
 		finally {

@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
@@ -9,24 +10,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -43,6 +40,13 @@ import org.testng.annotations.Test;
 public class WidgetAPITest
 {
 	private static final BigInteger TEST_ID_10 = BigInteger.TEN;
+	@Mocked
+	UriInfo uriInfo;
+	@Mocked
+	URI uri;
+	@Mocked
+	CategoryManager categoryManager;
+	
 	private static List<Map<String, Object>> mockedWidgetObjects()
 	{
 		List<Map<String, Object>> map = new ArrayList<Map<String, Object>>();
@@ -74,126 +78,15 @@ public class WidgetAPITest
 	Date now = new Date();
 
 	@BeforeMethod
-	public void setUp() throws Exception
+	public void setUp()
 	{
 		TenantContext.setContext(new TenantInfo("SYSMAN", 1L));
+		widgetAPI.uri = uriInfo;
 
-		UriInfo uri = new UriInfo() {
-			@Override
-			public URI getAbsolutePath()
-			{
-				return null;
-			}
-
-			@Override
-			public UriBuilder getAbsolutePathBuilder()
-			{
-				return null;
-			}
-
-			@Override
-			public URI getBaseUri()
-			{
-				return null;
-			}
-
-			@Override
-			public UriBuilder getBaseUriBuilder()
-			{
-				return null;
-			}
-
-			@Override
-			public List<Object> getMatchedResources()
-			{
-				return null;
-			}
-
-			@Override
-			public List<String> getMatchedURIs()
-			{
-				return null;
-			}
-
-			@Override
-			public List<String> getMatchedURIs(boolean b)
-			{
-				return null;
-			}
-
-			@Override
-			public String getPath()
-			{
-				return null;
-			}
-
-			@Override
-			public String getPath(boolean b)
-			{
-				return null;
-			}
-
-			@Override
-			public MultivaluedMap<String, String> getPathParameters()
-			{
-				return null;
-			}
-
-			@Override
-			public MultivaluedMap<String, String> getPathParameters(boolean b)
-			{
-				return null;
-			}
-
-			@Override
-			public List<PathSegment> getPathSegments()
-			{
-				return null;
-			}
-
-			@Override
-			public List<PathSegment> getPathSegments(boolean b)
-			{
-				return null;
-			}
-
-			@Override
-			public MultivaluedMap<String, String> getQueryParameters()
-			{
-				return null;
-			}
-
-			@Override
-			public MultivaluedMap<String, String> getQueryParameters(boolean b)
-			{
-				return null;
-			}
-
-			@Override
-			public URI getRequestUri()
-			{
-
-				URI uril = null;
-				try {
-					uril = new URI("");
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-				return uril;
-			}
-
-			@Override
-			public UriBuilder getRequestUriBuilder()
-			{
-				return null;
-			}
-		};
-		Deencapsulation.setField(widgetAPI, "uri", uri);
 	}
 
 	@Test
-	public void testGetAllWidgets() throws Exception
+	public void testGetAllWidgets()
 	{
 		String userTenant = "OAM_REMOTE_USER.userName";
 		String widgetGroupId = "10";
@@ -204,19 +97,12 @@ public class WidgetAPITest
 			category.setId(TEST_ID_10);
 			list.add(new CategoryImpl());
 		}
-
-		new MockUp<CategoryManagerImpl>() {
-			@Mock
-			public List<Category> getAllCategories() throws EMAnalyticsFwkException
+		new Expectations(){
 			{
-				return list;
-			}
-		};
-		new MockUp<URI>() {
-			@Mock
-			public String getQuery()
-			{
-				return "widgetGroupId=11&includeDashboardIneligible=true";
+				uriInfo.getRequestUri();
+				result = uri;
+				uri.getQuery();
+				result = "widgetGroupId=11&includeDashboardIneligible=true";
 			}
 		};
 		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
@@ -224,8 +110,7 @@ public class WidgetAPITest
 
 	@Test
 	public void testGetAllWidgets2nd(
-			@Mocked final oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil anyTSU) throws Exception
-	{
+			@Mocked final oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil anyTSU) throws IOException {
 		String userTenant = "OAM_REMOTE_USER.userName";
 		String widgetGroupId = "10";
 		boolean includeDashboardIneligible = false;
@@ -297,8 +182,7 @@ public class WidgetAPITest
 
 	@Test
 	public void testGetAllWidgets3th(
-			@Mocked final oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil anyTSU) throws Exception
-	{
+			@Mocked final oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil anyTSU) throws IOException {
 		String userTenant = "OAM_REMOTE_USER.userName";
 		String widgetGroupId = "10";
 		boolean includeDashboardIneligible = false;
@@ -369,8 +253,7 @@ public class WidgetAPITest
 
 	@Test
 	public void testGetAllWidgets4th(
-			@Mocked final oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil anyTSU) throws Exception
-	{
+			@Mocked final oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil anyTSU) throws IOException {
 		String userTenant = "OAM_REMOTE_USER.userName";
 		String widgetGroupId = "10";
 		boolean includeDashboardIneligible = false;
@@ -440,7 +323,7 @@ public class WidgetAPITest
 	}
 
 	@Test
-	public void testGetWidgetScreenshotById() throws Exception
+	public void testGetWidgetScreenshotById()
 	{
 		new MockUp<SearchManagerImpl>() {
 			@Mock
@@ -453,7 +336,7 @@ public class WidgetAPITest
 	}
 
 	@Test
-	public void testGetWidgetScreenshotById2nd() throws Exception
+	public void testGetWidgetScreenshotById2nd()
 	{
 		new MockUp<SearchManagerImpl>() {
 			@Mock
@@ -465,16 +348,4 @@ public class WidgetAPITest
 		widgetAPI.getWidgetScreenshotById(TEST_ID_10, "1.0", "test.png");
 	}
 
-	@Test
-	public void testGetWidgetScreenshotById3th() throws Exception
-	{
-		new MockUp<SearchManagerImpl>() {
-			@Mock
-			public ScreenshotData getWidgetScreenshotById(BigInteger widgetId) throws Exception
-			{
-				throw new Exception("");
-			}
-		};
-		widgetAPI.getWidgetScreenshotById(TEST_ID_10, "1.0", "test.png");
-	}
 }

@@ -31,25 +31,16 @@ public class AvailabilityServiceManagerTest {
     ApplicationLifecycleEvent applicationLifecycleEvent;
 
 
-    @BeforeMethod
-    public void setUp() throws Exception {
 
-        new NonStrictExpectations(){
-            {
-                logManager.getLogger(AvailabilityServiceManager.class);
-                result = logger;
-            }
-        };
-    }
 
     @Test(groups = {"s1"})
-    public void testGetName() throws Exception {
+    public void testGetName()  {
         AvailabilityServiceManager availabilityServiceManager = new AvailabilityServiceManager(new RegistryServiceManager());
         Assert.assertEquals("Saved Search Timer Service",availabilityServiceManager.getName());
     }
 
     @Test
-    public void testHandleNotification_DBCMReturnFalse(@Mocked Notification notification, @Injectable final RegistryServiceManager rsm) throws Exception {
+    public void testHandleNotification_DBCMReturnFalse(@Mocked Notification notification, @Injectable final RegistryServiceManager rsm)  {
 
         new Expectations(){
             {
@@ -63,10 +54,6 @@ public class AvailabilityServiceManagerTest {
                 returns(null,false,false,true);
                 rsm.registerService();
                 returns(false);
-                logger.debug(anyString,anyLong,anyInt);
-                times = 3;
-                logger.info(anyString);
-                times = 1;
             }
         };
 
@@ -83,7 +70,7 @@ public class AvailabilityServiceManagerTest {
     }
 
     @Test
-    public void testHandleNotification_DBCMReturnTrue(@Mocked Notification notification, @Mocked final RegistryServiceManager rsm) throws Exception {
+    public void testHandleNotification_DBCMReturnTrue(@Mocked Notification notification, @Mocked final RegistryServiceManager rsm)  {
 
         new Expectations(){
             {
@@ -97,10 +84,6 @@ public class AvailabilityServiceManagerTest {
                 returns(null,false,false,true);
                 rsm.registerService();
                 returns(false);
-                logger.debug(anyString,anyLong,anyInt);
-                times = 3;
-                logger.info(anyString);
-                times = 1;
                 rsm.makeServiceUp();
                 times = 1;
             }
@@ -119,10 +102,10 @@ public class AvailabilityServiceManagerTest {
     }
 
     @Test
-    public void testPostStart(@Mocked Notification notification, @Injectable final RegistryServiceManager rsm) throws Exception {
+    public void testPostStart(@Mocked Notification notification, @Injectable final RegistryServiceManager rsm)  {
 //        new Expectations(){
 //            {
-//                logger.info(anyString,anyLong);
+//                LOGGER.info(anyString,anyLong);
 //                times = 1;
 //            }
 //        };
@@ -131,20 +114,20 @@ public class AvailabilityServiceManagerTest {
 //        availabilityServiceManager.postStart(applicationLifecycleEvent);
     }
 
-    @Test
-    public void testPostStop(@Mocked final RegistryServiceManager rsm) throws Exception {
-        availabilityServiceManager = new AvailabilityServiceManager(rsm);
-        availabilityServiceManager.postStop(new ApplicationLifecycleEvent(null));
-    }
+//    @Test
+//    public void testPostStop(@Mocked final RegistryServiceManager rsm)  {
+//        availabilityServiceManager = new AvailabilityServiceManager(rsm);
+//        availabilityServiceManager.postStop(new ApplicationLifecycleEvent(null));
+//    }
+//
+//    @Test
+//    public void testPreStart(@Mocked final RegistryServiceManager rsm)  {
+//        availabilityServiceManager = new AvailabilityServiceManager(rsm);
+//        availabilityServiceManager.preStart(new ApplicationLifecycleEvent(null));
+//    }
 
     @Test
-    public void testPreStart(@Mocked final RegistryServiceManager rsm) throws Exception {
-        availabilityServiceManager = new AvailabilityServiceManager(rsm);
-        availabilityServiceManager.preStart(new ApplicationLifecycleEvent(null));
-    }
-
-    @Test
-    public void testPreStop(@Mocked final RegistryServiceManager rsm) throws Exception {
+    public void testPreStop(@Mocked final RegistryServiceManager rsm)  {
 //        new Expectations(){
 //            {
 //                timer.addNotificationListener(new AvailabilityServiceManager(rsm),null,null);

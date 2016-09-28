@@ -27,7 +27,6 @@ import java.util.Map;
 @Test(groups = {"s1"})
 public class LogUtilTest {
 
-    LogUtil logUtil= new LogUtil();
 
 	@BeforeMethod
 	public void beforeMethod() throws URISyntaxException
@@ -37,17 +36,17 @@ public class LogUtilTest {
 	}
 
     @Test
-    public void testClearInteractionLogContext() throws Exception {
+    public void testClearInteractionLogContext(){
         LogUtil.clearInteractionLogContext();
     }
 
     @Test
-    public void testGetInteractionLogger() throws Exception {
+    public void testGetInteractionLogger(){
         Assert.assertTrue(LogUtil.getInteractionLogger() instanceof Logger);
     }
 
     @Test
-    public void testGetLoggerUpdateTime() throws Exception {
+    public void testGetLoggerUpdateTime(){
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
         Configuration cfg = loggerContext.getConfiguration();
         LogUtil.setLoggerUpdateTime(cfg,new LoggerConfig(),null);
@@ -55,7 +54,7 @@ public class LogUtilTest {
     }
 
     @Test(groups = {"s2"})
-    public void testInitializeLoggersUpdateTime(@Injectable final LoggerConfig loggerConfig, @Mocked final LoggerContext loggerContext, @Mocked LogManager logManager, @Mocked final Configuration configuration) throws Exception {
+    public void testInitializeLoggersUpdateTime(@Injectable final LoggerConfig loggerConfig, @Mocked final LoggerContext loggerContext, @Mocked LogManager logManager, @Mocked final Configuration configuration){
         final Map<String, LoggerConfig> loggers = new HashMap<>();
         loggers.put("a",loggerConfig);
         loggers.put("b",loggerConfig);
@@ -78,7 +77,7 @@ public class LogUtilTest {
     }
 
     @Test
-    public void testSetInteractionLogThreadContext() throws Exception {
+    public void testSetInteractionLogThreadContext(){
         LogUtil.setInteractionLogThreadContext(null,"serviceInvoked",null);
 
         LogUtil.setInteractionLogThreadContext("tenantId",null,null);
@@ -87,7 +86,7 @@ public class LogUtilTest {
     }
 
     @Test
-    public void testInteractionLogContext() throws Exception {
+    public void testInteractionLogContext(){
         LogUtil.InteractionLogContext interactionLogContext = new LogUtil.InteractionLogContext("tenantId","serviceInvoked","direction");
         interactionLogContext.setDirection("direction");
         Assert.assertEquals(interactionLogContext.getDirection(),"direction");
@@ -98,7 +97,7 @@ public class LogUtilTest {
     }
 
     @Test
-    public void testInteractionLogDirection() throws Exception {
+    public void testInteractionLogDirection(){
         LogUtil.InteractionLogDirection.fromValue("aa");
         Assert.assertEquals(LogUtil.InteractionLogDirection.fromValue("IN"), LogUtil.InteractionLogDirection.IN);
     }

@@ -13,19 +13,19 @@ import java.util.List;
 public class AppMappingCollectionTest {
     private AppMappingCollection appMappingCollection = new AppMappingCollection();
     @Test
-    public void testGetCount() throws Exception {
+    public void testGetCount(){
         appMappingCollection.setCount(1);
         Assert.assertNotNull(appMappingCollection.getCount());
     }
 
     @Test
-    public void testGetItems() throws Exception {
+    public void testGetItems(){
         appMappingCollection.setTotal(1);
         Assert.assertNotNull(appMappingCollection.getTotal());
     }
 
     @Test
-    public void testGetTotal() throws Exception {
+    public void testGetTotal(){
         List<AppMappingEntity> list = new ArrayList<AppMappingEntity>();
         appMappingCollection.setItems(list);
         Assert.assertNotNull(appMappingCollection.getItems());
@@ -33,17 +33,17 @@ public class AppMappingCollectionTest {
     }
 
     @Test
-    public void testSetCount() throws Exception {
+    public void testSetCount(){
 
     }
 
     @Test
-    public void testSetItems() throws Exception {
+    public void testSetItems(){
 
     }
 
     @Test
-    public void testSetTotal() throws Exception {
+    public void testSetTotal(){
 
     }
 }

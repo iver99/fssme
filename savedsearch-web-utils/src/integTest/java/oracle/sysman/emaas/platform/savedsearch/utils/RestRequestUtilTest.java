@@ -2,14 +2,12 @@ package oracle.sysman.emaas.platform.savedsearch.utils;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.StatusLine;
+import org.apache.http.*;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -17,6 +15,10 @@ import org.apache.http.message.BasicStatusLine;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 
 @Test(groups = {"s2"})
 public class RestRequestUtilTest {
@@ -26,7 +28,7 @@ public class RestRequestUtilTest {
 	public static StatusLine statusLine = null;
 	
 	@BeforeClass
-	public static void setUp() throws Exception {
+	public static void setUp() throws UnsupportedEncodingException {
 		response = new MyHttpResponseProxy();
 		entity = new StringEntity(MOCKED_RESPONSE);
 		statusLine = new BasicStatusLine(new ProtocolVersion("HTTP", 0, 0), 200, null);

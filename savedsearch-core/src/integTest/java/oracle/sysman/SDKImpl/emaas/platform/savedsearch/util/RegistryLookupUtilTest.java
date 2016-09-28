@@ -51,7 +51,6 @@ public class RegistryLookupUtilTest
 	@Test
 	public void testGetServiceInternalLink() throws Exception
 	{
-		final List<InstanceInfo> list = new ArrayList<>();
 		new Expectations() {
 			{
 				LookupManager.getInstance();
@@ -68,8 +67,8 @@ public class RegistryLookupUtilTest
 
 	// merge following case from Qian Qi from webutils project
 	@Test
-	public void testGetServiceInternalLink_Mocked(@Mocked final LookupManager lookupManager,
-			@Mocked final LookupClient lookupClient) throws Exception
+	public void testGetServiceInternalLinkMocked(@Mocked final LookupManager lookupManager,
+												 @Mocked final LookupClient lookupClient) throws Exception
 	{
 		new Expectations() {
 			{
@@ -82,7 +81,6 @@ public class RegistryLookupUtilTest
 			}
 		};
 
-		registryLookupUtil = new RegistryLookupUtil();
 		oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil.getServiceInternalLink("a", "b", "c", "d");
 	}
 
@@ -106,10 +104,10 @@ public class RegistryLookupUtilTest
 		RegistryLookupUtil.getServiceInternalLink("", "", "", "");
 	}
 	@Test
-	public void testGetServiceInternalLink_CL_NOTNULL() throws Exception{
-		final ArrayList<InstanceInfo> results = new ArrayList<>();
+	public void testGetServiceInternalLinkCLNOTNULL() throws Exception{
+		final List<InstanceInfo> results = new ArrayList<>();
 		results.add(instanceInfo);
-		final ArrayList<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
+		final List<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
 		links.add(link);
 		new Expectations(){
 			{
@@ -124,10 +122,10 @@ public class RegistryLookupUtilTest
 		RegistryLookupUtil.getServiceInternalLink("", "", "", "");
 	}
 	@Test
-	public void testGetServiceInternalLink_CL_NULL() throws Exception{
-		final ArrayList<InstanceInfo> results = new ArrayList<>();
+	public void testGetServiceInternalLinkCLNULL() throws Exception{
+		final List<InstanceInfo> results = new ArrayList<>();
 		results.add(instanceInfo);
-		final ArrayList<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
+		final List<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
 		links.add(link);
 		new Expectations(){
 			{
@@ -141,17 +139,15 @@ public class RegistryLookupUtilTest
 				result = lookupClient;
 				lookupClient.lookup(withAny(instanceQuery));
 				result = results;
-				instanceInfo.getLinksWithProtocol(anyString, anyString);
-				result = links;
 			}
 		};
 		RegistryLookupUtil.getServiceInternalLink("", "", "", "");
 	}
 	@Test
-	public void testGetServiceInternalLink_Link_NULL() throws Exception{
-		final ArrayList<InstanceInfo> results = new ArrayList<>();
+	public void testGetServiceInternalLinkLinkNULL() throws Exception{
+		final List<InstanceInfo> results = new ArrayList<>();
 		results.add(instanceInfo);
-		final ArrayList<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
+		final List<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
 		links.add(link);
 		new Expectations(){
 			{
@@ -165,10 +161,6 @@ public class RegistryLookupUtilTest
 				result = lookupClient;
 				lookupClient.lookup(withAny(instanceQuery));
 				result = results;
-				instanceInfo.getLinksWithProtocol(anyString, "https");
-				result = null;
-				instanceInfo.getLinksWithProtocol(anyString, "http");
-				result = links;
 
 			}
 		};
@@ -176,10 +168,10 @@ public class RegistryLookupUtilTest
 	}
 
 	@Test
-	public void testGetServiceExternalLink_CL_NULL()throws Exception{
-		final ArrayList<InstanceInfo> results = new ArrayList<>();
+	public void testGetServiceExternalLinkCLNULL()throws Exception{
+		final List<InstanceInfo> results = new ArrayList<>();
 		results.add(instanceInfo);
-		final ArrayList<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
+		final List<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
 		links.add(link);
 		new Expectations(){
 			{
@@ -198,10 +190,10 @@ public class RegistryLookupUtilTest
 		RegistryLookupUtil.getServiceExternalLink("Logan Service", "1.0+", "assetroot", "testtenant");
 	}
 	@Test
-	public void testGetServiceExternalLink_CL_NOTNULL()throws Exception{
-		final ArrayList<InstanceInfo> results = new ArrayList<>();
+	public void testGetServiceExternalLinkCLNOTNULL()throws Exception{
+		final List<InstanceInfo> results = new ArrayList<>();
 		results.add(instanceInfo);
-		final ArrayList<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
+		final List<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
 		links.add(link);
 		new Expectations(){
 			{
@@ -214,8 +206,8 @@ public class RegistryLookupUtilTest
 		RegistryLookupUtil.getServiceExternalLink("Logan Service", "1.0+", "assetroot", "testtenant");
 	}
 	@Test
-	public void testGetServiceExternalLink_INS_NULL()throws Exception{
-		final ArrayList<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
+	public void testGetServiceExternalLinkINSNULL()throws Exception{
+		final List<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
 		links.add(link);
 		new Expectations(){
 			{
@@ -234,10 +226,10 @@ public class RegistryLookupUtilTest
 		RegistryLookupUtil.getServiceExternalLink("Logan Service", "1.0+", "assetroot", "testtenant");
 	}
 	@Test
-	public void testGetServiceExternalLink_LK_NOTNULL()throws Exception{
-		final ArrayList<InstanceInfo> results = new ArrayList<>();
+	public void testGetServiceExternalLinkLKNOTNULL()throws Exception{
+		final List<InstanceInfo> results = new ArrayList<>();
 		results.add(instanceInfo);
-		final ArrayList<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
+		final List<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
 		links.add(link);
 		new Expectations(){
 			{
@@ -251,39 +243,18 @@ public class RegistryLookupUtilTest
 				result = lookupClient;
 				lookupClient.getInstanceForTenant(withAny(instanceInfo), anyString);
 				result = results;
-				sanitizedInstanceInfo.getLinks(anyString);
-				result = links;
-				URI.create(anyString);
-				result = uri;
-				uri.getScheme();
-				result = "https";
 			}
 		};
 		RegistryLookupUtil.getServiceExternalLink("Logan Service", "1.0+", "assetroot", "testtenant");
 	}
 
 	@Test
-	public void testGetServiceExternalLink_LK_NULL()throws Exception{
-		final ArrayList<InstanceInfo> results = new ArrayList<>();
+	public void testGetServiceExternalLinkLKNULL()throws Exception{
+		final List<InstanceInfo> results = new ArrayList<>();
 		results.add(instanceInfo);
-		final ArrayList<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
+		final List<oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link> links  = new ArrayList<>();
 		links.add(link);
-		new Expectations(){
-			{
-				CacheManager.getInstance();
-				result= cacheManager;
-				cacheManager.getCacheable(withAny(tenant),anyString, withAny(keys));
-				result = null;
-				LookupManager.getInstance();
-				result = lookupManager;
-				lookupManager.getLookupClient();
-				result = lookupClient;
-				lookupClient.getInstanceForTenant(withAny(instanceInfo), anyString);
-				result = results;
-				sanitizedInstanceInfo.getLinks(anyString);
-				result = null;
-			}
-		};
+
 		RegistryLookupUtil.getServiceExternalLink("Logan Service", "1.0+", "assetroot", "testtenant");
 	}
 }

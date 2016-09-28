@@ -26,6 +26,7 @@ public class EmAnalyticsCategoryParamTest {
     public void testEquals() throws Exception {
         Assert.assertTrue(emAnalyticsCategoryParam.equals(emAnalyticsCategoryParam));
 
+        Assert.assertFalse(emAnalyticsCategoryParam.equals(null));
         Assert.assertFalse(emAnalyticsCategoryParam == null);
         Assert.assertFalse(emAnalyticsCategoryParam.equals(new String("astring")));
 
@@ -85,5 +86,10 @@ public class EmAnalyticsCategoryParamTest {
         Assert.assertEquals(emAnalyticsCategoryParam.hashCode(),-1876616455);
     }
 
+    @Test (groups = {"s1"})
+    public void getTenantId(){
+        emAnalyticsCategoryParam.setTenantId(1L);
+        Assert.assertEquals((Long) 1L, emAnalyticsCategoryParam.getTenantId());
+    }
 
 }

@@ -161,4 +161,6 @@ public interface Search extends SearchSummary
 	public void setUiHidden(boolean uiHidden);
 	
 	public void setId(BigInteger id);
+	public boolean isEditable();
+	public void setEditable(boolean isEditable);
 }
