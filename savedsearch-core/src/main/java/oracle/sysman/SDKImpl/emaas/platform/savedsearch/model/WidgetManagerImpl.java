@@ -99,7 +99,7 @@ public class WidgetManagerImpl extends WidgetManager
 				//generate ssUrl
 				String ssUrl = generateSSUrl(widgetAPIUrl, widget, id);
 				LOGGER.debug("Screenshot URL is generated for widget id={}, url={}", id, ssUrl);
-				AnalyticsSearchModel model = EntityJsonUtil.getJsonString(widget, ssUrl);
+				AnalyticsSearchModel model = EntityJsonUtil.getJsonModel(widget, ssUrl);
 				list.add(model);
 			}
 			message = JSONUtil.objectToJSONString(list);

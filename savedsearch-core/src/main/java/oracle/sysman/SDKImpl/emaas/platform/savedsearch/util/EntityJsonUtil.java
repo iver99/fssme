@@ -235,7 +235,7 @@ public class EntityJsonUtil
 		return obj;
 	}
 
-	public static AnalyticsSearchModel getJsonString(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
+	public static AnalyticsSearchModel getJsonModel(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
 	{
 		AnalyticsSearchModel emSearch = new AnalyticsSearchModel();
 		if(m.get("NAME")!=null){
@@ -268,7 +268,7 @@ public class EntityJsonUtil
 		if (m.get("WIDGET_TEMPLATE") != null) {
 			emSearch.setWidgetTemplate(m.get("WIDGET_TEMPLATE").toString());
 		}
-		if (m.get("WIDGET_TEMPLATE") != null) {
+		if (m.get("WIDGET_VIEWMODEL") != null) {
 			emSearch.setWidgetViewModel(m.get("WIDGET_VIEWMODEL").toString());
 		}
 		if (m.get("PROVIDER_NAME") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_NAME"))) {
