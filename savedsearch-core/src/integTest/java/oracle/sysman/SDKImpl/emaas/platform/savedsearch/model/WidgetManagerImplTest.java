@@ -2,7 +2,9 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -72,8 +74,8 @@ public class WidgetManagerImplTest
 	//		TenantContext.clearContext();
 	//	}
 
-	//	@Test
-	/*public void testGetSpelledJsonFromQueryResult() throws EMAnalyticsFwkException
+	@Test
+	public void testGetSpelledJsonFromQueryResult() throws EMAnalyticsFwkException
 	{
 		new Expectations() {
 			{
@@ -123,8 +125,8 @@ public class WidgetManagerImplTest
 		String json = WidgetManagerImpl.getInstance().getSpelledJsonFromQueryResult(widgets);
 		Assert.assertEquals(
 				json,
-				"[{\"WIDGET_UNIQUE_ID\":2000,\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_CREATION_TIME\":\"null\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SCREENSHOT_HREF\":\"null\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
-	}*/
+				"[{\"WIDGET_UNIQUE_ID\":2000,\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
+	}
 
 	@Test
 	public void testGetWidgetJsonStringFromWidgetList() throws EMAnalyticsFwkException

@@ -16,7 +16,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
@@ -26,6 +28,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -292,7 +295,7 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertFalse(output.contains(verifyString14), verifyString14 + " is found unexpected");
 	}
 
-	/*@Test(groups = { "s1" })
+	@Test(groups = { "s1" })
 	public void testGetJsonString() throws EMAnalyticsFwkException {
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("SEARCH_ID", 1000);
@@ -311,9 +314,25 @@ public class EntityJsonUtilTest extends BaseTest
 		m.put("PROVIDER_NAME", "TestProviderName");
 		m.put("PROVIDER_VERSION", "TestProviderVersion");
 		m.put("PROVIDER_ASSET_ROOT", "TestProviderAssetRoot");
-		String result = null;
-		result = EntityJsonUtil.getJsonString(m, "testScreenshotUrl");
-		final String verifyString1 = "\"WIDGET_UNIQUE_ID\":1000";
+//		String result = null;
+		AnalyticsSearchModel model = EntityJsonUtil.getJsonString(m, "testScreenshotUrl");
+		Assert.assertEquals(model.getId(), new Long(1000));
+		Assert.assertEquals(model.getWidgetKocName(), "TestKOC");
+		Assert.assertEquals(model.getWidgetViewModel(), "TestViewModel");
+		Assert.assertEquals(model.getWidgetTemplate(), "TestTemplate");
+		Assert.assertEquals(model.getWidgetLinkedDashboard(), new Long(1));
+		Assert.assertEquals(model.getWidgetDefaultHeight(), new Long(1));
+		Assert.assertEquals(model.getWidgetDefaultWidth(), new Long(1));
+		Assert.assertEquals(model.getDashboardIneligible(), "1");
+		Assert.assertEquals(model.getName(), "TestName");
+		Assert.assertEquals(model.getDescription(), "TestDesc");
+		Assert.assertEquals(model.getOwner(), "Test");
+		Assert.assertEquals(model.getWidgetGroupName(), "TestCateName");
+		Assert.assertEquals(model.getProviderName(), "TestProviderName");
+		Assert.assertEquals(model.getProviderVersion(), "TestProviderVersion");
+		Assert.assertEquals(model.getProviderAssetRoot(), "TestProviderAssetRoot");
+		
+		/*final String verifyString1 = "\"WIDGET_UNIQUE_ID\":1000";
 		final String verifyString2 = "\"WIDGET_KOC_NAME\":\"TestKOC\"";
 		final String verifyString3 = "\"WIDGET_VIEWMODEL\":\"TestViewModel\"";
 		final String verifyString4 = "\"WIDGET_TEMPLATE\":\"TestTemplate\"";
@@ -341,8 +360,8 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertTrue(result.contains(verifyString11), verifyString11 + " is NOT found as expected");
 		Assert.assertTrue(result.contains(verifyString14), verifyString14 + " is NOT found as expected");
 		Assert.assertTrue(result.contains(verifyString15), verifyString15 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString16), verifyString16 + " is NOT found as expected");
-	}*/
+		Assert.assertTrue(result.contains(verifyString16), verifyString16 + " is NOT found as expected");*/
+	}
 
 	@Test(groups = { "s1" })
 	public void testGetSimpleCategoryObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
