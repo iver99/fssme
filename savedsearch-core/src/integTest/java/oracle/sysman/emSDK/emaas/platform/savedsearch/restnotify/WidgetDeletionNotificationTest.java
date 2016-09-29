@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2016 Oracle
+ * All rights reserved.
+ *
+ * $$File: $$
+ * $$DateTime: $$
+ * $$Author: $$
+ * $$Revision: $$
+ */
+
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
 import java.util.ArrayList;
@@ -19,8 +29,11 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
+/**
+ * @author guochen
+ */
 @Test(groups = { "s2" })
-public class WidgetChangeNotificationTest
+public class WidgetDeletionNotificationTest
 {
 	private Link link;
 	private List<Link> links;
@@ -40,14 +53,14 @@ public class WidgetChangeNotificationTest
 	public void testNotifyChange(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final RestClient anyRestClient,
 			@Mocked final TenantContext anyTenantContext)
 	{
-		final WidgetChangeNotification wcn = new WidgetChangeNotification();
+		final WidgetDeletionNotification wcn = new WidgetDeletionNotification();
 		// null input
 		wcn.notify((WidgetNotifyEntity) null);
 
 		final WidgetNotifyEntity wne = new WidgetNotifyEntity();
 		wne.setUniqueId(1L);
 		wne.setName("Test Widget");
-		wne.setType(WidgetNotificationType.UPDATE_NAME);
+		wne.setNotifyTime(new Date());
 		wne.setAffactedObjects(2);
 
 		new Expectations(wcn) {
@@ -64,7 +77,7 @@ public class WidgetChangeNotificationTest
 	}
 
 	@Test
-	public void testNotifyChangeSearch(@Mocked final LookupManager anyLookupManager, @Mocked final LookupClient anyLookupClient)
+	public void testNotifyDeleteSearch(@Mocked final LookupManager anyLookupManager, @Mocked final LookupClient anyLookupClient)
 	{
 
 		new Expectations() {
@@ -76,16 +89,16 @@ public class WidgetChangeNotificationTest
 			}
 		};
 		SearchImpl search = new SearchImpl();
-		final WidgetChangeNotification wcn = new WidgetChangeNotification();
+		final WidgetDeletionNotification wcn = new WidgetDeletionNotification();
 		search.setId(1);
 		search.setName("name");
 		wcn.notify(search, new Date());
 	}
 
 	@Test
-	public void testNotifyChangeSearchNull()
+	public void testNotifyDeleteSearchNull()
 	{
-		final WidgetChangeNotification wcn = new WidgetChangeNotification();
+		final WidgetDeletionNotification wcn = new WidgetDeletionNotification();
 		wcn.notify((Search) null, (Date) null);
 	}
 }
