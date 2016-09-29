@@ -12,8 +12,8 @@ import java.util.List;
 public class OOBSearchTest {
     @Test
     public void test4NewWidgetsAdded() throws EMAnalyticsFwkException {
-        long topologyWidgetId = 3219;
-        long omcCompositeTargetId = 4004;
+        //long topologyWidgetId = 3219;
+        //long omcCompositeTargetId = 4004;
         //long orchestrationWorkflowSubmissionId = 5004;
         long omcWorkflowSubmissionId = 4005;
         TenantContext.setContext(new TenantInfo(
@@ -21,6 +21,7 @@ public class OOBSearchTest {
                 TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
         try {
             SearchManager searchManager = SearchManager.getInstance();
+            /* comment out now, enable again in 1.12
             Search search = searchManager.getSearch(topologyWidgetId);
             Assert.assertNotNull(search,"Topology Widget does not exist.");
             if(search != null) {
@@ -34,7 +35,7 @@ public class OOBSearchTest {
                 Assert.assertEquals("CARD_DEF_omc_composite_target", search.getName(),"Name for CARD_DEF_omc_composite_target");
                 Assert.assertNull(search.getDescription(),"Description for CARD_DEF_omc_composite_target");
             }
-
+            */
             /** Orchestration is not subscribed by emaastesttenant1 by default, so below test may not work in farm job
             search = searchManager.getSearch(orchestrationWorkflowSubmissionId);
             Assert.assertNotNull(search,"OrchestrationWorkflowSubmission does not exist.");
