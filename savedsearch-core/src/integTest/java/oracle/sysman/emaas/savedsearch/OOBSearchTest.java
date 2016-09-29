@@ -36,7 +36,8 @@ public class OOBSearchTest {
                 Assert.assertNull(search.getDescription(),"Description for CARD_DEF_omc_composite_target");
             }
             */
-            /** Orchestration is not subscribed by emaastesttenant1 by default, so below test may not work in farm job
+            
+            /* Orchestration is not subscribed by emaastesttenant1 by default, so below test may not work in farm job
             search = searchManager.getSearch(orchestrationWorkflowSubmissionId);
             Assert.assertNotNull(search,"OrchestrationWorkflowSubmission does not exist.");
             if(search != null) {
@@ -45,7 +46,7 @@ public class OOBSearchTest {
             }
             */
 
-            search = searchManager.getSearch(omcWorkflowSubmissionId);
+            Search search = searchManager.getSearch(omcWorkflowSubmissionId);
             Assert.assertNotNull(search,"CARD_DEF_omc_workflow_submission does not exist.");
             if(search != null) {
                 Assert.assertEquals("CARD_DEF_omc_workflow_submission", search.getName(),"Name for CARD_DEF_omc_workflow_submission");
