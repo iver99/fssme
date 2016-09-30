@@ -1,7 +1,12 @@
 Rem
-Rem    DML change during upgrade
-Rem    seed init timestamp
 Rem    MODIFIED   (MM/DD/YY)
-Rem    Rex Liang    06/29/2016 - created
+Rem    MIAYU      09/25/2016 - created
 Rem
-Rem
+
+--update OOB Category, since OOB category can be referenced by both normal and OOB search, don't use delete from ...
+
+--update OOB Folder, since OOB folder can be referenced by search and category, don't use delete from ...
+
+@&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_seed_data_ta.sql -1
+COMMIT;
+
