@@ -6094,9 +6094,9 @@ BEGIN
       where search_id >=5005 and search_id<=5013 and TENANT_ID =V_TENANT_ID;
   
 
-      DBMS_OUTPUT.PUT_LINE('7 new COS OOB widgets and 2 new custom COS OOB widgets have been added successfully.');
+      DBMS_OUTPUT.PUT_LINE('7 new COS OOB widgets and 2 new custom COS OOB widgets have been added successfully for tenant: '|| V_TENANT_ID);
     ELSE
-      DBMS_OUTPUT.PUT_LINE('7 new COS OOB widgets and 2 new custom COS OOB widgets have been added before, no need to add again.');
+      DBMS_OUTPUT.PUT_LINE('7 new COS OOB widgets and 2 new custom COS OOB widgets have been added before, no need to add again for tenant: '|| V_TENANT_ID);
     END IF;
     IF (V_TID<>-1) THEN
         EXIT;
