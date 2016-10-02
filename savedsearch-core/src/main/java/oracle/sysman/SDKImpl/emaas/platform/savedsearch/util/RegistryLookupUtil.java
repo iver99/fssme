@@ -10,6 +10,7 @@
 
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +29,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
 /**
@@ -45,15 +45,17 @@ public class RegistryLookupUtil
 	public static final String TA_SERVICE = "TargetAnalytics";
 	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
 
-	private RegistryLookupUtil()
-	{
-	}
-
-	public static List<Link> getAllServicesInternalLinksByRel(String rel)
+	public static List<Link> getAllServicesInternalLinksByRel(String rel) throws IOException
 	{
 		LOGGER.debug("/getInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
-		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
-		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(rel, "http");
+		//.initComponent() reads the default "looup-client.properties" file in class path
+		//.initComponent(List<String> urls) can override the default Registry urls with a list of urls
+		if (LookupManager.getInstance().getLookupClient() == null) {
+			// making sure the initComponent is only called once during the client lifecycle
+			LookupManager.getInstance().initComponent();
+		}
+		List<InstanceInfo> instanceList = LookupManager.getInstance().getLookupClient().getInstancesWithLinkRelPrefix(rel,
+				"http");
 		if (instanceList == null) {
 			LOGGER.warn("Found no instances with specified http rel {}", rel);
 			return Collections.emptyList();
@@ -94,14 +96,27 @@ public class RegistryLookupUtil
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
 	}
 
+	public static Link getServiceInternalHttpLink(String serviceName, String version, String rel, String tenantName)
+	{
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
+	}
+
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, false);
 	}
 
-	public static Link getServiceInternalHttpLink(String serviceName, String version, String rel, String tenantName)
+	public static Link replaceWithVanityUrl(Link lk, String tenantName, String serviceName)
 	{
-		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
+		if (lk == null || StringUtil.isEmpty(serviceName)) {
+			return lk;
+		}
+		Map<String, String> vanityBaseUrls = RegistryLookupUtil.getVanityBaseURLs(tenantName);
+		if (vanityBaseUrls != null && vanityBaseUrls.containsKey(serviceName)) {
+			lk = RegistryLookupUtil.replaceVanityUrlDomainForLink(vanityBaseUrls.get(serviceName), lk, tenantName);
+			LOGGER.debug("Completed to (try to) replace URL with vanity URL. Updated url is {}", lk.getHref());
+		}
+		return lk;
 	}
 
 	private static List<Link> getLinksWithProtocol(String protocol, List<Link> links)
@@ -407,19 +422,6 @@ public class RegistryLookupUtil
 		return lk;
 	}
 
-	public static Link replaceWithVanityUrl(Link lk, String tenantName, String serviceName)
-	{
-		if (lk == null || StringUtil.isEmpty(serviceName)) {
-			return lk;
-		}
-		Map<String, String> vanityBaseUrls = RegistryLookupUtil.getVanityBaseURLs(tenantName);
-		if (vanityBaseUrls != null && vanityBaseUrls.containsKey(serviceName)) {
-			lk = RegistryLookupUtil.replaceVanityUrlDomainForLink(vanityBaseUrls.get(serviceName), lk, tenantName);
-			LOGGER.debug("Completed to (try to) replace URL with vanity URL. Updated url is {}", lk.getHref());
-		}
-		return lk;
-	}
-
 	@SuppressWarnings("unchecked")
 	private static Map<String, String> getVanityBaseURLs(String tenantName)
 	{
@@ -517,19 +519,6 @@ public class RegistryLookupUtil
 		return map;
 	}
 
-	private static Link replaceVanityUrlDomainForLink(String domainPort, Link lk, String tenantName)
-	{
-		LOGGER.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"",
-				lk != null ? lk.getHref() : null, domainPort);
-		if (StringUtil.isEmpty(domainPort) || lk == null || StringUtil.isEmpty(lk.getHref())) {
-			return lk;
-		}
-		String replacedHref = RegistryLookupUtil.replaceVanityUrlDomainForUrl(domainPort, lk.getHref(), tenantName);
-		LOGGER.debug("/replaceDomainForLink/ Link \"{}\" URL (after replaced) is \"{}\"", lk.getHref(), replacedHref);
-		lk.withHref(replacedHref);
-		return lk;
-	}
-
 	private static String insertTenantIntoVanityBaseUrl(String tenantName, String vanityBaseUrl)
 	{
 		LOGGER.debug("/insertTenantIntoVanityBaseUrl/ Trying to insert tenant \"{}\" to base vanity url \"{}\"", tenantName,
@@ -555,6 +544,19 @@ public class RegistryLookupUtil
 			return sb.toString();
 		}
 		return vanityBaseUrl;
+	}
+
+	private static Link replaceVanityUrlDomainForLink(String domainPort, Link lk, String tenantName)
+	{
+		LOGGER.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"",
+				lk != null ? lk.getHref() : null, domainPort);
+		if (StringUtil.isEmpty(domainPort) || lk == null || StringUtil.isEmpty(lk.getHref())) {
+			return lk;
+		}
+		String replacedHref = RegistryLookupUtil.replaceVanityUrlDomainForUrl(domainPort, lk.getHref(), tenantName);
+		LOGGER.debug("/replaceDomainForLink/ Link \"{}\" URL (after replaced) is \"{}\"", lk.getHref(), replacedHref);
+		lk.withHref(replacedHref);
+		return lk;
 	}
 
 	private static String replaceVanityUrlDomainForUrl(String vanityBaseUrl, String targetUrl, String tenantName)
@@ -600,5 +602,9 @@ public class RegistryLookupUtil
 		}
 		LOGGER.info("After replacing with vanity url, the target url is: \"{}\"", sb.toString());
 		return sb.toString();
+	}
+
+	private RegistryLookupUtil()
+	{
 	}
 }

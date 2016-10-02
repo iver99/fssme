@@ -10,6 +10,7 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,7 @@ public class WidgetDeletionNotificationTest
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testNotifyChange(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final RestClient anyRestClient,
-			@Mocked final TenantContext anyTenantContext)
+			@Mocked final TenantContext anyTenantContext) throws IOException
 	{
 		final WidgetDeletionNotification wcn = new WidgetDeletionNotification();
 		// null input

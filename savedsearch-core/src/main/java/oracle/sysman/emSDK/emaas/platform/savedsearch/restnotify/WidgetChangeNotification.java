@@ -10,6 +10,7 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +52,13 @@ public class WidgetChangeNotification implements IWidgetNotification
 		LOGGER.info("Notify to end points with rel={} of widget changes. Widget unique ID={}, widget name={}",
 				WIDGET_CHANGE_SERVICE_REL, wne.getUniqueId(), wne.getName());
 		long start = System.currentTimeMillis();
-		List<Link> links = RegistryLookupUtil.getAllServicesInternalLinksByRel(WIDGET_CHANGE_SERVICE_REL);
+		List<Link> links = null;
+		try {
+			links = RegistryLookupUtil.getAllServicesInternalLinksByRel(WIDGET_CHANGE_SERVICE_REL);
+		}
+		catch (IOException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+		}
 		if (links == null || links.isEmpty()) {
 			LOGGER.info("Didn't notify of widget change for finding no link for rel={}", WIDGET_CHANGE_SERVICE_REL);
 			return;

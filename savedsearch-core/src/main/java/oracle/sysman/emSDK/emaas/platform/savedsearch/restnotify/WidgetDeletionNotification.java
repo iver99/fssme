@@ -10,6 +10,7 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +53,13 @@ public class WidgetDeletionNotification implements IWidgetNotification
 		LOGGER.info("Notify to end points with rel={} of widget deletion. Widget unique ID={}, widget name={}",
 				WIDGET_DELETION_SERVICE_REL, wne.getUniqueId(), wne.getName());
 		long start = System.currentTimeMillis();
-		List<Link> links = RegistryLookupUtil.getAllServicesInternalLinksByRel(WIDGET_DELETION_SERVICE_REL);
+		List<Link> links = null;
+		try {
+			links = RegistryLookupUtil.getAllServicesInternalLinksByRel(WIDGET_DELETION_SERVICE_REL);
+		}
+		catch (IOException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+		}
 		if (links == null || links.isEmpty()) {
 			LOGGER.info("Didn't notify of widget deletion for finding no link for rel={}", WIDGET_DELETION_SERVICE_REL);
 			return;

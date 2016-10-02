@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +39,7 @@ public class WidgetChangeNotificationTest
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testNotifyChange(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final RestClient anyRestClient,
-			@Mocked final TenantContext anyTenantContext)
+			@Mocked final TenantContext anyTenantContext) throws IOException
 	{
 		final WidgetChangeNotification wcn = new WidgetChangeNotification();
 		// null input
