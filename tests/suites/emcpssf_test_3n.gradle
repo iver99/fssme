@@ -62,6 +62,7 @@ dependencies {
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 	testConfig(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
 	testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1'){transitive = false}
+	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+')
 
 	configurations {
 		restAssured.exclude module: "groovy"
