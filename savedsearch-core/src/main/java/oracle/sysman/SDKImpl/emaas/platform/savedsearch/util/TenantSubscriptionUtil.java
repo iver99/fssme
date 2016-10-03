@@ -51,7 +51,7 @@ public class TenantSubscriptionUtil
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
 	private static String SERVICE_PROVIDER_NAME_LA = "LogAnalyticsUI";
 	private static String SERVICE_PROVIDER_NAME_SA = "SecurityAnalyticsUI";
-	private static String SERVICE_PROVIDER_NAME_OCS = "CosServiceUI";
+	private static String SERVICE_PROVIDER_NAME_OCS = "CosUIService";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
 	private static Map<String, String> providerToServiceMap = new HashMap<>();

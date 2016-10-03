@@ -58,11 +58,11 @@ BEGIN
 
     SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_CATEGORY WHERE category_id=7 AND PROVIDER_NAME='Orchestration' AND TENANT_ID  =V_TENANT_ID;
     IF (v_count=1) THEN 
-       UPDATE EMS_ANALYTICS_CATEGORY SET PROVIDER_NAME='CosServiceUI'
+       UPDATE EMS_ANALYTICS_CATEGORY SET PROVIDER_NAME='CosUIService'
        WHERE category_id=7 AND TENANT_ID  =V_TENANT_ID;
-       DBMS_OUTPUT.PUT_LINE('Orchestration''s provider name has been updated to CosServiceUI successfully');
+       DBMS_OUTPUT.PUT_LINE('Orchestration''s provider name has been updated to CosUIService successfully');
     ELSE
-       DBMS_OUTPUT.PUT_LINE('Orchestration''s provider name has been updated to CosServiceUI before, no need to update again');
+       DBMS_OUTPUT.PUT_LINE('Orchestration''s provider name has been updated to CosUIService before, no need to update again');
     END IF;
 
     SELECT COUNT(1) INTO v_count FROM EMS_ANALYTICS_SEARCH WHERE search_id=5005 AND TENANT_ID  =V_TENANT_ID;
@@ -97,7 +97,7 @@ BEGIN
   V_WIDGET_TEMPLATE          :='/executionWidget/html/inProgressWidget.html';
   V_WIDGET_SUPPORT_TIME_CONTROL      :=null;
   V_DASHBOARD_INELIGIBLE     :=null;
-  V_PROVIDER_NAME            :='CosServiceUI';
+  V_PROVIDER_NAME            :='CosUIService';
   V_PROVIDER_VERSION         :='1.0';
   V_PROVIDER_ASSET_ROOT      :='assetRoot';
   V_WIDGET_LINKED_DASHBOARD  :=0;
@@ -143,7 +143,7 @@ BEGIN
   V_WIDGET_TEMPLATE          :='/executionWidget/html/executionWidget.html';
   V_WIDGET_SUPPORT_TIME_CONTROL      :=null;
   V_DASHBOARD_INELIGIBLE     :=null;
-  V_PROVIDER_NAME            :='CosServiceUI';
+  V_PROVIDER_NAME            :='CosUIService';
   V_PROVIDER_VERSION         :='1.0';
   V_PROVIDER_ASSET_ROOT      :='assetRoot';
   V_WIDGET_LINKED_DASHBOARD  :=0;
