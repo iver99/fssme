@@ -11,11 +11,12 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.io.IOException;
-import java.util.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingCollection;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
@@ -29,6 +30,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * @author aduan
@@ -46,13 +51,10 @@ public class TenantSubscriptionUtil
 	private static String SERVICE_PROVIDER_NAME_TA = "TargetAnalytics";
 	private static String SERVICE_PROVIDER_NAME_LA = "LogAnalyticsUI";
 	private static String SERVICE_PROVIDER_NAME_SA = "SecurityAnalyticsUI";
-	private static String SERVICE_PROVIDER_NAME_OCS = "Orchestration";
+	private static String SERVICE_PROVIDER_NAME_OCS = "CosUIService";
 	private static final String PARAM_NAME_DASHBOARD_INELIGIBLE = "DASHBOARD_INELIGIBLE";
 
 	private static Map<String, String> providerToServiceMap = new HashMap<>();
-
-	private TenantSubscriptionUtil() {
-	}
 
 	static {
 		providerToServiceMap.put(SERVICE_PROVIDER_NAME_LA, SUBSCRIBED_SERVICE_NAME_LA);
@@ -87,7 +89,7 @@ public class TenantSubscriptionUtil
 
 	public static List<Category> getTenantSubscribedCategories(String tenant, boolean includeDashboardIneligible)
 			throws EMAnalyticsFwkException
-	{
+			{
 		List<Category> resultList = new ArrayList<Category>();
 		if (tenant == null) {
 			return resultList;
@@ -107,7 +109,7 @@ public class TenantSubscriptionUtil
 		}
 
 		return resultList;
-	}
+			}
 
 	public static List<String> getTenantSubscribedServiceProviders(String tenant) throws IOException
 	{
@@ -144,8 +146,9 @@ public class TenantSubscriptionUtil
 			return Collections.emptyList();
 		}
 		if (cachedApps != null) {
-			LOGGER.debug("retrieved subscribed apps for tenant {} from subscribe cache: "
-					+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
+			LOGGER.debug(
+					"retrieved subscribed apps for tenant {} from subscribe cache: "
+							+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
 			return cachedApps;
 		}
 
@@ -164,8 +167,8 @@ public class TenantSubscriptionUtil
 		try {
 			DomainsEntity de = JSONUtil.fromJson(mapper, domainsResponse, DomainsEntity.class);//ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().isEmpty()) {
-				LOGGER.warn(
-						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
+				LOGGER.warn("Checking tenant (" + tenant
+						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
 				return Collections.emptyList();
 			}
 			String tenantAppUrl = null;
@@ -180,8 +183,8 @@ public class TenantSubscriptionUtil
 				return Collections.emptyList();
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			LOGGER.info(
-					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
+			LOGGER.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
+					+ appMappingUrl);
 			String appMappingJson = rc.get(appMappingUrl);
 			LOGGER.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
@@ -221,13 +224,14 @@ public class TenantSubscriptionUtil
 			if (apps == null || "".equals(apps)) {
 				return Collections.emptyList();
 			}
-			List<String> origAppsList = Arrays
-					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+			List<String> origAppsList = Arrays.asList(apps
+					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
 			//put into cache
 			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
 					origAppsList);
-			LOGGER.debug("Store subscribed apps for tenant {} to subscribe cache: "
-					+ StringUtil.arrayToCommaDelimitedString(origAppsList.toArray()), tenant);
+			LOGGER.debug(
+					"Store subscribed apps for tenant {} to subscribe cache: "
+							+ StringUtil.arrayToCommaDelimitedString(origAppsList.toArray()), tenant);
 			return origAppsList;
 
 		}
@@ -254,5 +258,8 @@ public class TenantSubscriptionUtil
 
 		return hiddenInWidgetSelector;
 	}
-}
 
+	private TenantSubscriptionUtil()
+	{
+	}
+}
