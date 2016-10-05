@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.savedsearch;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 
@@ -165,13 +167,13 @@ public class SearchManagerTest extends BaseTest
 	}
 
 	@BeforeClass
-	public void initTenantDetails()
+	public void initTenantDetails() throws IOException
 	{
 
 		TenantContext.setContext(
 				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
 						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
-
+		RegistrationManager.getInstance().initComponent();
 	}
 
 	@AfterClass
@@ -555,7 +557,7 @@ public class SearchManagerTest extends BaseTest
 		}
 		cat2.getParameters().add(pm);
 		cm.editCategory(cat2);
-
+		
 		try {
 			queried = sm.getWidgetListByProviderNames(false, providers, null);
 			for (Widget widget : queried) {
