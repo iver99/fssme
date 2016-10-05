@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.savedsearch;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,8 +30,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 
 import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -56,6 +59,12 @@ public class TenantDataLeakTest extends BaseTest
 		String user = pr.getProperty(QAToolUtil.JDBC_PARAM_USER);
 		String password = pr.getProperty(QAToolUtil.JDBC_PARAM_PASSWORD);
 		return DriverManager.getConnection(url, user, password);
+	}
+
+	@BeforeClass
+	public void beforeClass() throws IOException
+	{
+		RegistrationManager.getInstance().initComponent();
 	}
 
 	@Test 
