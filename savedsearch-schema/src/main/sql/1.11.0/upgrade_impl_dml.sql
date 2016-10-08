@@ -8,5 +8,6 @@ Rem
 --update OOB Folder, since OOB folder can be referenced by search and category, don't use delete from ...
 
 @&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_seed_data_ta.sql -1
+@&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_seed_data_ocs.sql -1
 COMMIT;
 
