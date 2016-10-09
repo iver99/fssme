@@ -75,7 +75,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			try {
 				rsm.makeServiceUp();
 				GlobalStatus.setSavedSearchUpStatus();
-				LOGGER.debug("Saved search service is up");
+				LOGGER.info("Saved search service is up");
 			}
 			catch (Exception e) {
 				LOGGER.error(e.getLocalizedMessage(), e);
