@@ -24,7 +24,11 @@
             <pipeline name="PRODUCT"/>
              </pipelines>
      </lrg>
-   
+ <lrg name="lrgemctas_uitsts_3n" repos="emctas" description="Run LRG from emcpssf to ensure the dependent service is not breaking it."> 
+	     <pipelines>
+	     <pipeline name="PRODUCT"/> 
+	     </pipelines> 
+</lrg>  
 
  </lrg-metadata>
  
