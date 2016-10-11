@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.navigation;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,15 +9,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -31,9 +27,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.ajax.JSON;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -76,7 +71,7 @@ public class SavedSearchAPITest {
         for(int i=0;i<=3;i++)catList1.add(new CategoryImpl());
         new Expectations(){
             {
-                categoryManager.getInstance();
+                CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getAllCategories();
                 returns(catList1);
@@ -91,7 +86,7 @@ public class SavedSearchAPITest {
         for(int i=0;i<=3;i++)catList2.add(new CategoryImpl());
         new Expectations(){
             {
-                categoryManager.getInstance();
+                CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getAllCategories();
                 result = new EMAnalyticsFwkException(throwable);
@@ -107,7 +102,7 @@ public class SavedSearchAPITest {
         for(int i=0;i<=3;i++)catList3.add(new CategoryImpl());
         new Expectations(){
             {
-                categoryManager.getInstance();
+                CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getAllCategories();
                 result = new  Exception(throwable);
@@ -128,23 +123,21 @@ public class SavedSearchAPITest {
             {
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getSubFolders(anyLong);
+                folderManager.getSubFolders((BigInteger) any);
                 result = folderList;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchListByFolderId(anyLong);
+                searchManager.getSearchListByFolderId((BigInteger) any);
                 result = searchLists;
-                entityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
-                result = new JSONObject();
+                EntityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
+                result = new ObjectNode(null);
                 EntityJsonUtil.getSimpleSearchJsonObj((URI)any, (Search)any, null, true);
-                result = new JSONObject();
+                result = new ObjectNode(null);
             }
         };
-        Assert.assertNotNull(savedSearchAPI.getDetails(""));
         Assert.assertNotNull(savedSearchAPI.getDetails(null));
-        Assert.assertNotNull(savedSearchAPI.getDetails("id"));
-        Assert.assertNotNull(savedSearchAPI.getDetails("-111"));
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("-111")));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
 
@@ -156,7 +149,7 @@ public class SavedSearchAPITest {
                 result = new JSONException(throwable);
             }
         };
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
     @Test (groups = {"s2"})
@@ -167,7 +160,7 @@ public class SavedSearchAPITest {
                 result = new EMAnalyticsFwkException(throwable);
             }
         };
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
     @Test (groups = {"s2"})
@@ -178,7 +171,7 @@ public class SavedSearchAPITest {
                 result = new UnsupportedEncodingException();
             }
         };
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
     @Mocked
@@ -196,16 +189,16 @@ public class SavedSearchAPITest {
             {
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getSubFolders(anyLong);
+                folderManager.getSubFolders((BigInteger) any);
                 result = folderList;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchListByFolderId(anyLong);
+                searchManager.getSearchListByFolderId((BigInteger) any);
                 result = searchLists;
-                entityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
-                result = new JSONObject();
+                EntityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
+                result = new ObjectNode(null);
                 EntityJsonUtil.getSimpleSearchJsonObj((URI)any, (Search)any, null, true);
-                result = new JSONObject();
+                result = new ObjectNode(null);
             }
         };
         Assert.assertNotNull(savedSearchAPI.getRootFolders());

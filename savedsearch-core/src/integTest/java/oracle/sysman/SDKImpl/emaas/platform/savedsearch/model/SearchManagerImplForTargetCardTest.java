@@ -1,5 +1,17 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
@@ -12,26 +24,16 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 
 /**
  * Created by xidai on 6/29/2016.
  */
 @Test(groups={"s2"})
 public class SearchManagerImplForTargetCardTest {
+	private BigInteger TEST_ID = new BigInteger("10000");
     private SearchManager searchManager;
     @Mocked
     TenantContext tenantContext;
@@ -64,11 +66,11 @@ public class SearchManagerImplForTargetCardTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getSearchById(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getSearchById((BigInteger) any,withAny(entityManager));
                 result = emAnalyticsSearch;
-                EmAnalyticsObjectUtil.getSearchByIdForDelete(anyLong, withAny(entityManager));
+                EmAnalyticsObjectUtil.getSearchByIdForDelete((BigInteger) any, withAny(entityManager));
                 result =emAnalyticsSearch;
-                emAnalyticsSearch.setDeleted(anyLong);
+                emAnalyticsSearch.setDeleted((BigInteger) any);
                 entityManager.getTransaction();
                 result = entityTransaction;
                 entityTransaction.begin();
@@ -78,8 +80,8 @@ public class SearchManagerImplForTargetCardTest {
                 entityManager.close();
             }
         };
-        searchManager.deleteTargetCard(10000,false);
-        searchManager.deleteTargetCard(10000,true);
+        searchManager.deleteTargetCard(TEST_ID,false);
+        searchManager.deleteTargetCard(TEST_ID,true);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -90,11 +92,11 @@ public class SearchManagerImplForTargetCardTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getSearchById(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getSearchById((BigInteger) any,withAny(entityManager));
                 result = null;
             }
         };
-        searchManager.deleteTargetCard(10000,false);
+        searchManager.deleteTargetCard(TEST_ID,false);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -105,13 +107,13 @@ public class SearchManagerImplForTargetCardTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getSearchById(anyLong,withAny(entityManager));
+                EmAnalyticsObjectUtil.getSearchById((BigInteger) any,withAny(entityManager));
                 result = emAnalyticsSearch;
                 entityManager.getTransaction();
                 result = new Exception();
             }
         };
-        searchManager.deleteTargetCard(10000,false);
+        searchManager.deleteTargetCard(TEST_ID,false);
     }
     @Mocked
     EmAnalyticsCategory emAnalyticsCategory;

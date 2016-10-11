@@ -15,7 +15,7 @@
 
   <xs:complexType name="importSearchImpl">
     <xs:all>
-     <xs:element name="Id" type="xs:int" minOccurs="0"/>
+     <xs:element name="Id" type="xs:integer" minOccurs="0"/>
       <xs:element name="Name" minOccurs="1" nillable="false">
 		  <xs:simpleType>
 		     <xs:restriction base="xs:string">

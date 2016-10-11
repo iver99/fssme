@@ -10,12 +10,15 @@
 
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -23,7 +26,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-//import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
@@ -41,11 +43,11 @@ public class SavedSearchDbExceptionTest extends BaseTest
 	static String portno;
 	static String serveruri;
 	static String authToken;
-	static int categoryId = -1;
-	static int folderId = -1;
+	static BigInteger categoryId = BigInteger.ZERO;
+	static BigInteger folderId = BigInteger.ZERO;
 	static String catName = "";
-	static int folderid1 = -1;
-	static int searchId = -1;
+	static BigInteger folderid1 = BigInteger.ZERO;
+	static BigInteger searchId = BigInteger.ZERO;
 	static String catName1 = "";
 
 	@BeforeClass
@@ -64,7 +66,7 @@ public class SavedSearchDbExceptionTest extends BaseTest
 			folder.setName("FolderTest_99");
 			folder.setDescription("testing purpose folder");
 			folderId = objFolder.saveFolder(folder).getId();
-			AssertJUnit.assertFalse(folderId == 0);
+			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
 
 			CategoryManager objCategory = CategoryManagerImpl.getInstance();
 			Category cat = new CategoryImpl();
@@ -78,12 +80,12 @@ public class SavedSearchDbExceptionTest extends BaseTest
 			cat.setDefaultFolderId(folderId);
 			cat = objCategory.saveCategory(cat);
 			categoryId = cat.getId();
-			AssertJUnit.assertFalse(categoryId == 0);
+			AssertJUnit.assertFalse(BigInteger.ZERO.equals(categoryId));
 			SearchManager objSearch = SearchManager.getInstance();
 			Search search = objSearch.createNewSearch();
 			search.setDescription("testing purpose");
 			search.setName("Dummy Search_99");
-
+			search.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
 			search.setFolderId(folderId);
 			search.setCategoryId(categoryId);
 
@@ -92,7 +94,7 @@ public class SavedSearchDbExceptionTest extends BaseTest
 			searchId = s2.getId();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail(e.getLocalizedMessage());
 		}
 
 	}
@@ -162,7 +164,7 @@ public class SavedSearchDbExceptionTest extends BaseTest
 			cat.setProviderName("ProviderNameTest");
 			cat.setProviderVersion("ProviderVersionTest");
 			cat.setProviderDiscovery("ProviderDiscoveryTest");
-			cat.setDefaultFolderId(-11);
+			cat.setDefaultFolderId(BigInteger.ONE);
 			cat.setProviderAssetRoot("ProviderAssetRootTest");
 			cat = objCategory.saveCategory(cat);
 		}
@@ -188,7 +190,7 @@ public class SavedSearchDbExceptionTest extends BaseTest
 			folder.setName("FolderTest_99");
 			folder.setDescription("testing purpose folder");
 			folderId = objFolder.saveFolder(folder).getId();
-			AssertJUnit.assertFalse(folderId == 0);
+			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
 		}
 		catch (Exception e) {
 			bResult = true;
@@ -199,10 +201,10 @@ public class SavedSearchDbExceptionTest extends BaseTest
 			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 			Folder folder = objFolder.createNewFolder();
 			folder.setName("FolderTest_99");
-			folder.setParentId(-9);
+			folder.setParentId(BigInteger.ONE.negate());
 			folder.setDescription("testing purpose folder");
 			folderId = objFolder.saveFolder(folder).getId();
-			AssertJUnit.assertFalse(folderId == 0);
+			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
 		}
 		catch (Exception e) {
 			bResult = true;

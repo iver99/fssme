@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,8 +12,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -22,7 +21,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -53,15 +51,15 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Search.getSearchByNameExcludeOOBAndNonDeletedFORTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.name = :searchName AND e.deleted = 0 AND e.systemSearch = 0"),
 		@NamedQuery(name = "Search.getSearchByNamePatternExcludeOOBAndNonDeletedFORTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.name like :searchName escape \'\\\' AND e.deleted = 0 AND e.systemSearch = 0")
 })
-@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
-public class EmAnalyticsSearch implements Serializable
+//@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
+public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "SEARCH_ID")
-	@GeneratedValue(generator = "EMS_ANALYTICS_SEARCH_SEQ", strategy = GenerationType.SEQUENCE)
-	private long id;
+//	@GeneratedValue(generator = "EMS_ANALYTICS_SEARCH_SEQ", strategy = GenerationType.SEQUENCE)
+	private BigInteger id;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE")
@@ -104,7 +102,7 @@ public class EmAnalyticsSearch implements Serializable
 	private BigDecimal uiHidden;
 
 	@Column(name = "DELETED")
-	private long deleted;
+	private BigInteger deleted;
 
 	@Column(name = "IS_WIDGET")
 	private long isWidget;
@@ -225,7 +223,7 @@ public class EmAnalyticsSearch implements Serializable
 		return DASHBOARD_INELIGIBLE;
 	}
 
-	public long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -256,7 +254,7 @@ public class EmAnalyticsSearch implements Serializable
 	/**
 	 * @return the id
 	 */
-	public long getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -299,7 +297,7 @@ public class EmAnalyticsSearch implements Serializable
 		return name;
 	}
 
-	public Long getObjectId()
+	public BigInteger getObjectId()
 	{
 		if (lastAccess == null) {
 			return null;
@@ -498,7 +496,7 @@ public class EmAnalyticsSearch implements Serializable
 		DASHBOARD_INELIGIBLE = dashboardIneligible;
 	}
 
-	public void setDeleted(long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -527,7 +525,7 @@ public class EmAnalyticsSearch implements Serializable
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(long id)
+	public void setId(BigInteger id)
 	{
 		this.id = id;
 	}

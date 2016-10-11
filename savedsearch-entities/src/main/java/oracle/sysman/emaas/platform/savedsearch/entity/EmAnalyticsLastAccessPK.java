@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  * The primary key class for the EMS_ANALYTICS_LAST_ACCESS database table.
@@ -11,7 +12,7 @@ public class EmAnalyticsLastAccessPK implements Serializable
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	private long objectId;
+	private BigInteger objectId;
 
 	private String accessedBy;
 
@@ -39,7 +40,7 @@ public class EmAnalyticsLastAccessPK implements Serializable
 		return accessedBy;
 	}
 
-	public long getObjectId()
+	public BigInteger getObjectId()
 	{
 		return objectId;
 	}
@@ -54,7 +55,7 @@ public class EmAnalyticsLastAccessPK implements Serializable
 	{
 		final int prime = 31;
 		int hash = 17;
-		hash = hash * prime + (int) (objectId ^ objectId >>> 32);
+		hash = hash * prime + (int) (objectId.intValue() ^ objectId.intValue() >>> 32);
 		hash = hash * prime + accessedBy.hashCode();
 		hash = hash * prime + (int) (objectType ^ objectType >>> 32);
 		return hash;
@@ -65,7 +66,7 @@ public class EmAnalyticsLastAccessPK implements Serializable
 		this.accessedBy = accessedBy;
 	}
 
-	public void setObjectId(long objectId)
+	public void setObjectId(BigInteger objectId)
 	{
 		this.objectId = objectId;
 	}

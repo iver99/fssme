@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.folder;
 
+import java.math.BigInteger;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -25,6 +27,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUti
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -141,7 +144,7 @@ public class FolderAPI
 		LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/folder");
 		Folder objFld = null;
 		String msg = "";
-		JSONObject jsonObj;
+		ObjectNode jsonObj;
 		int statusCode = 201;
 		try {
 			objFld = getFolderFromJsonForCreate(folderObj);
@@ -227,7 +230,7 @@ public class FolderAPI
 	 */
 	@DELETE
 	@Path("{id: [0-9]*}")
-	public Response delete(@PathParam("id") long id)
+	public Response delete(@PathParam("id") BigInteger id)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/folder/{}", id);
 		int statusCode = 204;
@@ -313,15 +316,14 @@ public class FolderAPI
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id: [0-9]*}")
-	public Response editFolder(JSONObject folderObj, @PathParam("id") long id)
+	public Response editFolder(JSONObject folderObj, @PathParam("id") BigInteger id)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/folder/{}", id);
 		Folder objFld = null;
 		String msg = "";
-		JSONObject jsonObj;
+		ObjectNode jsonObj;
 		int statusCode = 200;
 		try {
-
 			FolderManager mgrFolder = FolderManager.getInstance();
 			objFld = getFolderFromJsonForEdit(folderObj, mgrFolder.getFolder(id));
 			objFld = mgrFolder.updateFolder(objFld);
@@ -396,12 +398,12 @@ public class FolderAPI
 	@GET
 	@Path("{id: [0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getFolder(@PathParam("id") long id)
+	public Response getFolder(@PathParam("id") BigInteger id)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/folder/{}", id);
 		String msg = "";
 		int statusCode = 200;
-		JSONObject jsonObj;
+		ObjectNode jsonObj;
 		try {
 			FolderManager mgrFolder = FolderManager.getInstance();
 			Folder tmp = mgrFolder.getFolder(id);
@@ -476,16 +478,21 @@ public class FolderAPI
 		objFld.setUiHidden(folderObj.optBoolean("uiHidden", objFld.isUiHidden()));
 		if (folderObj.has("parentFolder")) {
 			JSONObject jsonFol = folderObj.optJSONObject("parentFolder");
-			int parentId = jsonFol.optInt("id");
-			if (parentId == 0) {
-				objFld.setParentId(1);
+			BigInteger parentId = BigInteger.ZERO;
+			try {
+				parentId = new BigInteger(jsonFol.getString("id"));
+			} catch (JSONException e) {
+				throw new EMAnalyticsWSException(e);
+			}
+			if (BigInteger.ZERO.equals(parentId)) {
+				objFld.setParentId(BigInteger.ONE);
 			}
 			else {
 				objFld.setParentId(parentId);
 			}
 		}
 		else {
-			objFld.setParentId(1);
+			objFld.setParentId(BigInteger.ONE);
 		}
 		return objFld;
 	}
@@ -537,16 +544,21 @@ public class FolderAPI
 		folder.setUiHidden(folderObj.optBoolean("uiHidden", folder.isUiHidden()));
 		if (folderObj.has("parentFolder")) {
 			JSONObject jsonFol = folderObj.optJSONObject("parentFolder");
-			int parentId = jsonFol.optInt("id");
-			if (parentId == 0) {
-				folder.setParentId(1);
+			BigInteger parentId = BigInteger.ZERO;
+			try {
+				parentId = new BigInteger(jsonFol.getString("id"));
+			} catch (JSONException e) {
+				throw new EMAnalyticsWSException(e);
+			}
+			if (BigInteger.ZERO.equals(parentId)) {
+				folder.setParentId(BigInteger.ONE);
 			}
 			else {
 				folder.setParentId(parentId);
 			}
 		}
 		else {
-			folder.setParentId(1);
+			folder.setParentId(BigInteger.ONE);
 		}
 
 		return folder;

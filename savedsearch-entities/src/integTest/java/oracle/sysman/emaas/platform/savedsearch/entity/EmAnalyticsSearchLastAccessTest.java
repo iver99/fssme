@@ -11,12 +11,10 @@ import org.testng.annotations.Test;
 @Test (groups = {"s1"})
 public class EmAnalyticsSearchLastAccessTest {
     private EmAnalyticsSearchLastAccess emAnalyticsSearchLastAccess;
-    private EmAnalyticsSearchLastAccess emAnalyticsSearchLastAccess2;
 
     @BeforeClass
     public void setUp() throws Exception {
         emAnalyticsSearchLastAccess = new EmAnalyticsSearchLastAccess();
-        emAnalyticsSearchLastAccess2 = new EmAnalyticsSearchLastAccess(123412341234L,"accessedBy2");
     }
 
     @Test (groups = {"s1"})

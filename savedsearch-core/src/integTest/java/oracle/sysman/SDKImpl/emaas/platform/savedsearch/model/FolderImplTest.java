@@ -1,10 +1,9 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
-import org.testng.annotations.Test;
-
+import java.math.BigInteger;
 import java.util.Date;
 
-import static org.testng.Assert.*;
+import org.testng.annotations.Test;
 
 /**
  * Created by xiadai on 2016/8/23.
@@ -16,7 +15,7 @@ public class FolderImplTest {
     @Test
     public void testGetCreatedOn() throws Exception {
 
-        folder.setCreatedOn(date);
+        folder.setCreationDate(date);
         folder.getCreatedOn();
     }
 
@@ -28,7 +27,7 @@ public class FolderImplTest {
 
     @Test
     public void testGetId() throws Exception {
-        folder.setId(1);
+        folder.setId(BigInteger.ONE);
         folder.getId();
     }
 
@@ -40,7 +39,7 @@ public class FolderImplTest {
 
     @Test
     public void testGetLastModifiedOn() throws Exception {
-        folder.setLastModifiedOn(date);
+        folder.setLastModificationDate(date);
         folder.getLastModifiedOn();
     }
 
@@ -52,7 +51,7 @@ public class FolderImplTest {
 
     @Test
     public void testGetParentId() throws Exception {
-        folder.setParentId(1);
+        folder.setParentId(BigInteger.ONE);
         folder.getParentId();
     }
 

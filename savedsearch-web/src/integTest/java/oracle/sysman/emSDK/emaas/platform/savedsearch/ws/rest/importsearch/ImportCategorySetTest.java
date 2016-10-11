@@ -1,6 +1,15 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
-import mockit.*;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportCategoryImpl;
@@ -9,24 +18,18 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
+
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by xidai on 2/24/2016.
  */
 @Test(groups={"s2"})
 public class ImportCategorySetTest {
-    private ImportCategorySet importCategorySet = new ImportCategorySet();
+    private static final BigInteger TEST_ID_10 = BigInteger.TEN;
+	private ImportCategorySet importCategorySet = new ImportCategorySet();
     private String xml = "[{\"id\":121,\"name\":\"Category123\",\"providerName\":\"Log Analytics\",\"prividerVersion\":\"1.0\",\"providerDiscovery\":\"discovery\",\"providerAssetRoot\":\"asset\"}]";
     @Mocked
     InputStream inputStream;
@@ -40,12 +43,12 @@ public class ImportCategorySetTest {
     public void testImportsCategories(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<ImportCategoryImpl> list = new ArrayList<ImportCategoryImpl>();
         ImportCategoryImpl importCategory =new ImportCategoryImpl();
-        importCategory.setId(10);
+        importCategory.setId(TEST_ID_10);
         importCategory.setName("name");
         list.add(importCategory);
         final  List<Category> categoryList = new ArrayList<Category>();
         CategoryImpl category = new CategoryImpl();
-        category.setId(10);
+        category.setId(TEST_ID_10);
         category.setName("name");
         categoryList.add(category);
         new Expectations(){
@@ -67,12 +70,12 @@ public class ImportCategorySetTest {
     public void testImportsCategories2nd(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<ImportCategoryImpl> list = new ArrayList<ImportCategoryImpl>();
         ImportCategoryImpl importCategory =new ImportCategoryImpl();
-        importCategory.setId(10);
+        importCategory.setId(TEST_ID_10);
         importCategory.setName("name");
         list.add(importCategory);
         final  List<Category> categoryList = new ArrayList<Category>();
         final CategoryImpl category = new CategoryImpl();
-        category.setId(10);
+        category.setId(TEST_ID_10);
         category.setName("name");
         categoryList.add(category);
         new Expectations(){
@@ -95,12 +98,12 @@ public class ImportCategorySetTest {
     public void testImportsCategories3th(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
         final List<ImportCategoryImpl> list = new ArrayList<ImportCategoryImpl>();
         ImportCategoryImpl importCategory =new ImportCategoryImpl();
-        importCategory.setId(10);
+        importCategory.setId(TEST_ID_10);
         importCategory.setName("name");
         list.add(importCategory);
         final  List<Category> categoryList = new ArrayList<Category>();
         CategoryImpl category = new CategoryImpl();
-        category.setId(10);
+        category.setId(TEST_ID_10);
         category.setName("name");
         categoryList.add(category);
         new Expectations(){

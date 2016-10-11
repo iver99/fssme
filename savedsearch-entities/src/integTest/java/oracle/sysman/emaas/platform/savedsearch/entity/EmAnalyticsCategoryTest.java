@@ -1,13 +1,13 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.HashSet;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.collections.CollectionUtils;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 
 /**
@@ -25,8 +25,8 @@ public class EmAnalyticsCategoryTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetCategoryId(){
-        long id = 1234123412341234L;
+    public void testGetCategoryId() {
+        BigInteger id = new BigInteger("1234123412341234");
         emAnalyticsCategory.setCategoryId(id);
         Assert.assertEquals(id,emAnalyticsCategory.getCategoryId());
     }
@@ -40,7 +40,7 @@ public class EmAnalyticsCategoryTest {
 
     @Test (groups = {"s1"})
     public void testGetDeleted(){
-        long id = 1234123412341234L;
+        BigInteger id = new BigInteger("1234123412341234");
         emAnalyticsCategory.setDeleted(id);
         Assert.assertEquals(id,emAnalyticsCategory.getDeleted());
     }

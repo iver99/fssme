@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.targetmodel.services;
 
+import java.math.BigInteger;
+
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 
 public interface OdsDataService {
@@ -30,7 +32,7 @@ public interface OdsDataService {
 	 * @param id - saved search id
 	 * @throws EMAnalyticsFwkException
 	 */
-	public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException;
+	public void deleteOdsEntity(BigInteger searchId) throws EMAnalyticsFwkException;
 	
 	/**
 	 * create an ODS entity type

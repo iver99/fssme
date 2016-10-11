@@ -1,8 +1,11 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch;
 
+import java.math.BigInteger;
+
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
+
 import org.testng.annotations.Test;
 
 /**
@@ -63,8 +66,8 @@ public class ObjectFactoryTest {
     }
 
     @Test
-    public void testCreateCategoryId(){
-        objectFactory.createCategoryId(10);
+    public void testCreateCategoryId() {
+        objectFactory.createCategoryId(BigInteger.TEN);
     }
 
     @Test
@@ -83,8 +86,8 @@ public class ObjectFactoryTest {
     }
 
     @Test
-    public void testCreateFolderId(){
-        objectFactory.createFolderId(10);
+    public void testCreateFolderId() {
+        objectFactory.createFolderId(BigInteger.TEN);
     }
 
     @Test

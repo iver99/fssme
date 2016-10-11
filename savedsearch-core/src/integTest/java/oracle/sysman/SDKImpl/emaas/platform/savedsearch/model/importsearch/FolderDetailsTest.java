@@ -1,5 +1,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,9 +16,8 @@ public class FolderDetailsTest {
     @Test
     public void testGetId() {
         folderDetails = new FolderDetails();
-        Integer id = 123;
-        folderDetails.setId(id);
-        Assert.assertEquals(folderDetails.getId(),id);
+        folderDetails.setId(BigInteger.ONE);
+        Assert.assertEquals(folderDetails.getId(),BigInteger.ONE);
     }
 
     @Test
@@ -38,9 +39,8 @@ public class FolderDetailsTest {
     @Test
     public void testGetParentId() {
         folderDetails = new FolderDetails();
-        Integer parentId = 123;
-        folderDetails.setParentId(parentId);
-        Assert.assertEquals(folderDetails.getParentId(),parentId);
+        folderDetails.setParentId(BigInteger.ONE);
+        Assert.assertEquals(folderDetails.getParentId(),BigInteger.ONE);
     }
 
     @Test

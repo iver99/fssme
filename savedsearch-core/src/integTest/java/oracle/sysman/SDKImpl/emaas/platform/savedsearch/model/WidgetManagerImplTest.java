@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -142,19 +143,19 @@ public class WidgetManagerImplTest
 
 		};
 		WidgetImpl widget1 = new WidgetImpl();
-		widget1.setId(2001);
+		widget1.setId(new BigInteger("2001"));
 		CategoryImpl category1 = new CategoryImpl();
-		category1.setId(2);
+		category1.setId(new BigInteger("2"));
 		category1.setName("TargetAnalytics");
-		category1.setDefaultFolderId(3);
+		category1.setDefaultFolderId(new BigInteger("3"));
 		widget1.setCategory(category1);
 		widget1.setDescription("my widget desc");
-		widget1.setFolderId(3);
+		widget1.setFolderId(new BigInteger("3"));
 		widget1.setIsWidget(true);
 		Date today = new Date(1469782680798L);
 		widget1.setLastAccessDate(today);
-		widget1.setCreatedOn(today);
-		widget1.setLastModifiedOn(today);
+		widget1.setCreationDate(today);
+		widget1.setLastModificationDate(today);
 		widget1.setLastModifiedBy("emcsadmin");
 		widget1.setName("My widget");
 		widget1.setQueryStr("xxx");

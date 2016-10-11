@@ -1,5 +1,10 @@
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
+import java.util.Properties;
+
+import javax.persistence.EntityManager;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
@@ -10,17 +15,20 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceM
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
+
 import org.testng.Assert;
-import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.persistence.EntityManager;
-import java.util.Properties;
 @Test(groups = "s2")
 public class CategoryManagerTest extends BaseTest
 {
@@ -57,9 +65,13 @@ public class CategoryManagerTest extends BaseTest
 
 	@Test(expectedExceptions = EMAnalyticsFwkException.class)
 	public void testDeleteCategoryWithSearch(@Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
+		final EmAnalyticsFolder emAnalyticsFolder = new EmAnalyticsFolder();
+		emAnalyticsFolder.setDeleted(BigInteger.ZERO);
+		final EmAnalyticsCategory emAnalyticsCategory = new EmAnalyticsCategory();
+		emAnalyticsCategory.setDeleted(BigInteger.ZERO);
         new Expectations(){
             {
-                entityManager.find(EmAnalyticsFolder.class,anyLong);
+                entityManager.find(EmAnalyticsFolder.class, (BigInteger) any);
                 result = new EmAnalyticsFolder();
             }
         };

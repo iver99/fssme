@@ -12,6 +12,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Properties;
 
@@ -43,7 +44,7 @@ public class ScreenshotPathGenerator
 		initialize();
 	}
 
-	public String generateFileName(Long widgetId, Date creation, Date modification)
+	public String generateFileName(BigInteger widgetId, Date creation, Date modification)
 	{
 		if (widgetId == null) {
 			LOGGER.error("Unexpected null widget id to generate screenshot file name: widget id={}, creation={}, modification={}",
@@ -67,7 +68,7 @@ public class ScreenshotPathGenerator
 		return sb.toString();
 	}
 
-	public String generateScreenshotUrl(String baseUrl, Long widgetId, Date creation, Date modification)
+	public String generateScreenshotUrl(String baseUrl, BigInteger widgetId, Date creation, Date modification)
 	{
 		if (StringUtil.isEmpty(baseUrl)) {
 			LOGGER.error("Unexpected null/empty base url to generate screenshot URL");
@@ -88,7 +89,7 @@ public class ScreenshotPathGenerator
 		return url;
 	}
 
-	public boolean validFileName(Long dashboardId, String fileNameToValid, String fileNameFromCache)
+	public boolean validFileName(BigInteger dashboardId, String fileNameToValid, String fileNameFromCache)
 	{
 		if (StringUtil.isEmpty(fileNameToValid)) {
 			LOGGER.warn("Invalid file name as it is empty");

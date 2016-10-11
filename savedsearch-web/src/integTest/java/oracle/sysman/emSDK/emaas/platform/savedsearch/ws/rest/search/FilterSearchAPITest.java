@@ -1,23 +1,21 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
 import mockit.Mocked;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchSummaryImpl;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSummary;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
 
 import org.codehaus.jettison.json.JSONException;
@@ -69,7 +67,7 @@ public class FilterSearchAPITest {
                 result = "categoryId=11";
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchListByCategoryId(anyLong);
+                searchManager.getSearchListByCategoryId((BigInteger) any);
                 result = searches;
             }
         };
@@ -78,7 +76,6 @@ public class FilterSearchAPITest {
 
     @Test
     public void testGetAllSearches2nd(){
-
         Assert.assertNotNull(filterSearchAPI.getAllSearches(filterSearchAPI.uri, "", "", "", ""));
     }
 
@@ -88,7 +85,7 @@ public class FilterSearchAPITest {
             {
                 CategoryManager.getInstance();
                 result = categoryManager;
-                categoryManager.getCategory(anyLong);
+                categoryManager.getCategory((BigInteger) any);
                 result = new EMAnalyticsFwkException(throwable);
                 uri.getQuery();
                 result = "categoryId=11";
@@ -109,13 +106,13 @@ public class FilterSearchAPITest {
             {
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getFolder(anyLong);
+                folderManager.getFolder((BigInteger) any);
                 result = folder;
                 uri.getQuery();
                 result = "folderId=11";
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchListByFolderId(anyLong);
+                searchManager.getSearchListByFolderId((BigInteger) any);
                 result = searches;
             }
         };
@@ -128,7 +125,7 @@ public class FilterSearchAPITest {
             {
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getFolder(anyLong);
+                folderManager.getFolder((BigInteger) any);
                 result = new EMAnalyticsFwkException(throwable);
                 uri.getQuery();
                 result = "folderId=11";
@@ -150,7 +147,7 @@ public class FilterSearchAPITest {
             {
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getPathForFolderId(anyLong);
+                folderManager.getPathForFolderId((BigInteger) any);
                 result = path;
                 uri.getQuery();
                 result = "lastAccessCount=11";
@@ -166,7 +163,6 @@ public class FilterSearchAPITest {
     @Test
     public void testGetAllSearches7th() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<>();
-        final String[] path = {"path", "path", "path"};
         for (int i = 0; i <= 2; i++) {
             searches.add(search);
         }
@@ -174,7 +170,7 @@ public class FilterSearchAPITest {
             {
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getPathForFolderId(anyLong);
+                folderManager.getPathForFolderId((BigInteger) any);
                 result =  new EMAnalyticsFwkException(throwable);
                 uri.getQuery();
                 result = "lastAccessCount=11";
@@ -191,7 +187,6 @@ public class FilterSearchAPITest {
     @Test
     public void testGetAllSearches8th() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
-        final String[] path = {"path", "path", "path"};
         for (int i = 0; i <= 2; i++) {
             searches.add(search);
         }
@@ -199,7 +194,7 @@ public class FilterSearchAPITest {
             {
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getPathForFolderId(anyLong);
+                folderManager.getPathForFolderId((BigInteger) any);
                 result =  new JSONException("");
                 uri.getQuery();
                 result = "lastAccessCount=11";
@@ -215,7 +210,6 @@ public class FilterSearchAPITest {
     @Test
     public void testGetAllSearches9th() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
-        final String[] path = {"path", "path", "path"};
         for (int i = 0; i <= 2; i++) {
             searches.add(search);
         }
@@ -223,7 +217,7 @@ public class FilterSearchAPITest {
             {
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getPathForFolderId(anyLong);
+                folderManager.getPathForFolderId((BigInteger) any);
                 result =  new Exception("");
                 uri.getQuery();
                 result = "lastAccessCount=11";
@@ -251,12 +245,12 @@ public class FilterSearchAPITest {
 //                categoryManager.getCategory(anyLong);
 //                result = category;
                 category.getId();
-                result = 1;
+                result = BigInteger.ONE;
                 uri.getQuery();
                 result = "categoryName=11";
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchListByCategoryId(anyLong);
+                searchManager.getSearchListByCategoryId((BigInteger) any);
                 result = searches;
             }
         };
@@ -279,7 +273,7 @@ public class FilterSearchAPITest {
     }
 
     @Test
-    public void testGetAllSearches12th(){
+    public void testGetAllSearches12th() {
         new Expectations() {
             {
                 uri.getQuery();
@@ -290,7 +284,7 @@ public class FilterSearchAPITest {
     }
 
     @Test
-    public void testGetAllSearches13th(){
+    public void testGetAllSearches13th() {
         new Expectations() {
             {
                 uri.getQuery();

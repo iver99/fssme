@@ -1,10 +1,10 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
 
 /**
  * @author qianqi
@@ -18,7 +18,7 @@ public class EmAnalyticsLastAccessPKTest {
     public void setUp() {
         emAnalyticsLastAccessPK = new EmAnalyticsLastAccessPK();
         emAnalyticsLastAccessPK.setAccessedBy("accessedBy1");
-        emAnalyticsLastAccessPK.setObjectId(111L);
+        emAnalyticsLastAccessPK.setObjectId(BigInteger.ONE);
         emAnalyticsLastAccessPK.setObjectType(1L);
     }
 
@@ -30,7 +30,7 @@ public class EmAnalyticsLastAccessPKTest {
 
         EmAnalyticsLastAccessPK emAnalyticsLastAccessPK2 = new EmAnalyticsLastAccessPK();
         emAnalyticsLastAccessPK2.setAccessedBy("accessedBy1");
-        emAnalyticsLastAccessPK2.setObjectId(111L);
+        emAnalyticsLastAccessPK2.setObjectId(BigInteger.ONE);
         emAnalyticsLastAccessPK2.setObjectType(1L);
         Assert.assertTrue(emAnalyticsLastAccessPK.equals(emAnalyticsLastAccessPK2));
     }
@@ -42,7 +42,7 @@ public class EmAnalyticsLastAccessPKTest {
 
     @Test (groups = {"s1"})
     public void testGetObjectId() {
-        Assert.assertEquals(111L,emAnalyticsLastAccessPK.getObjectId());
+        Assert.assertEquals(BigInteger.ONE, emAnalyticsLastAccessPK.getObjectId());
     }
 
     @Test (groups = {"s1"})
@@ -52,6 +52,6 @@ public class EmAnalyticsLastAccessPKTest {
 
     @Test (groups = {"s1"})
     public void testHashCode() {
-        Assert.assertEquals(emAnalyticsLastAccessPK.hashCode(),-1782651096);
+        Assert.assertEquals(emAnalyticsLastAccessPK.hashCode(), -1782757767);
     }
 }

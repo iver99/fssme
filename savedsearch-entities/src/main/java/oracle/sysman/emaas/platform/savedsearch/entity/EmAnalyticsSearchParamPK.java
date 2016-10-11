@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  * The primary key class for the EMS_ANALYTICS_SEARCH_PARAMS database table.
@@ -11,7 +12,7 @@ public class EmAnalyticsSearchParamPK implements Serializable
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	private long searchId;
+	private BigInteger searchId;
 
 	private String name;
 
@@ -41,7 +42,7 @@ public class EmAnalyticsSearchParamPK implements Serializable
 		return name;
 	}
 
-	public long getSearchId()
+	public BigInteger getSearchId()
 	{
 		return searchId;
 	}
@@ -59,7 +60,7 @@ public class EmAnalyticsSearchParamPK implements Serializable
 	{
 		final int prime = 31;
 		int hash = 17;
-		hash = hash * prime + (int) (searchId ^ searchId >>> 32);
+		hash = hash * prime + (int) (searchId.intValue() ^ searchId.intValue() >>> 32);
 		hash = hash * prime + (name == null ? 0 : name.hashCode());
 		hash = hash * prime + (int) (tenantId ^ tenantId >>> 32);
 		return hash;
@@ -70,7 +71,7 @@ public class EmAnalyticsSearchParamPK implements Serializable
 		this.name = name;
 	}
 
-	public void setSearchId(long searchId)
+	public void setSearchId(BigInteger searchId)
 	{
 		this.searchId = searchId;
 	}

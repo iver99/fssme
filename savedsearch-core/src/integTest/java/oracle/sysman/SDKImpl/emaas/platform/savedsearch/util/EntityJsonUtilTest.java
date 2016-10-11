@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -109,7 +110,7 @@ public class EntityJsonUtilTest
 	@Test
 	public void testGetErrorJsonObject() throws EMAnalyticsFwkException
 	{
-		EntityJsonUtil.getErrorJsonObject(1L, "err_message", 1000L);
+		EntityJsonUtil.getErrorJsonObject(BigInteger.ONE, "err_message", 1000L);
 	}
 
 	@Test
@@ -118,11 +119,11 @@ public class EntityJsonUtilTest
 		CategoryImpl category = new CategoryImpl();
 		Date date = new Date();
 		category.setCreatedOn(date);
-		category.setDefaultFolderId(1);
+		category.setDefaultFolderId(BigInteger.ONE);
 		category.setDescription("des");
 		category.setName("name");
 		category.setOwner("Oracle");
-		category.setId(1);
+		category.setId(BigInteger.ONE);
 		List<Parameter> parameters = new ArrayList<>();
 		category.setParameters(parameters);
 		category.setProviderAssetRoot("pro_assetroot");
@@ -137,13 +138,13 @@ public class EntityJsonUtilTest
 	{
 		FolderImpl folder = new FolderImpl();
 		Date date = new Date();
-		folder.setCreatedOn(date);
+		folder.setCreationDate(date);
 		folder.setDescription("des");
-		folder.setId(1);
+		folder.setId(BigInteger.ONE);
 		folder.setLastModifiedBy("Oracle");
-		folder.setLastModifiedOn(date);
+		folder.setLastModificationDate(date);
 		folder.setOwner("Oracle");
-		folder.setParentId(1);
+		folder.setParentId(BigInteger.ONE);
 		folder.setSystemFolder(false);
 		folder.setUiHidden(false);
 		EntityJsonUtil.getFullFolderJsonObj(baseUri, folder);
@@ -160,9 +161,9 @@ public class EntityJsonUtilTest
 		search.setQueryStr("query_str");
 		search.setLocked(false);
 		search.setUiHidden(false);
-		search.setFolderId(1);
-		search.setCategoryId(1);
-		search.setId(1);
+		search.setFolderId(BigInteger.ONE);
+		search.setCategoryId(BigInteger.ONE);
+		search.setId(BigInteger.ONE);
 		EntityJsonUtil.getFullSearchJsonObj(baseUri, search);
 	}
 
@@ -177,9 +178,9 @@ public class EntityJsonUtilTest
 		search.setQueryStr("query_str");
 		search.setLocked(false);
 		search.setUiHidden(false);
-		search.setFolderId(1);
-		search.setCategoryId(1);
-		search.setId(1);
+		search.setFolderId(BigInteger.ONE);
+		search.setCategoryId(BigInteger.ONE);
+		search.setId(BigInteger.ONE);
 		String[] folderPathArray = { "path1", "path2" };
 		EntityJsonUtil.getFullSearchJsonObj(baseUri, search, folderPathArray, true);
 		EntityJsonUtil.getFullSearchJsonObj(baseUri, search, folderPathArray, false);
@@ -192,11 +193,11 @@ public class EntityJsonUtilTest
 		CategoryImpl category = new CategoryImpl();
 		Date date = new Date();
 		category.setCreatedOn(date);
-		category.setDefaultFolderId(1);
+		category.setDefaultFolderId(BigInteger.ONE);
 		category.setDescription("des");
 		category.setName("name");
 		category.setOwner("Oracle");
-		category.setId(1);
+		category.setId(BigInteger.ONE);
 		List<Parameter> parameters = new ArrayList<>();
 		category.setParameters(parameters);
 		category.setProviderAssetRoot("pro_assetroot");
@@ -211,13 +212,13 @@ public class EntityJsonUtilTest
 	{
 		FolderImpl folder = new FolderImpl();
 		Date date = new Date();
-		folder.setCreatedOn(date);
+		folder.setCreationDate(date);
 		folder.setDescription("des");
-		folder.setId(1);
+		folder.setId(BigInteger.ONE);
 		folder.setLastModifiedBy("Oracle");
-		folder.setLastModifiedOn(date);
+		folder.setLastModificationDate(date);
 		folder.setOwner("Oracle");
-		folder.setParentId(1);
+		folder.setParentId(BigInteger.ONE);
 		folder.setSystemFolder(false);
 		folder.setUiHidden(false);
 		EntityJsonUtil.getSimpleFolderJsonObj(baseUri, folder);
@@ -235,9 +236,9 @@ public class EntityJsonUtilTest
 		search.setQueryStr("query_str");
 		search.setLocked(false);
 		search.setUiHidden(false);
-		search.setFolderId(1);
-		search.setCategoryId(1);
-		search.setId(1);
+		search.setFolderId(BigInteger.ONE);
+		search.setCategoryId(BigInteger.ONE);
+		search.setId(BigInteger.ONE);
 		EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search);
 	}
 
@@ -252,9 +253,9 @@ public class EntityJsonUtilTest
 		search.setQueryStr("query_str");
 		search.setLocked(false);
 		search.setUiHidden(false);
-		search.setFolderId(1);
-		search.setCategoryId(1);
-		search.setId(1);
+		search.setFolderId(BigInteger.ONE);
+		search.setCategoryId(BigInteger.ONE);
+		search.setId(BigInteger.ONE);
 		EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search, true);
 		EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search, false);
 
@@ -271,9 +272,9 @@ public class EntityJsonUtilTest
 		search.setQueryStr("query_str");
 		search.setLocked(false);
 		search.setUiHidden(false);
-		search.setFolderId(1);
-		search.setCategoryId(1);
-		search.setId(1);
+		search.setFolderId(BigInteger.ONE);
+		search.setCategoryId(BigInteger.ONE);
+		search.setId(BigInteger.ONE);
 		EntityJsonUtil.getTargetCardJsonObj(baseUri, search);
 	}
 
@@ -283,11 +284,11 @@ public class EntityJsonUtilTest
 		CategoryImpl category = new CategoryImpl();
 		Date date = new Date();
 		category.setCreatedOn(date);
-		category.setDefaultFolderId(1);
+		category.setDefaultFolderId(BigInteger.ONE);
 		category.setDescription("des");
 		category.setName("name");
 		category.setOwner("Oracle");
-		category.setId(1);
+		category.setId(BigInteger.ONE);
 		List<Parameter> parameters = new ArrayList<>();
 		category.setParameters(parameters);
 		category.setProviderAssetRoot("pro_assetroot");

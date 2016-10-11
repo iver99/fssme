@@ -1,7 +1,11 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.upgrade;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -15,9 +19,6 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
-
-import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
 public class CategoryCRUDBeforeUpgradeTest
 {
@@ -34,8 +35,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	static String TENANT_ID_OPC1;
 	static String TENANT_ID1;
 
-	static int catid = -1;
-	static int folderid = -1;
+	static BigInteger catid = BigInteger.ONE.negate();
+	static BigInteger folderid = BigInteger.ONE.negate();
 	static String catName = "";
 
 	@AfterClass
@@ -52,7 +53,7 @@ public class CategoryCRUDBeforeUpgradeTest
 		String jsonString = "{ \"name\":\"CustomCat\",\"description\":\"Folder for  searches\"}";
 		Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
-		folderid = res.jsonPath().get("id");
+		folderid = new BigInteger(res.jsonPath().getString("id"));
 
 		String jsonString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><CategorySet><Category><Name>MyCategoryTesting</Name><Description>Testing</Description>"
 				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
@@ -63,7 +64,7 @@ public class CategoryCRUDBeforeUpgradeTest
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			catid = jsonObj.getInt("id");
+			catid = new BigInteger(jsonObj.getString("id"));
 			catName = jsonObj.getString("name");
 		}
 	}
@@ -106,7 +107,7 @@ public class CategoryCRUDBeforeUpgradeTest
 			JsonPath jp = res.jsonPath();
 			Assert.assertEquals(jp.get("description"), "Testing");
 			Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
-			Assert.assertEquals(jp.get("id"), catid);
+			Assert.assertEquals(jp.get("id"), catid.toString());
 			Assert.assertEquals(jp.get("providerName"), "Name");
 			Assert.assertEquals(jp.get("providerVersion"), "1");
 			Assert.assertEquals(jp.get("providerAssetRoot"), "Root");
@@ -129,7 +130,7 @@ public class CategoryCRUDBeforeUpgradeTest
 			JsonPath jp = res.jsonPath();
 			Assert.assertEquals(jp.get("description"), "Testing");
 			Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
-			Assert.assertEquals(jp.get("id"), catid);
+			Assert.assertEquals(jp.get("id"), catid.toString());
 			Assert.assertEquals(jp.get("providerName"), "Name");
 			Assert.assertEquals(jp.get("providerVersion"), "1");
 			Assert.assertEquals(jp.get("providerAssetRoot"), "Root");
@@ -179,9 +180,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	@Test
 	public void getSearchDetailsById()throws JSONException
 	{
-
-			String jsonString1 = "{\"name\":\"Search_Bycat\",\"category\":{\"id\":" + catid + "},\"folder\":{\"id\":" + folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString1 = "{\"name\":\"Search_Bycat\",\"category\":{\"id\":\"" + catid + "\"},\"folder\":{\"id\":\"" + folderid
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
 					.post("/search");
@@ -197,7 +197,7 @@ public class CategoryCRUDBeforeUpgradeTest
 			RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 					.delete("/search/" + jp1.get("id"));
-			Assert.assertTrue(res.getStatusCode() == 200);
+			Assert.assertEquals(res.getStatusCode(), 200);
 	}
 
 	@Test
@@ -206,9 +206,8 @@ public class CategoryCRUDBeforeUpgradeTest
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/abc/searches");
-			Assert.assertTrue(res.getStatusCode() == 400);
-			String output = res.getBody().asString();
-			Assert.assertEquals(output, "Id/count should be a positive number and not an alphanumeric");
+			Assert.assertEquals(res.getStatusCode(), 404);
+
 			Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/-1/searches");
 			Assert.assertTrue(res1.getStatusCode() == 400);
@@ -352,8 +351,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	public void searchesbyCategoryId()
 	{
 			int position = -1;
-			String jsonString1 = "{\"name\":\"Search_A\",\"category\":{\"id\":" + catid + "},\"folder\":{\"id\":" + folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString1 = "{\"name\":\"Search_A\",\"category\":{\"id\":\"" + catid + "\"},\"folder\":{\"id\":\"" + folderid
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
 					.post("/search");
@@ -385,8 +384,8 @@ public class CategoryCRUDBeforeUpgradeTest
 	public void searchesbyCategoryName()
 	{
 			int position = -1;
-			String jsonString1 = "{\"name\":\"Search_B\",\"category\":{\"id\":" + catid + "},\"folder\":{\"id\":" + folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString1 = "{\"name\":\"Search_B\",\"category\":{\"id\":\"" + catid + "\"},\"folder\":{\"id\":\"" + folderid
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
 					.post("/search");

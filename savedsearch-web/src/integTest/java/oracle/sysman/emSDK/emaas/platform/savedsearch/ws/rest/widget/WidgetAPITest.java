@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,25 +10,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetManagerImpl;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -38,12 +39,14 @@ import org.testng.annotations.Test;
 @Test(groups = { "s2" })
 public class WidgetAPITest
 {
+	private static final BigInteger TEST_ID_10 = BigInteger.TEN;
 	@Mocked
 	UriInfo uriInfo;
 	@Mocked
 	URI uri;
 	@Mocked
 	CategoryManager categoryManager;
+	
 	private static List<Map<String, Object>> mockedWidgetObjects()
 	{
 		List<Map<String, Object>> map = new ArrayList<Map<String, Object>>();
@@ -91,7 +94,7 @@ public class WidgetAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(new CategoryImpl());
 		}
 		new Expectations(){
@@ -114,7 +117,7 @@ public class WidgetAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -186,7 +189,7 @@ public class WidgetAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -257,7 +260,7 @@ public class WidgetAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -324,12 +327,12 @@ public class WidgetAPITest
 	{
 		new MockUp<SearchManagerImpl>() {
 			@Mock
-			public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
+			public ScreenshotData getWidgetScreenshotById(BigInteger widgetId) throws EMAnalyticsFwkException
 			{
 				return new ScreenshotData("10", now, now);
 			}
 		};
-		widgetAPI.getWidgetScreenshotById(10L, "1.0", "test.png");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_10, "1.0", "test.png");
 	}
 
 	@Test
@@ -337,13 +340,12 @@ public class WidgetAPITest
 	{
 		new MockUp<SearchManagerImpl>() {
 			@Mock
-			public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
+			public ScreenshotData getWidgetScreenshotById(BigInteger widgetId) throws EMAnalyticsFwkException
 			{
 				throw new EMAnalyticsFwkException(new Throwable());
 			}
 		};
-		widgetAPI.getWidgetScreenshotById(10L, "1.0", "test.png");
+		widgetAPI.getWidgetScreenshotById(TEST_ID_10, "1.0", "test.png");
 	}
-
 
 }

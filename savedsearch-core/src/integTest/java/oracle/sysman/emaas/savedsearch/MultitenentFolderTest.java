@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -41,8 +43,8 @@ public class MultitenentFolderTest extends BaseTest
 	private static final String TENANT_ID2 = TestUtils.TENANT_ID2;
 	private static final String TENANT_ID3 = TestUtils.TENANT_ID3;
 
-	public static int createfolder(Long value, String username) throws EMAnalyticsFwkException {
-		int id = 0;
+	public static BigInteger createfolder(Long value, String username) throws EMAnalyticsFwkException {
+		BigInteger id = BigInteger.ZERO;
 		TenantContext.setContext(new TenantInfo(username, value));
 		try {
 			FolderManager fmger = FolderManager.getInstance();
@@ -58,7 +60,7 @@ public class MultitenentFolderTest extends BaseTest
 		return id;
 	}
 
-	public static boolean deleteFolder(int id, Long value, String username) throws EMAnalyticsFwkException {
+	public static boolean deleteFolder(BigInteger id, Long value, String username) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		try {
 			TenantContext.setContext(new TenantInfo(username, value));
@@ -82,12 +84,12 @@ public class MultitenentFolderTest extends BaseTest
 		username2 = TestUtils.getUsername(TENANT_ID2);
 		username3 = TestUtils.getUsername(TENANT_ID3);
 
-		int id1 = MultitenentFolderTest.createfolder(opc1, username1);
-		int id2 = MultitenentFolderTest.createfolder(opc2, username2);
-		int id3 = MultitenentFolderTest.createfolder(opc3, username3);
-		Assert.assertTrue(id1 > 0);
-		Assert.assertTrue(id2 > 0);
-		Assert.assertTrue(id3 > 0);
+		BigInteger id1 = MultitenentFolderTest.createfolder(opc1, username1);
+		BigInteger id2 = MultitenentFolderTest.createfolder(opc2, username2);
+		BigInteger id3 = MultitenentFolderTest.createfolder(opc3, username3);
+		Assert.assertTrue(BigInteger.ZERO.compareTo(id1) == -1);
+		Assert.assertTrue(BigInteger.ZERO.compareTo(id2) == -1);
+		Assert.assertTrue(BigInteger.ZERO.compareTo(id3) == -1);
 
 		Assert.assertTrue(MultitenentFolderTest.getFolder(id1, opc1, username1) != null);
 		Assert.assertTrue(MultitenentFolderTest.getFolder(id2, opc2, username2) != null);
@@ -106,7 +108,7 @@ public class MultitenentFolderTest extends BaseTest
 		Assert.assertTrue(MultitenentFolderTest.deleteFolder(id3, opc3, username3) == true);
 	}
 
-	public static Folder getFolder(int id, Long value, String username) throws EMAnalyticsFwkException {
+	public static Folder getFolder(BigInteger id, Long value, String username) throws EMAnalyticsFwkException {
 		Folder fld = null;
 		try {
 			TenantContext.setContext(new TenantInfo(username, value));

@@ -1,10 +1,9 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
-import org.testng.annotations.Test;
-
+import java.math.BigInteger;
 import java.util.Date;
 
-import static org.testng.Assert.*;
+import org.testng.annotations.Test;
 
 /**
  * Created by xiadai on 2016/8/23.
@@ -15,13 +14,13 @@ public class SearchSummaryImplTest {
     private Date date = new Date();
     @Test
     public void testGetCategoryId(){
-        searchSummaryImpl.setCategoryId(1);
+        searchSummaryImpl.setCategoryId(BigInteger.ONE);
         searchSummaryImpl.getCategoryId();
     }
 
     @Test
     public void testGetCreatedOn(){
-        searchSummaryImpl.setCreatedOn(date);
+        searchSummaryImpl.setCreationDate(date);
         searchSummaryImpl.getCreatedOn();
     }
 
@@ -33,7 +32,7 @@ public class SearchSummaryImplTest {
 
     @Test
     public void testGetFolderId(){
-        searchSummaryImpl.setFolderId(1);
+        searchSummaryImpl.setFolderId(BigInteger.ONE);
         searchSummaryImpl.getFolderId();
     }
 
@@ -45,7 +44,7 @@ public class SearchSummaryImplTest {
 
     @Test
     public void testGetId(){
-        searchSummaryImpl.setId(1);
+        searchSummaryImpl.setId(BigInteger.ONE);
         searchSummaryImpl.getId();
     }
 
@@ -63,7 +62,7 @@ public class SearchSummaryImplTest {
 
     @Test
     public void testGetLastModifiedOn(){
-        searchSummaryImpl.setLastModifiedOn(date);
+        searchSummaryImpl.setLastAccessDate(date);
         searchSummaryImpl.getLastModifiedOn();
     }
 

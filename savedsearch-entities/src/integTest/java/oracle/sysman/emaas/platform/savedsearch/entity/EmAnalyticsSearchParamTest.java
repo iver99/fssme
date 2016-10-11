@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * @author qianqi
@@ -18,7 +19,7 @@ public class EmAnalyticsSearchParamTest {
     public void setUp(){
         emAnalyticsSearchParam = new EmAnalyticsSearchParam();
         emAnalyticsSearchParam.setName("name1");
-        emAnalyticsSearchParam.setSearchId(111L);
+        emAnalyticsSearchParam.setSearchId(BigInteger.TEN);
         emAnalyticsSearchParam.setParamAttributes("paramAttributes1");
         emAnalyticsSearchParam.setParamType(BigDecimal.valueOf(11L));
         emAnalyticsSearchParam.setParamValueClob("paramValueClob1");
@@ -38,19 +39,19 @@ public class EmAnalyticsSearchParamTest {
         Assert.assertFalse(emAnalyticsSearchParam2.equals(emAnalyticsSearchParam));
 
         emAnalyticsSearchParam2.setName("name2");
-        emAnalyticsSearchParam2.setSearchId(111L);
+        emAnalyticsSearchParam2.setSearchId(BigInteger.TEN);
         emAnalyticsSearchParam2.setParamAttributes("paramAttributes1");
         emAnalyticsSearchParam2.setParamType(BigDecimal.valueOf(11L));
         emAnalyticsSearchParam2.setParamValueClob("paramValueClob1");
         emAnalyticsSearchParam2.setParamValueStr("paramValueStr1");
         Assert.assertFalse(emAnalyticsSearchParam2.equals(emAnalyticsSearchParam));
 
-        emAnalyticsSearchParam2.setSearchId(222L);
+        emAnalyticsSearchParam2.setSearchId(BigInteger.TEN.add(BigInteger.TEN));
         emAnalyticsSearchParam2.setName("name1");
         Assert.assertFalse(emAnalyticsSearchParam2.equals(emAnalyticsSearchParam));
 
         emAnalyticsSearchParam2.setParamAttributes("paramAttributes2");
-        emAnalyticsSearchParam2.setSearchId(111L);
+        emAnalyticsSearchParam2.setSearchId(BigInteger.TEN);
         Assert.assertFalse(emAnalyticsSearchParam2.equals(emAnalyticsSearchParam));
         emAnalyticsSearchParam2.setParamAttributes(null);
         Assert.assertFalse(emAnalyticsSearchParam2.equals(emAnalyticsSearchParam));
@@ -74,7 +75,7 @@ public class EmAnalyticsSearchParamTest {
         Assert.assertFalse(emAnalyticsSearchParam2.equals(emAnalyticsSearchParam));
 
         emAnalyticsSearchParam2.setName("name1");
-        emAnalyticsSearchParam2.setSearchId(111L);
+        emAnalyticsSearchParam2.setSearchId(BigInteger.TEN);
         emAnalyticsSearchParam2.setParamAttributes("paramAttributes1");
         emAnalyticsSearchParam2.setParamType(BigDecimal.valueOf(11L));
         emAnalyticsSearchParam2.setParamValueClob("paramValueClob1");
@@ -125,15 +126,15 @@ public class EmAnalyticsSearchParamTest {
     }
 
     @Test (groups = {"s1"})
-    public void testGetSearchId(){
-        long searchId = 333L;
+    public void testGetSearchId() {
+        BigInteger searchId = new BigInteger("333");
         emAnalyticsSearchParam.setSearchId(searchId);
-        Assert.assertEquals(searchId,emAnalyticsSearchParam.getSearchId());
+        Assert.assertEquals(searchId, emAnalyticsSearchParam.getSearchId());
     }
 
     @Test (groups = {"s1"})
-    public void testHashCode(){
-        Assert.assertEquals(-454604205,emAnalyticsSearchParam.hashCode());
+    public void testHashCode() {
+        Assert.assertEquals(662527330, emAnalyticsSearchParam.hashCode());
     }
 
     @Test (groups = {"s1"})

@@ -1,40 +1,36 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.io.Serializable;
-
-/* $Header: emcore/jsrc/sdkcore/SdkcoreEmanalyticsPublicModel/src/oracle/sysman/sdkImpl/core/emanalytics/impl/FolderImpl.java /st_emgc_pt-13.1mstr/2 2014/02/03 02:51:00 saurgarg Exp $ */
-
-import java.util.Date;
+import java.math.BigInteger;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+/* $Header: emcore/jsrc/sdkcore/SdkcoreEmanalyticsPublicModel/src/oracle/sysman/sdkImpl/core/emanalytics/impl/FolderImpl.java /st_emgc_pt-13.1mstr/2 2014/02/03 02:51:00 saurgarg Exp $ */
+import java.util.Date;
 
 @XmlRootElement
 @XmlType(propOrder = { "id", "name", "description", "parentId", "createdOn", "owner", "lastModifiedOn", "systemFolder",
 		"uiHidden", "lastModifiedBy" })
-public class FolderImpl implements Folder, Serializable
+public class FolderImpl extends EmBase implements Folder, Serializable
 {
 	private static final long serialVersionUID = 8581284618417733855L;
 
-	protected Integer id;
+	protected BigInteger id;
 	protected String name;
 	protected String description;
 	protected String owner;
-
-	protected Date createdOn;
-	protected Date lastModifiedOn;
 	protected String lastModifiedBy;
 	protected boolean systemFolder;
-	protected Integer parentId;
+	protected BigInteger parentId;
 
 	protected boolean uiHidden;
 
 	@Override
 	public Date getCreatedOn()
 	{
-		return createdOn;
+		return creationDate;
 	}
 
 	@Override
@@ -44,7 +40,7 @@ public class FolderImpl implements Folder, Serializable
 	}
 
 	@Override
-	public Integer getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -58,7 +54,7 @@ public class FolderImpl implements Folder, Serializable
 	@Override
 	public Date getLastModifiedOn()
 	{
-		return lastModifiedOn;
+		return lastModificationDate;
 	}
 
 	@Override
@@ -74,7 +70,7 @@ public class FolderImpl implements Folder, Serializable
 	}
 
 	@Override
-	public Integer getParentId()
+	public BigInteger getParentId()
 	{
 		return parentId;
 	}
@@ -91,15 +87,6 @@ public class FolderImpl implements Folder, Serializable
 		return uiHidden;
 	}
 
-	/**
-	 * @param creationDate
-	 *            the creationDate to set
-	 */
-	public void setCreatedOn(Date createdOn)
-	{
-		this.createdOn = createdOn;
-	}
-
 	@Override
 	public void setDescription(String description)
 	{
@@ -110,7 +97,7 @@ public class FolderImpl implements Folder, Serializable
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Integer id)
+	public void setId(BigInteger id)
 	{
 		this.id = id;
 	}
@@ -122,15 +109,6 @@ public class FolderImpl implements Folder, Serializable
 	public void setLastModifiedBy(String lastModifiedBy)
 	{
 		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	/**
-	 * @param lastModificationDate
-	 *            the lastModificationDate to set
-	 */
-	public void setLastModifiedOn(Date lastModifiedOn)
-	{
-		this.lastModifiedOn = lastModifiedOn;
 	}
 
 	@Override
@@ -149,7 +127,7 @@ public class FolderImpl implements Folder, Serializable
 	}
 
 	@Override
-	public void setParentId(Integer parentId)
+	public void setParentId(BigInteger parentId)
 	{
 		this.parentId = parentId;
 	}

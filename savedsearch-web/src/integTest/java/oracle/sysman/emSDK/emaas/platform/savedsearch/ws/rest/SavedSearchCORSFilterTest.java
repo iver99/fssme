@@ -1,14 +1,17 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest;
 
 
-import mockit.*;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
-import org.testng.annotations.Test;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
+
+import org.testng.annotations.Test;
 
 /**
  * Created by xidai on 2/19/2016.
@@ -30,7 +33,7 @@ public class SavedSearchCORSFilterTest {
     public void testDoFilter() throws Exception {
         new Expectations(){
             {
-               request.getMethod();
+                request.getMethod();
                 result = "OPTIONS";
             }
         };
@@ -41,8 +44,8 @@ public class SavedSearchCORSFilterTest {
         new Expectations(){
             {
                 request.getHeader(anyString);
-                result = "head";
-                requestContext.setContext((RequestContext.RequestType)any);
+                result = null;
+                RequestContext.setContext((RequestContext.RequestType)any);
             }
         };
         savedSearchCORSFilter.doFilter(request, response, chain);

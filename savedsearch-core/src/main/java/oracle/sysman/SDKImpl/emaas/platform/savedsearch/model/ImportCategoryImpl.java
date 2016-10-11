@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ParameterDetails;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 
@@ -134,7 +137,7 @@ public class ImportCategoryImpl
 	}
 
 	@XmlElement(name = "Id")
-	protected Integer id;
+	protected BigInteger id;
 	@XmlElement(name = "Name", required = true)
 	protected String name;
 	@XmlElement(name = "Description")
@@ -158,6 +161,7 @@ public class ImportCategoryImpl
 
 		CategoryImpl objCatImp = null;
 		objCatImp = new CategoryImpl();
+		objCatImp.setId(getId() == null ? IdGenerator.getIntUUID(ZDTContext.getRequestId()) : getId());
 		objCatImp.setName(getName());
 		objCatImp.setDescription(getDescription());
 		objCatImp.setProviderName(getProviderName());
@@ -213,7 +217,7 @@ public class ImportCategoryImpl
 			FolderDetails fldDetails = (FolderDetails) obj;
 			fld.setName(fldDetails.getName());
 			fld.setDescription(fldDetails.getDescription());
-			fld.setParentId(fldDetails.getParentId() == null ? 1 : fldDetails.getParentId());
+			fld.setParentId(fldDetails.getParentId() == null ? BigInteger.ONE : fldDetails.getParentId());
 			fld.setUiHidden(fldDetails.isUiHidden());
 			return fld;
 		}
@@ -224,7 +228,7 @@ public class ImportCategoryImpl
 	 * 
 	 * @return possible object is {@link Integer }
 	 */
-	public Integer getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -318,7 +322,7 @@ public class ImportCategoryImpl
 	 * @param value
 	 *            allowed object is {@link Integer }
 	 */
-	public void setId(Integer value)
+	public void setId(BigInteger value)
 	{
 		id = value;
 	}

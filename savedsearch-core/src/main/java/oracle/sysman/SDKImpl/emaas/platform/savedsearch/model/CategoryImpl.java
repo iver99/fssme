@@ -1,6 +1,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -15,17 +16,16 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 @XmlRootElement
 @XmlType(propOrder = { "id", "name", "description", "owner", "createdOn", "defaultFolderId", "providerName", "providerVersion",
 		"providerDiscovery", "providerAssetRoot", "parameters" })
-public class CategoryImpl implements Category, Serializable
+public class CategoryImpl extends EmBase implements Category, Serializable
 {
 	private static final long serialVersionUID = 7141983180171753348L;
 
-	private Integer id;
+	private BigInteger id;
 	private String name;
 	private String description;
-	private Integer defaultFolderId;
+	private BigInteger defaultFolderId;
 	private List<Parameter> parameters;
 	private String owner;
-	private Date creationDate;
 	private String providerName;
 	private String providerVersion;
 	private String providerDiscovery;
@@ -41,7 +41,7 @@ public class CategoryImpl implements Category, Serializable
 	}
 
 	@Override
-	public Integer getDefaultFolderId()
+	public BigInteger getDefaultFolderId()
 	{
 		return defaultFolderId;
 	}
@@ -53,7 +53,7 @@ public class CategoryImpl implements Category, Serializable
 	}
 
 	@Override
-	public Integer getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -114,7 +114,7 @@ public class CategoryImpl implements Category, Serializable
 	}
 
 	@Override
-	public void setDefaultFolderId(Integer id)
+	public void setDefaultFolderId(BigInteger id)
 	{
 		defaultFolderId = id;
 
@@ -126,7 +126,7 @@ public class CategoryImpl implements Category, Serializable
 		this.description = description;
 	}
 
-	public void setId(Integer id)
+	public void setId(BigInteger id)
 	{
 		this.id = id;
 	}
@@ -178,4 +178,5 @@ public class CategoryImpl implements Category, Serializable
 	{
 		this.providerVersion = providerVersion;
 	}
+	
 }

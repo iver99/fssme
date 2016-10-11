@@ -17,7 +17,7 @@ public class UtilTest extends BaseTest
 		TimeZone localTZ = TimeZone.getDefault();
 		TimeZone utcTZ = TimeZone.getTimeZone("UTC");
 		long localNow = new Date().getTime();
-		long utcNow = DateUtil.getCurrentUTCTime().getTime();
+		long utcNow = DateUtil.getGatewayTime().getTime();
 		long offset = localNow - utcNow;
 		//		System.out.println(offset / 1000 / 60);
 		boolean isLocalUTC = localTZ.equals(utcTZ);

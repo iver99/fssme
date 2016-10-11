@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public interface Category
 	 *
 	 * @return default folder id associated with the category
 	 */
-	public Integer getDefaultFolderId();
+	public BigInteger getDefaultFolderId();
 
 	/**
 	 * Returns the (localized based on current context locale) description of the category.
@@ -52,7 +53,7 @@ public interface Category
 	 *
 	 * @return identifier
 	 */
-	public Integer getId();
+	public BigInteger getId();
 
 	/**
 	 * Returns the internal name of the category.
@@ -105,7 +106,7 @@ public interface Category
 	 *
 	 * @return default folder id associated with the category
 	 */
-	public void setDefaultFolderId(Integer id);
+	public void setDefaultFolderId(BigInteger id);
 
 	/**
 	 * Sets the description for the category.
@@ -169,5 +170,7 @@ public interface Category
 	 *            Version of the provider for this category
 	 */
 	public void setProviderVersion(String providerVersion);
+	
+	public void setId(BigInteger id);
 
 }

@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ public interface Folder
 	 * 
 	 * @return identifier of the folder
 	 */
-	public Integer getId();
+	public BigInteger getId();
 
 	/**
 	 * Name/Internal-name of the folder.
@@ -32,7 +33,7 @@ public interface Folder
 	 * 
 	 * @return parent folder id
 	 */
-	public Integer getParentId();
+	public BigInteger getParentId();
 
 	/**
 	 * Returns the localized description for the search (if localized description available, user specified description
@@ -91,7 +92,7 @@ public interface Folder
 	 * @param parentId
 	 *            parent folder id
 	 */
-	public void setParentId(Integer parentId);
+	public void setParentId(BigInteger parentId);
 
 	/**
 	 * Sets the description of folder.
@@ -115,4 +116,6 @@ public interface Folder
 	 * @return if the folder is marked to be hidden from UI
 	 */
 	public boolean isUiHidden();
+	
+	public void setId(BigInteger id);
 }
