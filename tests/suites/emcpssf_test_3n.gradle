@@ -42,7 +42,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  
  
 /* Your lrg specific code would come here */
-
+def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
@@ -62,7 +62,7 @@ dependencies {
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 	testConfig(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
 	testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1'){transitive = false}
-	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+')
+	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: emcpsmRegClientVer)
 
 	configurations {
 		restAssured.exclude module: "groovy"
