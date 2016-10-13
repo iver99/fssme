@@ -30,7 +30,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeClass;
@@ -64,7 +63,7 @@ public class TenantDataLeakTest extends BaseTest
 	@BeforeClass
 	public void beforeClass() throws IOException
 	{
-		RegistrationManager.getInstance().initComponent();
+//		RegistrationManager.getInstance().initComponent();	// comment out temporary since EMCPSSF-397
 	}
 
 	@Test 
