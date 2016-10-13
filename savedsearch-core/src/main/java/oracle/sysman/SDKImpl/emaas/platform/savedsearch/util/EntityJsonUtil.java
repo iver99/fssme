@@ -36,7 +36,7 @@ import org.codehaus.jettison.json.JSONObject;
  */
 public class EntityJsonUtil
 {
-	private static final Logger logger = LogManager.getLogger(EntityJsonUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(EntityJsonUtil.class);
 
 	public static final String NAME_ID = "id";
 
@@ -64,7 +64,7 @@ public class EntityJsonUtil
 
 	public static final String NAME_CATEGORY_ID = "categoryId";
 
-	public static final String Name_SYSTEM_SEARCH = "systemSearch";
+	public static final String NAME_SYSTEM_SEARCH = "systemSearch";
 
 	public static final String NAME_CATEGORY = "category";
 	public static final String NAME_CATEGORY_DEFAULTFOLDERID = "defaultFolderId";
@@ -130,6 +130,9 @@ public class EntityJsonUtil
 	private static final Integer MAX_DASHBOARD_TILE_WIDTH = 8;
 
 	private static final String DEFAULT_DB_VALUE = "0";
+
+	private EntityJsonUtil() {
+	}
 
 	public static JSONObject getErrorJsonObject(BigInteger id, String message, long errorcode) throws EMAnalyticsFwkException
 	{
@@ -241,7 +244,9 @@ public class EntityJsonUtil
 		sb.append("{");
 		sb.append("\"WIDGET_UNIQUE_ID\":").append("\"" + m.get("SEARCH_ID") + "\"").append(",");
 		sb.append("\"WIDGET_NAME\":").append("\"" + m.get("NAME") + "\"").append(",");
-		sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
+		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
+			sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
+		}
 		sb.append("\"WIDGET_OWNER\":").append("\"" + m.get("OWNER") + "\"").append(",");
 
 		String createdOn = null;
@@ -289,6 +294,10 @@ public class EntityJsonUtil
 		if (m.get("WIDGET_DEFAULT_WIDTH") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_WIDTH").toString())) {
 			sb.append("\"WIDGET_DEFAULT_WIDTH\":").append("\"" + m.get("WIDGET_DEFAULT_WIDTH") + "\"");
 		}
+		
+		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
+			sb.append("\"WIDGET_EDITABLE\":").append("\"" + m.get("WIDGET_EDITABLE") + "\"");
+		}
 
 		if (sb.toString().endsWith(",")) {
 			//remove the extra comma
@@ -296,7 +305,7 @@ public class EntityJsonUtil
 		}
 
 		sb.append("},");
-		logger.debug("Finished Conversion to JSON String:" + sb.toString());
+		LOGGER.debug("Finished Conversion to JSON String:" + sb.toString());
 		return sb.toString();
 	}
 
@@ -407,8 +416,8 @@ public class EntityJsonUtil
 	public static ObjectNode getTargetCardJsonObj(URI baseUri, Search search)
 			throws EMAnalyticsFwkException
 	{
-		return EntityJsonUtil.getTargetCardJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER,
-				NAME_SEARCH_QUERYSTR,NAME_LASTACCESSDATE,NAME_LASTMODIFIEDBY,Name_SYSTEM_SEARCH ,NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
+		return EntityJsonUtil.getTargetCardJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER, NAME_SEARCH_QUERYSTR,
+				NAME_LASTACCESSDATE, NAME_LASTMODIFIEDBY, NAME_SYSTEM_SEARCH, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
 				NAME_SEARCH_IS_WIDGET });
 	}
 	/**
@@ -420,12 +429,12 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkException
 	 */
 
-	private static ObjectNode getTargetCardJsonObj(URI baseUri, Search search, String[] excludedFields) throws EMAnalyticsFwkException
+	public static ObjectNode getTargetCardJsonObj(URI baseUri, Search search, String[] excludedFields) throws EMAnalyticsFwkException
 	{
 		ObjectNode searchObj = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			searchObj = JSONUtil.ObjectToJSONObject(search, excludedFields);
+			searchObj = JSONUtil.objectToJSONObject(search, excludedFields);
 			if (searchObj.has(NAME_FOLDER_ID)) {
 				BigInteger folderId = searchObj.get(NAME_FOLDER_ID).getBigIntegerValue();
 				ObjectNode folderObj = mapper.createObjectNode();
@@ -524,7 +533,7 @@ public class EntityJsonUtil
 			widgetObj.put(NAME_WIDGET_GROUP_NAME, category.getName());
 			widgetObj.put(NAME_WIDGET_SCREENSHOT_HREF, screenshotUrl);
 			List<SearchParameter> paramList = search.getParameters();
-			if (paramList != null && paramList.size() > 0) {
+			if (paramList != null && !paramList.isEmpty()) {
 				for (SearchParameter param : paramList) {
 					if (NAME_WIDGET_ICON.equals(param.getName())) {
 						widgetObj.put(NAME_WIDGET_ICON, param.getValue());
@@ -616,7 +625,7 @@ public class EntityJsonUtil
 		ObjectNode categoryObj = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			categoryObj = JSONUtil.ObjectToJSONObject(category, excludedFields);
+			categoryObj = JSONUtil.objectToJSONObject(category, excludedFields);
 			if (baseUri != null && categoryObj != null) {
 				if (categoryObj.has(NAME_CATEGORY_DEFAULTFOLDERID)) {
 					if (!isSimple) {
@@ -650,7 +659,7 @@ public class EntityJsonUtil
 		ObjectNode folderObj = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			folderObj = JSONUtil.ObjectToJSONObject(folder, excludedFields);
+			folderObj = JSONUtil.objectToJSONObject(folder, excludedFields);
 			if (baseUri != null && folderObj != null) {
 				if (folderObj.has(NAME_FOLDER_PARENTID)) {
 					if (!isSimple) {
@@ -701,7 +710,7 @@ public class EntityJsonUtil
 		ObjectNode searchObj = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			searchObj = JSONUtil.ObjectToJSONObject(search, excludedFields);
+			searchObj = JSONUtil.objectToJSONObject(search, excludedFields);
 			if (baseUri != null && searchObj != null) {
 				if (searchObj.has(NAME_FOLDER_ID)) {
 					BigInteger folderId = searchObj.get(NAME_FOLDER_ID).getBigIntegerValue();
@@ -749,13 +758,13 @@ public class EntityJsonUtil
 		try {
 			int height = Integer.parseInt(param.getValue());
 			if (height < 1) {
-				logger.warn("Widget (id={}) has the default height {}<1, use height=1", search.getId(), height);
+				LOGGER.warn("Widget (id={}) has the default height {}<1, use height=1", search.getId(), height);
 				height = 1;
 			}
 			widgetObj.put(NAME_WIDGET_DEFAULT_HEIGHT, height);
 		}
 		catch (NumberFormatException e) {
-			logger.error(new MessageFormatMessage("Invalid widget default height \"{}\" for widget id={}", param.getValue(),
+			LOGGER.error(new MessageFormatMessage("Invalid widget default height \"{}\" for widget id={}", param.getValue(),
 					search.getId()), e);
 		}
 	}
@@ -766,18 +775,18 @@ public class EntityJsonUtil
 		try {
 			int width = Integer.parseInt(param.getValue());
 			if (width < 1) {
-				logger.warn("Widget (id={}) has the default width {}<1, use width=1", search.getId(), width);
+				LOGGER.warn("Widget (id={}) has the default width {}<1, use width=1", search.getId(), width);
 				width = 1;
 			}
 			if (width > MAX_DASHBOARD_TILE_WIDTH) {
-				logger.warn("Widget (id={}) has the default width {}>{}, use width={}", search.getId(), width,
+				LOGGER.warn("Widget (id={}) has the default width {}>{}, use width={}", search.getId(), width,
 						MAX_DASHBOARD_TILE_WIDTH, MAX_DASHBOARD_TILE_WIDTH);
 				width = MAX_DASHBOARD_TILE_WIDTH;
 			}
 			widgetObj.put(NAME_WIDGET_DEFAULT_WIDTH, width);
 		}
 		catch (NumberFormatException e) {
-			logger.error(new MessageFormatMessage("Invalid widget default width \"{}\" for widget id={}", param.getValue(),
+			LOGGER.error(new MessageFormatMessage("Invalid widget default width \"{}\" for widget id={}", param.getValue(),
 					search.getId()), e);
 		}
 	}

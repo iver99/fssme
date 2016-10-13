@@ -22,12 +22,12 @@ public class ImportCategoryImplTest {
     ImportCategoryImpl importCategory;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp(){
         importCategory = new ImportCategoryImpl();
     }
 
     @Test
-    public void testGetCategoryDetails() throws Exception {
+    public void testGetCategoryDetails(){
         importCategory.getCategoryDetails();
 
         ImportCategoryImpl.Parameters parameters = new ImportCategoryImpl.Parameters();
@@ -38,13 +38,13 @@ public class ImportCategoryImplTest {
     }
 
     @Test
-    public void testGetDescription() throws Exception {
+    public void testGetDescription(){
         importCategory.setDescription("descriptionxx");
         Assert.assertEquals(importCategory.getDescription(),"descriptionxx");
     }
 
     @Test
-    public void testGetFolderDet() throws Exception {
+    public void testGetFolderDet(){
         importCategory.setName("namexx");
         importCategory.setDescription("desxx");
         JAXBElement<?> jaxbElement = new JAXBElement(new QName("eee","ee"), ImportCategoryImpl.class,importCategory);
@@ -53,7 +53,7 @@ public class ImportCategoryImplTest {
     }
 
     @Test
-    public void testGetFolderDetails() throws Exception {
+    public void testGetFolderDetails(){
 
         importCategory.setFolderDet(null);
         importCategory.getFolderDetails();
@@ -74,45 +74,45 @@ public class ImportCategoryImplTest {
     }
 
     @Test
-    public void testGetId() throws Exception {
+    public void testGetId() {
         BigInteger integer = new BigInteger("111");
         importCategory.setId(integer);
         Assert.assertEquals(importCategory.getId(),integer);
     }
 
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName(){
         importCategory.setName("namexx");
         Assert.assertEquals(importCategory.getName(),"namexx");
     }
 
     @Test
-    public void testGetParameters() throws Exception {
+    public void testGetParameters(){
         ImportCategoryImpl.Parameters parameters = new ImportCategoryImpl.Parameters();
         importCategory.setParameters(parameters);
         Assert.assertEquals(importCategory.getParameters(),parameters);
     }
 
     @Test
-    public void testGetProviderAssetRoot() throws Exception {
+    public void testGetProviderAssetRoot(){
         importCategory.setProviderAssetRoot("providerAssetRootxx");
         Assert.assertEquals(importCategory.getProviderAssetRoot(),"providerAssetRootxx");
     }
 
     @Test
-    public void testGetProviderDiscovery() throws Exception {
+    public void testGetProviderDiscovery(){
         importCategory.setProviderDiscovery("providerDiscoveryxx");
         Assert.assertEquals(importCategory.getProviderDiscovery(),"providerDiscoveryxx");
     }
 
     @Test
-    public void testGetProviderName() throws Exception {
+    public void testGetProviderName(){
         importCategory.setProviderName("providerNamexx");
         Assert.assertEquals(importCategory.getProviderName(),"providerNamexx");
     }
 
     @Test
-    public void testGetProviderVersion() throws Exception {
+    public void testGetProviderVersion(){
         importCategory.setProviderVersion("providerVersionxx");
         Assert.assertEquals(importCategory.getProviderVersion(),"providerVersionxx");
     }

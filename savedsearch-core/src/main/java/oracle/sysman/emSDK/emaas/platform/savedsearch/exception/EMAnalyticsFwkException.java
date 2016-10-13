@@ -33,8 +33,6 @@ public class EMAnalyticsFwkException extends Exception
 
 	private static final long serialVersionUID = -1837015774340642137L;
 
-	private static final String ERROR_KEY_PREFIX = "EM_ANALYTICS_FWK_EXCEPTION_";
-	private static final String EMAN_FWK_EXCEPTIONS_PROPERTIES_FILE = "oracle.sysman.emSDK.core.emanalytics.api.rsc.EMAnalyticsFwkExceptionMsg";
 
 	/**
 	 * Exception codes begin
@@ -56,11 +54,7 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_GET_SEARCH = 20050;
 	public static final int ERR_GET_SEARCH_FOR_ID = 20060;
 
-	//search privilege management exceptions
-	public static final int ERR_GET_GRANTEE_ROLES_FOR_SEARCH = 20080;
-	public static final int ERR_GET_GRANTEE_USERS_FOR_SEARCH = 20081;
-	public static final int ERR_ADD_GRANTEE_FOR_SEARCH = 20090;
-	public static final int ERR_REVOKE_GRANTEE_FOR_SEARCH = 20091;
+
 
 	//folder mgmt exceptions
 	public static final int ERR_CREATE_FOLDER = 30020;
@@ -70,12 +64,11 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_DELETE_FOLDER = 30040;
 	public static final int ERR_GET_FOLDER = 30050;
 	public static final int ERR_GET_FOLDER_FOR_ID = 30060;
-	public static final int ERR_GET_FOLDER_BY_NAME = 30070;
+
 
 	//category mgmt exceptions
 	public static final int ERR_GET_CATEGORIES = 40050;
 	public static final int ERR_GET_CATEGORY_BY_NAME = 40051;
-	public static final int ERR_GET_CATEGORY_BY_NAME_NOT_EXIST = 40052;
 	public static final int ERR_GET_CATEGORY_BY_ID = 40053;
 	public static final int ERR_GET_CATEGORY_BY_ID_NOT_EXIST = 40054;
 	public static final int ERR_CREATE_CATEGORY = 40055;
@@ -87,7 +80,6 @@ public class EMAnalyticsFwkException extends Exception
 	//upgrade data
 	public static final int ERR_UPGRADE_DATA = 50010;
 
-	public static final int ERR_EMPTY_TENANT_ID = 50011;
 
 	public static final int ERR_VALID_TENANT_ID = 500112;
 
@@ -305,6 +297,8 @@ public class EMAnalyticsFwkException extends Exception
 				break;
 			case EMAnalyticsFwkException.JSON_JSON_TO_OBJECT:
 				statusCode = 500;
+				break;
+			default:
 				break;
 		}
 		return statusCode;

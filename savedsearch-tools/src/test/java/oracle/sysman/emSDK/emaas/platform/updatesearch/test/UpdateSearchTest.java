@@ -152,7 +152,6 @@ public class UpdateSearchTest extends BaseTest
 					.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 					.header(UpdateUtilConstants.OAM_REMOTE_USER, TENANT_ID2).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
-			System.out.println("deleteing searches::::" + res.getBody().asString());
 			Assert.assertTrue(listID.contains(jsonObj.getLong("id")));
 
 		}
@@ -164,7 +163,6 @@ public class UpdateSearchTest extends BaseTest
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(UpdateUtilConstants.SSF_HEADER, UpdateUtilConstants.SSF_HEADER)
 				.header(UpdateUtilConstants.OAM_REMOTE_USER, TENANT_ID1).when().delete("/search/" + mySearchId);
-		System.out.println("											");
 		return res1.getStatusCode() == 204;
 
 	}

@@ -12,7 +12,6 @@ public class QueryParameterConstantTest {
 
     @Test
     public void testUserName() throws Exception {
-        QueryParameterConstant queryParameterConstant = new QueryParameterConstant();
         Assert.assertEquals(QueryParameterConstant.USER_NAME,"userName");
     }
 }

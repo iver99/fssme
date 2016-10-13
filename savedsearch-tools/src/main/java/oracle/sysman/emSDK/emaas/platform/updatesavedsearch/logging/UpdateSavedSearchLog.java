@@ -34,7 +34,6 @@ public class UpdateSavedSearchLog
 					props.load(stream);
 				}
 				catch (IOException e1) {
-					System.out.println(e1);
 				}
 				PropertyConfigurator.configure(props);
 			}

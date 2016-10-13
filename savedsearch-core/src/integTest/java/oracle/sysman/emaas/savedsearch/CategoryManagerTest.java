@@ -26,7 +26,6 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
 import org.testng.Assert;
-import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -73,9 +72,7 @@ public class CategoryManagerTest extends BaseTest
         new Expectations(){
             {
                 entityManager.find(EmAnalyticsFolder.class, (BigInteger) any);
-                result = emAnalyticsFolder;
-                entityManager.find(EmAnalyticsCategory.class, (BigInteger) any);
-                result = emAnalyticsCategory;
+                result = new EmAnalyticsFolder();
             }
         };
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
@@ -109,24 +106,12 @@ public class CategoryManagerTest extends BaseTest
 		search = objSearch.saveSearch(search);
 
 		// soft deletion test
-		try {
 			objCategory.deleteCategory(cat.getId(), false);
-		}
-		catch (EMAnalyticsFwkException e) {
-			AssertJUnit.fail();
-		}
+
 
 		// hard deletion test
 		boolean catchExpectedException = false;
-		try {
 			objCategory.deleteCategory(cat.getId(), true);
-		}
-		catch (EMAnalyticsFwkException e) {
-			if ("Error while deleting the category as it has associated searches".equals(e.getMessage())
-					&& EMAnalyticsFwkException.ERR_DELETE_CATEGORY == e.getErrorCode()) {
-				catchExpectedException = true;
-			}
-		}
         Assert.assertFalse(catchExpectedException);
 
 		objSearch.deleteSearch(search.getId(), true);

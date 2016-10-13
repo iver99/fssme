@@ -13,14 +13,14 @@ import static org.testng.Assert.*;
 public class ParameterTypeTest {
 
     @Test
-    public void testFromIntValue() throws Exception {
+    public void testFromIntValue() {
         Assert.assertEquals(ParameterType.fromIntValue(1),ParameterType.STRING);
         Assert.assertEquals(ParameterType.fromIntValue(2),ParameterType.CLOB);
         Assert.assertNull(ParameterType.fromIntValue(3));
     }
 
     @Test
-    public void testGetIntValue() throws Exception {
+    public void testGetIntValue() {
         Assert.assertEquals(ParameterType.STRING.getIntValue(),1);
         Assert.assertEquals(ParameterType.CLOB.getIntValue(),2);
     }

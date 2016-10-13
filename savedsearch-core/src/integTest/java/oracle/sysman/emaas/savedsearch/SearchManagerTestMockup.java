@@ -12,7 +12,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 
 public class SearchManagerTestMockup
 {
-	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
 
 	public static void executeRepeatedly(int threadNum, final int repeatsPerThread, final Runnable r,
 			final Runnable postThreadRun, final Runnable postAllRun) throws InterruptedException
@@ -33,8 +32,6 @@ public class SearchManagerTestMockup
 						}
 						long totalDuration = System.currentTimeMillis() - start;
 						threadAverageDuration[threadIndex] = totalDuration / repeatsPerThread;
-						System.out.println("Average duration for each operation in current thread is "
-								+ threadAverageDuration[threadIndex] + "ms");
 						if (postThreadRun != null) {
 							postThreadRun.run();
 						}
@@ -55,7 +52,6 @@ public class SearchManagerTestMockup
 			average += threadAverageDuration[i];
 		}
 		average /= threadNum;
-		System.out.println("Average duration is: " + average + " ms");
 		if (postAllRun != null) {
 			postAllRun.run();
 		}

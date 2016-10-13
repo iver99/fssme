@@ -63,7 +63,6 @@ public class FileUtils
 				}
 				stringBuilder.append(line + System.getProperty("line.separator"));
 			}
-			System.out.print(stringBuilder.toString());
 		}
 		catch (IOException ex) {
 

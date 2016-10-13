@@ -44,7 +44,10 @@ public class HeadersUtil
 	public static final String X_REMOTE_USER_HEADER = "X-REMOTE-USER";
 	public static final String X_USER_IDENTITY_DOMAIN_NAME_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
 
-	private static final Logger _logger = LogManager.getLogger(HeadersUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger(HeadersUtil.class);
+
+	private HeadersUtil() {
+	}
 
 	public static TenantInfo getTenantInfo(HttpServletRequest request) throws EMAnalyticsFwkException
 	{
@@ -82,6 +85,7 @@ public class HeadersUtil
 				internalId = Long.parseLong(header.substring(0, header.indexOf(".")));
 			}
 			catch (NumberFormatException e) {
+				LOGGER.error(e.getLocalizedMessage());
 				internalId = null;
 			}
 		}
@@ -95,16 +99,16 @@ public class HeadersUtil
 			}
 			try {
 				internalId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tName);
-				_logger.info("Internal tenant id =" + internalId);
+				LOGGER.info("Internal tenant id =" + internalId);
 			}
 			catch (BasicServiceMalfunctionException e) {
-				_logger.error("Tenant Id " + header + " does not exist.");
+				LOGGER.error("Tenant Id " + header + " does not exist.");
 				throw new EMAnalyticsFwkException("Tenant Id " + tName + " does not exist.",
 						EMAnalyticsFwkException.ERR_VALID_TENANT_ID, null);
 			}
 
 			if (internalId == null) {
-				_logger.error("Internal Tenant Id is null.");
+				LOGGER.error("Internal Tenant Id is null.");
 				throw new EMAnalyticsFwkException("Internal Tenant Id is null.", EMAnalyticsFwkException.ERR_VALID_TENANT_ID,
 						null);
 			}
@@ -169,7 +173,7 @@ public class HeadersUtil
 		if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
 			String tenantIdHeader = request.getHeader(X_USER_IDENTITY_DOMAIN_NAME_HEADER);
 			if (tenantIdHeader == null) {
-				_logger.error(X_USER_IDENTITY_DOMAIN_NAME_HEADER + " header value is missing.");
+				LOGGER.error(X_USER_IDENTITY_DOMAIN_NAME_HEADER + " header value is missing.");
 				throw new EMAnalyticsFwkException(X_USER_IDENTITY_DOMAIN_NAME_HEADER + " header value is missing.",
 						EMAnalyticsFwkException.ERR_VALID_OAM_HEADER, null);
 			}
@@ -177,14 +181,14 @@ public class HeadersUtil
 		// For external and internal request with both tenant and user
 		else {
 			if (userTenant == null) {
-				_logger.error(X_REMOTE_USER_HEADER + " header value is missing.");
+				LOGGER.error(X_REMOTE_USER_HEADER + " header value is missing.");
 				throw new EMAnalyticsFwkException(X_REMOTE_USER_HEADER + " header value is missing.",
 						EMAnalyticsFwkException.ERR_VALID_OAM_HEADER, null);
 			}
 			int idx = userTenant.indexOf(".");
 			if (idx <= 0) {
 
-				_logger.error(" Please provide " + X_REMOTE_USER_HEADER
+				LOGGER.error(" Please provide " + X_REMOTE_USER_HEADER
 						+ " header value in following format <tenant_name>.<user_name>");
 				throw new EMAnalyticsFwkException("Please provide " + X_REMOTE_USER_HEADER
 						+ " header value in following format <tenant_name>.<user_name>",
@@ -193,7 +197,7 @@ public class HeadersUtil
 
 			userName = userTenant.substring(0, idx);
 			if (userName == null || "".equalsIgnoreCase(userName.trim())) {
-				_logger.error("Tenant name was not provided , Please provide " + X_REMOTE_USER_HEADER
+				LOGGER.error("Tenant name was not provided , Please provide " + X_REMOTE_USER_HEADER
 						+ " header value in following format <tenant_name>.<user_name>");
 				throw new EMAnalyticsFwkException("Tenant name was not provided , Please provide " + X_REMOTE_USER_HEADER
 						+ " header value in following format <tenant_name>.<user_name>",
@@ -203,7 +207,7 @@ public class HeadersUtil
 			userName = userTenant.substring(idx + 1, userTenant.length());
 
 			if (userName == null || "".equalsIgnoreCase(userName.trim())) {
-				_logger.error("User name was not provided , Please provide " + X_REMOTE_USER_HEADER
+				LOGGER.error("User name was not provided , Please provide " + X_REMOTE_USER_HEADER
 						+ " header value in following format <tenant_name>.<user_name>");
 				throw new EMAnalyticsFwkException("User name was not provided , Please provide " + X_REMOTE_USER_HEADER
 						+ " header value in following format <tenant_name>.<user_name>",

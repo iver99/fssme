@@ -106,7 +106,7 @@ public class ZDTAPI
 		String message = null;
 		int statusCode = 200;
 		try {
-			message = JSONUtil.ObjectToJSONString(zdte);
+			message = JSONUtil.objectToJSONString(zdte);
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getLocalizedMessage();

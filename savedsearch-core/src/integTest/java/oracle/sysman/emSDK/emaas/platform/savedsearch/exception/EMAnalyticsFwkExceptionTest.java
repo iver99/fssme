@@ -15,26 +15,26 @@ public class EMAnalyticsFwkExceptionTest {
 
     EMAnalyticsFwkException emAnalyticsFwkException;
     @Test
-    public void testGetErrorCode() throws Exception {
+    public void testGetErrorCode() {
         emAnalyticsFwkException = new EMAnalyticsFwkException(111,new Throwable());
         Assert.assertEquals(emAnalyticsFwkException.getErrorCode(),111);
     }
 
     @Test
-    public void testGetErrorParams() throws Exception {
+    public void testGetErrorParams() {
         Object[] errorParams = new Object[]{};
         emAnalyticsFwkException = new EMAnalyticsFwkException("errormessage111",111,errorParams);
         Assert.assertEquals(emAnalyticsFwkException.getErrorParams(),errorParams);
     }
 
     @Test
-    public void testGetLocalizedMessage() throws Exception {
+    public void testGetLocalizedMessage() {
         emAnalyticsFwkException = new EMAnalyticsFwkException(111,new Throwable());
         Assert.assertTrue(emAnalyticsFwkException.getLocalizedMessage() instanceof String);
     }
 
     @Test
-    public void testGetStatusCode() throws Exception {
+    public void testGetStatusCode() {
         emAnalyticsFwkException = new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_FOLDER_INVALID_PARENT,new Throwable());
         emAnalyticsFwkException.getStatusCode();
         emAnalyticsFwkException = new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME,new Throwable());

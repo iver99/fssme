@@ -11,11 +11,13 @@ import java.util.Date;
  */
 @Test(groups = {"s1"})
 public class ScreenshotPathGeneratorTest {
+	private BigInteger TEST_ID_10000 = new BigInteger("10000");
+	private BigInteger TEST_ID_10001 = new BigInteger("10001");
     ScreenshotPathGenerator screenshotPathGenerator = ScreenshotPathGenerator.getInstance();
     Date now = new Date();
 
     @Test
-    public void testGenerateFileName() throws Exception {
+    public void testGenerateFileName(){
         Assert.assertTrue(screenshotPathGenerator.generateFileName(BigInteger.ONE, now, now) instanceof String);
         Assert.assertNull(screenshotPathGenerator.generateFileName(null, now, now));
         screenshotPathGenerator.generateFileName(BigInteger.ONE, null, now);
@@ -24,7 +26,7 @@ public class ScreenshotPathGeneratorTest {
     }
 
     @Test
-    public void testGenerateScreenshotUrl() throws Exception {
+    public void testGenerateScreenshotUrl(){
         String baseUrl = "baseUrlxx";
         BigInteger widgetId = BigInteger.ONE;
         Date creation = now;
@@ -32,5 +34,16 @@ public class ScreenshotPathGeneratorTest {
         Assert.assertTrue(screenshotPathGenerator.generateScreenshotUrl(baseUrl,widgetId,creation,modification) instanceof String);
         Assert.assertNull(screenshotPathGenerator.generateScreenshotUrl("",widgetId,creation,modification));
         Assert.assertNull(screenshotPathGenerator.generateScreenshotUrl(baseUrl,null,creation,modification));
+    }
+
+    @Test
+    public void testValidFileName(){
+        Assert.assertTrue(screenshotPathGenerator.validFileName(TEST_ID_10000, "20160821_10000.png","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(TEST_ID_10000, "","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(TEST_ID_10000, "invalid","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(TEST_ID_10001, "20160821_10000.png","20160721_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(TEST_ID_10001, "20160821_10000.png","20160921_10000.png"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(TEST_ID_10000, "20160821_10000.png","invalid"));
+        Assert.assertFalse(screenshotPathGenerator.validFileName(TEST_ID_10000, "20160821_10000.png","invalid_10000.png"));
     }
 }

@@ -188,7 +188,7 @@ public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (searchId.intValue() ^ searchId.intValue() >>> 32);
+		result = prime * result + (searchId == null ? 0 : (int) (searchId.intValue() ^ searchId.intValue() >>> 32));
 		result = prime * result + (name == null ? 0 : name.hashCode());
 		result = prime * result + (paramAttributes == null ? 0 : paramAttributes.hashCode());
 		result = prime * result + (paramType == null ? 0 : paramType.hashCode());

@@ -13,6 +13,7 @@ package oracle.sysman.emaas.savedsearch;
 import java.math.BigInteger;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -42,8 +43,7 @@ public class MultitenentFolderTest extends BaseTest
 	private static final String TENANT_ID2 = TestUtils.TENANT_ID2;
 	private static final String TENANT_ID3 = TestUtils.TENANT_ID3;
 
-	public static BigInteger createfolder(Long value, String username)
-	{
+	public static BigInteger createfolder(Long value, String username) throws EMAnalyticsFwkException {
 		BigInteger id = BigInteger.ZERO;
 		TenantContext.setContext(new TenantInfo(username, value));
 		try {
@@ -54,26 +54,19 @@ public class MultitenentFolderTest extends BaseTest
 			fld = fmger.saveFolder(fld);
 			id = fld.getId();
 		}
-		catch (Exception e) {
-			//do nothing	
-		}
 		finally {
 			TenantContext.clearContext();
 		}
 		return id;
 	}
 
-	public static boolean deleteFolder(BigInteger id, Long value, String username)
-	{
+	public static boolean deleteFolder(BigInteger id, Long value, String username) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		try {
 			TenantContext.setContext(new TenantInfo(username, value));
 			FolderManager fmger = FolderManager.getInstance();
 			fmger.deleteFolder(id, true);
 			bResult = true;
-		}
-		catch (Exception e) {
-			bResult = false;
 		}
 		finally {
 			TenantContext.clearContext();
@@ -82,8 +75,7 @@ public class MultitenentFolderTest extends BaseTest
 	}
 
 	//	@Test
-	public static void folderTest()
-	{
+	public static void folderTest() throws EMAnalyticsFwkException {
 		opc1 = TestUtils.getInternalTenantId(TENANT_OPC1);
 		opc2 = TestUtils.getInternalTenantId(TENANT_OPC2);
 		opc3 = TestUtils.getInternalTenantId(TENANT_OPC3);
@@ -116,16 +108,12 @@ public class MultitenentFolderTest extends BaseTest
 		Assert.assertTrue(MultitenentFolderTest.deleteFolder(id3, opc3, username3) == true);
 	}
 
-	public static Folder getFolder(BigInteger id, Long value, String username)
-	{
+	public static Folder getFolder(BigInteger id, Long value, String username) throws EMAnalyticsFwkException {
 		Folder fld = null;
 		try {
 			TenantContext.setContext(new TenantInfo(username, value));
 			FolderManager fmger = FolderManager.getInstance();
 			fld = fmger.getFolder(id);
-		}
-		catch (Exception e) {
-			fld = null;
 		}
 		finally {
 			TenantContext.clearContext();

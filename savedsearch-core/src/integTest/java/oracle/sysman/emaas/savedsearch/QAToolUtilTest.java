@@ -9,6 +9,7 @@
  */
 package oracle.sysman.emaas.savedsearch;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
@@ -23,21 +24,20 @@ public class QAToolUtilTest
 {
 
 	@Test 
-	public void testDbProperties() throws Exception
+	public void testDbProperties()
 	{
 		Properties props = QAToolUtil.getDbProperties();
 		Assert.assertTrue(props.size() == 4);
 	}
 
 	@Test
-	public void testSavedSearchDeploymentDet() throws Exception
-	{
+	public void testSavedSearchDeploymentDet() throws IOException {
 		String url = QAToolUtil.getSavedSearchDeploymentDet();
 		Assert.assertTrue(url != null && url.trim().length() > 0);
 	}
 
 	@Test
-	public void testTenantDetails() throws Exception
+	public void testTenantDetails()
 	{
 		Properties props = QAToolUtil.getTenantDetails();
 		Assert.assertTrue(props.size() == 2);

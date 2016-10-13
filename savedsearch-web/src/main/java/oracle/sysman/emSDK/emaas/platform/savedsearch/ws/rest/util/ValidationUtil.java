@@ -17,8 +17,10 @@ import java.io.UnsupportedEncodingException;
 /**
  * @author vinjoshi
  */
-public class validationUtil
+public class ValidationUtil
 {
+	private ValidationUtil() {
+	}
 
 	public static void validateLength(String name, String value, int fieldLength) throws EMAnalyticsWSException
 	{

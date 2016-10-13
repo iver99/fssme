@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -7,18 +8,23 @@ public class CacheFactory {
 	
 	private static final int DEFAULT_EXPIRE_TIME=0;
 	
-	private static ConcurrentHashMap<String,CacheUnit> cacheUnitMap=new ConcurrentHashMap<String,CacheUnit>();
+	private static Map<String,CacheUnit> cacheUnitMap=new ConcurrentHashMap<String,CacheUnit>();
 	
 	
 	public static CacheUnit getCache(String cacheName){
 		return getCache(cacheName,DEFAULT_EXPIRE_TIME);
 	}
-	
-	public static CacheUnit getCache(String cacheName,int expire){
-		if(cacheName ==null)
+
+	private CacheFactory() {
+	}
+
+	public static CacheUnit getCache(String cacheName, int expire){
+		if(cacheName ==null) {
 			throw new IllegalArgumentException("cache name cannot be null!");
-		if("".equals(cacheName))
+		}
+		if("".equals(cacheName)) {
 			throw new IllegalArgumentException("cache name cannot be empty!");
+		}
 		CacheUnit cu=cacheUnitMap.get(cacheName);
 		if(cu == null){
 			return createCacheUnit(cacheName, expire);

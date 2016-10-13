@@ -14,14 +14,14 @@ public class FolderDetailsTest {
 
     FolderDetails folderDetails;
     @Test
-    public void testGetId() throws Exception {
+    public void testGetId() {
         folderDetails = new FolderDetails();
         folderDetails.setId(BigInteger.ONE);
         Assert.assertEquals(folderDetails.getId(),BigInteger.ONE);
     }
 
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName() {
         folderDetails = new FolderDetails();
         String name = "namexx";
         folderDetails.setName(name);
@@ -29,7 +29,7 @@ public class FolderDetailsTest {
     }
 
     @Test
-    public void testGetDescription() throws Exception {
+    public void testGetDescription() {
         folderDetails = new FolderDetails();
         String description = "descriptionxx";
         folderDetails.setDescription(description);
@@ -37,21 +37,21 @@ public class FolderDetailsTest {
     }
 
     @Test
-    public void testGetParentId() throws Exception {
+    public void testGetParentId() {
         folderDetails = new FolderDetails();
         folderDetails.setParentId(BigInteger.ONE);
         Assert.assertEquals(folderDetails.getParentId(),BigInteger.ONE);
     }
 
     @Test
-    public void testIsUiHidden() throws Exception {
+    public void testIsUiHidden() {
         folderDetails = new FolderDetails();
         folderDetails.setUiHidden(true);
         Assert.assertTrue(folderDetails.isUiHidden());
     }
 
     @Test
-    public void testGetFolder() throws Exception {
+    public void testGetFolder() {
         folderDetails = new FolderDetails();
         folderDetails.getFolder();
     }

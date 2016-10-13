@@ -110,13 +110,13 @@ public class SavedSearchCommonTest
 		t2.setType(ParameterType.CLOB);
 		t2.setValue("test");
 		Assert.assertFalse(t1.equals(t2));
-		Assert.assertFalse(t1.equals("test1"));
+		Assert.assertFalse("test1".equals(t1));
 		Parameter p1 = new Parameter();
 		p1.setName("test1");
 		Assert.assertFalse(t1.equals(p1));
 		p1.setName("test");
 		Assert.assertTrue(t1.equals(p1));
-		Assert.assertTrue(t1.equals("test"));
+		Assert.assertFalse("test".equals(t1));
 	}
 
 	@Test (groups = {"s1"})
@@ -134,11 +134,11 @@ public class SavedSearchCommonTest
 	{
 		long i = 1;
 		TenantInfo a = new TenantInfo("admin", i, "admin1");
-		Assert.assertTrue(a.getUsername().equals("admin"));
+		Assert.assertTrue("admin".equals(a.getUsername()));
 		Assert.assertTrue(a.getTenantInternalId() == i);
 		a.setTenantInternalId(i);
 		Assert.assertTrue(a.getTenantInternalId() == i);
-		Assert.assertTrue(a.gettenantName().equals("admin1"));
+		Assert.assertTrue("admin1".equals(a.gettenantName()));
 
 	}
 

@@ -41,7 +41,7 @@ import org.codehaus.jettison.json.JSONException;
 @Path("")
 public class SavedSearchAPI
 {
-	private static final Logger _logger = LogManager.getLogger(SearchManagerImpl.class);
+	private static final Logger LOGGER = LogManager.getLogger(SearchManagerImpl.class);
 	@Context
 	UriInfo uri;
 
@@ -111,13 +111,13 @@ public class SavedSearchAPI
 		catch (EMAnalyticsFwkException e) {
 			statusCode = e.getStatusCode();
 			message = e.getMessage();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Failed to get all categories, statusCode:" + e.getStatusCode() + " ,err:" + e.getMessage(), e);
 		}
 		catch (Exception e) {
 			statusCode = 500;
 			message = e.getMessage();
-			_logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 					+ "Unknow error when retrieving all categories, statusCode:" + "500" + " ,err:" + e.getMessage(), e);
 		}
 		return Response.status(statusCode).entity(message).build();
@@ -218,7 +218,11 @@ public class SavedSearchAPI
 		 */
 		if (id == null) {
 			return Response.status(400).entity("Please give folderId").build();
-		} else {
+		} 
+		else if ("".equals(id.toString().trim())) {
+			return Response.status(400).entity("Empty folderId").build();
+		}
+		else {
 			folderId = id;
 		}
 		if (BigInteger.ZERO.compareTo(folderId) < 0) {
@@ -226,17 +230,17 @@ public class SavedSearchAPI
 				return Response.status(200).entity(getFolderDetails(folderId)).build();
 			}
 			catch (JSONException e) {
-				e.printStackTrace();
+				LOGGER.error(e.getLocalizedMessage());
 				return Response.status(500).entity(e.getMessage()).build();
 
 			}
 			catch (EMAnalyticsFwkException e) {
-				e.printStackTrace();
+				LOGGER.error(e.getLocalizedMessage());
 				return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 
 			}
 			catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				LOGGER.error(e.getLocalizedMessage());
 			}
 			return Response.status(200).entity(message).build();
 		}
@@ -297,12 +301,12 @@ public class SavedSearchAPI
 			message = getFolderDetails(BigInteger.ZERO);
 		}
 		catch (EMAnalyticsFwkException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getLocalizedMessage());
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getLocalizedMessage());
 			return Response.status(500).entity(e.getMessage()).build();
 		}
 		return Response.status(200).entity(message).build();

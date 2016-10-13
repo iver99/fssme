@@ -13,6 +13,7 @@ import weblogic.application.ApplicationLifecycleEvent;
 
 import javax.management.*;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.lang.management.ManagementFactory;
 
 /**
@@ -24,24 +25,24 @@ public class EMTargetInitializerTest {
     EMTargetInitializer emTargetInitializer;
 
     @Mocked
-    Logger logger;
+    Logger LOGGER;
 
     @Mocked
     LogManager logManager;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp(){
         new NonStrictExpectations(){
             {
                 logManager.getLogger(EMTargetInitializer.class);
-                result = logger;
+                result = LOGGER;
             }
         };
 
     }
 
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName(){
         emTargetInitializer = new EMTargetInitializer();
         Assert.assertEquals("Saved Search Target Initializer",emTargetInitializer.getName());
     }
@@ -59,7 +60,7 @@ public class EMTargetInitializerTest {
                 InitialContext.doLookup(anyString);
                 result = "xxxx";
                 times = 2;
-//  ?              logger.error(anyString,e);
+//  ?              LOGGER.error(anyString,e);
 //                times = 1;
             }
         };

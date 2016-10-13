@@ -2,97 +2,29 @@ package oracle.sysman.emaas.savedsearch;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class FolderManagerTest extends BaseTest
 {
 	private static BigInteger folderId;
-
-	private static BigInteger childFolderId;
-	private static BigInteger categoryId;
-	private static final String TENANT_ID_OPC2 = TestUtils.TENANT_ID_OPC2;
-	private static final String TENANT_ID_OPC3 = TestUtils.TENANT_ID_OPC3;
-	private static BigInteger TA_FOLDER_ID = new BigInteger("4");
-
-	@AfterClass
-	public static void DeleteFolder() throws Exception
-	{
-
-		try {
-			TenantContext.setContext(new TenantInfo(
-					TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
-					TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			objFolder.deleteFolder(folderId, true);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-	}
-
-	@BeforeClass
-	public static void testSaveFolder() throws Exception
-	{
-		try {
-
-			TenantContext.setContext(new TenantInfo(
-					TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
-					TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			Folder folder = new FolderImpl();
-			folder.setName("FolderTest");
-			folder.setDescription("TestFolderDescription");
-			folder.setUiHidden(false);
-			folder = objFolder.saveFolder(folder);
-			folderId = folder.getId();
-			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
-			AssertJUnit.assertNotNull(folder.getOwner());
-			// cross check the content of the folder being saves
-			folder = objFolder.getFolder(folderId);
-			AssertJUnit.assertTrue("FolderTest".equals(folder.getName()));
-			AssertJUnit.assertTrue("TestFolderDescription".equals(folder.getDescription()));
-			AssertJUnit.assertTrue(folder.isUiHidden() == false);
-			AssertJUnit.assertTrue(folder.isSystemFolder() == false);
-			AssertJUnit.assertNotNull(folder.getCreatedOn());
-			AssertJUnit.assertNotNull(folder.getLastModifiedOn());
-			AssertJUnit.assertEquals(folder.getCreatedOn(), folder.getLastModifiedOn());
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getLocalizedMessage());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-	}
 
 	@Test(groups = { "s1" })
 	public void entityClassTest()
@@ -167,8 +99,7 @@ public class FolderManagerTest extends BaseTest
 
 	@Test(groups = { "s2" })
 	public void testRootFolder_S2(@Mocked final TenantContext tenantContext, @Mocked final PersistenceManager persistenceManager,
-			@Mocked final EntityManager entityManager, @Mocked final EmAnalyticsFolder emAnalyticsFolder) throws Exception
-	{
+			@Mocked final EntityManager entityManager, @Mocked final EmAnalyticsFolder emAnalyticsFolder) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
 				TenantContext.getContext();
@@ -183,8 +114,8 @@ public class FolderManagerTest extends BaseTest
 		objFolder.getRootFolder();
 	}
 
-	@Test
-	public void testUpdate() throws EMAnalyticsFwkException
+	@Test(groups = { "s1" }, expectedExceptions = NullPointerException.class)
+	public void testUpdate(@Mocked final QAToolUtil qaToolUtil) throws EMAnalyticsFwkException
 	{
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		TenantContext.setContext(

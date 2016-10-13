@@ -19,8 +19,9 @@ public class SearchSet
  
     @XmlElement(name="Search")
     public List<ImportSearchImpl> getSearchSet() {
-    	if(search==null)
+    	if(search==null){
     		search = new ArrayList<ImportSearchImpl>();
+        }
         return search;
     }
  

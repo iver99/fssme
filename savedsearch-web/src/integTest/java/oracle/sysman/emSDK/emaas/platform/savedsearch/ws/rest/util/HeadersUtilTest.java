@@ -1,23 +1,16 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.Cookie;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
+import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import org.testng.annotations.Test;
 
 /**
@@ -26,340 +19,146 @@ import org.testng.annotations.Test;
 @Test(groups = { "s2" })
 public class HeadersUtilTest
 {
-	private final HeadersUtil headUtil = new HeadersUtil();
-
-	@Test
-	public void testGetTenantInfo(@Mocked final TenantIdProcessor anyTIP) throws Exception
-	{
-		ServletRequest request = new HttpServletRequest() {
-			@Override
-			public Object getAttribute(String s)
-			{
-				return null;
-			}
-
-			@Override
-			public Enumeration getAttributeNames()
-			{
-				return null;
-			}
-
-			@Override
-			public String getAuthType()
-			{
-				return null;
-			}
-
-			@Override
-			public String getCharacterEncoding()
-			{
-				return null;
-			}
-
-			@Override
-			public int getContentLength()
-			{
-				return 0;
-			}
-
-			@Override
-			public String getContentType()
-			{
-				return null;
-			}
-
-			@Override
-			public String getContextPath()
-			{
-				return null;
-			}
-
-			@Override
-			public Cookie[] getCookies()
-			{
-				return new Cookie[0];
-			}
-
-			@Override
-			public long getDateHeader(String s)
-			{
-				return 0;
-			}
-
-			@Override
-			public String getHeader(String s)
-			{
-				if ("OAM_REMOTE_USER".equals(s) || "X-REMOTE-USER".equals(s)) {
-					s = "Origin.userName";
-				}
-				return s;
-			}
-
-			@Override
-			public Enumeration getHeaderNames()
-			{
-				return null;
-			}
-
-			@Override
-			public Enumeration getHeaders(String s)
-			{
-				return null;
-			}
-
-			@Override
-			public ServletInputStream getInputStream() throws IOException
-			{
-				return null;
-			}
-
-			@Override
-			public int getIntHeader(String s)
-			{
-				return 0;
-			}
-
-			@Override
-			public String getLocalAddr()
-			{
-				return null;
-			}
-
-			@Override
-			public Locale getLocale()
-			{
-				return null;
-			}
-
-			@Override
-			public Enumeration getLocales()
-			{
-				return null;
-			}
-
-			@Override
-			public String getLocalName()
-			{
-				return null;
-			}
-
-			@Override
-			public int getLocalPort()
-			{
-				return 0;
-			}
-
-			@Override
-			public String getMethod()
-			{
-				return "OPTIONS";
-			}
-
-			@Override
-			public String getParameter(String s)
-			{
-				return null;
-			}
-
-			@Override
-			public Map getParameterMap()
-			{
-				return null;
-			}
-
-			@Override
-			public Enumeration getParameterNames()
-			{
-				return null;
-			}
-
-			@Override
-			public String[] getParameterValues(String s)
-			{
-				return new String[0];
-			}
-
-			@Override
-			public String getPathInfo()
-			{
-				return null;
-			}
-
-			@Override
-			public String getPathTranslated()
-			{
-				return null;
-			}
-
-			@Override
-			public String getProtocol()
-			{
-				return null;
-			}
-
-			@Override
-			public String getQueryString()
-			{
-				return null;
-			}
-
-			@Override
-			public BufferedReader getReader() throws IOException
-			{
-				return null;
-			}
-
-			@Override
-			public String getRealPath(String s)
-			{
-				return null;
-			}
-
-			@Override
-			public String getRemoteAddr()
-			{
-				return null;
-			}
-
-			@Override
-			public String getRemoteHost()
-			{
-				return null;
-			}
-
-			@Override
-			public int getRemotePort()
-			{
-				return 0;
-			}
-
-			@Override
-			public String getRemoteUser()
-			{
-				return null;
-			}
-
-			@Override
-			public RequestDispatcher getRequestDispatcher(String s)
-			{
-				return null;
-			}
-
-			@Override
-			public String getRequestedSessionId()
-			{
-				return null;
-			}
-
-			@Override
-			public String getRequestURI()
-			{
-				return null;
-			}
-
-			@Override
-			public StringBuffer getRequestURL()
-			{
-				return null;
-			}
-
-			@Override
-			public String getScheme()
-			{
-				return null;
-			}
-
-			@Override
-			public String getServerName()
-			{
-				return null;
-			}
-
-			@Override
-			public int getServerPort()
-			{
-				return 0;
-			}
-
-			@Override
-			public String getServletPath()
-			{
-				return null;
-			}
-
-			@Override
-			public HttpSession getSession()
-			{
-				return null;
-			}
-
-			@Override
-			public HttpSession getSession(boolean b)
-			{
-				return null;
-			}
-
-			@Override
-			public Principal getUserPrincipal()
-			{
-				return null;
-			}
-
-			@Override
-			public boolean isRequestedSessionIdFromCookie()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isRequestedSessionIdFromUrl()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isRequestedSessionIdFromURL()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isRequestedSessionIdValid()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isSecure()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isUserInRole(String s)
-			{
-				return false;
-			}
-
-			@Override
-			public void removeAttribute(String s)
-			{
-
-			}
-
-			@Override
-			public void setAttribute(String s, Object o)
-			{
-
-			}
-
-			@Override
-			public void setCharacterEncoding(String s) throws UnsupportedEncodingException
-			{
-
-			}
-		};
-		HeadersUtil.getTenantInfo((HttpServletRequest) request);
+	@Mocked
+	HttpServletRequest request;
+	@Mocked
+	RequestContext requestContext;
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetTenantInfoEMAnalyticsFwkException() throws EMAnalyticsFwkException {
+		HeadersUtil.getTenantInfo( request);
 	}
 
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetTenantInfoInternalTenant() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+				request.getHeader(anyString);
+				result = null;
+				RequestContext.getContext();
+				result = RequestContext.RequestType.INTERNAL_TENANT;
+			}
+		};
+		HeadersUtil.getTenantInfo( request);
+	}
+
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetTenantInfoFormInvalid1() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+				request.getHeader(anyString);
+				result = " .";
+			}
+		};
+		HeadersUtil.getTenantInfo( request);
+	}
+
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetTenantInfoFormInvalid2() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+				request.getHeader(anyString);
+				result = "name.";
+			}
+		};
+		HeadersUtil.getTenantInfo( request);
+	}
+
+	@Test
+	public void testGetTenantInfo() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+				request.getHeader("OAM_REMOTE_USER");
+				result = "1.emcsadmintest";
+				request.getHeader("ssfheadertest");
+				result = "ssfheadertest";
+			}
+		};
+		HeadersUtil.getTenantInfo( request);
+	}
+
+	@Test
+	public void testGetTenantInfoNumberFormatException() throws EMAnalyticsFwkException {
+		new Expectations(){
+			{
+				request.getHeader("OAM_REMOTE_USER");
+				result = "ssf1.emcsadmintest";
+				request.getHeader("ssfheadertest");
+				result = "ssfheadertest";
+			}
+		};
+		HeadersUtil.getTenantInfo( request);
+	}
+
+	@Mocked
+	TenantIdProcessor tenantIdProcessor;
+	@Test
+	public void testGetTenantInfoTestHeadNullInternalTenant() throws EMAnalyticsFwkException, BasicServiceMalfunctionException {
+		new Expectations(){
+			{
+				request.getHeader("OAM_REMOTE_USER");
+				result = "ssf1.emcsadmintest";
+				request.getHeader("ssfheadertest");
+				result = null;
+				RequestContext.getContext();
+				result = RequestContext.RequestType.INTERNAL_TENANT;
+				request.getHeader("X-USER-IDENTITY-DOMAIN-NAME");
+				result = "ssf1.emcsadmintest";
+				TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
+				result = 1L;
+			}
+		};
+		HeadersUtil.getTenantInfo(request);
+	}
+
+	@Test
+	public void testGetTenantInfoTestHeadNull() throws EMAnalyticsFwkException, BasicServiceMalfunctionException {
+		new Expectations(){
+			{
+				request.getHeader("OAM_REMOTE_USER");
+				result = "ssf1.emcsadmintest";
+				request.getHeader("ssfheadertest");
+				result = null;
+				RequestContext.getContext();
+				result = RequestContext.RequestType.EXTERNAL;
+				TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
+				result = 1L;
+			}
+		};
+		HeadersUtil.getTenantInfo(request);
+	}
+ 	@Mocked
+ 	Throwable throwable;
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetTenantInfoTestHeadBasicServiceMalfunctionExceptionl() throws EMAnalyticsFwkException, BasicServiceMalfunctionException {
+		new Expectations(){
+			{
+				request.getHeader("OAM_REMOTE_USER");
+				result = "ssf1.emcsadmintest";
+				request.getHeader("ssfheadertest");
+				result = null;
+				RequestContext.getContext();
+				result = RequestContext.RequestType.EXTERNAL;
+				TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
+				result = new BasicServiceMalfunctionException("","",1,throwable);
+			}
+		};
+		HeadersUtil.getTenantInfo(request);
+	}
+
+	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
+	public void testGetTenantInfoTestHeadResultNull() throws EMAnalyticsFwkException, BasicServiceMalfunctionException {
+		new Expectations(){
+			{
+				request.getHeader("OAM_REMOTE_USER");
+				result = "ssf1.emcsadmintest";
+				request.getHeader("ssfheadertest");
+				result = null;
+				RequestContext.getContext();
+				result = RequestContext.RequestType.EXTERNAL;
+				TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
+				result = null;
+			}
+		};
+		HeadersUtil.getTenantInfo(request);
+	}
 }
