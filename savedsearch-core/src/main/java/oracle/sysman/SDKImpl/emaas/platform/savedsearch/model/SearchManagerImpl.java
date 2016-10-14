@@ -105,7 +105,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public void deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException
+	public EmAnalyticsSearch deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		LOGGER.info("Deleting search with id: " + searchId);
 		EntityManager em = null;
@@ -127,9 +127,6 @@ public class SearchManagerImpl extends SearchManager
 				throw new EMAnalyticsFwkException("Search with Id: " + searchId + " is system search and NOT allowed to delete",
 						EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
 			}
-			// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
-			Date deletionTime = DateUtil.getCurrentUTCTime();
-			WidgetNotifyEntity wne = new WidgetNotifyEntity(searchObj, deletionTime, WidgetNotificationType.DELETE);
 			searchObj.setDeleted(searchId);
 			em.getTransaction().begin();
 			if (permanently) {
@@ -139,9 +136,7 @@ public class SearchManagerImpl extends SearchManager
 				em.merge(searchObj);
 			}
 			em.getTransaction().commit();
-			if (searchObj.getIsWidget() == 1L) {
-				new WidgetDeletionNotification().notify(wne);
-			}
+			return searchObj;
 		}
 		catch (EMAnalyticsFwkException eme) {
 			LOGGER.error("Search with Id: " + searchId + " does not exist", eme);
