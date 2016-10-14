@@ -14,14 +14,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
-import org.eclipse.persistence.jpa.JpaEntityManager;
-import org.eclipse.persistence.queries.DatabaseQuery;
-import org.eclipse.persistence.sessions.DatabaseRecord;
-import org.eclipse.persistence.sessions.Session;
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
@@ -43,15 +35,20 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetDeletionNotification;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotificationType;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
+import org.eclipse.persistence.jpa.JpaEntityManager;
+import org.eclipse.persistence.queries.DatabaseQuery;
+import org.eclipse.persistence.sessions.DatabaseRecord;
+import org.eclipse.persistence.sessions.Session;
 
 public class SearchManagerImpl extends SearchManager
 {
@@ -108,7 +105,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public void deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException
+	public EmAnalyticsSearch deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		LOGGER.info("Deleting search with id: " + searchId);
 		EntityManager em = null;
@@ -130,9 +127,6 @@ public class SearchManagerImpl extends SearchManager
 				throw new EMAnalyticsFwkException("Search with Id: " + searchId + " is system search and NOT allowed to delete",
 						EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
 			}
-			// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
-			Date deletionTime = DateUtil.getCurrentUTCTime();
-			WidgetNotifyEntity wne = new WidgetNotifyEntity(searchObj, deletionTime, WidgetNotificationType.DELETE);
 			searchObj.setDeleted(searchId);
 			searchObj.setLastModificationDate(DateUtil.getGatewayTime());
 			em.getTransaction().begin();
@@ -143,9 +137,7 @@ public class SearchManagerImpl extends SearchManager
 				em.merge(searchObj);
 			}
 			em.getTransaction().commit();
-			if (searchObj.getIsWidget() == 1L) {
-				new WidgetDeletionNotification().notify(wne);
-			}
+			return searchObj;
 		}
 		catch (EMAnalyticsFwkException eme) {
 			LOGGER.error("Search with Id: " + searchId + " does not exist", eme);

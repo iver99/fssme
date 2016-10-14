@@ -2,6 +2,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -35,10 +36,14 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetDeletionNotification;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotificationType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
 
@@ -326,7 +331,13 @@ public class SearchAPI
 		
 		try {
 			odsService.deleteOdsEntity(searchId);
-			sman.deleteSearch(searchId, false);
+			EmAnalyticsSearch eas = sman.deleteSearch(searchId, false);
+			// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
+			Date deletionTime = DateUtil.getCurrentUTCTime();
+			WidgetNotifyEntity wne = new WidgetNotifyEntity(eas, deletionTime, WidgetNotificationType.DELETE);
+			if (eas.getIsWidget() == 1L) {
+				new WidgetDeletionNotification().notify(wne);
+			}
 		}
 		catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());
