@@ -22,28 +22,28 @@ public class CacheFactory {
 	private CacheFactory() {
 	}
 
-	public static CacheUnit getCache(String cacheName, int expire){
+	public static CacheUnit getCache(String cacheName, int timeToLive){
 		if(cacheName ==null) {
-			LOGGER.debug("CacheFactory:Cache name cannot be null!");
+			LOGGER.error("CacheFactory:Cache name cannot be null!");
 			throw new IllegalArgumentException("cache name cannot be null!");
 		}
 		if("".equals(cacheName)) {
-			LOGGER.debug("CacheFactory:Cache name cannot be empty!");
+			LOGGER.error("CacheFactory:Cache name cannot be empty!");
 			throw new IllegalArgumentException("cache name cannot be empty!");
 		}
 		CacheUnit cu=cacheUnitMap.get(cacheName);
 		if(cu == null){
-			return createCacheUnit(cacheName, expire);
+			return createCacheUnit(cacheName, timeToLive);
 		}else{
 			return cu;
 		}
 		
 	}
 	
-	private static CacheUnit createCacheUnit(String cacheName,int expire){
-		CacheUnit cu=new CacheUnit(cacheName,expire);
+	private static CacheUnit createCacheUnit(String cacheName,int timeToLive){
+		CacheUnit cu=new CacheUnit(cacheName,timeToLive);
 		cacheUnitMap.put(cacheName, cu);
-		LOGGER.debug("CacheFactory:Cache named: {},expire time: {} has been created.", cacheName, expire);
+		LOGGER.debug("CacheFactory:Cache named: {},time to live: {} has been created.", cacheName, timeToLive);
 		return cu;
 	}
 }

@@ -61,7 +61,6 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:value cannot be null!");
 			throw new IllegalArgumentException("cannot put into CacheUnit:value cannot be null!");
 		}
-		value.setLastAccessTime(getCurrentTime());
 		cacheLinkedHashMap.put(key, value);
 		return true;
 		
@@ -99,8 +98,6 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 			LOGGER.debug("CacheUnit:Element is null,returning null...");
 			return null;
 		}
-		e.setLastAccessTime(getCurrentTime());
-		//update action(last access time is updated)
 		cacheLinkedHashMap.putWithoutLock(key, e);
 		LOGGER.debug("CacheUnit:Get element from cache successful,and element has been updated!");
 		return e.getValue();
