@@ -18,7 +18,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsSearchParamRedirector;
+import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsSearchRedirector;
+
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
@@ -33,6 +38,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @NamedQueries({
 	@NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
 })
+@AdditionalCriteria("this.deleted = '0'")
+@QueryRedirectors(delete = EmAnalyticsSearchParamRedirector.class)
 public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -40,6 +47,9 @@ public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 	@Id
 	@Column(name = "SEARCH_ID", insertable = false, updatable = false, nullable = false)
 	private BigInteger searchId;
+	
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 
 	@Id
 	private String name;
@@ -68,6 +78,7 @@ public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 
 	public EmAnalyticsSearchParam()
 	{
+		this.deleted = false;
 	}
 
 	/* (non-Javadoc)
@@ -130,6 +141,16 @@ public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 			return false;
 		}
 		return true;
+	}
+	
+	
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public EmAnalyticsSearch getEmAnalyticsSearch()

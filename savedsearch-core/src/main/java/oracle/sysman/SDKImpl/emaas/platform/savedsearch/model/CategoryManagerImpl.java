@@ -209,6 +209,7 @@ public class CategoryManagerImpl extends CategoryManager
 			categoryObj.setDeleted(categoryId);
 			categoryObj.setLastModificationDate(DateUtil.getGatewayTime());
 			em.getTransaction().begin();
+			em.setProperty("soft.deletion.permanent", permanently);
 			if (permanently) {
 				em.remove(categoryObj);
 			}

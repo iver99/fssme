@@ -17,7 +17,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsCategoryParamRedirector;
+import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsFolderRedirector;
+
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
@@ -34,6 +39,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)"),
 		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)") })
 //@SequenceGenerator(name = "EMS_ANALYTICS_FOLDERS_SEQ", sequenceName = "EMS_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
+@AdditionalCriteria("this.deleted = '0'")
+@QueryRedirectors(delete = EmAnalyticsFolderRedirector.class)
 public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -42,6 +49,9 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 	@Column(name = "FOLDER_ID")
 //	@GeneratedValue(generator = "EMS_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
 	private BigInteger folderId;
+	
+	@Column(name = "PARENT_ID")
+	private BigInteger parentId;
 
 	private String description;
 
@@ -117,6 +127,14 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 	public String getDescriptionSubsystem()
 	{
 		return descriptionSubsystem;
+	}	
+
+	public BigInteger getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(BigInteger parentId) {
+		this.parentId = parentId;
 	}
 
 	public Set<EmAnalyticsCategory> getEmAnalyticsCategories()
