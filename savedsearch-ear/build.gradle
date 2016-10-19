@@ -24,25 +24,22 @@ ear
 	}
 }
 
-def regLookupClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
-def regClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 dependencies
 {
 	deploy (project(path:':savedsearch-web', configuration:'archives')) {transitive = false}
 	earlib (project(':savedsearch-core')){transitive = false}
 	earlib (project(':savedsearch-entities')){transitive = false}
-	earlib (project(':savedsearch-web-utils')){transitive = false} 
-	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: regLookupClientVer) {transitive=false }
-	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: regClientVer) {transitive=false }
-        earlib(group: 'org.apache.zookeeper', name:'zookeeper', version:'3.4.6') {transitive=false }
-        earlib(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {transitive=false }
-        earlib(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1')
-        earlib(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3')
-        earlib(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1')
-        earlib(group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.0.1') {transitive=false }
-        earlib(group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.0.1') {transitive=false }
-        earlib(group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.0') {transitive=false }
-//	earlib (group: 'log4j', name: 'log4j', version: '1.2.17') {transitive=false }
+	earlib (project(':savedsearch-web-utils')){transitive = false}
+	earlib getProjectArtifact('registry-lookup-client')
+	earlib getProjectArtifact('registry-client')
+	earlib getProjectArtifact('zookeeper')
+	earlib getProjectArtifact('emaas-platform-tenant-sdk')
+	earlib getProjectArtifact('httpclient')
+	earlib getProjectArtifact('httpcore')
+	earlib getProjectArtifact('httpmime')
+	earlib getProjectArtifact('log4j-api')
+	earlib getProjectArtifact('log4j-core')
+	earlib getProjectArtifact('log4j-web')
 }
 
 // All WLS Related things

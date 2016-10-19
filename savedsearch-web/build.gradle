@@ -150,56 +150,54 @@ test {
         }
 }
 
-def regLookupClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
-def regClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 dependencies {
-	providedCompile project(':savedsearch-entities'){transitive = false}
-	providedCompile project(':savedsearch-core'){transitive = false}
-	providedCompile project(':savedsearch-web-utils'){transitive = false}
+	providedCompile project(':savedsearch-entities')
+	providedCompile project(':savedsearch-core')
+	providedCompile project(':savedsearch-web-utils')
 	
-	//providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){transitive = false}
-	providedCompile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-	providedCompile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: regLookupClientVer)
-	providedCompile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: regClientVer)
+	providedCompile getProjectArtifact('wls-api')
+	providedCompile getProjectArtifact('registry-lookup-client')
+	providedCompile getProjectArtifact('registry-client')
 	
-	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){transitive = false}
-	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17')
-	providedCompile(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1') { transitive = false }
-	providedCompile(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){transitive = false}
+	providedCompile getProjectArtifact('servlet-api')
+	providedCompile getProjectArtifact('jersey-client')
+	providedCompile getProjectArtifact('jersey-multipart')
+	providedCompile getProjectArtifact('jettison')
 	
-	providedCompile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){transitive = false}
-	providedCompile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){transitive = false}
+	providedCompile getProjectArtifact('log4j-core')
+	providedCompile getProjectArtifact('log4j-api')
 
-	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'){transitive = false}
-	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
-	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
+	providedCompile getProjectArtifact('jackson-core-asl')
+	providedCompile getProjectArtifact('jackson-mapper-asl')
+	providedCompile getProjectArtifact('jackson-xc')
 	
-	providedCompile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1'){transitive = false}
-	providedCompile(group: 'org.hamcrest', name:'hamcrest-core', version: '1.3'){transitive = false}
-	providedCompile(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1'){transitive = false}
-	providedCompile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3'){transitive = false}
-	providedCompile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1'){transitive = false}
+	providedCompile getProjectArtifact('commons-lang3')
+	providedCompile getProjectArtifact('hamcrest-core')
+	providedCompile getProjectArtifact('httpclient')
+	providedCompile getProjectArtifact('httpcore')
+	providedCompile getProjectArtifact('httpmime')
 	providedCompile configurations.testNG
 	providedCompile configurations.webdriver
 	providedCompile configurations.restAssured
 
-	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
+	providedCompile getProjectArtifact('groovy-all')
 	
-	providedCompile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
+	/*providedCompile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
 		exclude group: 'emaas.platform', module: 'registry-lookup-client'
 		exclude group: 'emaas.platform', module: 'registry-client'
-	}
+	}*/
+	providedCompile getProjectArtifact('emaas-platform-tenant-sdk')
 
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
 	
 	restDoc(
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.28'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.28'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.28'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.28'],
-		[group: 'com.oracle.weblogic', name: 'jersey-core-1.17.1', version: '12.1.2-0-0'],
-		[group: 'com.oracle.weblogic', name: 'jersey-server-1.17.1', version: '12.1.2-0-0'],
-		[group: 'com.oracle.weblogic', name: 'jersey-servlet-1.17.1', version: '12.1.2-0-0']
+		getProjectArtifact('enunciate-core-rt'),
+		getProjectArtifact('enunciate-core'),
+		getProjectArtifact('enunciate-docs'),
+		getProjectArtifact('enunciate-core-annotations'),
+		getProjectArtifact('jersey-core-1.17.1'),
+		getProjectArtifact('jersey-server-1.17.1'),
+		getProjectArtifact('jersey-servlet-1.17.1')
 	)
 	
 	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
@@ -208,9 +206,9 @@ dependencies {
 		}
 	}
 	
-	testCompile('com.sun.jersey:jersey-servlet:1.17.1') { transitive = false }
-	testCompile('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
-	testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+	testCompile getProjectArtifact('jersey-servlet')
+	testCompile getProjectArtifact('jersey-server')
+	testCompile getProjectArtifact('jmockit')
  }
 
 build.dependsOn integTestJar

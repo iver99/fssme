@@ -1,18 +1,15 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot;
 
+import java.util.Date;
+
 import mockit.Expectations;
-import mockit.Mock;
 import mockit.Mocked;
-import oracle.security.crypto.core.Key;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Date;
-
-import static org.testng.Assert.*;
 
 /**
  * Created by xiadai on 2016/8/21.
