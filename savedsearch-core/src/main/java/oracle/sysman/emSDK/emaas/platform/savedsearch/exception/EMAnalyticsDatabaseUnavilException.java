@@ -17,7 +17,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.exception;
 public class EMAnalyticsDatabaseUnavilException extends EMAnalyticsFwkException
 {
 	private static final long serialVersionUID = 9145095920461462561L;
-	private static final String DATABASE_UNAVAILABLE_ERROR_MSG = "[SSF Dependency Error] database is unavailable.";
+	private static final String DATABASE_UNAVAILABLE_ERROR_MSG = "(SSF Dependency Error) SSF database is unavailable.";
 	
 	/**
 	 * @param throwable
