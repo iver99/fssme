@@ -14,7 +14,7 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavilException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -274,7 +274,7 @@ public class FilterSearchAPI
 
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			// just for checking whether category with given Id exist or not
 			catMan.getCategory(catId);
@@ -318,7 +318,7 @@ public class FilterSearchAPI
 
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			// just for checking whether folder with given Id exist or not
 			foldMan.getFolder(foldId);
@@ -354,7 +354,7 @@ public class FilterSearchAPI
 		JSONArray jsonArray = new JSONArray();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			List<Search> searchList = SearchManager.getInstance().getSearchListByLastAccessDate(count);
 			for (Search searchObj : searchList) {

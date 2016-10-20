@@ -30,7 +30,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavilException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -239,7 +239,7 @@ public class SearchAPI
 		SearchManager sman = SearchManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			Search searchObj = createSearchObjectForAdd(inputJsonObj);
 			Search savedSearch = sman.saveSearch(searchObj);
@@ -334,7 +334,7 @@ public class SearchAPI
 		
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			odsService.deleteOdsEntity(searchId);
 			EmAnalyticsSearch eas = sman.deleteSearch(searchId, false);
@@ -368,7 +368,7 @@ public class SearchAPI
 		}
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			LOGGER.debug("Calling searchManager.deleteSearchByName");
 			searchManager.deleteSearchByName(name, Boolean.valueOf(isExactly));
@@ -499,7 +499,7 @@ public class SearchAPI
 		SearchManager sman = SearchManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			if (updateCategory != null && "ORACLE_INTERNAL".equals(updateCategory)) {
 				searchObj = createSearchObjectForEdit(inputJsonObj, sman.getSearch(searchId), true);
@@ -540,7 +540,7 @@ public class SearchAPI
 		
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			savedSearch = sman.getSearch(searchId);
 		} catch (EMAnalyticsFwkException e) {
@@ -599,7 +599,7 @@ public class SearchAPI
 		SearchManager sman = SearchManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			Search searchObj = sman.getSearchWithoutOwner(searchId);
 			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj);
@@ -760,7 +760,7 @@ public class SearchAPI
 		SearchManager sman = SearchManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			Search searchObj = sman.getSearchWithoutOwner(searchid);
 			String[] pathArray = null;
@@ -788,7 +788,7 @@ public class SearchAPI
 		int statusCode = 200;
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			SearchManager sman = SearchManager.getInstance();
 			java.util.Date date = sman.modifyLastAccessDate(searchId);
@@ -814,7 +814,7 @@ public class SearchAPI
 		String rel;
 		try{
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavilException();
+				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			Search search = searchManager.getSearch(searchid);
 			if(search.getCategoryId()==null){
