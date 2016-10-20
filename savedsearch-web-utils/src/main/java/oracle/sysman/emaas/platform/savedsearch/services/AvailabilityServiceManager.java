@@ -1,8 +1,6 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
@@ -22,7 +20,7 @@ import weblogic.management.timer.Timer;
  */
 public class AvailabilityServiceManager implements ApplicationServiceManager, NotificationListener
 {
-	private static final long PERIOD = Timer.ONE_MINUTE;
+	private static final long PERIOD = Timer.ONE_SECOND * 20;
 
 	private static final Logger LOGGER = LogManager.getLogger(AvailabilityServiceManager.class);
 	private Timer timer;
@@ -59,23 +57,24 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
 			LOGGER.warn("Saved search service registration is not completed. Ignore dependant services availability checking");
 			return;
-
 		}
 		// check database available
 		boolean isDBAvailable = isDatabaseAvailable();
 		// update saved search service status
 		if (!isDBAvailable) {
-			List<String> dbReasons = new ArrayList<>();
-			dbReasons.add("Saved search service is out of service because database is unavailable");
-			rsm.makeServiceOutOfService(null, null, dbReasons);
-			GlobalStatus.setSavedSearchDownStatus();
-			LOGGER.error("Saved search service is out of service because database is unavailable");
+//			List<String> dbReasons = new ArrayList<>();
+//			dbReasons.add("Saved search service is out of service because database is unavailable");
+//			rsm.makeServiceOutOfService(null, null, dbReasons);
+//			GlobalStatus.setSavedSearchDownStatus();
+			DependencyStatus.getInstance().setDatabaseUp(Boolean.FALSE);
+			LOGGER.error("Saved search service keeps running, although database is unavailable");
 		}
 		else {
 			try {
 				rsm.makeServiceUp();
 				GlobalStatus.setSavedSearchUpStatus();
-				LOGGER.info("Saved search service is up");
+				DependencyStatus.getInstance().setDatabaseUp(Boolean.TRUE);
+				LOGGER.debug("Saved search service is up");
 			}
 			catch (Exception e) {
 				LOGGER.error(e.getLocalizedMessage(), e);
