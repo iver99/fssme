@@ -21,7 +21,7 @@ public class DependencyStatus
 	private static final DependencyStatus INSTANCE = new DependencyStatus();
 	
 	private DependencyStatus() {
-		databaseUp = Boolean.TRUE;
+		databaseUp = Boolean.FALSE;
 	}
 
 	public static DependencyStatus getInstance() {

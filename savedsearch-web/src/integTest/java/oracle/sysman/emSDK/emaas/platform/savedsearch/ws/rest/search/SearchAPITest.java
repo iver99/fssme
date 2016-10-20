@@ -4,16 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import mockit.Expectations;
-import mockit.Mocked;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
-import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
+import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -22,7 +13,24 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.UriInfo;
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
+import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
+import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
 
 /**
  * Created by xidai on 2/24/2016.
@@ -428,7 +436,7 @@ public class SearchAPITest {
      * @throws JSONException
      */
     @Test
-    public void testCreateSearch13th() throws JSONException, EMAnalyticsFwkException {
+    public void testCreateSearch13th(@Mocked final DependencyStatus anyDependencyStatus) throws JSONException, EMAnalyticsFwkException {
         JSONObject category = new JSONObject();
         category.put("id","999");
         JSONObject folder = new JSONObject();
@@ -447,6 +455,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+            	anyDependencyStatus.isDatabaseUp();
+            	result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.saveSearch(withAny(search));
@@ -465,7 +475,7 @@ public class SearchAPITest {
     @Mocked
     Throwable throwable;
     @Test
-    public void testCreateSearchEMAnalyticsFwkException() throws JSONException, EMAnalyticsFwkException {
+    public void testCreateSearchEMAnalyticsFwkException(@Mocked final DependencyStatus anyDependencyStatus) throws JSONException, EMAnalyticsFwkException {
         JSONObject category = new JSONObject();
         category.put("id","999");
         JSONObject folder = new JSONObject();
@@ -484,6 +494,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+            	anyDependencyStatus.isDatabaseUp();
+            	result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.saveSearch(withAny(search));
