@@ -7,6 +7,7 @@ import java.util.List;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 
 /**
  * The class <code>SearchManager</code> provides CRUD and other management operations over the Search entity in EM Analytics.
@@ -42,9 +43,10 @@ public abstract class SearchManager
 	/**
 	 * @param searchId
 	 * @param permanently
+	 * @return 
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract void deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException;
+	public abstract EmAnalyticsSearch deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException;
 
 	/**
 	 *

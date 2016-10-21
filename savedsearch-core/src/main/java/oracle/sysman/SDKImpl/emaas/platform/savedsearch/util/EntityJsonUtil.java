@@ -244,7 +244,8 @@ public class EntityJsonUtil
 		}
 		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
 			emSearch.setDescription(m.get("DESCRIPTION").toString());
-
+		}else{
+			emSearch.setDescription("No description.");
 		}
 		if (m.get("CREATION_DATE") != null) {
 			emSearch.setCreationDate(Timestamp.valueOf(String.valueOf(m.get("CREATION_DATE"))));
@@ -256,9 +257,7 @@ public class EntityJsonUtil
 		if (m.get("CATOGORY_NAME") != null) {
 			emSearch.setWidgetGroupName(m.get("CATOGORY_NAME").toString());
 		}
-		if (m.get("WIDGET_SCREENSHOT_HREF") != null) {
-			emSearch.setWidgetScreenshotHref(screenshotUrl);
-		}
+		emSearch.setWidgetScreenshotHref(screenshotUrl);
 		if (m.get("WIDGET_SUPPORT_TIME_CONTROL") != null) {
 			emSearch.setWidgetSupportTimeControl(m.get("WIDGET_SUPPORT_TIME_CONTROL").toString());
 		}
