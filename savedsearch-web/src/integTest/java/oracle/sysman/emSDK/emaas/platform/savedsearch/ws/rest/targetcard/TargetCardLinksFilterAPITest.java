@@ -11,6 +11,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
@@ -40,6 +41,8 @@ public class TargetCardLinksFilterAPITest {
     EntityJsonUtil entityJsonUtil;
     @Mocked
     Search search;
+    @Mocked
+    DependencyStatus dependencyStatus;
 
     @BeforeMethod
     public void setUp (){
@@ -54,6 +57,8 @@ public class TargetCardLinksFilterAPITest {
         final JSONObject jsonTargetcardObject = new JSONObject();
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.getTargetCard(withAny(targetcardName));
@@ -75,6 +80,8 @@ public class TargetCardLinksFilterAPITest {
         searches.add(search);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.getTargetCard(withAny(targetcardName));
@@ -88,6 +95,8 @@ public class TargetCardLinksFilterAPITest {
     public void testDeleteTargetCard() throws Exception {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.deleteTargetCard(anyLong,false);
@@ -100,6 +109,8 @@ public class TargetCardLinksFilterAPITest {
     public void testDeleteTargetCardEMAnalyticsFwkException() throws Exception {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.deleteTargetCard(anyLong,false);
@@ -135,6 +146,8 @@ public class TargetCardLinksFilterAPITest {
 
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.saveTargetCard(withAny(search));
@@ -172,6 +185,8 @@ public class TargetCardLinksFilterAPITest {
 
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.saveTargetCard(withAny(search));
@@ -207,6 +222,8 @@ public class TargetCardLinksFilterAPITest {
 
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.saveTargetCard(withAny(search));

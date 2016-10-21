@@ -262,6 +262,9 @@ public class WidgetAPI
 		}
 
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				return Response.status(Status.NOT_FOUND).build();
+			}
 			SearchManager searchMan = SearchManager.getInstance();
 			final ScreenshotData ss = searchMan.getWidgetScreenshotById(widgetId);
 			if (ss == null || ss.getScreenshot() == null) { // searchManagerImpl ensures an non-null return value. put check for later possible checks

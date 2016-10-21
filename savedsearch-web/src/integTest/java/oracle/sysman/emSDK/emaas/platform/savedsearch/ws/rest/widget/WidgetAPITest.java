@@ -29,6 +29,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.Screensho
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -44,6 +45,8 @@ public class WidgetAPITest
 	URI uri;
 	@Mocked
 	CategoryManager categoryManager;
+	@Mocked
+	DependencyStatus dependencyStatus;
 	private static List<Map<String, Object>> mockedWidgetObjects()
 	{
 		List<Map<String, Object>> map = new ArrayList<Map<String, Object>>();
@@ -96,6 +99,8 @@ public class WidgetAPITest
 		}
 		new Expectations(){
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -132,6 +137,8 @@ public class WidgetAPITest
 		}
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil
 				.getTenantSubscribedServiceProviders(anyString);
 				result = Arrays.asList("LoganService", "emcitas-ui-apps", "TargetAnalytics", "ApmUI");
@@ -204,6 +211,8 @@ public class WidgetAPITest
 		}
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil
 				.getTenantSubscribedServiceProviders(anyString);
 				result = Arrays.asList("LoganService", "emcitas-ui-apps", "TargetAnalytics", "ApmUI");
@@ -275,6 +284,8 @@ public class WidgetAPITest
 		}
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil
 				.getTenantSubscribedServiceProviders(anyString);
 				result = Arrays.asList("LoganService", "emcitas-ui-apps", "TargetAnalytics", "ApmUI");
