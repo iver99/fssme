@@ -20,11 +20,13 @@ public class EmAnalyticsCategoryParamRedirector implements QueryRedirector {
 	@Override
 	public Object invokeQuery(DatabaseQuery query, Record arguments,
 			Session session) {
-				
+		return null; // remove it if uncomment following lines;
+		
+		/* comment out the implementation as currently we don't support create/delete category		
 		ClassDescriptor cd = session.getDescriptor(query.getReferenceClass());
-		boolean permanant = (boolean) session.getActiveSession().getProperty("soft.deletion.permanent");
+		Object permanant = session.getActiveSession().getProperty("soft.deletion.permanent");
 		if (query.isDeleteObjectQuery()) {
-			if (!permanant) {
+			if (!Boolean.TRUE.equals(permanant)) {
 				DeleteObjectQuery doq = (DeleteObjectQuery) query;
 				EmAnalyticsCategoryParam emObject = (EmAnalyticsCategoryParam) doq.getObject();
 				emObject.setDeleted(true);
@@ -60,6 +62,7 @@ public class EmAnalyticsCategoryParamRedirector implements QueryRedirector {
 		else {
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);
 		}
+		*/
 	}
 
 }

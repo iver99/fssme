@@ -21,9 +21,9 @@ public class EmAnalyticsSearchParamRedirector implements QueryRedirector{
 	public Object invokeQuery(DatabaseQuery query, Record arguments,
 			Session session) {
 		ClassDescriptor cd = session.getDescriptor(query.getReferenceClass());
-		boolean permanant = (boolean) session.getActiveSession().getProperty("soft.deletion.permanent");
+		Object permanant = session.getActiveSession().getProperty("soft.deletion.permanent");
 		if (query.isDeleteObjectQuery()) {
-			if (!permanant) {
+			if (!Boolean.TRUE.equals(permanant)) {
 				DeleteObjectQuery doq = (DeleteObjectQuery) query;
 				EmAnalyticsSearchParam emObject = (EmAnalyticsSearchParam) doq.getObject();
 				emObject.setDeleted(true);

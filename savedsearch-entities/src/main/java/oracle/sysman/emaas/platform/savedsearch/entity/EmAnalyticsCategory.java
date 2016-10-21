@@ -41,8 +41,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Category.getCategoryByNameForTenant", query = "SELECT e FROM EmAnalyticsCategory e where e.name = "
 				+ ":categoryName" + " AND e.deleted = 0 ") })
 //@SequenceGenerator(name = "EMS_ANALYTICS_CATEGORY_SEQ", sequenceName = "EMS_ANALYTICS_CATEGORY_SEQ", allocationSize = 1)
-@AdditionalCriteria("this.deleted = '0'")
-@QueryRedirectors(delete = EmAnalyticsCategoryRedirector.class)
+//@AdditionalCriteria("this.deleted = '0'")
+//@QueryRedirectors(delete = EmAnalyticsCategoryRedirector.class)
 public class EmAnalyticsCategory extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
