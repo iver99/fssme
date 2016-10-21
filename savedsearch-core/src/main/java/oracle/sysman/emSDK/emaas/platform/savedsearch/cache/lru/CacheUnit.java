@@ -47,16 +47,18 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 		this.timeToLive=timeToLive;
 		this.cacheCapacity=capacity;
 		this.cacheLinkedHashMap=new CacheLinkedHashMap<String, Element>(capacity);
-		LOGGER.debug("Creating a CacheUnit named {} and expiration time is {}"+name,timeToLive);
+
 	}
 	
 	
 	@Override
 	public boolean put(String key,Element value){
 		if(key ==null) {
+			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:key cannot be null!");
 			throw new IllegalArgumentException("cannot put into CacheUnit:key cannot be null!");
 		}
 		if(value ==null) {
+			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:value cannot be null!");
 			throw new IllegalArgumentException("cannot put into CacheUnit:value cannot be null!");
 		}
 		value.setLastAccessTime(getCurrentTime());
@@ -82,19 +84,25 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 	 */
 	private Object getElementValue(String key) {
 		if (key == null) {
+			LOGGER.debug("CacheUnit:key is null,returning null...");
 			return null;
 		}
 		Element e = (Element) cacheLinkedHashMap.get(key);
 		if (e == null) {
+			LOGGER.debug("CacheUnit:Element is null,returning null...");
 			return null;
 		}
 		if(e.isExpired(timeToLive)){
 			//remove action
+			LOGGER.debug("CacheUnit:The Element is expired,removing it from cache unit..");
 			cacheLinkedHashMap.remove(key);
+			LOGGER.debug("CacheUnit:Element is null,returning null...");
 			return null;
 		}
 		e.setLastAccessTime(getCurrentTime());
+		//update action(last access time is updated)
 		cacheLinkedHashMap.putWithoutLock(key, e);
+		LOGGER.debug("CacheUnit:Get element from cache successful,and element has been updated!");
 		return e.getValue();
 	}
 

@@ -21,6 +21,7 @@ import javax.persistence.Query;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -28,6 +29,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProce
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
+import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
 import org.apache.logging.log4j.LogManager;
@@ -82,25 +84,28 @@ public class WidgetManagerImpl extends WidgetManager
 	@Override
 	public String getSpelledJsonFromQueryResult(List<Map<String, Object>> l) throws EMAnalyticsFwkException
 	{
-		String tenantName = TenantContext.getContext().gettenantName();
-		String widgetAPIUrl = getWidgetAPIUrl(tenantName);
-		StringBuilder sb = new StringBuilder();
-		sb.append("[");
-		for (Map<String, Object> widget : l) {
-			Object widgetId = widget.get("SEARCH_ID");
-			String sId = String.valueOf(widgetId);
-			Long id = Long.valueOf(sId);
-			//generate ssUrl
-			String ssUrl = generateSSUrl(widgetAPIUrl, widget, id);
-			LOGGER.debug("Screenshot URL is generated for widget id={}, url={}", id, ssUrl);
-			String jsonString = EntityJsonUtil.getJsonString(widget, ssUrl);
-			sb.append(jsonString);
+		String message = null;
+		if(l == null || l.isEmpty()) {
+			message = "[]";
+			LOGGER.debug("No widgets retrieved");
+		} else {
+			String tenantName = TenantContext.getContext().gettenantName();
+			String widgetAPIUrl = getWidgetAPIUrl(tenantName);
+			List<AnalyticsSearchModel> list = new ArrayList<AnalyticsSearchModel>();
+			for (Map<String, Object> widget : l) {
+				Object widgetId = widget.get("SEARCH_ID");
+				String sId = String.valueOf(widgetId);
+				Long id = Long.valueOf(sId);
+				//generate ssUrl
+				String ssUrl = generateSSUrl(widgetAPIUrl, widget, id);
+				LOGGER.debug("Screenshot URL is generated for widget id={}, url={}", id, ssUrl);
+				AnalyticsSearchModel model = EntityJsonUtil.getJsonModel(widget, ssUrl);
+				list.add(model);
+			}
+			message = JSONUtil.objectToJSONString(list);
+			LOGGER.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
 		}
-		//remove the extra comma
-		sb.deleteCharAt(sb.length() - 1);
-		sb.append("]");
-		String message = sb.toString();
-		LOGGER.debug("Retrieved widget list json object for tenant {}, the json object is [{}]", tenantName, message);
+		
 		return message;
 	}
 

@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -25,10 +26,14 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetDeletionNotification;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotificationType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
 
@@ -317,7 +322,13 @@ public class SearchAPI
 		
 		try {
 			odsService.deleteOdsEntity(searchId);
-			sman.deleteSearch(searchId, false);
+			EmAnalyticsSearch eas = sman.deleteSearch(searchId, false);
+			// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
+			Date deletionTime = DateUtil.getCurrentUTCTime();
+			WidgetNotifyEntity wne = new WidgetNotifyEntity(eas, deletionTime, WidgetNotificationType.DELETE);
+			if (eas.getIsWidget() == 1L) {
+				new WidgetDeletionNotification().notify(wne);
+			}
 		}
 		catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());
@@ -325,6 +336,29 @@ public class SearchAPI
 		}
 
 		return Response.status(statusCode).build();
+	}
+
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteSearchByName(@QueryParam("searchName") String name, @QueryParam("isExactly") String isExactly) {
+		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/search?searchName={}&isExactly={}", name, isExactly);
+		SearchManager searchManager = SearchManager.getInstance();
+		if (isExactly == null) {
+			LOGGER.debug("isExactly is null and set the default value true");
+			isExactly = "true";
+		}
+		if (!"true".equalsIgnoreCase(isExactly) && !"false".equalsIgnoreCase(isExactly)) {
+			LOGGER.error("The param isExactly is invalid");
+			return Response.status(Response.Status.BAD_REQUEST).entity("The param isExactly is invalid").build();
+		}
+		try {
+			LOGGER.debug("Calling searchManager.deleteSearchByName");
+			searchManager.deleteSearchByName(name, Boolean.valueOf(isExactly));
+		} catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+		}
+		return Response.status(Response.Status.OK).build();
 	}
 
 	/**

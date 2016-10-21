@@ -61,7 +61,8 @@ public class RestClient
 		else {
 			LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
 			LOGGERITR.info(
-					"RestClient is connecting to get response after getting authorization token from registration manager.");
+					"RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is get.",
+					url);
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
@@ -81,11 +82,11 @@ public class RestClient
 	public Object post(String url, Map<String, Object> headers, Object requestEntity, String tenant)
 	{
 		if (StringUtil.isEmpty(url)) {
-			LOGGER.error("Unable to put to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
+			LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
 			return null;
 		}
 		if (requestEntity == null || "".equals(requestEntity)) {
-			LOGGER.error("Unable to put an empty request entity");
+			LOGGER.error("Unable to post an empty request entity");
 			return null;
 		}
 
@@ -100,7 +101,8 @@ public class RestClient
 		else {
 			LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
 			LOGGERITR.info(
-					"RestClient is connecting to get response after getting authorization token from registration manager.");
+					"RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
+					url);
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);

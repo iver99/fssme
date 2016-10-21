@@ -886,9 +886,36 @@ public class SearchAPITest {
         };
         Assert.assertEquals(200,api.getAssetRoot(1L).getStatus());
     }
-
     @Test
     public void testEditLastAccess() {
         Assert.assertNotNull(api.editLastAccess(10L));
+    }
+
+    @Test
+    public void testDeleteSearchName() throws EMAnalyticsFwkException {
+        api.deleteSearchByName("searchName", "a");
+        new Expectations(){
+            {
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.deleteSearchByName(anyString, anyBoolean);
+            }
+        };
+        api.deleteSearchByName("searchName", "true");
+        api.deleteSearchByName("searchName", "false");
+        api.deleteSearchByName("searchName", null);
+    }
+
+    @Test
+    public void testDeleteSearchNameEMAnalyticsFwkException() throws EMAnalyticsFwkException {
+        new Expectations(){
+            {
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.deleteSearchByName(anyString, anyBoolean);
+                result = new EMAnalyticsFwkException(throwable);
+            }
+        };
+        api.deleteSearchByName("searchName", "true");
     }
 }

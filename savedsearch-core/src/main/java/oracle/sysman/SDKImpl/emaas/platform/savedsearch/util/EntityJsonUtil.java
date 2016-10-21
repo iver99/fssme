@@ -10,6 +10,8 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.net.URI;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -128,9 +131,6 @@ public class EntityJsonUtil
 
 	private static final String DEFAULT_DB_VALUE = "0";
 
-	private EntityJsonUtil() {
-	}
-
 	public static JSONObject getErrorJsonObject(long id, String message, long errorcode) throws EMAnalyticsFwkException
 	{
 		JSONObject errorObj = new JSONObject();
@@ -235,75 +235,77 @@ public class EntityJsonUtil
 		return obj;
 	}
 
-	public static String getJsonString(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
+	public static AnalyticsSearchModel getJsonModel(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		sb.append("\"WIDGET_UNIQUE_ID\":").append(Integer.valueOf(m.get("SEARCH_ID").toString())).append(",");
-		sb.append("\"WIDGET_NAME\":").append("\"" + m.get("NAME") + "\"").append(",");
+		AnalyticsSearchModel emSearch = new AnalyticsSearchModel();
+		if(m.get("NAME")!=null){
+			emSearch.setName(m.get("NAME").toString());
+
+		}
 		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
-			sb.append("\"WIDGET_DESCRIPTION\":").append("\"" + m.get("DESCRIPTION") + "\"").append(",");
-		}
-		sb.append("\"WIDGET_OWNER\":").append("\"" + m.get("OWNER") + "\"").append(",");
+			emSearch.setDescription(m.get("DESCRIPTION").toString());
 
-		String createdOn = null;
+		}
 		if (m.get("CREATION_DATE") != null) {
-			createdOn = DateUtil.getDateFormatter().format(m.get("CREATION_DATE"));
+			emSearch.setCreationDate(Timestamp.valueOf(String.valueOf(m.get("CREATION_DATE"))));
 		}
-		sb.append("\"WIDGET_CREATION_TIME\":").append("\"" + createdOn + "\"").append(",");
-		sb.append("\"WIDGET_SOURCE\":").append(1).append(",");
-		sb.append("\"WIDGET_GROUP_NAME\":").append("\"" + m.get("CATOGORY_NAME") + "\"").append(",");
-		sb.append("\"WIDGET_SCREENSHOT_HREF\":").append("\"" + screenshotUrl + "\"").append(",");
-		sb.append("\"WIDGET_SUPPORT_TIME_CONTROL\":").append("\"" + m.get("WIDGET_SUPPORT_TIME_CONTROL") + "\"").append(",");
-		sb.append("\"WIDGET_KOC_NAME\":").append("\"" + m.get("WIDGET_KOC_NAME") + "\"").append(",");
-		sb.append("\"WIDGET_TEMPLATE\":").append("\"" + m.get("WIDGET_TEMPLATE") + "\"").append(",");
-		sb.append("\"WIDGET_VIEWMODEL\":").append("\"" + m.get("WIDGET_VIEWMODEL") + "\"").append(",");
-
-		//if provider_name ,provider_version,provider_asset_root, did not exist in search table, find value in category table
+		if (m.get("OWNER") != null) {
+			emSearch.setOwner(m.get("OWNER").toString());
+		}
+		emSearch.setWidgetSource(1L);
+		if (m.get("CATOGORY_NAME") != null) {
+			emSearch.setWidgetGroupName(m.get("CATOGORY_NAME").toString());
+		}
+		emSearch.setWidgetScreenshotHref(screenshotUrl);
+		if (m.get("WIDGET_SUPPORT_TIME_CONTROL") != null) {
+			emSearch.setWidgetSupportTimeControl(m.get("WIDGET_SUPPORT_TIME_CONTROL").toString());
+		}
+		if (m.get("WIDGET_KOC_NAME") != null) {
+			emSearch.setWidgetKocName(m.get("WIDGET_KOC_NAME").toString());
+		}
+		if (m.get("WIDGET_TEMPLATE") != null) {
+			emSearch.setWidgetTemplate(m.get("WIDGET_TEMPLATE").toString());
+		}
+		if (m.get("WIDGET_VIEWMODEL") != null) {
+			emSearch.setWidgetViewModel(m.get("WIDGET_VIEWMODEL").toString());
+		}
 		if (m.get("PROVIDER_NAME") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_NAME"))) {
-			sb.append("\"PROVIDER_NAME\":").append("\"" + m.get("PROVIDER_NAME") + "\"").append(",");
+			emSearch.setProviderName(m.get("PROVIDER_NAME").toString());
 		}
 		else {
-			sb.append("\"PROVIDER_NAME\":").append("\"" + m.get("C_PROVIDER_NAME") + "\"").append(",");
+			emSearch.setProviderName(m.get("C_PROVIDER_NAME").toString());
 		}
 		if (m.get("PROVIDER_VERSION") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_VERSION"))) {
-			sb.append("\"PROVIDER_VERSION\":").append("\"" + m.get("PROVIDER_VERSION") + "\"").append(",");
+			emSearch.setProviderVersion(m.get("PROVIDER_VERSION").toString());
 		}
 		else {
-			sb.append("\"PROVIDER_VERSION\":").append("\"" + m.get("C_PROVIDER_VERSION") + "\"").append(",");
+			emSearch.setProviderVersion(m.get("C_PROVIDER_VERSION").toString());
 		}
 		if (m.get("PROVIDER_ASSET_ROOT") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_ASSET_ROOT"))) {
-			sb.append("\"PROVIDER_ASSET_ROOT\":").append("\"" + m.get("PROVIDER_ASSET_ROOT") + "\"").append(",");
+			emSearch.setProviderAssetRoot(m.get("PROVIDER_ASSET_ROOT").toString());
 		}
 		else {
-			sb.append("\"PROVIDER_ASSET_ROOT\":").append("\"" + m.get("C_PROVIDER_ASSET_ROOT") + "\"").append(",");
+			emSearch.setProviderAssetRoot(m.get("C_PROVIDER_ASSET_ROOT").toString());
 		}
 
 		if (m.get("WIDGET_DEFAULT_HEIGHT") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_HEIGHT").toString())) {
-			sb.append("\"WIDGET_DEFAULT_HEIGHT\":").append("\"" + m.get("WIDGET_DEFAULT_HEIGHT") + "\"").append(",");
+			emSearch.setWidgetDefaultHeight(Long.valueOf(m.get("WIDGET_DEFAULT_HEIGHT").toString()));
 		}
 		if (m.get("DASHBOARD_INELIGIBLE") != null && !DEFAULT_DB_VALUE.equals(m.get("DASHBOARD_INELIGIBLE").toString())) {
-			sb.append("\"DASHBOARD_INELIGIBLE\":").append("\"" + m.get("DASHBOARD_INELIGIBLE") + "\"").append(",");
+			emSearch.setDashboardIneligible(m.get("DASHBOARD_INELIGIBLE").toString());
 		}
 		if (m.get("WIDGET_LINKED_DASHBOARD") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_LINKED_DASHBOARD").toString())) {
-			sb.append("\"WIDGET_LINKED_DASHBOARD\":").append("\"" + m.get("WIDGET_LINKED_DASHBOARD") + "\"").append(",");
+			emSearch.setWidgetLinkedDashboard(Long.valueOf(m.get("WIDGET_LINKED_DASHBOARD").toString()));
 		}
 		if (m.get("WIDGET_DEFAULT_WIDTH") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_WIDTH").toString())) {
-			sb.append("\"WIDGET_DEFAULT_WIDTH\":").append("\"" + m.get("WIDGET_DEFAULT_WIDTH") + "\"");
+			emSearch.setWidgetDefaultWidth(Long.valueOf(m.get("WIDGET_DEFAULT_WIDTH").toString()));
 		}
-		
 		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
-			sb.append("\"WIDGET_EDITABLE\":").append("\"" + m.get("WIDGET_EDITABLE") + "\"");
+			emSearch.setWidgetEditable(m.get("WIDGET_EDITABLE").toString());
 		}
+		emSearch.setId(Long.valueOf(m.get("SEARCH_ID").toString()));
 
-		if (sb.toString().endsWith(",")) {
-			//remove the extra comma
-			sb.deleteCharAt(sb.length() - 1);
-		}
-
-		sb.append("},");
-		LOGGER.debug("Finished Conversion to JSON String:" + sb.toString());
-		return sb.toString();
+		return emSearch;
 	}
 
 	/**
@@ -316,7 +318,7 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkJsonException
 	 */
 	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-			EMAnalyticsFwkException
+	EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
@@ -481,26 +483,6 @@ public class EntityJsonUtil
 		return widgetGroupObj;
 	}
 
-	//	/**
-	//	 * Return simple JSON string for widget screen shot
-	//	 *
-	//	 * @param widgetScreenshot
-	//	 * @return
-	//	 * @throws JSONException
-	//	 */
-	//	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
-	//	{
-	//		JSONObject widgetScreenshotObj = new JSONObject();
-	//		try {
-	//			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
-	//		}
-	//		catch (JSONException ex) {
-	//			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
-	//					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
-	//		}
-	//		return widgetScreenshotObj;
-	//	}
-
 	/**
 	 * Return simple JSON string for widget
 	 *
@@ -625,6 +607,26 @@ public class EntityJsonUtil
 		}
 		return categoryObj;
 	}
+
+	//	/**
+	//	 * Return simple JSON string for widget screen shot
+	//	 *
+	//	 * @param widgetScreenshot
+	//	 * @return
+	//	 * @throws JSONException
+	//	 */
+	//	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
+	//	{
+	//		JSONObject widgetScreenshotObj = new JSONObject();
+	//		try {
+	//			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
+	//		}
+	//		catch (JSONException ex) {
+	//			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
+	//					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
+	//		}
+	//		return widgetScreenshotObj;
+	//	}
 
 	private static JSONObject getFolderJsonObj(URI baseUri, Folder folder, String[] excludedFields, boolean isSimple,
 			boolean includeType) throws EMAnalyticsFwkException
@@ -760,5 +762,29 @@ public class EntityJsonUtil
 			LOGGER.error(new MessageFormatMessage("Invalid widget default width \"{}\" for widget id={}", param.getValue(),
 					search.getId()), e);
 		}
+	}
+
+	private static String handleDoubleQuotation(String value)
+	{
+		if (value == null) {
+			LOGGER.error("Handling Double Quotation in String,but String is null!");
+			return null;
+		}
+		StringBuilder sb=new StringBuilder();
+		if (value.contains("\"")) {
+			String[] array = value.split("\"");
+			for (String element : array) {
+				sb.append(element);
+				sb.append("\\\"");
+			}
+			if (!value.endsWith("\"")) {
+				sb.delete(sb.lastIndexOf("\\\""), sb.length());
+			}
+			return sb.toString();
+		}
+		return value;
+	}
+
+	private EntityJsonUtil() {
 	}
 }
