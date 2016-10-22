@@ -258,9 +258,7 @@ public class EntityJsonUtil
 		if (m.get("CATOGORY_NAME") != null) {
 			emSearch.setWidgetGroupName(m.get("CATOGORY_NAME").toString());
 		}
-		if (m.get("WIDGET_SCREENSHOT_HREF") != null) {
-			emSearch.setWidgetScreenshotHref(screenshotUrl);
-		}
+		emSearch.setWidgetScreenshotHref(screenshotUrl);
 		if (m.get("WIDGET_SUPPORT_TIME_CONTROL") != null) {
 			emSearch.setWidgetSupportTimeControl(m.get("WIDGET_SUPPORT_TIME_CONTROL").toString());
 		}
