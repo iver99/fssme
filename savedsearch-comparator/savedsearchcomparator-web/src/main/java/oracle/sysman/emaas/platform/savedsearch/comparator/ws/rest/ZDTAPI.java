@@ -29,9 +29,6 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.ro
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.ZDTTableRowEntity;
 
-/**
- * @author guochen
- */
 @Path("/v1/comparator")
 public class ZDTAPI
 {
@@ -141,7 +138,7 @@ public class ZDTAPI
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response compareOnDF()
+	public Response compareOnSSF()
 	{
 		logger.info("There is an incoming call from ZDT comparator API to compare");
 		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects, and return the counts for each instance
@@ -155,7 +152,7 @@ public class ZDTAPI
 	@PUT
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response syncOnDF()
+	public Response syncOnSSF()
 	{
 		logger.info("There is an incoming call from ZDT comparator API to sync");
 		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
