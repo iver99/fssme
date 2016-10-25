@@ -31,6 +31,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.eclipse.jetty.util.ajax.JSON;
@@ -63,6 +64,8 @@ public class SavedSearchAPITest {
     @Mocked
     CategoryManager categoryManager;
     @Mocked
+    DependencyStatus dependencyStatus;
+    @Mocked
     Throwable throwable;
     @BeforeMethod
     public void setUp(){
@@ -76,6 +79,8 @@ public class SavedSearchAPITest {
         for(int i=0;i<=3;i++)catList1.add(new CategoryImpl());
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 categoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getAllCategories();
@@ -91,6 +96,8 @@ public class SavedSearchAPITest {
         for(int i=0;i<=3;i++)catList2.add(new CategoryImpl());
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 categoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getAllCategories();
@@ -107,6 +114,8 @@ public class SavedSearchAPITest {
         for(int i=0;i<=3;i++)catList3.add(new CategoryImpl());
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 categoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getAllCategories();
@@ -126,6 +135,8 @@ public class SavedSearchAPITest {
         searchLists.add(new SearchImpl());
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = folderManager;
                 folderManager.getSubFolders(anyLong);
@@ -152,6 +163,8 @@ public class SavedSearchAPITest {
     public void testGetDetailsJSONException() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = new JSONException(throwable);
             }
@@ -163,6 +176,8 @@ public class SavedSearchAPITest {
     public void testGetDetailsEMAnalyticsFwkException() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = new EMAnalyticsFwkException(throwable);
             }
@@ -174,6 +189,8 @@ public class SavedSearchAPITest {
     public void testGetDetailsUnsupportedEncodingException() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = new UnsupportedEncodingException();
             }
@@ -194,6 +211,8 @@ public class SavedSearchAPITest {
         searchLists.add(new SearchImpl());
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = folderManager;
                 folderManager.getSubFolders(anyLong);
@@ -215,6 +234,8 @@ public class SavedSearchAPITest {
     public void testGetRootFoldersEMAnalyticsFwkException() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = new EMAnalyticsFwkException(throwable);
             }
@@ -225,6 +246,8 @@ public class SavedSearchAPITest {
     public void testGetRootFoldersException() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = new Exception(throwable);
             }

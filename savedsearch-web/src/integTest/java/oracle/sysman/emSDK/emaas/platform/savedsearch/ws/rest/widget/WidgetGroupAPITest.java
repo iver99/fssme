@@ -9,6 +9,7 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -34,7 +35,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 public class WidgetGroupAPITest
 {
 	private final WidgetGroupAPI widgetAPI = new WidgetGroupAPI();
-
+	@Mocked
+	DependencyStatus dependencyStatus;
 	@BeforeMethod
 	public void setUp() throws Exception
 	{
@@ -180,6 +182,8 @@ public class WidgetGroupAPITest
 
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				TenantSubscriptionUtil.getTenantSubscribedCategories(anyString, anyBoolean);
 				result = list;
 			}
@@ -289,6 +293,8 @@ public class WidgetGroupAPITest
 
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				TenantSubscriptionUtil.getTenantSubscribedCategories(anyString, anyBoolean);
 				result = new EMAnalyticsFwkException(new Throwable());
 			}
@@ -347,6 +353,8 @@ public class WidgetGroupAPITest
 
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				TenantSubscriptionUtil.getTenantSubscribedCategories(anyString, anyBoolean);
 				result = new Exception();
 			}
