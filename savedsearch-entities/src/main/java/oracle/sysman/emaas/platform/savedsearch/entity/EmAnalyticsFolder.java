@@ -39,8 +39,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)"),
 		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)") })
 //@SequenceGenerator(name = "EMS_ANALYTICS_FOLDERS_SEQ", sequenceName = "EMS_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
-@AdditionalCriteria("this.deleted = '0'")
-@QueryRedirectors(delete = EmAnalyticsFolderRedirector.class)
+//@AdditionalCriteria("this.deleted = '0'")
+//@QueryRedirectors(delete = EmAnalyticsFolderRedirector.class)
 public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
