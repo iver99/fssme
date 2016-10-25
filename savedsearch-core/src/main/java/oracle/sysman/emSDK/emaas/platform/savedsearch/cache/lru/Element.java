@@ -8,13 +8,11 @@ public class Element implements Serializable{
 	private  Object key;
     private  Object value;
     private transient long creationTime;
-	private transient long lastAccessTime;
     
     public Element(Object key, Object value){
     	this.key=key;
     	this.value=value;
     	this.creationTime=getCurrentTime();
-    	this.lastAccessTime=creationTime;
     }
 
 	/**
@@ -76,14 +74,6 @@ public class Element implements Serializable{
 		this.creationTime = creationTime;
 	}
 
-	public long getLastAccessTime() {
-		return lastAccessTime;
-	}
-
-	public void setLastAccessTime(long lastAccessTime) {
-		this.lastAccessTime = lastAccessTime;
-	}
-
 	/**
 	 * check if the element is exipired.
 	 * @param timeToLive
@@ -93,7 +83,7 @@ public class Element implements Serializable{
 		if(timeToLive <=0){
 			return false;//eternal cache
 		}
-		return getCurrentTime()-lastAccessTime>TimeUtil.toMillis(timeToLive);
+		return getCurrentTime()-creationTime>TimeUtil.toMillis(timeToLive);
 	}
     
     
