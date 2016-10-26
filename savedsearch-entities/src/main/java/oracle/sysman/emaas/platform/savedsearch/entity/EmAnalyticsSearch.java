@@ -52,8 +52,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 	@NamedQuery(name = "Search.getWidgetListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 AND e.isWidget = 1 AND (e.owner in (:userName) OR e.systemSearch =1) "),
 	@NamedQuery(name = "Search.getSearchListByTargetType", query = "SELECT e FROM EmAnalyticsSearch e WHERE e.name like :searchName AND (e.owner in (:userName) OR e.systemSearch =1) AND e.deleted=0") })
 //@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
-//@AdditionalCriteria("this.deleted = '0'")
-//@QueryRedirectors(delete = EmAnalyticsSearchRedirector.class)
+@AdditionalCriteria("this.deleted = '0'")
+@QueryRedirectors(delete = EmAnalyticsSearchRedirector.class)
 public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -169,12 +169,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	@Column(name = "PROVIDER_ASSET_ROOT")
 	private String PROVIDER_ASSET_ROOT;
 	
-	@Column(name = "FOLDER_ID")
-	private BigInteger folderId;
-	
-	@Column(name = "CATEGORY_ID")
-	private BigInteger categoryId;
-
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID"),
@@ -223,24 +217,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 			return null;
 		}
 		return lastAccess.getAccessDate();
-	}
-
-	public BigInteger getFolderId() {
-		return folderId;
-	}
-
-	public void setFolderId(BigInteger folderId) {
-		folderId = folderId;
-	}
-	
-	
-
-	public BigInteger getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(BigInteger categoryId) {
-		this.categoryId = categoryId;
 	}
 
 	public String getAccessedBy()

@@ -96,9 +96,11 @@ public class PersistenceManager
 	{
 		Map<String, String> emProperties = new HashMap<String, String>();
 		emProperties.put(TENANT_ID_STR, String.valueOf(value.getTenantInternalId()));
-		EntityManager em = emf.createEntityManager(emProperties);
+		return emf.createEntityManager(emProperties);
+		/*EntityManager em = emf.createEntityManager(emProperties);
 		em.setProperty("tenant.id", value.getTenantInternalId());
 		return em;
+		*/
 	}
 
 	public EntityManagerFactory getEntityManagerFactory()

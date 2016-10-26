@@ -36,6 +36,7 @@ public class EmAnalyticsCategoryParamRedirector implements QueryRedirector {
 				doq.setDescriptor(uoq.getDescriptor());
 				return uoq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			} else {
+			query.setDoNotRedirect(true);
 				return query.execute((AbstractSession) session, (AbstractRecord) arguments);
 			}
 			
@@ -60,6 +61,7 @@ public class EmAnalyticsCategoryParamRedirector implements QueryRedirector {
 			return rtn;
 		}
 		else {
+		query.setDoNotRedirect(true);
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);
 		}
 		*/

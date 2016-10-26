@@ -34,11 +34,13 @@ public class EmAnalyticsFolderRedirector implements QueryRedirector{
 				doq.setDescriptor(uoq.getDescriptor());
 				return uoq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			} else {
+				query.setDoNotRedirect(true);
 				return query.execute((AbstractSession) session, (AbstractRecord) arguments);
 			}
 			
 		}
-		else if (query.isInsertObjectQuery()) {
+	/*	It is impossible to insert the same row which against unique key by web service
+	 * else if (query.isInsertObjectQuery()) {
 			InsertObjectQuery ioq = (InsertObjectQuery) query;
 			EmAnalyticsFolder emObject = (EmAnalyticsFolder) ioq.getObject();
 
@@ -57,8 +59,9 @@ public class EmAnalyticsFolderRedirector implements QueryRedirector{
 			Object rtn = ioq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			cd.getQueryManager().setInsertQuery(old);
 			return rtn;
-		}
+		} */
 		else {
+			query.setDoNotRedirect(true);
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);
 		}
 	}
