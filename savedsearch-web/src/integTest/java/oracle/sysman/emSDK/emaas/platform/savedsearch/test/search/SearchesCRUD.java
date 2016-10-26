@@ -204,7 +204,7 @@ public class SearchesCRUD
 
 			.put("/search/100000000087?updateLastAccessTime=true");
 			Assert.assertEquals(res.asString(), "Invalid search id: 100000000087");
-			Assert.assertTrue(res.getStatusCode() == 404);
+			Assert.assertEquals(res.getStatusCode(), 404);
 
 	}
 

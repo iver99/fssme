@@ -807,7 +807,7 @@ public class SearchManagerImpl extends SearchManager
 		catch (Exception e) {
 			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
 			LOGGER.error("Invalid search id: " + searchId);
-			throw new EMAnalyticsFwkException("Invalid search id: " + searchId, EMAnalyticsFwkException.ERR_GENERIC, null, e);
+			throw new EMAnalyticsFwkException("Invalid search id: " + searchId, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null, e);
 		}
 		finally {
 			if (em != null) {
