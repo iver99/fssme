@@ -76,7 +76,7 @@ dependencies {
 
 
 
-	 testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name: 'emaas-platform-tenant-sdk', version: '1.0.+') {
+	 testConfig(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
       exclude group: 'emaas.platform', module: 'registry-lookup-client'
       exclude group: 'emaas.platform', module: 'registry-client'
   
