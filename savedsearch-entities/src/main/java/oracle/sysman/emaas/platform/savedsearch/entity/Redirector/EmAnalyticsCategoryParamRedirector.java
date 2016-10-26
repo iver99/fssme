@@ -24,7 +24,7 @@ public class EmAnalyticsCategoryParamRedirector implements QueryRedirector {
 		
 		/* comment out the implementation as currently we don't support create/delete category		
 		ClassDescriptor cd = session.getDescriptor(query.getReferenceClass());
-		Object permanant = session.getActiveSession().getProperty("soft.deletion.permanent");
+		Object permanant = session.getActiveSession().getProperty("permanent");
 		if (query.isDeleteObjectQuery()) {
 			if (!Boolean.TRUE.equals(permanant)) {
 				DeleteObjectQuery doq = (DeleteObjectQuery) query;

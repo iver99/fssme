@@ -22,7 +22,7 @@ public class EmAnalyticsFolderRedirector implements QueryRedirector{
 			Session session) {
 		
 		ClassDescriptor cd = session.getDescriptor(query.getReferenceClass());
-		Object permanant = session.getActiveSession().getProperty("soft.deletion.permanent");
+		Object permanant = session.getActiveSession().getProperty("permanent");
 		if (query.isDeleteObjectQuery()) {
 			if (!Boolean.TRUE.equals(permanant)) {
 				DeleteObjectQuery doq = (DeleteObjectQuery) query;

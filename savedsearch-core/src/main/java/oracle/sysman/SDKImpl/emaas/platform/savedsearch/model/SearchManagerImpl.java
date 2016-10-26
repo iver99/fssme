@@ -130,7 +130,7 @@ public class SearchManagerImpl extends SearchManager
 			searchObj.setDeleted(searchId);
 			searchObj.setLastModificationDate(DateUtil.getGatewayTime());
 			em.getTransaction().begin();
-			em.setProperty("soft.deletion.permanent", permanently);		
+			em.setProperty("permanent", permanently);		
 			if (permanently) {
 				em.remove(searchObj);
 			}
@@ -184,7 +184,7 @@ public class SearchManagerImpl extends SearchManager
 						}*/
 			targetCardObj.setDeleted(targetCardId);
 			em.getTransaction().begin();
-			em.setProperty("soft.deletion.permanent", permanently);			
+			em.setProperty("permanent", permanently);			
 			if (permanently) {
 				em.remove(targetCardObj);
 			}
