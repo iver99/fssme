@@ -11,15 +11,15 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache;
 
 
-import java.util.ResourceBundle;
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheUnit;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.Element;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * @author guochen
@@ -44,6 +44,7 @@ public class CacheManager
 	public static final String LOOKUP_CACHE_KEY_HOME_LINKS = "homeLinks";
 	public static final String LOOKUP_CACHE_KEY_VISUAL_ANALYZER = "visualAnalyzer";
 
+	private static transient long lastLogTime;
 	ResourceBundle conf = ResourceBundle.getBundle("cache_config");
 	private static CacheManager instance = new CacheManager();
 
@@ -56,6 +57,7 @@ public class CacheManager
 
 	private CacheManager()
 	{
+		lastLogTime=System.currentTimeMillis();
 		keyGen = new DefaultKeyGenerator();
 		LOGGER.info("Initialization LRU CacheManager!!");
 		CacheFactory.getCache(CACHES_LOOKUP_CACHE,Integer.valueOf(conf.getString("DEFAULT_CACHE_UNIT_CAPACITY")), Integer.valueOf(conf.getString("CACHES_LOOKUP_CACHE_EXPIRE_TIME")));
@@ -94,6 +96,7 @@ public class CacheManager
 
 	public Object getCacheable(Tenant tenant, String cacheName, Keys keys, ICacheFetchFactory ff) throws Exception
 	{
+		logCacheStatus();
 		CacheUnit cache = getInternalCache(cacheName);
 		if (cache == null) {
 			return null;
@@ -153,6 +156,7 @@ public class CacheManager
 
 	public Object putCacheable(Tenant tenant, String cacheName, Keys keys, Object value)
 	{
+		logCacheStatus();
 		CacheUnit cache = getInternalCache(cacheName);
 		if (cache == null) {
 			return null;
@@ -226,5 +230,21 @@ public class CacheManager
 			return null;
 		}
 		return cache;
+	}
+	/**
+	 * log out current cache group's cache status
+	 */
+	public void logCacheStatus(){
+		long now=System.currentTimeMillis();
+		//log every 5 mins
+		if(now-lastLogTime>= 5*60*1000L){
+			for(Map.Entry<String,CacheUnit> e: CacheFactory.getCacheUnitMap().entrySet()){
+				CacheUnit cu=e.getValue();
+				LOGGER.info("[Cache Status] Cache name is [{}], Cache capacity is [{}], Cache usage is [{}], Cache usage rate is [{}], " +
+								"Cache total request count is [{}], Cache hit count is [{}], Cache hit rate is [{}], Eviction Count is [{}]" ,cu.getName(),cu.getCacheUnitStatus().getUsage(),cu.getCacheUnitStatus().getUsageRate(),
+						cu.getCacheUnitStatus().getRequestCount(),cu.getCacheUnitStatus().getHitCount(),cu.getCacheUnitStatus().getHitRate(),cu.getCacheUnitStatus().getEvictionCount());
+			}
+			lastLogTime=now;
+		}
 	}
 }
