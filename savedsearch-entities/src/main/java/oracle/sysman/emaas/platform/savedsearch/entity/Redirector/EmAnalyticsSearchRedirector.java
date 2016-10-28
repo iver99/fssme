@@ -40,8 +40,7 @@ public class EmAnalyticsSearchRedirector implements QueryRedirector{
 			
 		}
 		
-	/*	It is impossible to insert the same row which against unique key by web service
-	  else if (query.isInsertObjectQuery()) {
+	else if (query.isInsertObjectQuery()) {
 			InsertObjectQuery ioq = (InsertObjectQuery) query;
 			EmAnalyticsSearch emObject = (EmAnalyticsSearch) ioq.getObject();
 			
@@ -61,7 +60,7 @@ public class EmAnalyticsSearchRedirector implements QueryRedirector{
 			Object rtn = ioq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			cd.getQueryManager().setInsertQuery(old);
 			return rtn;
-		} */
+		} 
 		else {
 			query.setDoNotRedirect(true);
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);
