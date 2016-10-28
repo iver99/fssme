@@ -41,13 +41,14 @@ public class EmAnalyticsSearchRedirector implements QueryRedirector{
 		}
 		
 	/*	It is impossible to insert the same row which against unique key by web service
-	 * else if (query.isInsertObjectQuery()) {
+	  else if (query.isInsertObjectQuery()) {
 			InsertObjectQuery ioq = (InsertObjectQuery) query;
 			EmAnalyticsSearch emObject = (EmAnalyticsSearch) ioq.getObject();
+			
 			UnitOfWork uow = session.acquireUnitOfWork();
 			String sql = "DELETE FROM EMS_ANALYTICS_FOLDERS p WHERE p.NAME='" + emObject.getName() 
-					+ "' AND p.FOLDER_ID='" + emObject.getFolderId()
-					+ "' AND p.CATEGORY_ID='" + emObject.getCategoryId()
+					+ "' AND p.FOLDER_ID='" + emObject.getEmAnalyticsFolder().getFolderId()
+					+ "' AND p.CATEGORY_ID='" + emObject.getEmAnalyticsCategory().getCategoryId()
 					+ "' AND p.OWNER='" + emObject.getOwner() + "' AND p.TENANT_ID='"
 					+ session.getActiveSession().getProperty("tenant.id") + "' AND p.DELETED='" + emObject.getId() + "'";
 			uow.executeNonSelectingCall(new SQLCall(sql));
