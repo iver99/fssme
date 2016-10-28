@@ -38,8 +38,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @NamedQueries({
 	@NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
 })
-//@AdditionalCriteria("this.deleted = '0'")
-//@QueryRedirectors(delete = EmAnalyticsSearchParamRedirector.class)
+@AdditionalCriteria("this.deleted = '0'")
+@QueryRedirectors(delete = EmAnalyticsSearchParamRedirector.class)
 public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
