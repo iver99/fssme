@@ -187,8 +187,8 @@ dependencies {
 		exclude group: 'emaas.platform', module: 'registry-client'
 	}*/
 	providedCompile getProjectArtifact('emaas-platform-tenant-sdk')
-
-	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
+	providedCompile getProjectArtifact('enunciate-core')
+	
 	
 	restDoc(
 		getProjectArtifact('enunciate-core-rt'),

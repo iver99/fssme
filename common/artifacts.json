@@ -279,5 +279,12 @@
 		"name": "jersey-servlet-1.17.1",
 		"version": "12.1.2-0-0",
 		"transitive": false
+	},
+
+	"enunciate-core": {
+		"group": "org.codehaus.enunciate",
+		"name": "enunciate-core",
+		"version": "1.28",
+		"transitive": false
 	}
 }
