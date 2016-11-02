@@ -13,14 +13,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
-import org.eclipse.persistence.jpa.JpaEntityManager;
-import org.eclipse.persistence.queries.DatabaseQuery;
-import org.eclipse.persistence.sessions.DatabaseRecord;
-import org.eclipse.persistence.sessions.Session;
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
@@ -40,15 +32,20 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetDeletionNotification;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotificationType;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
+import org.eclipse.persistence.jpa.JpaEntityManager;
+import org.eclipse.persistence.queries.DatabaseQuery;
+import org.eclipse.persistence.sessions.DatabaseRecord;
+import org.eclipse.persistence.sessions.Session;
 
 public class SearchManagerImpl extends SearchManager
 {
@@ -653,6 +650,64 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Search> getSearchListByIds(List<Long> ids) throws EMAnalyticsFwkException
+	{
+		List<Search> resultList = new ArrayList<Search>();
+		if(ids == null || ids.isEmpty()) {
+			return resultList;
+		}
+		
+		EntityManager em = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			List<EmAnalyticsSearch> searchList = em.createNamedQuery("Search.getSearchListByIds")
+					.setParameter("ids", ids).getResultList();
+			for (EmAnalyticsSearch searchObj : searchList) {
+				resultList.add(createWidgetObject(searchObj, false));
+			}
+		} catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			LOGGER.error("Error while retrieving the list of search by id list : " + ids, e);
+			throw new EMAnalyticsFwkException("Error while retrieving the list of search by id list : " + ids,
+					EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null, e);
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		return resultList;
+	}
+	
+	@Override
+	public int updateLastAccessDate(List<Long> ids) throws EMAnalyticsFwkException {
+		if(ids == null || ids.isEmpty()) {
+			return 0;
+		}
+		EntityManager em = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			em.getTransaction().begin();
+			int updatedNum = em.createNamedQuery("LastAccess.updateLastAccessByIds")
+					.setParameter("accessDate", DateUtil.getCurrentUTCTime())
+					.setParameter("ids", ids)
+					.setParameter("accessedBy", TenantContext.getContext().getUsername())
+					.executeUpdate();
+			em.getTransaction().commit();
+			return updatedNum;
+		} catch (Exception e) {
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			LOGGER.error("Error while updating last access date by search id list : " + ids, e);
+			throw new EMAnalyticsFwkException("Error while updating last access date by search id list : " + ids,
+					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, e);
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	/* (non-Javadoc)

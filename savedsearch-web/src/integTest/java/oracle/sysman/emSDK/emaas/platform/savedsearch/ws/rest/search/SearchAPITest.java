@@ -6,13 +6,6 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
@@ -31,6 +24,13 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
+
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * Created by xidai on 2/24/2016.
@@ -987,5 +987,29 @@ public class SearchAPITest {
             }
         };
         api.deleteSearchByName("searchName", "true");
+    }
+    
+    @SuppressWarnings("unchecked")
+	@Test
+    public void testGetSearchList() throws JSONException, EMAnalyticsFwkException {
+		final List<Search> realList = new ArrayList<Search>();
+		realList.add(new SearchImpl());
+        new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchListByIds((List<Long>) any);
+                result = realList;
+            }
+        };
+        Assert.assertEquals(api.getSearchList(null).getStatus(), 404);
+        JSONArray wrongJson = new JSONArray();
+        wrongJson.put("abc");
+        Assert.assertEquals(api.getSearchList(wrongJson).getStatus(), 404);
+    	JSONArray inputJson = new JSONArray();
+    	inputJson.put(1234L);
+        Assert.assertNotNull(api.getSearchList(inputJson));
     }
 }
