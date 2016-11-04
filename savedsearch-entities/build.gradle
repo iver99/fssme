@@ -18,7 +18,7 @@ dependencies {
 	compile getProjectArtifact('eclipselink')
 	compile getProjectArtifact('jackson-core-asl')
 	compile getProjectArtifact('jmockit')
-	compile configurations.testNG
+	//compile configurations.testNG
 }
 
 /*
@@ -60,6 +60,7 @@ sourceSets {
                         srcDirs = ['src/integTest/java']
                 }
                 resources.srcDirs = ['src/integTest/java']
+                compileClasspath = compileClasspath + configurations.testNG
         }
 }
 
