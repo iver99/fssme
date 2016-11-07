@@ -170,7 +170,6 @@ subprojects {
 } 
 
 configurations {
-  testNG
   prebuild_log4j { transitive = false }
   prebuild_tenant_sdk { transitive = false }
 	prebuild_toplink { transitive = false }
@@ -234,7 +233,6 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_junit
    from configurations.prebuild_apacheHttp
    from configurations.prebuild_jaxrs
-   from configurations.testNG
    from configurations.prebuild_wlfullc
    from configurations.prebuild_cache
    from configurations.prebuild_integtest

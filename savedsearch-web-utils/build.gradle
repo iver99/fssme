@@ -7,11 +7,15 @@ jar {
 }
  
 sourceSets {
+	main {
+		compileClasspath += configurations.restAssured
+	}
 	test{
 		java {
 			srcDirs = ['src/integTest/java']
 		}
 		resources.srcDirs = ['src/integTest/java']
+		compileClasspath += configurations.testNG + configurations.restAssured
 	}
 }
 publishing.publications {
@@ -42,6 +46,7 @@ dependencies {
 	testCompile getProjectArtifact('jmockit')
 } 
 test {
+        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
         useTestNG()
         {
                 //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
@@ -51,3 +56,8 @@ test {
 }
 build.dependsOn integTestJar
 
+eclipse {
+    classpath {
+        plusConfigurations += configurations.restAssured //avoid building error in Eclipse
+    }
+}

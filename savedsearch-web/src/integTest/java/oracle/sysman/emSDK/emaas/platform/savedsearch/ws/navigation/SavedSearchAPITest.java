@@ -8,15 +8,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -30,11 +25,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
-
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.ajax.JSON;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -81,7 +75,7 @@ public class SavedSearchAPITest {
             {
                 dependencyStatus.isDatabaseUp();
                 result = true;
-                categoryManager.getInstance();
+                CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getAllCategories();
                 returns(catList1);
@@ -98,7 +92,7 @@ public class SavedSearchAPITest {
             {
                 dependencyStatus.isDatabaseUp();
                 result = true;
-                categoryManager.getInstance();
+                CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getAllCategories();
                 result = new EMAnalyticsFwkException(throwable);
@@ -116,7 +110,7 @@ public class SavedSearchAPITest {
             {
                 dependencyStatus.isDatabaseUp();
                 result = true;
-                categoryManager.getInstance();
+                CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getAllCategories();
                 result = new  Exception(throwable);
@@ -145,7 +139,7 @@ public class SavedSearchAPITest {
                 result = searchManager;
                 searchManager.getSearchListByFolderId(anyLong);
                 result = searchLists;
-                entityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
+                EntityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
                 result = new JSONObject();
                 EntityJsonUtil.getSimpleSearchJsonObj((URI)any, (Search)any, null, true);
                 result = new JSONObject();
@@ -221,7 +215,7 @@ public class SavedSearchAPITest {
                 result = searchManager;
                 searchManager.getSearchListByFolderId(anyLong);
                 result = searchLists;
-                entityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
+                EntityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
                 result = new JSONObject();
                 EntityJsonUtil.getSimpleSearchJsonObj((URI)any, (Search)any, null, true);
                 result = new JSONObject();

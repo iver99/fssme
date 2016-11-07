@@ -42,10 +42,6 @@ dependencies {
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: regLookupClientVer){transitive = false}
         compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
     testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-        
-	compile configurations.restAssured
-	compile configurations.testNG
-	compile configurations.webdriver
 }
 
 
