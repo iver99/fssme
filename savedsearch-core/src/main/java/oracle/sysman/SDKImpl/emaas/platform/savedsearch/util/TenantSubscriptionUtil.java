@@ -138,7 +138,7 @@ public class TenantSubscriptionUtil
 		Tenant cacheTenant = new Tenant(tenant);
 		List<String> cachedApps;
 		try {
-			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE,
+			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 		}
 		catch (Exception e) {
@@ -227,7 +227,7 @@ public class TenantSubscriptionUtil
 			List<String> origAppsList = Arrays.asList(apps
 					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
 			//put into cache
-			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
+			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
 					origAppsList);
 			LOGGER.debug(
 					"Store subscribed apps for tenant {} to subscribe cache: "
