@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
 
+import java.text.DecimalFormat;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,17 +71,39 @@ public class CacheUnitStatus {
      * get cache groups hit rate
      * @return
      */
-    public Double getHitRate(){
-        return (double) (hitCount / requestCount);
-        //TODO change to percentage later
+    public String getHitRate(){
+    	if(hitCount==0 || requestCount ==0){
+    		return "0.0%";
+    	}
+    	if(hitCount<0 ){
+    		LOGGER.error("Cache hit count cannot below 0!");
+    		this.setHitCount(0L);
+    	}
+    	if(requestCount<0){
+    		LOGGER.error("Cache request count cannot below 0!");
+    		this.setRequestCount(0L);
+    	}
+    	DecimalFormat df=new DecimalFormat(".##");
+		String st=df.format(1.0*hitCount/requestCount);
+		double result=Double.valueOf(st)*100;
+        return result+"%";
     }
 
     /**
      * get cache groups usage rate
      * @return
      */
-    public Double getUsageRate(){
-        return (double) (usage / capacity);
-        //TODO change to percentage later
+    public String getUsageRate(){
+    	if(usage==0 || capacity ==0){
+    		return "0.0%";
+    	}
+    	if(usage<0){
+    		LOGGER.error("Cache usage count cannot below 0!");
+    		this.setUsage(0);
+    	}
+    	DecimalFormat df=new DecimalFormat(".##");
+		String st=df.format(1.0*usage/capacity);
+		double result=Double.valueOf(st)*100;
+        return result+"%";
     }
 }
