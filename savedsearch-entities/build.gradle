@@ -71,8 +71,8 @@ test {
                 //if you wish to run ALL tests within this projet - remove following.
                 includeGroups 's1' ,'s2'
         }
-build.dependsOn integTestJar
 }
+build.dependsOn integTestJar
 
 eclipse {
     classpath {
