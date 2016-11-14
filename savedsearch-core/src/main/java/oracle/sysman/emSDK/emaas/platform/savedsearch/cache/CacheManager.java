@@ -11,14 +11,15 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache;
 
 
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.CacheUnit;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.Element;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * @author guochen
@@ -52,6 +53,7 @@ public class CacheManager
 	public static final String LOOKUP_CACHE_KEY_HOME_LINKS = "homeLinks";
 	public static final String LOOKUP_CACHE_KEY_VISUAL_ANALYZER = "visualAnalyzer";
 
+	private static transient long lastLogTime;
 	private static CacheManager instance = new CacheManager();
 
 	public static CacheManager getInstance()
@@ -63,6 +65,7 @@ public class CacheManager
 
 	private CacheManager()
 	{
+		lastLogTime=System.currentTimeMillis();
 		keyGen = new DefaultKeyGenerator();
 		LOGGER.info("Initialization LRU CacheManager!!");
 		CacheFactory.getCache(CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
@@ -109,6 +112,7 @@ public class CacheManager
 
 	public Object getCacheable(Tenant tenant, String cacheName, Keys keys, ICacheFetchFactory ff) throws Exception
 	{
+		logCacheStatus();
 		CacheUnit cache = getInternalCache(cacheName);
 		if (cache == null) {
 			return null;
@@ -168,6 +172,7 @@ public class CacheManager
 
 	public Object putCacheable(Tenant tenant, String cacheName, Keys keys, Object value)
 	{
+		logCacheStatus();
 		CacheUnit cache = getInternalCache(cacheName);
 		if (cache == null) {
 			return null;
@@ -241,5 +246,34 @@ public class CacheManager
 			return null;
 		}
 		return cache;
+	}
+	/**
+	 * log out current cache group's cache status
+	 */
+	public void logCacheStatus(){
+		long now=System.currentTimeMillis();
+		long logInterval=CacheConfig.LOG_INTERVAL;
+		if(now-lastLogTime>= logInterval){
+			for(Map.Entry<String,CacheUnit> e: CacheFactory.getCacheUnitMap().entrySet()){
+				CacheUnit cu=e.getValue();
+				LOGGER.info("[Cache Status] Cache name is [{}], "
+						+ "Cache capacity is [{}], "
+						+ "Cache usage is [{}], "
+						+ "Cache usage rate is [{}], " +
+						"Cache total request count is [{}], "
+						+ "Cache hit count is [{}], "
+						+ "Cache hit rate is [{}], "
+						+ "Eviction Count is [{}]" ,
+								cu.getName(),
+								cu.getCacheCapacity(),
+								cu.getCacheUnitStatus().getUsage(),
+								cu.getCacheUnitStatus().getUsageRate(),
+								cu.getCacheUnitStatus().getRequestCount(),
+								cu.getCacheUnitStatus().getHitCount(),
+								cu.getCacheUnitStatus().getHitRate(),
+								cu.getCacheUnitStatus().getEvictionCount());
+			}
+			lastLogTime=now;
+		}
 	}
 }
