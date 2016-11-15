@@ -5,14 +5,24 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.UriInfo;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
 
@@ -22,8 +32,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by xidai on 2/24/2016.
@@ -50,6 +58,8 @@ public class SearchAPITest {
     OdsDataService odsDataService;
     @Mocked
     OdsDataServiceImpl odsDataServiceImpl;
+    @Mocked
+    DependencyStatus dependencyStatus;
     @Test
     public void testCreateSearch() throws JSONException {
         JSONObject inputJson = new JSONObject();
@@ -75,6 +85,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -106,6 +118,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -137,6 +151,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -168,6 +184,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
        new Expectations(){
            {
+               dependencyStatus.isDatabaseUp();
+               result = true;
                SearchManager.getInstance();
                result = searchManager;
            }
@@ -199,6 +217,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -230,6 +250,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -262,6 +284,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -294,6 +318,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -325,6 +351,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -356,6 +384,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -388,6 +418,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -419,6 +451,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -451,6 +485,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.saveSearch(withAny(search));
@@ -492,6 +528,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.saveSearch(withAny(search));
@@ -505,6 +543,8 @@ public class SearchAPITest {
     public void testDeleteSearch() throws JSONException, EMAnalyticsFwkException {
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.deleteSearch((BigInteger)any, anyBoolean);
@@ -520,6 +560,8 @@ public class SearchAPITest {
     public void testDeleteSearch2nd() throws JSONException, EMAnalyticsFwkException {
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.deleteSearch((BigInteger)any, anyBoolean);
@@ -558,6 +600,8 @@ public class SearchAPITest {
 
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.getSearch((BigInteger)any);
@@ -594,6 +638,8 @@ public class SearchAPITest {
 
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.getSearch((BigInteger)any);
@@ -631,6 +677,8 @@ public class SearchAPITest {
 
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.getSearch((BigInteger)any);
@@ -666,6 +714,8 @@ public class SearchAPITest {
         inputJson.put("parameters",parameter);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.getSearch((BigInteger)any);
@@ -700,6 +750,8 @@ public class SearchAPITest {
 
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.getSearch((BigInteger)any);
@@ -718,6 +770,8 @@ public class SearchAPITest {
     public void testEditSearchAccessDate2nd() throws JSONException {
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 uriInfo.getRequestUri();
                 result = uri;
                 uri.getQuery();
@@ -755,6 +809,8 @@ public class SearchAPITest {
     public void testEditSearchAccessDateEMAnalyticsFwkException() throws JSONException {
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 uriInfo.getRequestUri();
                 result = uri;
                 uri.getQuery();
@@ -792,6 +848,8 @@ public class SearchAPITest {
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -806,6 +864,8 @@ public class SearchAPITest {
         }
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
             }
@@ -821,6 +881,8 @@ public class SearchAPITest {
         }
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 FolderManager.getInstance();
@@ -839,6 +901,8 @@ public class SearchAPITest {
     public void testCreateOdsEntity() throws JSONException, EMAnalyticsFwkException {
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.getSearch((BigInteger)any);
@@ -870,6 +934,8 @@ public class SearchAPITest {
     public void testGetAssetRoot() throws JSONException, EMAnalyticsFwkException {
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 searchManager.getSearch((BigInteger)any);
                 result = search;
                 categoryManager.getCategory((BigInteger)any);
@@ -902,6 +968,8 @@ public class SearchAPITest {
         api.deleteSearchByName("searchName", "a");
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.deleteSearchByName(anyString, anyBoolean);
@@ -916,6 +984,8 @@ public class SearchAPITest {
     public void testDeleteSearchNameEMAnalyticsFwkException() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 searchManager.deleteSearchByName(anyString, anyBoolean);
@@ -923,5 +993,29 @@ public class SearchAPITest {
             }
         };
         api.deleteSearchByName("searchName", "true");
+    }
+    
+    @SuppressWarnings("unchecked")
+	@Test
+    public void testGetSearchList() throws JSONException, EMAnalyticsFwkException {
+		final List<Search> realList = new ArrayList<Search>();
+		realList.add(new SearchImpl());
+        new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchListByIds((List<BigInteger>) any);
+                result = realList;
+            }
+        };
+        Assert.assertEquals(api.getSearchList(null).getStatus(), 404);
+        JSONArray wrongJson = new JSONArray();
+        wrongJson.put("abc");
+        Assert.assertEquals(api.getSearchList(wrongJson).getStatus(), 404);
+    	JSONArray inputJson = new JSONArray();
+    	inputJson.put(1234L);
+        Assert.assertNotNull(api.getSearchList(inputJson));
     }
 }

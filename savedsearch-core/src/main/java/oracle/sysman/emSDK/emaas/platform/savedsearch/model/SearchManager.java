@@ -217,4 +217,20 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract String getSearchParamByName(BigInteger searchId, String paramName) throws EMAnalyticsFwkException;
+	
+	/**
+	 * get search list by a list of id
+	 * @param widgetIds
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract List<Search> getSearchListByIds(List<BigInteger> ids) throws EMAnalyticsFwkException;
+	
+	/**
+	 * update last access of searches by a list of id
+	 * @param ids
+	 * @return how many rows has been updated
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract int updateLastAccessDate(List<BigInteger> ids) throws EMAnalyticsFwkException;
 }

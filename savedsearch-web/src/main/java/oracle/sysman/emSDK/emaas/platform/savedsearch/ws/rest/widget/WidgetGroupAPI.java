@@ -15,10 +15,12 @@ import javax.ws.rs.core.UriInfo;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -91,6 +93,9 @@ public class WidgetGroupAPI
 		int statusCode = 200;
 
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			String query = uri.getRequestUri().getQuery();
 
 			if (query != null) {

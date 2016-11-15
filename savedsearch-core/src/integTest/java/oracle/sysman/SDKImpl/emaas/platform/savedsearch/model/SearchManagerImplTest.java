@@ -32,6 +32,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -355,6 +356,121 @@ public class SearchManagerImplTest
 			}
 		};
 		searchManager.getSearch(TEST_ID);
+	}
+	
+	@Test
+	public void testUpdateLastAccessDate() throws EMAnalyticsFwkException
+	{
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				entityManager.getTransaction().begin();
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, any);
+				result = query;
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getUsername();
+				result = "userName";
+				query.executeUpdate();
+				result = 1;
+				entityManager.getTransaction().commit();
+			}
+		};
+		
+		int result1 = searchManager.updateLastAccessDate(null);
+		Assert.assertEquals(result1, 0);
+		List<BigInteger> ids = new ArrayList<BigInteger>();
+		int result2 = searchManager.updateLastAccessDate(ids);
+		Assert.assertEquals(result2, 0);
+		ids.add(BigInteger.valueOf(1234L));
+		int result3 = searchManager.updateLastAccessDate(ids);
+		Assert.assertEquals(result3, 1);
+	}
+	
+	@Test (expectedExceptions = { EMAnalyticsFwkException.class })
+	public void testUpdateLastAccessDateException() throws EMAnalyticsFwkException
+	{
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				entityManager.getTransaction().begin();
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, any);
+				result = query;
+				TenantContext.getContext();
+				result = tenantInfo;
+				tenantInfo.getUsername();
+				result = "userName";
+				query.executeUpdate();
+				result = new Exception(throwable);
+			}
+		};
+		
+		List<BigInteger> ids = new ArrayList<BigInteger>();
+		ids.add(BigInteger.valueOf(1234L));
+		searchManager.updateLastAccessDate(ids);
+	}
+	
+	@Test
+	public void testGetSearchListByIds() throws EMAnalyticsFwkException
+	{
+		final List<EmAnalyticsSearch> realList = new ArrayList<EmAnalyticsSearch>();
+		realList.add(new EmAnalyticsSearch());
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, any);
+				result = query;
+				query.getResultList();
+				result = realList;
+				
+			}
+		};
+		
+		List<Search> list1 = searchManager.getSearchListByIds(null);
+		Assert.assertEquals(list1.size(), 0);
+		List<BigInteger> ids = new ArrayList<BigInteger>();
+		List<Search> list2 = searchManager.getSearchListByIds(ids);
+		Assert.assertEquals(list2.size(), 0);
+		ids.add(BigInteger.valueOf(1234L));
+		searchManager.getSearchListByIds(ids);
+	}
+	
+	@Test (expectedExceptions = { EMAnalyticsFwkException.class })
+	public void testGetSearchListByIdsException() throws EMAnalyticsFwkException
+	{
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo) any);
+				result = entityManager;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, any);
+				result = query;
+				query.getResultList();
+				result = new Exception(throwable);
+			}
+		};
+		
+		List<BigInteger> ids = new ArrayList<BigInteger>();
+		ids.add(BigInteger.valueOf(1234L));
+		searchManager.getSearchListByIds(ids);
 	}
 
 	@Test

@@ -1,8 +1,8 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
 
 
-import java.util.ResourceBundle;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheConfig;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.inter.ICacheUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,11 +17,12 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 	private final int timeToLive;
 	private int cacheCapacity;
 	private String name;
+	private CacheUnitStatus cacheUnitStatus;
 	
 	//constant
 	private final static int DEFAULT_TIME_TO_LIVE=0;// means live forever
 	private final static String DEFAULT_CACHE_UNIT_NAME="default_cache_unit";
-	public static final int DEFAULT_CACHE_CAPACITY=Integer.valueOf(ResourceBundle.getBundle("cache_config").getString("DEFAULT_CACHE_UNIT_CAPACITY"));//default capacity is 500
+	public static final int DEFAULT_CACHE_CAPACITY= CacheConfig.DEFAULT_CAPACITY;
 	//constructor
 	public CacheUnit(){
 		this(DEFAULT_CACHE_UNIT_NAME,DEFAULT_CACHE_CAPACITY,DEFAULT_TIME_TO_LIVE);
@@ -47,7 +48,8 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 		this.timeToLive=timeToLive;
 		this.cacheCapacity=capacity;
 		this.cacheLinkedHashMap=new CacheLinkedHashMap<String, Element>(capacity);
-
+		this.cacheUnitStatus=new CacheUnitStatus(capacity);
+		LOGGER.debug("Creating a CacheUnit named {} and expiration time is {} and capacity is {}"+name,timeToLive,capacity);
 	}
 	
 	
@@ -61,15 +63,17 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:value cannot be null!");
 			throw new IllegalArgumentException("cannot put into CacheUnit:value cannot be null!");
 		}
-		value.setLastAccessTime(getCurrentTime());
 		cacheLinkedHashMap.put(key, value);
+		this.cacheUnitStatus.setUsage(this.cacheUnitStatus.getUsage()+1);
 		return true;
 		
 	}
 	
 	@Override
 	public boolean remove(String key){
-			return cacheLinkedHashMap.remove(key) == null?false:true;
+		this.cacheUnitStatus.setUsage(this.cacheUnitStatus.getUsage()-1);
+		this.cacheUnitStatus.setEvictionCount(this.cacheUnitStatus.getEvictionCount()+1);
+		return cacheLinkedHashMap.remove(key) != null;
 		
 	}
 	@Override
@@ -83,13 +87,12 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 	 * @return
 	 */
 	private Object getElementValue(String key) {
+		this.cacheUnitStatus.setRequestCount(this.cacheUnitStatus.getRequestCount()+1);
 		if (key == null) {
-			LOGGER.debug("CacheUnit:key is null,returning null...");
 			return null;
 		}
 		Element e = (Element) cacheLinkedHashMap.get(key);
 		if (e == null) {
-			LOGGER.debug("CacheUnit:Element is null,returning null...");
 			return null;
 		}
 		if(e.isExpired(timeToLive)){
@@ -97,18 +100,14 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 			LOGGER.debug("CacheUnit:The Element is expired,removing it from cache unit..");
 			cacheLinkedHashMap.remove(key);
 			LOGGER.debug("CacheUnit:Element is null,returning null...");
+			this.cacheUnitStatus.setUsage(this.cacheUnitStatus.getUsage()-1);
+			this.cacheUnitStatus.setEvictionCount(this.cacheUnitStatus.getEvictionCount()+1);
 			return null;
 		}
-		e.setLastAccessTime(getCurrentTime());
-		//update action(last access time is updated)
-		cacheLinkedHashMap.putWithoutLock(key, e);
-		LOGGER.debug("CacheUnit:Get element from cache successful,and element has been updated!");
+		this.cacheUnitStatus.setHitCount(this.cacheUnitStatus.getHitCount()+1);
 		return e.getValue();
 	}
 
-	private long getCurrentTime() {
-		return System.currentTimeMillis();
-	}
 	public String getName() {
 		return name;
 	}
@@ -134,14 +133,16 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 	}
 	
 	public boolean isEmpty(){
-		return this.cacheLinkedHashMap.getCacheMap().isEmpty()?true:false;
+		return this.cacheLinkedHashMap.getCacheMap().isEmpty();
 	}
 
 	@Override
 	public void clearCache() {
 		cacheLinkedHashMap.clear();
 	}
-	
+	public CacheUnitStatus getCacheUnitStatus() {
+		return cacheUnitStatus;
+	}
 	
 	
 	

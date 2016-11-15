@@ -14,11 +14,10 @@ jar {
 }
 
 dependencies {
-	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5'){transitive = false}
-	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2') {transitive = false}
-	compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13')  { transitive = false }
-	testCompile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-	compile configurations.testNG
+	compile getProjectArtifact('javax.persistence')
+	compile getProjectArtifact('eclipselink')
+	compile getProjectArtifact('jackson-core-asl')
+	compile getProjectArtifact('jmockit')
 }
 
 /*
@@ -60,15 +59,24 @@ sourceSets {
                         srcDirs = ['src/integTest/java']
                 }
                 resources.srcDirs = ['src/integTest/java']
+                compileClasspath += configurations.testNG
         }
 }
 
 test {
+    classpath = sourceSets.test.compileClasspath  + sourceSets.test.output
         useTestNG()
         {
                 //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
                 //if you wish to run ALL tests within this projet - remove following.
                 includeGroups 's1' ,'s2'
         }
-build.dependsOn integTestJar}
+}
+build.dependsOn integTestJar
+
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}
 

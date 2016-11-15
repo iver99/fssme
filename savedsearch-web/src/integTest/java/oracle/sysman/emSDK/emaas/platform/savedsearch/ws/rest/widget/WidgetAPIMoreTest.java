@@ -24,6 +24,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.testng.annotations.Test;
 
 
@@ -37,12 +38,15 @@ public class WidgetAPIMoreTest
 	private static final BigInteger TEST_ID_1234 = new BigInteger("1234");
 	WidgetAPI widgetAPI;
 	Date now = new Date();
-
+	@Mocked
+	DependencyStatus dependencyStatus;
 	@Test(groups = { "s2" })
 	public void testCheckQueryParamGroupIdLessThen0(@Mocked final UriInfo uriInfo, @Mocked final URI uri)
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -58,6 +62,8 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -73,6 +79,8 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -88,6 +96,8 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -103,6 +113,8 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -127,6 +139,8 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -155,6 +169,8 @@ public class WidgetAPIMoreTest
 		widgetList.add(new WidgetImpl());
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -186,6 +202,8 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -201,6 +219,8 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -216,6 +236,8 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -240,6 +262,8 @@ public class WidgetAPIMoreTest
 		widgetList.add(new WidgetImpl());
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -271,6 +295,8 @@ public class WidgetAPIMoreTest
 	{
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				uriInfo.getRequestUri();
 				result = uri;
 				uri.getQuery();
@@ -335,6 +361,8 @@ public class WidgetAPIMoreTest
 				) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				SearchManager.getInstance();
 				result = searchManager;
 			}
@@ -349,6 +377,8 @@ public class WidgetAPIMoreTest
 													 @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -365,6 +395,8 @@ public class WidgetAPIMoreTest
 													 @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -381,6 +413,8 @@ public class WidgetAPIMoreTest
 												  @Mocked SearchManager searchManager, @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -398,6 +432,8 @@ public class WidgetAPIMoreTest
 																		 @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -415,6 +451,8 @@ public class WidgetAPIMoreTest
 														   @Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
@@ -432,6 +470,8 @@ public class WidgetAPIMoreTest
 														@Mocked final SearchManagerImpl searchManagerImpl) throws EMAnalyticsFwkException {
 		new Expectations() {
 			{
+				dependencyStatus.isDatabaseUp();
+				result = true;
 				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;

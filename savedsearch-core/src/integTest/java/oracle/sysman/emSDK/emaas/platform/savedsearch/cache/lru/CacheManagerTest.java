@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 public class CacheManagerTest
 {
-	@Test
+	/*@Test
 	public void testCacheExpires() throws Exception
 	{
 		String putValue = "value";
@@ -22,7 +22,7 @@ public class CacheManagerTest
 		Thread.sleep(8500);
 		value = (String) cm.getCacheable("lookupCache", new Keys("test"));
 		Assert.assertNull(value);
-	}
+	}*/
 
 	/*@Test
 	public void testNotExistsCache()

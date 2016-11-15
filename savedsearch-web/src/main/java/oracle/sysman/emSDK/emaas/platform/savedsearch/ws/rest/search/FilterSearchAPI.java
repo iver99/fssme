@@ -15,6 +15,7 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -23,6 +24,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -271,6 +273,9 @@ public class FilterSearchAPI
 		List<Search> searchList = new ArrayList<Search>();
 
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			// just for checking whether category with given Id exist or not
 			catMan.getCategory(catId);
 			searchList = searchMan.getSearchListByCategoryId(catId);
@@ -310,6 +315,9 @@ public class FilterSearchAPI
 		List<Search> searchList = new ArrayList<Search>();
 
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			// just for checking whether folder with given Id exist or not
 			foldMan.getFolder(foldId);
 			searchList = searchMan.getSearchListByFolderId(foldId);
@@ -341,6 +349,9 @@ public class FilterSearchAPI
 		String message = "";
 		ArrayNode jsonArray = new ObjectMapper().createArrayNode();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			List<Search> searchList = SearchManager.getInstance().getSearchListByLastAccessDate(count);
 			for (Search searchObj : searchList) {
 				FolderManager folderMgr = FolderManager.getInstance();

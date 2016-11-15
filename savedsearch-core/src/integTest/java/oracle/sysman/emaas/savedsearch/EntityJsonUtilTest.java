@@ -332,39 +332,13 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertEquals(model.getProviderName(), "TestProviderName");
 		Assert.assertEquals(model.getProviderVersion(), "TestProviderVersion");
 		Assert.assertEquals(model.getProviderAssetRoot(), "TestProviderAssetRoot");
+		//test widget screenshot href
+		Assert.assertEquals(model.getWidgetScreenshotHref(), "testScreenshotUrl");
+		model = EntityJsonUtil.getJsonModel(m, null);
+		Assert.assertEquals(model.getWidgetScreenshotHref(), null);
 		
-		/*final String verifyString1 = "\"WIDGET_UNIQUE_ID\":1000";
-		final String verifyString2 = "\"WIDGET_KOC_NAME\":\"TestKOC\"";
-		final String verifyString3 = "\"WIDGET_VIEWMODEL\":\"TestViewModel\"";
-		final String verifyString4 = "\"WIDGET_TEMPLATE\":\"TestTemplate\"";
-		final String verifyString5 = "\"WIDGET_LINKED_DASHBOARD\":\"1\"";
-		final String verifyString6 = "\"WIDGET_DEFAULT_WIDTH\":\"1\"";
-		final String verifyString7 = "\"WIDGET_DEFAULT_HEIGHT\":\"1\"";
-		final String verifyString8 = "\"DASHBOARD_INELIGIBLE\":\"1\"";
-		final String verifyString9 = "\"WIDGET_NAME\":\"TestName\"";
-		final String verifyString10 = "\"WIDGET_DESCRIPTION\":\"TestDesc\"";
-		final String verifyString11 = "\"WIDGET_OWNER\":\"Test\"";
-		final String verifyString14 = "\"PROVIDER_NAME\":\"TestProviderName\"";
-		final String verifyString15 = "\"PROVIDER_VERSION\":\"TestProviderVersion\"";
-		final String verifyString16 = "\"PROVIDER_ASSET_ROOT\":\"TestProviderAssetRoot\"";
-		
-		Assert.assertNotNull(result);
-		Assert.assertTrue(result.contains(verifyString1), verifyString1 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString2), verifyString2 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString3), verifyString3 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString4), verifyString4 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString5), verifyString5 + " is found unexpected");
-		Assert.assertTrue(result.contains(verifyString6), verifyString6 + " is found unexpected");
-		Assert.assertTrue(result.contains(verifyString7), verifyString7 + " is found unexpected");
-		Assert.assertTrue(result.contains(verifyString8), verifyString8 + " is found unexpected");
-		Assert.assertTrue(result.contains(verifyString9), verifyString9 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString10), verifyString10 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString11), verifyString11 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString14), verifyString14 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString15), verifyString15 + " is NOT found as expected");
-		Assert.assertTrue(result.contains(verifyString16), verifyString16 + " is NOT found as expected");*/
 	}
-
+	
 	@Test(groups = { "s1" })
 	public void testGetSimpleCategoryObj()
 			throws EMAnalyticsFwkException, MalformedURLException, URISyntaxException
