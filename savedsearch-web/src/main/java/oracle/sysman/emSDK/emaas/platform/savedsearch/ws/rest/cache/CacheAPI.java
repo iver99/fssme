@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by chehao on 2016/11/10.
  * emcpssf409 introduce internal API to change server side cache settings
  */
-@Path("/v1/cache")
+@Path("/cache")
 public class CacheAPI {
     private static final Logger LOGGER = LogManager.getLogger(CacheAPI.class);
 
@@ -37,14 +37,10 @@ public class CacheAPI {
         ConcurrentHashMap<String, CacheUnit> cacheUnitMap = CacheFactory.getCacheUnitMap();
         List<CacheUnit> cacheUnitList = new ArrayList<CacheUnit>();
         Iterator<Map.Entry<String,CacheUnit>> iterator= cacheUnitMap.entrySet().iterator();
-//        JSONArray jsonArray=new JSONArray();
         while(iterator.hasNext()){
-//            JSONObject jsonObject=new JSONObject();
             Map.Entry<String, CacheUnit> entry = iterator.next();
             cacheUnitList.add(entry.getValue());
-//            jsonObject=JSONObject.
         }
-//        return Response.ok(getJsonUtil().toJson(cacheUnitList)).build();
         return Response.status(Response.Status.OK).entity( JsonUtil.buildNormalMapper().toJson(cacheUnitList)).build();
 
     }
@@ -63,12 +59,10 @@ public class CacheAPI {
             if(cu == null){
                 throw new CacheGroupNotFoundException();
             }
-//            return Response.ok(getJsonUtil().toJson(cu)).build();
             return Response.status(Response.Status.OK).entity( JsonUtil.buildNormalMapper().toJson(cu)).build();
         }catch(CacheException e){
             LOGGER.error(e.getLocalizedMessage(), e);
-//            return buildErrorResponse(new ErrorEntity(e));
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred when get cache group!").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"msg\":\"Cannot find given cache group!\"}").build();
         }
     }
 
@@ -103,18 +97,16 @@ public class CacheAPI {
             if(cacheGroupName == null || "".equals(cacheGroupName)){
                 throw new CacheGroupNameEmptyException();
             }
-            //clear specific cache group
             CacheFactory.getCacheUnitMap().get(cacheGroupName).clearCache();
             ConcurrentHashMap<String,CacheUnit> cacheUnitMap= CacheFactory.getCacheUnitMap();
             CacheUnit cu=cacheUnitMap.get(cacheGroupName);
             if(cu == null){
                 throw new CacheGroupNotFoundException();
             }
-//            return Response.ok(getJsonUtil().toJson(cu)).build();
             return Response.status(Response.Status.OK).entity(JsonUtil.buildNormalMapper().toJson(cu)).build();
         }catch(CacheException e){
             LOGGER.error(e.getLocalizedMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred when clear cache group!").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"msg\":\"Cannot find given cache group!\"}").build();
         }
     }
 
