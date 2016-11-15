@@ -1,8 +1,8 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
 
 
-import java.util.ResourceBundle;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheConfig;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.inter.ICacheUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +21,7 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 	//constant
 	private final static int DEFAULT_TIME_TO_LIVE=0;// means live forever
 	private final static String DEFAULT_CACHE_UNIT_NAME="default_cache_unit";
-	public static final int DEFAULT_CACHE_CAPACITY=Integer.valueOf(ResourceBundle.getBundle("cache_config").getString("DEFAULT_CACHE_UNIT_CAPACITY"));//default capacity is 500
+	public static final int DEFAULT_CACHE_CAPACITY= CacheConfig.DEFAULT_CAPACITY;
 	//constructor
 	public CacheUnit(){
 		this(DEFAULT_CACHE_UNIT_NAME,DEFAULT_CACHE_CAPACITY,DEFAULT_TIME_TO_LIVE);
@@ -61,7 +61,6 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 			LOGGER.debug("CacheUnit:Cannot put into CacheUnit:value cannot be null!");
 			throw new IllegalArgumentException("cannot put into CacheUnit:value cannot be null!");
 		}
-		value.setLastAccessTime(getCurrentTime());
 		cacheLinkedHashMap.put(key, value);
 		return true;
 		
@@ -99,8 +98,6 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 			LOGGER.debug("CacheUnit:Element is null,returning null...");
 			return null;
 		}
-		e.setLastAccessTime(getCurrentTime());
-		//update action(last access time is updated)
 		cacheLinkedHashMap.putWithoutLock(key, e);
 		LOGGER.debug("CacheUnit:Get element from cache successful,and element has been updated!");
 		return e.getValue();

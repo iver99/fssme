@@ -3,11 +3,13 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.targetcard;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -44,6 +46,9 @@ public class TargetCardLinksFilterAPI {
 
         SearchManager searchManager = SearchManager.getInstance();
         try{
+            if (!DependencyStatus.getInstance().isDatabaseUp()) {
+                throw new EMAnalyticsDatabaseUnavailException();
+            }
             List<Search> searches = searchManager.getTargetCard(name);
             if(searches.isEmpty()){
                 return Response.status(statusCode).entity("NOT FOUND").build();
@@ -72,6 +77,9 @@ public class TargetCardLinksFilterAPI {
         String message = null;
         SearchManager sman = SearchManager.getInstance();
         try {
+            if (!DependencyStatus.getInstance().isDatabaseUp()) {
+                throw new EMAnalyticsDatabaseUnavailException();
+            }
             sman.deleteTargetCard(searchId, false);
             message = "Delete TargetCard with id: " + searchId +" Successfully!";
         } catch(EMAnalyticsFwkException e) {
@@ -91,6 +99,9 @@ public class TargetCardLinksFilterAPI {
         JSONObject jsonObj;
         SearchManager searchManager =  SearchManager.getInstance();
         try{
+            if (!DependencyStatus.getInstance().isDatabaseUp()) {
+                throw new EMAnalyticsDatabaseUnavailException();
+            }
             Search targetObject = createSearchObjectForAdd(inputJsonObj);
             Search savedTarget = searchManager.saveTargetCard(targetObject);
             jsonObj = EntityJsonUtil.getTargetCardJsonObj(uri.getBaseUri(),savedTarget);

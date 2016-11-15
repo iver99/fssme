@@ -19,13 +19,27 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetDeletionNotification;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotificationType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
@@ -34,14 +48,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Search Services
@@ -229,6 +238,9 @@ public class SearchAPI
 		JSONObject jsonObj;
 		SearchManager sman = SearchManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			Search searchObj = createSearchObjectForAdd(inputJsonObj);
 			Search savedSearch = sman.saveSearch(searchObj);
 			
@@ -321,6 +333,9 @@ public class SearchAPI
 		SearchManager sman = SearchManager.getInstance();
 		
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			odsService.deleteOdsEntity(searchId);
 			EmAnalyticsSearch eas = sman.deleteSearch(searchId, false);
 			// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
@@ -352,11 +367,14 @@ public class SearchAPI
 			return Response.status(Response.Status.BAD_REQUEST).entity("The param isExactly is invalid").build();
 		}
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			LOGGER.debug("Calling searchManager.deleteSearchByName");
 			searchManager.deleteSearchByName(name, Boolean.valueOf(isExactly));
 		} catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());
-			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 		return Response.status(Response.Status.OK).build();
 	}
@@ -480,6 +498,9 @@ public class SearchAPI
 		Search searchObj;
 		SearchManager sman = SearchManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			if (updateCategory != null && "ORACLE_INTERNAL".equals(updateCategory)) {
 				searchObj = createSearchObjectForEdit(inputJsonObj, sman.getSearch(searchId), true);
 
@@ -518,6 +539,9 @@ public class SearchAPI
 		Search savedSearch = null;
 		
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			savedSearch = sman.getSearch(searchId);
 		} catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -574,6 +598,9 @@ public class SearchAPI
 		// find and return the whole object
 		SearchManager sman = SearchManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			Search searchObj = sman.getSearchWithoutOwner(searchId);
 			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj);
 			message = jsonObj.toString();
@@ -732,7 +759,9 @@ public class SearchAPI
 		JSONObject jsonObj;
 		SearchManager sman = SearchManager.getInstance();
 		try {
-
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			Search searchObj = sman.getSearchWithoutOwner(searchid);
 			String[] pathArray = null;
 			if (bPath) {
@@ -758,6 +787,9 @@ public class SearchAPI
 		String message = null;
 		int statusCode = 200;
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			SearchManager sman = SearchManager.getInstance();
 			java.util.Date date = sman.modifyLastAccessDate(searchId);
 			message = String.valueOf(DateUtil.getDateFormatter().format(date));
@@ -765,7 +797,7 @@ public class SearchAPI
 		catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());
 			message = e.getMessage();
-			statusCode = 404;
+			statusCode = e.getStatusCode();
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -781,6 +813,9 @@ public class SearchAPI
 		String version;
 		String rel;
 		try{
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			Search search = searchManager.getSearch(searchid);
 			if(search.getCategoryId()==null){
 				return Response.status(Response.Status.NOT_FOUND).entity("Search with id "+searchid
@@ -809,7 +844,7 @@ public class SearchAPI
 		}catch (EMAnalyticsFwkException e) {
 			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
 					e.getStatusCode());
-			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 	}
 	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException

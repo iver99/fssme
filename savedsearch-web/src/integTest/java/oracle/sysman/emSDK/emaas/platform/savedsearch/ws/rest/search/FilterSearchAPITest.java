@@ -20,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.codehaus.jettison.json.JSONException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -55,6 +56,8 @@ public class FilterSearchAPITest {
     SearchSummary searchSummary;
     @Mocked
     Throwable throwable;
+    @Mocked
+    DependencyStatus dependencyStatus;
     @Test
     public void testGetAllSearches() throws EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
@@ -63,6 +66,8 @@ public class FilterSearchAPITest {
         }
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 CategoryManager.getInstance();
                 result = categoryManager;
                 uri.getQuery();
@@ -86,6 +91,8 @@ public class FilterSearchAPITest {
     public void testGetAllSearches3th() throws EMAnalyticsFwkException {
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getCategory(anyLong);
@@ -107,6 +114,8 @@ public class FilterSearchAPITest {
         }
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = folderManager;
                 folderManager.getFolder(anyLong);
@@ -126,6 +135,8 @@ public class FilterSearchAPITest {
     public void testGetAllSearches5th() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = folderManager;
                 folderManager.getFolder(anyLong);
@@ -148,6 +159,8 @@ public class FilterSearchAPITest {
         }
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = folderManager;
                 folderManager.getPathForFolderId(anyLong);
@@ -172,6 +185,8 @@ public class FilterSearchAPITest {
         }
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = folderManager;
                 folderManager.getPathForFolderId(anyLong);
@@ -197,6 +212,8 @@ public class FilterSearchAPITest {
         }
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = folderManager;
                 folderManager.getPathForFolderId(anyLong);
@@ -221,6 +238,8 @@ public class FilterSearchAPITest {
         }
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 FolderManager.getInstance();
                 result = folderManager;
                 folderManager.getPathForFolderId(anyLong);
@@ -244,6 +263,8 @@ public class FilterSearchAPITest {
         }
         new Expectations() {
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getCategory(anyString);
