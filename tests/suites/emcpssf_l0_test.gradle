@@ -85,9 +85,6 @@ dependencies {
 	}
 	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: regLookupClientVer)
 	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: regClientVer)
-	configurations{
-		restAssured.exclude module: 'groovy'
-	}
 }
 
 

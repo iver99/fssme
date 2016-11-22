@@ -50,4 +50,7 @@ public class CacheFactory {
 		LOGGER.debug("CacheFactory:Cache named: {},time to live: {} has been created.", cacheName, timeToLive);
 		return cu;
 	}
+	public static ConcurrentHashMap<String, CacheUnit> getCacheUnitMap() {
+		return (ConcurrentHashMap<String, CacheUnit>) cacheUnitMap;
+	}
 }
