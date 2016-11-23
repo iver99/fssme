@@ -1326,11 +1326,11 @@ public class SearchesCRUD
 
 	@Test
 	public void testDeleteSearchByName(){
-		String inputJson = "{\"name\":\"SearchTestDeletedByName\",\"category\":{\"id\":"
+		String inputJson = "{\"name\":\"SearchTestDeletedByName\",\"category\":{\"id\":\""
 				+ 5
-				+ "},\"folder\":{\"id\":"
+				+ "\"},\"folder\":{\"id\":\""
 				+ 6
-				+ "}"
+				+ "\"}"
 				+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"deletedlater\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
 		RestAssured.given().contentType(ContentType.JSON).log().everything()
 				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
@@ -1360,40 +1360,40 @@ public class SearchesCRUD
 	@Test
 	public void testGetSearchList() {
 		// create 2 searches
-		String jsonString1 = "{\"name\":\"Search_List_1\",\"category\":{\"id\":"
+		String jsonString1 = "{\"name\":\"Search_List_1\",\"category\":{\"id\":\""
 				+ catid
-				+ "},\"folder\":{\"id\":"
+				+ "\"},\"folder\":{\"id\":\""
 				+ folderid
-				+ "},\"description\":\"test get search list 1\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
+				+ "\"},\"description\":\"test get search list 1\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log()
 				.everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1)
 				.when().post("/search");
 		Assert.assertEquals(res1.getStatusCode(), 201);
-		Long id1 = res1.jsonPath().getLong("id");
-		String jsonString2 = "{\"name\":\"Search_List_2\",\"category\":{\"id\":"
+		String id1 = res1.jsonPath().getString("id");
+		String jsonString2 = "{\"name\":\"Search_List_2\",\"category\":{\"id\":\""
 				+ catid
-				+ "},\"folder\":{\"id\":"
+				+ "\"},\"folder\":{\"id\":\""
 				+ folderid
-				+ "},\"description\":\"test get search list 2\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
+				+ "\"},\"description\":\"test get search list 2\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
 		Response res2 = RestAssured.given().contentType(ContentType.JSON).log()
 				.everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2)
 				.when().post("/search");
 		Assert.assertEquals(res2.getStatusCode(), 201);
-		Long id2 = res2.jsonPath().getLong("id");
+		String id2 = res2.jsonPath().getString("id");
 		
 		// get 2 searches by getSearchList
-		String ids = "[" + id1 + "," + id2 + "]";
+		String[] ids = new String[]{id1, id2};
 		Response res3 = RestAssured.given().contentType(ContentType.JSON).log()
 				.everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(ids)
 				.when().put("/search/list");
 		Assert.assertEquals(res3.getStatusCode(), 200);
-		List<Integer> result = res3.jsonPath().getList("id");
-		Assert.assertEquals(result.size(), 2);
-		Assert.assertTrue(result.contains(Integer.valueOf(id1.toString())));
-		Assert.assertTrue(result.contains(Integer.valueOf(id2.toString())));
+		List<String> resultList = res3.jsonPath().get();
+		Assert.assertEquals(resultList.size(), 2);
+		Assert.assertTrue(resultList.get(0).contains(id1) || resultList.get(1).contains(id1));
+		Assert.assertTrue(resultList.get(0).contains(id2) || resultList.get(1).contains(id2));
 		
 		// clean the searches
 		Response res4 = RestAssured.given().contentType(ContentType.JSON).log()
