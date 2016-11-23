@@ -39,7 +39,8 @@ public class EmAnalyticsFolderRedirector implements QueryRedirector{
 			}
 			
 		}
-	else if (query.isInsertObjectQuery()) {
+/**	the unique key contains ids
+ * else if (query.isInsertObjectQuery()) {
 			InsertObjectQuery ioq = (InsertObjectQuery) query;
 			EmAnalyticsFolder emObject = (EmAnalyticsFolder) ioq.getObject();
 
@@ -58,7 +59,7 @@ public class EmAnalyticsFolderRedirector implements QueryRedirector{
 			Object rtn = ioq.execute((AbstractSession) session, (AbstractRecord) arguments);
 			cd.getQueryManager().setInsertQuery(old);
 			return rtn;
-		} 
+		} */
 		else {
 			query.setDoNotRedirect(true);
 			return query.execute((AbstractSession) session, (AbstractRecord) arguments);
