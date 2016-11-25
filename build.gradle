@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 // Enable this to be a rootProject which uses project common files.
 //
@@ -10,10 +9,19 @@ buildscript {
   if (System.env.BRANCH_TOP_DIR) {
     project.ext.commonBranchTopDir = System.env.BRANCH_TOP_DIR
   } else {
-    project.ext.commonBranchTopDir = ["sh", "-c", "cd $rootDir; git rev-parse --show-toplevel"].execute().text.trim()
-    if ( ! project.commonBranchTopDir) {
-      throw new GradleException("Error: git not found in sh search PATH\n" +
-        "=> If changing PATH to find git is not feasible, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set")
+    def command = "cd '$rootDir' && git rev-parse --show-toplevel"
+    def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
+    try {
+      def proc = new ProcessBuilder("sh", "-c", command).start()
+      proc.waitForProcessOutput(stdout, stderr); exitCode = proc.exitValue()
+    } catch (Exception e) { stderr << e.message }
+    if (exitCode) {
+      throw new GradleException (
+        "[ERROR] sh or git command is not found or pwd=${System.properties.'user.dir'} is not a git project dir\n" +
+        "[Note] If git is not available, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set\n" +
+        "[Command] sh -c \"$command\"\n" + "[Error] $stderr")
+    } else {
+      project.ext.commonBranchTopDir = "$stdout".trim()
     }
   }
   apply from: "$project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle"
@@ -162,7 +170,6 @@ subprojects {
 } 
 
 configurations {
-  testNG
   prebuild_log4j { transitive = false }
   prebuild_tenant_sdk { transitive = false }
 	prebuild_toplink { transitive = false }
@@ -226,14 +233,12 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_junit
    from configurations.prebuild_apacheHttp
    from configurations.prebuild_jaxrs
-   from configurations.testNG
    from configurations.prebuild_wlfullc
    from configurations.prebuild_cache
    from configurations.prebuild_integtest
    into "$afDir"
    rename 'registry-lookup-client-1.(.*)-(.*).jar', 'registry-lookup-client-1.x.jar'
    rename 'registry-client-1.(.*)-(.*).jar', 'registry-client-1.x.jar'
-   rename(/em-qatool-os-webdriver-2.0.0-\d+.jar/, 'em-qatool-os-webdriver-2.0.0.jar')
 }
 
 compileJava.dependsOn preBuildCompile
@@ -266,7 +271,7 @@ apply from: "${project.ext.source_cc}/codeCoverage.gradle"
 if(project.plugins.hasPlugin('sonar-runner')) {
   sonarRunner {
     sonarProperties {
-      property "sonar.branch", 'master'
+      property "sonar.branch", 'greenchannel'
     }
   }
 }
@@ -280,7 +285,7 @@ configurations.driver.each {File file ->
 }
 
 String CLEANUP_SQL = "cleanup_ssf.sql"
-String db_usr = "SYSEMS_T_9"
+String db_usr = "SYSEMS_T_1010"
 String db_pw = "welcome1"
 String db_url_pre = "jdbc:oracle:thin:@"
 String db_url_suf = ".us.oracle.com:1521:orcl12c"

@@ -53,6 +53,7 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_DELETE_SEARCH = 20040;
 	public static final int ERR_GET_SEARCH = 20050;
 	public static final int ERR_GET_SEARCH_FOR_ID = 20060;
+	public static final int ERR_GET_SEARCH_BY_NAME = 20070;
 
 
 
@@ -86,6 +87,9 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_VALID_USER_NAME = 500113;
 
 	public static final int ERR_VALID_OAM_HEADER = 500114;
+	
+	// dependency unavailable exception
+	public static final int ERR_DATABASE_UNAVAILABLE = 60010;
 
 
 	public static final int JSON_OBJECT_TO_JSON_EXCEPTION = 70040;
@@ -298,6 +302,10 @@ public class EMAnalyticsFwkException extends Exception
 			case EMAnalyticsFwkException.JSON_JSON_TO_OBJECT:
 				statusCode = 500;
 				break;
+				
+			//status code for dependency checking
+			case EMAnalyticsFwkException.ERR_DATABASE_UNAVAILABLE:
+				statusCode = 404;
 			default:
 				break;
 		}

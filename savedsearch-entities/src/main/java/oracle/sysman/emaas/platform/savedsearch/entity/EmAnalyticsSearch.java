@@ -25,7 +25,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsFolderRedirector;
 import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsSearchRedirector;
 
 import org.eclipse.persistence.annotations.AdditionalCriteria;
@@ -42,6 +41,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_SEARCH")
 @NamedQueries({
+	@NamedQuery(name = "Search.getSearchListByIds", query = "SELECT e FROM EmAnalyticsSearch e where e.id in :ids AND e.deleted =0 "),
 	@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
 	@NamedQuery(name = "Search.getSearchListByFolderForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0 "),
 	@NamedQuery(name = "Search.getSearchListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
@@ -50,7 +50,12 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 	@NamedQuery(name = "Search.getSearchCountByFolder", query = "SELECT count(e) FROM EmAnalyticsSearch e where e.emAnalyticsFolder = :folder  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1) "),
 	@NamedQuery(name = "Search.getSearchByName", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId and e.name = :searchName  AND e.deleted =0 AND (e.owner in (:userName) OR e.systemSearch =1)"),
 	@NamedQuery(name = "Search.getWidgetListByCategory", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsCategory.categoryId = :categoryId  AND e.deleted =0 AND e.isWidget = 1 AND (e.owner in (:userName) OR e.systemSearch =1) "),
-	@NamedQuery(name = "Search.getSearchListByTargetType", query = "SELECT e FROM EmAnalyticsSearch e WHERE e.name like :searchName AND (e.owner in (:userName) OR e.systemSearch =1) AND e.deleted=0") })
+	@NamedQuery(name = "Search.getSearchListByTargetType", query = "SELECT e FROM EmAnalyticsSearch e WHERE e.name like :searchName AND (e.owner in (:userName) OR e.systemSearch =1) AND e.deleted=0"),
+		@NamedQuery(name = "Search.getSearchByNameExcludeOOBAndNonDeleted", query = "SELECT e FROM EmAnalyticsSearch e where e.name = :searchName AND e.deleted = 0 AND e.owner in (:userName) AND  e.systemSearch = 0"),
+		@NamedQuery(name = "Search.getSearchByNamePatternExcludeOOBAndNonDeleted", query = "SELECT e FROM EmAnalyticsSearch e where e.name like :searchName escape \'\\\' AND e.deleted = 0 AND e.owner in (:userName) AND e.systemSearch = 0"),
+		@NamedQuery(name = "Search.getSearchByNameExcludeOOBAndNonDeletedFORTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.name = :searchName AND e.deleted = 0 AND e.systemSearch = 0"),
+		@NamedQuery(name = "Search.getSearchByNamePatternExcludeOOBAndNonDeletedFORTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.name like :searchName escape \'\\\' AND e.deleted = 0 AND e.systemSearch = 0")
+})
 //@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
 @AdditionalCriteria("this.deleted = '0'")
 @QueryRedirectors(delete = EmAnalyticsSearchRedirector.class)
@@ -69,15 +74,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 
 	private String description;
 
-	@Column(name = "DESCRIPTION_NLSID")
-	private String descriptionNlsid;
-
-	@Column(name = "DESCRIPTION_SUBSYSTEM")
-	private String descriptionSubsystem;
-
-	@Column(name = "EM_PLUGIN_ID")
-	private String emPluginId;
-
 	@Column(name = "IS_LOCKED")
 	private BigDecimal isLocked;
 
@@ -94,12 +90,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	private String metadataClob;
 
 	private String name;
-
-	@Column(name = "NAME_NLSID")
-	private String nameNlsid;
-
-	@Column(name = "NAME_SUBSYSTEM")
-	private String nameSubsystem;
 
 	@Column(name = "OWNER")
 	private String owner;
@@ -168,7 +158,7 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 
 	@Column(name = "PROVIDER_ASSET_ROOT")
 	private String PROVIDER_ASSET_ROOT;
-	
+
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID"),
@@ -250,16 +240,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 		return description;
 	}
 
-	public String getDescriptionNlsid()
-	{
-		return descriptionNlsid;
-	}
-
-	public String getDescriptionSubsystem()
-	{
-		return descriptionSubsystem;
-	}
-
 	public EmAnalyticsCategory getEmAnalyticsCategory()
 	{
 		return emAnalyticsCategory;
@@ -276,11 +256,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 			emAnalyticsSearchParams = new HashSet<EmAnalyticsSearchParam>();
 		}
 		return emAnalyticsSearchParams;
-	}
-
-	public String getEmPluginId()
-	{
-		return emPluginId;
 	}
 
 	/**
@@ -327,16 +302,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	public String getName()
 	{
 		return name;
-	}
-
-	public String getNameNlsid()
-	{
-		return nameNlsid;
-	}
-
-	public String getNameSubsystem()
-	{
-		return nameSubsystem;
 	}
 
 	public BigInteger getObjectId()
@@ -520,8 +485,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 		if (lastAccess == null) {
 			lastAccess = new EmAnalyticsSearchLastAccess(getId(), getOwner());
 			lastAccess.setEmAnalyticsSearch(this);
-			lastAccess.setCreationDate(getCreationDate());
-			lastAccess.setLastModificationDate(getLastModificationDate());
 		}
 		lastAccess.setAccessDate(accessDate);
 	}
@@ -550,16 +513,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 		this.description = description;
 	}
 
-	public void setDescriptionNlsid(String descriptionNlsid)
-	{
-		this.descriptionNlsid = descriptionNlsid;
-	}
-
-	public void setDescriptionSubsystem(String descriptionSubsystem)
-	{
-		this.descriptionSubsystem = descriptionSubsystem;
-	}
-
 	public void setEmAnalyticsCategory(EmAnalyticsCategory emAnalyticsCategory)
 	{
 		this.emAnalyticsCategory = emAnalyticsCategory;
@@ -573,11 +526,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	public void setEmAnalyticsSearchParams(Set<EmAnalyticsSearchParam> emAnalyticsSearchParams)
 	{
 		this.emAnalyticsSearchParams = emAnalyticsSearchParams;
-	}
-
-	public void setEmPluginId(String emPluginId)
-	{
-		this.emPluginId = emPluginId;
 	}
 
 	/**
@@ -617,16 +565,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	public void setNameNlsid(String nameNlsid)
-	{
-		this.nameNlsid = nameNlsid;
-	}
-
-	public void setNameSubsystem(String nameSubsystem)
-	{
-		this.nameSubsystem = nameSubsystem;
 	}
 
 	public void setOwner(String owner)

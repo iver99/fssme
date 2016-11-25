@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
@@ -25,6 +26,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWS
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.node.ObjectNode;
@@ -147,6 +149,9 @@ public class FolderAPI
 		ObjectNode jsonObj;
 		int statusCode = 201;
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			objFld = getFolderFromJsonForCreate(folderObj);
 			FolderManager mgrFolder = FolderManager.getInstance();
 			objFld = mgrFolder.saveFolder(objFld);
@@ -235,7 +240,9 @@ public class FolderAPI
 		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/folder/{}", id);
 		int statusCode = 204;
 		try {
-
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			FolderManager mgrFolder = FolderManager.getInstance();
 			mgrFolder.deleteFolder(id, false);
 
@@ -324,6 +331,9 @@ public class FolderAPI
 		ObjectNode jsonObj;
 		int statusCode = 200;
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			FolderManager mgrFolder = FolderManager.getInstance();
 			objFld = getFolderFromJsonForEdit(folderObj, mgrFolder.getFolder(id));
 			objFld = mgrFolder.updateFolder(objFld);
@@ -405,6 +415,9 @@ public class FolderAPI
 		int statusCode = 200;
 		ObjectNode jsonObj;
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			FolderManager mgrFolder = FolderManager.getInstance();
 			Folder tmp = mgrFolder.getFolder(id);
 			jsonObj = EntityJsonUtil.getFullFolderJsonObj(uri.getBaseUri(), tmp);

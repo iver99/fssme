@@ -10,9 +10,11 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
+import java.util.Date;
 import java.math.BigInteger;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 
 /**
  * @author guochen
@@ -21,6 +23,11 @@ public class WidgetNotifyEntity
 {
 	private BigInteger uniqueId;
 	private String name;
+	private WidgetNotificationType type;
+	private Date notifyTime;
+	/**
+	 * Used as a 'returned value' to indicate who many objects are impacted by this widget change notification
+	 */
 	private Integer affactedObjects;
 
 	public WidgetNotifyEntity()
@@ -28,13 +35,26 @@ public class WidgetNotifyEntity
 
 	}
 
-	public WidgetNotifyEntity(Search search)
+	public WidgetNotifyEntity(Search search, Date notifyTime, WidgetNotificationType type)
 	{
 		if (search == null) {
 			return;
 		}
 		uniqueId = search.getId();
 		name = search.getName();
+		this.notifyTime = notifyTime;
+		this.type = type;
+	}
+
+	public WidgetNotifyEntity(EmAnalyticsSearch eas, Date notifyTime, WidgetNotificationType type)
+	{
+		if (eas == null) {
+			return;
+		}
+		uniqueId = eas.getId();
+		name = eas.getName();
+		this.notifyTime = notifyTime;
+		this.type = type;
 	}
 
 	/**
@@ -51,6 +71,11 @@ public class WidgetNotifyEntity
 	public String getName()
 	{
 		return name;
+	}
+	
+	public Date getNotifyTime()
+	{
+		return notifyTime;
 	}
 
 	/**
@@ -78,6 +103,11 @@ public class WidgetNotifyEntity
 	{
 		this.name = name;
 	}
+	
+	public void setNotifyTime(Date notifyTime)
+	{
+		this.notifyTime = notifyTime;
+	}
 
 	/**
 	 * @param uniqueId
@@ -86,5 +116,22 @@ public class WidgetNotifyEntity
 	public void setUniqueId(BigInteger uniqueId)
 	{
 		this.uniqueId = uniqueId;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public WidgetNotificationType getType()
+	{
+		return type;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(WidgetNotificationType type)
+	{
+		this.type = type;
 	}
 }

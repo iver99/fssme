@@ -1,17 +1,14 @@
 package oracle.sysman.emaas.savedsearch;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-
-import org.testng.AssertJUnit;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -40,6 +37,11 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
+
+import org.testng.AssertJUnit;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 public class SearchManagerTest extends BaseTest
 {
@@ -139,11 +141,12 @@ public class SearchManagerTest extends BaseTest
 	}
 
 	@BeforeClass
-	public void initTenantDetails()
+	public void initTenantDetails() throws IOException
 	{
 		TenantContext.setContext(
 				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
 						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+//		RegistrationManager.getInstance().initComponent();	// comment out temporary since EMCPSSF-397
 	}
 
 	@AfterClass
@@ -506,7 +509,7 @@ public class SearchManagerTest extends BaseTest
 		widget2.getParameters().add(wp1);
 		new Expectations() {
 			{// as there is no 3n environment for unit test cases
-				anyWidgetChangeNotification.notifyChange((Search) any);
+				anyWidgetChangeNotification.notify((Search) any, (Date) any);
 			}
 		};
 		sm.editSearch(widget2);
@@ -522,7 +525,7 @@ public class SearchManagerTest extends BaseTest
 		}
 		cat2.getParameters().add(pm);
 		cm.editCategory(cat2);
-
+		
 		try {
 			queried = sm.getWidgetListByProviderNames(false, providers, null);
 			for (Widget widget : queried) {

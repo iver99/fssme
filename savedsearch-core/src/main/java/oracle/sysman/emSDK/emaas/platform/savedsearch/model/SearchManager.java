@@ -8,6 +8,7 @@ import java.util.List;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 
 /**
  * The class <code>SearchManager</code> provides CRUD and other management operations over the Search entity in EM Analytics.
@@ -43,9 +44,10 @@ public abstract class SearchManager
 	/**
 	 * @param searchId
 	 * @param permanently
+	 * @return 
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract void deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException;
+	public abstract EmAnalyticsSearch deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException;
 
 	/**
 	 *
@@ -54,6 +56,14 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract void deleteTargetCard(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException;
+	/**
+	 *
+	 * @param searchName
+	 * @param isExactly
+	 * @param permanently
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract void deleteSearchByName(String searchName, boolean isExactly)throws EMAnalyticsFwkException;
 	/**
 	 * Resturns the search by its name dxy
 	 * @param searchName
@@ -207,4 +217,20 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract String getSearchParamByName(BigInteger searchId, String paramName) throws EMAnalyticsFwkException;
+	
+	/**
+	 * get search list by a list of id
+	 * @param widgetIds
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract List<Search> getSearchListByIds(List<BigInteger> ids) throws EMAnalyticsFwkException;
+	
+	/**
+	 * update last access of searches by a list of id
+	 * @param ids
+	 * @return how many rows has been updated
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract int updateLastAccessDate(List<BigInteger> ids) throws EMAnalyticsFwkException;
 }

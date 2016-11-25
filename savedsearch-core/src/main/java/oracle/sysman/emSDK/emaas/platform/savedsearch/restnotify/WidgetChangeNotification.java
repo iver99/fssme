@@ -10,77 +10,40 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
 /**
  * @author guochen
  */
-public class WidgetChangeNotification
+public class WidgetChangeNotification implements IWidgetNotification
 {
 	private static final Logger LOGGER = LogManager.getLogger(WidgetChangeNotification.class);
-	private static final String WIDGET_CHANGE_SERVICE_REL = "ssf.widget.changed";
+	public static final String WIDGET_CHANGE_SERVICE_REL = "ssf.widget.changed";
 
-	public List<Link> getInternalLinksByRel(String rel)
-	{
-		LOGGER.debug("/getInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
-		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
-		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(rel, "http");
-		if (instanceList == null) {
-			LOGGER.warn("Found no instances with specified http rel {}", rel);
-			return Collections.emptyList();
-		}
-		Map<String, Link> serviceLinksMap = new HashMap<String, Link>();
-		for (InstanceInfo ii : instanceList) {
-			List<Link> links = null;
-			try {
-				links = ii.getLinksWithRelPrefix(rel);
-				if (links == null || links.isEmpty()) {
-					LOGGER.warn("Found no links for InstanceInfo for service {}", ii.getServiceName());
-					continue;
-				}
-				LOGGER.debug("Retrieved {} links for service {}. Links list: {}", links == null ? 0 : links.size(),
-						ii.getServiceName(), StringUtil.arrayToCommaDelimitedString(links.toArray()));
-				for (Link link : links) {
-					if (link.getHref().startsWith("http://")) {
-						serviceLinksMap.put(ii.getServiceName(), links.get(0));
-					}
-				}
-			}
-			catch (Exception e) {
-				LOGGER.error("Error to get links!", e);
-			}
-		}
-		if (serviceLinksMap.isEmpty()) {
-			LOGGER.warn("Found no internal widget notification links for rel {}", rel);
-			return Collections.emptyList();
-		}
-		else {
-			LOGGER.info("Widget notification links: {}", serviceLinksMap);
-			return new ArrayList<Link>(serviceLinksMap.values());
-		}
-	}
-
-	public void notifyChange(Search search)
+	@Override
+	public void notify(Search search, Date notifyTime)
 	{
 		if (search == null) {
 			return;
 		}
-		notifyChange(new WidgetNotifyEntity(search));
+		notify(new WidgetNotifyEntity(search, notifyTime, WidgetNotificationType.UPDATE_NAME));
 	}
 
-	public void notifyChange(WidgetNotifyEntity wne)
+	@Override
+	public void notify(WidgetNotifyEntity wne)
 	{
 		if (wne == null) {
 			LOGGER.info("Didn't notify of widget change for null widget notify entity object");
@@ -89,7 +52,13 @@ public class WidgetChangeNotification
 		LOGGER.info("Notify to end points with rel={} of widget changes. Widget unique ID={}, widget name={}",
 				WIDGET_CHANGE_SERVICE_REL, wne.getUniqueId(), wne.getName());
 		long start = System.currentTimeMillis();
-		List<Link> links = getInternalLinksByRel(WIDGET_CHANGE_SERVICE_REL);
+		List<Link> links = null;
+		try {
+			links = RegistryLookupUtil.getAllServicesInternalLinksByRel(WIDGET_CHANGE_SERVICE_REL);
+		}
+		catch (IOException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+		}
 		if (links == null || links.isEmpty()) {
 			LOGGER.info("Didn't notify of widget change for finding no link for rel={}", WIDGET_CHANGE_SERVICE_REL);
 			return;

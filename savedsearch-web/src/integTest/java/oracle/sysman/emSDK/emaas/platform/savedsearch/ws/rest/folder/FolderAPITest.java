@@ -11,6 +11,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
@@ -38,6 +39,8 @@ public class FolderAPITest {
     FolderManager folderManager;
     @Mocked
     Folder folder;
+    @Mocked
+    DependencyStatus dependencyStatus;
     @Test(groups={"s2"})
     public void testCreateFolder2nd() throws JSONException, EMAnalyticsFwkException {
         final JSONObject folderoj = new JSONObject();
@@ -48,6 +51,8 @@ public class FolderAPITest {
         folderoj.put("parentFolder",parentFolder);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.saveFolder((Folder)any);
                 result = folder;
             }
@@ -64,6 +69,8 @@ public class FolderAPITest {
         folderoj.put("parentFolder",parentFolder);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.saveFolder((Folder)any);
                 result = new EMAnalyticsFwkException(throwable);
             }
@@ -76,6 +83,8 @@ public class FolderAPITest {
     public void testDelete() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.deleteFolder((BigInteger) any, anyBoolean);
             }
 
@@ -88,6 +97,8 @@ public class FolderAPITest {
     public void testDelete2nd() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.deleteFolder((BigInteger) any, anyBoolean);
                 result = new EMAnalyticsFwkException(1,throwable);
             }
@@ -100,6 +111,8 @@ public class FolderAPITest {
         folderobj.put("name","name");
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.getFolder((BigInteger) any);
                 result = new EMAnalyticsFwkException(2,throwable);
             }
@@ -113,6 +126,8 @@ public class FolderAPITest {
         folderobj.put("name","name");
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.getFolder((BigInteger) any);
                 result = new EMAnalyticsWSException(throwable);
             }
@@ -129,6 +144,8 @@ public class FolderAPITest {
 
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.updateFolder((Folder) any);
                 result = folder;
                 folderManager.getFolder((BigInteger) any);
@@ -143,8 +160,8 @@ public class FolderAPITest {
         folderobj.put("name","");
         new Expectations(){
             {
-                folderManager.getFolder((BigInteger) any);
-                result = folder;
+                dependencyStatus.isDatabaseUp();
+                result = true;
             }
 
         };
@@ -156,6 +173,8 @@ public class FolderAPITest {
         folderobj.append("name",null);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.updateFolder((Folder) any);
                 result = folder;
                 folderManager.getFolder((BigInteger) any);
@@ -175,6 +194,8 @@ public class FolderAPITest {
 
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.updateFolder((Folder) any);
                 result = folder;
                 folderManager.getFolder((BigInteger) any);
@@ -187,6 +208,8 @@ public class FolderAPITest {
     public void testGetFolder() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.getFolder((BigInteger) any);
                 result = folder;
             }
@@ -197,6 +220,8 @@ public class FolderAPITest {
     public void testGetFolder2nd() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 folderManager.getFolder((BigInteger) any);
                 result =  new EMAnalyticsFwkException(1, throwable);
             }

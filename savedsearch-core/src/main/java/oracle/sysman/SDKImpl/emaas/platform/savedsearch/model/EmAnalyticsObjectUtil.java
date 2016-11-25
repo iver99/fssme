@@ -2,6 +2,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
@@ -36,8 +38,11 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
 
+import org.apache.logging.log4j.LogManager;
+
 class EmAnalyticsObjectUtil
 {
+	private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(EmAnalyticsObjectUtil.class);
 	public static boolean canDeleteFolder(BigInteger folderId, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsFolder folder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
@@ -125,8 +130,7 @@ class EmAnalyticsObjectUtil
 		return cateObj;
 	}
 
-	public static EmAnalyticsCategory getCategoryByName(String categoryName, EntityManager em)
-	{
+	public static EmAnalyticsCategory getCategoryByName(String categoryName, EntityManager em) {
 		try {
 			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
 				return (EmAnalyticsCategory) em.createNamedQuery("Category.getCategoryByNameForTenant")
@@ -143,6 +147,47 @@ class EmAnalyticsObjectUtil
 			return null;
 
 		}
+	}
+
+	public static EmAnalyticsSearch getSearchByNameForDelete(String searchName, EntityManager entityManager) {
+		EmAnalyticsSearch result = null;
+		try {
+			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+				result = (EmAnalyticsSearch) entityManager.createNamedQuery("Search.getSearchByNameExcludeOOBAndNonDeletedFORTenant")
+						.setParameter("searchName", searchName)
+						.getSingleResult();
+			} else {
+				result = (EmAnalyticsSearch) entityManager.createNamedQuery("Search.getSearchByNameExcludeOOBAndNonDeleted")
+						.setParameter("searchName", searchName)
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getSingleResult();
+			}
+		} catch (NonUniqueResultException e) {
+			LOGGER.error("The result is not unique");
+		} catch (NoResultException e) {
+			LOGGER.error("There is not result");
+		}
+		return result;
+	}
+
+	public static List getSearchListByNamePatternForDelete(String searchNamePattern, EntityManager entityManager) {
+		List result = new ArrayList();
+		searchNamePattern = searchNamePattern.replace("%", "\\%");
+		try {
+			if (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
+				result = entityManager.createNamedQuery("Search.getSearchByNamePatternExcludeOOBAndNonDeletedFORTenant")
+						.setParameter("searchName", "%" + searchNamePattern + "%")
+						.getResultList();
+			} else {
+				result = entityManager.createNamedQuery("Search.getSearchByNamePatternExcludeOOBAndNonDeleted")
+						.setParameter("searchName", "%" + searchNamePattern + "%")
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getResultList();
+			}
+		} catch (NoResultException e) {
+			LOGGER.error("There is not result");
+		}
+		return result;
 	}
 
 	public static EmAnalyticsCategory getEmAnalyticsCategoryForAdd(Category category, EntityManager em)
@@ -662,7 +707,7 @@ class EmAnalyticsObjectUtil
 		}
 		return searchObj;
 	}
-	
+
 	public static EmAnalyticsSearch findEmSearchByIdWithoutOwner(BigInteger searchId, EntityManager em) {
 		EmAnalyticsSearch searchObj = null;
 		try {

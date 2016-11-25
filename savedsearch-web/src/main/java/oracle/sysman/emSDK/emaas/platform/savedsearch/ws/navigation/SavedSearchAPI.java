@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -26,6 +27,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -100,6 +102,9 @@ public class SavedSearchAPI
 
 		CategoryManager catMan = CategoryManager.getInstance();
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			catList = catMan.getAllCategories();
 			for (Category category : catList) {
 				ObjectNode jsonCat = EntityJsonUtil.getSimpleCategoryJsonObj(uri.getBaseUri(), category);
@@ -227,6 +232,9 @@ public class SavedSearchAPI
 		}
 		if (BigInteger.ZERO.compareTo(folderId) < 0) {
 			try {
+				if (!DependencyStatus.getInstance().isDatabaseUp()) {
+					throw new EMAnalyticsDatabaseUnavailException();
+				}
 				return Response.status(200).entity(getFolderDetails(folderId)).build();
 			}
 			catch (JSONException e) {
@@ -298,6 +306,9 @@ public class SavedSearchAPI
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1");
 		String message = "";
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			message = getFolderDetails(BigInteger.ZERO);
 		}
 		catch (EMAnalyticsFwkException e) {

@@ -29,11 +29,13 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.Screensho
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotPathGenerator;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -129,6 +131,9 @@ public class WidgetAPI
 		int statusCode = 200;
 
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 			String query = uri.getRequestUri().getQuery();
 			int groupId = widgetGroupId != null ? Integer.parseInt(widgetGroupId) : 0;
 			if (groupId < 0) {
@@ -258,6 +263,9 @@ public class WidgetAPI
 		}
 
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				return Response.status(Status.NOT_FOUND).build();
+			}
 			SearchManager searchMan = SearchManager.getInstance();
 			final ScreenshotData ss = searchMan.getWidgetScreenshotById(widgetId);
 			if (ss == null || ss.getScreenshot() == null) { // searchManagerImpl ensures an non-null return value. put check for later possible checks

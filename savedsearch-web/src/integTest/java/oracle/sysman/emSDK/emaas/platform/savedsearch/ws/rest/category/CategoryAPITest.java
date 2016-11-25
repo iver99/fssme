@@ -18,6 +18,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 
 import org.codehaus.jackson.node.ObjectNode;
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.codehaus.jettison.json.JSONException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -37,6 +38,8 @@ public class CategoryAPITest {
     URI uri;
     @Mocked
     EntityJsonUtil entityJsonUtil;
+    @Mocked
+    DependencyStatus dependencyStatus;
     private CategoryAPI categoryAPI = new CategoryAPI();
 
     @BeforeMethod
@@ -48,6 +51,8 @@ public class CategoryAPITest {
     public void testGetCategory() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getCategory((BigInteger) any);
@@ -66,6 +71,8 @@ public class CategoryAPITest {
     public void testGetCategoryEMAnalyticsFwkException() throws EMAnalyticsFwkException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 CategoryManager.getInstance();
                 result = categoryManager;
                 categoryManager.getCategory((BigInteger) any);
@@ -82,6 +89,8 @@ public class CategoryAPITest {
         categoryAPI.getCategoryByName("");
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 CategoryManager.getInstance();
                 result =categoryManager;
                 categoryManager.getCategory(anyString);
@@ -101,6 +110,8 @@ public class CategoryAPITest {
         categoryAPI.getCategoryByName("");
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 CategoryManager.getInstance();
                 result =categoryManager;
                 categoryManager.getCategory(anyString);
@@ -121,6 +132,8 @@ public class CategoryAPITest {
         searches.add(search);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 CategoryManager.getInstance();
@@ -143,6 +156,8 @@ public class CategoryAPITest {
     public void testGetSearchesByCategoryEMAnalyticsFwkException() throws EMAnalyticsFwkException, JSONException {
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 CategoryManager.getInstance();
@@ -161,6 +176,8 @@ public class CategoryAPITest {
         searches.add(search);
         new Expectations(){
             {
+                dependencyStatus.isDatabaseUp();
+                result = true;
                 SearchManager.getInstance();
                 result = searchManager;
                 CategoryManager.getInstance();

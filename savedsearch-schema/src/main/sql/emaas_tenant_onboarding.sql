@@ -49,6 +49,8 @@ DECLARE
     END;
 /
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_insert_column.sql
+@&EMSAAS_SQL_ROOT/1.12.0/emaas_savesearch_add_column.sql
+
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_la.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
@@ -66,7 +68,6 @@ UPDATE EMS_ANALYTICS_CATEGORY
 SET PROVIDER_NAME = 'TargetAnalytics' ,
     PROVIDER_VERSION ='1.0'	
     WHERE CATEGORY_ID = 2 AND TENANT_ID ='&TENANT_ID';
-
 
 
 UPDATE EMS_ANALYTICS_CATEGORY
@@ -126,6 +127,10 @@ COMMIT;
 
 @&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_seed_data_ocs.sql  &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.12.0/emaas_savesearch_drop_column.sql
+@&EMSAAS_SQL_ROOT/1.12.0/emaas_savesearch_seed_data_ude.sql &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.13.0/emaas_savesearch_seed_data.sql &TENANT_ID
 
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');

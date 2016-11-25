@@ -78,22 +78,6 @@ public class EmAnalyticsSearchTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetDescriptionNlsid()
-	{
-		String descriptionNlsid = "descriptionNlsidxx";
-		emAnalyticsSearch.setDescriptionNlsid(descriptionNlsid);
-		Assert.assertEquals(descriptionNlsid, emAnalyticsSearch.getDescriptionNlsid());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetDescriptionSubsystem()
-	{
-		String descriptionSubsystem = "descriptionSubsystemxx";
-		emAnalyticsSearch.setDescriptionSubsystem(descriptionSubsystem);
-		Assert.assertEquals(descriptionSubsystem, emAnalyticsSearch.getDescriptionSubsystem());
-	}
-
-	@Test(groups = { "s1" })
 	public void testGetEmAnalyticsCategory()
 	{
 		EmAnalyticsCategory emAnalyticsCategory = new EmAnalyticsCategory();
@@ -118,14 +102,6 @@ public class EmAnalyticsSearchTest
 		HashSet<EmAnalyticsSearchParam> emAnalyticsSearches = new HashSet<>();
 		emAnalyticsSearch.setEmAnalyticsSearchParams(emAnalyticsSearches);
 		Assert.assertEquals(emAnalyticsSearches, emAnalyticsSearch.getEmAnalyticsSearchParams());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetEmPluginId()
-	{
-		String plugid = "pluginidxx";
-		emAnalyticsSearch.setEmPluginId(plugid);
-		Assert.assertEquals(plugid, emAnalyticsSearch.getEmPluginId());
 	}
 
 	@Test(groups = { "s1" })
@@ -192,22 +168,6 @@ public class EmAnalyticsSearchTest
 		String name = "namexx";
 		emAnalyticsSearch.setName(name);
 		Assert.assertEquals(name, emAnalyticsSearch.getName());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetNameNlsid()
-	{
-		String nameNlsid = "nameMlsidxx";
-		emAnalyticsSearch.setNameNlsid(nameNlsid);
-		Assert.assertEquals(nameNlsid, emAnalyticsSearch.getNameNlsid());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetNameSubsystem()
-	{
-		String nameSubsystem = "nameSubsystemxx";
-		emAnalyticsSearch.setNameSubsystem(nameSubsystem);
-		Assert.assertEquals(nameSubsystem, emAnalyticsSearch.getNameSubsystem());
 	}
 
 	@Test(groups = { "s1" })

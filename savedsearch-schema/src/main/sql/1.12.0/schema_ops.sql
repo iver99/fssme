@@ -3,7 +3,7 @@ Rem Upgrade from 1.0.0 (this first version with multiple tenancy support) to lat
 Rem Note:
 Rem   Upgrade from any version below 1.0.0 is not supported any more.
 Rem
-Rem 07/05/2016	ADUAN	    created
+Rem 09/06/2016	REX	    created
 Rem ----------------------------------------------------------------
 
 @&EMSAAS_SQL_ROOT/1.12.0/upgrade_impl_ddl.sql
