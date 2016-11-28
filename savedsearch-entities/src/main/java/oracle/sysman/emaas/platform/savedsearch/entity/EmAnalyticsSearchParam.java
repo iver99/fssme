@@ -18,9 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsSearchParamRedirector;
-import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsSearchRedirector;
-
 import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.QueryRedirectors;
@@ -38,8 +35,6 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @NamedQueries({
 	@NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
 })
-//@AdditionalCriteria("this.deleted = '0'")
-//@QueryRedirectors(delete = EmAnalyticsSearchParamRedirector.class)
 public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;

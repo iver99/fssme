@@ -12,9 +12,6 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsCategoryParamRedirector;
-import oracle.sysman.emaas.platform.savedsearch.entity.Redirector.EmAnalyticsCategoryRedirector;
-
 import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.QueryRedirectors;
@@ -28,8 +25,6 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @IdClass(EmAnalyticsCategoryParamPK.class)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_CATEGORY_PARAMS")
-//@AdditionalCriteria("this.deleted = '0'")
-//@QueryRedirectors(delete = EmAnalyticsCategoryParamRedirector.class)
 public class EmAnalyticsCategoryParam extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;

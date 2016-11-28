@@ -98,7 +98,7 @@ public class PersistenceManager
 		emProperties.put(TENANT_ID_STR, String.valueOf(value.getTenantInternalId()));
 		//return emf.createEntityManager(emProperties);
 		EntityManager em = emf.createEntityManager(emProperties);
-		em.setProperty("tenant.id", value.getTenantInternalId());
+		//em.setProperty("tenant.id", value.getTenantInternalId());
 		return em;
 		
 	}
