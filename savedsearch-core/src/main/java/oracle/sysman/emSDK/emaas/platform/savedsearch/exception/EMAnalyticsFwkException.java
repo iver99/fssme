@@ -78,6 +78,13 @@ public class EMAnalyticsFwkException extends Exception
 	public static final int ERR_DELETE_CATEGORY = 40060;
 	public static final int ERR_UPDATE_CATEGORY = 40070;
 
+	//keep cache code same with SSF side
+	public static final Integer DASHBOARD_CACHE_ERROR_CODE=50000;
+	public static final Integer DASHBOARD_CACHE_GROUP_NOT_FOUND_ERROR_CODE=50001;
+	public static final Integer DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR_CODE=50002;
+	// important: don't assign value larger than this value to dashboard cache errors
+	public static final Integer DASHBOARD_CACHE_MAX_ERROR_CODE=59999;
+
 	//upgrade data
 	public static final int ERR_UPGRADE_DATA = 50010;
 
