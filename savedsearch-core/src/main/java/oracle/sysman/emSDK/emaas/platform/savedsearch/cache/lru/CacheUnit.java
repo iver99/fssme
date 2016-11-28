@@ -7,16 +7,19 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru.inter.ICacheUnit
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 
 public class CacheUnit implements ICacheUnit{
 	
 private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
-	
+	@JsonIgnore
 	private CacheLinkedHashMap<String,Element> cacheLinkedHashMap;
-	private final int timeToLive;
-	private int cacheCapacity;
 	private String name;
+	private final int timeToLive;
+	@JsonIgnore
+	private int cacheCapacity;
 	private CacheUnitStatus cacheUnitStatus;
 	
 	//constant
@@ -131,7 +134,7 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 			CacheLinkedHashMap<String, Element> cacheLinkedHashMap) {
 		this.cacheLinkedHashMap = cacheLinkedHashMap;
 	}
-	
+	@JsonProperty("isEmpty")
 	public boolean isEmpty(){
 		return this.cacheLinkedHashMap.getCacheMap().isEmpty();
 	}
@@ -139,9 +142,21 @@ private static final Logger LOGGER = LogManager.getLogger(CacheUnit.class);
 	@Override
 	public void clearCache() {
 		cacheLinkedHashMap.clear();
+		this.cacheUnitStatus.setEvictionCount(0L);
+		this.cacheUnitStatus.setHitCount(0L);
+		this.cacheUnitStatus.setRequestCount(0L);
+		this.cacheUnitStatus.setUsage(0);
+
 	}
 	public CacheUnitStatus getCacheUnitStatus() {
 		return cacheUnitStatus;
+	}
+	/**
+	 * @return the timeToLive
+	 */
+	public int getTimeToLive()
+	{
+		return timeToLive;
 	}
 	
 	

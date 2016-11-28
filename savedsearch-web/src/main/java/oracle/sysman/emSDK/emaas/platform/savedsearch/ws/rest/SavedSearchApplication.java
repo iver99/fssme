@@ -7,6 +7,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.navigation.SavedSearchAPI;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.cache.CacheAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.category.CategoryAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.folder.FolderAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportCategorySet;
@@ -40,6 +41,7 @@ public class SavedSearchApplication extends Application
 		s.add(LoggingConfigAPI.class);
 		s.add(TargetCardLinksFilterAPI.class);
 		s.add(ZDTAPI.class);
+		s.add(CacheAPI.class);
 		return s;
 	}
 
