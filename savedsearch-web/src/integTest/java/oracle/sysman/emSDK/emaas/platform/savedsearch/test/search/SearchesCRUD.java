@@ -1,13 +1,13 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.search;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
-import org.codehaus.jettison.json.JSONException;
+
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -46,10 +46,10 @@ public class SearchesCRUD
 		Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + folderid);
 
-		Assert.assertTrue(res2.getStatusCode() == 204);
+		Assert.assertEquals(res2.getStatusCode(), 204);
 		res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + folderid1);
-		Assert.assertTrue(res2.getStatusCode() == 204);
+		Assert.assertEquals(res2.getStatusCode(), 204);
 
 		//TenantContext.clearContext();
 	}
@@ -1359,8 +1359,56 @@ public class SearchesCRUD
 				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
 				.delete("/search?searchName=TestDeletedBy&isExactly=false");
 		Assert.assertEquals(200, resForDelete3.getStatusCode());
-
-
-
+	}
+	
+	@Test
+	public void testGetSearchList() {
+		// create 2 searches
+		String jsonString1 = "{\"name\":\"Search_List_1\",\"category\":{\"id\":"
+				+ catid
+				+ "},\"folder\":{\"id\":"
+				+ folderid
+				+ "},\"description\":\"test get search list 1\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
+		Response res1 = RestAssured.given().contentType(ContentType.JSON).log()
+				.everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1)
+				.when().post("/search");
+		Assert.assertEquals(res1.getStatusCode(), 201);
+		Long id1 = res1.jsonPath().getLong("id");
+		String jsonString2 = "{\"name\":\"Search_List_2\",\"category\":{\"id\":"
+				+ catid
+				+ "},\"folder\":{\"id\":"
+				+ folderid
+				+ "},\"description\":\"test get search list 2\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
+		Response res2 = RestAssured.given().contentType(ContentType.JSON).log()
+				.everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2)
+				.when().post("/search");
+		Assert.assertEquals(res2.getStatusCode(), 201);
+		Long id2 = res2.jsonPath().getLong("id");
+		
+		// get 2 searches by getSearchList
+		String ids = "[" + id1 + "," + id2 + "]";
+		Response res3 = RestAssured.given().contentType(ContentType.JSON).log()
+				.everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(ids)
+				.when().put("/search/list");
+		Assert.assertEquals(res3.getStatusCode(), 200);
+		List<Integer> result = res3.jsonPath().getList("id");
+		Assert.assertEquals(result.size(), 2);
+		Assert.assertTrue(result.contains(Integer.valueOf(id1.toString())));
+		Assert.assertTrue(result.contains(Integer.valueOf(id2.toString())));
+		
+		// clean the searches
+		Response res4 = RestAssured.given().contentType(ContentType.JSON).log()
+				.everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+				.delete("/search/" + id1);
+		Assert.assertEquals(res4.getStatusCode(), 204);
+		Response res5 = RestAssured.given().contentType(ContentType.JSON).log()
+				.everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+				.delete("/search/" + id2);
+		Assert.assertEquals(res5.getStatusCode(), 204);
 	}
 }

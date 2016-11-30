@@ -49,12 +49,14 @@ sourceSets {
 			srcDirs = ['src/main/java']
 		}
 		resources.srcDirs = ['src/main/java', 'src/main/resources']
+		compileClasspath += configurations.testNG
 	}
 	test{
 		java {
 			srcDirs = ['src/integTest/java']
 		}
 		resources.srcDirs = ['src/integTest/java']
+		compileClasspath += configurations.testNG
 	}
 }
 
@@ -74,6 +76,7 @@ task runDEVTestSuite(type: Test){
 }
 
 test {
+        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
         useTestNG()
         {
                 //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
@@ -103,7 +106,4 @@ dependencies {
 	compile getProjectArtifact('registry-lookup-client')
 	compile getProjectArtifact('emaas-platform-tenant-sdk')
 	testCompile getProjectArtifact('jmockit')
-	compile configurations.testNG
-	compile configurations.webdriver
-	compile configurations.restAssured
 }

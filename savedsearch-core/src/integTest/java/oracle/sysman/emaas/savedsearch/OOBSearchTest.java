@@ -67,8 +67,8 @@ public class OOBSearchTest {
                 TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
                 TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
         try {
-            checkUpdatedSearchParam(id4000,new String("{\"id\":null,\"entityType\":\"omc_weblogic_j2eeserver\",\"widgets\":null,\"widgetRefs\":[{\"id\":3030,\"parameters\":null,\"entityCapability\":null,\"accessControl\":{\"userPrivilege\":\"USE_TARGET_ANALYTICS\"}}]}"));
-            checkUpdatedSearchParam(id4001,new String("{\"id\":null,\"entityType\":\"omc_oracle_db\",\"widgets\":null,\"widgetRefs\":[{\"id\":3029,\"parameters\":null,\"entityCapability\":null,\"accessControl\":{\"userPrivilege\":\"USE_TARGET_ANALYTICS\"}}]}"));
+            checkUpdatedSearchParam(id4000,new String("{\"id\":null,\"entityType\":\"omc_web_application_server\",\"widgets\":null,\"widgetRefs\":[{\"id\":3030,\"parameters\":null,\"entityCapability\":null,\"accessControl\":{\"userPrivilege\":\"USE_TARGET_ANALYTICS\"}}]}"));
+            checkUpdatedSearchParam(id4001,new String("{\"id\":null,\"entityType\":\"omc_relational_database\",\"widgets\":null,\"widgetRefs\":[{\"id\":3029,\"parameters\":null,\"entityCapability\":null,\"accessControl\":{\"userPrivilege\":\"USE_TARGET_ANALYTICS\"}}]}"));
             checkUpdatedSearchParam(id4002,new String("{\"id\":null,\"entityType\":\"omc_host\",\"widgets\":null,\"widgetRefs\":[{\"id\":3031,\"parameters\":null,\"entityCapability\":null,\"accessControl\":{\"userPrivilege\":\"USE_TARGET_ANALYTICS\"}}]}"));
             checkUpdatedSearchParam(id4003,new String("{\"id\":null,\"entityType\":\"omc_entity\",\"widgets\":null,\"widgetRefs\":[{\"id\":2027,\"parameters\":null,\"entityCapability\":{\"type\":\"SERVICE: Log Analytics\",\"name\":\"LOG_COLLECTED\"},\"accessControl\":{\"userPrivilege\":\"SEARCH_LOGS\"}}]}"));
         }finally{

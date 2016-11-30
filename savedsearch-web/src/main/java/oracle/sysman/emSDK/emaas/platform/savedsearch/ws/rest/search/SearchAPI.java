@@ -19,12 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
@@ -51,6 +45,12 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Search Services
@@ -772,6 +772,50 @@ public class SearchAPI
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
+			statusCode = e.getStatusCode();
+			message = e.getMessage();
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+					e.getStatusCode());
+		}
+
+		return Response.status(statusCode).entity(message).build();
+	}
+	
+	@PUT
+	@Path("/list")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSearchList(JSONArray inputJsonArray)
+	{
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/list");
+		List<Long> searchIdList = new ArrayList<Long>();
+		try {
+			for(int i = 0; i < inputJsonArray.length(); i++) {
+				searchIdList.add(inputJsonArray.getLong(i));
+			}
+		} catch(NullPointerException npe) {
+			return Response.status(404).entity("search id list is empty").build();
+		} catch(JSONException je) {
+			return Response.status(404).entity("invalid search id in search id list").build(); 
+		}
+		
+		String message = null;
+		int statusCode = 200;
+		JSONArray outputJsonArray = new JSONArray();
+		SearchManager sman = SearchManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			sman.updateLastAccessDate(searchIdList);
+			
+			List<Search> searchList = sman.getSearchListByIds(searchIdList);
+			for(Search searchObj : searchList) {
+				outputJsonArray.put(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj));
+			}
+			message = outputJsonArray.toString();
+		} catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());
 			statusCode = e.getStatusCode();
 			message = e.getMessage();
