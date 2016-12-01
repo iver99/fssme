@@ -39,7 +39,14 @@ public class PersistenceManager
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
 	private static final String TENANT_ID_STR = "tenant";
 
-
+	/** 
+	 * mapping to QAToolUtil
+	 * Picking up db env when running test cases
+	 */
+	public static final String JDBC_PARAM_URL = "javax.persistence.jdbc.url";
+	public static final String JDBC_PARAM_USER = "javax.persistence.jdbc.user";
+	public static final String JDBC_PARAM_PASSWORD = "javax.persistence.jdbc.password";
+	public static final String JDBC_PARAM_DRIVER = "javax.persistence.jdbc.driver";
 
 	public static PersistenceManager getInstance()
 	{
@@ -74,7 +81,7 @@ public class PersistenceManager
 		}
 
 		if (IS_TEST_ENV) {
-			Properties props = null;
+			Properties props = new Properties();
 			String sresult = System.getProperty(TESTENV_HUDSON_PROP, "false");
 
 			boolean bResult = "true".equalsIgnoreCase(sresult);
@@ -83,7 +90,10 @@ public class PersistenceManager
 			}
 
 			if (System.getenv("T_WORK") != null && !bResult) {
-				props = QAToolUtil.getDbProperties();
+				props.put(PersistenceManager.JDBC_PARAM_URL, System.getProperty(PersistenceManager.JDBC_PARAM_URL));
+				props.put(PersistenceManager.JDBC_PARAM_USER, System.getProperty(PersistenceManager.JDBC_PARAM_USER));
+				props.put(PersistenceManager.JDBC_PARAM_PASSWORD, System.getProperty(PersistenceManager.JDBC_PARAM_PASSWORD));
+				props.put(PersistenceManager.JDBC_PARAM_DRIVER, System.getProperty(PersistenceManager.JDBC_PARAM_DRIVER));
 			}
 			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
 		}

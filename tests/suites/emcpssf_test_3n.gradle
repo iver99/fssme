@@ -83,7 +83,6 @@ task DEVTest(type:EMTest,dependsOn: omcSetup){
 	include "oracle/sysman/emaas/savedsearch/MultitenentFolderTest.class"
 	include "oracle/sysman/emaas/savedsearch/MultitenentCategoryTest"
 	include "oracle/sysman/emaas/savedsearch/MultitenentSearchTest.class"
-        include "oracle/sysman/emaas/savedsearch/QAToolUtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/DBConnectionManagerTest.class"	
 	include "oracle/sysman/emaas/savedsearch/FolderSetTest.class"
 	include "oracle/sysman/emaas/savedsearch/TenantDataLeakTest.class"

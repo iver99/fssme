@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.savedsearch;
 
+import java.util.Properties;
 import java.util.TimeZone;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
@@ -16,5 +17,14 @@ public abstract class BaseTest
 	static {
 		System.setProperty(PersistenceManager.TESTENV_PROP, "true");
 		DateUtil.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+		// set db env to system property for running test cases
+		Properties props = QAToolUtil.getDbProperties();
+		if (props != null) {
+			System.setProperty(PersistenceManager.JDBC_PARAM_URL, props.getProperty(QAToolUtil.JDBC_PARAM_URL));
+			System.setProperty(PersistenceManager.JDBC_PARAM_USER, props.getProperty(QAToolUtil.JDBC_PARAM_USER));
+			System.setProperty(PersistenceManager.JDBC_PARAM_PASSWORD, props.getProperty(QAToolUtil.JDBC_PARAM_PASSWORD));
+			System.setProperty(PersistenceManager.JDBC_PARAM_DRIVER, props.getProperty(QAToolUtil.JDBC_PARAM_DRIVER));
+		}
 	}
 }

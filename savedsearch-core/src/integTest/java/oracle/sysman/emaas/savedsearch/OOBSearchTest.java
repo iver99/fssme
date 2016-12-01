@@ -1,8 +1,8 @@
 package oracle.sysman.emaas.savedsearch;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

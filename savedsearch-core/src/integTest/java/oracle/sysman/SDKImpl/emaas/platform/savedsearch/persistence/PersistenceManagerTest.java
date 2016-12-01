@@ -5,6 +5,8 @@ import mockit.*;
 import java.util.Properties;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emaas.savedsearch.QAToolUtil;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
