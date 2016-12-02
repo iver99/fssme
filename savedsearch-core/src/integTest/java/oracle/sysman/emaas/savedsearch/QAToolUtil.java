@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
+package oracle.sysman.emaas.savedsearch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +39,6 @@ public class QAToolUtil
 
 	private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";//WEBLOGIC_USER + ":" + WEBLOGIC_USER;
 	private static final String DEPLOY_URL = "/instances?servicename=LifecycleInventoryService";
-	private static final String SSF_DEPLOY_URL = "/instances?servicename=SavedSearch";
 	private static final String DEPLY_SCHEMA = "/schemaDeployments?softwareName=SavedSearchService";
 	private static final String PASSWORD = "welcome1";
 	public static final String JDBC_URL = "jdbc:oracle:thin:@";
@@ -67,27 +66,18 @@ public class QAToolUtil
 	public static Properties getDbProperties()
 	{
 		Properties props = new Properties();
-		String url = JDBC_URL + Utils.getProperty(ODS_HOSTNAME) + ":" + Utils.getProperty(ODS_PORT) + ":"
-				+ Utils.getProperty(ODS_SID);
-		props.put(JDBC_PARAM_URL, url);
+		try {
+			String url = JDBC_URL + Utils.getProperty(ODS_HOSTNAME) + ":" + Utils.getProperty(ODS_PORT) + ":"
+					+ Utils.getProperty(ODS_SID);
+			props.put(JDBC_PARAM_URL, url);
+		} catch (Exception ex) {
+			return null;
+		}
 		String schemaName = QAToolUtil.getSchemaDeploymentDetails();
 		props.put(JDBC_PARAM_USER, schemaName);
 		props.put(JDBC_PARAM_PASSWORD, PASSWORD);
 		props.put(JDBC_PARAM_DRIVER, JDBC_PARAM_DRIVER_VALUE);
 		return props;
-	}
-
-	public static String getSavedSearchDeploymentDet()
-	{
-		String data = QAToolUtil.getDetaildByUrl(Utils.getProperty(SERVICE_MANAGER_URL) + SSF_DEPLOY_URL);
-		//String data = QAToolUtil.getDetaildByUrl("http://slc08twq.us.oracle.com:7001//registry/servicemanager/registry/v1"
-		//	+ SSF_DEPLOY_URL);
-
-		List<String> urlList = SchemaUtil.getSchemaUrls(data);
-		if (urlList == null | urlList.isEmpty()) {
-			return null;
-		}
-		return urlList.get(0);
 	}
 
 	public static Properties getTenantDetails()

@@ -157,7 +157,6 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/EmAnalyticsObjec
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderManagerImplTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplTest.class"
 //include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/PersistenceManagerTest.class"
-include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/QAToolUtilTestS2.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/LogUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RegistryLookupUtilTest.class"
