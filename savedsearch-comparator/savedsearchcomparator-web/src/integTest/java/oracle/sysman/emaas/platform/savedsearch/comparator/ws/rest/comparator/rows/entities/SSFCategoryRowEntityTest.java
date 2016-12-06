@@ -8,10 +8,11 @@ import org.testng.annotations.Test;
  * @author pingwu
  *
  */
+@Test(groups = { "s1" })
 public class SSFCategoryRowEntityTest {
 	
 
-	@Test(groups = {"s1"})
+	@Test
 	public void testEquals(){
 		SavedSearchCategoryRowEntity entity1 = new SavedSearchCategoryRowEntity();
 		SavedSearchCategoryRowEntity entity2 = new SavedSearchCategoryRowEntity();
@@ -59,7 +60,7 @@ public class SSFCategoryRowEntityTest {
 			
 	}
 	
-	@Test(groups = {"s1"})
+	@Test
 	public void testHashcode(){
 		SavedSearchCategoryRowEntity entity1 = new SavedSearchCategoryRowEntity();
 		SavedSearchCategoryRowEntity entity2 = new SavedSearchCategoryRowEntity();

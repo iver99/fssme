@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 
 import mockit.Deencapsulation;
 
-
+@Test(groups = { "s1" })
 public class SaveSearchRowsComparatorTest
 {
 	
@@ -129,7 +129,7 @@ public class SaveSearchRowsComparatorTest
 			+ 		"\"PARAM_VALUE_STR\":\"test value\"}]"
 			+ "}";
 
-	@Test(groups = { "s1" })
+	@Test
 	public void testCompareInstancesData() throws IOException
 	{
 		SavedsearchRowsComparator src1 = new SavedsearchRowsComparator();
@@ -176,7 +176,7 @@ public class SaveSearchRowsComparatorTest
 		Assert.assertEquals(result2.getSavedSearchCategory().get(0), sscr2);
 	}
 
-	@Test(groups = { "s1" })
+	@Test
 	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException
 	{
 		SavedsearchRowsComparator src = new SavedsearchRowsComparator();

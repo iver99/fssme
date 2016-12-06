@@ -2,10 +2,10 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
+@Test(groups = { "s1" })
 public class SSFSearchLastAccessRowEntityTest {
 
-	@Test(groups = "s")
+	@Test
 	public void testEquals() {
 		SavedSearchLastAccessRowEntity entity1 = new SavedSearchLastAccessRowEntity();
 		SavedSearchLastAccessRowEntity entity2 = new SavedSearchLastAccessRowEntity();
@@ -43,7 +43,7 @@ public class SSFSearchLastAccessRowEntityTest {
 		
 	}
 	
-	@Test(groups = "s")
+	@Test
 	public void testHashcode() {
 		SavedSearchLastAccessRowEntity entity1 = new SavedSearchLastAccessRowEntity();
 		SavedSearchLastAccessRowEntity entity2 = new SavedSearchLastAccessRowEntity();
