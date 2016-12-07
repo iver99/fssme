@@ -1,11 +1,13 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.SessionInfoUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +19,9 @@ public class DBConnectionManager
 {
 	private static final Logger LOGGER = LogManager.getLogger(DBConnectionManager.class);
 	private static DBConnectionManager instance;
+	
+	private static final String MODULE_NAME = "SavedSearchService"; // application service name
+	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
 
 	static {
 		instance = new DBConnectionManager();
@@ -47,6 +52,11 @@ public class DBConnectionManager
 		try {
 			final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
+			try {
+				SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+			} catch (SQLException e) {
+				LOGGER.info("setModuleAndAction in DBConnectionManager",e);
+			}
 			BigDecimal result = (BigDecimal) em.createNativeQuery("select 1 from dual").getSingleResult();
 			return BigDecimal.valueOf(1).equals(result);
 		}

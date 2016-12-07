@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImp
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.SessionInfoUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -44,6 +46,9 @@ public class SearchManagerTest extends BaseTest
 
 	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
 	private static Long opc1 = null;
+	
+	private static final String MODULE_NAME = "SavedSearchService"; // application service name
+	private final static String ACTION_NAME = "SearchManagerTest";//current class name
 
 	// Important: keep this value the same with sequence step (value for 'INCREMENT BY') for EMS_ANALYTICS_SEARCH_SEQ
 	private static final int SEQ_ALLOCATION_SIZE = 1;
@@ -150,6 +155,12 @@ public class SearchManagerTest extends BaseTest
 		try {
 			final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 			em = emf.createEntityManager();
+
+		try {
+			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 			em.createNativeQuery("SELECT EMS_ANALYTICS_SEARCH_SEQ.NEXTVAL FROM DUAL").getSingleResult();
 
 		}
