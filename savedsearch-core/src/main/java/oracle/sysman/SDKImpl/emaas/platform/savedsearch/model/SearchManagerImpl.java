@@ -125,7 +125,7 @@ public class SearchManagerImpl extends SearchManager
 						EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
 			}
 			searchObj.setDeleted(searchId);
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			if (permanently) {
 				em.remove(searchObj);
 			}
@@ -177,7 +177,7 @@ public class SearchManagerImpl extends SearchManager
 								+ " does not exist please check if it's a system search or you're not the owner",
 						EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME, null);
 			}
-			entityManager.getTransaction().begin();
+			//entityManager.getTransaction().begin();
 			LOGGER.debug("START TRANSACTION DELETE {}", searchName);
 			for (EmAnalyticsSearch temp : emAnalyticsSearchList) {
 				LOGGER.debug("START DELETE {}", temp.getId());
@@ -230,7 +230,7 @@ public class SearchManagerImpl extends SearchManager
 									EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
 						}*/
 			targetCardObj.setDeleted(targetCardId);
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			if (permanently) {
 				em.remove(targetCardObj);
 			}
@@ -277,7 +277,7 @@ public class SearchManagerImpl extends SearchManager
 						"Search with Id: " + searchEntity.getId() + " is system search and NOT allowed to edit",
 						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);
 			}
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			em.merge(searchEntity);
 			em.getTransaction().commit();
 			if (searchEntity.getIsWidget() == 1L) {
@@ -690,7 +690,7 @@ public class SearchManagerImpl extends SearchManager
 		EntityManager em = null;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			int updatedNum = em.createNamedQuery("LastAccess.updateLastAccessByIds")
 					.setParameter("accessDate", DateUtil.getCurrentUTCTime())
 					.setParameter("ids", ids)
@@ -849,7 +849,7 @@ public class SearchManagerImpl extends SearchManager
 				if (accessObj != null) {
 					tmp = DateUtil.getCurrentUTCTime();
 					accessObj.setAccessDate(tmp);
-					em.getTransaction().begin();
+					//em.getTransaction().begin();
 					em.persist(accessObj);
 					em.getTransaction().commit();
 				}
@@ -885,7 +885,7 @@ public class SearchManagerImpl extends SearchManager
 		List<Search> importedList = new ArrayList<Search>();
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			for (ImportSearchImpl tmpImportSrImpl : searchList) {
 				Search search = tmpImportSrImpl.getSearch();
 				Object obj = tmpImportSrImpl.getFolderDetails();
@@ -1113,7 +1113,7 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			em.persist(searchEntity);
 			// when a search is created, creation date/modification date/last access date keeps the same
 			updateSearchLastAccess(searchEntity, searchEntity.getLastModificationDate());
@@ -1153,7 +1153,7 @@ public class SearchManagerImpl extends SearchManager
 			// use internal tenant id = 0 to create the EntityManager for target card
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsSearch targetCardEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(targetCard, em);
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			em.persist(targetCardEntity);
 			em.getTransaction().commit();
 			return createSearchObject(targetCardEntity, null);

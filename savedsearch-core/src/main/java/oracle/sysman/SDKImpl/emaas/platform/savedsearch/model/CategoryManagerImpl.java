@@ -203,7 +203,7 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 			//boolean bResult = EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
 			categoryObj.setDeleted(categoryId);
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			if (permanently) {
 				em.remove(categoryObj);
 			}
@@ -238,7 +238,7 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsCategory categoryEntity = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			em.merge(categoryEntity);
 			em.getTransaction().commit();
 			return CategoryManagerImpl.createCategoryObject(categoryEntity, null);
@@ -271,9 +271,10 @@ public class CategoryManagerImpl extends CategoryManager
 	public List<Category> getAllCategories() throws EMAnalyticsFwkException
 	{
 		List<Category> categories = null;
+		EntityManager em = null;
 		try {
 
-			EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
@@ -293,6 +294,12 @@ public class CategoryManagerImpl extends CategoryManager
 					EMAnalyticsFwkException.ERR_GET_CATEGORIES, null, e);
 
 		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		
 		return categories;
 	}
 
@@ -388,7 +395,7 @@ public class CategoryManagerImpl extends CategoryManager
 
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
 			em.persist(categoryObj);
 			em.getTransaction().commit();
@@ -431,7 +438,7 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			for (ImportCategoryImpl categorytmp : categories) {
 				try {
 					category = categorytmp.getCategoryDetails();
