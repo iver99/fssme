@@ -170,7 +170,6 @@ subprojects {
 } 
 
 configurations {
-  testNG
   prebuild_log4j { transitive = false }
   prebuild_tenant_sdk { transitive = false }
 	prebuild_toplink { transitive = false }
@@ -234,14 +233,12 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_junit
    from configurations.prebuild_apacheHttp
    from configurations.prebuild_jaxrs
-   from configurations.testNG
    from configurations.prebuild_wlfullc
    from configurations.prebuild_cache
    from configurations.prebuild_integtest
    into "$afDir"
    rename 'registry-lookup-client-1.(.*)-(.*).jar', 'registry-lookup-client-1.x.jar'
    rename 'registry-client-1.(.*)-(.*).jar', 'registry-client-1.x.jar'
-   rename(/em-qatool-os-webdriver-2.0.0-\d+.jar/, 'em-qatool-os-webdriver-2.0.0.jar')
 }
 
 compileJava.dependsOn preBuildCompile
