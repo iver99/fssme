@@ -1,7 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
@@ -188,8 +187,6 @@ public abstract class SearchManager
 	 */
 	public abstract ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException;
 
-	public abstract Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException;
-
 	/**
 	 * Saves a completely specified search entity in the analytics sub-system.
 	 *
@@ -225,11 +222,4 @@ public abstract class SearchManager
 	 */
 	public abstract List<Search> getSearchListByIds(List<Long> ids) throws EMAnalyticsFwkException;
 	
-	/**
-	 * update last access of searches by a list of id
-	 * @param ids
-	 * @return how many rows has been updated
-	 * @throws EMAnalyticsFwkException
-	 */
-	public abstract int updateLastAccessDate(List<Long> ids) throws EMAnalyticsFwkException;
 }

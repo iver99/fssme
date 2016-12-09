@@ -763,8 +763,6 @@ public class SearchAPITest {
     public void testEditSearchAccessDate2nd() throws JSONException {
         new Expectations() {
             {
-                dependencyStatus.isDatabaseUp();
-                result = true;
                 uriInfo.getRequestUri();
                 result = uri;
                 uri.getQuery();
@@ -798,22 +796,6 @@ public class SearchAPITest {
         Assert.assertNotNull(api.editSearchAccessDate(10L,false));
     }
 
-    @Test
-    public void testEditSearchAccessDateEMAnalyticsFwkException() throws JSONException {
-        new Expectations() {
-            {
-                dependencyStatus.isDatabaseUp();
-                result = true;
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "searchId = 1";
-                SearchManager.getInstance();
-                result = new EMAnalyticsFwkException(throwable);
-            }
-        };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
-    }
     @Test
     public void testEditSearchAccessDate5th() throws JSONException {
         new Expectations() {

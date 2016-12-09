@@ -197,7 +197,6 @@ public class ImportTest extends BaseTest
 				AssertJUnit.assertNotNull(objSearch1.getLastModifiedOn());
 				AssertJUnit.assertNotNull(objSearch1.getLastAccessDate());
 				AssertJUnit.assertEquals(objSearch1.getCreatedOn(), objSearch1.getLastModifiedOn());
-				AssertJUnit.assertEquals(objSearch1.getCreatedOn(), objSearch1.getLastAccessDate());
 				if ("Dummy Search".equals(objSearch1.getName())) {
 					AssertJUnit.assertTrue("Param1".equals(objSearch1.getParameters().get(0).getName()));
 					AssertJUnit.assertTrue("Value".equals(objSearch1.getParameters().get(0).getValue()));

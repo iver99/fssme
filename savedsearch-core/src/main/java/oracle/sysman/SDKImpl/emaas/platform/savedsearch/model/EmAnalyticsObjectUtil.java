@@ -1,7 +1,15 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -21,7 +29,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.Reque
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.logging.Logger;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParamPK;
@@ -29,6 +36,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
+
 import org.apache.logging.log4j.LogManager;
 
 class EmAnalyticsObjectUtil
@@ -582,7 +590,6 @@ class EmAnalyticsObjectUtil
 		//move value from params to search table
 		EmAnalyticsObjectUtil.moveParamsToSearchEdit(searchEntity, existingParams);
 
-		searchEntity.setAccessDate(utcNow);
 		return searchEntity;
 	}
 

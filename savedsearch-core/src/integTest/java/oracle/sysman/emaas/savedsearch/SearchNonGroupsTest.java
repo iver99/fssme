@@ -83,7 +83,6 @@ public class SearchNonGroupsTest extends BaseTest{
             AssertJUnit.assertNotNull(s2.getLastModifiedOn());
             AssertJUnit.assertNotNull(s2.getLastAccessDate());
             AssertJUnit.assertEquals(s2.getCreatedOn(), s2.getLastModifiedOn());
-            AssertJUnit.assertEquals(s2.getCreatedOn(), s2.getLastAccessDate());
             AssertJUnit.assertEquals("Dummy Search", s2.getName());
             AssertJUnit.assertEquals("testing purpose", s2.getDescription());
 
@@ -278,7 +277,6 @@ public class SearchNonGroupsTest extends BaseTest{
             AssertJUnit.assertNotNull(s2.getLastModifiedOn());
             AssertJUnit.assertNotNull(s2.getLastAccessDate());
             AssertJUnit.assertEquals(s2.getLastModifiedOn(), s2.getLastModifiedOn());
-            AssertJUnit.assertFalse(s2.getCreatedOn().equals(s2.getLastAccessDate()));
             AssertJUnit.assertFalse(s2.getCreatedOn().equals(s2.getLastModifiedOn()));
 
         }

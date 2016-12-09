@@ -31,8 +31,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -232,10 +230,6 @@ public class SearchManagerTest extends BaseTest
 		int searchId = search.getId().intValue();
 
 		sm.deleteSearch(search.getId(), true);
-
-		// ensure the last access for the search is deleted also
-		EmAnalyticsLastAccess eala = getLastAccessForSearch(searchId);
-		AssertJUnit.assertEquals(null, eala);
 
 		cm.deleteCategory(cat.getId(), true);
 		fm.deleteFolder(folder.getId(), true);
@@ -856,28 +850,7 @@ public class SearchManagerTest extends BaseTest
 		AssertJUnit.assertEquals(expected.getOwner(), actual.getOwner());
 		AssertJUnit.assertEquals(expected.getCategoryId(), actual.getCategoryId());
 		AssertJUnit.assertEquals(expected.getFolderId(), actual.getFolderId());
-		AssertJUnit.assertEquals(expected.getLastAccessDate(), actual.getLastAccessDate());
 		AssertJUnit.assertEquals(expected.getIsWidget(), actual.getIsWidget());
 	}
 
-	private EmAnalyticsLastAccess getLastAccessForSearch(int searchId)
-	{
-		EntityManagerFactory emf = null;
-		EntityManager em = null;
-		EmAnalyticsLastAccess eala = null;
-		try {
-
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			EmAnalyticsLastAccessPK ealaPK = new EmAnalyticsLastAccessPK();
-			ealaPK.setObjectId(searchId);
-			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-			ealaPK.setAccessedBy(currentUser);
-			ealaPK.setObjectType(EmAnalyticsLastAccess.LAST_ACCESS_TYPE_SEARCH);
-			eala = em.find(EmAnalyticsLastAccess.class, ealaPK);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getMessage());
-		}
-		return eala;
-	}
 }

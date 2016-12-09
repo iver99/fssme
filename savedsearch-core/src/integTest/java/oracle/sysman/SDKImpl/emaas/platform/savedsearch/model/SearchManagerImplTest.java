@@ -21,7 +21,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 
@@ -60,9 +59,6 @@ public class SearchManagerImplTest
 
 	@Mocked
 	Query query;
-
-	@Mocked
-	EmAnalyticsLastAccess emAnalyticsLastAccess;
 
 	@Mocked
 	EmAnalyticsCategory emAnalyticsCategory;
@@ -347,68 +343,6 @@ public class SearchManagerImplTest
 			}
 		};
 		searchManager.getSearch(1234);
-	}
-	
-	@Test
-	public void testUpdateLastAccessDate() throws EMAnalyticsFwkException
-	{
-		new Expectations() {
-			{
-				PersistenceManager.getInstance();
-				result = persistenceManager;
-				persistenceManager.getEntityManager((TenantInfo) any);
-				result = entityManager;
-				entityManager.getTransaction().begin();
-				entityManager.createNamedQuery(anyString);
-				result = query;
-				query.setParameter(anyString, any);
-				result = query;
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.getUsername();
-				result = "userName";
-				query.executeUpdate();
-				result = 1;
-				entityManager.getTransaction().commit();
-			}
-		};
-		
-		int result1 = searchManager.updateLastAccessDate(null);
-		Assert.assertEquals(result1, 0);
-		List<Long> ids = new ArrayList<Long>();
-		int result2 = searchManager.updateLastAccessDate(ids);
-		Assert.assertEquals(result2, 0);
-		ids.add(1234L);
-		int result3 = searchManager.updateLastAccessDate(ids);
-		Assert.assertEquals(result3, 1);
-	}
-	
-	@Test (expectedExceptions = { EMAnalyticsFwkException.class })
-	public void testUpdateLastAccessDateException() throws EMAnalyticsFwkException
-	{
-		new Expectations() {
-			{
-				PersistenceManager.getInstance();
-				result = persistenceManager;
-				persistenceManager.getEntityManager((TenantInfo) any);
-				result = entityManager;
-				entityManager.getTransaction().begin();
-				entityManager.createNamedQuery(anyString);
-				result = query;
-				query.setParameter(anyString, any);
-				result = query;
-				TenantContext.getContext();
-				result = tenantInfo;
-				tenantInfo.getUsername();
-				result = "userName";
-				query.executeUpdate();
-				result = new Exception(throwable);
-			}
-		};
-		
-		List<Long> ids = new ArrayList<Long>();
-		ids.add(1234L);
-		searchManager.updateLastAccessDate(ids);
 	}
 	
 	@Test
@@ -913,8 +847,6 @@ public class SearchManagerImplTest
 				result = emAnalyticsFolder;
 				emAnalyticsFolder.getFolderId();
 				result = 1L;
-				emAnalyticsSearch.getAccessDate();
-				result = new Date();
 				emAnalyticsSearch.getIsWidget();
 				result = 1;
 				emAnalyticsSearch.getEmAnalyticsSearchParams();
@@ -954,56 +886,6 @@ public class SearchManagerImplTest
 			}
 		};
 		searchManager.getWidgetScreenshotById(1L);
-	}
-
-	@Test
-	public void testModifyLastAccessDate() throws EMAnalyticsFwkException
-	{
-		List<EmAnalyticsSearch> searchList = new ArrayList<>();
-		searchList.add(emAnalyticsSearch);
-		searchList.add(emAnalyticsSearch);
-		new Expectations() {
-			{
-				PersistenceManager.getInstance();
-				result = persistenceManager;
-				persistenceManager.getEntityManager((TenantInfo) any);
-				result = entityManager;
-				TenantContext.getContext();
-				result = tenantInfo;
-				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
-				result = emAnalyticsSearch;
-				emAnalyticsSearch.getAccessedBy();
-				result = "accessedbyxx";
-				emAnalyticsSearch.getObjectId();
-				result = 1234L;
-				emAnalyticsSearch.getObjectType();
-				result = 5678L;
-				entityManager.find(EmAnalyticsLastAccess.class, any);
-				result = emAnalyticsLastAccess;
-			}
-		};
-		searchManager.modifyLastAccessDate(1234);
-	}
-
-	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
-	public void testModifyLastAccessDateException() throws EMAnalyticsFwkException
-	{
-		List<EmAnalyticsSearch> searchList = new ArrayList<>();
-		searchList.add(emAnalyticsSearch);
-		searchList.add(emAnalyticsSearch);
-		new Expectations() {
-			{
-				PersistenceManager.getInstance();
-				result = persistenceManager;
-				persistenceManager.getEntityManager((TenantInfo) any);
-				result = entityManager;
-				TenantContext.getContext();
-				result = tenantInfo;
-				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
-				result = null;
-			}
-		};
-		searchManager.modifyLastAccessDate(1234);
 	}
 
 	@Test(expectedExceptions = { NullPointerException.class })
