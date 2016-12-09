@@ -154,14 +154,18 @@ public class SearchManagerTest extends BaseTest
 		EntityManager em = null;
 		try {
 			final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
-
-		try {
-			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+			EntityManager entityManager = emf.createEntityManager();
+		try {			
+			SessionInfoUtil.setModuleAndAction(entityManager, MODULE_NAME, ACTION_NAME);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			if (entityManager != null) {
+				entityManager.close();
+			}
 		}
-			em.createNativeQuery("SELECT EMS_ANALYTICS_SEARCH_SEQ.NEXTVAL FROM DUAL").getSingleResult();
+		em = emf.createEntityManager();
+		em.createNativeQuery("SELECT EMS_ANALYTICS_SEARCH_SEQ.NEXTVAL FROM DUAL").getSingleResult();
 
 		}
 		catch (Exception e) {

@@ -53,13 +53,18 @@ public class VersionManager
 		LOGGER.info("Retrieving schema version... ");
 		EntityManager em = null;
 		try {
-			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
+			EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();			
+			EntityManager entityManager = emf.createEntityManager();
 			try {
-				SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+				SessionInfoUtil.setModuleAndAction(entityManager, MODULE_NAME, ACTION_NAME);
 			} catch (SQLException e) {
 				LOGGER.info("setModuleAndAction in VersionManager",e);
+			} finally {
+				if (entityManager != null) {
+					entityManager.close();
+				}
 			}
+			em = emf.createEntityManager();
                         @SuppressWarnings("unchecked")
 			List<EmAnalyticsSchemaVer> vers = em.createNamedQuery("EmAnalyticsSchemaVer.findAll").getResultList();
 			if (vers != null && vers.size() == 1) {
