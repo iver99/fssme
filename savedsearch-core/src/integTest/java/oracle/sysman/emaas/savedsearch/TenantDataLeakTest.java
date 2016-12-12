@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -67,7 +68,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	@Test 
 	public void tenantLeakTest() throws SQLException, ClassNotFoundException, EMAnalyticsFwkException {
-		long id = 6666;
+		BigInteger id = new BigInteger("6666");
 		Connection conn = null;
 		try {
 
@@ -147,9 +148,9 @@ public class TenantDataLeakTest extends BaseTest
 			AssertJUnit.assertNull(folder);
 			folder = getFolder(id, 999);
 			AssertJUnit.assertNull(folder);
-			AssertJUnit.assertTrue(deleteFolder(1, 777, true));
-			AssertJUnit.assertTrue(deleteFolder(1, 888, true));
-			AssertJUnit.assertTrue(deleteFolder(1, 999, true));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 777, true));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 888, true));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 999, true));
 
 			deleteSeedData(conn, 777);
 			deleteSeedData(conn, 888);
@@ -163,7 +164,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	@Test
 	public void tenantLeakTest_softdelete() throws SQLException, ClassNotFoundException, EMAnalyticsFwkException {
-		long id = 6666;
+		BigInteger id = new BigInteger("6666");
 		Connection conn = null;
 		try {
 
@@ -243,9 +244,9 @@ public class TenantDataLeakTest extends BaseTest
 			AssertJUnit.assertNull(folder);
 			folder = getFolder(id, 999);
 			AssertJUnit.assertNull(folder);
-			AssertJUnit.assertTrue(deleteFolder(1, 777, false));
-			AssertJUnit.assertTrue(deleteFolder(1, 888, false));
-			AssertJUnit.assertTrue(deleteFolder(1, 999, false));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 777, false));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 888, false));
+			AssertJUnit.assertTrue(deleteFolder(BigInteger.ONE, 999, false));
 
 			deleteSeedData(conn, 777);
 			deleteSeedData(conn, 888);
@@ -258,7 +259,7 @@ public class TenantDataLeakTest extends BaseTest
 		}
 	}
 
-	private boolean deleteCategory(long id, long tenantid, boolean permanently) throws EMAnalyticsFwkException {
+	private boolean deleteCategory(BigInteger id, long tenantid, boolean permanently) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -275,7 +276,7 @@ public class TenantDataLeakTest extends BaseTest
 		return bResult;
 	}
 
-	private boolean deleteFolder(long id, long tenantid, boolean permanently) throws EMAnalyticsFwkException {
+	private boolean deleteFolder(BigInteger id, long tenantid, boolean permanently) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -292,7 +293,7 @@ public class TenantDataLeakTest extends BaseTest
 		return bResult;
 	}
 
-	private boolean deleteSearch(long id, long tenantid, boolean permanently) throws EMAnalyticsFwkException {
+	private boolean deleteSearch(BigInteger id, long tenantid, boolean permanently) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -325,7 +326,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	}
 
-	private Category getCategory(long id, long tenantid) throws EMAnalyticsFwkException {
+	private Category getCategory(BigInteger id, long tenantid) throws EMAnalyticsFwkException {
 		Category category = null;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -342,7 +343,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	}
 
-	private Folder getFolder(long id, long tenantid) throws EMAnalyticsFwkException {
+	private Folder getFolder(BigInteger id, long tenantid) throws EMAnalyticsFwkException {
 		Folder folder = null;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {
@@ -361,7 +362,7 @@ public class TenantDataLeakTest extends BaseTest
 
 	}
 
-	private Search getSearch(long id, long tenantid) throws EMAnalyticsFwkException {
+	private Search getSearch(BigInteger id, long tenantid) throws EMAnalyticsFwkException {
 		Search search = null;
 		TenantContext.setContext(new TenantInfo("TESTING", tenantid));
 		try {

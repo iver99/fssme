@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,7 +33,7 @@ import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -61,10 +62,10 @@ public class EntityJsonUtilTest extends BaseTest
 		long time = 1406040533048L;
 		Date d = new Date(time);
 
-		search.setId(10000);
+		search.setId(new BigInteger("10000"));
 		search.setGuid("FEAFC0AE644068B1E043DC72F00AAFC4");
-		search.setCategoryId(999);
-		search.setFolderId(999);
+		search.setCategoryId(new BigInteger("999"));
+		search.setFolderId(new BigInteger("999"));
 		search.setName("Search for UT");
 		search.setDescription("desc for UT");
 		search.setQueryStr("*");
@@ -72,27 +73,27 @@ public class EntityJsonUtilTest extends BaseTest
 		search.setLocked(false);
 		search.setUiHidden(false);
 		search.setSystemSearch(true);
-		search.setCreatedOn(d);
-		search.setLastModifiedOn(d);
+		search.setCreationDate(d);
+		search.setLastModificationDate(d);
 		search.setLastModifiedBy(currentUser);
 		search.setLastAccessDate(d);
 
-		folder.setId(1000);
+		folder.setId(new BigInteger("1000"));
 		folder.setName("Folder for UT");
 		folder.setDescription("desc for UT");
-		folder.setCreatedOn(d);
+		folder.setCreationDate(d);
 		folder.setOwner(currentUser);
-		folder.setLastModifiedOn(d);
+		folder.setLastModificationDate(d);
 		folder.setLastModifiedBy(currentUser);
-		folder.setParentId(1);
+		folder.setParentId(BigInteger.ONE);
 		folder.setSystemFolder(false);
 		folder.setUiHidden(false);
 
-		category.setId(100);
+		category.setId(new BigInteger("100"));
 		category.setName("Category for UT");
 		category.setDescription("desc for UT");
 		category.setCreatedOn(d);
-		category.setDefaultFolderId(1);
+		category.setDefaultFolderId(BigInteger.ONE);
 		category.setOwner(currentUser);
 		category.setProviderName("Provider name for UT");
 		category.setProviderVersion("Provider version for UT");
@@ -114,10 +115,10 @@ public class EntityJsonUtilTest extends BaseTest
 		params.add(p1);
 		search.setParameters(params);
 
-		widget.setId(10001);
+		widget.setId(new BigInteger("10001"));
 		widget.setGuid("FEAFC0AE644068B1E043DC72F00AAFC5");
-		widget.setCategoryId(100);
-		widget.setFolderId(999);
+		widget.setCategoryId(new BigInteger("100"));
+		widget.setFolderId(new BigInteger("999"));
 		widget.setName("Widget for UT");
 		widget.setDescription("Widget desc for UT");
 		widget.setQueryStr("*");
@@ -125,8 +126,8 @@ public class EntityJsonUtilTest extends BaseTest
 		widget.setLocked(false);
 		widget.setUiHidden(false);
 		widget.setSystemSearch(true);
-		widget.setCreatedOn(d);
-		widget.setLastModifiedOn(d);
+		widget.setCreationDate(d);
+		widget.setLastModificationDate(d);
 		widget.setLastModifiedBy(currentUser);
 		widget.setLastAccessDate(d);
 		widget.setIsWidget(true);
@@ -182,20 +183,20 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetFullCategoryObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
+	public void testGetFullCategoryObj() throws EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{
-		JSONObject fullCategoryObj = EntityJsonUtil.getFullCategoryJsonObj(uri, category);
+		ObjectNode fullCategoryObj = EntityJsonUtil.getFullCategoryJsonObj(uri, category);
 		String output = fullCategoryObj.toString();
 
-		final String verifyString1 = "\"id\":100";
+		final String verifyString1 = "\"id\":\"100\"";
 		final String verifyString2 = "\"name\":\"Category for UT\"";
 		final String verifyString3 = "\"description\":\"desc for UT\"";
 		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String verifyString5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
-				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
+		final String verifyString5 = "\"defaultFolder\":{\"id\":\"1\",\"href\":\"http://" + HOST_PORT
+				+ "/savedsearch/v1/folder/1\"}";
 		final String verifyString6 = "\"defaultFolderId\"";
 		final String verifyString7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
-		final String verifyString9 = "\"href\":\"http:\\/\\/" + HOST_PORT + "\\/savedsearch\\/v1\\/category\\/100\"}";
+		final String verifyString9 = "\"href\":\"http://" + HOST_PORT + "/savedsearch/v1/category/100\"}";
 		final String verifyString10 = "\"providerName\":\"Provider name for UT\"";
 		final String verifyString11 = "\"providerVersion\":\"Provider version for UT\"";
 		final String verifyString12 = "\"providerDiscovery\":\"Provider discovery for UT\"";
@@ -217,17 +218,17 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetFullFolderObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException, URISyntaxException
+	public void testGetFullFolderObj() throws EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{
-		JSONObject fullFolderObj = EntityJsonUtil.getFullFolderJsonObj(uri, folder);
+		ObjectNode fullFolderObj = EntityJsonUtil.getFullFolderJsonObj(uri, folder);
 		String output = fullFolderObj.toString();
 
-		final String verifyString1 = "\"id\":1000";
+		final String verifyString1 = "\"id\":\"1000\"";
 		final String verifyString2 = "\"name\":\"Folder for UT\"";
 		final String verifyString3 = "\"systemFolder\":false";
 		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String verifyString5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
-				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
+		final String verifyString5 = "\"parentFolder\":{\"id\":\"1\",\"href\":\"http://" + HOST_PORT
+				+ "/savedsearch/v1/folder/1\"}";
 		final String verifyString6 = "\"parentFolderId\"";
 		final String verifyString7 = "\"uiHidden\":false";
 		final String verifyString8 = "\"systemFolder\":false";
@@ -248,25 +249,25 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetFullSearchJsonObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
-	URISyntaxException
+	public void testGetFullSearchJsonObj()
+			throws EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{
-		JSONObject fullSearchObj = EntityJsonUtil.getFullSearchJsonObj(uri, search);
+		ObjectNode fullSearchObj = EntityJsonUtil.getFullSearchJsonObj(uri, search);
 		String output = fullSearchObj.toString();
 
-		JSONObject fullSearchObjWithFolderPath = EntityJsonUtil.getFullSearchJsonObj(uri, search, new String[] { "parent Folder",
+		ObjectNode fullSearchObjWithFolderPath = EntityJsonUtil.getFullSearchJsonObj(uri, search, new String[] { "parent Folder",
 		"Root Folder" });
 		String output2 = fullSearchObjWithFolderPath.toString();
 
-		final String verifyString1 = "\"id\":10000";
+		final String verifyString1 = "\"id\":\"10000\"";
 		final String verifyString2 = "\"queryStr\":\"*\"";
 		final String verifyString3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
 		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String verifyString5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
-				+ "\\/savedsearch\\/v1\\/folder\\/999\"}";
+		final String verifyString5 = "\"folder\":{\"id\":\"999\",\"href\":\"http://" + HOST_PORT
+				+ "/savedsearch/v1/folder/999\"}";
 		final String verifyString6 = "\"folderId\"";
-		final String verifyString7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
-				+ "\\/savedsearch\\/v1\\/category\\/999\"}";
+		final String verifyString7 = "\"category\":{\"id\":\"999\",\"href\":\"http://" + HOST_PORT
+				+ "/savedsearch/v1/category/999\"}";
 		final String verifyString8 = "\"categoryId\"";
 		final String verifyString9 = "\"locked\":false";
 		final String verifyString10 = "\"uiHidden\":false";
@@ -298,7 +299,7 @@ public class EntityJsonUtilTest extends BaseTest
 	@Test(groups = { "s1" })
 	public void testGetJsonModel() throws EMAnalyticsFwkException {
 		Map<String, Object> m = new HashMap<String, Object>();
-		m.put("SEARCH_ID", 1000);
+		m.put("SEARCH_ID", new BigInteger("1000"));
 		m.put("WIDGET_KOC_NAME", "TestKOC");
 		m.put("WIDGET_VIEWMODEL", "TestViewModel");
 		m.put("WIDGET_TEMPLATE", "TestTemplate");
@@ -316,7 +317,7 @@ public class EntityJsonUtilTest extends BaseTest
 		m.put("PROVIDER_ASSET_ROOT", "TestProviderAssetRoot");
 //		String result = null;
 		AnalyticsSearchModel model = EntityJsonUtil.getJsonModel(m, "testScreenshotUrl");
-		Assert.assertEquals(model.getId(), new Long(1000));
+		Assert.assertEquals(model.getId(), new BigInteger("1000"));
 		Assert.assertEquals(model.getWidgetKocName(), "TestKOC");
 		Assert.assertEquals(model.getWidgetViewModel(), "TestViewModel");
 		Assert.assertEquals(model.getWidgetTemplate(), "TestTemplate");
@@ -339,22 +340,22 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 	
 	@Test(groups = { "s1" })
-	public void testGetSimpleCategoryObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
-	URISyntaxException
+	public void testGetSimpleCategoryObj()
+			throws EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{
-		JSONObject simpleCategoryObj = EntityJsonUtil.getSimpleCategoryJsonObj(uri, category);
+		ObjectNode simpleCategoryObj = EntityJsonUtil.getSimpleCategoryJsonObj(uri, category);
 		String output = simpleCategoryObj.toString();
 
-		final String verifyString1 = "\"id\":100";
+		final String verifyString1 = "\"id\":\"100\"";
 		final String verifyString2 = "\"name\":\"Category for UT\"";
 		final String verifyString3 = "\"description\":\"desc for UT\"";
 		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String verifyString5 = "\"defaultFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
-				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
+		final String verifyString5 = "\"defaultFolder\":{\"id\":\"1\",\"href\":\"http://" + HOST_PORT
+				+ "/savedsearch/v1/folder/1\"}";
 		final String verifyString6 = "\"defaultFolderId\"";
 		final String verifyString7 = "\"parameters\":[{\"name\":\"CATEGORY_PARAM_VIEW_TASKFLOW\"";
 		final String verifyString8 = "\"owner\":\"SYSMAN\"";
-		final String verifyString9 = "\"href\":\"http:\\/\\/" + HOST_PORT + "\\/savedsearch\\/v1\\/category\\/100\"}";
+		final String verifyString9 = "\"href\":\"http://" + HOST_PORT + "/savedsearch/v1/category/100\"}";
 		final String verifyString10 = "\"providerName\":\"Provider name for UT\"";
 		final String verifyString11 = "\"providerVersion\":\"Provider version for UT\"";
 		final String verifyString12 = "\"providerDiscovery\":\"Provider discovery for UT\"";
@@ -377,20 +378,21 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetSimpleFolderJsonObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
-	URISyntaxException
+	public void testGetSimpleFolderJsonObj()
+			throws EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{
-		JSONObject simpleFolderObj = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder);
+		ObjectNode simpleFolderObj = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder);
 		String output = simpleFolderObj.toString();
-		JSONObject simpleFolderObjWithType = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder, true);
+
+		ObjectNode simpleFolderObjWithType = EntityJsonUtil.getSimpleFolderJsonObj(uri, folder, true);
 		String output2 = simpleFolderObjWithType.toString();
 
-		final String verifyString1 = "\"id\":1000";
+		final String verifyString1 = "\"id\":\"1000\"";
 		final String verifyString2 = "\"name\":\"Folder for UT\"";
 		final String verifyString3 = "\"systemFolder\":false";
 		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String verifyString5 = "\"parentFolder\":{\"id\":1,\"href\":\"http:\\/\\/" + HOST_PORT
-				+ "\\/savedsearch\\/v1\\/folder\\/1\"}";
+		final String verifyString5 = "\"parentFolder\":{\"id\":\"1\",\"href\":\"http://" + HOST_PORT
+				+ "/savedsearch/v1/folder/1\"}";
 		final String verifyString6 = "\"parentId\"";
 		final String verifyString7 = "\"uiHidden\":false";
 		final String verifyString8 = "\"type\":\"folder\"";
@@ -415,28 +417,28 @@ public class EntityJsonUtilTest extends BaseTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetSimpleSearchJsonObj() throws JSONException, EMAnalyticsFwkException, MalformedURLException,
-	URISyntaxException
+	public void testGetSimpleSearchJsonObj()
+			throws EMAnalyticsFwkException, MalformedURLException, URISyntaxException
 	{
-		JSONObject simpleSearchObj = EntityJsonUtil.getSimpleSearchJsonObj(uri, search);
+		ObjectNode simpleSearchObj = EntityJsonUtil.getSimpleSearchJsonObj(uri, search);
 		String output = simpleSearchObj.toString();
 
-		JSONObject simpleSearchObjWithFolderPath = EntityJsonUtil.getSimpleSearchJsonObj(uri, search, new String[] {
+		ObjectNode simpleSearchObjWithFolderPath = EntityJsonUtil.getSimpleSearchJsonObj(uri, search, new String[] {
 				"parent Folder", "Root Folder" }, false);
 		String output2 = simpleSearchObjWithFolderPath.toString();
 
-		JSONObject simpleSearchObjWithType = EntityJsonUtil.getSimpleSearchJsonObj(uri, search, null, true);
+		ObjectNode simpleSearchObjWithType = EntityJsonUtil.getSimpleSearchJsonObj(uri, search, null, true);
 		String output3 = simpleSearchObjWithType.toString();
 
-		final String verifyString1 = "\"id\":10000";
+		final String verifyString1 = "\"id\":\"10000\"";
 		final String verifyString2 = "\"queryStr\":\"*\"";
 		final String verifyString3 = "\"parameters\":[{\"name\":\"Param1\",\"value\":\"value1\",\"type\":\"STRING\"}]";
 		final String verifyString4 = "\"createdOn\":\"2014-07-22T14:48:53.048Z\"";
-		final String verifyString5 = "\"folder\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
-				+ "\\/savedsearch\\/v1\\/folder\\/999\"}";
+		final String verifyString5 = "\"folder\":{\"id\":\"999\",\"href\":\"http://" + HOST_PORT
+				+ "/savedsearch/v1/folder/999\"}";
 		final String verifyString6 = "\"folderId\"";
-		final String verifyString7 = "\"category\":{\"id\":999,\"href\":\"http:\\/\\/" + HOST_PORT
-				+ "\\/savedsearch\\/v1\\/category\\/999\"}";
+		final String verifyString7 = "\"category\":{\"id\":\"999\",\"href\":\"http://" + HOST_PORT
+				+ "/savedsearch/v1/category/999\"}";
 		final String verifyString8 = "\"categoryId\"";
 		final String verifyString9 = "\"locked\":false";
 		final String verifyString10 = "\"uiHidden\":false";
@@ -472,10 +474,10 @@ public class EntityJsonUtilTest extends BaseTest
 	@Test(groups = { "s1" })
 	public void testGetTargetCardJsonObj()
 	{
-		search.setFolderId(1);
-		search.setCategoryId(1);
+		search.setFolderId(BigInteger.ONE);
+		search.setCategoryId(BigInteger.ONE);
 		try {
-			JSONObject jsonObject = EntityJsonUtil.getTargetCardJsonObj(uri, search, null);
+			ObjectNode jsonObject = EntityJsonUtil.getTargetCardJsonObj(uri, search, null);
 			Assert.assertNotNull(jsonObject);
 			Assert.assertNotNull(jsonObject.get("folder"));
 			Assert.assertNotNull(jsonObject.get("category"));
@@ -484,9 +486,6 @@ public class EntityJsonUtilTest extends BaseTest
 
 		}
 		catch (EMAnalyticsFwkException e) {
-			e.printStackTrace();
-		}
-		catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}

@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -16,7 +18,7 @@ public class EmAnalyticsCategoryParamTest {
     @BeforeClass
     public void setUp() throws Exception {
         emAnalyticsCategoryParam = new EmAnalyticsCategoryParam();
-        emAnalyticsCategoryParam.setCategoryId(1);
+        emAnalyticsCategoryParam.setCategoryId(BigInteger.ONE);
         emAnalyticsCategoryParam.setName("name1");
         emAnalyticsCategoryParam.setValue("value1");
     }
@@ -29,12 +31,12 @@ public class EmAnalyticsCategoryParamTest {
         Assert.assertFalse(emAnalyticsCategoryParam.equals(new String("astring")));
 
         EmAnalyticsCategoryParam emAnalyticsCategoryParam2 =  new EmAnalyticsCategoryParam();
-        emAnalyticsCategoryParam2.setCategoryId(2);
+        emAnalyticsCategoryParam2.setCategoryId(BigInteger.ONE.add(BigInteger.ONE));
         emAnalyticsCategoryParam2.setName("name1");
         emAnalyticsCategoryParam2.setValue("value1");
         Assert.assertFalse(emAnalyticsCategoryParam2.equals(emAnalyticsCategoryParam));
 
-        emAnalyticsCategoryParam2.setCategoryId(1);
+        emAnalyticsCategoryParam2.setCategoryId(BigInteger.ONE);
         emAnalyticsCategoryParam2.setName(null);
         Assert.assertFalse(emAnalyticsCategoryParam2.equals(emAnalyticsCategoryParam));
 
@@ -48,7 +50,7 @@ public class EmAnalyticsCategoryParamTest {
         emAnalyticsCategoryParam2.setValue("value2");
         Assert.assertFalse(emAnalyticsCategoryParam2.equals(emAnalyticsCategoryParam));
 
-        emAnalyticsCategoryParam2.setCategoryId(1);
+        emAnalyticsCategoryParam2.setCategoryId(BigInteger.ONE);
         emAnalyticsCategoryParam2.setName("name1");
         emAnalyticsCategoryParam2.setValue("value1");
         Assert.assertTrue(emAnalyticsCategoryParam2.equals(emAnalyticsCategoryParam));
@@ -56,7 +58,7 @@ public class EmAnalyticsCategoryParamTest {
 
     @Test (groups = {"s1"})
     public void testGetCategoryId() throws Exception {
-        Assert.assertEquals(emAnalyticsCategoryParam.getCategoryId(),1);
+        Assert.assertEquals(emAnalyticsCategoryParam.getCategoryId(),BigInteger.ONE);
     }
 
     @Test (groups = {"s1"})
@@ -78,10 +80,10 @@ public class EmAnalyticsCategoryParamTest {
 
     @Test (groups = {"s1"})
     public void testHashCode() throws Exception {
-        emAnalyticsCategoryParam.setCategoryId(1);
+        emAnalyticsCategoryParam.setCategoryId(BigInteger.ONE);
         emAnalyticsCategoryParam.setName("name1");
         emAnalyticsCategoryParam.setValue("value1");
-        Assert.assertEquals(emAnalyticsCategoryParam.hashCode(),-1876615494);
+        Assert.assertEquals(emAnalyticsCategoryParam.hashCode(),-1876616455);
     }
 
     @Test (groups = {"s1"})

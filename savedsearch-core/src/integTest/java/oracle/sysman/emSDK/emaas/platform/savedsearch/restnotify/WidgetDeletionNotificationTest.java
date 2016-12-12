@@ -11,6 +11,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,7 +60,7 @@ public class WidgetDeletionNotificationTest
 		wcn.notify((WidgetNotifyEntity) null);
 
 		final WidgetNotifyEntity wne = new WidgetNotifyEntity();
-		wne.setUniqueId(1L);
+		wne.setUniqueId(BigInteger.ONE);
 		wne.setName("Test Widget");
 		wne.setNotifyTime(new Date());
 		wne.setAffactedObjects(2);
@@ -91,7 +92,7 @@ public class WidgetDeletionNotificationTest
 		};
 		SearchImpl search = new SearchImpl();
 		final WidgetDeletionNotification wcn = new WidgetDeletionNotification();
-		search.setId(1);
+		search.setId(BigInteger.ONE);
 		search.setName("name");
 		wcn.notify(search, new Date());
 	}

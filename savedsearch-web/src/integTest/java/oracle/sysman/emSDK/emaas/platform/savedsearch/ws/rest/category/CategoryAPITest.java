@@ -1,30 +1,27 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.category;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import mockit.*;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
+import javax.ws.rs.core.UriInfo;
+
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
 
+import org.codehaus.jackson.node.ObjectNode;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by xidai on 2/22/2016.
@@ -58,15 +55,15 @@ public class CategoryAPITest {
                 result = true;
                 CategoryManager.getInstance();
                 result = categoryManager;
-                categoryManager.getCategory(anyLong);
+                categoryManager.getCategory((BigInteger) any);
                 result = category;
                 uriInfo.getBaseUri();
                 result = uri;
                 EntityJsonUtil.getFullCategoryJsonObj((URI)any, (Category)any);
-                result = new JSONObject();
+                result = new ObjectNode(null);
             }
         };
-        categoryAPI.getCategory((int) 1L);
+        categoryAPI.getCategory(BigInteger.ONE);
     }
     @Mocked
     Throwable throwable;
@@ -78,11 +75,11 @@ public class CategoryAPITest {
                 result = true;
                 CategoryManager.getInstance();
                 result = categoryManager;
-                categoryManager.getCategory(anyLong);
+                categoryManager.getCategory((BigInteger) any);
                 result = new EMAnalyticsFwkException(throwable);
             }
         };
-        categoryAPI.getCategory((int) 1L);
+        categoryAPI.getCategory(BigInteger.ONE);
 
     }
 
@@ -101,7 +98,7 @@ public class CategoryAPITest {
                 uriInfo.getBaseUri();
                 result = uri;
                 EntityJsonUtil.getFullCategoryJsonObj((URI)any, (Category)any);
-                result = new JSONObject();
+                result = new ObjectNode(null);
             }
         };
         categoryAPI.getCategoryByName("name");
@@ -130,9 +127,7 @@ public class CategoryAPITest {
     @Test
     public void testGetSearchesByCategory() throws EMAnalyticsFwkException, JSONException {
         categoryAPI.getSearchesByCategory(null, "true");
-        categoryAPI.getSearchesByCategory("", "true");
-        categoryAPI.getSearchesByCategory("a", "true");
-        categoryAPI.getSearchesByCategory("-1", "true");
+        categoryAPI.getSearchesByCategory(BigInteger.ONE.negate(), "true");
         final List<Search> searches = new ArrayList<>();
         searches.add(search);
         new Expectations(){
@@ -143,18 +138,18 @@ public class CategoryAPITest {
                 result = searchManager;
                 CategoryManager.getInstance();
                 result = categoryManager;
-                searchManager.getSystemSearchListByCategoryId(anyLong);
+                searchManager.getSystemSearchListByCategoryId((BigInteger) any);
                 result = searches;
-                searchManager.getSearchListByCategoryId(anyLong);
+                searchManager.getSearchListByCategoryId((BigInteger) any);
                 result = searches;
                 uriInfo.getBaseUri();
                 result = uri;
                 EntityJsonUtil.getFullSearchJsonObj((URI)any, (Search)any, null, false);
-                result = new JSONObject();
+                result = new ObjectNode(null);
             }
         };
-        categoryAPI.getSearchesByCategory("1", "true");
-        categoryAPI.getSearchesByCategory("1", null);
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, "true");
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, null);
     }
 
     @Test
@@ -167,12 +162,12 @@ public class CategoryAPITest {
                 result = searchManager;
                 CategoryManager.getInstance();
                 result = categoryManager;
-                searchManager.getSystemSearchListByCategoryId(anyLong);
+                searchManager.getSystemSearchListByCategoryId((BigInteger) any);
                 result =  new EMAnalyticsFwkException(throwable);
             }
         };
-        categoryAPI.getSearchesByCategory("1", "true");
-        categoryAPI.getSearchesByCategory("1", null);
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, "true");
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, null);
     }
 
     @Test
@@ -187,16 +182,16 @@ public class CategoryAPITest {
                 result = searchManager;
                 CategoryManager.getInstance();
                 result = categoryManager;
-                searchManager.getSystemSearchListByCategoryId(anyLong);
+                searchManager.getSystemSearchListByCategoryId((BigInteger) any);
                 result = searches;
-                searchManager.getSearchListByCategoryId(anyLong);
+                searchManager.getSearchListByCategoryId((BigInteger) any);
                 result = searches;
                 uriInfo.getBaseUri();
                 result =  new EMAnalyticsFwkException(throwable);
             }
         };
-        categoryAPI.getSearchesByCategory("1", "true");
-        categoryAPI.getSearchesByCategory("1", null);
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, "true");
+        categoryAPI.getSearchesByCategory(BigInteger.ONE, null);
     }
 
 }

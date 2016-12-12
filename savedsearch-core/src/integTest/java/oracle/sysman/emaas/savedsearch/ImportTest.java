@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.Folde
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ParameterDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.SearchParameterDetails;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -44,7 +47,7 @@ public class ImportTest extends BaseTest
 			category.setProviderVersion("ProviderVersionImportUT");
 			category.setProviderDiscovery("ProviderDiscoveryImportUT");
 			category.setProviderAssetRoot("ProviderAssetRootImportUT");
-			//set the parameter for the category
+			// set the parameter for the category
 			Parameter sp1 = new Parameter();
 			sp1.setName("Param1");
 			sp1.setValue("ParamValue1");
@@ -71,11 +74,14 @@ public class ImportTest extends BaseTest
 			listCat.add(ImportTest.createImportCategoryImpl(category));
 			listCat.add(ImportTest.createImportCategoryImpl(category1));
 
-			List<Category> listobj = ((CategoryManagerImpl) catImpl).saveMultipleCategories(listCat);
+			List<Category> listobj = ((CategoryManagerImpl) catImpl)
+					.saveMultipleCategories(listCat);
 			AssertJUnit.assertTrue(listobj.size() == 2);
 
 			for (Category obj : listobj) {
-				AssertJUnit.assertNotNull("Imported category has NULL creation date", obj.getCreatedOn());
+				AssertJUnit.assertNotNull(
+						"Imported category has NULL creation date",
+						obj.getCreatedOn());
 				catImpl.deleteCategory(obj.getId(), true);
 			}
 	}
@@ -102,7 +108,8 @@ public class ImportTest extends BaseTest
 			for (Folder obj : listobj) {
 				AssertJUnit.assertNotNull(obj.getLastModifiedOn());
 				AssertJUnit.assertNotNull(obj.getCreatedOn());
-				AssertJUnit.assertEquals(obj.getCreatedOn(), obj.getLastModifiedOn());
+				AssertJUnit.assertEquals(obj.getCreatedOn(),
+						obj.getLastModifiedOn());
 
 				objFolder.deleteFolder(obj.getId(), true);
 			}
@@ -110,8 +117,8 @@ public class ImportTest extends BaseTest
 
 	@Test 
 	public static void testImportSearchSet() throws Exception {
-		Integer folderId = 0;
-		Integer categoryId = 0;
+		BigInteger folderId = BigInteger.ZERO;
+		BigInteger categoryId = BigInteger.ZERO;
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		CategoryManager catImpl = CategoryManager.getInstance();
 		SearchManagerImpl obj = SearchManagerImpl.getInstance();
@@ -128,7 +135,7 @@ public class ImportTest extends BaseTest
 			category.setProviderVersion("ProviderVersionTest");
 			category.setProviderDiscovery("ProviderDiscoveryTest");
 			category.setProviderAssetRoot("ProviderAssetRootTest");
-			//set the parameter for the category
+			// set the parameter for the category
 			Parameter sp1 = new Parameter();
 			sp1.setName("Param1");
 			sp1.setValue("ParamValue1");
@@ -147,16 +154,18 @@ public class ImportTest extends BaseTest
 			//SearchManagerImpl objSearch = SearchManagerImpl.getInstance();
 
 			ImportSearchImpl search = new ImportSearchImpl();
+			search.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
 			search.setDescription("testing purpose");
 			search.setName("Dummy Search");
 			search.setIsWidget(false);
 			ObjectFactory objFactory = new ObjectFactory();
-			JAXBElement<Integer> catId = objFactory.createCategoryId(category.getId());
+			JAXBElement<BigInteger> catId = objFactory.createCategoryId(category.getId());
 			search.setCategoryDet(catId);
-			JAXBElement<Integer> fldId = objFactory.createFolderId(folderId);
+			JAXBElement<BigInteger> fldId = objFactory.createFolderId(folderId);
 			search.setFolderDet(fldId);
 
-			ImportSearchImpl.SearchParameters param = search.getSearchParameters();
+			ImportSearchImpl.SearchParameters param = search
+					.getSearchParameters();
 			if (param == null) {
 				param = new ImportSearchImpl.SearchParameters();
 				search.setSearchParameters(param);
@@ -168,13 +177,15 @@ public class ImportTest extends BaseTest
 			param.getSearchParameter().add(tmpDetails);
 
 			ImportSearchImpl search1 = new ImportSearchImpl();
+			search1.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
 			search1.setDescription("testing import purpose");
 			search1.setName("Import Dummy Search");
 			catId = objFactory.createCategoryId(category.getId());
 			search1.setCategoryDet(catId);
 			fldId = objFactory.createFolderId(folderId);
 			search1.setFolderDet(fldId);
-			ImportSearchImpl.SearchParameters param1 = search1.getSearchParameters();
+			ImportSearchImpl.SearchParameters param1 = search1
+					.getSearchParameters();
 			if (param1 == null) {
 				param1 = new ImportSearchImpl.SearchParameters();
 				search1.setSearchParameters(param1);
@@ -182,7 +193,7 @@ public class ImportTest extends BaseTest
 			SearchParameterDetails tmpDetails2 = new SearchParameterDetails();
 			tmpDetails2.setName("Param2");
 			tmpDetails2.setType(ParameterType.CLOB);
-			//tmpDetails2.setValue("Value");
+			// tmpDetails2.setValue("Value");
 			param1.getSearchParameter().add(tmpDetails2);
 			search1.getSearchParameters().getSearchParameter().add(tmpDetails2);
 
@@ -208,37 +219,31 @@ public class ImportTest extends BaseTest
 					AssertJUnit.assertTrue("CLOB".equals(objSearch1.getParameters().get(0).getType().toString()));
 				}
 			}
-
-			//catImpl.deleteCategory(category.getId(), true);
-
-			//objFolder.deleteFolder(folderId, true);
 			for (Search objSearch : listobj) {
 				if (objSearch.getId() != null) {
 					obj.deleteSearch(objSearch.getId(), true);
 				}
 			}
-			if (categoryId != 0) {
+			if (!BigInteger.ZERO.equals(categoryId)) {
 				catImpl.deleteCategory(categoryId, true);
 			}
-			if (folderId != 0) {
+			if (!BigInteger.ZERO.equals(folderId)) {
 				objFolder.deleteFolder(folderId, true);
 			}
 	}
 
-	private static ImportCategoryImpl createImportCategoryImpl(Category cat)
-	{
+	private static ImportCategoryImpl createImportCategoryImpl(Category cat) {
 		if (cat == null) {
 			return null;
 		}
 		ImportCategoryImpl impCat = new ImportCategoryImpl();
-		impCat.setId(cat.getId());
+		impCat.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
 		impCat.setName(cat.getName());
 		impCat.setDescription(cat.getDescription());
 		impCat.setProviderName(cat.getProviderName());
 		impCat.setProviderVersion(cat.getProviderVersion());
 		impCat.setProviderDiscovery(cat.getProviderDiscovery());
 		impCat.setProviderAssetRoot(cat.getProviderAssetRoot());
-		//TODO add parameters
 		ImportCategoryImpl.Parameters param = impCat.getParameters();
 		if (param == null) {
 			param = new ImportCategoryImpl.Parameters();
@@ -252,16 +257,16 @@ public class ImportTest extends BaseTest
 	}
 
 	@BeforeClass
-	public void initTenantDetails()
-	{
-		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-				.get(QAToolUtil.TENANT_NAME).toString())));
+	public void initTenantDetails() {
+		TenantContext.setContext(new TenantInfo(TestUtils
+				.getUsername(QAToolUtil.getTenantDetails()
+						.get(QAToolUtil.TENANT_USER_NAME).toString()),
+				TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+						.get(QAToolUtil.TENANT_NAME).toString())));
 	}
 
 	@AfterClass
-	public void removeTenantDetails()
-	{
+	public void removeTenantDetails() {
 		TenantContext.clearContext();
 	}
 

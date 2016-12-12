@@ -24,6 +24,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
  *  @since   release specific (what release of product did this appear in)
  */
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +35,10 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -73,10 +77,10 @@ public class CategoryManagerImpl extends CategoryManager
 			else {
 				rtnObj = new CategoryImpl();
 			}
-			rtnObj.setId((int) category.getCategoryId());
+			rtnObj.setId(category.getCategoryId());
 			if (category.getEmAnalyticsFolder() != null) {
-				Long id = category.getEmAnalyticsFolder().getFolderId();
-				rtnObj.setDefaultFolderId(id == 0 ? null : (int) id.intValue());
+				BigInteger id = category.getEmAnalyticsFolder().getFolderId();
+				rtnObj.setDefaultFolderId(BigInteger.ZERO.equals(id) ? null : id);
 			}
 			else {
 				rtnObj.setDefaultFolderId(null);
@@ -184,7 +188,7 @@ public class CategoryManagerImpl extends CategoryManager
 	}
 
 	@Override
-	public void deleteCategory(long categoryId, boolean permanently) throws EMAnalyticsFwkException
+	public void deleteCategory(BigInteger categoryId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		EmAnalyticsCategory categoryObj = null;
@@ -203,6 +207,7 @@ public class CategoryManagerImpl extends CategoryManager
 			}
 			//boolean bResult = EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
 			categoryObj.setDeleted(categoryId);
+			categoryObj.setLastModificationDate(DateUtil.getGatewayTime());
 			em.getTransaction().begin();
 			if (permanently) {
 				em.remove(categoryObj);
@@ -248,8 +253,8 @@ public class CategoryManagerImpl extends CategoryManager
 			throw eme;
 		}
 		catch (PersistenceException dmlce) {
-			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId(),
-					category.getName());
+			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId() == null ? -1
+					: category.getDefaultFolderId().longValue(), category.getName());
 			LOGGER.error("Error while updating the category: " + category.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while updating the category: " + category.getName(),
 					EMAnalyticsFwkException.ERR_UPDATE_CATEGORY, null, dmlce);
@@ -297,7 +302,7 @@ public class CategoryManagerImpl extends CategoryManager
 	}
 
 	@Override
-	public Category getCategory(long categoryId) throws EMAnalyticsFwkException
+	public Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException
 	{
 		Category category = null;
 		EntityManager em = null;
@@ -385,7 +390,9 @@ public class CategoryManagerImpl extends CategoryManager
 	public Category saveCategory(Category category) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
-
+		if(category != null && category.getId() == null) {
+			category.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
+		}
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			em.getTransaction().begin();
@@ -400,7 +407,7 @@ public class CategoryManagerImpl extends CategoryManager
 		}
 		catch (PersistenceException dmlce) {
 			EmAnalyticsProcessingException.processCategoryPersistantException(dmlce, category.getDefaultFolderId() == null ? -1
-					: category.getDefaultFolderId(), category.getName());
+					: category.getDefaultFolderId().longValue(), category.getName());
 
 			LOGGER.error("Error while saving the category: " + category.getName(), dmlce);
 			throw new EMAnalyticsFwkException("Error while saving the category: " + category.getName(),
@@ -423,7 +430,6 @@ public class CategoryManagerImpl extends CategoryManager
 
 	public List<Category> saveMultipleCategories(List<ImportCategoryImpl> categories)
 	{
-
 		boolean bCommit = true;
 		EntityManager em = null;
 		Category category = null;
@@ -435,10 +441,10 @@ public class CategoryManagerImpl extends CategoryManager
 			for (ImportCategoryImpl categorytmp : categories) {
 				try {
 					category = categorytmp.getCategoryDetails();
-					if (category.getId() != null && category.getId() > 0) {
+					EmAnalyticsCategory categoryEntity = EmAnalyticsObjectUtil.getCategoryById(category.getId(), em);
+					if (categoryEntity != null) {
 						EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
 						em.merge(emCategory);
-						categorytmp.setId((int) emCategory.getCategoryId());
 						importedList.add(CategoryManagerImpl.createCategoryObject(emCategory, null));
 					}
 					else {
@@ -448,7 +454,7 @@ public class CategoryManagerImpl extends CategoryManager
 									.setParameter("categoryName", category.getName())
 									.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 									.getSingleResult();
-							categorytmp.setId((int) categoryObj.getCategoryId());
+							categorytmp.setId(categoryObj.getCategoryId());
 							importedList.add(CategoryManagerImpl.createCategoryObject(categoryObj, null));
 						}
 						catch (NoResultException e) {
@@ -461,26 +467,24 @@ public class CategoryManagerImpl extends CategoryManager
 
 									if (obj instanceof Folder) {
 										Folder folder = (Folder) obj;
-										if (folder.getParentId() == null || folder.getParentId() == 0) {
-											folder.setParentId(1);
+										if (folder.getParentId() == null || BigInteger.ZERO.equals(folder.getParentId())) {
+											folder.setParentId(BigInteger.ONE);
 										}
-										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(folder.getParentId()
-												.longValue(), em);
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(folder.getParentId(), em);
 
 										if (tmpfld == null) {
 											EmAnalyticsFolder fld = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
 											em.persist(fld);
-											category.setDefaultFolderId((int) fld.getFolderId());
+											category.setDefaultFolderId(fld.getFolderId());
 										}
 										else {
-											category.setDefaultFolderId((int) tmpfld.getFolderId());
+											category.setDefaultFolderId(tmpfld.getFolderId());
 										}
 									}
-									else if (obj instanceof Integer) {
-										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(
-												((Integer) obj).longValue(), em);
+									else if (obj instanceof BigInteger) {
+										EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById((BigInteger) obj, em);
 										if (tmpfld != null) {
-											category.setDefaultFolderId((Integer) obj);
+											category.setDefaultFolderId((BigInteger) obj);
 										}
 										else {
 											importedList.add(category);
@@ -491,7 +495,7 @@ public class CategoryManagerImpl extends CategoryManager
 							}
 							EmAnalyticsCategory emCategory = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
 							em.persist(emCategory);
-							categorytmp.setId((int) emCategory.getCategoryId());
+							categorytmp.setId(emCategory.getCategoryId());
 							importedList.add(CategoryManagerImpl.createCategoryObject(emCategory, null));
 						}
 					}

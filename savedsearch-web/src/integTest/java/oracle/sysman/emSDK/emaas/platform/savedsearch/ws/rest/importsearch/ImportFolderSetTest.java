@@ -1,6 +1,15 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch;
 
-import mockit.*;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
@@ -8,24 +17,18 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.Objec
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JAXBUtil;
+
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by xidai on 2/29/2016.
  */
 @Test(groups={"s2"})
 public class ImportFolderSetTest {
-    private  ImportFolderSet importFolderSet = new ImportFolderSet();
+    private static final BigInteger TEST_ID_10 = BigInteger.TEN;
+	private  ImportFolderSet importFolderSet = new ImportFolderSet();
     private String xml = "[{\"id\":121,\"name\":\"Category123\",\"providerName\":\"Log Analytics\",\"prividerVersion\":\"1.0\",\"providerDiscovery\":\"discovery\",\"providerAssetRoot\":\"asset\"}]";
     @Mocked
     InputStream inputStream;
@@ -44,7 +47,7 @@ public class ImportFolderSetTest {
         final List<FolderImpl> folderlist = new ArrayList<FolderImpl>();
         FolderImpl folder = new FolderImpl();
         folder.setName("name");
-        folder.setId(10);
+        folder.setId(TEST_ID_10);
         folderlist.add(folder);
         new Expectations(){
             {
@@ -72,7 +75,7 @@ public class ImportFolderSetTest {
         final List<FolderImpl> folderlist = new ArrayList<FolderImpl>();
         FolderImpl folder = new FolderImpl();
         folder.setName("name");
-        folder.setId(10);
+        folder.setId(TEST_ID_10);
         folderlist.add(folder);
         new Expectations(){
             {
@@ -98,7 +101,7 @@ public class ImportFolderSetTest {
         final List<FolderImpl> folderlist = new ArrayList<FolderImpl>();
         FolderImpl folder = new FolderImpl();
         folder.setName("name");
-        folder.setId(10);
+        folder.setId(TEST_ID_10);
         folderlist.add(folder);
         new Expectations() {
             {

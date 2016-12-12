@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 @Test(groups = { "s1" })
 public class WidgetGroupAPITest
 {
+	private static final BigInteger TEST_ID_10 = BigInteger.TEN;
 	private final WidgetGroupAPI widgetAPI = new WidgetGroupAPI();
 	@Mocked
 	DependencyStatus dependencyStatus;
@@ -163,7 +165,7 @@ public class WidgetGroupAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -198,7 +200,7 @@ public class WidgetGroupAPITest
 		};
 		new MockUp<SearchManagerImpl>() {
 			@Mock
-			public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+			public List<Search> getWidgetListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
 			{
 				return searches;
 			}
@@ -223,7 +225,7 @@ public class WidgetGroupAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -249,7 +251,7 @@ public class WidgetGroupAPITest
 		};
 		new MockUp<SearchManagerImpl>() {
 			@Mock
-			public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+			public List<Search> getWidgetListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
 			{
 				return searches;
 			}
@@ -274,7 +276,7 @@ public class WidgetGroupAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -309,7 +311,7 @@ public class WidgetGroupAPITest
 		};
 		new MockUp<SearchManagerImpl>() {
 			@Mock
-			public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+			public List<Search> getWidgetListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
 			{
 				return searches;
 			}
@@ -334,7 +336,7 @@ public class WidgetGroupAPITest
 		final List<Category> list = new ArrayList<Category>();
 		for (int i = 0; i < 3; i++) {
 			CategoryImpl category = new CategoryImpl();
-			category.setId(10);
+			category.setId(TEST_ID_10);
 			list.add(category);
 		}
 		final List<SearchParameter> parameters = new ArrayList<SearchParameter>();
@@ -369,7 +371,7 @@ public class WidgetGroupAPITest
 		};
 		new MockUp<SearchManagerImpl>() {
 			@Mock
-			public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+			public List<Search> getWidgetListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
 			{
 				return searches;
 			}

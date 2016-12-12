@@ -1,5 +1,15 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
@@ -9,17 +19,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author qianqi
@@ -28,7 +31,8 @@ import java.util.List;
 @Test(groups = {"s2"})
 public class FolderManagerImplTest {
 
-    FolderManagerImpl folderManager;
+    private static final BigInteger TEST_ID = new BigInteger("1234");
+	FolderManagerImpl folderManager;
     @Mocked
     Throwable throwable;
     @BeforeMethod
@@ -51,7 +55,7 @@ public class FolderManagerImplTest {
                 result = entityManager;
             }
         };
-        folderManager.deleteFolder(1234, true);
+        folderManager.deleteFolder(TEST_ID, true);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -64,9 +68,7 @@ public class FolderManagerImplTest {
                 result = new Exception(throwable);
             }
         };
-
-        folderManager.deleteFolder(1234, true);
-
+        folderManager.deleteFolder(TEST_ID, true);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -79,13 +81,13 @@ public class FolderManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderByIdForDelete(anyLong, entityManager);
+                EmAnalyticsObjectUtil.getFolderByIdForDelete((BigInteger) any, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(1);
             }
         };
-        folderManager.deleteFolder(1234, true);
+        folderManager.deleteFolder(TEST_ID, true);
     }
 
     @Test
@@ -99,14 +101,14 @@ public class FolderManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderByIdForDelete(anyLong, entityManager);
+                EmAnalyticsObjectUtil.getFolderByIdForDelete((BigInteger) any, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(100);
             }
         };
-        folderManager.deleteFolder(1234, true);
-        folderManager.deleteFolder(1234, false);
+        folderManager.deleteFolder(TEST_ID, true);
+        folderManager.deleteFolder(TEST_ID, false);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -120,7 +122,7 @@ public class FolderManagerImplTest {
                 result = new Exception(throwable);
             }
         };
-        folderManager.getFolder(1234);
+        folderManager.getFolder(TEST_ID);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -133,13 +135,13 @@ public class FolderManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any, entityManager);
                 result = null;
 //                emAnalyticsFolder.getSystemFolder();
 //                result = new BigDecimal(100);
             }
         };
-        folderManager.getFolder(1234);
+        folderManager.getFolder(TEST_ID);
     }
 
     @Test
@@ -152,13 +154,13 @@ public class FolderManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getSystemFolder();
                 result = new BigDecimal(100);
             }
         };
-        folderManager.getFolder(1234);
+        folderManager.getFolder(TEST_ID);
     }
 
     @Test
@@ -171,13 +173,13 @@ public class FolderManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any, entityManager);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getEmAnalyticsFolder();
                 returns(emAnalyticsFolder, emAnalyticsFolder, emAnalyticsFolder, emAnalyticsFolder, null);
             }
         };
-        folderManager.getPathForFolderId(1234);
+        folderManager.getPathForFolderId(TEST_ID);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -188,11 +190,11 @@ public class FolderManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
-                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any, entityManager);
                 result = new Exception(throwable);
             }
         };
-        folderManager.getPathForFolderId(1234);
+        folderManager.getPathForFolderId(TEST_ID);
     }
 
     @Test
@@ -271,7 +273,7 @@ public class FolderManagerImplTest {
 //                result = emAnalyticsFolder;
             }
         };
-        folderManager.getSubFolders(-1);
+        folderManager.getSubFolders(BigInteger.ONE.negate());
     }
 
     @Test
@@ -290,7 +292,7 @@ public class FolderManagerImplTest {
                 result = entityManager;
                 TenantContext.getContext();
                 result = tenantInfo;
-                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any, entityManager);
                 result = emAnalyticsFolder;
                 tenantInfo.getUsername();
                 result = "userName";
@@ -304,7 +306,7 @@ public class FolderManagerImplTest {
                 result = new BigDecimal(111);
             }
         };
-        folderManager.getSubFolders(1);
+        folderManager.getSubFolders(BigInteger.ONE);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -323,7 +325,7 @@ public class FolderManagerImplTest {
                 result = entityManager;
                 TenantContext.getContext();
                 result = tenantInfo;
-                EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any, entityManager);
                 result = emAnalyticsFolder;
                 tenantInfo.getUsername();
                 result = "userName";
@@ -337,7 +339,7 @@ public class FolderManagerImplTest {
                 result = new EMAnalyticsFwkException(throwable);
             }
         };
-        folderManager.getSubFolders(1);
+        folderManager.getSubFolders(BigInteger.ONE);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -410,7 +412,7 @@ public class FolderManagerImplTest {
                 folderDetails.getFolder();
                 result = folder;
                 folder.getId();
-                result = 111;
+                result = BigInteger.ONE;
                 EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, entityManager);
                 result = emAnalyticsFolder;
 
@@ -436,7 +438,7 @@ public class FolderManagerImplTest {
                 folderDetails.getFolder();
                 result = folder;
                 folder.getId();
-                result = 111;
+                result = BigInteger.ONE;
                 EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, entityManager);
                 result = emAnalyticsFolder;
                 withAny(emAnalyticsFolder).getSystemFolder();
@@ -464,10 +466,8 @@ public class FolderManagerImplTest {
                 result = entityManager;
                 folderDetails.getFolder();
                 result = folder;
-                folder.getId();
-                result = -111;
-//                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder,entityManager);
-//                result = emAnalyticsFolder;
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any, entityManager);
+                result = null;
                 withAny(emAnalyticsFolder).getSystemFolder();
                 result = new BigDecimal(1123);
                 TenantContext.getContext();
@@ -477,8 +477,6 @@ public class FolderManagerImplTest {
                 entityManager.createNamedQuery(anyString);
                 result = query;
                 query.setParameter(anyString, anyString);
-                result = query;
-                query.setParameter(anyString, (EmAnalyticsFolder) any);
                 result = query;
                 query.getSingleResult();
                 result = emAnalyticsFolder;
@@ -505,10 +503,8 @@ public class FolderManagerImplTest {
                 result = entityManager;
                 folderDetails.getFolder();
                 result = folder;
-                folder.getId();
-                result = -111;
-//                EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder,entityManager);
-//                result = emAnalyticsFolder;
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any, entityManager);
+                result = null;
                 withAny(emAnalyticsFolder).getSystemFolder();
                 result = new BigDecimal(1123);
                 TenantContext.getContext();
@@ -518,8 +514,6 @@ public class FolderManagerImplTest {
                 entityManager.createNamedQuery(anyString);
                 result = query;
                 query.setParameter(anyString, anyString);
-                result = query;
-                query.setParameter(anyString, (EmAnalyticsFolder) any);
                 result = query;
                 query.getSingleResult();
                 result = new NoResultException();
@@ -556,7 +550,7 @@ public class FolderManagerImplTest {
                 folderDetails.getFolder();
                 result = folder;
                 folder.getId();
-                result = 111;
+                result = BigInteger.ONE;
                 folder.getName();
                 result = "namexx";
                 EmAnalyticsObjectUtil.getEmAnalyticsFolderForEdit(folder, entityManager);
@@ -585,7 +579,6 @@ public class FolderManagerImplTest {
                 result = new BigDecimal(1);
             }
         };
-        FolderImpl folder = new FolderImpl();
         folderManager.updateFolder(null);
     }
 
@@ -605,7 +598,7 @@ public class FolderManagerImplTest {
             }
         };
         FolderImpl folder = new FolderImpl();
-        folder.setParentId(1234);
+        folder.setParentId(TEST_ID);
         folderManager.updateFolder(folder);
     }
 
@@ -627,7 +620,7 @@ public class FolderManagerImplTest {
             }
         };
         FolderImpl folder = new FolderImpl();
-        folder.setParentId(1234);
+        folder.setParentId(TEST_ID);
         folderManager.updateFolder(folder);
     }
 
@@ -646,7 +639,6 @@ public class FolderManagerImplTest {
                 result = new BigDecimal(222);
             }
         };
-        FolderImpl folder = new FolderImpl();
         folderManager.updateFolder(null);
     }
 

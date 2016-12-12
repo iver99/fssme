@@ -1,19 +1,13 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
 
-import org.testng.Assert;
-import org.testng.AssertJUnit;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
@@ -23,18 +17,19 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
+import org.testng.Assert;
+import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
+
 public class FolderManagerTest extends BaseTest
 {
-
-	private static int folderId;
-
-
+	private static BigInteger folderId;
 
 	@Test(groups = { "s1" })
 	public void entityClassTest()
 	{
 		EmAnalyticsFolder fld = new EmAnalyticsFolder();
-		Date utcNow = DateUtil.getCurrentUTCTime();
+		Date utcNow = DateUtil.getGatewayTime();
 		fld.setCreationDate(utcNow);
 		fld.setDescription("desc");
 		fld.setDescriptionNlsid("desc");
@@ -43,7 +38,7 @@ public class FolderManagerTest extends BaseTest
 		fld.setEmAnalyticsFolder(null);
 		fld.setEmAnalyticsFolders(null);
 		fld.setEmPluginId("null");
-		fld.setFolderId(1);
+		fld.setFolderId(BigInteger.ONE);
 		fld.setName("abc");
 		fld.setLastModificationDate(utcNow);
 		fld.setLastModifiedBy("admin");
@@ -68,11 +63,7 @@ public class FolderManagerTest extends BaseTest
 
 	}
 
-
-
-
-
-
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(groups = "s2", expectedExceptions = EMAnalyticsFwkException.class, expectedExceptionsMessageRegExp = "Folder with the Id 0 does not exist")
 	public void testGetFolder(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager)
 			throws EMAnalyticsFwkException
@@ -86,9 +77,8 @@ public class FolderManagerTest extends BaseTest
 				result = null;
 			}
 		};
-		objFolder.getFolder(0);
+		objFolder.getFolder(BigInteger.ZERO);
 	}
-
 
 	/*@Test
 	public void testRootFolder() throws Exception

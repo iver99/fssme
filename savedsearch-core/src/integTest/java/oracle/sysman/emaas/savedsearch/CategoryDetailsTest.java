@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.CategoryDetails;
 
 import org.testng.AssertJUnit;
@@ -26,9 +28,9 @@ public class CategoryDetailsTest
 	{
 
 		CategoryDetails catdetail = new CategoryDetails();
-		catdetail.setId(1000);
+		catdetail.setId(new BigInteger("1000"));
 		catdetail.setDescription("test categroy details");
-		catdetail.setDefaultFolderId(999);
+		catdetail.setDefaultFolderId(BigInteger.TEN);
 		catdetail.setProviderName("Test provider name");
 		catdetail.setProviderVersion("Test provider version");
 		catdetail.setProviderDiscovery("Test provider discovery");
@@ -39,7 +41,7 @@ public class CategoryDetailsTest
 		AssertJUnit.assertNotNull(sp1.getParameter());
 		AssertJUnit.assertEquals("test categroy details", catdetail.getDescription());
 		AssertJUnit.assertEquals(1000, catdetail.getId().intValue());
-		AssertJUnit.assertEquals(999, catdetail.getDefaultFolderId().intValue());
+		AssertJUnit.assertEquals(BigInteger.TEN, catdetail.getDefaultFolderId());
 		AssertJUnit.assertEquals(sp1, catdetail.getParameters());
 		AssertJUnit.assertEquals("Test provider name", catdetail.getProviderName());
 		AssertJUnit.assertEquals("Test provider version", catdetail.getProviderVersion());

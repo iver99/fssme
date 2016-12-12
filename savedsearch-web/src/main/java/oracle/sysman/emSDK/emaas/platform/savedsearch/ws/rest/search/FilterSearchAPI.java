@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +27,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 
 /**
  * Find Searches by Category Name/Category Id/ Folder Id
@@ -41,7 +42,6 @@ public class FilterSearchAPI
 
 	@Context
 	UriInfo uri;
-
 
 	private static final Logger LOGGER = LogManager.getLogger(FilterSearchAPI.class);
 
@@ -188,8 +188,8 @@ public class FilterSearchAPI
 				catId, name, lastAccessCount, foldId);
 		final String errmsg = "Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount";
 		CategoryManager catMan = CategoryManager.getInstance();
-		int categId = 0;
-		int folId = 0;
+		BigInteger categId = BigInteger.ZERO;
+		BigInteger folId = BigInteger.ZERO;
 		Category category;
 		String key = "";
 		String value;
@@ -213,15 +213,15 @@ public class FilterSearchAPI
 
 			try {
 				if ("categoryId".equals(key) && value != null) {
-					categId = Integer.parseInt(value);
-					if (categId < 0) {
+					categId = new BigInteger(value);
+					if (BigInteger.ZERO.compareTo(categId) == 1) {
 						throw new NumberFormatException();
 					}
 					return getAllSearchByCategory(categId);
 				}
 				else if ("folderId".equals(key) && value != null) {
-					folId = Integer.parseInt(value);
-					if (folId < 0) {
+					folId = new BigInteger(value);
+					if (BigInteger.ZERO.compareTo(folId) == 1) {
 						throw new NumberFormatException();
 					}
 					return getAllSearchByFolder(folId);
@@ -262,14 +262,14 @@ public class FilterSearchAPI
 
 	}
 
-	private Response getAllSearchByCategory(int catId)
+	private Response getAllSearchByCategory(BigInteger catId)
 	{
 		SearchManager searchMan = SearchManager.getInstance();
 		CategoryManager catMan = CategoryManager.getInstance();
 		Search searchInstance;
 		int statusCode = 200;
 		String message = "";
-		JSONArray jsonArray = new JSONArray();
+		ArrayNode jsonArray = new ObjectMapper().createArrayNode();
 		List<Search> searchList = new ArrayList<Search>();
 
 		try {
@@ -288,10 +288,8 @@ public class FilterSearchAPI
 		try {
 			for (int i = 0; i < searchList.size(); i++) {
 				searchInstance = searchList.get(i);
-
-				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchInstance);
-				jsonArray.put(jsonObj);
-
+				ObjectNode jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchInstance);
+				jsonArray.add(jsonObj);
 			}
 			message = jsonArray.toString();
 		}
@@ -305,7 +303,7 @@ public class FilterSearchAPI
 
 	}
 
-	private Response getAllSearchByFolder(int foldId)
+	private Response getAllSearchByFolder(BigInteger foldId)
 	{
 		SearchManager searchMan = SearchManager.getInstance();
 		FolderManager foldMan = FolderManager.getInstance();
@@ -313,7 +311,7 @@ public class FilterSearchAPI
 
 		String message = "";
 		int statusCode = 200;
-		JSONArray jsonArray = new JSONArray();
+		ArrayNode jsonArray = new ObjectMapper().createArrayNode();
 		List<Search> searchList = new ArrayList<Search>();
 
 		try {
@@ -334,10 +332,8 @@ public class FilterSearchAPI
 		try {
 			for (int i = 0; i < searchList.size(); i++) {
 				searchInstance = searchList.get(i);
-
-				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchInstance);
-				jsonArray.put(jsonObj);
-
+				ObjectNode jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchInstance);
+				jsonArray.add(jsonObj);
 			}
 			message = jsonArray.toString();
 		}
@@ -351,7 +347,7 @@ public class FilterSearchAPI
 	private Response getLastAccessSearch(int count)
 	{
 		String message = "";
-		JSONArray jsonArray = new JSONArray();
+		ArrayNode jsonArray = new ObjectMapper().createArrayNode();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
 				throw new EMAnalyticsDatabaseUnavailException();
@@ -360,11 +356,11 @@ public class FilterSearchAPI
 			for (Search searchObj : searchList) {
 				FolderManager folderMgr = FolderManager.getInstance();
 				String[] pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
-				JSONObject jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchObj, pathArray, false);
-				jsonArray.put(jsonObj);
+				ObjectNode jsonObj = EntityJsonUtil.getSimpleSearchJsonObj(uri.getBaseUri(), searchObj, pathArray, false);
+				jsonArray.add(jsonObj);
 
 			}
-			message = jsonArray.toString(1);
+			message = jsonArray.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 
@@ -372,11 +368,6 @@ public class FilterSearchAPI
 					+ "Fail to read folder/search object", e);
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 
-		}
-		catch (JSONException e) {
-			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
-					+ "Fail to read folder/search object", e);
-			return Response.status(500).entity(e.getMessage()).build();
 		}
 		catch (Exception e) {
 			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")

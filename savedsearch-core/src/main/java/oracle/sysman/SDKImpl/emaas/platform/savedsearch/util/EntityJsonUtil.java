@@ -9,6 +9,7 @@
 
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -25,7 +26,9 @@ import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.MessageFormatMessage;
-import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -131,7 +134,7 @@ public class EntityJsonUtil
 
 	private static final String DEFAULT_DB_VALUE = "0";
 
-	public static JSONObject getErrorJsonObject(long id, String message, long errorcode) throws EMAnalyticsFwkException
+	public static JSONObject getErrorJsonObject(BigInteger id, String message, long errorcode) throws EMAnalyticsFwkException
 	{
 		JSONObject errorObj = new JSONObject();
 		try {
@@ -158,7 +161,7 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getFullCategoryJsonObj(URI baseUri, Category category) throws EMAnalyticsFwkException
+	public static ObjectNode getFullCategoryJsonObj(URI baseUri, Category category) throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, null, false);
 	}
@@ -172,7 +175,7 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getFullFolderJsonObj(URI baseUri, Folder folder) throws EMAnalyticsFwkException
+	public static ObjectNode getFullFolderJsonObj(URI baseUri, Folder folder) throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getFolderJsonObj(baseUri, folder, new String[] { NAME_FOLDER_UIHIDDEN }, false, false);
 	}
@@ -186,7 +189,7 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search) throws EMAnalyticsFwkException
+	public static ObjectNode getFullSearchJsonObj(URI baseUri, Search search) throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getFullSearchJsonObj(baseUri, search, null);
 	}
@@ -202,7 +205,7 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray)
+	public static ObjectNode getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray)
 			throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_SEARCH_LOCKED,
@@ -220,10 +223,10 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray, boolean bResult)
+	public static ObjectNode getFullSearchJsonObj(URI baseUri, Search search, String[] folderPathArray, boolean bResult)
 			throws JSONException, EMAnalyticsFwkException
 	{
-		JSONObject obj = null;
+		ObjectNode obj = null;
 		String fields[] = new String[] { NAME_GUID, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN, NAME_SEARCH_IS_WIDGET };
 		if (bResult) {
 			obj = EntityJsonUtil.getSearchJsonObj(baseUri, search, fields, folderPathArray, false);
@@ -240,7 +243,6 @@ public class EntityJsonUtil
 		AnalyticsSearchModel emSearch = new AnalyticsSearchModel();
 		if(m.get("NAME")!=null){
 			emSearch.setName(m.get("NAME").toString());
-
 		}
 		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
 			emSearch.setDescription(m.get("DESCRIPTION").toString());
@@ -304,7 +306,7 @@ public class EntityJsonUtil
 		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
 			emSearch.setWidgetEditable(m.get("WIDGET_EDITABLE").toString());
 		}
-		emSearch.setId(Long.valueOf(m.get("SEARCH_ID").toString()));
+		emSearch.setId(new BigInteger(m.get("SEARCH_ID").toString()));
 
 		return emSearch;
 	}
@@ -318,8 +320,8 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleCategoryJsonObj(URI baseUri, Category category) throws JSONException,
-	EMAnalyticsFwkException
+	public static ObjectNode getSimpleCategoryJsonObj(URI baseUri, Category category)
+			throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getCategoryJsonObj(baseUri, category, new String[] { NAME_OWNER, NAME_CATEGORY_DEFAULTFOLDER,
 				NAME_PARAMETERS }, true);
@@ -334,7 +336,7 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder) throws JSONException, EMAnalyticsFwkException
+	public static ObjectNode getSimpleFolderJsonObj(URI baseUri, Folder folder) throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSimpleFolderJsonObj(baseUri, folder, false);
 	}
@@ -349,7 +351,7 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleFolderJsonObj(URI baseUri, Folder folder, boolean includeType)
+	public static ObjectNode getSimpleFolderJsonObj(URI baseUri, Folder folder, boolean includeType)
 			throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getFolderJsonObj(baseUri, folder, new String[] { NAME_OWNER, NAME_LASTMODIFIEDBY,
@@ -365,7 +367,7 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search) throws EMAnalyticsFwkException
+	public static ObjectNode getSimpleSearchJsonObj(URI baseUri, Search search) throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search, false);
 	}
@@ -380,7 +382,7 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search, boolean includeType)
+	public static ObjectNode getSimpleSearchJsonObj(URI baseUri, Search search, boolean includeType)
 			throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSimpleSearchJsonObj(baseUri, search, null, includeType);
@@ -397,7 +399,7 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	public static JSONObject getSimpleSearchJsonObj(URI baseUri, Search search, String[] folderPathArray, boolean includeType)
+	public static ObjectNode getSimpleSearchJsonObj(URI baseUri, Search search, String[] folderPathArray, boolean includeType)
 			throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getSearchJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER, NAME_LASTMODIFIEDBY,
@@ -406,20 +408,22 @@ public class EntityJsonUtil
 	}
 
 	/**
+	 *
 	 * @param baseUri
 	 * @param search
 	 * @return
 	 * @throws EMAnalyticsFwkException
 	 */
 
-	public static JSONObject getTargetCardJsonObj(URI baseUri, Search search) throws EMAnalyticsFwkException
+	public static ObjectNode getTargetCardJsonObj(URI baseUri, Search search)
+			throws EMAnalyticsFwkException
 	{
 		return EntityJsonUtil.getTargetCardJsonObj(baseUri, search, new String[] { NAME_GUID, NAME_OWNER, NAME_SEARCH_QUERYSTR,
 				NAME_LASTACCESSDATE, NAME_LASTMODIFIEDBY, NAME_SYSTEM_SEARCH, NAME_SEARCH_LOCKED, NAME_SEARCH_UIHIDDEN,
 				NAME_SEARCH_IS_WIDGET });
 	}
-
 	/**
+	 *
 	 * @param baseUri
 	 * @param search
 	 * @param excludedFields
@@ -427,25 +431,25 @@ public class EntityJsonUtil
 	 * @throws EMAnalyticsFwkException
 	 */
 
-	public static JSONObject getTargetCardJsonObj(URI baseUri, Search search, String[] excludedFields)
-			throws EMAnalyticsFwkException
+	public static ObjectNode getTargetCardJsonObj(URI baseUri, Search search, String[] excludedFields) throws EMAnalyticsFwkException
 	{
-		JSONObject searchObj = null;
+		ObjectNode searchObj = null;
+		ObjectMapper mapper = new ObjectMapper();
 		try {
 			searchObj = JSONUtil.objectToJSONObject(search, excludedFields);
 			if (searchObj.has(NAME_FOLDER_ID)) {
-				int folderId = searchObj.getInt(NAME_FOLDER_ID);
-				JSONObject folderObj = new JSONObject();
-				folderObj.put(NAME_ID, folderId);
+				BigInteger folderId = searchObj.get(NAME_FOLDER_ID).getBigIntegerValue();
+				ObjectNode folderObj = mapper.createObjectNode();
+				folderObj.put(NAME_ID, String.valueOf(folderId));
 				searchObj.remove(NAME_FOLDER_ID);
 				searchObj.put(NAME_FOLDER, folderObj);
 			}
 			if (searchObj.has(NAME_CATEGORY_ID)) {
-				int categoryId = searchObj.getInt(NAME_CATEGORY_ID);
-				JSONObject folderObj = new JSONObject();
-				folderObj.put(NAME_ID, categoryId);
+				BigInteger categoryId = searchObj.get(NAME_CATEGORY_ID).getBigIntegerValue();
+				ObjectNode categoryObj = mapper.createObjectNode();
+				categoryObj.put(NAME_ID, String.valueOf(categoryId));
 				searchObj.remove(NAME_CATEGORY_ID);
-				searchObj.put(NAME_CATEGORY, folderObj);
+				searchObj.put(NAME_CATEGORY, categoryObj);
 			}
 
 		}
@@ -577,18 +581,39 @@ public class EntityJsonUtil
 		return null;
 	}
 
-	private static JSONObject getCategoryJsonObj(URI baseUri, Category category, String[] excludedFields, boolean isSimple)
+	//	/**
+	//	 * Return simple JSON string for widget screen shot
+	//	 *
+	//	 * @param widgetScreenshot
+	//	 * @return
+	//	 * @throws JSONException
+	//	 */
+	//	public static JSONObject getWidgetScreenshotJsonObj(String widgetScreenshot) throws EMAnalyticsFwkException
+	//	{
+	//		JSONObject widgetScreenshotObj = new JSONObject();
+	//		try {
+	//			widgetScreenshotObj.put(NAME_WIDGET_SCREENSHOT, widgetScreenshot);
+	//		}
+	//		catch (JSONException ex) {
+	//			throw new EMAnalyticsFwkException("An error occurred while converting widget screen shot object to JSON string",
+	//					EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, ex);
+	//		}
+	//		return widgetScreenshotObj;
+	//	}
+
+	private static ObjectNode getCategoryJsonObj(URI baseUri, Category category, String[] excludedFields, boolean isSimple)
 			throws EMAnalyticsFwkException
 	{
-		JSONObject categoryObj = null;
+		ObjectNode categoryObj = null;
+		ObjectMapper mapper = new ObjectMapper();
 		try {
 			categoryObj = JSONUtil.objectToJSONObject(category, excludedFields);
 			if (baseUri != null && categoryObj != null) {
 				if (categoryObj.has(NAME_CATEGORY_DEFAULTFOLDERID)) {
 					if (!isSimple) {
-						int defaultFolderId = categoryObj.getInt(NAME_CATEGORY_DEFAULTFOLDERID);
-						JSONObject defaultFolderObj = new JSONObject();
-						defaultFolderObj.put(NAME_ID, defaultFolderId);
+						BigInteger defaultFolderId = categoryObj.get(NAME_CATEGORY_DEFAULTFOLDERID).getBigIntegerValue();
+						ObjectNode defaultFolderObj = mapper.createObjectNode();
+						defaultFolderObj.put(NAME_ID, String.valueOf(defaultFolderId));
 						defaultFolderObj.put(NAME_HREF, baseUri + PATH_FOLDER + defaultFolderId);
 						categoryObj.put(NAME_CATEGORY_DEFAULTFOLDER, defaultFolderObj);
 					}
@@ -596,7 +621,8 @@ public class EntityJsonUtil
 				}
 
 				if (categoryObj.has(NAME_ID)) {
-					int folderId = categoryObj.getInt(NAME_ID);
+					BigInteger folderId = categoryObj.get(NAME_ID).getBigIntegerValue();
+					categoryObj.put(NAME_ID, String.valueOf(folderId));
 					categoryObj.put(NAME_HREF, baseUri + PATH_CATEGORY + folderId);
 				}
 
@@ -629,18 +655,19 @@ public class EntityJsonUtil
 	//		return widgetScreenshotObj;
 	//	}
 
-	private static JSONObject getFolderJsonObj(URI baseUri, Folder folder, String[] excludedFields, boolean isSimple,
+	private static ObjectNode getFolderJsonObj(URI baseUri, Folder folder, String[] excludedFields, boolean isSimple,
 			boolean includeType) throws EMAnalyticsFwkException
 	{
-		JSONObject folderObj = null;
+		ObjectNode folderObj = null;
+		ObjectMapper mapper = new ObjectMapper();
 		try {
 			folderObj = JSONUtil.objectToJSONObject(folder, excludedFields);
 			if (baseUri != null && folderObj != null) {
 				if (folderObj.has(NAME_FOLDER_PARENTID)) {
 					if (!isSimple) {
-						int folderId = folderObj.getInt(NAME_FOLDER_PARENTID);
-						JSONObject parentFolderObj = new JSONObject();
-						parentFolderObj.put(NAME_ID, folderId);
+						BigInteger folderId = folderObj.get(NAME_FOLDER_PARENTID).getBigIntegerValue();
+						ObjectNode parentFolderObj = mapper.createObjectNode();
+						parentFolderObj.put(NAME_ID, String.valueOf(folderId));
 						parentFolderObj.put(NAME_HREF, baseUri + PATH_FOLDER + folderId);
 						folderObj.put(NAME_FOLDER_PARENTFOLDER, parentFolderObj);
 					}
@@ -648,7 +675,8 @@ public class EntityJsonUtil
 				}
 
 				if (folderObj.has(NAME_ID)) {
-					int folderId = folderObj.getInt(NAME_ID);
+					BigInteger folderId = folderObj.get(NAME_ID).getBigIntegerValue();
+					folderObj.put(NAME_ID, String.valueOf(folderId));
 					folderObj.put(NAME_HREF, baseUri + PATH_FOLDER + folderId);
 				}
 
@@ -678,42 +706,42 @@ public class EntityJsonUtil
 	 * @throws JSONException
 	 * @throws EMAnalyticsFwkJsonException
 	 */
-	private static JSONObject getSearchJsonObj(URI baseUri, Search search, String[] excludedFields, String[] folderPathArray,
+	private static ObjectNode getSearchJsonObj(URI baseUri, Search search, String[] excludedFields, String[] folderPathArray,
 			boolean includeType) throws EMAnalyticsFwkException
 	{
-		JSONObject searchObj = null;
+		ObjectNode searchObj = null;
+		ObjectMapper mapper = new ObjectMapper();
 		try {
 			searchObj = JSONUtil.objectToJSONObject(search, excludedFields);
 			if (baseUri != null && searchObj != null) {
 				if (searchObj.has(NAME_FOLDER_ID)) {
-					int folderId = searchObj.getInt(NAME_FOLDER_ID);
-					JSONObject folderObj = new JSONObject();
-					folderObj.put(NAME_ID, folderId);
+					BigInteger folderId = searchObj.get(NAME_FOLDER_ID).getBigIntegerValue();
+					ObjectNode folderObj = mapper.createObjectNode();
+					folderObj.put(NAME_ID, String.valueOf(folderId));
 					folderObj.put(NAME_HREF, baseUri + PATH_FOLDER + folderId);
 					searchObj.remove(NAME_FOLDER_ID);
 					searchObj.put(NAME_FOLDER, folderObj);
 				}
 				if (searchObj.has(NAME_CATEGORY_ID)) {
-					int categoryId = searchObj.getInt(NAME_CATEGORY_ID);
-					JSONObject folderObj = new JSONObject();
-					folderObj.put(NAME_ID, categoryId);
-					folderObj.put(NAME_HREF, baseUri + PATH_CATEGORY + categoryId);
+					BigInteger categoryId = searchObj.get(NAME_CATEGORY_ID).getBigIntegerValue();
+					ObjectNode categoryObj = mapper.createObjectNode();
+					categoryObj.put(NAME_ID, String.valueOf(categoryId));
+					categoryObj.put(NAME_HREF, baseUri + PATH_CATEGORY + categoryId);
 					searchObj.remove(NAME_CATEGORY_ID);
-					searchObj.put(NAME_CATEGORY, folderObj);
+					searchObj.put(NAME_CATEGORY, categoryObj);
 				}
 				if (folderPathArray != null && folderPathArray.length > 0) {
-					JSONArray jsonPathArray = new JSONArray();
+					ArrayNode jsonPathArray = mapper.createArrayNode();
 					for (String p : folderPathArray) {
-						jsonPathArray.put(p);
+						jsonPathArray.add(p);
 					}
 					searchObj.put(NAME_SEARCH_FOLDERPATH, jsonPathArray);
 				}
-
 				if (searchObj.has(NAME_ID)) {
-					int searchId = searchObj.getInt(NAME_ID);
+					BigInteger searchId = searchObj.get(NAME_ID).getBigIntegerValue();
+					searchObj.put(NAME_ID, String.valueOf(searchId));
 					searchObj.put(NAME_HREF, baseUri + PATH_SEARCH + searchId);
 				}
-
 				if (includeType) {
 					searchObj.put(NAME_TYPE, TYPE_SEARCH);
 				}

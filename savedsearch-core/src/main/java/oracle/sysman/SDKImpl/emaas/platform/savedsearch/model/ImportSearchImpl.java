@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import javax.xml.bind.annotation.XmlType;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.CategoryDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.SearchParameterDetails;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
@@ -119,7 +122,7 @@ public class ImportSearchImpl
 	}
 
 	@XmlElement(name = "Id")
-	protected Integer id;
+	protected BigInteger id;
 	@XmlElement(required = true, name = "Name")
 	protected String name;
 	@XmlElement(name = "Description")
@@ -157,12 +160,13 @@ public class ImportSearchImpl
 	{
 		Object obj = categoryDet.getValue();
 		CategoryImpl objCatImp = null;
-		if (obj instanceof Integer) {
+		if (obj instanceof BigInteger) {
 			return categoryDet.getValue();
 		}
 		else {
 			CategoryDetails catDet = (CategoryDetails) obj;
 			objCatImp = new CategoryImpl();
+			objCatImp.setId(catDet.getId() == null ? IdGenerator.getIntUUID(ZDTContext.getRequestId()) : catDet.getId());
 			objCatImp.setName(catDet.getName());
 			objCatImp.setDefaultFolderId(catDet.getDefaultFolderId());
 			objCatImp.setDescription(catDet.getDescription());
@@ -202,14 +206,15 @@ public class ImportSearchImpl
 	{
 		Object obj = folderDet.getValue();
 		FolderImpl fld = new FolderImpl();
-		if (obj instanceof Integer) {
+		if (obj instanceof BigInteger) {
 			return obj;
 		}
 		else {
 			FolderDetails fldDetails = (FolderDetails) obj;
+			fld.setId(fldDetails.getId() == null ? IdGenerator.getIntUUID(ZDTContext.getRequestId()) : fldDetails.getId());
 			fld.setName(fldDetails.getName());
 			fld.setDescription(fldDetails.getDescription());
-			fld.setParentId(fldDetails.getParentId() == null ? 1 : fldDetails.getParentId());
+			fld.setParentId(fldDetails.getParentId() == null ? BigInteger.ONE : fldDetails.getParentId());
 			fld.setUiHidden(fldDetails.isUiHidden());
 			return fld;
 		}
@@ -220,7 +225,7 @@ public class ImportSearchImpl
 	 *
 	 * @return possible object is {@link Integer }
 	 */
-	public Integer getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -363,7 +368,7 @@ public class ImportSearchImpl
 	 * @param value
 	 *            allowed object is {@link Integer }
 	 */
-	public void setId(Integer value)
+	public void setId(BigInteger value)
 	{
 		id = value;
 	}

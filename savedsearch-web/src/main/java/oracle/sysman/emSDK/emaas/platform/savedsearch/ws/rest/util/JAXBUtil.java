@@ -194,13 +194,12 @@ public class JAXBUtil
 			object = u.unmarshal(br);
 		}
 		catch (UnmarshalException e) {
-			e.printStackTrace();
 			if (!errorList.contains(VALID_ERR_MESSAGE) && errorList.isEmpty()) {
 				errorList.add(VALID_ERR_MESSAGE);
 			}
 		}
 		catch (JAXBException | SAXException e) {
-			e.printStackTrace();
+			// TODO
 		}
 		if (!errorList.isEmpty()) {
 			StringBuilder errMsg = new StringBuilder();

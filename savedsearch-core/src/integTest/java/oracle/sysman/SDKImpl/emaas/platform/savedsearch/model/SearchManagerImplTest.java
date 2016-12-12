@@ -1,7 +1,14 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -35,7 +42,9 @@ import org.testng.annotations.Test;
 @Test(groups = { "s2" })
 public class SearchManagerImplTest
 {
-
+	private static final int TEST_INT_ID = 1234;
+	private static final BigInteger TEST_ID = new BigInteger("1234");
+	
 	SearchManagerImpl searchManager;
 	@Mocked
 	PersistenceManager persistenceManager;
@@ -92,7 +101,7 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.getSearchByIdForDelete(anyLong, entityManager);
+				EmAnalyticsObjectUtil.getSearchByIdForDelete((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getSystemSearch();
 				result = new Exception();
@@ -101,7 +110,7 @@ public class SearchManagerImplTest
 
 			}
 		};
-		searchManager.deleteSearch(1234, true);
+		searchManager.deleteSearch(TEST_ID, true);
 	}
 
 	@Test
@@ -113,13 +122,13 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.getSearchByIdForDelete(anyLong, entityManager);
+				EmAnalyticsObjectUtil.getSearchByIdForDelete((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 
 			}
 		};
-		searchManager.deleteSearch(1234, true);
-		searchManager.deleteSearch(1234, false);
+		searchManager.deleteSearch(TEST_ID, true);
+		searchManager.deleteSearch(TEST_ID, false);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -131,13 +140,13 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.getSearchByIdForDelete(anyLong, entityManager);
+				EmAnalyticsObjectUtil.getSearchByIdForDelete((BigInteger) any, entityManager);
 				result = null;
 
 			}
 		};
-		searchManager.deleteSearch(1234, true);
-		searchManager.deleteSearch(1234, false);
+		searchManager.deleteSearch(TEST_ID, true);
+		searchManager.deleteSearch(TEST_ID, false);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -219,11 +228,11 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 			}
 		};
-		searchManager.getSearch(1234);
+		searchManager.getSearch(TEST_ID);
 	}
 	
 	@Test
@@ -237,13 +246,13 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
+				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getDeleted();
-				result = 0L;
+				result = BigInteger.ZERO;
 			}
 		};
-		searchManager.getSearchWithoutOwner(1234);
+		searchManager.getSearchWithoutOwner(TEST_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -257,7 +266,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery("Search.getSearchByName");
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getSingleResult();
 				result = new Exception();
@@ -267,7 +276,7 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getSearchByName("name", 1234);
+		searchManager.getSearchByName("name", TEST_ID);
 	}
 
 	@Test
@@ -281,7 +290,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery("Search.getSearchByName");
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getSingleResult();
 				result = new NoResultException("");
@@ -291,7 +300,7 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getSearchByName("name", 1234);
+		searchManager.getSearchByName("name", TEST_ID);
 	}
 
 	@Test
@@ -305,7 +314,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery("Search.getSearchByName");
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getSingleResult();
 				result = emAnalyticsSearch;
@@ -315,14 +324,14 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getSearchByName("name", 1234);
+		searchManager.getSearchByName("name", TEST_ID);
 	}
 
 	@Test
 	public void testGetSearchCountByFolderId() throws Exception
 	{
 		try {
-			searchManager.getSearchCountByFolderId(1234);
+			searchManager.getSearchCountByFolderId(TEST_ID);
 		}
 		catch (Exception e) {
 
@@ -338,11 +347,11 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = new Exception(throwable);
 			}
 		};
-		searchManager.getSearch(1234);
+		searchManager.getSearch(TEST_ID);
 	}
 	
 	@Test
@@ -368,10 +377,10 @@ public class SearchManagerImplTest
 		
 		List<Search> list1 = searchManager.getSearchListByIds(null);
 		Assert.assertEquals(list1.size(), 0);
-		List<Long> ids = new ArrayList<Long>();
+		List<BigInteger> ids = new ArrayList<BigInteger>();
 		List<Search> list2 = searchManager.getSearchListByIds(ids);
 		Assert.assertEquals(list2.size(), 0);
-		ids.add(1234L);
+		ids.add(BigInteger.valueOf(1234L));
 		searchManager.getSearchListByIds(ids);
 	}
 	
@@ -393,8 +402,8 @@ public class SearchManagerImplTest
 			}
 		};
 		
-		List<Long> ids = new ArrayList<Long>();
-		ids.add(1234L);
+		List<BigInteger> ids = new ArrayList<BigInteger>();
+		ids.add(BigInteger.valueOf(1234L));
 		searchManager.getSearchListByIds(ids);
 	}
 
@@ -409,7 +418,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getResultList();
 				result = emAnalyticsSearch;
@@ -419,7 +428,7 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getSearchListByCategoryId(1234);
+		searchManager.getSearchListByCategoryId(TEST_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -433,7 +442,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getResultList();
 				result = emAnalyticsSearch;
@@ -445,7 +454,7 @@ public class SearchManagerImplTest
 				result = new Exception(throwable);
 			}
 		};
-		searchManager.getSearchListByCategoryId(1234);
+		searchManager.getSearchListByCategoryId(TEST_ID);
 	}
 
 	@Test
@@ -459,7 +468,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getResultList();
 				result = emAnalyticsSearch;
@@ -469,7 +478,7 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getSearchListByFolderId(1234);
+		searchManager.getSearchListByFolderId(TEST_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -483,7 +492,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getResultList();
 				result = emAnalyticsSearch;
@@ -495,7 +504,7 @@ public class SearchManagerImplTest
 				result = new Exception(throwable);
 			}
 		};
-		searchManager.getSearchListByFolderId(1234);
+		searchManager.getSearchListByFolderId(TEST_ID);
 	}
 
 	@Test
@@ -521,7 +530,7 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getSearchListByLastAccessDate(1234);
+		searchManager.getSearchListByLastAccessDate(TEST_INT_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -547,7 +556,7 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getSearchListByLastAccessDate(1234);
+		searchManager.getSearchListByLastAccessDate(TEST_INT_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -573,7 +582,7 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getSearchListByLastAccessDate(1234);
+		searchManager.getSearchListByLastAccessDate(TEST_INT_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -585,11 +594,11 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = null;
 			}
 		};
-		searchManager.getSearch(1234);
+		searchManager.getSearch(TEST_ID);
 	}
 
 	@Test
@@ -602,11 +611,11 @@ public class SearchManagerImplTest
 				TenantContext.getContext();
 				result = tenantInfo;
 				persistenceManager.getEntityManager((TenantInfo) any);
-				EmAnalyticsObjectUtil.getSearchParamByName(anyLong, anyString, entityManager);
+				EmAnalyticsObjectUtil.getSearchParamByName((BigInteger) any, anyString, entityManager);
 				result = "param_value";
 			}
 		};
-		searchManager.getSearchParamByName(1L, "widget_viewmodel");
+		searchManager.getSearchParamByName(BigInteger.ONE, "widget_viewmodel");
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -620,7 +629,7 @@ public class SearchManagerImplTest
 				result = new Exception(throwable);
 			}
 		};
-		searchManager.getSearchParamByName(1L, "widget_viewmodel");
+		searchManager.getSearchParamByName(BigInteger.ONE, "widget_viewmodel");
 	}
 
 	@Test
@@ -632,13 +641,13 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
+				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getDeleted();
 				result = 0L;
 			}
 		};
-		searchManager.getSearchWithoutOwner(1234);
+		searchManager.getSearchWithoutOwner(TEST_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -650,13 +659,13 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
+				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getDeleted();
 				result = 1L;
 			}
 		};
-		searchManager.getSearchWithoutOwner(1234);
+		searchManager.getSearchWithoutOwner(TEST_ID);
 	}
 
 	@Test
@@ -670,7 +679,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getResultList();
 				result = emAnalyticsSearch;
@@ -678,7 +687,7 @@ public class SearchManagerImplTest
 				result = tenantInfo;
 			}
 		};
-		searchManager.getSystemSearchListByCategoryId(1234);
+		searchManager.getSystemSearchListByCategoryId(TEST_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -692,7 +701,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getResultList();
 				result = new Exception(throwable);
@@ -700,7 +709,7 @@ public class SearchManagerImplTest
 				result = tenantInfo;
 			}
 		};
-		searchManager.getSystemSearchListByCategoryId(1234);
+		searchManager.getSystemSearchListByCategoryId(TEST_ID);
 	}
 
 	@Test
@@ -714,7 +723,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getResultList();
 				result = emAnalyticsSearch;
@@ -724,7 +733,7 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getWidgetListByCategoryId(1234);
+		searchManager.getWidgetListByCategoryId(TEST_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -738,7 +747,7 @@ public class SearchManagerImplTest
 				result = entityManager;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
 				query.getResultList();
 				result = new Exception(throwable);
@@ -748,7 +757,7 @@ public class SearchManagerImplTest
 				result = "userName";
 			}
 		};
-		searchManager.getWidgetListByCategoryId(1234);
+		searchManager.getWidgetListByCategoryId(TEST_ID);
 	}
 
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
@@ -790,11 +799,11 @@ public class SearchManagerImplTest
 				result = persistenceManager;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
+				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner((BigInteger) any, entityManager);
 				result = null;
 			}
 		};
-		searchManager.getWidgetScreenshotById(1234);
+		searchManager.getWidgetScreenshotById(TEST_ID);
 	}
 
 	@Test
@@ -827,12 +836,12 @@ public class SearchManagerImplTest
 				result = tenantInfo;
 				persistenceManager.getEntityManager((TenantInfo) any);
 				result = entityManager;
-				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(anyLong, entityManager);
+				EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getDeleted();
-				result = 0;
+				result = BigInteger.ZERO;
 				emAnalyticsSearch.getId();
-				result = 1L;
+				result = BigInteger.ONE;
 				emAnalyticsSearch.getOwner();
 				result = "Oracle";
 				emAnalyticsSearch.getCreationDate();
@@ -842,11 +851,11 @@ public class SearchManagerImplTest
 				emAnalyticsSearch.getEmAnalyticsCategory();
 				result = emAnalyticsCategory;
 				emAnalyticsCategory.getCategoryId();
-				result = 1L;
+				result = BigInteger.ONE;
 				emAnalyticsSearch.getEmAnalyticsFolder();
 				result = emAnalyticsFolder;
 				emAnalyticsFolder.getFolderId();
-				result = 1L;
+				result = BigInteger.ONE;
 				emAnalyticsSearch.getIsWidget();
 				result = 1;
 				emAnalyticsSearch.getEmAnalyticsSearchParams();
@@ -885,7 +894,7 @@ public class SearchManagerImplTest
 				result = category;
 			}
 		};
-		searchManager.getWidgetScreenshotById(1L);
+		searchManager.getWidgetScreenshotById(BigInteger.ONE);
 	}
 
 	@Test(expectedExceptions = { NullPointerException.class })
@@ -910,8 +919,8 @@ public class SearchManagerImplTest
 				importSearchImpl.getCategoryDetails();
 				result = new CategoryImpl();
 				search.getId();
-				result = 1L;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				result = BigInteger.ONE;
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				search.getCategoryId();
 				result = null;
@@ -950,13 +959,13 @@ public class SearchManagerImplTest
 				importSearchImpl.getCategoryDetails();
 				result = new Integer(2223);
 				search.getId();
-				result = 1L;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				result = BigInteger.ONE;
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getEmAnalyticsCategory();
 				result = emAnalyticsCategory;
 				emAnalyticsCategory.getCategoryId();
-				returns(2223L, 1111L);
+				returns(new BigInteger("2223"), new BigInteger("1111"));
 			}
 		};
 		searchManager.saveMultipleSearch(importSearchList);
@@ -985,8 +994,8 @@ public class SearchManagerImplTest
 				importSearchImpl.getCategoryDetails();
 				result = new Object();
 				search.getId();
-				result = 1L;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				result = BigInteger.ONE;
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getSystemSearch();
 				result = new BigDecimal(1);
@@ -1017,8 +1026,8 @@ public class SearchManagerImplTest
 				importSearchImpl.getCategoryDetails();
 				result = new Object();
 				search.getId();
-				result = 1L;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				result = BigInteger.ONE;
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getSystemSearch();
 				result = new BigDecimal(1333);
@@ -1049,11 +1058,13 @@ public class SearchManagerImplTest
 				importSearchImpl.getCategoryDetails();
 				result = new Object();
 				search.getId();
-				result = 1L;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				result = BigInteger.ONE;
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getSystemSearch();
 				result = new BigDecimal(1333);
+				search.getFolderId();
+				result = BigInteger.ONE;
 			}
 		};
 		searchManager.saveMultipleSearch(importSearchList);
@@ -1077,16 +1088,16 @@ public class SearchManagerImplTest
 				importSearchImpl.getSearch();
 				result = search;
 				importSearchImpl.getFolderDetails();
-				result = new Integer(3333);
+				result = new BigInteger("3333");
 				importSearchImpl.getCategoryDetails();
 				result = new Object();
 				search.getId();
-				result = 1L;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				result = BigInteger.ONE;
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getSystemSearch();
 				result = new BigDecimal(1333);
-				EmAnalyticsObjectUtil.getFolderById(anyLong, entityManager);
+				EmAnalyticsObjectUtil.getFolderById((BigInteger) any, entityManager);
 			}
 		};
 		searchManager.saveMultipleSearch(importSearchList);
@@ -1116,7 +1127,7 @@ public class SearchManagerImplTest
 				result = new Object();
 				search.getId();
 				result = 1L;
-				EmAnalyticsObjectUtil.getSearchById(anyLong, entityManager);
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getSystemSearch();
 				result = new BigDecimal(1333);
@@ -1238,9 +1249,8 @@ public class SearchManagerImplTest
 				result = null;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
-				query.setParameter(anyString, anyString);
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getUsername();
@@ -1282,9 +1292,8 @@ public class SearchManagerImplTest
 				result = null;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
-				query.setParameter(anyString, anyString);
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getUsername();
@@ -1314,16 +1323,15 @@ public class SearchManagerImplTest
 				importSearchImpl.getSearch();
 				result = search;
 				importSearchImpl.getFolderDetails();
-				result = new Integer(11);
+				result = new BigInteger("11");
 				importSearchImpl.getCategoryDetails();
 				result = new Object();
-				search.getId();
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = null;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
-				query.setParameter(anyString, anyString);
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getUsername();
@@ -1353,16 +1361,15 @@ public class SearchManagerImplTest
 				importSearchImpl.getSearch();
 				result = search;
 				importSearchImpl.getFolderDetails();
-				result = new Integer(11);
+				result = new BigInteger("11");
 				importSearchImpl.getCategoryDetails();
 				result = new Object();
-				search.getId();
+				EmAnalyticsObjectUtil.getSearchById((BigInteger) any, entityManager);
 				result = null;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyLong);
+				query.setParameter(anyString, (BigInteger) any);
 				result = query;
-				query.setParameter(anyString, anyString);
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getUsername();

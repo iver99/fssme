@@ -2,6 +2,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +16,10 @@ import javax.persistence.Query;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
@@ -99,7 +102,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public EmAnalyticsSearch deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException
+	public EmAnalyticsSearch deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		LOGGER.info("Deleting search with id: " + searchId);
 		EntityManager em = null;
@@ -122,6 +125,7 @@ public class SearchManagerImpl extends SearchManager
 						EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
 			}
 			searchObj.setDeleted(searchId);
+			searchObj.setLastModificationDate(DateUtil.getGatewayTime());
 			em.getTransaction().begin();
 			if (permanently) {
 				em.remove(searchObj);
@@ -204,7 +208,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public void deleteTargetCard(long targetCardId, boolean permanently) throws EMAnalyticsFwkException
+	public void deleteTargetCard(BigInteger targetCardId, boolean permanently) throws EMAnalyticsFwkException
 	{
 		LOGGER.info("Deleting target card with id: " + targetCardId);
 		EntityManager em = null;
@@ -309,14 +313,14 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public Search getSearch(long searchId) throws EMAnalyticsFwkException
+	public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException
 	{
 		//Get full search data
 		return getSearch(searchId, false);
 	}
 
 	@Override
-	public Search getSearchByName(String name, long folderId) throws EMAnalyticsFwkException
+	public Search getSearchByName(String name, BigInteger folderId) throws EMAnalyticsFwkException
 	{
 		LOGGER.info("Retrieving search with name " + name + " in folder id: " + folderId);
 		EntityManager em = null;
@@ -351,7 +355,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public int getSearchCountByFolderId(long folderId) throws EMAnalyticsFwkException
+	public int getSearchCountByFolderId(BigInteger folderId) throws EMAnalyticsFwkException
 	{
 		throw new RuntimeException("getSearchCountByFolderId is not ready to use");
 		//Not used now, uncomment below when necessary
@@ -388,7 +392,7 @@ public class SearchManagerImpl extends SearchManager
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+	public List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		try {
@@ -429,7 +433,7 @@ public class SearchManagerImpl extends SearchManager
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException
+	public List<Search> getSearchListByFolderId(BigInteger folderId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		try {
@@ -516,7 +520,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public String getSearchParamByName(long searchId, String paramName) throws EMAnalyticsFwkException
+	public String getSearchParamByName(BigInteger searchId, String paramName) throws EMAnalyticsFwkException
 	{
 		LOGGER.debug("get param value by searchId: " + searchId + ", param name: " + paramName);
 		EntityManager em = null;
@@ -541,14 +545,14 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public Search getSearchWithoutOwner(long searchId) throws EMAnalyticsFwkException
+	public Search getSearchWithoutOwner(BigInteger searchId) throws EMAnalyticsFwkException
 	{
 		return getSearchWithoutOwner(searchId, false);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Search> getSystemSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+	public List<Search> getSystemSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		try {
@@ -618,7 +622,7 @@ public class SearchManagerImpl extends SearchManager
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException
+	public List<Search> getWidgetListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException
 	{
 		EntityManager em = null;
 		try {
@@ -651,7 +655,7 @@ public class SearchManagerImpl extends SearchManager
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Search> getSearchListByIds(List<Long> ids) throws EMAnalyticsFwkException
+	public List<Search> getSearchListByIds(List<BigInteger> ids) throws EMAnalyticsFwkException
 	{
 		List<Search> resultList = new ArrayList<Search>();
 		if(ids == null || ids.isEmpty()) {
@@ -737,7 +741,7 @@ public class SearchManagerImpl extends SearchManager
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 					.setParameter("tenantId", TenantContext.getContext().getTenantInternalId());
 			if (widgetGroupId != null) {
-				query.setParameter("widgetGroupId", Long.valueOf(widgetGroupId));
+				query.setParameter("widgetGroupId", new BigInteger(widgetGroupId));
 			}
 			if (LOGGER.isDebugEnabled()) {
 				try {
@@ -777,7 +781,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException
+	public ScreenshotData getWidgetScreenshotById(BigInteger widgetId) throws EMAnalyticsFwkException
 	{
 		String screenshot = null;
 		Search search = getSearchWithoutOwner(widgetId, true);
@@ -816,44 +820,47 @@ public class SearchManagerImpl extends SearchManager
 				Search search = tmpImportSrImpl.getSearch();
 				Object obj = tmpImportSrImpl.getFolderDetails();
 				Object cateObj = tmpImportSrImpl.getCategoryDetails();
+				if(search.getId() == null) {
+					search.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
+				}
+					
+				EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getSearchById(search.getId(), em);
 				try {
-					if (search.getId() != null && search.getId() > 0) {
-
-						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getSearchById(search.getId(), em);
+					if (emSearch != null) {
+//						EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getSearchById(search.getId(), em);
 						// checking that ,it is system search and method is not  calling from updateutility.
-						if (!isOobSearch && emSearch != null && emSearch.getSystemSearch() != null
+						if (!isOobSearch && emSearch.getSystemSearch() != null
 								&& emSearch.getSystemSearch().intValue() == 1) {
 							importedList.add(createSearchObject(emSearch, null));
 							continue;
 						}
 
 						// checking that ,it is system search and method is not  calling from updateutility.
-						if (isOobSearch && emSearch != null && emSearch.getSystemSearch() != null
+						if (isOobSearch && emSearch.getSystemSearch() != null
 								&& emSearch.getSystemSearch().intValue() != 1) {
 							importedList.add(createSearchObject(emSearch, null));
 							continue;
 						}
 
-						if (obj != null && obj instanceof Integer) {
-							EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(), em);
+						if (obj != null && obj instanceof BigInteger) {
+							EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById((BigInteger) obj, em);
 							if (tmpfld != null) {
-								search.setFolderId((Integer) obj);
+								search.setFolderId((BigInteger) obj);
 							}
 							else {
 								continue;
 							}
-
 						}
 
 						if (obj != null && obj instanceof FolderImpl) {
 							Folder fld = (Folder) obj;
-							if (fld.getParentId() == null || fld.getParentId() == 0) {
-								fld.setParentId(1);
+							if (fld.getParentId() == null || BigInteger.ZERO.equals(fld.getParentId())) {
+								fld.setParentId(BigInteger.ONE);
 							}
 							EmAnalyticsFolder objFolder = EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(fld);
 
 							if (objFolder != null) {
-								search.setFolderId((int) objFolder.getFolderId());
+								search.setFolderId(objFolder.getFolderId());
 							}
 
 						}
@@ -861,14 +868,14 @@ public class SearchManagerImpl extends SearchManager
 						if (obj instanceof FolderImpl && search.getFolderId() == null) {
 							EmAnalyticsFolder folderObj = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
 							em.persist(folderObj);
-							search.setFolderId((int) folderObj.getFolderId());
+							search.setFolderId(folderObj.getFolderId());
 						}
 
-						if (cateObj instanceof Integer) {
+						if (cateObj instanceof BigInteger) {
 							EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getSearchById(search.getId(), em);
 
-							if (searchEntity.getEmAnalyticsCategory().getCategoryId() == ((Integer) cateObj).longValue()) {
-								search.setCategoryId((Integer) cateObj);
+							if (searchEntity.getEmAnalyticsCategory().getCategoryId().equals((BigInteger) cateObj)) {
+								search.setCategoryId((BigInteger) cateObj);
 							}
 							else {
 								continue;
@@ -877,24 +884,24 @@ public class SearchManagerImpl extends SearchManager
 
 						if (cateObj instanceof CategoryImpl && search.getCategoryId() == null) {
 							EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
-							search.setCategoryId((int) iCategory.getCategoryId());
+							search.setCategoryId(iCategory.getCategoryId());
 						}
 
 						emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
 						em.merge(emSearch);
-						tmpImportSrImpl.setId((int) emSearch.getId());
+						tmpImportSrImpl.setId(emSearch.getId());
 						importedList.add(createSearchObject(emSearch, null));
 					}
 					else {
 						EmAnalyticsSearch searchEntity = null;
 						try {
-							if (obj != null && obj instanceof Integer) {
-								Integer id = null;
+							if (obj != null && obj instanceof BigInteger) {
+								BigInteger id = (BigInteger) obj;
 								searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
 										.setParameter("folderId", id).setParameter("searchName", search.getName())
 										.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 										.getSingleResult();
-								tmpImportSrImpl.setId((int) searchEntity.getId());
+								tmpImportSrImpl.setId(searchEntity.getId());
 								importedList.add(createSearchObject(searchEntity, null));
 							}
 						}
@@ -906,13 +913,12 @@ public class SearchManagerImpl extends SearchManager
 							Folder fld = null;
 
 							if (obj == null) {
-
 								continue;
 							}
-							if (obj != null && obj instanceof Integer) {
-								EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById(((Integer) obj).longValue(), em);
+							if (obj != null && obj instanceof BigInteger) {
+								EmAnalyticsFolder tmpfld = EmAnalyticsObjectUtil.getFolderById((BigInteger) obj, em);
 								if (tmpfld != null) {
-									search.setFolderId((Integer) obj);
+									search.setFolderId((BigInteger) obj);
 								}
 								else {
 									importedList.add(search);
@@ -922,14 +928,12 @@ public class SearchManagerImpl extends SearchManager
 							if (cateObj == null) {
 								continue;
 							}
-							if (cateObj instanceof Integer) {
-								EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil
-										.getCategoryById(((Integer) cateObj).longValue(), em);
+							if (cateObj instanceof BigInteger) {
+								EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getCategoryById((BigInteger) cateObj, em);
 								if (categoryObj != null) {
-									search.setCategoryId((Integer) cateObj);
+									search.setCategoryId((BigInteger) cateObj);
 								}
 								else {
-
 									importedList.add(search);
 									continue;
 								}
@@ -937,12 +941,12 @@ public class SearchManagerImpl extends SearchManager
 
 							if (obj instanceof FolderImpl) {
 								fld = (Folder) obj;
-								if (fld.getParentId() == null || fld.getParentId() == 0) {
-									fld.setParentId(1);
+								if (fld.getParentId() == null || BigInteger.ZERO.equals(fld.getParentId())) {
+									fld.setParentId(BigInteger.ONE);
 								}
 								EmAnalyticsFolder objFolder = EmAnalyticsObjectUtil.getEmAnalyticsFolderByFolderObject(fld);
 								if (objFolder != null) {
-									search.setFolderId((int) objFolder.getFolderId());
+									search.setFolderId(objFolder.getFolderId());
 								}
 							}
 							EmAnalyticsCategory categoryObj = null;
@@ -958,13 +962,11 @@ public class SearchManagerImpl extends SearchManager
 									LOGGER.error("no result");
 								}
 								if (categoryObj != null) {
-
-									search.setCategoryId((int) categoryObj.getCategoryId());
+									search.setCategoryId(categoryObj.getCategoryId());
 								}
-
 							}
 
-							if (search != null && search.getFolderId() != null) {
+							if (search != null  && search.getFolderId() != null) {
 								try {
 
 									searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
@@ -978,7 +980,7 @@ public class SearchManagerImpl extends SearchManager
 									LOGGER.error("no result");
 								}
 								if (searchEntity != null) {
-									tmpImportSrImpl.setId((int) searchEntity.getId());
+									tmpImportSrImpl.setId(searchEntity.getId());
 									importedList.add(createSearchObject(searchEntity, null));
 									continue;
 								}
@@ -987,19 +989,19 @@ public class SearchManagerImpl extends SearchManager
 							if (obj instanceof FolderImpl && search.getFolderId() == null) {
 								folder = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
 								em.persist(folder);
-								search.setFolderId((int) folder.getFolderId());
+								search.setFolderId(folder.getFolderId());
 							}
 
 							if (cateObj instanceof CategoryImpl && search.getCategoryId() == null) {
 								EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
 								em.persist(iCategory);
-								search.setCategoryId((int) iCategory.getCategoryId());
+								search.setCategoryId(iCategory.getCategoryId());
 							}
 
-							EmAnalyticsSearch emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
-							em.persist(emSearch);
-							tmpImportSrImpl.setId((int) emSearch.getId());
-							importedList.add(createSearchObject(emSearch, null));
+							EmAnalyticsSearch newSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
+							em.persist(newSearch);
+							tmpImportSrImpl.setId(newSearch.getId());
+							importedList.add(createSearchObject(newSearch, null));
 						}
 					}
 				}
@@ -1133,7 +1135,7 @@ public class SearchManagerImpl extends SearchManager
 
 			}
 
-			rtnObj.setId((int) searchObj.getId());
+			rtnObj.setId(searchObj.getId());
 			if (searchObj.getSearchGuid() != null) {
 				rtnObj.setGuid(searchObj.getSearchGuid().toString());
 			}
@@ -1141,9 +1143,9 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setName(searchObj.getName());
 			rtnObj.setDescription(searchObj.getDescription());
 			rtnObj.setOwner(searchObj.getOwner());
-			rtnObj.setCreatedOn(searchObj.getCreationDate());
+			rtnObj.setCreationDate(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
-			rtnObj.setLastModifiedOn(searchObj.getLastModificationDate());
+			rtnObj.setLastModificationDate(searchObj.getLastModificationDate());
 			rtnObj.setLastAccessDate(DateUtil.getCurrentUTCTime());
 			if (searchObj.getMetadataClob() != null && searchObj.getMetadataClob().length() > 0) {
 				char[] metadataCharArr = new char[searchObj.getMetadataClob().length()];
@@ -1154,9 +1156,9 @@ public class SearchManagerImpl extends SearchManager
 
 			rtnObj.setQueryStr(searchObj.getSearchDisplayStr());
 			rtnObj.setLocked(searchObj.getIsLocked() != null && searchObj.getIsLocked().intValue() == 1 ? true : false);
-			rtnObj.setCategoryId((int) searchObj.getEmAnalyticsCategory().getCategoryId());
+			rtnObj.setCategoryId(searchObj.getEmAnalyticsCategory().getCategoryId());
 
-			rtnObj.setFolderId((int) searchObj.getEmAnalyticsFolder().getFolderId());
+			rtnObj.setFolderId(searchObj.getEmAnalyticsFolder().getFolderId());
 
 			rtnObj.setUiHidden(searchObj.getUiHidden() != null && searchObj.getUiHidden().intValue() == 1 ? true : false);
 			rtnObj.setSystemSearch(
@@ -1215,15 +1217,15 @@ public class SearchManagerImpl extends SearchManager
 		WidgetImpl rtnObj = null;
 		try {
 			rtnObj = new WidgetImpl();
-			rtnObj.setId((int) searchObj.getId());
+			rtnObj.setId(searchObj.getId());
 			rtnObj.setName(searchObj.getName());
 			rtnObj.setDescription(searchObj.getDescription());
 			rtnObj.setOwner(searchObj.getOwner());
-			rtnObj.setCreatedOn(searchObj.getCreationDate());
+			rtnObj.setCreationDate(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
-			rtnObj.setLastModifiedOn(searchObj.getLastModificationDate());
-			rtnObj.setCategoryId((int) searchObj.getEmAnalyticsCategory().getCategoryId());
-			rtnObj.setFolderId((int) searchObj.getEmAnalyticsFolder().getFolderId());
+			rtnObj.setLastModificationDate(searchObj.getLastModificationDate());
+			rtnObj.setCategoryId(searchObj.getEmAnalyticsCategory().getCategoryId());
+			rtnObj.setFolderId(searchObj.getEmAnalyticsFolder().getFolderId());
 			rtnObj.setLastAccessDate(DateUtil.getCurrentUTCTime());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
 
@@ -1387,7 +1389,7 @@ public class SearchManagerImpl extends SearchManager
 		return search;
 	}
 
-	private Search getSearch(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException
+	private Search getSearch(BigInteger searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException
 	{
 		LOGGER.info("Retrieving search with id: " + searchId);
 		EntityManager em = null;
@@ -1418,7 +1420,7 @@ public class SearchManagerImpl extends SearchManager
 		return getSearch(searchObj, loadWidgetOnly);
 	}
 
-	private Search getSearchWithoutOwner(long searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException
+	private Search getSearchWithoutOwner(BigInteger searchId, boolean loadWidgetOnly) throws EMAnalyticsFwkException
 	{
 		LOGGER.info("getSearchWithoutOwner with id: " + searchId);
 		EntityManager em = null;
@@ -1440,7 +1442,7 @@ public class SearchManagerImpl extends SearchManager
 			}
 		}
 
-		if (searchObj == null || searchObj.getDeleted() != 0) {
+		if (searchObj == null || !BigInteger.ZERO.equals(searchObj.getDeleted())) {
 			String errMsg = "Search identified by ID: " + searchId + " does not exist";
 			LOGGER.error(errMsg);
 			throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, new Object[] { searchId });

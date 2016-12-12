@@ -1,14 +1,12 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.upgrade;
 
-import java.util.ArrayList;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -33,10 +31,10 @@ public class FolderCRUDAfterUpgradeTest {
 
     static String serveruri;
 
-    static String authToken;
-    static Integer catid = null;
-    static String TENANT_ID_OPC1;
-    static String TENANT_ID1;
+	static String authToken;
+	static BigInteger catid = null;;
+	static String TENANT_ID_OPC1;
+	static String TENANT_ID1;
 
 
     //@Test
@@ -84,7 +82,7 @@ public class FolderCRUDAfterUpgradeTest {
         JSONArray arrfld = new JSONArray(res1.getBody().asString());
         for (int index = 0; index < arrfld.length(); index++) {
             JSONObject jsonObj = arrfld.getJSONObject(index);
-            catid = jsonObj.getInt("id");
+            catid = new BigInteger(jsonObj.getString("id"));
         }
     }
 
@@ -198,7 +196,7 @@ public class FolderCRUDAfterUpgradeTest {
         Assert.assertTrue(res2.getStatusCode() == 400);
         String message = res2.jsonPath().getString("message");
         Assert.assertEquals(message, "The folder name 'Custom_Folder' already exist");
-        Assert.assertEquals(res1.jsonPath().getInt("id"), res2.jsonPath().getInt("id"));
+        Assert.assertEquals(res1.jsonPath().getString("id"), res2.jsonPath().getString("id"));
         Assert.assertEquals(res2.jsonPath().getInt("errorCode"), 30021);
         Response res = RestAssured.given().log().everything().header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + id);
@@ -226,18 +224,18 @@ public class FolderCRUDAfterUpgradeTest {
                 .post("/folder");
         JsonPath jpp1 = resp1.jsonPath();
 
-        Integer parentFolder = jpp1.getInt("id");
+        String parentFolder = jpp1.getString("id");
 
         int position;
-        String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":"
-                + parentFolder.intValue() + "}}";
+        String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":\""
+                + parentFolder + "\"}}";
         Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
                 .post("/folder");
         JsonPath jp1 = res1.jsonPath();
         Assert.assertTrue(res1.getStatusCode() == 201);
         Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + parentFolder.intValue());
+                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + parentFolder);
         JsonPath jp = res.jsonPath();
         List<String> a = jp.get("name");
 
@@ -252,7 +250,7 @@ public class FolderCRUDAfterUpgradeTest {
                 .delete("/folder/" + jp1.get("id"));
         Assert.assertTrue(res2.getStatusCode() == 204);
         res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + parentFolder.intValue());
+                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + parentFolder);
         Assert.assertTrue(res2.getStatusCode() == 204);
     }
 
@@ -267,17 +265,17 @@ public class FolderCRUDAfterUpgradeTest {
                 .post("/folder");
         JsonPath jpp1 = resp1.jsonPath();
 
-        Integer parentFolder = jpp1.getInt("id");
+        String parentFolder = jpp1.getString("id");
 
         int position = -1;
-        String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":0}}";
+        String jsonString = "{ \"name\":\"TestFolder\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":\"0\"}}";
         Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
                 .post("/folder");
         JsonPath jp1 = res1.jsonPath();
         Assert.assertTrue(res1.getStatusCode() == 201);
         Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + parentFolder.intValue());
+                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + parentFolder);
         JsonPath jp = res.jsonPath();
         List<String> a = jp.get("name");
 
@@ -293,7 +291,7 @@ public class FolderCRUDAfterUpgradeTest {
         Assert.assertTrue(res2.getStatusCode() == 204);
 
         res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + parentFolder.intValue());
+                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + parentFolder);
         Assert.assertTrue(res2.getStatusCode() == 204);
     }
 
@@ -315,20 +313,20 @@ public class FolderCRUDAfterUpgradeTest {
      * update a folder using put method
      */
     public void folderEdit() {
-        Integer id = getRootId();
+    	String id = getRootId();
 
         int position = -1;
         Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + id.intValue());
+                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + id);
         JsonPath jp = res.jsonPath();
         List<String> a = jp.get("name");
-        List<Integer> b = jp.get("id");
+        List<String> b = jp.get("id");
 
         for (int i = 0; i < a.size(); i++) {
             if (a.get(i).equals("Custom_Folder")) {
                 position = i;
 
-                int myfolderID = b.get(position);
+                String myfolderID = b.get(position);
                 String jsonString = "{ \"name\":\"Custom_Folder_Edit\" }";
 
                 Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
@@ -365,9 +363,9 @@ public class FolderCRUDAfterUpgradeTest {
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
                 .post("/folder");
         JsonPath jp11 = res11.jsonPath();
-        int pid = jp11.get("id");
-        String jsonString = "{ \"name\":\"TestFolder_ParentId\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":"
-                + pid + "}}";
+        String pid = jp11.getString("id");
+        String jsonString = "{ \"name\":\"TestFolder_ParentId\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":\""
+                + pid + "\"}}";
         Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
                 .post("/folder");
@@ -377,14 +375,14 @@ public class FolderCRUDAfterUpgradeTest {
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + pid);
         JsonPath jp = res.jsonPath();
         List<String> a = jp.get("name");
-        List<Integer> b = jp.get("id");
+        List<String> b = jp.get("id");
 
         for (int i = 0; i < a.size(); i++) {
             if ("TestFolder_ParentId".equals(a.get(i))) {
                 position = i;
 
-                int myfolderID = b.get(position);
-                String jsonString_parentId = "{\"parentFolder\":{\"id\":" + pid + "}}";
+                String myfolderID = b.get(position);
+                String jsonString_parentId = "{\"parentFolder\":{\"id\":\"" + pid + "\"}}";
 
                 Response resParentId = RestAssured.given().contentType(ContentType.JSON).log().everything()
                         .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1)
@@ -395,7 +393,7 @@ public class FolderCRUDAfterUpgradeTest {
         }
 
         res = RestAssured.given().log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + getRootId().intValue());
+                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + getRootId());
         jp = res.jsonPath();
         List<String> a1 = jp.get("name");
 
@@ -430,11 +428,11 @@ public class FolderCRUDAfterUpgradeTest {
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
                 .post("/folder");
         JsonPath jp11 = res11.jsonPath();
-        int parentId = jp11.get("id");
+        String parentId = jp11.getString("id");
 
         int position;
-        String jsonString = "{ \"name\":\"TestFolder_ParentId_Zero\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":"
-                + parentId + "}}";
+        String jsonString = "{ \"name\":\"TestFolder_ParentId_Zero\", \"description\":\"Folder for EMAAS searches\",\"parentFolder\":{\"id\":\""
+                + parentId + "\"}}";
         Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
                 .post("/folder");
@@ -444,12 +442,12 @@ public class FolderCRUDAfterUpgradeTest {
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + parentId);
         JsonPath jp = res.jsonPath();
         List<String> a = jp.get("name");
-        List<Integer> b = jp.get("id");
+        List<String> b = jp.get("id");
 
         for (int i = 0; i < a.size(); i++) {
             if ("TestFolder_ParentId_Zero".equals(a.get(i))) {
                 position = i;
-                int myfolderID = b.get(position);
+                String myfolderID = b.get(position);
                 String jsonStringParentId = "{\"parentFolder\":{\"id\":0}}";
                 Response resParentId = RestAssured.given().contentType(ContentType.JSON).log().everything()
                         .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1)
@@ -459,9 +457,9 @@ public class FolderCRUDAfterUpgradeTest {
             }
         }
 
-        Integer id = getRootId();
+        String id = getRootId();
         res = RestAssured.given().log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + id.intValue());
+                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + id);
         jp = res.jsonPath();
         List<String> a1 = jp.get("name");
 
@@ -627,9 +625,7 @@ public class FolderCRUDAfterUpgradeTest {
     public void folderInvalidType() {
         Response res = RestAssured.given().log().everything().header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=me");
-
-        Assert.assertTrue(res.getStatusCode() == 400);
-        Assert.assertEquals(res.asString(), "Folder Id should be a numeric and not alphanumeric");
+        Assert.assertEquals(res.getStatusCode(), 404);
     }
 
     @Test
@@ -641,13 +637,13 @@ public class FolderCRUDAfterUpgradeTest {
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId");
 
         Assert.assertTrue(res.getStatusCode() == 400);
-        Assert.assertEquals(res.asString(), "Empty folderId");
+        Assert.assertEquals(res.asString(), "Please give folderId");
 
         Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=");
 
         Assert.assertTrue(res1.getStatusCode() == 400);
-        Assert.assertEquals(res1.asString(), "Empty folderId");
+        Assert.assertEquals(res1.asString(), "Please give folderId");
 
         Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities");
@@ -705,19 +701,19 @@ public class FolderCRUDAfterUpgradeTest {
      * Delete a folder using DELETE method
      */
     public void getFolderDelete() {
-        Integer id = getRootId();
+        String id = getRootId();
 
         int position;
         Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + id.intValue());
+                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/entities?folderId=" + id);
         JsonPath jp = res.jsonPath();
         List<String> a = jp.get("name");
-        List<Integer> b = jp.get("id");
+        List<String> b = jp.get("id");
 
         for (int i = 0; i < a.size(); i++) {
             if ("Custom_Folder_Edit".equals(a.get(i))) {
                 position = i;
-                int myfolderID = b.get(position);
+                String myfolderID = b.get(position);
                 Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
                         .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
                         .delete("/folder/" + myfolderID);
@@ -754,7 +750,7 @@ public class FolderCRUDAfterUpgradeTest {
      * create a folder and searches in it using post method to verify the functionality of find searches by folderId
      */
     public void searchesByFolderId() {
-        Integer id = getRootId();
+    	String id = getRootId();
 
         String jsonString1 = "{ \"name\":\"Folder_searches6\",\"description\":\"Folder for EMAAS searches\"}";
         Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
@@ -772,11 +768,11 @@ public class FolderCRUDAfterUpgradeTest {
                 + "/savedsearch/v1/folder/" + id);
         Assert.assertEquals(jp0.get("href"), "http://" + HOSTNAME + ":" + portno + "/savedsearch/v1/folder/" + jp0.get("id"));
         Assert.assertEquals(jp0.get("description"), "Folder for EMAAS searches");
-        String jsonString2 = "{\"name\":\"Search_s1\",\"category\":{\"id\":"
+        String jsonString2 = "{\"name\":\"Search_s1\",\"category\":{\"id\":\""
                 + catid
-                + "},\"folder\":{\"id\":"
+                + "\"},\"folder\":{\"id\":\""
                 + jp1.get("id")
-                + "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
+                + "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
         Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when()
                 .post("/search");
@@ -788,11 +784,11 @@ public class FolderCRUDAfterUpgradeTest {
 
         Assert.assertTrue(res10.getStatusCode() == 200);
         Assert.assertTrue("Search_s1".equals(jp10.get("name[0]")));
-        String jsonString3 = "{\"name\":\"Search_s2\",\"category\":{\"id\":"
+        String jsonString3 = "{\"name\":\"Search_s2\",\"category\":{\"id\":\""
                 + catid
-                + "},\"folder\":{\"id\":"
+                + "\"},\"folder\":{\"id\":\""
                 + jp1.get("id")
-                + "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample2\",\"type\":STRING,\"value\":\"my_value\"}]}";
+                + "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample2\",\"type\":STRING,\"value\":\"my_value\"}]}";
         Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
                 .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString3).when()
                 .post("/search");
@@ -839,14 +835,15 @@ public class FolderCRUDAfterUpgradeTest {
         Assert.assertEquals(res9.asString(), "Folder with Id " + jp1.get("id") + " does not exist");
     }
 
-    private Integer getRootId() {
+	private String getRootId()
+	{
 
-        Response resroot = RestAssured.given().log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("");
-        JsonPath jpRoot = resroot.jsonPath();
+		Response resroot = RestAssured.given().log().everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("");
+		JsonPath jpRoot = resroot.jsonPath();
 
-        List<Integer> id = jpRoot.get("id");
-        return id.get(0);
-    }
+		List<String> id = jpRoot.get("id");
+		return id.get(0);
+	}
 
 }

@@ -1,12 +1,17 @@
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
+import java.util.List;
+
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 @Test
 public class OOBSearchTest {
@@ -15,7 +20,7 @@ public class OOBSearchTest {
         //long topologyWidgetId = 3219;
         //long omcCompositeTargetId = 4004;
         //long orchestrationWorkflowSubmissionId = 5004;
-        long omcWorkflowSubmissionId = 4005;
+        BigInteger omcWorkflowSubmissionId = new BigInteger("4005");
         TenantContext.setContext(new TenantInfo(
                 TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
                 TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
@@ -59,10 +64,10 @@ public class OOBSearchTest {
 
     @Test
     public void test4WidgetsUpdated() throws EMAnalyticsFwkException {
-        long id4000 = 4000;
-        long id4001 = 4001;
-        long id4002 = 4002;
-        long id4003 = 4003;
+    	BigInteger id4000 = new BigInteger("4000");
+    	BigInteger id4001 = new BigInteger("4001");
+    	BigInteger id4002 = new BigInteger("4002");
+    	BigInteger id4003 = new BigInteger("4003");
         TenantContext.setContext(new TenantInfo(
                 TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
                 TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
@@ -76,7 +81,7 @@ public class OOBSearchTest {
         }
     }
 
-    private void checkUpdatedSearchParam(long searchId,String paramStr) throws EMAnalyticsFwkException {
+    private void checkUpdatedSearchParam(BigInteger searchId,String paramStr) throws EMAnalyticsFwkException {
         SearchManager searchManager = SearchManager.getInstance();
         Search search = searchManager.getSearch(searchId);
         List<SearchParameter> searchParameterList = search.getParameters();

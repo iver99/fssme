@@ -26,10 +26,10 @@ public class OOBFolderCRUD {
 	@Test
 	public void testFolder401()
 	{
-		testOOBFolder(401, "UDE Type-Ahead Feature");
+		testOOBFolder("401", "UDE Type-Ahead Feature");
 	}
 	
-	private void testOOBFolder(int folderId, String folderName)
+	private void testOOBFolder(String folderId, String folderName)
 	{
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/folder/{folderId}", folderId);

@@ -1,13 +1,11 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -19,6 +17,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 @Test(groups = { "s2" })
 public class WidgetChangeNotificationTest
@@ -46,7 +47,7 @@ public class WidgetChangeNotificationTest
 		wcn.notify((WidgetNotifyEntity) null);
 
 		final WidgetNotifyEntity wne = new WidgetNotifyEntity();
-		wne.setUniqueId(1L);
+		wne.setUniqueId(BigInteger.ONE);
 		wne.setName("Test Widget");
 		wne.setType(WidgetNotificationType.UPDATE_NAME);
 		wne.setAffactedObjects(2);
@@ -78,7 +79,7 @@ public class WidgetChangeNotificationTest
 		};
 		SearchImpl search = new SearchImpl();
 		final WidgetChangeNotification wcn = new WidgetChangeNotification();
-		search.setId(1);
+		search.setId(BigInteger.ONE);
 		search.setName("name");
 		wcn.notify(search, new Date());
 	}

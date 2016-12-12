@@ -126,7 +126,8 @@ public class LogUtil
 	public static final String LOG_PROP_TENANTID = "tenantId";
 	public static final String LOG_VALUE_NA = "N/A";
 	public static final String INTERACTION_LOG_PROP_SERVICE_INVOKED = "serviceInvoked";
-
+	public static final String INTERACTION_LOG_PROP_ZDT_REQID = "gatewayQuestId";
+	public static final String INTERACTION_LOG_PROP_ZDT_REQTIME = "gatewayQuestTime";
 	public static final String INTERACTION_LOG_PROP_DIRECTION = "direction";
 
 	private static final String INTERACTION_LOG_NAME = "oracle.sysman.emaas.platform.savedsearch.interaction.log";
@@ -180,7 +181,7 @@ public class LogUtil
 	 */
 	public static void initializeLoggersUpdateTime()
 	{
-		Long timestamp = DateUtil.getCurrentUTCTime().getTime();
+		Long timestamp = DateUtil.getGatewayTime().getTime();
 		LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
 		Configuration cfg = loggerContext.getConfiguration();
 		Map<String, LoggerConfig> loggers = cfg.getLoggers();

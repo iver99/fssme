@@ -9,6 +9,7 @@
  */
  
 package oracle.sysman.emaas.platform.savedsearch.model;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -19,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class AnalyticsSearchModel
 {
 	@JsonProperty("WIDGET_UNIQUE_ID")
-	private Long id;
+	private BigInteger id;
 	@JsonProperty("WIDGET_NAME")
 	private String name;
 	@JsonProperty("WIDGET_DESCRIPTION")
@@ -62,7 +63,7 @@ public class AnalyticsSearchModel
 	/**
 	 * @return the id
 	 */
-	public Long getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -71,7 +72,7 @@ public class AnalyticsSearchModel
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id)
+	public void setId(BigInteger id)
 	{
 		this.id = id;
 	}

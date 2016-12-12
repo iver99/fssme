@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import mockit.Expectations;
@@ -26,7 +27,7 @@ public class ScreenshotCacheManagerTest {
     @Test
     public void testGetScreenshotFromCacheParamNull()throws Exception{
         Assert.assertNull(screenshotCacheManager.getScreenshotFromCache(tenant,null,"filename"));
-        Assert.assertNull(screenshotCacheManager.getScreenshotFromCache(tenant,1L,null));
+        Assert.assertNull(screenshotCacheManager.getScreenshotFromCache(tenant,BigInteger.ONE,null));
     }
 
     @Test
@@ -37,7 +38,7 @@ public class ScreenshotCacheManagerTest {
                 result = null;
             }
         };
-        screenshotCacheManager.getScreenshotFromCache(tenant, 1L, "filename");
+        screenshotCacheManager.getScreenshotFromCache(tenant, BigInteger.ONE, "filename");
     }
     @Test
     public void testGetScreenshotFromCache()throws Exception{
@@ -47,12 +48,12 @@ public class ScreenshotCacheManagerTest {
                 result = screenshotElement;
             }
         };
-        screenshotCacheManager.getScreenshotFromCache(tenant, 1L, "filename");
+        screenshotCacheManager.getScreenshotFromCache(tenant, BigInteger.ONE, "filename");
     }
 
     @Test
     public void testStoreBase64ScreenshotToCacheParamNull() throws Exception {
-        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, 1L, null);
+        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, BigInteger.ONE, null);
     }
     @Mocked
     ScreenshotData screenshotData;
@@ -71,7 +72,7 @@ public class ScreenshotCacheManagerTest {
                 cacheManager.putCacheable((Tenant)any, anyString, (Keys)any, (ScreenshotElement)any);
             }
         };
-        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, 1L, screenshotData);
+        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, BigInteger.ONE, screenshotData);
     }
 
     @Test
@@ -89,7 +90,7 @@ public class ScreenshotCacheManagerTest {
                 cacheManager.putCacheable((Tenant)any, anyString, (Keys)any, (ScreenshotElement)any);
             }
         };
-        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, 1L, screenshotData);
+        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, BigInteger.ONE, screenshotData);
 
     }
 
@@ -107,7 +108,7 @@ public class ScreenshotCacheManagerTest {
                 result = "data:image/,";
             }
         };
-        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, 1L, screenshotData);
+        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, BigInteger.ONE, screenshotData);
 
     }
     @Test
@@ -124,7 +125,7 @@ public class ScreenshotCacheManagerTest {
                 result = null;
             }
         };
-        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, 1L, screenshotData);
+        screenshotCacheManager.storeBase64ScreenshotToCache(tenant, BigInteger.ONE, screenshotData);
 
     }
 

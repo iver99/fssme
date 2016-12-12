@@ -3,6 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Enumeration;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.servlet.Filter;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogDirection;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -149,6 +151,20 @@ public class SavedSearchCORSFilter implements Filter
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
 		HttpServletRequest oamRequest = new OAMHttpRequestWrapper(hReq);
+		
+		ZDTContext.clear();
+		String requestIdHeader = hReq.getHeader("X-ORCL-OMC-APIGW-REQGUID");
+		String requestTimeHeader = hReq.getHeader("X-ORCL-OMC-APIGW-REQTIME");
+		if (requestIdHeader != null) {
+			LOGGER.debug("X-ORCL-OMC-APIGW-REQGUID : " + requestIdHeader);
+			UUID uuid = UUID.fromString(requestIdHeader);
+			ZDTContext.setRequestId(uuid);
+		}
+		if (requestTimeHeader != null) {
+			LOGGER.debug("X-ORCL-OMC-APIGW-REQTIME : " + requestTimeHeader);
+			Long time = Long.valueOf(requestTimeHeader);
+			ZDTContext.setRequestTime(time);
+		}
 
 		// Only add CORS headers if the developer mode is enabled to add them
 		if (new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {

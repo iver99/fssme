@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -21,7 +22,7 @@ public class EmAnalyticsSearchTest
 	public void setUp()
 	{
 		emAnalyticsSearch = new EmAnalyticsSearch();
-		emAnalyticsSearch.setId(123412341234L);
+		emAnalyticsSearch.setId(new BigInteger("123412341234"));
 		emAnalyticsSearch.setOwner("ownerxx");
 	}
 
@@ -43,7 +44,7 @@ public class EmAnalyticsSearchTest
 	@Test(groups = { "s1" })
 	public void testGetDeleted()
 	{
-		long deleted = 123412341234L;
+		BigInteger deleted = new BigInteger("123412341234");
 		emAnalyticsSearch.setDeleted(deleted);
 		Assert.assertEquals(deleted, emAnalyticsSearch.getDeleted());
 	}
@@ -86,7 +87,7 @@ public class EmAnalyticsSearchTest
 	@Test(groups = { "s1" })
 	public void testGetId()
 	{
-		long id = 1234123412341234L;
+		BigInteger id = new BigInteger("1234123412341234");
 		emAnalyticsSearch.setId(id);
 		Assert.assertEquals(id, emAnalyticsSearch.getId());
 	}

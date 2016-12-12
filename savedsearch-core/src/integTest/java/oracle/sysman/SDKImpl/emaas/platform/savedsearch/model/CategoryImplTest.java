@@ -1,14 +1,14 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.testng.Assert.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * Created by xiadai on 2016/8/23.
@@ -25,7 +25,7 @@ public class CategoryImplTest {
 
     @Test
     public void testGetDefaultFolderId(){
-        category.setDefaultFolderId(1);
+        category.setDefaultFolderId(BigInteger.ONE);
         category.getDefaultFolderId();
     }
 
@@ -37,7 +37,7 @@ public class CategoryImplTest {
 
     @Test
     public void testGetId(){
-        category.setId(1);
+        category.setId(BigInteger.ONE);
         category.getId();
     }
 

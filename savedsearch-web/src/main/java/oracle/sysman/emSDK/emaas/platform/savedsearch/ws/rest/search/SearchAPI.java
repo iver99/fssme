@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,8 +23,10 @@ import javax.ws.rs.core.UriInfo;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -48,6 +51,7 @@ import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServ
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -235,7 +239,6 @@ public class SearchAPI
 
 		String message = "";
 		int statusCode = 201;
-		JSONObject jsonObj;
 		SearchManager sman = SearchManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
@@ -263,8 +266,7 @@ public class SearchAPI
 				}
 			}
 			
-			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch);
-			message = jsonObj.toString();
+			message = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -324,7 +326,7 @@ public class SearchAPI
 	 */
 	@DELETE
 	@Path("{id: [0-9]*}")
-	public Response deleteSearch(@PathParam("id") long searchId)
+	public Response deleteSearch(@PathParam("id") BigInteger searchId)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/search/{}", searchId);
 		int statusCode = 204;
@@ -489,12 +491,11 @@ public class SearchAPI
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response editSearch(JSONObject inputJsonObj, @HeaderParam("X_SSF_API_AUTH") String updateCategory,
-			@PathParam("id") long searchId)
+			@PathParam("id") BigInteger searchId)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}", searchId);
 		String message = null;
 		int statusCode = 200;
-		JSONObject jsonObj;
 		Search searchObj;
 		SearchManager sman = SearchManager.getInstance();
 		try {
@@ -509,9 +510,7 @@ public class SearchAPI
 				searchObj = createSearchObjectForEdit(inputJsonObj, sman.getSearch(searchId), false);
 			}
 			Search savedSearch = sman.editSearch(searchObj);
-			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch);
-			message = jsonObj.toString();
-
+			message = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			message = e.getMessage();
@@ -532,7 +531,7 @@ public class SearchAPI
 	@Path("{id: [0-9]*}/odsentity")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createOdsEntity(@PathParam("id") long searchId) {
+	public Response createOdsEntity(@PathParam("id") BigInteger searchId) {
 		String message = null;
 		int statusCode = 200;
 		SearchManager sman = SearchManager.getInstance();
@@ -550,6 +549,9 @@ public class SearchAPI
 		}
 		
 		if(savedSearch != null) {
+			if(savedSearch.getParameters() == null) {
+				savedSearch.setParameters(new ArrayList<SearchParameter>());
+			}
 			for (SearchParameter param : savedSearch.getParameters()) {
 				if(param.getName().equalsIgnoreCase(OdsDataService.ENTITY_ID)) {
 					statusCode = 400;
@@ -564,8 +566,7 @@ public class SearchAPI
 					String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
 					savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
 					savedSearch = sman.editSearch(savedSearch, true);
-					JSONObject jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch);
-					message = jsonObj.toString();
+					message = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
 				} catch (EMAnalyticsFwkException e) {
 					statusCode = e.getStatusCode();
 					message = e.getMessage();
@@ -586,12 +587,12 @@ public class SearchAPI
 	@PUT
 	@Path("{id: [0-9]*}/updatelastaccess")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response editLastAccess(@PathParam("id") long searchId) {
+	public Response editLastAccess(@PathParam("id") BigInteger searchId) {
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}/updatelastaccess", searchId);
 		
 		String message = null;
 		int statusCode = 200;
-		JSONObject jsonObj = null;
+		ObjectNode jsonObj = null;
 		
 		// find and return the whole object
 		SearchManager sman = SearchManager.getInstance();
@@ -657,7 +658,7 @@ public class SearchAPI
 	@Deprecated
 	@PUT
 	@Path("{id: [0-9]*}")
-	public Response editSearchAccessDate(@PathParam("id") long searchId, @QueryParam("updateLastAccessTime") boolean update)
+	public Response editSearchAccessDate(@PathParam("id") BigInteger searchId, @QueryParam("updateLastAccessTime") boolean update)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}?updateLastAccessTime={}",
 				searchId, update);
@@ -751,13 +752,12 @@ public class SearchAPI
 	@GET
 	@Path("{id: [0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearch(@PathParam("id") long searchid, @QueryParam("flattenedFolderPath") boolean bPath)
+	public Response getSearch(@PathParam("id") BigInteger searchid, @QueryParam("flattenedFolderPath") boolean bPath)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}?flattenedFolderPath={}",
 				searchid, bPath);
 		String message = null;
 		int statusCode = 200;
-		JSONObject jsonObj;
 		SearchManager sman = SearchManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
@@ -769,8 +769,7 @@ public class SearchAPI
 				FolderManager folderMgr = FolderManager.getInstance();
 				pathArray = folderMgr.getPathForFolderId(searchObj.getFolderId());
 			}
-			jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj, pathArray);
-			message = jsonObj.toString();
+			message = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj, pathArray).toString();
 		}
 		catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());
@@ -790,15 +789,17 @@ public class SearchAPI
 	public Response getSearchList(JSONArray inputJsonArray)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/list");
-		List<Long> searchIdList = new ArrayList<Long>();
+		List<BigInteger> searchIdList = new ArrayList<BigInteger>();
 		try {
 			for(int i = 0; i < inputJsonArray.length(); i++) {
-				searchIdList.add(inputJsonArray.getLong(i));
+				searchIdList.add(new BigInteger(inputJsonArray.getString(i)));
 			}
 		} catch(NullPointerException npe) {
 			return Response.status(404).entity("search id list is empty").build();
 		} catch(JSONException je) {
-			return Response.status(404).entity("invalid search id in search id list").build(); 
+			return Response.status(404).entity("invalid search id in search id list").build();
+		} catch(NumberFormatException nfe) {
+			return Response.status(404).entity("invalid search id in search id list").build();
 		}
 		
 		String message = null;
@@ -827,7 +828,7 @@ public class SearchAPI
 	
 	@GET
 	@Path("{id: [0-9]*}/assetroot")
-	public Response getAssetRoot(@PathParam("id") long searchid){
+	public Response getAssetRoot(@PathParam("id") BigInteger searchid){
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/assetroot/{}",
 				searchid);
 		SearchManager searchManager = SearchManager.getInstance();
@@ -873,14 +874,13 @@ public class SearchAPI
 	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException
 	{
 		Search searchObj = new SearchImpl();
+		
+		// set id provided by gateway
+		searchObj.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
+		
 		// Data population !
 		try {
 			String name = json.getString("name");
-
-			//			if (name.trim() == null) {
-			//				throw new EMAnalyticsWSException("The name key for search can not be null in the input JSON Object",
-			//						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-			//			}
 			if (name != null && "".equals(name.trim())) {
 				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
@@ -928,7 +928,7 @@ public class SearchAPI
 
 		try {
 			JSONObject jsonObj = json.getJSONObject("category");
-			searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
+			searchObj.setCategoryId(new BigInteger(jsonObj.getString("id")));
 		}
 		catch (JSONException je) {
 			throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",
@@ -936,7 +936,7 @@ public class SearchAPI
 		}
 		try {
 			JSONObject jsonFold = json.getJSONObject("folder");
-			searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id")));
+			searchObj.setFolderId(new BigInteger(jsonFold.getString("id")));
 		}
 		catch (JSONException je) {
 			throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",
@@ -967,11 +967,6 @@ public class SearchAPI
 				}
 				try {
 					String name = jsonParam.getString("name");
-					//					if (name.trim() == null) {
-					//						throw new EMAnalyticsWSException(
-					//								"The name key for search param can not be null in the input JSON Object",
-					//								EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
-					//					}
 					if (name != null && "".equals(name.trim())) {
 						throw new EMAnalyticsWSException(
 								"The name key for search param can not be empty in the input JSON Object",
@@ -1065,7 +1060,7 @@ public class SearchAPI
 			if (json.has("category")) {
 				try {
 					JSONObject jsonObj = json.getJSONObject("category");
-					searchObj.setCategoryId(Integer.parseInt(jsonObj.getString("id")));
+					searchObj.setCategoryId(new BigInteger(jsonObj.getString("id")));
 				}
 				catch (JSONException je) {
 					throw new EMAnalyticsWSException("The category key for search is missing in the input JSON Object",
@@ -1073,13 +1068,13 @@ public class SearchAPI
 				}
 			}
 			else {
-				searchObj.setCategoryId(Integer.parseInt(searchObj.getCategoryId().toString()));
+				searchObj.setCategoryId(searchObj.getCategoryId());
 			}
 		}
 		if (json.has("folder")) {
 			try {
 				JSONObject jsonFold = json.getJSONObject("folder");
-				searchObj.setFolderId(Integer.parseInt(jsonFold.getString("id")));
+				searchObj.setFolderId(new BigInteger(jsonFold.getString("id")));
 			}
 			catch (JSONException je) {
 				throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",
@@ -1087,7 +1082,7 @@ public class SearchAPI
 			}
 		}
 		else {
-			searchObj.setFolderId(Integer.parseInt(searchObj.getFolderId().toString()));
+			searchObj.setFolderId(searchObj.getFolderId());
 		}
 
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));

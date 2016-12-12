@@ -11,6 +11,8 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch;
 
 
 
+import java.math.BigInteger;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,6 +20,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 
 
@@ -57,7 +61,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 public class FolderDetails {
 
  @XmlElement(name="Id") 
- protected Integer id;
+ protected BigInteger id;
  
  @XmlElement(name="Name")
  protected String name;
@@ -66,7 +70,7 @@ public class FolderDetails {
  protected String description;
  
  @XmlElement(name="ParentId")
- protected Integer parentId;
+ protected BigInteger parentId;
  
  @XmlElement(name="UiHidden")
  protected boolean uiHidden;
@@ -79,7 +83,7 @@ public class FolderDetails {
   *     {@link Integer }
   *     
   */
- public Integer getId() {
+ public BigInteger getId() {
      return id;
  }
 
@@ -91,7 +95,7 @@ public class FolderDetails {
   *     {@link Integer }
   *     
   */
- public void setId(Integer value) {
+ public void setId(BigInteger value) {
      this.id = value;
  }
 
@@ -151,7 +155,7 @@ public class FolderDetails {
   *     {@link Integer }
   *     
   */
- public Integer getParentId() {
+ public BigInteger getParentId() {
      return parentId;
  }
 
@@ -163,7 +167,7 @@ public class FolderDetails {
   *     {@link Integer }
   *     
   */
- public void setParentId(Integer value) {
+ public void setParentId(BigInteger value) {
      this.parentId = value;
  }
 
@@ -186,7 +190,7 @@ public class FolderDetails {
  public Folder getFolder()
  {
 	 FolderImpl fld= new FolderImpl();
-	 fld.setId(getId());
+	 fld.setId(getId() == null ? IdGenerator.getIntUUID(ZDTContext.getRequestId()) : getId());
 	 fld.setName(getName());
 	 fld.setDescription(getDescription());
 	 fld.setParentId(getParentId());

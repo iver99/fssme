@@ -1,6 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.navigation;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.TestHelper;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -133,23 +134,21 @@ public class SavedSearchAPITest {
                 result = true;
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getSubFolders(anyLong);
+                folderManager.getSubFolders((BigInteger) any);
                 result = folderList;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchListByFolderId(anyLong);
+                searchManager.getSearchListByFolderId((BigInteger) any);
                 result = searchLists;
                 EntityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
-                result = new JSONObject();
+                result = new ObjectNode(null);
                 EntityJsonUtil.getSimpleSearchJsonObj((URI)any, (Search)any, null, true);
-                result = new JSONObject();
+                result = new ObjectNode(null);
             }
         };
-        Assert.assertNotNull(savedSearchAPI.getDetails(""));
         Assert.assertNotNull(savedSearchAPI.getDetails(null));
-        Assert.assertNotNull(savedSearchAPI.getDetails("id"));
-        Assert.assertNotNull(savedSearchAPI.getDetails("-111"));
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("-111")));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
 
@@ -163,7 +162,7 @@ public class SavedSearchAPITest {
                 result = new JSONException(throwable);
             }
         };
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
     @Test (groups = {"s2"})
@@ -176,7 +175,7 @@ public class SavedSearchAPITest {
                 result = new EMAnalyticsFwkException(throwable);
             }
         };
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
     @Test (groups = {"s2"})
@@ -189,7 +188,7 @@ public class SavedSearchAPITest {
                 result = new UnsupportedEncodingException();
             }
         };
-        Assert.assertNotNull(savedSearchAPI.getDetails("111"));
+        Assert.assertNotNull(savedSearchAPI.getDetails(new BigInteger("111")));
     }
 
     @Mocked
@@ -209,16 +208,16 @@ public class SavedSearchAPITest {
                 result = true;
                 FolderManager.getInstance();
                 result = folderManager;
-                folderManager.getSubFolders(anyLong);
+                folderManager.getSubFolders((BigInteger) any);
                 result = folderList;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchListByFolderId(anyLong);
+                searchManager.getSearchListByFolderId((BigInteger) any);
                 result = searchLists;
                 EntityJsonUtil.getSimpleFolderJsonObj((URI)any, (Folder)any, true);
-                result = new JSONObject();
+                result = new ObjectNode(null);
                 EntityJsonUtil.getSimpleSearchJsonObj((URI)any, (Search)any, null, true);
-                result = new JSONObject();
+                result = new ObjectNode(null);
             }
         };
         Assert.assertNotNull(savedSearchAPI.getRootFolders());
