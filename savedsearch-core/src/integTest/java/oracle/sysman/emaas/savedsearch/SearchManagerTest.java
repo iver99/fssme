@@ -2,6 +2,7 @@ package oracle.sysman.emaas.savedsearch;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.SessionInfoUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -41,6 +43,10 @@ import org.testng.annotations.Test;
 
 public class SearchManagerTest extends BaseTest
 {
+	
+	private static final String MODULE_NAME = "SavedSearchService"; // application service name
+	private final static String ACTION_NAME = "SearchManagerTest";//current class name
+
 	public static Category createTestCategory(CategoryManager cm, Folder folder, String name) throws EMAnalyticsFwkException
 	{
 		Category cat = new CategoryImpl();
