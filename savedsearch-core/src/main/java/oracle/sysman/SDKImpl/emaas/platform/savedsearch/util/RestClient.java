@@ -62,8 +62,8 @@ public class RestClient
 		else {
 			LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
 			LOGGERITR
-					.info("RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is get.",
-							url);
+			.info("RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is get.",
+					url);
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 				.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
@@ -103,14 +103,17 @@ public class RestClient
 		else {
 			LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
 			LOGGERITR
-					.info("RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
-							url);
+			.info("RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
+					url);
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 				.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON);
 		if (headers != null) {
 			for (String key : headers.keySet()) {
+				if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
+					continue;
+				}
 				Object value = headers.get(key);
 				if (value == null) {
 					continue;
