@@ -37,6 +37,7 @@ def regClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-cl
 
 project.ext.omctf_omcCloudSetup_deployArgs= "-skipOpssConfig true -skipRestartServerOpss true "
 
+
 dependencies {
 
 
