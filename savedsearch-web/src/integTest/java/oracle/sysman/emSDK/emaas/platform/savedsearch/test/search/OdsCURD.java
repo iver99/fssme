@@ -101,7 +101,7 @@ public class OdsCURD {
                 ||createForExistingSearchResponse.getBody().asString()
                     .startsWith("Exist Entity ID"));
         if (createForExistingSearchResponse.getStatusCode() == 200) {
-        	Assert.assertTrue(createForExistingSearchResponse.getBody().asString().contains("\"owner\": \"ORACLE\""));
+        	Assert.assertTrue(createForExistingSearchResponse.getBody().asString().contains("\"owner\":\"ORACLE\""));
         }
     }
 
