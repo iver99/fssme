@@ -536,7 +536,6 @@ class EmAnalyticsObjectUtil
 		Date utcNow = DateUtil.getGatewayTime();
 		if (!RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())) {
 			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-			searchEntity.setOwner(currentUser);
 			searchEntity.setLastModifiedBy(currentUser);
 		}
 		searchEntity.setLastModificationDate(utcNow);
