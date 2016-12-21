@@ -2,12 +2,12 @@ package oracle.sysman.emaas.savedsearch;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import mockit.Expectations;
@@ -19,6 +19,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.SessionInfoUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -34,8 +35,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -44,6 +43,10 @@ import org.testng.annotations.Test;
 
 public class SearchManagerTest extends BaseTest
 {
+	
+	private static final String MODULE_NAME = "SavedSearchService"; // application service name
+	private final static String ACTION_NAME = "SearchManagerTest";//current class name
+
 	public static Category createTestCategory(CategoryManager cm, Folder folder, String name) throws EMAnalyticsFwkException
 	{
 		Category cat = new CategoryImpl();
@@ -201,15 +204,7 @@ public class SearchManagerTest extends BaseTest
 		search = sm.editSearch(search);
 		long editedDate = search.getLastAccessDate().getTime();
 		AssertJUnit.assertTrue(createdDate < editedDate);
-
-		BigInteger searchId = search.getId();
-
 		sm.deleteSearch(search.getId(), true);
-
-		// ensure the last access for the search is deleted also
-		EmAnalyticsLastAccess eala = getLastAccessForSearch(searchId);
-		AssertJUnit.assertEquals(null, eala);
-
 		cm.deleteCategory(cat.getId(), true);
 		fm.deleteFolder(folder.getId(), true);
 	}
@@ -791,27 +786,7 @@ public class SearchManagerTest extends BaseTest
 		AssertJUnit.assertEquals(expected.getOwner(), actual.getOwner());
 		AssertJUnit.assertEquals(expected.getCategoryId(), actual.getCategoryId());
 		AssertJUnit.assertEquals(expected.getFolderId(), actual.getFolderId());
-		AssertJUnit.assertEquals(expected.getLastAccessDate(), actual.getLastAccessDate());
 		AssertJUnit.assertEquals(expected.getIsWidget(), actual.getIsWidget());
 	}
 
-	private EmAnalyticsLastAccess getLastAccessForSearch(BigInteger searchId)
-	{
-		EntityManager em = null;
-		EmAnalyticsLastAccess eala = null;
-		try {
-
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			EmAnalyticsLastAccessPK ealaPK = new EmAnalyticsLastAccessPK();
-			ealaPK.setObjectId(searchId);
-			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-			ealaPK.setAccessedBy(currentUser);
-			ealaPK.setObjectType(EmAnalyticsLastAccess.LAST_ACCESS_TYPE_SEARCH);
-			eala = em.find(EmAnalyticsLastAccess.class, ealaPK);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getMessage());
-		}
-		return eala;
-	}
 }

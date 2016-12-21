@@ -13,9 +13,6 @@
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVer</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVerPK</class>
 		<properties>
@@ -56,9 +53,6 @@
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVer</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVerPK</class>
 		<properties>

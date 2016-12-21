@@ -5,7 +5,6 @@ import java.io.StringReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -37,8 +36,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 
@@ -57,8 +54,8 @@ public class SearchManagerImpl extends SearchManager
 	private static final Logger LOGGER = LogManager.getLogger(SearchManagerImpl.class);
 
 	public static final SearchManagerImpl SEARCH_MANAGER = new SearchManagerImpl();
-	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 and e.owner in ('ORACLE',:userName) order by e.lastAccess.accessDate DESC ";
-	private static final String LASTACCESS_ORDERBY_FOR_INTERNAL_TENANT = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.lastAccess.accessDate DESC ";
+	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 and e.owner in ('ORACLE',:userName) order by e.lastModificationDate DESC ";
+	private static final String LASTACCESS_ORDERBY_FOR_INTERNAL_TENANT = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.lastModificationDate DESC ";
 
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_1 = "SELECT e FROM EmAnalyticsSearch e " + "where ";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_2 = "e.emAnalyticsCategory.categoryId=:widgetGroupId AND ";
@@ -687,34 +684,6 @@ public class SearchManagerImpl extends SearchManager
 		}
 		return resultList;
 	}
-	
-	@Override
-	public int updateLastAccessDate(List<BigInteger> ids) throws EMAnalyticsFwkException {
-		if(ids == null || ids.isEmpty()) {
-			return 0;
-		}
-		EntityManager em = null;
-		try {
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			em.getTransaction().begin();
-			int updatedNum = em.createNamedQuery("LastAccess.updateLastAccessByIds")
-					.setParameter("accessDate", DateUtil.getCurrentUTCTime())
-					.setParameter("ids", ids)
-					.setParameter("accessedBy", TenantContext.getContext().getUsername())
-					.executeUpdate();
-			em.getTransaction().commit();
-			return updatedNum;
-		} catch (Exception e) {
-			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			LOGGER.error("Error while updating last access date by search id list : " + ids, e);
-			throw new EMAnalyticsFwkException("Error while updating last access date by search id list : " + ids,
-					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, e);
-		} finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager#getWidgetListByProviderNames(java.lang.String[])
@@ -771,8 +740,6 @@ public class SearchManagerImpl extends SearchManager
 					.setHint("eclipselink.join-fetch", "e.emAnalyticsCategory")
 					.setHint("eclipselink.left-join-fetch", "e.emAnalyticsCategory.emAnalyticsCategoryParams")
 					.setHint("eclipselink.join-fetch", "e.emAnalyticsFolder")
-					.setHint("eclipselink.left-join-fetch", "e.lastAccess")
-					.setHint("eclipselink.left-join-fetch", "e.lastAccess.emAnalyticsSearch")
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
 					.setParameter("tenantId", TenantContext.getContext().getTenantInternalId());
 			if (widgetGroupId != null) {
@@ -835,47 +802,6 @@ public class SearchManagerImpl extends SearchManager
 		}
 		ScreenshotData ssd = new ScreenshotData(screenshot, search.getCreatedOn(), search.getLastModifiedOn());
 		return ssd;
-	}
-
-	@Override
-	public Date modifyLastAccessDate(BigInteger searchId) throws EMAnalyticsFwkException
-	{
-		EntityManager em = null;
-		try {
-			Date tmp = null;
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			EmAnalyticsSearch searchObj = EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(searchId, em);
-			EmAnalyticsLastAccess accessObj = null;
-			if (searchObj != null) {
-				EmAnalyticsLastAccessPK pk = new EmAnalyticsLastAccessPK();
-				pk.setAccessedBy(searchObj.getAccessedBy());
-				pk.setObjectId(searchObj.getObjectId());
-				pk.setObjectType(searchObj.getObjectType());
-				accessObj = em.find(EmAnalyticsLastAccess.class, pk);
-				if (accessObj != null) {
-					tmp = DateUtil.getGatewayTime();
-					accessObj.setAccessDate(tmp);
-					em.getTransaction().begin();
-					em.persist(accessObj);
-					em.getTransaction().commit();
-				}
-				return tmp;
-			}
-			else {
-				throw new Exception("Invalid search id: " + searchId);
-			}
-		}
-		catch (Exception e) {
-			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			LOGGER.error("Invalid search id: " + searchId);
-			throw new EMAnalyticsFwkException("Invalid search id: " + searchId, EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null, e);
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-
-		}
 	}
 
 	public List<Search> saveMultipleSearch(List<ImportSearchImpl> searchList) throws Exception
@@ -1076,7 +1002,6 @@ public class SearchManagerImpl extends SearchManager
 
 							EmAnalyticsSearch newSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
 							em.persist(newSearch);
-							updateSearchLastAccess(newSearch, newSearch.getLastModificationDate());
 							tmpImportSrImpl.setId(newSearch.getId());
 							importedList.add(createSearchObject(newSearch, null));
 						}
@@ -1119,8 +1044,6 @@ public class SearchManagerImpl extends SearchManager
 			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
 			em.getTransaction().begin();
 			em.persist(searchEntity);
-			// when a search is created, creation date/modification date/last access date keeps the same
-			updateSearchLastAccess(searchEntity, searchEntity.getLastModificationDate());
 			em.getTransaction().commit();
 			em.refresh(searchEntity);
 			return createSearchObject(searchEntity, null);
@@ -1225,7 +1148,7 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setCreationDate(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
 			rtnObj.setLastModificationDate(searchObj.getLastModificationDate());
-			rtnObj.setLastAccessDate(searchObj.getAccessDate());
+			rtnObj.setLastAccessDate(DateUtil.getCurrentUTCTime());
 			if (searchObj.getMetadataClob() != null && searchObj.getMetadataClob().length() > 0) {
 				char[] metadataCharArr = new char[searchObj.getMetadataClob().length()];
 				Reader reader = new StringReader(searchObj.getMetadataClob());
@@ -1242,7 +1165,7 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setUiHidden(searchObj.getUiHidden() != null && searchObj.getUiHidden().intValue() == 1 ? true : false);
 			rtnObj.setSystemSearch(
 					searchObj.getSystemSearch() != null && searchObj.getSystemSearch().intValue() == 1 ? true : false);
-			rtnObj.setLastAccessDate(searchObj.getAccessDate());
+			rtnObj.setLastAccessDate(DateUtil.getCurrentUTCTime());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
 
 			if (TenantContext.getContext() != null && TenantContext.getContext().getUsername() != null) {
@@ -1305,7 +1228,7 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setLastModificationDate(searchObj.getLastModificationDate());
 			rtnObj.setCategoryId(searchObj.getEmAnalyticsCategory().getCategoryId());
 			rtnObj.setFolderId(searchObj.getEmAnalyticsFolder().getFolderId());
-			rtnObj.setLastAccessDate(searchObj.getAccessDate());
+			rtnObj.setLastAccessDate(DateUtil.getCurrentUTCTime());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
 
 			List<SearchParameter> searchParams = new ArrayList<SearchParameter>();
@@ -1657,20 +1580,6 @@ public class SearchManagerImpl extends SearchManager
 					.toString();
 			throw new EMAnalyticsFwkException(result, EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME,
 					new Object[] { search.getName() });
-		}
-
-	}
-
-	private void updateSearchLastAccess(EmAnalyticsSearch search, Date lastAccessDate)
-	{
-		if (search == null) {
-			return;
-		}
-		if (lastAccessDate == null) {
-			search.setAccessDate(DateUtil.getGatewayTime());
-		}
-		else {
-			search.setAccessDate(lastAccessDate);
 		}
 
 	}

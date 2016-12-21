@@ -154,8 +154,6 @@ public class SearchManagerImplForTargetCardTest {
                 result = "lastmodifiedby";
                 emAnalyticsSearch.getLastModificationDate();
                 result = new Date();
-                emAnalyticsSearch.getAccessDate();
-                result = new Date();
                 emAnalyticsSearch.getMetadataClob();
                 result = "meta_clob";
                 emAnalyticsSearch.getSearchDisplayStr();

@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -174,43 +173,11 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	@PrivateOwned
 	private Set<EmAnalyticsSearchParam> emAnalyticsSearchParams;
 
-	@OneToOne(mappedBy = "emAnalyticsSearch", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private EmAnalyticsSearchLastAccess lastAccess;
-
 	@Column(name = "TENANT_ID", insertable = false, updatable = false)
 	long tenant;
 
-	/*@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "OBJECT_ID")
-	private long objectId;
-
-	@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "ACCESSED_BY")
-	private String accessedBy;
-
-	@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "OBJECT_TYPE")
-	private long objectType;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(table = "EMS_ANALYTICS_LAST_ACCESS", name = "ACCESS_DATE")
-	private Date accessDate;*/
-
 	public EmAnalyticsSearch()
 	{
-	}
-
-	public Date getAccessDate()
-	{
-		if (lastAccess == null) {
-			return null;
-		}
-		return lastAccess.getAccessDate();
-	}
-
-	public String getAccessedBy()
-	{
-		if (lastAccess == null) {
-			return null;
-		}
-		return lastAccess.getAccessedBy();
 	}
 
 	public Date getCreationDate()
@@ -272,14 +239,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 		return isWidget;
 	}
 
-	/**
-	 * @return the lastAccess
-	 */
-	public EmAnalyticsLastAccess getLastAccess()
-	{
-		return lastAccess;
-	}
-
 	public Date getLastModificationDate()
 	{
 		return lastModificationDate;
@@ -298,22 +257,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	public String getName()
 	{
 		return name;
-	}
-
-	public BigInteger getObjectId()
-	{
-		if (lastAccess == null) {
-			return null;
-		}
-		return lastAccess.getObjectId();
-	}
-
-	public Long getObjectType()
-	{
-		if (lastAccess == null) {
-			return null;
-		}
-		return lastAccess.getObjectType();
 	}
 
 	public String getOwner()
@@ -464,25 +407,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	public String getWIDGETVIEWMODEL()
 	{
 		return WIDGET_VIEWMODEL;
-	}
-
-	//	public void setObjectId(long objectId)
-	//	{
-	//		this.objectId = objectId;
-	//	}
-	//
-	//	public void setObjectType(long objectType)
-	//	{
-	//		this.objectType = objectType;
-	//	}
-
-	public void setAccessDate(Date accessDate)
-	{
-		if (lastAccess == null) {
-			lastAccess = new EmAnalyticsSearchLastAccess(getId(), getOwner());
-			lastAccess.setEmAnalyticsSearch(this);
-		}
-		lastAccess.setAccessDate(accessDate);
 	}
 
 	public void setCreationDate(Date creationDate)

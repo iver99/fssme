@@ -195,23 +195,6 @@ public class SearchesCRUD
 
 	@Test
 	/**
-	 * Test verify the status and response with invalid objects on a correct url path
-	 */
-	public void lastaccessedSearches_invalidObjects4()
-	{
-
-			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-
-			.put("/search/100000000087?updateLastAccessTime=true");
-			Assert.assertEquals(res.asString(), "Invalid search id: 100000000087");
-			Assert.assertEquals(res.getStatusCode(), 404);
-
-	}
-
-	@Test
-	/**
 	 * Test to return all last accessed searches
 	 */
 	public void returnAlllastaccessedSearches()
@@ -325,7 +308,7 @@ public class SearchesCRUD
 			JsonPath jp1 = res1.jsonPath();
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			Assert.assertEquals(jp1.get("createdOn"), jp1.get("lastModifiedOn"));
-			Assert.assertEquals(jp1.get("createdOn"), jp1.get("lastAccessDate"));
+			Assert.assertNotNull(jp1.get("lastAccessDate"));
 			String jsonString2 = "{\"name\":\"Custom_Search\",\"category\":{\"id\":\""
 					+ catid
 					+ "\"},\"folder\":{\"id\":\""
@@ -490,7 +473,8 @@ public class SearchesCRUD
 
 					JsonPath jp1 = res1.jsonPath();
 					Assert.assertEquals(jp1.get("name"), "Custom_Search_Edit");
-					Assert.assertEquals(jp1.get("lastModifiedOn"), jp1.get("lastAccessDate"));
+					Assert.assertNotNull(jp1.get("lastModifiedOn"));
+					Assert.assertNotNull(jp1.get("lastAccessDate"));
 					Assert.assertTrue(res.getStatusCode() == 200);
 				}
 			}
@@ -1128,121 +1112,6 @@ public class SearchesCRUD
 			}
 
 		}*/
-
-	@Test
-	/**
-	 * set last access time to a search using PUT method
-	 */
-	public void setlastaccesstime_Tosearch()
-	{
-
-			String jsonString1 = "{\"name\":\"SearchSet1\",\"category\":{\"id\":\"" + catid1 + "\"},\"folder\":{\"id\":\"" + folderid1
-					+ "\"},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
-					.post("/search");
-
-			JsonPath jp1 = res1.jsonPath();
-			Assert.assertTrue(res1.getStatusCode() == 201, "status code: " + res1.getStatusCode());
-			try{
-				Thread.sleep(2000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-
-			String jsonString2 = "{\"name\":\"SearchSet2\",\"category\":{\"id\":\"" + catid1 + "\"},\"folder\":{\"id\":\"" + folderid1
-					+ "\"},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when()
-					.post("/search");
-
-			JsonPath jp2 = res2.jsonPath();
-			String str_lastAccessTime = jp2.get("lastAccessDate");
-			Assert.assertTrue(res2.getStatusCode() == 201);
-			try{
-				Thread.sleep(3000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.get("/searches?lastAccessCount=2");
-
-			JsonPath jp3 = res3.jsonPath();
-			try{
-				Thread.sleep(3000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-
-			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-
-			.put("/search/" + jp3.get("id[1]") + "?updateLastAccessTime=true");
-			// JsonPath jp4 = res4.jsonPath();
-			String str_updateTime = res4.asString();
-			Assert.assertTrue(res4.getStatusCode() == 200);
-			Response res4_1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.get("/search/" + jp3.get("id[1]"));
-
-			JsonPath jp4_1 = res4_1.jsonPath();
-			Assert.assertTrue(res4_1.getStatusCode() == 200);
-			Assert.assertEquals(jp4_1.get("lastAccessDate"), str_updateTime);
-
-			try {
-				Thread.sleep(2000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-
-			Response res4_3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-
-			.put("/search/" + jp3.get("id[0]") + "?updateLastAccessTime=false");
-			// JsonPath jp4 = res4.jsonPath();
-			Assert.assertTrue(res4_3.getStatusCode() == 200);
-			Response res4_4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.get("/search/" + jp3.get("id[0]"));
-
-			JsonPath jp4_2 = res4_4.jsonPath();
-			Assert.assertTrue(res4_4.getStatusCode() == 200);
-			Assert.assertEquals(jp4_2.get("lastAccessDate"), str_lastAccessTime);
-			try{
-				Thread.sleep(2000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-
-			RestAssured.given().contentType(ContentType.JSON).log().everything()
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.get("/searches?lastAccessCount=2");
-			Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.delete("/search/" + jp1.get("id"));
-			Assert.assertTrue(res6.getStatusCode() == 204);
-			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.delete("/search/" + jp2.get("id"));
-
-			Assert.assertTrue(res7.getStatusCode() == 204);
-
-	}
 
 	/**
 	 * set last access time to a search using PUT method, but the query parameter is not complete

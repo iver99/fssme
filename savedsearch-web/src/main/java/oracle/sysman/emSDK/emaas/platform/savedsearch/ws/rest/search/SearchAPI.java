@@ -579,10 +579,11 @@ public class SearchAPI
 	}
 	
 	/**
-	 * update last access time & return the whole search
+	 * Just return the whole search and will be removed
 	 * @param searchId
 	 * @return
 	 */
+	@Deprecated
 	@PUT
 	@Path("{id: [0-9]*}/updatelastaccess")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -592,9 +593,6 @@ public class SearchAPI
 		String message = null;
 		int statusCode = 200;
 		ObjectNode jsonObj = null;
-		
-		// update firstly
-		updateLastAccessTime(searchId);
 		
 		// find and return the whole object
 		SearchManager sman = SearchManager.getInstance();
@@ -657,6 +655,7 @@ public class SearchAPI
 	 *         </tr>
 	 *         </table>
 	 */
+	@Deprecated
 	@PUT
 	@Path("{id: [0-9]*}")
 	public Response editSearchAccessDate(@PathParam("id") BigInteger searchId, @QueryParam("updateLastAccessTime") boolean update)
@@ -670,7 +669,9 @@ public class SearchAPI
 		String[] input = query.split("=");
 		if (input.length == 2) {
 			if (update) {
-				return updateLastAccessTime(searchId);
+				java.util.Date date = DateUtil.getCurrentUTCTime();
+				String message = String.valueOf(DateUtil.getDateFormatter().format(date));
+				return Response.status(200).entity(message).build();
 			}
 			else {
 				return Response.status(200).build();
@@ -809,7 +810,6 @@ public class SearchAPI
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
 				throw new EMAnalyticsDatabaseUnavailException();
 			}
-			sman.updateLastAccessDate(searchIdList);
 			
 			List<Search> searchList = sman.getSearchListByIds(searchIdList);
 			for(Search searchObj : searchList) {
@@ -822,27 +822,6 @@ public class SearchAPI
 			message = e.getMessage();
 			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
 					e.getStatusCode());
-		}
-
-		return Response.status(statusCode).entity(message).build();
-	}
-
-	private Response updateLastAccessTime(BigInteger searchId)
-	{
-		String message = null;
-		int statusCode = 200;
-		try {
-			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavailException();
-			}
-			SearchManager sman = SearchManager.getInstance();
-			java.util.Date date = sman.modifyLastAccessDate(searchId);
-			message = String.valueOf(DateUtil.getDateFormatter().format(date));
-		}
-		catch (EMAnalyticsFwkException e) {
-			LOGGER.error(e.getLocalizedMessage());
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
 		}
 		return Response.status(statusCode).entity(message).build();
 	}

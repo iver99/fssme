@@ -80,7 +80,6 @@ public class SearchTest extends BaseTest
 			AssertJUnit.assertNotNull(s2.getLastModifiedOn());
 			AssertJUnit.assertNotNull(s2.getLastAccessDate());
 			AssertJUnit.assertEquals(s2.getCreatedOn(), s2.getLastModifiedOn());
-			AssertJUnit.assertEquals(s2.getCreatedOn(), s2.getLastAccessDate());
 			AssertJUnit.assertEquals("Dummy Search", s2.getName());
 			AssertJUnit.assertEquals("testing purpose", s2.getDescription());
 

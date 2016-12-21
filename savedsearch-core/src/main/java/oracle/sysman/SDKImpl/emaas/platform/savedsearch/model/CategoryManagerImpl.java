@@ -277,9 +277,10 @@ public class CategoryManagerImpl extends CategoryManager
 	public List<Category> getAllCategories() throws EMAnalyticsFwkException
 	{
 		List<Category> categories = null;
+		EntityManager em = null;
 		try {
 
-			EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			@SuppressWarnings("unchecked")
 			List<EmAnalyticsCategory> emcategories = em.createNamedQuery("Category.getAllCategory")
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getResultList();
@@ -299,6 +300,12 @@ public class CategoryManagerImpl extends CategoryManager
 					EMAnalyticsFwkException.ERR_GET_CATEGORIES, null, e);
 
 		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		
 		return categories;
 	}
 

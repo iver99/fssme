@@ -27,26 +27,6 @@ public class EmAnalyticsSearchTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetAccessDate()
-	{
-		Assert.assertNull(emAnalyticsSearch.getAccessDate());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		Assert.assertEquals(now, emAnalyticsSearch.getAccessDate());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetAccessedBy()
-	{
-		Assert.assertNull(emAnalyticsSearch.getAccessedBy());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		Assert.assertEquals(emAnalyticsSearch.getLastAccess().getAccessedBy(), emAnalyticsSearch.getAccessedBy());
-	}
-
-	@Test(groups = { "s1" })
 	public void testGetCreationDate()
 	{
 		Date now = new Date();
@@ -129,16 +109,6 @@ public class EmAnalyticsSearchTest
 	}
 
 	@Test(groups = { "s1" })
-	public void testGetLastAccess()
-	{
-		Assert.assertNull(emAnalyticsSearch.getLastAccess());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		Assert.assertNotNull(emAnalyticsSearch.getLastAccess());
-	}
-
-	@Test(groups = { "s1" })
 	public void testGetLastModificationDate()
 	{
 		Date now = new Date();
@@ -175,28 +145,6 @@ public class EmAnalyticsSearchTest
 	{
 		emAnalyticsSearch.setWIDGET_SOURCE("namesource");
 		Assert.assertEquals("namesource", emAnalyticsSearch.getWIDGET_SOURCE());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetObjectId()
-	{
-		Assert.assertNull(emAnalyticsSearch.getObjectId());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		emAnalyticsSearch.getAccessDate();
-		Assert.assertNotNull(emAnalyticsSearch.getObjectId());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetObjectType()
-	{
-		Assert.assertNull(emAnalyticsSearch.getObjectType());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		emAnalyticsSearch.getAccessDate();
-		Assert.assertNotNull(emAnalyticsSearch.getObjectType());
 	}
 
 	@Test(groups = { "s1" })
