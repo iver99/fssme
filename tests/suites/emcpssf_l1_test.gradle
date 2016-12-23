@@ -32,8 +32,12 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
  
-def regLookupClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
+def regLookupClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+') 
 def regClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
+
+project.ext.omctf_omcCloudSetup_deployArgs= "-skipOpssConfig true -skipRestartServerOpss true "
+
+
 dependencies {
 
 
