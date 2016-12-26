@@ -40,14 +40,14 @@ import org.testng.annotations.Test;
  */
 public class TenantDataLeakTest extends BaseTest
 {
-	private static void closeConnection(Connection conn) throws SQLException {
-
-
-			if (conn != null) {
+	private static void closeConnection(Connection conn) {
+		if (conn != null) {
+			try {
 				conn.close();
+			} catch (SQLException sqlEx) {
+				// donothing
 			}
-
-
+		}
 	}
 
 	private static Connection createConnection() throws ClassNotFoundException, SQLException

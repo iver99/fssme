@@ -8,7 +8,7 @@
   
   <xs:complexType name="categorySet">
     <xs:sequence>
-      <xs:element name="Category" type="importCategoryImpl" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Category" type="importCategoryImpl" nillable="true" minOccurs="0" maxOccurs="2048"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -54,7 +54,7 @@
       <xs:element name="Parameters" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="Parameter" type="Parameter" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Parameter" type="Parameter" minOccurs="0" maxOccurs="2048"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>

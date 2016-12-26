@@ -2,11 +2,11 @@ package oracle.sysman.emaas.savedsearch;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.sql.SQLException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -19,7 +19,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.SessionInfoUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -440,7 +439,7 @@ public class SearchManagerTest extends BaseTest
 			queried = sm.getWidgetListByProviderNames(true, providers, null);
 		}
 		catch (EMAnalyticsFwkException e) {
-			AssertJUnit.fail();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 
 		AssertJUnit.assertNotNull(queried);
@@ -467,8 +466,14 @@ public class SearchManagerTest extends BaseTest
 		assertSearchEquals(widget1, savedWidget1);
 		assertSearchEquals(widget2, savedWidget2);
 		assertSearchEquals(widget3, savedWidget3);
+		AssertJUnit.assertNotNull(savedWidget1);
+		AssertJUnit.assertNotNull(savedWidget1.getCategory());
 		AssertJUnit.assertEquals(cat1.getId(), savedWidget1.getCategory().getId());
+		AssertJUnit.assertNotNull(savedWidget2);
+		AssertJUnit.assertNotNull(savedWidget2.getCategory());
 		AssertJUnit.assertEquals(cat1.getId(), savedWidget2.getCategory().getId());
+		AssertJUnit.assertNotNull(savedWidget3);
+		AssertJUnit.assertNotNull(savedWidget3.getCategory());
 		AssertJUnit.assertEquals(cat2.getId(), savedWidget3.getCategory().getId());
 
 		// widgetGroupId specified
@@ -644,18 +649,17 @@ public class SearchManagerTest extends BaseTest
 			@Override
 			public void run()
 			{
-				Random r = new Random();
-				int randomSearchIndex = r.nextInt(availableSearchIDs.length);
 				try {
+					SecureRandom r = SecureRandom.getInstance("SHA1PRNG");
+					int randomSearchIndex = r.nextInt(availableSearchIDs.length);
 					Search search = sm.getSearch(availableSearchIDs[randomSearchIndex]);
 					AssertJUnit.assertNotNull(search);
-				}
-				catch (EMAnalyticsFwkException e) {
-					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e1) {
+					AssertJUnit.fail(e1.getLocalizedMessage());
+				} catch (EMAnalyticsFwkException e) {
 					AssertJUnit.fail(e.getLocalizedMessage());
 				}
 			}
-
 		}, null, null);
 	}
 
@@ -690,9 +694,7 @@ public class SearchManagerTest extends BaseTest
 					//					AssertJUnit.assertNotNull(search);
 				}
 				catch (EMAnalyticsFwkException e) {
-					e.printStackTrace();
 					AssertJUnit.fail(e.getLocalizedMessage());
-
 				}
 			}
 

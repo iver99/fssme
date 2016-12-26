@@ -114,10 +114,11 @@ public class QAToolUtil
 	{
 		BufferedReader in = null;
 		InputStreamReader inReader = null;
+		HttpURLConnection con = null;
 		StringBuilder response = new StringBuilder();
 		try {
 			URL schemaDepUrl = new URL(url);
-			HttpURLConnection con = (HttpURLConnection) schemaDepUrl.openConnection();
+			con = (HttpURLConnection) schemaDepUrl.openConnection();
 			con.setRequestProperty(AUTHORIZATION, AUTH_STRING);
 			//int responseCode = con.getResponseCode();
 			inReader = new InputStreamReader(con.getInputStream(), "UTF-8");
@@ -136,6 +137,9 @@ public class QAToolUtil
 				}
 				if (inReader != null) {
 					inReader.close();
+				}
+				if (con != null && con.getInputStream() != null) {
+					con.getInputStream().close();
 				}
 			}
 			catch (IOException ioEx) {
