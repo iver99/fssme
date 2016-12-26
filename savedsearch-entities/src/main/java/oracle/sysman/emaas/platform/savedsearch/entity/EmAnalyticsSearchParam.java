@@ -18,7 +18,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
@@ -40,6 +42,9 @@ public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 	@Id
 	@Column(name = "SEARCH_ID", insertable = false, updatable = false, nullable = false)
 	private BigInteger searchId;
+	
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 
 	@Id
 	private String name;
@@ -68,6 +73,7 @@ public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 
 	public EmAnalyticsSearchParam()
 	{
+		this.deleted = false;
 	}
 
 	/* (non-Javadoc)
@@ -130,6 +136,16 @@ public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 			return false;
 		}
 		return true;
+	}
+	
+	
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public EmAnalyticsSearch getEmAnalyticsSearch()

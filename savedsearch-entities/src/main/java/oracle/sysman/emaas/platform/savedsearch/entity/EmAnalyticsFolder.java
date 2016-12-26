@@ -17,7 +17,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
@@ -42,7 +44,7 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 	@Column(name = "FOLDER_ID")
 //	@GeneratedValue(generator = "EMS_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
 	private BigInteger folderId;
-
+	
 	private String description;
 
 	@Column(name = "DESCRIPTION_NLSID")
@@ -117,7 +119,7 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 	public String getDescriptionSubsystem()
 	{
 		return descriptionSubsystem;
-	}
+	}	
 
 	public Set<EmAnalyticsCategory> getEmAnalyticsCategories()
 	{

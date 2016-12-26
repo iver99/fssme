@@ -17,8 +17,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.PrivateOwned;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**

@@ -47,6 +47,7 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web-integ-tests', version: "${REPO_BID}") {transitive = false}
 	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
 	 testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17'){ transitive = false }
@@ -215,6 +216,13 @@ include "oracle/sysman/emaas/platform/savedsearch/utils/RestRequestUtilTest.clas
 	 include "oracle/sysman/emaas/platform/savedsearch/services/ApplicationLifecycleServiceTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/services/AvailabilityServiceManagerTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/services/EMTargetMXBeanImplTest.class"
+	 
+	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SaveSearchRowsComparatorTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFCategoryParamRowEntityTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFCategoryRowEntityTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchLastAccessRowEntityTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchParamRowEntityTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchRowEntityTest.class"
 
 useRestAssured =true
 ext.set("testType", "unit")

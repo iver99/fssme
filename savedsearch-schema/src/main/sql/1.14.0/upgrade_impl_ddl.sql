@@ -79,6 +79,22 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_ANALYTICS_SEARCH_PARAMS.LAST_MODIFICATION_DATE exists already, no change is needed');
   END IF;
+  
+   --add new column 'DELETED' for EMS_CATEGORY_PARAMS
+  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_ANALYTICS_CATEGORY_PARAMS' AND column_name='DELETED';
+  IF v_count=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_ANALYTICS_CATEGORY_PARAMS ADD "DELETED" NUMBER(1, 0) DEFAULT(0) NOT NULL';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_ANALYTICS_CATEGORY_PARAMS.DELETED exists already, no change is needed');
+  END IF;
+  
+   --add new column 'DELETED' for EMS_SEARCH_PARAMS
+  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_ANALYTICS_SEARCH_PARAMS' AND column_name='DELETED';
+  IF v_count=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_ANALYTICS_SEARCH_PARAMS ADD "DELETED" NUMBER(1, 0) DEFAULT(0) NOT NULL';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_ANALYTICS_SEARCH_PARAMS.DELETED exists already, no change is needed');
+  END IF;
 END;
 /
 

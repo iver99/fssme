@@ -12,7 +12,9 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
@@ -40,6 +42,9 @@ public class EmAnalyticsCategoryParam extends EmBaseEntity implements Serializab
 	@Id
 	@Column(name = "TENANT_ID", insertable = false, updatable = false)
 	private Long tenantId;
+	
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne(optional = false)
@@ -49,6 +54,7 @@ public class EmAnalyticsCategoryParam extends EmBaseEntity implements Serializab
 
 	public EmAnalyticsCategoryParam()
 	{
+		this.deleted = false;
 	}
 
 	@Override
@@ -86,6 +92,16 @@ public class EmAnalyticsCategoryParam extends EmBaseEntity implements Serializab
 			return false;
 		}
 		return true;
+	}
+	
+	
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public BigInteger getCategoryId()

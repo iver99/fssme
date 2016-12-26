@@ -90,6 +90,7 @@ public class FolderManagerImpl extends FolderManager
 			folderObj.setDeleted(folderId);
 			folderObj.setLastModificationDate(DateUtil.getGatewayTime());
 			em.getTransaction().begin();
+			em.setProperty("permanent", permanently);			
 			if (permanently) {
 				em.remove(folderObj);
 			}
