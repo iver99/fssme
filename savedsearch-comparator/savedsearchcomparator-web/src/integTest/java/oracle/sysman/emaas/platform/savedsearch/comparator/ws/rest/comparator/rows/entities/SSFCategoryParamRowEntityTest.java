@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,8 +12,8 @@ public class SSFCategoryParamRowEntityTest {
 	public void testEquals() {
 		SavedSearchCategoryParamRowEntity entity1 = new SavedSearchCategoryParamRowEntity();
 		SavedSearchCategoryParamRowEntity entity2 = new SavedSearchCategoryParamRowEntity();
-		entity1.setCategoryId(1L);
-		entity2.setCategoryId(1L);
+		entity1.setCategoryId(new BigInteger("1"));
+		entity2.setCategoryId(new BigInteger("1"));
 		Assert.assertEquals(entity1, entity2);
 		
 		entity1.setCreationDate("2016-07-22 08:23:32.517");
@@ -44,8 +46,8 @@ public class SSFCategoryParamRowEntityTest {
 	public void testHashcode() {
 		SavedSearchCategoryParamRowEntity entity1 = new SavedSearchCategoryParamRowEntity();
 		SavedSearchCategoryParamRowEntity entity2 = new SavedSearchCategoryParamRowEntity();
-		entity1.setCategoryId(1L);
-		entity2.setCategoryId(1L);
+		entity1.setCategoryId(new BigInteger("1"));
+		entity2.setCategoryId(new BigInteger("1"));
 		Assert.assertEquals(entity1.hashCode(), entity2.hashCode());
 		
 		entity1.setCreationDate("2016-07-22 08:23:32.517");

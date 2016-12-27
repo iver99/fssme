@@ -272,7 +272,7 @@ public class DataManager
 		return getDatabaseTableData(SQL_ALL_SEARCH_ROWS);
 	}
 
-	public void syncCategoryParamTable(Long categoryId, String name, String paramValue, Long tenantId, String creationDate,
+	public void syncCategoryParamTable(BigInteger categoryId, String name, String paramValue, Long tenantId, String creationDate,
 			String lastModificationDate)
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY_PARAMS t where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
@@ -324,9 +324,9 @@ public class DataManager
 
 	}
 
-	public void syncCategoryTable(Long categoryId, String name, String description, String owner, String creationDate,
+	public void syncCategoryTable(BigInteger categoryId, String name, String description, String owner, String creationDate,
 			String nameNlsid, String nameSubSystem, String descriptionNlsid, String descriptionSubSystem, String emPluginId,
-			Long defaultFolderId, Long deleted, String providerName, String providerVersion, String providerDiscovery,
+			Long defaultFolderId, BigInteger deleted, String providerName, String providerVersion, String providerDiscovery,
 			String providerAssetroot, Long tenantId, String dashboardIneligible, String lastModificationDate)
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=? and t.TENANT_ID=?";//check if the data is existing.
@@ -385,9 +385,9 @@ public class DataManager
 		}
 	}
 
-	public void syncFolderTable(Long folderId, String name, Long parentId, String description, String creationDate, String owner,
+	public void syncFolderTable(BigInteger folderId, String name, BigInteger parentId, String description, String creationDate, String owner,
 			String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem, String descriptionNlsid,
-			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, Long deleted, Long tenantId)
+			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId)
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t where t.FOLDER_ID=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
@@ -438,60 +438,6 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync folders table data!");
-			e.printStackTrace();
-		}
-		finally {
-			em.close();
-		}
-
-	}
-
-	public void syncLastAccessTable(Long objectId, String accessedBy, Long objectType, String accessDate, Long tenantId,
-			String creationDate, String lastModificationDate)
-	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_LAST_ACCESS t where t.OBJECT_ID=? and t.ACCESSED_BY=? and t.OBJECT_TYPE=? and t.TENANT_ID=?";//check if the data is existing.
-		EntityManager em = null;
-		em = getEntityManager();
-		em.getTransaction().begin();
-		Query q1 = em.createNativeQuery(sql).setParameter(1, objectId).setParameter(2, accessedBy).setParameter(3, objectType)
-				.setParameter(4, tenantId);
-		List<Object> result = q1.getResultList();
-		boolean flag = true;//true=>insert,false=>update
-		if (result != null && result.size() > 0) {
-			flag = false;
-		}
-
-		try {
-			if (flag) {
-				//execute insert action
-				logger.debug("Data not exist in table EMS_ANALYTICS_LAST_ACCESS,execute insert action.");
-				em.createNativeQuery(SQL_INSERT_LAST_ACCESS).setParameter(1, objectId).setParameter(2, accessedBy)
-				.setParameter(3, objectType).setParameter(4, accessDate).setParameter(5, tenantId)
-				.setParameter(6, creationDate).setParameter(7, lastModificationDate).executeUpdate();
-			}
-			else {
-				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
-					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
-					//do nothing
-				}
-				else {
-					//execute update action
-					logger.debug("Data exist in table EMS_ANALYTICS_LAST_ACCESS,execute update action.");
-					em.createNativeQuery(SQL_UPDATE_LAST_ACCESS).setParameter(1, accessDate).setParameter(2, creationDate)
-							.setParameter(3, lastModificationDate).setParameter(4, objectId).setParameter(5, accessedBy)
-							.setParameter(6, objectType).setParameter(7, tenantId).executeUpdate();
-				}
-
-			}
-			em.getTransaction().commit();
-		}
-		catch (ParseException e) {
-			logger.error("Error occurred when parse LastModificationDate!");
-			e.printStackTrace();
-		}
-		catch (Exception e) {
-			logger.error("Error occured when sync last access table data!");
 			e.printStackTrace();
 		}
 		finally {
@@ -556,10 +502,10 @@ public class DataManager
 
 	}
 
-	public void syncSearchTable(Long searchId/*, String searchGuid*/, String name, String owner, String creationDate,
-			String lastModificationDate, String lastModifiedBy, String description, Long folderId, Long categoryId,
+	public void syncSearchTable(BigInteger searchId/*, String searchGuid*/, String name, String owner, String creationDate,
+			String lastModificationDate, String lastModifiedBy, String description, BigInteger folderId, BigInteger categoryId,
 			String nameNlsid, String nameSubsystem, String descriptionNlsid, String descriptionSubsystem, Integer systemSearch,
-			String emPluginId, Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, Long deleted,
+			String emPluginId, Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
 			Integer isWidget, Long tenantId, String nameWidgetSource, String widgetGroupName, String widgetScreenshotHref,
 			String widgetIcon, String widgetKocName, String viewModel, String widgetTemplate, String widgetSupportTimeControl,
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,

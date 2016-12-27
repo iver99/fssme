@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
@@ -144,13 +145,11 @@ public class SaveSearchRowsComparatorTest
 		ZDTTableRowEntity result2 = cd.getInstance1().getData();
 		Assert.assertNull(result1.getSavedSearchCategory());
 		Assert.assertNull(result1.getSavedSearchCategoryParams());
-		Assert.assertNull(result1.getSavedSearchLastAccess());
 		Assert.assertNull(result1.getSavedSearchSearch());
 		Assert.assertNull(result1.getSavedSearchSearchParams());
 		
 		Assert.assertNull(result2.getSavedSearchCategory());
 		Assert.assertNull(result2.getSavedSearchCategoryParams());
-		Assert.assertNull(result2.getSavedSearchLastAccess());
 		Assert.assertNull(result2.getSavedSearchSearch());
 		Assert.assertNull(result2.getSavedSearchSearchParams());
 
@@ -159,12 +158,12 @@ public class SaveSearchRowsComparatorTest
 		tre1 = Deencapsulation.invoke(src2, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
 		tre2 = Deencapsulation.invoke(src2, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
 		SavedSearchCategoryRowEntity sscr1 = new SavedSearchCategoryRowEntity();
-		sscr1.setCategoryId(12L);
-		sscr1.setDeleted(2L);
+		sscr1.setCategoryId(new BigInteger("12"));
+		sscr1.setDeleted(new BigInteger("2"));
 		tre1.getSavedSearchCategory().add(sscr1);
 		SavedSearchCategoryRowEntity sscr2 = new SavedSearchCategoryRowEntity();
-		sscr2.setCategoryId(10L);
-		sscr2.setDeleted(0L);
+		sscr2.setCategoryId(new BigInteger("10"));
+		sscr2.setDeleted(new BigInteger("0"));
 		tre2.getSavedSearchCategory().add(sscr2);
 
 		cd = Deencapsulation.invoke(src2, "compareInstancesData", new InstanceData<ZDTTableRowEntity>(null, tre1),

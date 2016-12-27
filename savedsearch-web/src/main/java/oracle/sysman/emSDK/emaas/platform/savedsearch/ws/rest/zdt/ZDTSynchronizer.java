@@ -15,7 +15,6 @@ import java.util.List;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchFolderRowEntity;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchLastAccessRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTTableRowEntity;
@@ -37,7 +36,6 @@ public class ZDTSynchronizer
 		syncCategoryTableRows(data.getSavedSearchCategory());
 		syncCategoryParamsTableRows(data.getSavedSearchCategoryParams());
 		syncFoldersTableRows(data.getSavedSearchFoldersy());
-		syncLastAccessTableRows(data.getSavedSearchLastAccess());
 		syncSearchTableRows(data.getSavedSearchSearch());
 		syncSearchParamsTableRows(data.getSavedSearchSearchParams());
 	}
@@ -91,21 +89,6 @@ public class ZDTSynchronizer
 					e.getEmPluginId(), e.getUiHidden(), e.getDeleted(), e.getTenantId());
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS_FOLDERS table");
-	}
-
-	private void syncLastAccessTableRows(List<SavedSearchLastAccessRowEntity> rows)
-	{
-		// TODO: call DataManager implementation to insert or update data to database
-		if (rows == null) {
-			logger.debug("List<SavedSearchLastAccessRowEntity> is null,no sync action is needed");
-			return;
-		}
-		logger.debug("Begin to sync table EMS_ANALYTICS_LAST_ACCESS table");
-		for (SavedSearchLastAccessRowEntity e : rows) {
-			DataManager.getInstance().syncLastAccessTable(e.getObjectId(), e.getAccessedBy(), e.getObjectType(),
-					e.getAccessDate(), e.getTenantId(), e.getCreationDate(), e.getLastModificationDate());
-		}
-		logger.debug("Finished to sync table EMS_ANALYTICS_LAST_ACCESS table");
 	}
 
 	private void syncSearchParamsTableRows(List<SavedSearchSearchParamRowEntity> rows)

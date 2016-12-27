@@ -29,9 +29,6 @@ public class ZDTTableRowEntity
 	@JsonProperty("EMS_ANALYTICS_FOLDERS")
 	private List<SavedSearchFolderRowEntity> savedSearchFoldersy;
 
-	@JsonProperty("EMS_ANALYTICS_LAST_ACCESS")
-	private List<SavedSearchLastAccessRowEntity> savedSearchLastAccess;
-
 	@JsonProperty("EMS_ANALYTICS_SCHEMA_VER_SSF")
 	private List<SavedSearchSchemaVerRowEntity> savedSearchSchemaVer;
 
@@ -81,14 +78,7 @@ public class ZDTTableRowEntity
 		else if (!savedSearchFoldersy.equals(other.savedSearchFoldersy)) {
 			return false;
 		}
-		if (savedSearchLastAccess == null) {
-			if (other.savedSearchLastAccess != null) {
-				return false;
-			}
-		}
-		else if (!savedSearchLastAccess.equals(other.savedSearchLastAccess)) {
-			return false;
-		}
+		
 		if (savedSearchSchemaVer == null) {
 			if (other.savedSearchSchemaVer != null) {
 				return false;
@@ -140,14 +130,7 @@ public class ZDTTableRowEntity
 		return savedSearchFoldersy;
 	}
 
-	/**
-	 * @return the savedSearchLastAccess
-	 */
-	public List<SavedSearchLastAccessRowEntity> getSavedSearchLastAccess()
-	{
-		return savedSearchLastAccess;
-	}
-
+	
 	/**
 	 * @return the savedSearchSchemaVer
 	 */
@@ -183,7 +166,6 @@ public class ZDTTableRowEntity
 		result = prime * result + (savedSearchCategory == null ? 0 : savedSearchCategory.hashCode());
 		result = prime * result + (savedSearchCategoryParams == null ? 0 : savedSearchCategoryParams.hashCode());
 		result = prime * result + (savedSearchFoldersy == null ? 0 : savedSearchFoldersy.hashCode());
-		result = prime * result + (savedSearchLastAccess == null ? 0 : savedSearchLastAccess.hashCode());
 		result = prime * result + (savedSearchSchemaVer == null ? 0 : savedSearchSchemaVer.hashCode());
 		result = prime * result + (savedSearchSearch == null ? 0 : savedSearchSearch.hashCode());
 		result = prime * result + (savedSearchSearchParams == null ? 0 : savedSearchSearchParams.hashCode());
@@ -215,15 +197,6 @@ public class ZDTTableRowEntity
 	public void setSavedSearchFoldersy(List<SavedSearchFolderRowEntity> savedSearchFoldersy)
 	{
 		this.savedSearchFoldersy = savedSearchFoldersy;
-	}
-
-	/**
-	 * @param savedSearchLastAccess
-	 *            the savedSearchLastAccess to set
-	 */
-	public void setSavedSearchLastAccess(List<SavedSearchLastAccessRowEntity> savedSearchLastAccess)
-	{
-		this.savedSearchLastAccess = savedSearchLastAccess;
 	}
 
 	/**
@@ -260,8 +233,7 @@ public class ZDTTableRowEntity
 	public String toString()
 	{
 		return "ZDTTableRowEntity [savedSearchCategory=" + savedSearchCategory + ", savedSearchCategoryParams="
-				+ savedSearchCategoryParams + ", savedSearchFoldersy=" + savedSearchFoldersy + ", savedSearchLastAccess="
-				+ savedSearchLastAccess + ", savedSearchSchemaVer=" + savedSearchSchemaVer + ", savedSearchSearchParams="
+				+ savedSearchCategoryParams + ", savedSearchFoldersy=" + savedSearchFoldersy + ", savedSearchSchemaVer=" + savedSearchSchemaVer + ", savedSearchSearchParams="
 				+ savedSearchSearchParams + ", savedSearchSearch=" + savedSearchSearch + "]";
 	}
 

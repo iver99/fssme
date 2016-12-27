@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -18,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchFolderRowEntity implements RowEntity
 {
 	@JsonProperty("FOLDER_ID")
-	private Long folderId;
+	private BigInteger folderId;
 
 	@JsonProperty("DESCRIPTION")
 	private String description;
@@ -57,13 +59,13 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	private Integer uiHidden;
 
 	@JsonProperty("DELETED")
-	private Long deleted;
+	private BigInteger deleted;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
 	@JsonProperty("PARENT_ID")
-	private Long parentId;
+	private BigInteger parentId;
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -215,7 +217,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public Long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -255,7 +257,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	/**
 	 * @return the folderId
 	 */
-	public Long getFolderId()
+	public BigInteger getFolderId()
 	{
 		return folderId;
 	}
@@ -311,7 +313,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	/**
 	 * @return the parentId
 	 */
-	public Long getParentId()
+	public BigInteger getParentId()
 	{
 		return parentId;
 	}
@@ -371,7 +373,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(Long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -416,7 +418,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	 * @param folderId
 	 *            the folderId to set
 	 */
-	public void setFolderId(Long folderId)
+	public void setFolderId(BigInteger folderId)
 	{
 		this.folderId = folderId;
 	}
@@ -479,7 +481,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	 * @param parentId
 	 *            the parentId to set
 	 */
-	public void setParentId(Long parentId)
+	public void setParentId(BigInteger parentId)
 	{
 		this.parentId = parentId;
 	}

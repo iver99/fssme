@@ -10,6 +10,8 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity;
 
+import java.math.BigInteger;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -18,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchCategoryRowEntity implements RowEntity
 {
 	@JsonProperty("CATEGORY_ID")
-	private Long categoryId;
+	private BigInteger categoryId;
 
 	@JsonProperty("DESCRIPTION")
 	private String description;
@@ -45,7 +47,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	private String owner;
 
 	@JsonProperty("DELETED")
-	private Long deleted;
+	private BigInteger deleted;
 
 	@JsonProperty("PROVIDER_NAME")
 	private String providerName;
@@ -224,7 +226,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	/**
 	 * @return the categoryId
 	 */
-	public Long getCategoryId()
+	public BigInteger getCategoryId()
 	{
 		return categoryId;
 	}
@@ -256,7 +258,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public Long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -404,7 +406,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	 * @param categoryId
 	 *            the categoryId to set
 	 */
-	public void setCategoryId(Long categoryId)
+	public void setCategoryId(BigInteger categoryId)
 	{
 		this.categoryId = categoryId;
 	}
@@ -440,7 +442,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(Long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}

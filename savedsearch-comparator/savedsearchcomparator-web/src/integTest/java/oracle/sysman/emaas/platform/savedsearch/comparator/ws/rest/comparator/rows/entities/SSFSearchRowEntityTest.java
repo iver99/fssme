@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 @Test(groups = { "s1" })
@@ -19,8 +21,8 @@ public class SSFSearchRowEntityTest {
 		entity2.setDashboardIneligible("ineligible2");
 		Assert.assertNotEquals(entity1,entity2);
 		
-		entity1.setDeleted(1L);
-		entity2.setDeleted(1L);
+		entity1.setDeleted(new BigInteger("1"));
+		entity2.setDeleted(new BigInteger("1"));
 		Assert.assertNotEquals(entity1,entity2);
 		
 		entity1.setDescription("des");
@@ -68,8 +70,8 @@ public class SSFSearchRowEntityTest {
 		entity2.setDashboardIneligible("ineligible2");
 		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
 		
-		entity1.setDeleted(1L);
-		entity2.setDeleted(1L);
+		entity1.setDeleted(new BigInteger("1"));
+		entity2.setDeleted(new BigInteger("1"));
 		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
 		
 		entity1.setDescription("des");

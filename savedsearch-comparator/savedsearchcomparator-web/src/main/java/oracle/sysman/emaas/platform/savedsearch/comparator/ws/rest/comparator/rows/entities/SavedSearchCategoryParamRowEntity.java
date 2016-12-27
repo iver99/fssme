@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -18,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchCategoryParamRowEntity implements RowEntity
 {
 	@JsonProperty("CATEGORY_ID")
-	private Long categoryId;
+	private BigInteger categoryId;
 
 	@JsonProperty("NAME")
 	private String name;
@@ -105,7 +107,7 @@ public class SavedSearchCategoryParamRowEntity implements RowEntity
 	/**
 	 * @return the categoryId
 	 */
-	public Long getCategoryId()
+	public BigInteger getCategoryId()
 	{
 		return categoryId;
 	}
@@ -171,7 +173,7 @@ public class SavedSearchCategoryParamRowEntity implements RowEntity
 	 * @param categoryId
 	 *            the categoryId to set
 	 */
-	public void setCategoryId(Long categoryId)
+	public void setCategoryId(BigInteger categoryId)
 	{
 		this.categoryId = categoryId;
 	}

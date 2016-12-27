@@ -10,6 +10,8 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity;
 
+import java.math.BigInteger;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -19,7 +21,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchSearchRowEntity implements RowEntity
 {
 	@JsonProperty("SEARCH_ID")
-	private Long searchId;
+	private BigInteger searchId;
 
 	@JsonProperty("DESCRIPTION")
 	private String description;
@@ -70,7 +72,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private Integer uiHidden;
 
 	@JsonProperty("DELETED")
-	private Long deleted;
+	private BigInteger deleted;
 
 	@JsonProperty("IS_WIDGET")
 	private Integer isWidget;
@@ -121,10 +123,10 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private Long tenantId;
 
 	@JsonProperty("FOLDER_ID")
-	private Long folderId;
+	private BigInteger folderId;
 
 	@JsonProperty("CATEGORY_ID")
-	private Long categoryId;
+	private BigInteger categoryId;
 
 	@JsonProperty("PROVIDER_NAME")
 	private String providerName;
@@ -414,7 +416,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the categoryId
 	 */
-	public Long getCategoryId()
+	public BigInteger getCategoryId()
 	{
 		return categoryId;
 	}
@@ -438,7 +440,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public Long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -478,7 +480,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the folderId
 	 */
-	public Long getFolderId()
+	public BigInteger getFolderId()
 	{
 		return folderId;
 	}
@@ -598,7 +600,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the searchId
 	 */
-	public Long getSearchId()
+	public BigInteger getSearchId()
 	{
 		return searchId;
 	}
@@ -754,7 +756,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param categoryId
 	 *            the categoryId to set
 	 */
-	public void setCategoryId(Long categoryId)
+	public void setCategoryId(BigInteger categoryId)
 	{
 		this.categoryId = categoryId;
 	}
@@ -781,7 +783,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(Long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -826,7 +828,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param folderId
 	 *            the folderId to set
 	 */
-	public void setFolderId(Long folderId)
+	public void setFolderId(BigInteger folderId)
 	{
 		this.folderId = folderId;
 	}
@@ -961,7 +963,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param searchId
 	 *            the searchId to set
 	 */
-	public void setSearchId(Long searchId)
+	public void setSearchId(BigInteger searchId)
 	{
 		this.searchId = searchId;
 	}

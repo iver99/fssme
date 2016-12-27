@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities;
 
+import java.math.BigInteger;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -18,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchSearchRowEntity implements RowEntity
 {
 	@JsonProperty("SEARCH_ID")
-	private Long searchId;
+	private BigInteger searchId;
 
 	@JsonProperty("DESCRIPTION")
 	private String description;
@@ -67,7 +69,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private Integer uiHidden;
 
 	@JsonProperty("DELETED")
-	private Long deleted;
+	private BigInteger deleted;
 
 	@JsonProperty("IS_WIDGET")
 	private Integer isWidget;
@@ -412,7 +414,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public Long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -541,7 +543,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the searchId
 	 */
-	public Long getSearchId()
+	public BigInteger getSearchId()
 	{
 		return searchId;
 	}
@@ -715,7 +717,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(Long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -861,7 +863,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param searchId
 	 *            the searchId to set
 	 */
-	public void setSearchId(Long searchId)
+	public void setSearchId(BigInteger searchId)
 	{
 		this.searchId = searchId;
 	}

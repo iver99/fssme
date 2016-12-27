@@ -100,26 +100,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		cd.getInstance2().getData().setSavedSearchCategory(result.getList2());
 	}
 
-	/**
-	 * Compares the SSF last access rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
-	 * object
-	 *
-	 * @param rows1
-	 * @param rows2
-	 * @param cd
-	 */
-	private void compareSSFLastAccessRows(List<SavedSearchLastAccessRowEntity> rows1,
-			List<SavedSearchLastAccessRowEntity> rows2, InstancesComparedData<ZDTTableRowEntity> cd)
-	{
-		if (cd == null) {
-			return;
-		}
-		RowEntityComparator<SavedSearchLastAccessRowEntity> rec = new RowEntityComparator<SavedSearchLastAccessRowEntity>();
-		CompareListPair<SavedSearchLastAccessRowEntity> result = rec.compare(rows1, rows2);
-		cd.getInstance1().getData().setSavedSearchLastAccess(result.getList1());
-		cd.getInstance2().getData().setSavedSearchLastAccess(result.getList2());
-	}
-
+	
 	/**
 	 * Compares the saved search rows data for the 2 instances, and put the compare result into <code>ComparedData</code> object
 	 *
@@ -215,7 +196,6 @@ public class SavedsearchRowsComparator extends AbstractComparator
 				cd);
 		compareSSFFolderRows(insData1.getData().getSavedSearchFoldersy(),
 				insData2.getData().getSavedSearchFoldersy(), cd);
-		compareSSFLastAccessRows(insData1.getData().getSavedSearchLastAccess(), insData2.getData().getSavedSearchLastAccess(), cd);
 		compareSSFSearchParamsRows(insData1.getData().getSavedSearchSearchParams(),
 				insData2.getData().getSavedSearchSearchParams(), cd);
 		compareSSFSearchRows(insData1.getData().getSavedSearchSearch(),
