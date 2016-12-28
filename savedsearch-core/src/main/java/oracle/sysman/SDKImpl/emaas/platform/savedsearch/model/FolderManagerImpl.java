@@ -89,7 +89,9 @@ public class FolderManagerImpl extends FolderManager
 
 			folderObj.setDeleted(folderId);
 			folderObj.setLastModificationDate(DateUtil.getGatewayTime());
-			em.getTransaction().begin();
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			em.setProperty("permanent", permanently);			
 			if (permanently) {
 				em.remove(folderObj);
@@ -258,7 +260,9 @@ public class FolderManagerImpl extends FolderManager
 		EntityManager em = null;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			em.getTransaction().begin();
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
 			em.persist(folderObj);
 			em.getTransaction().commit();
@@ -303,7 +307,9 @@ public class FolderManagerImpl extends FolderManager
 		List<FolderImpl> importedList = new ArrayList<FolderImpl>();
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			em.getTransaction().begin();
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			for (FolderDetails folderDet : folders) {
 				try {
 					folder = folderDet.getFolder();
@@ -437,7 +443,9 @@ public class FolderManagerImpl extends FolderManager
 				throw new EMAnalyticsFwkException("Folder with Id " + folderObj.getFolderId()
 						+ " is system folder and NOT allowed to edit", EMAnalyticsFwkException.ERR_UPDATE_FOLDER, null);
 			}
-			em.getTransaction().begin();
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			em.persist(folderObj);
 			em.getTransaction().commit();
 			return createFolderObject(folderObj, null);

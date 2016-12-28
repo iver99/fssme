@@ -278,7 +278,9 @@ public class DataManager
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY_PARAMS t where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		em.getTransaction().begin();
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}		
 		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId).setParameter(3, name);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
@@ -332,7 +334,9 @@ public class DataManager
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		em.getTransaction().begin();
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
 		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
@@ -392,7 +396,9 @@ public class DataManager
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t where t.FOLDER_ID=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		em.getTransaction().begin();
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
 		Query q1 = em.createNativeQuery(sql).setParameter(1, folderId).setParameter(2, tenantId);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
@@ -452,7 +458,9 @@ public class DataManager
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH_PARAMS t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		em.getTransaction().begin();
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
 		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
@@ -514,7 +522,9 @@ public class DataManager
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
-		em.getTransaction().begin();
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
 		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update

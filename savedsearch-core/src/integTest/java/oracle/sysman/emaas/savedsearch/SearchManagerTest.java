@@ -43,9 +43,6 @@ import org.testng.annotations.Test;
 public class SearchManagerTest extends BaseTest
 {
 	
-	private static final String MODULE_NAME = "SavedSearchService"; // application service name
-	private final static String ACTION_NAME = "SearchManagerTest";//current class name
-
 	public static Category createTestCategory(CategoryManager cm, Folder folder, String name) throws EMAnalyticsFwkException
 	{
 		Category cat = new CategoryImpl();

@@ -208,7 +208,9 @@ public class CategoryManagerImpl extends CategoryManager
 			//boolean bResult = EmAnalyticsObjectUtil.canDeleteCategory(categoryId, em);
 			categoryObj.setDeleted(categoryId);
 			categoryObj.setLastModificationDate(DateUtil.getGatewayTime());
-			em.getTransaction().begin();
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			em.setProperty("permanent", permanently);
 			if (permanently) {
 				em.remove(categoryObj);
@@ -244,7 +246,9 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			EmAnalyticsCategory categoryEntity = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(category, em);
-			em.getTransaction().begin();
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			em.merge(categoryEntity);
 			em.getTransaction().commit();
 			return CategoryManagerImpl.createCategoryObject(categoryEntity, null);
@@ -403,7 +407,9 @@ public class CategoryManagerImpl extends CategoryManager
 		}
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			em.getTransaction().begin();
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			EmAnalyticsCategory categoryObj = EmAnalyticsObjectUtil.getEmAnalyticsCategoryForAdd(category, em);
 			em.persist(categoryObj);
 			em.getTransaction().commit();
@@ -445,7 +451,9 @@ public class CategoryManagerImpl extends CategoryManager
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 
-			em.getTransaction().begin();
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			for (ImportCategoryImpl categorytmp : categories) {
 				try {
 					category = categorytmp.getCategoryDetails();

@@ -111,20 +111,15 @@ public class PersistenceManager
 
 	public EntityManager getEntityManager(TenantInfo value)
 	{
-		EntityManager entityManager = emf.createEntityManager();
-		try {
-			SessionInfoUtil.setModuleAndAction(entityManager, MODULE_NAME, ACTION_NAME);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (entityManager != null) {
-				entityManager.close();
-			}
-		}
 		
 		Map<String, String> emProperties = new HashMap<String, String>();
 		emProperties.put(TENANT_ID_STR, String.valueOf(value.getTenantInternalId()));
-		EntityManager em = emf.createEntityManager(emProperties);		
+		EntityManager em = emf.createEntityManager(emProperties);	
+		try {
+			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
 		return em;
 	}
 
