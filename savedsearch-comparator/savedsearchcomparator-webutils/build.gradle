@@ -76,3 +76,10 @@ sourceSets {
                 resources.srcDirs = ['src/integTest/java']
         }
 }
+
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+        plusConfigurations += configurations.restAssured //avoid building error in Eclipse
+    }
+}
