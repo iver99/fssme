@@ -12,7 +12,6 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 import java.math.BigInteger;
 import java.net.URI;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -306,7 +305,7 @@ public class EntityJsonUtil
 		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
 			emSearch.setWidgetEditable(m.get("WIDGET_EDITABLE").toString());
 		}
-		emSearch.setId(new BigInteger(m.get("SEARCH_ID").toString()));
+		emSearch.setId(m.get("SEARCH_ID").toString());
 
 		return emSearch;
 	}
