@@ -299,7 +299,7 @@ public class EntityJsonUtilTest extends BaseTest
 	@Test(groups = { "s1" })
 	public void testGetJsonModel() throws EMAnalyticsFwkException {
 		Map<String, Object> m = new HashMap<String, Object>();
-		m.put("SEARCH_ID", new BigInteger("1000"));
+		m.put("SEARCH_ID", "1000");
 		m.put("WIDGET_KOC_NAME", "TestKOC");
 		m.put("WIDGET_VIEWMODEL", "TestViewModel");
 		m.put("WIDGET_TEMPLATE", "TestTemplate");
@@ -317,7 +317,7 @@ public class EntityJsonUtilTest extends BaseTest
 		m.put("PROVIDER_ASSET_ROOT", "TestProviderAssetRoot");
 //		String result = null;
 		AnalyticsSearchModel model = EntityJsonUtil.getJsonModel(m, "testScreenshotUrl");
-		Assert.assertEquals(model.getId(), new BigInteger("1000"));
+		Assert.assertEquals(model.getId(), "1000");
 		Assert.assertEquals(model.getWidgetKocName(), "TestKOC");
 		Assert.assertEquals(model.getWidgetViewModel(), "TestViewModel");
 		Assert.assertEquals(model.getWidgetTemplate(), "TestTemplate");
