@@ -45,6 +45,24 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
+	
+	
+
+	public SavedSearchSearchParamRowEntity(BigInteger searchId, String name,
+			String paramAttributes, Long paramType, String paramValueClob,
+			String paramValueStr, Long tenantId, String creationDate,
+			String lastModificationDate) {
+		super();
+		this.searchId = searchId;
+		this.name = name;
+		this.paramAttributes = paramAttributes;
+		this.paramType = paramType;
+		this.paramValueClob = paramValueClob;
+		this.paramValueStr = paramValueStr;
+		this.tenantId = tenantId;
+		this.creationDate = creationDate;
+		this.lastModificationDate = lastModificationDate;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)

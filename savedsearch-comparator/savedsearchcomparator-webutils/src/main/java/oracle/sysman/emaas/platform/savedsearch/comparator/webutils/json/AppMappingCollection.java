@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,9 +42,9 @@ public class AppMappingCollection
 		this.count = count;
 	}
 
-	public void setItems(List<AppMappingEntity> items)
+	public void setItems(ArrayList<AppMappingEntity> arrayList)
 	{
-		this.items = items;
+		this.items = arrayList;
 	}
 
 	public void setTotal(int total)

@@ -81,6 +81,15 @@ public class SavedSearchSchemaVerRowEntity implements RowEntity
 		return true;
 	}
 
+	public SavedSearchSchemaVerRowEntity(Long major, Long minor,
+			String creationDate, String lastModificationDate) {
+		super();
+		this.major = major;
+		this.minor = minor;
+		this.creationDate = creationDate;
+		this.lastModificationDate = lastModificationDate;
+	}
+
 	/**
 	 * @return the creationDate
 	 */

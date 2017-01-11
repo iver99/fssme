@@ -126,6 +126,9 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGro
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/JAXBUtilTestS2.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPIMoreTest.class"
 
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/RowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/ZDTCountEntityTest.class"
+
 
         useRestAssured=true
 ext.set("testType", "integration")

@@ -233,6 +233,33 @@ public class SavedSearchFolderRowEntity implements RowEntity
 		return deleted;
 	}
 
+	public SavedSearchFolderRowEntity(BigInteger folderId, String description,
+			String descriptionNlsid, String descriptionSubsystem,
+			String emPluginId, String lastModifiedBy,
+			String lastModificationDate, String name, String nameNlsid,
+			String nameSubsystem, String owner, Integer systemFolder,
+			Integer uiHidden, BigInteger deleted, Long tenantId,
+			BigInteger parentId, String creationDate) {
+		super();
+		this.folderId = folderId;
+		this.description = description;
+		this.descriptionNlsid = descriptionNlsid;
+		this.descriptionSubsystem = descriptionSubsystem;
+		this.emPluginId = emPluginId;
+		this.lastModifiedBy = lastModifiedBy;
+		this.lastModificationDate = lastModificationDate;
+		this.name = name;
+		this.nameNlsid = nameNlsid;
+		this.nameSubsystem = nameSubsystem;
+		this.owner = owner;
+		this.systemFolder = systemFolder;
+		this.uiHidden = uiHidden;
+		this.deleted = deleted;
+		this.tenantId = tenantId;
+		this.parentId = parentId;
+		this.creationDate = creationDate;
+	}
+
 	/**
 	 * @return the description
 	 */

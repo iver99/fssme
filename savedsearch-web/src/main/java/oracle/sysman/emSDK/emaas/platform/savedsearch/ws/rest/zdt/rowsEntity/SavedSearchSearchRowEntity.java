@@ -136,6 +136,65 @@ public class SavedSearchSearchRowEntity implements RowEntity
 
 	@JsonProperty("PROVIDER_ASSET_ROOT")
 	private String providerAssetRoot;
+	
+	
+
+	public SavedSearchSearchRowEntity(BigInteger searchId, String description,
+			String descriptionNlsid, String descriptionSubsystem,
+			String emPluginId, Integer isLocked, String lastModifiedBy,
+			String metadataClob, String name, String nameNlsid,
+			String nameSubsystem, String owner, String searchDisplayStr,
+			String searchGuid, Integer systemSearch, Integer uiHidden,
+			BigInteger deleted, Integer isWidget, String creationDate,
+			String lastModificationDate, String nameWidgetSource,
+			String widgetGroupName, String widgetScreenshotHref,
+			String widgetIcon, String widgetKocName, String widgetViewModel,
+			String widgetTemplate, String widgetSupportTimeControl,
+			Long widgetLinkedDashboard, Long widgetDefaulWidth,
+			Long widgetDefaultHeight, String dashboardIneligible,
+			Long tenantId, BigInteger folderId, BigInteger categoryId,
+			String providerName, String providerVersion,
+			String providerAssetRoot) {
+		super();
+		this.searchId = searchId;
+		this.description = description;
+		this.descriptionNlsid = descriptionNlsid;
+		this.descriptionSubsystem = descriptionSubsystem;
+		this.emPluginId = emPluginId;
+		this.isLocked = isLocked;
+		this.lastModifiedBy = lastModifiedBy;
+		this.metadataClob = metadataClob;
+		this.name = name;
+		this.nameNlsid = nameNlsid;
+		this.nameSubsystem = nameSubsystem;
+		this.owner = owner;
+		this.searchDisplayStr = searchDisplayStr;
+		this.searchGuid = searchGuid;
+		this.systemSearch = systemSearch;
+		this.uiHidden = uiHidden;
+		this.deleted = deleted;
+		this.isWidget = isWidget;
+		this.creationDate = creationDate;
+		this.lastModificationDate = lastModificationDate;
+		this.nameWidgetSource = nameWidgetSource;
+		this.widgetGroupName = widgetGroupName;
+		this.widgetScreenshotHref = widgetScreenshotHref;
+		this.widgetIcon = widgetIcon;
+		this.widgetKocName = widgetKocName;
+		this.widgetViewModel = widgetViewModel;
+		this.widgetTemplate = widgetTemplate;
+		this.widgetSupportTimeControl = widgetSupportTimeControl;
+		this.widgetLinkedDashboard = widgetLinkedDashboard;
+		this.widgetDefaulWidth = widgetDefaulWidth;
+		this.widgetDefaultHeight = widgetDefaultHeight;
+		this.dashboardIneligible = dashboardIneligible;
+		this.tenantId = tenantId;
+		this.folderId = folderId;
+		this.categoryId = categoryId;
+		this.providerName = providerName;
+		this.providerVersion = providerVersion;
+		this.providerAssetRoot = providerAssetRoot;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)

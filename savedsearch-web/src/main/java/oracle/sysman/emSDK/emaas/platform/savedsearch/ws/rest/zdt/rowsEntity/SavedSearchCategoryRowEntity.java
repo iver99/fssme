@@ -76,6 +76,36 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	@JsonProperty("DASHBOARD_INELIGIBLE")
 	private String dashboardIneligible;
 
+	public SavedSearchCategoryRowEntity(BigInteger categoryId,
+			String description, String descriptionNlsid,
+			String descriptionSubsystem, String emPluginId, String name,
+			String nameNlsid, String nameSubsystem, String owner,
+			BigInteger deleted, String providerName, String providerVersion,
+			String providerDiscovery, String providerAssetRoot,
+			String lastModificationDate, Long tenantId, String creationDate,
+			Long defaultFolderId, String dashboardIneligible) {
+		super();
+		this.categoryId = categoryId;
+		this.description = description;
+		this.descriptionNlsid = descriptionNlsid;
+		this.descriptionSubsystem = descriptionSubsystem;
+		this.emPluginId = emPluginId;
+		this.name = name;
+		this.nameNlsid = nameNlsid;
+		this.nameSubsystem = nameSubsystem;
+		this.owner = owner;
+		this.deleted = deleted;
+		this.providerName = providerName;
+		this.providerVersion = providerVersion;
+		this.providerDiscovery = providerDiscovery;
+		this.providerAssetRoot = providerAssetRoot;
+		this.lastModificationDate = lastModificationDate;
+		this.tenantId = tenantId;
+		this.creationDate = creationDate;
+		this.defaultFolderId = defaultFolderId;
+		this.dashboardIneligible = dashboardIneligible;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

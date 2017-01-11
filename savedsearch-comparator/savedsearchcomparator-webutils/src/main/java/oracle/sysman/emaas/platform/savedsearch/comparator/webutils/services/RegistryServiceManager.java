@@ -41,7 +41,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		Properties build();
 	}
 
-	class ServiceConfigBuilder implements Builder
+	public class ServiceConfigBuilder implements Builder
 	{
 		private final Map<String, String> serviceConfigMap = new HashMap<String, String>();
 
