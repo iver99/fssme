@@ -126,6 +126,24 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/JAXBUtilTes
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPIMoreTest.class"
 
 
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/RowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/ZDTCountEntityTest.class"
+
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedSearchComparatorCORSFilterTest.class"
+include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/services/ZDTAPITest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/property/PropertyReaderTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/services/LoggingServiceManagerTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/targetmodel/services/SavedSearchStatusTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/AppMappingCollectionTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/GlobalStatusTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/JsonUtilTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/LogUtilTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/RegistryLookupUtilTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/SavedSearchComparatorStatusTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/lifecycle/SavedsearchComparatorLifeCycleServiceTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/management/AppLoggingManageMXBeanTest.class"
+
+
         useRestAssured=true
 ext.set("testType", "integration")
 }
