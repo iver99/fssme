@@ -14,6 +14,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.SavedsearchComparatorCORSFilter;
 
+@Test(groups={"s2"})
 public class SavedSearchComparatorCORSFilterTest {
 	private SavedsearchComparatorCORSFilter dashboardsComparatorCORSFilter = new SavedsearchComparatorCORSFilter();
     @Mocked
