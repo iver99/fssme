@@ -140,7 +140,6 @@ include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/AppMappi
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/GlobalStatusTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/JsonUtilTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/LogUtilTest.class"
-include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/RegistryLookupUtilTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/SavedSearchComparatorStatusTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/lifecycle/SavedsearchComparatorLifeCycleServiceTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/management/AppLoggingManageMXBeanTest.class"

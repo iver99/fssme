@@ -128,7 +128,6 @@ include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/AppMappingCollectionTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/JsonUtilTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/LogUtilTest.class"
-include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/RegistryLookupUtilTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/StringUtilTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/TenantSubscriptionUtilTest.class"
 

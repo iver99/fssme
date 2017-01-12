@@ -13,6 +13,8 @@ public class StringUtilTest {
 
     @Test
     public void testStringUtil(){
+    	
+    	Assert.assertTrue(StringUtil.isEmpty(null));
         Assert.assertTrue(StringUtil.isEmpty(""));
 
         Assert.assertFalse(StringUtil.isEmpty("string"));
