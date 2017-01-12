@@ -231,6 +231,12 @@ include "oracle/sysman/emaas/platform/savedsearch/utils/RestRequestUtilTest.clas
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchRowEntityTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/ZDTTableRowEntityTest.class"
 
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/CountsEntityTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFFolderRowEntityTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedsearchComparatorApplicationTest.class"
+
+
+
 useRestAssured =true
 ext.set("testType", "unit")
 }
