@@ -21,9 +21,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by chehao on 2017/1/11.
- */
+
 @Test(groups = {"s2"})
 public class TenantSubscriptionUtilTest {
 
@@ -396,24 +394,20 @@ public class TenantSubscriptionUtilTest {
         };
     }
 
-    /*@Test
-    public void testGetTenantSubscribedServices(final @Mocked InstanceInfo instanceInfo) throws Exception {
-        final Link link = new Link();
-
-        link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
-        link.withRel("");
-        new Expectations() {
-            {
-                RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, "emaastesttenant1");
-                result = link;
-                *//*LookupManager.getInstance().getLookupClient().getInstanceForTenant((InstanceInfo)any, "emaastesttenant1");
-                result=instanceInfo;*//*
-
-            }
-        };
-        List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-    }*/
-
+  @Test
+  public void testPutFunction(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+          @Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
+          @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+          @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) {
+	  new NonStrictExpectations() {
+          {
+              new DefaultClientConfig();
+              Client.create(anyClientConfig);
+          }
+      };
+	  Assert.assertNull(new TenantSubscriptionUtil.RestClient().put(null,null,null));
+	  new TenantSubscriptionUtil.RestClient().put("http://test.link.com",new StringBuilder(), "emaastesttenant1");
+  }
 
 }
 
