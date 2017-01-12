@@ -152,7 +152,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtil
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/SchemaVersionTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/WidgetChangeNotificationTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplTest.class"
-include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/SearchPaurameterDetailsTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/SearchParameterDetailsTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/DBConnectionManagerTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderManagerImplTest.java"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/WidgetManagerImplTest.class"
@@ -186,6 +186,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptio
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchSummaryImplTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/EntityJsonUtilTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/CategoryDetailsTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/ObjectFactoryTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplForTargetCardTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/zdt/DataManagerTest.class"
 	useRestAssured =true
@@ -228,6 +229,7 @@ include "oracle/sysman/emaas/platform/savedsearch/utils/RestRequestUtilTest.clas
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchLastAccessRowEntityTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchParamRowEntityTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchRowEntityTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/ZDTTableRowEntityTest.class"
 
 useRestAssured =true
 ext.set("testType", "unit")
