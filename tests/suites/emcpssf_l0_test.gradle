@@ -173,6 +173,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RegistryLookupUti
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RestClientTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptionUtilTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheFactoryTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheLinkedHashMapTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/CachedLinkTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/BinaryTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotCacheManagerTest.class"
