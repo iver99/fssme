@@ -137,7 +137,7 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/S
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchRowEntityTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/ZDTTableRowEntityTest.class"
 
-
+/*
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedSearchComparatorCORSFilterTest.class"
 include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/services/ZDTAPITest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/property/PropertyReaderTest.class"
@@ -157,7 +157,7 @@ include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/management
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/CountsEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFFolderRowEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedsearchComparatorApplicationTest.class"
-
+*/
 
         useRestAssured=true
 ext.set("testType", "integration")
