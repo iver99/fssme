@@ -80,8 +80,6 @@ public class ZDTAPI
 			obj.put(TABLE_SEARCH, tableData);
 			tableData = getSearchParamsTableData();
 			obj.put(TABLE_SEARCH_PARAMS, tableData);
-			tableData = getLastAccessTableData();
-			obj.put(TABLE_LAST_ACCESS, tableData);
 			tableData = getSchemaVersionTableData();
 			obj.put(TABLE_SCHEMA_VERSION, tableData);
 		}
@@ -170,12 +168,6 @@ public class ZDTAPI
 		}
 		logger.debug("Retrieved table data for {} is \"{}\"", dataName, array.toString());
 		return array;
-	}
-
-	private JSONArray getLastAccessTableData()
-	{
-		List<Map<String, Object>> list = DataManager.getInstance().getLastAccessTableData();
-		return getJSONArrayForListOfObjects(TABLE_LAST_ACCESS, list);
 	}
 
 	private JSONArray getSchemaVersionTableData()

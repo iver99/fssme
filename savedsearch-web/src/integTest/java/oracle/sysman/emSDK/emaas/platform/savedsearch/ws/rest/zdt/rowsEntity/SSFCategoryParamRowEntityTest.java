@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities;
+package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity;
 
 import java.math.BigInteger;
 
@@ -10,8 +10,8 @@ public class SSFCategoryParamRowEntityTest {
 	
 	@Test
 	public void testEquals() {
-		SavedSearchCategoryParamRowEntity entity1 = new SavedSearchCategoryParamRowEntity();
-		SavedSearchCategoryParamRowEntity entity2 = new SavedSearchCategoryParamRowEntity();
+		SavedSearchCategoryParamRowEntity entity1 = new SavedSearchCategoryParamRowEntity(null,null,null,null,null,null);
+		SavedSearchCategoryParamRowEntity entity2 = new SavedSearchCategoryParamRowEntity(null,null,null,null,null,null);
 		entity1.setCategoryId(new BigInteger("1"));
 		entity2.setCategoryId(new BigInteger("1"));
 		Assert.assertEquals(entity1, entity2);
@@ -47,8 +47,8 @@ public class SSFCategoryParamRowEntityTest {
 	
 	@Test
 	public void testHashcode() {
-		SavedSearchCategoryParamRowEntity entity1 = new SavedSearchCategoryParamRowEntity();
-		SavedSearchCategoryParamRowEntity entity2 = new SavedSearchCategoryParamRowEntity();
+		SavedSearchCategoryParamRowEntity entity1 = new SavedSearchCategoryParamRowEntity(null,null,null,null,null,null);
+		SavedSearchCategoryParamRowEntity entity2 = new SavedSearchCategoryParamRowEntity(null,null,null,null,null,null);
 		entity1.setCategoryId(new BigInteger("1"));
 		entity2.setCategoryId(new BigInteger("1"));
 		Assert.assertEquals(entity1.hashCode(), entity2.hashCode());

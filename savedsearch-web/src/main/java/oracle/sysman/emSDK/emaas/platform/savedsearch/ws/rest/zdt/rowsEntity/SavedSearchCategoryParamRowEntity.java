@@ -104,12 +104,28 @@ public class SavedSearchCategoryParamRowEntity implements RowEntity
 		return true;
 	}
 
+	public SavedSearchCategoryParamRowEntity() {
+		super();
+	}
+
 	/**
 	 * @return the categoryId
 	 */
 	public BigInteger getCategoryId()
 	{
 		return categoryId;
+	}
+
+	public SavedSearchCategoryParamRowEntity(BigInteger categoryId,
+			String name, String value, Long tenantId, String creationDate,
+			String lastModificationDate) {
+		super();
+		this.categoryId = categoryId;
+		this.name = name;
+		this.value = value;
+		this.tenantId = tenantId;
+		this.creationDate = creationDate;
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**

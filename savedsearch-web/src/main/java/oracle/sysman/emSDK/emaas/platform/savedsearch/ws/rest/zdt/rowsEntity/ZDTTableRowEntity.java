@@ -37,6 +37,28 @@ public class ZDTTableRowEntity
 
 	@JsonProperty("EMS_ANALYTICS_SEARCH")
 	private List<SavedSearchSearchRowEntity> savedSearchSearch;
+	
+	
+
+	public ZDTTableRowEntity() {
+		super();
+	}
+
+	public ZDTTableRowEntity(
+			List<SavedSearchCategoryRowEntity> savedSearchCategory,
+			List<SavedSearchCategoryParamRowEntity> savedSearchCategoryParams,
+			List<SavedSearchFolderRowEntity> savedSearchFoldersy,
+			List<SavedSearchSchemaVerRowEntity> savedSearchSchemaVer,
+			List<SavedSearchSearchParamRowEntity> savedSearchSearchParams,
+			List<SavedSearchSearchRowEntity> savedSearchSearch) {
+		super();
+		this.savedSearchCategory = savedSearchCategory;
+		this.savedSearchCategoryParams = savedSearchCategoryParams;
+		this.savedSearchFoldersy = savedSearchFoldersy;
+		this.savedSearchSchemaVer = savedSearchSchemaVer;
+		this.savedSearchSearchParams = savedSearchSearchParams;
+		this.savedSearchSearch = savedSearchSearch;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)

@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities;
+package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity;
 
 import java.math.BigInteger;
 
@@ -9,8 +9,38 @@ public class SSFSearchRowEntityTest {
 
 	@Test
 	public void testEquals() {
-		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity();
-		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity();
+		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity(new BigInteger("1"), "description",
+				"descriptionNlsid", "descriptionSubsystem",
+				"emPluginId", new Integer("1"), "lastModifiedBy",
+				"metadataClob", "name", "nameNlsid",
+				"nameSubsystem", "owner", "searchDisplayStr",
+				"searchGuid", new Integer("1"), new Integer("1"),
+				new BigInteger("1"), new Integer("1"), "creationDate",
+				"lastModificationDate", "nameWidgetSource",
+				"widgetGroupName", "widgetScreenshotHref",
+				"widgetIcon", "widgetKocName", "widgetViewModel",
+				" widgetTemplate", "widgetSupportTimeControl",
+				1L, 1L,
+				1L, "dashboardIneligible",
+				1L, new BigInteger("1"), new BigInteger("1"),
+				"providerName", "providerVersion",
+				"providerAssetRoot");
+		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity(new BigInteger("1"), "description",
+				"descriptionNlsid", "descriptionSubsystem",
+				"emPluginId", new Integer("1"), "lastModifiedBy",
+				"metadataClob", "name", "nameNlsid",
+				"nameSubsystem", "owner", "searchDisplayStr",
+				"searchGuid", new Integer("1"), new Integer("1"),
+				new BigInteger("1"), new Integer("1"), "creationDate",
+				"lastModificationDate", "nameWidgetSource",
+				"widgetGroupName", "widgetScreenshotHref",
+				"widgetIcon", "widgetKocName", "widgetViewModel",
+				" widgetTemplate", "widgetSupportTimeControl",
+				1L, 1L,
+				1L, "dashboardIneligible",
+				1L, new BigInteger("1"), new BigInteger("1"),
+				"providerName", "providerVersion",
+				"providerAssetRoot");
 		Assert.assertEquals(entity1,entity2);
 		
 		entity1.setCreationDate("2016-07-22 08:23:32.517");
@@ -102,8 +132,38 @@ public class SSFSearchRowEntityTest {
 	
 	@Test
 	public void testHashcode() {
-		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity();
-		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity();
+		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity(new BigInteger("1"), "description",
+				"descriptionNlsid", "descriptionSubsystem",
+				"emPluginId", new Integer("1"), "lastModifiedBy",
+				"metadataClob", "name", "nameNlsid",
+				"nameSubsystem", "owner", "searchDisplayStr",
+				"searchGuid", new Integer("1"), new Integer("1"),
+				new BigInteger("1"), new Integer("1"), "creationDate",
+				"lastModificationDate", "nameWidgetSource",
+				"widgetGroupName", "widgetScreenshotHref",
+				"widgetIcon", "widgetKocName", "widgetViewModel",
+				" widgetTemplate", "widgetSupportTimeControl",
+				1L, 1L,
+				1L, "dashboardIneligible",
+				1L, new BigInteger("1"), new BigInteger("1"),
+				"providerName", "providerVersion",
+				"providerAssetRoot");
+		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity(new BigInteger("1"), "description",
+				"descriptionNlsid", "descriptionSubsystem",
+				"emPluginId", new Integer("1"), "lastModifiedBy",
+				"metadataClob", "name", "nameNlsid",
+				"nameSubsystem", "owner", "searchDisplayStr",
+				"searchGuid", new Integer("1"), new Integer("1"),
+				new BigInteger("1"), new Integer("1"), "creationDate",
+				"lastModificationDate", "nameWidgetSource",
+				"widgetGroupName", "widgetScreenshotHref",
+				"widgetIcon", "widgetKocName", "widgetViewModel",
+				" widgetTemplate", "widgetSupportTimeControl",
+				1L, 1L,
+				1L, "dashboardIneligible",
+				1L, new BigInteger("1"), new BigInteger("1"),
+				"providerName", "providerVersion",
+				"providerAssetRoot");
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
 		
 		entity1.setCreationDate("2016-07-22 08:23:32.517");

@@ -46,7 +46,6 @@ public class DataManager
 	private static final String SQL_ALL_FOLDER_ROWS = "SELECT * FROM EMS_ANALYTICS_FOLDERS";
 	private static final String SQL_ALL_SEARCH_ROWS = "SELECT * FROM EMS_ANALYTICS_SEARCH";
 	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS = "SELECT * FROM EMS_ANALYTICS_CATEGORY_PARAMS";
-	private static final String SQL_ALL_LAST_ACCESS_ROWS = "SELECT * FROM EMS_ANALYTICS_LAST_ACCESS";
 	private static final String SQL_ALL_SCHEMA_VER_ROWS = "SELECT * FROM EMS_ANALYTICS_SCHEMA_VER_SSF";
 	private static final String SQL_ALL_SEARCH_PARAMS_ROWS = "SELECT * FROM EMS_ANALYTICS_SEARCH_PARAMS";
 
@@ -73,11 +72,6 @@ public class DataManager
 			+ "t.OWNER=?,t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFIED_BY=?,t.NAME_NLSID=?,"
 			+ "t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,t.DESCRIPTION_SUBSYSTEM=?,t.SYSTEM_FOLDER=?,t.EM_PLUGIN_ID=?,"
 			+ "t.UI_HIDDEN=?,t.DELETED=? where t.FOLDER_ID=? and t.TENANT_ID=?";
-
-	private static final String SQL_INSERT_LAST_ACCESS = "INSERT INTO EMS_ANALYTICS_LAST_ACCESS (OBJECT_ID,ACCESSED_BY,OBJECT_TYPE,ACCESS_DATE,"
-			+ "TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE) VALUES(?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
-	private static final String SQL_UPDATE_LAST_ACCESS = "UPDATE EMS_ANALYTICS_LAST_ACCESS t SET t.ACCESS_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') "
-			+ "where t.OBJECT_ID=? and t.ACCESSED_BY=? and t.OBJECT_TYPE=? and t.TENANT_ID=?";
 
 	private static final String SQL_INSERT_SEARCH = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,"
@@ -229,17 +223,6 @@ public class DataManager
 	}
 
 	/**
-	 * Get all rows in last access table
-	 *
-	 * @return
-	 */
-
-	public List<Map<String, Object>> getLastAccessTableData()
-	{
-		return getDatabaseTableData(SQL_ALL_LAST_ACCESS_ROWS);
-	}
-
-	/**
 	 * Get all rows in search version table
 	 *
 	 * @return
@@ -281,8 +264,8 @@ public class DataManager
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}		
-		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId).setParameter(3, name);
-		List<Object> result = q1.getResultList();
+		Query query = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId).setParameter(3, name);
+		List<Object> result = query.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
 			flag = false;

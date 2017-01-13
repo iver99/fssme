@@ -4,6 +4,7 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 import java.io.IOException;
 import java.math.BigInteger;
 
+import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
@@ -12,6 +13,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 
 @Test(groups = { "s1" })
 public class SaveSearchRowsComparatorTest
@@ -187,5 +190,19 @@ public class SaveSearchRowsComparatorTest
 		Assert.assertEquals(tre.getSavedSearchFoldersy().get(0).getName(), "All Searches");
 		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId().longValue(), 2024);
 		Assert.assertEquals(tre.getSavedSearchSearchParams().get(0).getName(), "meId");
+	}
+	
+	@Test
+	public void testCompare(@Mocked final AbstractComparator abstractComparator, 
+			@Mocked final InstancesComparedData<ZDTTableRowEntity> zdtTableRowsEntity) {
+		SavedsearchRowsComparator src = new SavedsearchRowsComparator();
+		 new Expectations(){
+	            {
+	                abstractComparator.getOMCInstances();
+	                result = null;
+	            }
+	        };
+	        src.compare();
+		
 	}
 }
