@@ -104,6 +104,10 @@ public class SavedSearchCategoryParamRowEntity implements RowEntity
 		return true;
 	}
 
+	public SavedSearchCategoryParamRowEntity() {
+		super();
+	}
+
 	/**
 	 * @return the categoryId
 	 */

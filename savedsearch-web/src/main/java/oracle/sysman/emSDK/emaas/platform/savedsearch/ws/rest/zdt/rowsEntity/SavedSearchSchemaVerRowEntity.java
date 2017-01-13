@@ -30,6 +30,10 @@ public class SavedSearchSchemaVerRowEntity implements RowEntity
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
 
+	public SavedSearchSchemaVerRowEntity() {
+		super();
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

@@ -40,6 +40,10 @@ public class ZDTTableRowEntity
 	
 	
 
+	public ZDTTableRowEntity() {
+		super();
+	}
+
 	public ZDTTableRowEntity(
 			List<SavedSearchCategoryRowEntity> savedSearchCategory,
 			List<SavedSearchCategoryParamRowEntity> savedSearchCategoryParams,

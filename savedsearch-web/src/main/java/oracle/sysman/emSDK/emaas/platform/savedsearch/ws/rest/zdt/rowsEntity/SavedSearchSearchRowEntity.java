@@ -139,6 +139,10 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	
 	
 
+	public SavedSearchSearchRowEntity() {
+		super();
+	}
+
 	public SavedSearchSearchRowEntity(BigInteger searchId, String description,
 			String descriptionNlsid, String descriptionSubsystem,
 			String emPluginId, Integer isLocked, String lastModifiedBy,
