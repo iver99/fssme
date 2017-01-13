@@ -75,6 +75,12 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 
 	@JsonProperty("DASHBOARD_INELIGIBLE")
 	private String dashboardIneligible;
+	
+	
+
+	public SavedSearchCategoryRowEntity() {
+		super();
+	}
 
 	public SavedSearchCategoryRowEntity(BigInteger categoryId,
 			String description, String descriptionNlsid,

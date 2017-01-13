@@ -19,6 +19,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
  */
 public class SavedSearchFolderRowEntity implements RowEntity
 {
+	public SavedSearchFolderRowEntity() {
+		super();
+	}
+
 	@JsonProperty("FOLDER_ID")
 	private BigInteger folderId;
 

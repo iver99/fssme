@@ -48,6 +48,10 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	
 	
 
+	public SavedSearchSearchParamRowEntity() {
+		super();
+	}
+
 	public SavedSearchSearchParamRowEntity(BigInteger searchId, String name,
 			String paramAttributes, Long paramType, String paramValueClob,
 			String paramValueStr, Long tenantId, String creationDate,
