@@ -6,6 +6,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +46,20 @@ public class OOBWidgetTest {
             TenantContext.clearContext();
         }
     }
-
+    @Test
+    public void testCOSWidgetDelete() throws EMAnalyticsFwkException {
+        TenantContext.setContext(new TenantInfo(
+                TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+                TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+        try {
+            SearchManager searchManager = SearchManager.getInstance();
+            String[] searchIds = {"5009", "5007", "5006"};
+            for (String searchId : searchIds) {
+                Search search = searchManager.getSearch(new BigInteger(searchId));
+                Assert.assertNull(search);
+            }
+        }finally{
+            TenantContext.clearContext();
+        }
+    }
 }
