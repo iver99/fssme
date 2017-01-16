@@ -46,7 +46,7 @@ public class OOBWidgetTest {
             TenantContext.clearContext();
         }
     }
-    @Test
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
     public void testCOSWidgetDelete() throws EMAnalyticsFwkException {
         TenantContext.setContext(new TenantInfo(
                 TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
@@ -58,6 +58,27 @@ public class OOBWidgetTest {
                 Search search = searchManager.getSearch(new BigInteger(searchId));
                 Assert.assertNull(search);
             }
+        }finally{
+            TenantContext.clearContext();
+        }
+    }
+
+    @Test
+    public void testTopSourcesParam() throws EMAnalyticsFwkException {
+        TenantContext.setContext(new TenantInfo(
+                TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+                TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+        try {
+            SearchManager searchManager = SearchManager.getInstance();
+            Search search = searchManager.getSearch(new BigInteger("2000"));
+            boolean isExist = false;
+            for(SearchParameter searchParam : search.getParameters()){
+                if("VISUALIZATION_TYPE_KEY".equals(searchParam.getName()) ){
+                    isExist = true;
+                    break;
+                }
+            }
+            Assert.assertTrue(isExist);
         }finally{
             TenantContext.clearContext();
         }
