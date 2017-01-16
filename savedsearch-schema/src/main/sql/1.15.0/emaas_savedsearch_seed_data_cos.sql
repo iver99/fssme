@@ -46,6 +46,9 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Searches with id : 5006, 5007, 5009 does not exist in TENANT: '|| V_TENANT_ID || ', no need to remove');
        END IF;
 
+     IF (V_TID<>-1) THEN
+        EXIT;
+     END IF;
   END LOOP;
   CLOSE TENANT_CURSOR;
   COMMIT;
