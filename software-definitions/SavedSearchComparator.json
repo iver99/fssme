@@ -1,5 +1,5 @@
 {
-    "name": "SavedSearchComparator",
+    "name": "SavedSearchService-comparator",
     "serviceName": "SavedsearchService-comparator",
     "version": "SERVICEVERSION",
     "ephemeral": true,
