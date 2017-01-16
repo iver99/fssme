@@ -41,5 +41,5 @@
         "rel": "link\/gzip",
         "href": "<software>"
     },
-    "microServices":["SavedSearch"]
+    "microServices":["SavedSearchService-comparator"]
 }
