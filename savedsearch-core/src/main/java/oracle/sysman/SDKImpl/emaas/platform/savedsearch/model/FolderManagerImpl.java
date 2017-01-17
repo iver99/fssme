@@ -608,7 +608,7 @@ public class FolderManagerImpl extends FolderManager
 					.setParameter(parentFolder, parentFolderObj).setParameter("foldername", folder.getName())
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
 
-			String result = EntityJsonUtil.getErrorJsonObject(folderObj.getFolderId(),
+			String result = EntityJsonUtil.getErrorJsonObject(folderObj.getFolderId().toString(),
 					"The folder name '" + folderObj.getName() + "' already exist", EMAnalyticsFwkException.ERR_FOLDER_DUP_NAME)
 					.toString();
 
