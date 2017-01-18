@@ -2,15 +2,16 @@ package oracle.sysman.emaas.savedsearch;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +19,13 @@ import java.util.List;
  * Created by xidai on 6/28/2016.
  */
 public class FolderManagerNonGroupsTest {
-    private static int folderId;
+    private static BigInteger folderId;
 
-    private static int childFolderId;
-    private static int categoryId;
+    private static BigInteger childFolderId;
+    private static BigInteger categoryId;
     private static final String TENANT_ID_OPC2 = TestUtils.TENANT_ID_OPC2;
     private static final String TENANT_ID_OPC3 = TestUtils.TENANT_ID_OPC3;
-    private static long TA_FOLDER_ID = 4;
+    private static BigInteger TA_FOLDER_ID = new BigInteger("4");
 
     @AfterClass
     public static void DeleteFolder() throws EMAnalyticsFwkException {
@@ -55,7 +56,7 @@ public class FolderManagerNonGroupsTest {
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
             folderId = folder.getId();
-            AssertJUnit.assertFalse(folderId == 0);
+            AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
             AssertJUnit.assertNotNull(folder.getOwner());
             // cross check the content of the folder being saves
             folder = objFolder.getFolder(folderId);
@@ -74,8 +75,8 @@ public class FolderManagerNonGroupsTest {
     // DISABLE TEST CASES   @Test
     public static void createreadFolderByTenant() throws EMAnalyticsFwkException {
 
-        long folderId = 0;
-        long folderId1 = 0;
+        BigInteger folderId = BigInteger.ZERO;
+        BigInteger folderId1 = BigInteger.ZERO;
         try {
 
             TenantContext.setContext(
@@ -87,7 +88,7 @@ public class FolderManagerNonGroupsTest {
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
             folderId = folder.getId();
-            AssertJUnit.assertFalse(folderId == 0);
+            AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
 
         }
         finally {
@@ -106,7 +107,7 @@ public class FolderManagerNonGroupsTest {
             folder.setUiHidden(false);
             folder = objFolder.saveFolder(folder);
             folderId1 = folder.getId();
-            AssertJUnit.assertFalse(folderId1 == 0);
+            AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId1));
 
         }
         finally {
@@ -164,7 +165,7 @@ public class FolderManagerNonGroupsTest {
                 new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
                         TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
         try {
-            foldMan.deleteFolder(987656788498L, true);
+            foldMan.deleteFolder(new BigInteger("987656788498"), true);
         }
         finally {
             TenantContext.clearContext();
@@ -263,8 +264,6 @@ public class FolderManagerNonGroupsTest {
         }
     }
 
-
-
     @Test
     public void testGetInstance()
     {
@@ -287,7 +286,7 @@ public class FolderManagerNonGroupsTest {
                         TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
         FolderManager foldMan = FolderManager.getInstance();
         try {
-            foldMan.getFolder(987656788498L);
+            foldMan.getFolder(new BigInteger("987656788498"));
         }
         finally {
             TenantContext.clearContext();
@@ -371,7 +370,7 @@ public class FolderManagerNonGroupsTest {
                         TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
         Folder folder = fman.createNewFolder();
         folder.setName("harsh kumar");
-        folder.setParentId(987876788);
+        folder.setParentId(new BigInteger("987876788"));
         try {
             fman.saveFolder(folder);
 

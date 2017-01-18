@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -21,28 +22,8 @@ public class EmAnalyticsSearchTest
 	public void setUp()
 	{
 		emAnalyticsSearch = new EmAnalyticsSearch();
-		emAnalyticsSearch.setId(123412341234L);
+		emAnalyticsSearch.setId(new BigInteger("123412341234"));
 		emAnalyticsSearch.setOwner("ownerxx");
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetAccessDate()
-	{
-		Assert.assertNull(emAnalyticsSearch.getAccessDate());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		Assert.assertEquals(now, emAnalyticsSearch.getAccessDate());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetAccessedBy()
-	{
-		Assert.assertNull(emAnalyticsSearch.getAccessedBy());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		Assert.assertEquals(emAnalyticsSearch.getLastAccess().getAccessedBy(), emAnalyticsSearch.getAccessedBy());
 	}
 
 	@Test(groups = { "s1" })
@@ -63,7 +44,7 @@ public class EmAnalyticsSearchTest
 	@Test(groups = { "s1" })
 	public void testGetDeleted()
 	{
-		long deleted = 123412341234L;
+		BigInteger deleted = new BigInteger("123412341234");
 		emAnalyticsSearch.setDeleted(deleted);
 		Assert.assertEquals(deleted, emAnalyticsSearch.getDeleted());
 	}
@@ -106,7 +87,7 @@ public class EmAnalyticsSearchTest
 	@Test(groups = { "s1" })
 	public void testGetId()
 	{
-		long id = 1234123412341234L;
+		BigInteger id = new BigInteger("1234123412341234");
 		emAnalyticsSearch.setId(id);
 		Assert.assertEquals(id, emAnalyticsSearch.getId());
 	}
@@ -125,16 +106,6 @@ public class EmAnalyticsSearchTest
 		long isWidget = 333L;
 		emAnalyticsSearch.setIsWidget(isWidget);
 		Assert.assertEquals(isWidget, emAnalyticsSearch.getIsWidget());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetLastAccess()
-	{
-		Assert.assertNull(emAnalyticsSearch.getLastAccess());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		Assert.assertNotNull(emAnalyticsSearch.getLastAccess());
 	}
 
 	@Test(groups = { "s1" })
@@ -174,28 +145,6 @@ public class EmAnalyticsSearchTest
 	{
 		emAnalyticsSearch.setWIDGET_SOURCE("namesource");
 		Assert.assertEquals("namesource", emAnalyticsSearch.getWIDGET_SOURCE());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetObjectId()
-	{
-		Assert.assertNull(emAnalyticsSearch.getObjectId());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		emAnalyticsSearch.getAccessDate();
-		Assert.assertNotNull(emAnalyticsSearch.getObjectId());
-	}
-
-	@Test(groups = { "s1" })
-	public void testGetObjectType()
-	{
-		Assert.assertNull(emAnalyticsSearch.getObjectType());
-
-		Date now = new Date();
-		emAnalyticsSearch.setAccessDate(now);
-		emAnalyticsSearch.getAccessDate();
-		Assert.assertNotNull(emAnalyticsSearch.getObjectType());
 	}
 
 	@Test(groups = { "s1" })

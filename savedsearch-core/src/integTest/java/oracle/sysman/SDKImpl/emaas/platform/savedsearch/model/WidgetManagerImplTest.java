@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import javax.persistence.EntityManager;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
@@ -21,6 +21,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.savedsearch.QAToolUtil;
 import oracle.sysman.emaas.savedsearch.TestUtils;
 
 import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
@@ -125,7 +126,7 @@ public class WidgetManagerImplTest
 		String json = WidgetManagerImpl.getInstance().getSpelledJsonFromQueryResult(widgets);
 		Assert.assertEquals(
 				json,
-				"[{\"WIDGET_UNIQUE_ID\":2000,\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
+				"[{\"WIDGET_UNIQUE_ID\":\"2000\",\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
 	}
 
 	@Test
@@ -142,19 +143,19 @@ public class WidgetManagerImplTest
 
 		};
 		WidgetImpl widget1 = new WidgetImpl();
-		widget1.setId(2001);
+		widget1.setId(new BigInteger("2001"));
 		CategoryImpl category1 = new CategoryImpl();
-		category1.setId(2);
+		category1.setId(new BigInteger("2"));
 		category1.setName("TargetAnalytics");
-		category1.setDefaultFolderId(3);
+		category1.setDefaultFolderId(new BigInteger("3"));
 		widget1.setCategory(category1);
 		widget1.setDescription("my widget desc");
-		widget1.setFolderId(3);
+		widget1.setFolderId(new BigInteger("3"));
 		widget1.setIsWidget(true);
 		Date today = new Date(1469782680798L);
 		widget1.setLastAccessDate(today);
-		widget1.setCreatedOn(today);
-		widget1.setLastModifiedOn(today);
+		widget1.setCreationDate(today);
+		widget1.setLastModificationDate(today);
 		widget1.setLastModifiedBy("emcsadmin");
 		widget1.setName("My widget");
 		widget1.setQueryStr("xxx");

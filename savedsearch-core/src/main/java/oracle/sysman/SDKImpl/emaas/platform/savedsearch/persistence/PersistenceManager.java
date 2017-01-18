@@ -2,6 +2,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -10,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.SessionInfoUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 public class PersistenceManager
@@ -38,6 +40,18 @@ public class PersistenceManager
 	private static final String TEST_PERSISTENCE_UNIT = "EmaasAnalyticsPublicModelTest";
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
 	private static final String TENANT_ID_STR = "tenant";
+
+	/** 
+	 * mapping to QAToolUtil
+	 * Picking up db env when running test cases
+	 */
+	public static final String JDBC_PARAM_URL = "javax.persistence.jdbc.url";
+	public static final String JDBC_PARAM_USER = "javax.persistence.jdbc.user";
+	public static final String JDBC_PARAM_PASSWORD = "javax.persistence.jdbc.password";
+	public static final String JDBC_PARAM_DRIVER = "javax.persistence.jdbc.driver";
+	
+	private static final String MODULE_NAME = "SavedSearchService"; // application service name
+	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
 
 
 
@@ -74,7 +88,7 @@ public class PersistenceManager
 		}
 
 		if (IS_TEST_ENV) {
-			Properties props = null;
+			Properties props = new Properties();
 			String sresult = System.getProperty(TESTENV_HUDSON_PROP, "false");
 
 			boolean bResult = "true".equalsIgnoreCase(sresult);
@@ -83,7 +97,10 @@ public class PersistenceManager
 			}
 
 			if (System.getenv("T_WORK") != null && !bResult) {
-				props = QAToolUtil.getDbProperties();
+				props.put(PersistenceManager.JDBC_PARAM_URL, System.getProperty(PersistenceManager.JDBC_PARAM_URL));
+				props.put(PersistenceManager.JDBC_PARAM_USER, System.getProperty(PersistenceManager.JDBC_PARAM_USER));
+				props.put(PersistenceManager.JDBC_PARAM_PASSWORD, System.getProperty(PersistenceManager.JDBC_PARAM_PASSWORD));
+				props.put(PersistenceManager.JDBC_PARAM_DRIVER, System.getProperty(PersistenceManager.JDBC_PARAM_DRIVER));
 			}
 			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
 		}
@@ -94,9 +111,16 @@ public class PersistenceManager
 
 	public EntityManager getEntityManager(TenantInfo value)
 	{
+		
 		Map<String, String> emProperties = new HashMap<String, String>();
 		emProperties.put(TENANT_ID_STR, String.valueOf(value.getTenantInternalId()));
-		return emf.createEntityManager(emProperties);
+		EntityManager em = emf.createEntityManager(emProperties);	
+		try {
+			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return em;
 	}
 
 	public EntityManagerFactory getEntityManagerFactory()

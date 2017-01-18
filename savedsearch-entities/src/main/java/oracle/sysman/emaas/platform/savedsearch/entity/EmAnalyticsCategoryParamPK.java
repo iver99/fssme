@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  * The primary key class for the EMS_ANALYTICS_CATEGORY_PARAMS database table.
@@ -11,7 +12,7 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	private long categoryId;
+	private BigInteger categoryId;
 
 	private String name;
 
@@ -35,7 +36,7 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 
 	}
 
-	public long getCategoryId()
+	public BigInteger getCategoryId()
 	{
 		return categoryId;
 	}
@@ -58,14 +59,14 @@ public class EmAnalyticsCategoryParamPK implements Serializable
 	{
 		final int prime = 31;
 		int hash = 17;
-		hash = hash * prime + (int) (categoryId ^ categoryId >>> 32);
+		hash = hash * prime + (int) (categoryId.intValue() ^ categoryId.intValue() >>> 32);
 		hash = hash * prime + (name == null ? 0 : name.hashCode());
 		hash = hash * prime + (int) (tenantId ^ tenantId >>> 32);
 		return hash;
 
 	}
 
-	public void setCategoryId(long categoryId)
+	public void setCategoryId(BigInteger categoryId)
 	{
 		this.categoryId = categoryId;
 	}

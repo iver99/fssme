@@ -10,6 +10,8 @@
 
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -24,10 +26,10 @@ public class CategoryDetailsTest
 	{
 
 		CategoryDetails catdetail = new CategoryDetails();
-		catdetail.setId(1000);
+		catdetail.setId(new BigInteger("1000"));
 		catdetail.setName("test_name");
 		catdetail.setDescription("test categroy details");
-		catdetail.setDefaultFolderId(999);
+		catdetail.setDefaultFolderId(new BigInteger("999"));
 		catdetail.setProviderName("Test provider name");
 		catdetail.setProviderVersion("Test provider version");
 		catdetail.setProviderDiscovery("Test provider discovery");

@@ -1,26 +1,25 @@
 package oracle.sysman.emaas.savedsearch;
 
-import mockit.Mocked;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CategoryTest extends BaseTest
 {
-	private static Integer categoryId;
-
-
-	//@Mocked
-    //PersistenceManager persistenceManager;
+	private static BigInteger categoryId;
 
 	@AfterClass
 	public static void testDelete() throws EMAnalyticsFwkException {
@@ -36,7 +35,6 @@ public class CategoryTest extends BaseTest
 			// now delete the category
 			catMan.deleteCategory(categoryId, true);
 			// here the assertion not required or required
-
 	}
 
 	@BeforeClass
@@ -68,7 +66,7 @@ public class CategoryTest extends BaseTest
 
 			category = catMan.saveCategory(category);
 			categoryId = category.getId();
-			AssertJUnit.assertFalse(categoryId == 0);
+			AssertJUnit.assertFalse(BigInteger.ZERO.equals(categoryId));
 
 			category = catMan.getCategory(categoryId);
 			AssertJUnit.assertEquals(2, category.getParameters().size());
@@ -79,7 +77,6 @@ public class CategoryTest extends BaseTest
 			AssertJUnit.assertEquals("ProviderVersionTest", category.getProviderVersion());
 			AssertJUnit.assertEquals("ProviderDiscoveryTest", category.getProviderDiscovery());
 			AssertJUnit.assertEquals("ProviderAssetRootTest", category.getProviderAssetRoot());
-			// Assert.assertEquals("MyCategory", category.getDisplayName());
 			AssertJUnit.assertNotNull(category.getCreatedOn());
 	}
 
@@ -89,7 +86,6 @@ public class CategoryTest extends BaseTest
 		TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
 				.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
 				.get(QAToolUtil.TENANT_NAME).toString())));
-
 	}
 
 	/*@AfterClass
@@ -110,8 +106,7 @@ public class CategoryTest extends BaseTest
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
 	public void testDeleteCategoryInvalidId() throws EMAnalyticsFwkException {
 		CategoryManager catMan = CategoryManager.getInstance();
-			catMan.deleteCategory(99898987898L, true);
-
+		catMan.deleteCategory(new BigInteger("99898987898"), true);
 		 
 	}
 
@@ -125,7 +120,7 @@ public class CategoryTest extends BaseTest
 			// now set the some value
 			category.setName("testName");
 			category.setDescription("testcase checking");
-			category.setDefaultFolderId(1);
+			category.setDefaultFolderId(BigInteger.ONE);
 			category.setProviderName("ProviderNameTestEdit");
 			category.setProviderVersion("ProviderVersionTestEdit");
 			category.setProviderDiscovery("ProviderDiscoveryTestEdit");
@@ -141,10 +136,7 @@ public class CategoryTest extends BaseTest
 
 			category.setParameters(list);
 			obj.editCategory(category);
-
 			category = obj.getCategory(categoryId);
-
-			// Assert.assertEquals(1,category.getParameters().size());
 
 			AssertJUnit.assertEquals("testName", category.getName());
 			AssertJUnit.assertEquals("testcase checking", category.getDescription());
@@ -210,13 +202,10 @@ public class CategoryTest extends BaseTest
 		}
 	}*/
 
-        @Test(expectedExceptions = {EMAnalyticsFwkException.class})
+    @Test(expectedExceptions = {EMAnalyticsFwkException.class})
 	public void testgetCategoryInvalidId() throws EMAnalyticsFwkException {
-
 		CategoryManager catMan = CategoryManager.getInstance();
-			catMan.getCategory(99898987898L);
-
-
+		catMan.getCategory(new BigInteger("99898987898"));
 	}
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -228,19 +217,16 @@ public class CategoryTest extends BaseTest
 
 	@Test(expectedExceptions = {EMAnalyticsFwkException.class})
 	public void testInvalidData() throws EMAnalyticsFwkException {
-
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("CategoryName");
 		category.setDescription("CategoryTest");
-		category.setDefaultFolderId(9878787);
-			catMan.saveCategory(category);
-
+		category.setDefaultFolderId(new BigInteger("9878787"));
+		catMan.saveCategory(category);
 	}
 
-	@Test 
+	@Test
 	public void testSaveCategory_DuplicateName() throws EMAnalyticsFwkException {
-
 		CategoryManager catMan = CategoryManager.getInstance();
 		Category category = catMan.createNewCategory();
 		category.setName("Log Analytics");

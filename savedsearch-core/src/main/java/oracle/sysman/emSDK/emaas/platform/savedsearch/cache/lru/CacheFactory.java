@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,5 +53,18 @@ public class CacheFactory {
 	}
 	public static ConcurrentHashMap<String, CacheUnit> getCacheUnitMap() {
 		return (ConcurrentHashMap<String, CacheUnit>) cacheUnitMap;
+	}
+	public static void clearAllCacheGroup(){
+		if(cacheUnitMap!=null){
+			Iterator<Map.Entry<String,CacheUnit>> it =cacheUnitMap.entrySet().iterator();
+			while(it.hasNext()){
+				CacheUnit cu=it.next().getValue();
+				cu.getCacheUnitStatus().setEvictionCount(0L);
+				cu.getCacheUnitStatus().setHitCount(0L);
+				cu.getCacheUnitStatus().setRequestCount(0L);
+				cu.getCacheUnitStatus().setUsage(0);
+				cu.getCacheLinkedHashMap().clear();
+			}
+		}
 	}
 }

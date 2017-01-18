@@ -1,6 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.navigations;
 
-import java.util.ArrayList;
+import java.math.BigInteger;
 import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
@@ -26,8 +26,8 @@ public class SavedSearchNavigations {
     static String portno;
     static String serveruri;
     static String authToken;
-    static int catid = -1;
-    static int folderid = -1;
+	static BigInteger catid = BigInteger.ONE.negate();
+	static BigInteger folderid = BigInteger.ONE.negate();
     static String catName = "";
     static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC0;
     static String TENANT_ID1 = TestConstant.TENANT_ID0;
@@ -44,7 +44,7 @@ public class SavedSearchNavigations {
         String jsonString = "{ \"name\":\"FolderTesting\",\"description\":\"Folder for  searches\"}";
         Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
-        folderid = res.jsonPath().get("id");
+        folderid = new BigInteger(res.jsonPath().getString("id"));
 
 		/*String jsonString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><CategorySet><Category><Name>MyCategoryTesting</Name><Description>Testing</Description><DefaultFolderId>"
                 + folderid + "</DefaultFolderId></Category></CategorySet>";
@@ -133,7 +133,7 @@ public class SavedSearchNavigations {
      * Checking details of the root folder
      */
     public void rootFolderDetails() {
-        int id = getRootId();
+    	String id = getRootId();
         Response res = RestAssured.given().log().everything().header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/folder/" + id);
         JsonPath jp = res.jsonPath();
@@ -143,12 +143,11 @@ public class SavedSearchNavigations {
         Assert.assertEquals(jp.get("systemFolder"), true);
     }
 
-    private Integer getRootId() {
+    private String getRootId() {
         Response resroot = RestAssured.given().log().everything().header("Authorization", authToken)
                 .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("");
         JsonPath jpRoot = resroot.jsonPath();
-        List<Integer> id = jpRoot.get("id");
+        List<String> id = jpRoot.get("id");
         return id.get(0);
     }
-
 }

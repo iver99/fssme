@@ -1,7 +1,10 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.targetcard;
 
+import java.math.BigInteger;
+import java.net.URI;
+import java.util.ArrayList;
 
-
+import javax.ws.rs.core.UriInfo;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -10,20 +13,14 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
+
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.util.ArrayList;
-
-import static org.testng.Assert.*;
 
 /**
  * Created by xidai on 6/29/2016.
@@ -54,7 +51,7 @@ public class TargetCardLinksFilterAPITest {
         final String targetcardName="name";
         final ArrayList<Search> searches = new ArrayList<>();
         searches.add(search);
-        final JSONObject jsonTargetcardObject = new JSONObject();
+        final ObjectNode jsonTargetcardObject = new ObjectNode(null);
         new Expectations(){
             {
                 dependencyStatus.isDatabaseUp();
@@ -99,10 +96,10 @@ public class TargetCardLinksFilterAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.deleteTargetCard(anyLong,false);
+                searchManager.deleteTargetCard((BigInteger) any,false);
             }
         };
-        Assert.assertEquals(204,targetCardLinksFilterAPI.deleteTargetCard(1000).getStatus());
+        Assert.assertEquals(204,targetCardLinksFilterAPI.deleteTargetCard(new BigInteger("1000")).getStatus());
     }
 
     @Test
@@ -113,15 +110,16 @@ public class TargetCardLinksFilterAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.deleteTargetCard(anyLong,false);
+                searchManager.deleteTargetCard((BigInteger) any, false);
                 result = new EMAnalyticsFwkException(throwable);
             }
         };
-         targetCardLinksFilterAPI.deleteTargetCard(1000);
+         targetCardLinksFilterAPI.deleteTargetCard(new BigInteger("1000"));
     }
 
     @Test
     public void testRegisterTargertCard() throws Exception {
+    	final ObjectNode objNode = new ObjectNode(null);
         final JSONObject inputJson = new JSONObject();
         JSONObject category = new JSONObject();
         JSONObject folder = new JSONObject();
@@ -153,7 +151,7 @@ public class TargetCardLinksFilterAPITest {
                 searchManager.saveTargetCard(withAny(search));
                 result = search;
                 EntityJsonUtil.getTargetCardJsonObj(withAny(uriInfo.getBaseUri()),search);
-                result = inputJson;
+                result = objNode;
             }
         };
         Assert.assertEquals(201,targetCardLinksFilterAPI.registerTargertCard(inputJson).getStatus());

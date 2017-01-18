@@ -10,6 +10,7 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,8 +44,9 @@ public class ScreenshotCacheManager
 		cm = CacheManager.getInstance();
 	}
 
-	public ScreenshotElement getScreenshotFromCache(Tenant tenant, Long widgetId, String fileName) throws Exception {
-		if (widgetId == null || widgetId <= 0) {
+	public ScreenshotElement getScreenshotFromCache(Tenant tenant, BigInteger widgetId, String fileName) throws Exception
+	{
+		if (widgetId == null || BigInteger.ZERO.compareTo(widgetId) >= 0) {
 			LOGGER.error("Unexpected widget id to get screenshot from cache for tenant={}, widget id={}, fileName={}", tenant,
 					widgetId, fileName);
 			return null;
@@ -65,7 +67,7 @@ public class ScreenshotCacheManager
 		return se;
 	}
 
-	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, Long widgetId, Date creation, Date modification,
+	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, BigInteger widgetId, Date creation, Date modification,
 			String screenshot)
 	{
 		if (screenshot == null) {
@@ -92,7 +94,7 @@ public class ScreenshotCacheManager
 		return se;
 	}
 
-	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, Long dashboardId, ScreenshotData ssd)
+	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, BigInteger dashboardId, ScreenshotData ssd)
 	{
 		if (ssd == null) {
 			return null;

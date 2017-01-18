@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +12,9 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
@@ -22,13 +25,13 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @IdClass(EmAnalyticsCategoryParamPK.class)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_CATEGORY_PARAMS")
-public class EmAnalyticsCategoryParam implements Serializable
+public class EmAnalyticsCategoryParam extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "CATEGORY_ID", insertable = false, updatable = false, nullable = false)
-	private long categoryId;
+	private BigInteger categoryId;
 
 	@Id
 	private String name;
@@ -39,6 +42,9 @@ public class EmAnalyticsCategoryParam implements Serializable
 	@Id
 	@Column(name = "TENANT_ID", insertable = false, updatable = false)
 	private Long tenantId;
+	
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne(optional = false)
@@ -48,6 +54,7 @@ public class EmAnalyticsCategoryParam implements Serializable
 
 	public EmAnalyticsCategoryParam()
 	{
+		this.deleted = false;
 	}
 
 	@Override
@@ -86,8 +93,18 @@ public class EmAnalyticsCategoryParam implements Serializable
 		}
 		return true;
 	}
+	
+	
 
-	public long getCategoryId()
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public BigInteger getCategoryId()
 	{
 		return categoryId;
 	}
@@ -135,13 +152,13 @@ public class EmAnalyticsCategoryParam implements Serializable
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + (int) (categoryId ^ categoryId >>> 32);
+		result = prime * result + (int) (categoryId.intValue() ^ categoryId.intValue() >>> 32);
 		result = prime * result + (name == null ? 0 : name.hashCode());
 		result = prime * result + (value == null ? 0 : value.hashCode());
 		return result;
 	}
 
-	public void setCategoryId(long categoryId)
+	public void setCategoryId(BigInteger categoryId)
 	{
 		this.categoryId = categoryId;
 	}

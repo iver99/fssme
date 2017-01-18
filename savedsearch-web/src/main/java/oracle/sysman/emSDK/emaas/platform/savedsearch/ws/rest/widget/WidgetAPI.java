@@ -2,6 +2,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.widget;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -217,7 +218,7 @@ public class WidgetAPI
 	 */
 	@GET
 	@Path("{id: [1-9][0-9]*}/screenshot/{serviceVersion}/images/{fileName}")
-	public Response getWidgetScreenshotById(@PathParam("id") long widgetId, @PathParam("serviceVersion") String serviceVersion,
+	public Response getWidgetScreenshotById(@PathParam("id") BigInteger widgetId, @PathParam("serviceVersion") String serviceVersion,
 			@PathParam("fileName") String fileName)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/widgets/{}/screenshot/{}/images/{}",

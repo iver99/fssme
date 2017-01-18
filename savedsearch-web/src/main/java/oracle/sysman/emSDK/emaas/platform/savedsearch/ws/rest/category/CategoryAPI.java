@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.category;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +28,10 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 /**
  * The Category Services
@@ -247,7 +249,7 @@ public class CategoryAPI
 	@GET
 	@Path("{id: [0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getCategory(@PathParam("id") int categoryId)
+	public Response getCategory(@PathParam("id") BigInteger categoryId)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/category/{}", categoryId);
 		String message = null;
@@ -258,7 +260,7 @@ public class CategoryAPI
 				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			Category category = catMan.getCategory(categoryId);
-			JSONObject jsonObj = EntityJsonUtil.getFullCategoryJsonObj(uri.getBaseUri(), category);
+			ObjectNode jsonObj = EntityJsonUtil.getFullCategoryJsonObj(uri.getBaseUri(), category);
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -349,7 +351,7 @@ public class CategoryAPI
 				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			Category category = catMan.getCategory(name);
-			JSONObject jsonObj = EntityJsonUtil.getFullCategoryJsonObj(uri.getBaseUri(), category);
+			ObjectNode jsonObj = EntityJsonUtil.getFullCategoryJsonObj(uri.getBaseUri(), category);
 			message = jsonObj.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -579,7 +581,7 @@ public class CategoryAPI
 	@GET
 	@Path("{id}/searches")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearchesByCategory(@PathParam("id") String categoryId, @HeaderParam("SSF_OOB") String oobSearch)
+	public Response getSearchesByCategory(@PathParam("id") BigInteger categoryId, @HeaderParam("SSF_OOB") String oobSearch)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/category/{}/searches", categoryId);
 		SearchManager searchMan = SearchManager.getInstance();
@@ -587,29 +589,17 @@ public class CategoryAPI
 		Search search;
 		int statusCode = 200;
 		String message = "";
-		JSONArray jsonArray = new JSONArray();
+		ArrayNode jsonArray = new ObjectMapper().createArrayNode();
 		List<Search> searchList = new ArrayList<Search>();
-		long tmpCatId = -1;
+		BigInteger tmpCatId = BigInteger.ONE.negate();
 
 		if (categoryId == null) {
 			return Response.status(400).entity("Please specify vaild category Id").build();
-		}
-		else if ("".equals(categoryId.trim())) {
-			return Response.status(400).entity("Category Id is empty Please specify valid Category Id").build();
-		}
-		else {
-			try {
-
-				if (!"".equals(categoryId.trim())) {
-					tmpCatId = Long.parseLong(categoryId);
-				}
-			}
-			catch (NumberFormatException e) {
-				return Response.status(400).entity("Id/count should be a positive number and not an alphanumeric").build();
-			}
+		} else {
+			tmpCatId = categoryId;
 		}
 
-		if (tmpCatId <= 0) {
+		if (BigInteger.ZERO.compareTo(tmpCatId) >= 0) {
 			return Response.status(400).entity("Id/count should be a positive number and not an alphanumeric").build();
 		}
 
@@ -643,8 +633,8 @@ public class CategoryAPI
 			for (int i = 0; i < searchList.size(); i++) {
 				search = searchList.get(i);
 				try {
-					JSONObject jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), search, null, false);
-					jsonArray.put(jsonObj);
+					ObjectNode jsonObj = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), search, null, false);
+					jsonArray.add(jsonObj);
 				}
 				catch (JSONException e) {
 					LOGGER.error(e.getLocalizedMessage());

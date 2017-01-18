@@ -1,12 +1,13 @@
 package oracle.sysman.emaas.savedsearch;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import mockit.Expectations;
@@ -16,7 +17,8 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImp
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -32,8 +34,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -42,13 +42,7 @@ import org.testng.annotations.Test;
 
 public class SearchManagerTest extends BaseTest
 {
-
-	private static final String TENANT_ID_OPC1 = TestUtils.TENANT_ID_OPC1;
-	private static Long opc1 = null;
-
-	// Important: keep this value the same with sequence step (value for 'INCREMENT BY') for EMS_ANALYTICS_SEARCH_SEQ
-	private static final int SEQ_ALLOCATION_SIZE = 1;
-
+	
 	public static Category createTestCategory(CategoryManager cm, Folder folder, String name) throws EMAnalyticsFwkException
 	{
 		Category cat = new CategoryImpl();
@@ -80,6 +74,7 @@ public class SearchManagerTest extends BaseTest
 			throws EMAnalyticsFwkException
 	{
 		Search search = sm.createNewSearch();
+		search.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
 		search.setDescription("testing purpose");
 		search.setName(name);
 		search.setFolderId(folder.getId());
@@ -92,6 +87,7 @@ public class SearchManagerTest extends BaseTest
 			throws EMAnalyticsFwkException
 	{
 		Search widget = sm.createNewSearch();
+		widget.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
 		widget.setDescription("testing purpose");
 		widget.setName(name);
 		widget.setFolderId(folder.getId());
@@ -142,33 +138,9 @@ public class SearchManagerTest extends BaseTest
 		return widget;
 	}
 
-	public static void incrementSeq()
-	{
-
-		long result = 0;
-
-		EntityManager em = null;
-		try {
-			final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-			em = emf.createEntityManager();
-			em.createNativeQuery("SELECT EMS_ANALYTICS_SEARCH_SEQ.NEXTVAL FROM DUAL").getSingleResult();
-
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
-
 	@BeforeClass
 	public void initTenantDetails() throws IOException
 	{
-
 		TenantContext.setContext(
 				new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
 						TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
@@ -199,7 +171,6 @@ public class SearchManagerTest extends BaseTest
 		final int categoryCount = 1000; //change this to your desired count
 		final int folderCount = 10000;//change this to your desired count
 		final int searchCount = 1000000;//change this to your desired count
-		long start = System.currentTimeMillis();
 		for (int i = 0; i < categoryCount; i++) {
 			Category cat = SearchManagerTest.createTestCategory(cm, null, "CategoryTest " + i);
 			for (int j = 0; j < folderCount / categoryCount; j++) {
@@ -229,15 +200,7 @@ public class SearchManagerTest extends BaseTest
 		search = sm.editSearch(search);
 		long editedDate = search.getLastAccessDate().getTime();
 		AssertJUnit.assertTrue(createdDate < editedDate);
-
-		int searchId = search.getId().intValue();
-
 		sm.deleteSearch(search.getId(), true);
-
-		// ensure the last access for the search is deleted also
-		EmAnalyticsLastAccess eala = getLastAccessForSearch(searchId);
-		AssertJUnit.assertEquals(null, eala);
-
 		cm.deleteCategory(cat.getId(), true);
 		fm.deleteFolder(folder.getId(), true);
 	}
@@ -278,7 +241,7 @@ public class SearchManagerTest extends BaseTest
 		SearchManager sm = SearchManager.getInstance();
 		String searchName = "Search Name " + System.currentTimeMillis();
 		try {
-			Search queried = sm.getSearchByName(searchName, 1);
+			Search queried = sm.getSearchByName(searchName, BigInteger.ONE);
 			AssertJUnit.assertNull(queried);
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -341,24 +304,20 @@ public class SearchManagerTest extends BaseTest
 			queried = sm.getSearchListByFolderId(folder.getId());
 		}
 		catch (EMAnalyticsFwkException e) {
-			AssertJUnit.fail();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 
 		AssertJUnit.assertNotNull(queried);
 		if (queried != null) {
 			AssertJUnit.assertEquals(2, queried.size());
-			long searchId1 = queried.get(0).getId();
-			long searchId2 = queried.get(1).getId();
-			if (searchId1 < searchId2) {
+			String searchName = queried.get(0).getName();
+			if (searchName != null && searchName.equals(search1.getName())) {
 				assertSearchEquals(search1, queried.get(0));
 				assertSearchEquals(search2, queried.get(1));
 			}
-			else if (searchId1 > searchId2) {
+			else {
 				assertSearchEquals(search2, queried.get(0));
 				assertSearchEquals(search1, queried.get(1));
-			}
-			else {
-				AssertJUnit.assertTrue("Same search id of two searches: search_id=" + searchId1, false);
 			}
 		}
 
@@ -477,7 +436,7 @@ public class SearchManagerTest extends BaseTest
 			queried = sm.getWidgetListByProviderNames(true, providers, null);
 		}
 		catch (EMAnalyticsFwkException e) {
-			AssertJUnit.fail();
+			AssertJUnit.fail(e.getLocalizedMessage());
 		}
 
 		AssertJUnit.assertNotNull(queried);
@@ -504,8 +463,14 @@ public class SearchManagerTest extends BaseTest
 		assertSearchEquals(widget1, savedWidget1);
 		assertSearchEquals(widget2, savedWidget2);
 		assertSearchEquals(widget3, savedWidget3);
+		AssertJUnit.assertNotNull(savedWidget1);
+		AssertJUnit.assertNotNull(savedWidget1.getCategory());
 		AssertJUnit.assertEquals(cat1.getId(), savedWidget1.getCategory().getId());
+		AssertJUnit.assertNotNull(savedWidget2);
+		AssertJUnit.assertNotNull(savedWidget2.getCategory());
 		AssertJUnit.assertEquals(cat1.getId(), savedWidget2.getCategory().getId());
+		AssertJUnit.assertNotNull(savedWidget3);
+		AssertJUnit.assertNotNull(savedWidget3.getCategory());
 		AssertJUnit.assertEquals(cat2.getId(), savedWidget3.getCategory().getId());
 
 		// widgetGroupId specified
@@ -603,8 +568,8 @@ public class SearchManagerTest extends BaseTest
 				"WidgetWithoutScreenshot " + System.currentTimeMillis(), null);
 
 		try {
-			ScreenshotData screnshotForWidget1 = sm.getWidgetScreenshotById(widget1.getId().longValue());
-			ScreenshotData screnshotForWidget2 = sm.getWidgetScreenshotById(widget2.getId().longValue());
+			ScreenshotData screnshotForWidget1 = sm.getWidgetScreenshotById(widget1.getId());
+			ScreenshotData screnshotForWidget2 = sm.getWidgetScreenshotById(widget2.getId());
 			AssertJUnit.assertEquals(screnshotForWidget1.getScreenshot(), screenshot);
 			AssertJUnit.assertEquals(screnshotForWidget2.getScreenshot(), SearchManager.DEFAULT_WIDGET_SCREENSHOT);
 		}
@@ -630,7 +595,7 @@ public class SearchManagerTest extends BaseTest
 	//	@Test
 	public void testQueryPerformanceMultiThreadsSearchByFolderId() throws EMAnalyticsFwkException, InterruptedException
 	{
-		final int folderId = 101790;
+		final BigInteger folderId = new BigInteger("101790");
 
 		// Uncomment below code to clearing Entity Manager before the test
 		/*		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
@@ -645,7 +610,6 @@ public class SearchManagerTest extends BaseTest
 					List<Search> searches = sm.getSearchListByFolderId(folderId);
 				}
 				catch (EMAnalyticsFwkException e) {
-					e.printStackTrace();
 					AssertJUnit.fail(e.getLocalizedMessage());
 				}
 			}
@@ -669,31 +633,30 @@ public class SearchManagerTest extends BaseTest
 	//	@Test
 	public void testQueryPerformanceMultiThreadsSearchById() throws EMAnalyticsFwkException, InterruptedException
 	{
-		final int searchId = 990007;
-
 		// Uncomment below code to clearing Entity Manager before the test
 		/*		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 				emf.createEntityManager().clear();
 		 */
 		final SearchManager sm = SearchManager.getInstance();
-		final int[] availableSearchIDs = { 10139, 10141, 10164, 10560, 10571, 10872, 10876, 10525, 11117, 11129 };
+		final BigInteger[] availableSearchIDs = {new BigInteger("10139"), new BigInteger("10141"), new BigInteger("10164"), 
+				new BigInteger("10560"), new BigInteger("10571"), new BigInteger("10872"), new BigInteger("10876"), 
+				new BigInteger("10525"), new BigInteger("11117"), new BigInteger("11129")};
 
 		SearchManagerTestMockup.executeRepeatedly(100, 10, new Runnable() {
 			@Override
 			public void run()
 			{
-				Random r = new Random();
-				int randomSearchIndex = r.nextInt(availableSearchIDs.length);
 				try {
+					SecureRandom r = SecureRandom.getInstance("SHA1PRNG");
+					int randomSearchIndex = r.nextInt(availableSearchIDs.length);
 					Search search = sm.getSearch(availableSearchIDs[randomSearchIndex]);
 					AssertJUnit.assertNotNull(search);
-				}
-				catch (EMAnalyticsFwkException e) {
-					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e1) {
+					AssertJUnit.fail(e1.getLocalizedMessage());
+				} catch (EMAnalyticsFwkException e) {
 					AssertJUnit.fail(e.getLocalizedMessage());
 				}
 			}
-
 		}, null, null);
 	}
 
@@ -711,7 +674,7 @@ public class SearchManagerTest extends BaseTest
 	public void testQueryPerformanceMultiThreadsSearchByName() throws EMAnalyticsFwkException, InterruptedException
 	{
 		final String searchName = "Search for performance 94 1407381675833";
-		final int folderId = 1740;
+		final BigInteger folderId = new BigInteger("1740");
 
 		// Uncomment below code to clearing Entity Manager before the test
 		/*final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
@@ -728,9 +691,7 @@ public class SearchManagerTest extends BaseTest
 					//					AssertJUnit.assertNotNull(search);
 				}
 				catch (EMAnalyticsFwkException e) {
-					e.printStackTrace();
 					AssertJUnit.fail(e.getLocalizedMessage());
-
 				}
 			}
 
@@ -748,7 +709,7 @@ public class SearchManagerTest extends BaseTest
 	//	@Test
 	public void testQueryPerformanceSingleSearchById() throws EMAnalyticsFwkException
 	{
-		int searchId = 990007;
+		BigInteger searchId = new BigInteger("990007");
 		SearchManager sm = SearchManager.getInstance();
 		//		Search search = SearchManagerTest
 		//				.createTestSearch(sm, folder, cat, "Search Name for query " + System.currentTimeMillis());
@@ -776,7 +737,7 @@ public class SearchManagerTest extends BaseTest
 	public void testQueryPerformanceSingleSearchByName() throws EMAnalyticsFwkException
 	{
 		String searchName = "Search for performance 978615 1407383176408";
-		int folderId = 1740;
+		BigInteger folderId = new BigInteger("1740");
 
 		//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		//		emf.createEntityManager().clear();
@@ -801,7 +762,7 @@ public class SearchManagerTest extends BaseTest
 	//@Test
 	public void testQueryPerformanceSingleSearchListByFolderId() throws EMAnalyticsFwkException
 	{
-		int folderId = 1740;
+		BigInteger folderId = new BigInteger("1740");
 
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		emf.createEntityManager().clear();
@@ -815,39 +776,6 @@ public class SearchManagerTest extends BaseTest
 		long end = System.currentTimeMillis();
 	}
 
-	@Test
-	public void testSearchAllocationSize() throws EMAnalyticsFwkException
-	{
-		FolderManagerImpl fm = FolderManagerImpl.getInstance();
-		Folder folder = SearchManagerTest.createTestFolder(fm, "FolderTest" + System.currentTimeMillis());
-
-		CategoryManager cm = CategoryManagerImpl.getInstance();
-		Category cat = SearchManagerTest.createTestCategory(cm, folder, "CategoryTest" + System.currentTimeMillis());
-
-		SearchManager sm = SearchManager.getInstance();
-		Search search1 = SearchManagerTest.createTestSearch(sm, folder, cat, "Search Name " + System.currentTimeMillis());
-
-		SearchManagerTest.incrementSeq();
-
-		List<Search> searchList = new ArrayList<Search>();
-		searchList.add(search1);
-		for (int i = 1; i < SEQ_ALLOCATION_SIZE; i++) {
-			Search search = SearchManagerTest.createTestSearch(sm, folder, cat,
-					"Search" + i + " Name " + System.currentTimeMillis());
-			searchList.add(search);
-		}
-
-		Search search = SearchManagerTest.createTestSearch(sm, folder, cat, "Search last Name " + System.currentTimeMillis());
-		AssertJUnit.assertEquals(search1.getId() + SEQ_ALLOCATION_SIZE * 2, search.getId().intValue());
-		searchList.add(search);
-
-		for (Search searchObj : searchList) {
-			sm.deleteSearch(searchObj.getId(), true);
-		}
-		cm.deleteCategory(cat.getId(), true);
-		fm.deleteFolder(folder.getId(), true);
-	}
-
 	private void assertSearchEquals(Search expected, Search actual)
 	{
 		AssertJUnit.assertNotNull(actual);
@@ -857,28 +785,7 @@ public class SearchManagerTest extends BaseTest
 		AssertJUnit.assertEquals(expected.getOwner(), actual.getOwner());
 		AssertJUnit.assertEquals(expected.getCategoryId(), actual.getCategoryId());
 		AssertJUnit.assertEquals(expected.getFolderId(), actual.getFolderId());
-		AssertJUnit.assertEquals(expected.getLastAccessDate(), actual.getLastAccessDate());
 		AssertJUnit.assertEquals(expected.getIsWidget(), actual.getIsWidget());
 	}
 
-	private EmAnalyticsLastAccess getLastAccessForSearch(int searchId)
-	{
-		EntityManagerFactory emf = null;
-		EntityManager em = null;
-		EmAnalyticsLastAccess eala = null;
-		try {
-
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			EmAnalyticsLastAccessPK ealaPK = new EmAnalyticsLastAccessPK();
-			ealaPK.setObjectId(searchId);
-			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-			ealaPK.setAccessedBy(currentUser);
-			ealaPK.setObjectType(EmAnalyticsLastAccess.LAST_ACCESS_TYPE_SEARCH);
-			eala = em.find(EmAnalyticsLastAccess.class, ealaPK);
-		}
-		catch (Exception e) {
-			AssertJUnit.fail(e.getMessage());
-		}
-		return eala;
-	}
 }

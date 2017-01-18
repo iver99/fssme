@@ -1,13 +1,15 @@
 package oracle.sysman.emaas.platform.savedsearch.targetmodel.services;
 
+import java.math.BigInteger;
+
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
 import org.apache.http.HttpException;
@@ -57,14 +59,14 @@ public class OdsDataServiceTest {
 				result = link;
 				link.getHref();
 				result = "http://xxx";
-				sman.getSearchParamByName(anyLong, anyString);
+				sman.getSearchParamByName((BigInteger) any, anyString);
 				result = "meid";
 				RestRequestUtil.restDelete(anyString);
 				result = MOCKED_RESULT;
 			};
 		};
 		
-		odsService.deleteOdsEntity(999);
+		odsService.deleteOdsEntity(new BigInteger("999"));
 	}
 	
 	public void testCreateOdsEntityType(@Mocked final RegistryLookupUtil registryLookupUtil, @Mocked final Link link,

@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.savedsearch;
 
+import java.math.BigInteger;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -50,12 +52,12 @@ public class MultitenentCategoryTest extends BaseTest
 		username2 = TestUtils.getUsername(TENANT_ID2);
 		username3 = TestUtils.getUsername(TENANT_ID3);
 
-		int id1 = MultitenentCategoryTest.createCategory(username1, opc1);
-		int id2 = MultitenentCategoryTest.createCategory(username2, opc2);
-		int id3 = MultitenentCategoryTest.createCategory(username3, opc3);
-		Assert.assertTrue(id1 > 0);
-		Assert.assertTrue(id2 > 0);
-		Assert.assertTrue(id3 > 0);
+		BigInteger id1 = MultitenentCategoryTest.createCategory(username1, opc1);
+		BigInteger id2 = MultitenentCategoryTest.createCategory(username2, opc2);
+		BigInteger id3 = MultitenentCategoryTest.createCategory(username3, opc3);
+		Assert.assertTrue(BigInteger.ZERO.compareTo(id1) == -1);
+		Assert.assertTrue(BigInteger.ZERO.compareTo(id2) == -1);
+		Assert.assertTrue(BigInteger.ZERO.compareTo(id3) == -1);
 
 		Assert.assertTrue(MultitenentCategoryTest.getCategory(id1, opc1, username1) != null);
 		Assert.assertTrue(MultitenentCategoryTest.getCategory(id2, opc2, username2) != null);
@@ -74,8 +76,8 @@ public class MultitenentCategoryTest extends BaseTest
 		Assert.assertTrue(MultitenentCategoryTest.deleteCategory(id3, opc3, username3) == true);
 	}
 
-	public static int createCategory(String username, Long value) throws EMAnalyticsFwkException {
-		int id = 0;
+	public static BigInteger createCategory(String username, Long value) throws EMAnalyticsFwkException {
+		BigInteger id = BigInteger.ZERO;
 		TenantContext.setContext(new TenantInfo(username, value));
 		try {
 			CategoryManager fmger = CategoryManager.getInstance();
@@ -95,7 +97,7 @@ public class MultitenentCategoryTest extends BaseTest
 		return id;
 	}
 
-	public static boolean deleteCategory(int id, Long value, String username) throws EMAnalyticsFwkException {
+	public static boolean deleteCategory(BigInteger id, Long value, String username) throws EMAnalyticsFwkException {
 		boolean bResult = false;
 		try {
 			TenantContext.setContext(new TenantInfo(username, value));
@@ -109,7 +111,7 @@ public class MultitenentCategoryTest extends BaseTest
 		return bResult;
 	}
 
-	public static Category getCategory(int id, Long value, String username) throws EMAnalyticsFwkException {
+	public static Category getCategory(BigInteger id, Long value, String username) throws EMAnalyticsFwkException {
 		Category catObj = null;
 		try {
 			TenantContext.setContext(new TenantInfo(username, value));

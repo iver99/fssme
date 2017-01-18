@@ -1,21 +1,36 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
+
 import org.eclipse.persistence.internal.jpa.EntityManagerImpl;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.persistence.*;
-import java.util.*;
 
 /**
  * @author jishshi
@@ -79,7 +94,7 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryById(anyLong, withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
                 result = emAnalyticsCategory;
                 entityManager.getTransaction();
                 result = entityTransaction;
@@ -91,7 +106,7 @@ public class CategoryManagerImplTest {
                 entityManager.close();
             }
         };
-        categoryManager.deleteCategory(10L, false);
+        categoryManager.deleteCategory(BigInteger.TEN, false);
     }
 
     @Test
@@ -102,7 +117,7 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryByIdForDelete(anyLong, withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryByIdForDelete((BigInteger) any, withAny(entityManager));
                 result = emAnalyticsCategory;
                 entityManager.getTransaction();
                 result = entityTransaction;
@@ -115,7 +130,7 @@ public class CategoryManagerImplTest {
 
             }
         };
-        categoryManager.deleteCategory(10L, true);
+        categoryManager.deleteCategory(BigInteger.TEN, true);
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -126,7 +141,7 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryByIdForDelete(anyLong, withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryByIdForDelete((BigInteger) any, withAny(entityManager));
                 result = emAnalyticsCategory;
                 entityManager.getTransaction();
                 result = entityTransaction;
@@ -140,7 +155,7 @@ public class CategoryManagerImplTest {
 
             }
         };
-        categoryManager.deleteCategory(10L, true);
+        categoryManager.deleteCategory(BigInteger.TEN, true);
     }
 
 
@@ -152,7 +167,7 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryByIdForDelete(anyLong, withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryByIdForDelete((BigInteger) any, withAny(entityManager));
                 result = emAnalyticsCategory;
                 entityManager.getTransaction();
                 result = entityTransaction;
@@ -165,7 +180,7 @@ public class CategoryManagerImplTest {
                 entityManager.close();
             }
         };
-        categoryManager.deleteCategory(10L, true);
+        categoryManager.deleteCategory(BigInteger.TEN, true);
     }
 
     @Test
@@ -305,11 +320,11 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryById(anyLong, withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
                 result = emAnalyticsCategory;
             }
         };
-        Assert.assertNotNull(categoryManager.getCategory(10L));
+        Assert.assertNotNull(categoryManager.getCategory(BigInteger.TEN));
     }
 
     @Test(expectedExceptions = {EMAnalyticsFwkException.class})
@@ -320,11 +335,11 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryById(anyLong, withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
                 result = exception;
             }
         };
-        categoryManager.getCategory(10L);
+        categoryManager.getCategory(BigInteger.TEN);
     }
 
     @Test
@@ -335,11 +350,11 @@ public class CategoryManagerImplTest {
                 result = persistenceManager;
                 persistenceManager.getEntityManager(withAny(tenantInfo));
                 result = entityManager;
-                EmAnalyticsObjectUtil.getCategoryById(anyLong, withAny(entityManager));
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
 
             }
         };
-        categoryManager.getCategory(10L);
+        categoryManager.getCategory(BigInteger.TEN);
     }
 
 
@@ -479,10 +494,10 @@ public class CategoryManagerImplTest {
     public void testSaveMultipleCategories() {
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl category1 = new ImportCategoryImpl();
-        category1.setId(10);
+        category1.setId(BigInteger.TEN);
         list.add(category1);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(10);
+        categoryinput.setId(BigInteger.TEN);
         new Expectations() {
             {
                 PersistenceManager.getInstance();
@@ -501,13 +516,13 @@ public class CategoryManagerImplTest {
     }
 
     @Test
-    public void testSaveMultipleCategories2nd() {
+    public void testSaveMultipleCategories2nd() throws Exception {
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl importCategory1 = new ImportCategoryImpl();
-        importCategory1.setId(10);
+        importCategory1.setId(BigInteger.TEN);
         list.add(importCategory1);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(-1);
+        categoryinput.setId(BigInteger.ONE.negate());
         new Expectations() {
             {
                 PersistenceManager.getInstance();
@@ -519,19 +534,13 @@ public class CategoryManagerImplTest {
                 entityTransaction.begin();
                 importCategory1.getCategoryDetails();
                 result = categoryinput;
-                entityManager.createNamedQuery(anyString);
-                result = query;
-                query.setParameter(anyString, anyString);
-                result = query;
-                query.setParameter(anyString, anyString);
-                TenantContext.getContext();
-                result = tenantInfo;
-                tenantInfo.getUsername();
-                result = "";
-                query.getSingleResult();
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
                 result = emAnalyticsCategory;
-                emAnalyticsCategory.getCategoryId();
-                result = 10L;
+                EmAnalyticsObjectUtil.getEmAnalyticsCategoryForEdit(withAny(category), withAny(entityManager));
+                result = emAnalyticsCategory;
+                entityManager.merge(withAny(emAnalyticsCategory));
+                CategoryManagerImpl.createCategoryObject(withAny(emAnalyticsCategory), null);
+                result = category;
             }
         };
         CategoryManagerImpl categoryManager1 = (CategoryManagerImpl) CategoryManagerImpl.getInstance();
@@ -542,12 +551,12 @@ public class CategoryManagerImplTest {
     public void testSaveMultipleCategories3th() {
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl importCategory2 = new ImportCategoryImpl();
-        importCategory2.setId(10);
+        importCategory2.setId(BigInteger.TEN);
         list.add(importCategory2);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(-1);
+        categoryinput.setId(BigInteger.ONE.negate());
         final FolderImpl folderImpl = new FolderImpl();
-        folderImpl.setId(1);
+        folderImpl.setId(BigInteger.ONE);
         new Expectations() {
             {
                 PersistenceManager.getInstance();
@@ -559,6 +568,8 @@ public class CategoryManagerImplTest {
                 entityTransaction.begin();
                 importCategory2.getCategoryDetails();
                 result = categoryinput;
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
+                result = null;
                 entityManager.createNamedQuery(anyString);
                 result = query;
                 query.setParameter(anyString, anyString);
@@ -572,10 +583,10 @@ public class CategoryManagerImplTest {
                 result = new NoResultException();
                 importCategory2.getFolderDetails();
                 result = folderImpl;
-                EmAnalyticsObjectUtil.getFolderById(anyLong,(EntityManager)any);
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any,(EntityManager)any);
                 result = emAnalyticsFolder;
                 emAnalyticsFolder.getFolderId();
-                result = 1L;
+                result = BigInteger.ONE;
             }
         };
         CategoryManagerImpl categoryManager2 = (CategoryManagerImpl) CategoryManagerImpl.getInstance();
@@ -586,12 +597,12 @@ public class CategoryManagerImplTest {
     public void testSaveMultipleCategories4th() throws EMAnalyticsFwkException {
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl importCategory2 = new ImportCategoryImpl();
-        importCategory2.setId(10);
+        importCategory2.setId(BigInteger.TEN);
         list.add(importCategory2);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(-1);
+        categoryinput.setId(BigInteger.ONE.negate());
         final FolderImpl folderImpl = new FolderImpl();
-        folderImpl.setId(1);
+        folderImpl.setId(BigInteger.ONE);
         new Expectations() {
             {
                 PersistenceManager.getInstance();
@@ -603,6 +614,8 @@ public class CategoryManagerImplTest {
                 entityTransaction.begin();
                 importCategory2.getCategoryDetails();
                 result = categoryinput;
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
+                result = null;
                 entityManager.createNamedQuery(anyString);
                 result = query;
                 query.setParameter(anyString, anyString);
@@ -616,14 +629,13 @@ public class CategoryManagerImplTest {
                 result = new NoResultException();
                 importCategory2.getFolderDetails();
                 result = folderImpl;
-                EmAnalyticsObjectUtil.getFolderById(anyLong,(EntityManager)any);
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any,(EntityManager)any);
                 result = null;
                 EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd((Folder)any, (EntityManager)any);
                 result = emAnalyticsFolder;
                 entityManager.persist(emAnalyticsFolder);
                 emAnalyticsFolder.getFolderId();
-                result =10L;
-
+                result = BigInteger.TEN;
             }
         };
         CategoryManagerImpl categoryManager2 = (CategoryManagerImpl) CategoryManagerImpl.getInstance();
@@ -634,12 +646,12 @@ public class CategoryManagerImplTest {
     public void testSaveMultipleCategories5th() throws EMAnalyticsFwkException {
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl importCategory2 = new ImportCategoryImpl();
-        importCategory2.setId(10);
+        importCategory2.setId(BigInteger.TEN);
         list.add(importCategory2);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(-1);
+        categoryinput.setId(BigInteger.ONE.negate());
         final FolderImpl folderImpl = new FolderImpl();
-        folderImpl.setId(1);
+        folderImpl.setId(BigInteger.ONE);
         new Expectations() {
             {
                 PersistenceManager.getInstance();
@@ -651,6 +663,8 @@ public class CategoryManagerImplTest {
                 entityTransaction.begin();
                 importCategory2.getCategoryDetails();
                 result = categoryinput;
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
+                result = null;
                 entityManager.createNamedQuery(anyString);
                 result = query;
                 query.setParameter(anyString, anyString);
@@ -663,8 +677,8 @@ public class CategoryManagerImplTest {
                 query.getSingleResult();
                 result = new NoResultException();
                 importCategory2.getFolderDetails();
-                result = new Integer(1);
-                EmAnalyticsObjectUtil.getFolderById(anyLong,(EntityManager)any);
+                result = BigInteger.ONE;
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any,(EntityManager)any);
                 result = null;
             }
         };
@@ -676,12 +690,12 @@ public class CategoryManagerImplTest {
     public void testSaveMultipleCategories6th() throws EMAnalyticsFwkException {
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl importCategory2 = new ImportCategoryImpl();
-        importCategory2.setId(10);
+        importCategory2.setId(BigInteger.TEN);
         list.add(importCategory2);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(-1);
+        categoryinput.setId(BigInteger.ONE.negate());
         final FolderImpl folderImpl = new FolderImpl();
-        folderImpl.setId(1);
+        folderImpl.setId(BigInteger.ONE);
         new Expectations() {
             {
                 PersistenceManager.getInstance();
@@ -693,6 +707,8 @@ public class CategoryManagerImplTest {
                 entityTransaction.begin();
                 importCategory2.getCategoryDetails();
                 result = categoryinput;
+                EmAnalyticsObjectUtil.getCategoryById((BigInteger) any, withAny(entityManager));
+                result = null;
                 entityManager.createNamedQuery(anyString);
                 result = query;
                 query.setParameter(anyString, anyString);
@@ -705,8 +721,8 @@ public class CategoryManagerImplTest {
                 query.getSingleResult();
                 result = new NoResultException();
                 importCategory2.getFolderDetails();
-                result = new Integer(1);
-                EmAnalyticsObjectUtil.getFolderById(anyLong,(EntityManager)any);
+                result = BigInteger.ONE;
+                EmAnalyticsObjectUtil.getFolderById((BigInteger) any, (EntityManager)any);
                 result = emAnalyticsFolder;
             }
         };
@@ -718,12 +734,12 @@ public class CategoryManagerImplTest {
     public void testSaveMultipleCategories7th() {
         final List<ImportCategoryImpl> list = new ArrayList<>();
         final ImportCategoryImpl importCategory2 = new ImportCategoryImpl();
-        importCategory2.setId(10);
+        importCategory2.setId(BigInteger.TEN);
         list.add(importCategory2);
         final CategoryImpl categoryinput = new CategoryImpl();
-        categoryinput.setId(-1);
+        categoryinput.setId(BigInteger.ONE.negate());
         final FolderImpl folderImpl = new FolderImpl();
-        folderImpl.setId(1);
+        folderImpl.setId(BigInteger.ONE);
         new Expectations() {
             {
                 PersistenceManager.getInstance();

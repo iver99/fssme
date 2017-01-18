@@ -19,7 +19,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * @author guochen
@@ -55,6 +54,7 @@ public class CacheManager
 
 	private static transient long lastLogTime;
 	private static CacheManager instance = new CacheManager();
+	private static boolean isCacheEnabled;
 
 	public static CacheManager getInstance()
 	{
@@ -65,6 +65,7 @@ public class CacheManager
 
 	private CacheManager()
 	{
+		isCacheEnabled = Boolean.TRUE;
 		lastLogTime=System.currentTimeMillis();
 		keyGen = new DefaultKeyGenerator();
 		LOGGER.info("Initialization LRU CacheManager!!");
@@ -121,11 +122,17 @@ public class CacheManager
 		if (key == null) {
 			return null;
 		}
-		Object value = cache.get(key.toString());
+		Object value=null;
+		if(isCacheEnabled){
+			value = cache.get(key.toString());
+		}else{
+			//if cache is disabled, we do not retrieve data from cache anymore
+			LOGGER.debug("Cache Manager is disabled, will not use the data retrieved from cache");
+		}
 		if (value == null && ff != null) {
 			LOGGER.debug("Cache not retrieved, trying to load with fetch factory");
 			value = ff.fetchCachable(key);
-			if (value != null) {
+			if (value != null && isCacheEnabled) {
 				cache.put(key.toString(), new Element(key,value));
 				LOGGER.debug("Successfully fetched data, putting to cache group {}",cacheName);
 			}
@@ -172,6 +179,10 @@ public class CacheManager
 
 	public Object putCacheable(Tenant tenant, String cacheName, Keys keys, Object value)
 	{
+		if(!isCacheEnabled){
+			LOGGER.debug("CacheManager is disabled, will not put element into cache!");
+			return null;
+		}
 		logCacheStatus();
 		CacheUnit cache = getInternalCache(cacheName);
 		if (cache == null) {
@@ -199,6 +210,10 @@ public class CacheManager
 
 	public Object removeCacheable(Tenant tenant, String cacheName, Keys keys)
 	{
+		if(!isCacheEnabled){
+			LOGGER.debug("CacheManager is disabled, will not remove element from cache!");
+			return null;
+		}
 		CacheUnit cache = getInternalCache(cacheName);
 		if (cache == null) {
 			return null;
@@ -251,6 +266,10 @@ public class CacheManager
 	 * log out current cache group's cache status
 	 */
 	public void logCacheStatus(){
+		if(!isCacheEnabled){
+			LOGGER.warn("Cache Manager is disabled, will not log cache status!");
+			return;
+		}
 		long now=System.currentTimeMillis();
 		long logInterval=CacheConfig.LOG_INTERVAL;
 		if(now-lastLogTime>= logInterval){
@@ -275,5 +294,17 @@ public class CacheManager
 			}
 			lastLogTime=now;
 		}
+	}
+	public void disableCacheManager() {
+		synchronized (this) {
+			isCacheEnabled = Boolean.FALSE;
+		}
+	}
+
+	public void enableCacheManager() {
+		synchronized (this) {
+			isCacheEnabled = Boolean.TRUE;
+		}
+
 	}
 }

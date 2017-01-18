@@ -8,8 +8,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.QAToolUtil;
-
 public class SearchManagerTestMockup
 {
 

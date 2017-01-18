@@ -11,6 +11,7 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.sql.Timestamp;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +96,7 @@ public class WidgetManagerImpl extends WidgetManager
 			for (Map<String, Object> widget : l) {
 				Object widgetId = widget.get("SEARCH_ID");
 				String sId = String.valueOf(widgetId);
-				Long id = Long.valueOf(sId);
+				BigInteger id = new BigInteger(sId);
 				//generate ssUrl
 				String ssUrl = generateSSUrl(widgetAPIUrl, widget, id);
 				LOGGER.debug("Screenshot URL is generated for widget id={}, url={}", id, ssUrl);
@@ -125,7 +126,7 @@ public class WidgetManagerImpl extends WidgetManager
 		String widgetAPIUrl = getWidgetAPIUrl(tenantName);
 		for (Widget widget : widgetList) {
 			String ssUrl = ScreenshotPathGenerator.getInstance().generateScreenshotUrl(widgetAPIUrl,
-					Long.valueOf(widget.getId()), widget.getCreatedOn(), widget.getLastModifiedOn());
+					widget.getId(), widget.getCreatedOn(), widget.getLastModifiedOn());
 			JSONObject jsonWidget = EntityJsonUtil.getWidgetJsonObj(widget, widget.getCategory(), ssUrl);
 			if (jsonWidget != null) {
 				jsonArray.put(jsonWidget);
@@ -227,7 +228,7 @@ public class WidgetManagerImpl extends WidgetManager
 	/*
 	 * generate SS url
 	 */
-	private String generateSSUrl(String widgetAPIUrl, Map<String, Object> widget, Long id)
+	private String generateSSUrl(String widgetAPIUrl, Map<String, Object> widget, BigInteger id)
 	{
 		Object sCreatedOn = widget.get("CREATION_DATE");
 		Object sModifiedOn = widget.get("LAST_MODIFICATION_DATE");

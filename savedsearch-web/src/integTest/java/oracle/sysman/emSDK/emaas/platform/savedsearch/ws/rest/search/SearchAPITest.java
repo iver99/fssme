@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,10 @@ import org.testng.annotations.Test;
  */
 @Test(groups={"s2"})
 public class SearchAPITest {
-    private SearchAPI api = new SearchAPI();
+	private static final BigInteger TEST_ID_10 = BigInteger.TEN;
+	private static final BigInteger TEST_ID_100 = new BigInteger("100");
+	private static final BigInteger TEST_ID_999 = new BigInteger("999");
+	private SearchAPI api = new SearchAPI();
     @BeforeMethod
     public void setUp() throws JSONException {
         api.uri = uriInfo;
@@ -489,6 +493,10 @@ public class SearchAPITest {
                 result = search;
                 searchManager.editSearch(withAny(search));
                 result = search;
+		search.getId();
+                result = "999";
+                search.getName();
+                result = "searchName";
                 odsDataServiceImpl.createOdsEntity(anyString,anyString);
                 result = "odsentitymeid";
                 search.getParameters();
@@ -539,13 +547,13 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.deleteSearch(anyLong,anyBoolean);
+                searchManager.deleteSearch((BigInteger)any, anyBoolean);
                 OdsDataServiceImpl.getInstance();
                 result = odsDataServiceImpl;
-                odsDataServiceImpl.deleteOdsEntity(anyLong);
+                odsDataServiceImpl.deleteOdsEntity((BigInteger)any);
             }
         };
-        Assert.assertNotNull(api.deleteSearch(100L));
+        Assert.assertNotNull(api.deleteSearch(TEST_ID_100));
 
     }
     @Test
@@ -556,14 +564,14 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.deleteSearch(anyLong,anyBoolean);
+                searchManager.deleteSearch((BigInteger)any, anyBoolean);
                 result = new EMAnalyticsFwkException(throwable);
                 OdsDataServiceImpl.getInstance();
                 result = odsDataServiceImpl;
-                odsDataServiceImpl.deleteOdsEntity(anyLong);
+                odsDataServiceImpl.deleteOdsEntity((BigInteger)any);
             }
         };
-        Assert.assertNotNull(api.deleteSearch(100L));
+        Assert.assertNotNull(api.deleteSearch(TEST_ID_100));
 
     }
     @Test
@@ -596,13 +604,13 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearch((BigInteger)any);
                 result =search;
                 searchManager.editSearch(withAny(search));
                 result = search;
             }
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"",TEST_ID_10));
     }
     @Test
     public void testEditSearch2nd() throws JSONException, EMAnalyticsFwkException {
@@ -634,13 +642,13 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearch((BigInteger)any);
                 result =search;
                 searchManager.editSearch(withAny(search));
                 result = search;
             }
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",TEST_ID_10));
     }
 
     @Test
@@ -673,13 +681,13 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearch((BigInteger)any);
                 result =search;
                 searchManager.editSearch(withAny(search));
                 result = search;
             }
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",TEST_ID_10));
     }
     @Test
     public void testEditSearch4th() throws JSONException, EMAnalyticsFwkException {
@@ -710,11 +718,11 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearch((BigInteger)any);
                 result =new EMAnalyticsWSException(throwable);
             }
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",TEST_ID_10));
     }
     @Test
     public void testEditSearch5th() throws JSONException, EMAnalyticsFwkException {
@@ -746,32 +754,29 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearch((BigInteger)any);
                 result =search;
             }
         };
-        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",10L));
+        Assert.assertNotNull(api.editSearch(inputJson,"ORACLE_INTERNAL",TEST_ID_10));
     }
 
 
     @Test
     public void testEditSearchAccessDate() throws JSONException {
-
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10, true));
     }
     @Test
     public void testEditSearchAccessDate2nd() throws JSONException {
         new Expectations() {
             {
-                dependencyStatus.isDatabaseUp();
-                result = true;
                 uriInfo.getRequestUri();
                 result = uri;
                 uri.getQuery();
                 result = "categoryId=11";
             }
         };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10,true));
     }
     @Test
     public void testEditSearchAccessDate3th() throws JSONException {
@@ -783,7 +788,7 @@ public class SearchAPITest {
                 result = null;
             }
         };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10,true));
     }
     @Test
     public void testEditSearchAccessDate4th() throws JSONException {
@@ -795,25 +800,9 @@ public class SearchAPITest {
                 result = "searchId = 1";
             }
         };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,false));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10,false));
     }
 
-    @Test
-    public void testEditSearchAccessDateEMAnalyticsFwkException() throws JSONException {
-        new Expectations() {
-            {
-                dependencyStatus.isDatabaseUp();
-                result = true;
-                uriInfo.getRequestUri();
-                result = uri;
-                uri.getQuery();
-                result = "searchId = 1";
-                SearchManager.getInstance();
-                result = new EMAnalyticsFwkException(throwable);
-            }
-        };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
-    }
     @Test
     public void testEditSearchAccessDate5th() throws JSONException {
         new Expectations() {
@@ -824,7 +813,7 @@ public class SearchAPITest {
                 result = "searchId";
             }
         };
-        Assert.assertNotNull(api.editSearchAccessDate(10L,true));
+        Assert.assertNotNull(api.editSearchAccessDate(TEST_ID_10,true));
     }
     @Mocked
     FolderManager folderManager;
@@ -838,7 +827,6 @@ public class SearchAPITest {
     @Test
     public void testGetSearch() throws JSONException, EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
-        final String[] path = {"path","path","path"};
         for(int i = 0;i<=2;i++){searches.add(new SearchImpl());}
         new Expectations(){
             {
@@ -848,7 +836,7 @@ public class SearchAPITest {
                 result = searchManager;
             }
         };
-        Assert.assertNotNull(api.getSearch(10L,true));
+        Assert.assertNotNull(api.getSearch(TEST_ID_10,true));
     }
     @Test
     public void testGetSearch2nd() throws JSONException, EMAnalyticsFwkException {
@@ -864,7 +852,7 @@ public class SearchAPITest {
                 result = searchManager;
             }
         };
-        Assert.assertNotNull(api.getSearch(10L,true));
+        Assert.assertNotNull(api.getSearch(TEST_ID_10,true));
     }
 
     @Test
@@ -883,7 +871,7 @@ public class SearchAPITest {
                 result = new EMAnalyticsFwkException(throwable);
             }
         };
-        Assert.assertNotNull(api.getSearch(10L,true));
+        Assert.assertNotNull(api.getSearch(TEST_ID_10, true));
     }
 
     /**
@@ -899,10 +887,10 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearch((BigInteger)any);
                 result = search;
                 search.getId();
-                result = 999;
+                result = new BigInteger("999");
                 search.getName();
                 result = "Saved Search";
                 search.getParameters();
@@ -915,7 +903,7 @@ public class SearchAPITest {
 
             }
         };
-    	Assert.assertNotNull(api.createOdsEntity(999L));
+    	Assert.assertNotNull(api.createOdsEntity(TEST_ID_999));
     }
 
     @Mocked
@@ -930,9 +918,9 @@ public class SearchAPITest {
             {
                 dependencyStatus.isDatabaseUp();
                 result = true;
-                searchManager.getSearch(anyLong);
+                searchManager.getSearch((BigInteger)any);
                 result = search;
-                categoryManager.getCategory(anyLong);
+                categoryManager.getCategory((BigInteger)any);
                 result = categoryMocked;
                 search.getCategoryId();
                 result = 1L;
@@ -950,11 +938,11 @@ public class SearchAPITest {
                 result = link;
             }
         };
-        Assert.assertEquals(200,api.getAssetRoot(1L).getStatus());
+        Assert.assertEquals(200,api.getAssetRoot(new BigInteger("1")).getStatus());
     }
     @Test
     public void testEditLastAccess() {
-        Assert.assertNotNull(api.editLastAccess(10L));
+        Assert.assertNotNull(api.editLastAccess(TEST_ID_10));
     }
 
     @Test
@@ -1000,7 +988,7 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchListByIds((List<Long>) any);
+                searchManager.getSearchListByIds((List<BigInteger>) any);
                 result = realList;
             }
         };

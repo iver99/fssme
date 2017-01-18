@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.search;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,11 +33,11 @@ public class SearchesCRUD
 	static String serveruri;
 	static String authToken;
 	static String TENANT_ID_OPC1 = TestConstant.TENANT_ID_OPC0;
-	static int catid = -1;
-	static int folderid = -1;
+	static BigInteger catid = BigInteger.ONE.negate();
+	static BigInteger folderid = BigInteger.ONE.negate();
 	static String catName = "";
-	static int folderid1 = -1;
-	static int catid1 = -1;
+	static BigInteger folderid1 = BigInteger.ONE.negate();
+	static BigInteger catid1 = BigInteger.ONE.negate();
 	static String catName1 = "";
 	static String TENANT_ID1 = TestConstant.TENANT_ID0;
 
@@ -61,27 +63,28 @@ public class SearchesCRUD
 
 		.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
 
-		folderid = res.jsonPath().get("id");
+		folderid = new BigInteger(res.jsonPath().getString("id"));
 
 		String jsonString2 = "{ \"name\":\"Custom21\",\"description\":\"Folder for  searches\"}";
 		Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 
 		.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when().post("/folder");
 
-		folderid1 = res2.jsonPath().get("id");
+		folderid1 = new BigInteger(res2.jsonPath().getString("id"));
 
 		String jsonString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><CategorySet><Category><Name>MyCategoryTest</Name><Description>Testing</Description>"
 				+ "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
 				+ "</Category></CategorySet>";
-		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-
-		.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importcategories");
+		Response res1 = RestAssured.given().contentType(ContentType.XML).log()
+				.everything().header("Authorization", authToken)
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1)
+				.when().post("/importcategories");
 
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			catid = jsonObj.getInt("id");
+			catid = new BigInteger(jsonObj.getString("id"));
 			catName = jsonObj.getString("name");
 		}
 
@@ -91,12 +94,12 @@ public class SearchesCRUD
 		Response res3 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString3).when().post("/importcategories");
 
-		Assert.assertEquals(res1.getStatusCode(), 200);
+		Assert.assertEquals(res3.getStatusCode(), 200);
 		JSONArray arrfld1 = new JSONArray(res3.getBody().asString());
 		for (int index = 0; index < arrfld1.length(); index++) {
 			System.out.println("verifying categoryids");
 			JSONObject jsonObj = arrfld1.getJSONObject(index);
-			catid1 = jsonObj.getInt("id");
+			catid1 = new BigInteger(jsonObj.getString("id"));
 			catName1 = jsonObj.getString("name");
 		}
 
@@ -121,29 +124,28 @@ public class SearchesCRUD
 	public void flattenedFolderPath()
 	{
 			String jsonString = "{ \"name\":\"Folder_cont5\",\"description\":\"Folder for EMAAS searches\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
-					.post("/folder");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON)
+					.log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1)
+					.body(jsonString).when().post("/folder");
 
 			JsonPath jp1 = res1.jsonPath();
 			Assert.assertTrue(res1.getStatusCode() == 201);
-			String jsonString2 = "{\"name\":\"Search_cont\",\"category\":{\"id\":"
+			String jsonString2 = "{\"name\":\"Search_cont\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ jp1.get("id")
-					+ "}"
+					+ "\"}"
 					+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when()
-					.post("/search");
+			Response res2 = RestAssured.given().contentType(ContentType.JSON)
+					.log().everything().header("Authorization", authToken)
+					.header(TestConstant.OAM_HEADER, TENANT_ID1)
+					.body(jsonString2).when().post("/search");
 
 			JsonPath jp2 = res2.jsonPath();
 			Assert.assertTrue(res2.getStatusCode() == 201);
 			Response res3 = RestAssured.given().log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-
 					.get("/search/" + jp2.get("id") + "?flattenedFolderPath=true");
 			JsonPath jp3 = res3.jsonPath();
 			Assert.assertEquals(jp3.get("flattenedFolderPath[0]"), "Folder_cont5");
@@ -188,23 +190,6 @@ public class SearchesCRUD
 			.delete("/search/1000000087?updateLastAccessTime=true");
 			Assert.assertEquals(res.asString(), "Search with Id: 1000000087 does not exist");
 			Assert.assertTrue(res.getStatusCode() == 404);
-
-	}
-
-	@Test
-	/**
-	 * Test verify the status and response with invalid objects on a correct url path
-	 */
-	public void lastaccessedSearches_invalidObjects4()
-	{
-
-			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-
-			.put("/search/100000000087?updateLastAccessTime=true");
-			Assert.assertEquals(res.asString(), "Invalid search id: 100000000087");
-			Assert.assertEquals(res.getStatusCode(), 404);
 
 	}
 
@@ -310,11 +295,11 @@ public class SearchesCRUD
 	public void search_create()
 	{
 			int position;
-			String jsonString = "{\"name\":\"Custom_Search\",\"category\":{\"id\":"
+			String jsonString = "{\"name\":\"Custom_Search\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\",\"attributes\":\"test\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\",\"attributes\":\"test\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -323,12 +308,12 @@ public class SearchesCRUD
 			JsonPath jp1 = res1.jsonPath();
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			Assert.assertEquals(jp1.get("createdOn"), jp1.get("lastModifiedOn"));
-			Assert.assertEquals(jp1.get("createdOn"), jp1.get("lastAccessDate"));
-			String jsonString2 = "{\"name\":\"Custom_Search\",\"category\":{\"id\":"
+			Assert.assertNotNull(jp1.get("lastAccessDate"));
+			String jsonString2 = "{\"name\":\"Custom_Search\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when()
@@ -336,7 +321,7 @@ public class SearchesCRUD
 
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.jsonPath().getString("message"), "Search name 'Custom_Search' already exist");
-			Assert.assertEquals(jp1.getInt("id"), res2.jsonPath().getInt("id"));
+			Assert.assertEquals(jp1.getString("id"), res2.jsonPath().getString("id"));
 			Assert.assertEquals(res2.jsonPath().getInt("errorCode"), 20021);
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
 
@@ -361,11 +346,11 @@ public class SearchesCRUD
 	@Test
 	public void search_create_emptyparamName()
 	{
-			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":"
+			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\" \",\"type\":\"STRING\",\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\" \",\"type\":\"STRING\",\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -384,9 +369,9 @@ public class SearchesCRUD
 	{
 
 
-			String jsonString = "{\"name\":\"TestSearch\",\"category\":{\"id\":12000},\"folder\":{\"id\":"
+			String jsonString = "{\"name\":\"TestSearch\",\"category\":{\"id\":12000},\"folder\":{\"id\":\""
 					+ folderid1
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -404,7 +389,7 @@ public class SearchesCRUD
 	public void search_create_invalidfolderId()
 	{
 
-			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":3000},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":\"1\"},\"folder\":{\"id\":\"3000\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -423,7 +408,7 @@ public class SearchesCRUD
 	{
 
 
-			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":1},\"folder\":{\"id\":3000},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":\"text\",\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\"TestSearch\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":\"1\"},\"folder\":{\"id\":\"3000\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":\"text\",\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -440,8 +425,7 @@ public class SearchesCRUD
 	 */
 	public void search_createwithEmptyName()
 	{
-
-			String jsonString = "{\"name\":\" \",\"category\":{\"id\":1},\"folder\":{\"id\":2},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+			String jsonString = "{\"name\":\" \",\"category\":{\"id\":\"1\"},\"folder\":{\"id\":\"2\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -467,21 +451,20 @@ public class SearchesCRUD
 			JsonPath jp = res.jsonPath();
 			List<String> a;
 			a = jp.get("name");
-			List<Integer> b;
+
+			List<String> b = new ArrayList<String>();
 			b = jp.get("id");
 
 			for (int i = 0; i < a.size(); i++) {
 				if (a.get(i).equals("Custom_Search")) {
 					position = i;
-
-					int searchID = b.get(position);
-
+					String searchID = b.get(position);
 					Assert.assertEquals(a.get(position), "Custom_Search");
-					String jsonString = "{ \"name\":\"Custom_Search_Edit\",\"category\":{\"id\":"
+					String jsonString = "{ \"name\":\"Custom_Search_Edit\",\"category\":{\"id\":\""
 							+ catid
-							+ "}, \"folder\":{\"id\":"
+							+ "\"}, \"folder\":{\"id\":\""
 							+ folderid
-							+ "},\"queryStr\": \"target.name=mydb.mydomain message like ERR1*\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+							+ "\"},\"queryStr\": \"target.name=mydb.mydomain message like ERR1*\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
 					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
@@ -490,7 +473,8 @@ public class SearchesCRUD
 
 					JsonPath jp1 = res1.jsonPath();
 					Assert.assertEquals(jp1.get("name"), "Custom_Search_Edit");
-					Assert.assertEquals(jp1.get("lastModifiedOn"), jp1.get("lastAccessDate"));
+					Assert.assertNotNull(jp1.get("lastModifiedOn"));
+					Assert.assertNotNull(jp1.get("lastAccessDate"));
 					Assert.assertTrue(res.getStatusCode() == 200);
 				}
 			}
@@ -503,12 +487,11 @@ public class SearchesCRUD
 	 */
 	public void search_edit_categoryId()
 	{
-
-			String jsonString = "{\"name\":\"Search for test edit category\",\"category\":{\"id\":"
+			String jsonString = "{\"name\":\"Search for test edit category\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
 					.post("/search");
@@ -530,7 +513,7 @@ public class SearchesCRUD
 			Assert.assertEquals(jp3.getJsonObject("category").toString(), "{id=" + catid + ", href=" + serveruri
 					+ "/savedsearch/v1/category/" + catid + "}");
 			Assert.assertEquals(jp3.get("name"), "Search for test edit category_edit");
-			String jsonString3 = "{ \"category\":{\"id\":" + catid + "}}";
+			String jsonString3 = "{ \"category\":{\"id\":\"" + catid + "\"}}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1)
@@ -554,12 +537,11 @@ public class SearchesCRUD
 	 */
 	public void search_edit_emptyFolderId()
 	{
-
-			String jsonString = "{\"name\":\"Search for test missing folderId\",\"category\":{\"id\":"
+			String jsonString = "{\"name\":\"Search for test missing folderId\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -567,9 +549,9 @@ public class SearchesCRUD
 
 			JsonPath jp = res1.jsonPath();
 			Assert.assertTrue(res1.getStatusCode() == 201);
-			String jsonString_edit = "{\"name\":\"Search for test missing folderId\",\"category\":{\"id\":"
+			String jsonString_edit = "{\"name\":\"Search for test missing folderId\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"folder\":{},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString_edit).when()
@@ -590,12 +572,11 @@ public class SearchesCRUD
 	@Test
 	public void search_edit_emptyName()
 	{
-
-			String jsonString = "{\"name\":\"Search for test empty name\",\"category\":{\"id\":"
+			String jsonString = "{\"name\":\"Search for test empty name\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -603,11 +584,11 @@ public class SearchesCRUD
 
 			JsonPath jp = res1.jsonPath();
 			Assert.assertTrue(res1.getStatusCode() == 201);
-			String jsonString_edit = "{\"name\":\" \",\"category\":{\"id\":"
+			String jsonString_edit = "{\"name\":\" \",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString_edit).when()
@@ -629,12 +610,11 @@ public class SearchesCRUD
 	@Test
 	public void search_edit_invalidParam()
 	{
-
-			String jsonString = "{\"name\":\"Search for test param\",\"category\":{\"id\":"
+			String jsonString = "{\"name\":\"Search for test param\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -751,11 +731,11 @@ public class SearchesCRUD
 
 					+ result
 					+ "\""
-					+ ",\"category\":{\"id\":"
+					+ ",\"category\":{\"id\":\""
 					+ 1
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ 1
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
 					.post("/search");
@@ -767,11 +747,11 @@ public class SearchesCRUD
 			jsonString = "{\"name\":\""
 					+ "abc"
 					+ "\""
-					+ ",\"category\":{\"id\":"
+					+ ",\"category\":{\"id\":\""
 					+ 1
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ 1
-					+ "},\"description\":\""
+					+ "\"},\"description\":\""
 					+ description
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
@@ -786,11 +766,11 @@ public class SearchesCRUD
 					+ "\""
 					+ result
 					+ "\""
-					+ ",\"category\":{\"id\":"
+					+ ",\"category\":{\"id\":\""
 					+ 1
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ 1
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3040");
 			Assert.assertTrue(res1.getStatusCode() == 400);
@@ -802,11 +782,11 @@ public class SearchesCRUD
 
 					+ "abc"
 					+ "\""
-					+ ",\"category\":{\"id\":"
+					+ ",\"category\":{\"id\":\""
 					+ 1
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ 1
-					+ "},\"description\":\""
+					+ "\"},\"description\":\""
 					+ description
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
@@ -836,11 +816,11 @@ public class SearchesCRUD
 
 					+ result
 					+ "\""
-					+ ",\"category\":{\"id\":"
+					+ ",\"category\":{\"id\":\""
 					+ 1
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ 1
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
 					.post("/search");
@@ -850,11 +830,11 @@ public class SearchesCRUD
 			jsonString = "{\"name\":\""
 					+ "abc"
 					+ "\""
-					+ ",\"category\":{\"id\":"
+					+ ",\"category\":{\"id\":\""
 					+ 1
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ 1
-					+ "},\"description\":\""
+					+ "\"},\"description\":\""
 					+ description
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
@@ -868,11 +848,11 @@ public class SearchesCRUD
 					+ "\""
 					+ result
 					+ "\""
-					+ ",\"category\":{\"id\":"
+					+ ",\"category\":{\"id\":\""
 					+ 1
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ 1
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/search/3040");
 			Assert.assertTrue(res1.getStatusCode() == 400);
@@ -882,11 +862,11 @@ public class SearchesCRUD
 
 					+ "abc"
 					+ "\""
-					+ ",\"category\":{\"id\":"
+					+ ",\"category\":{\"id\":\""
 					+ 1
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ 1
-					+ "},\"description\":\""
+					+ "\"},\"description\":\""
 					+ description
 					+ "\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":						\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 
@@ -904,12 +884,11 @@ public class SearchesCRUD
 	 */
 	public void search_missingMandateinfo()
 	{
-
-			String jsonString = "{\"category\":{\"id\":"
+			String jsonString = "{\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when()
@@ -935,39 +914,39 @@ public class SearchesCRUD
 			 * "The displayName key for search is missing in the input JSON Object"
 			 * ); System.out.println("											");
 			 */
-			String jsonString2 = "{\"name\":\"MyLostSearch\",\"folder\":{\"id\":"
+			String jsonString2 = "{\"name\":\"MyLostSearch\",\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when()
 					.post("/search");
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.asString(), "The category key for search is missing in the input JSON Object");
-			String jsonString3 = "{\"displayName\":\"My_Search!!!\",\"category\":{\"id\":"
+			String jsonString3 = "{\"displayName\":\"My_Search!!!\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"name\":\"My_Search\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"name\":\"My_Search\",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString3).when()
 					.post("/search");
 			Assert.assertTrue(res3.getStatusCode() == 400);
 			Assert.assertEquals(res3.asString(), "The folder key for search is missing in the input JSON Object");
-			String jsonString4 = "{\"name\":\"Custom_Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":"
+			String jsonString4 = "{\"name\":\"Custom_Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"type\":STRING	,\"value\":\"my_value\"}]}";
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString4).when()
 					.post("/search");
 			Assert.assertTrue(res4.getStatusCode() == 400);
 			Assert.assertEquals(res4.asString(), "The name key for search parameter is missing in the input JSON Object");
-			String jsonString5 = "{\"name\":\"Custom_Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":"
+			String jsonString5 = "{\"name\":\"Custom_Search\",\"displayName\":\"My_Search!!!\",\"category\":{\"id\":\""
 					+ catid
-					+ "},\"folder\":{\"id\":"
+					+ "\"},\"folder\":{\"id\":\""
 					+ folderid
-					+ "},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
+					+ "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample\",\"value\":\"my_value\"}]}";
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 
 			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString5).when()
@@ -991,23 +970,24 @@ public class SearchesCRUD
 			JsonPath jp = res.jsonPath();
 			List<String> a;
 			a = jp.get("name");
-			List<Integer> b;
+			
+			List<String> b = new ArrayList<String>();
 			b = jp.get("id");
 
 			for (int i = 0; i < a.size(); i++) {
 				if (a.get(i).equals("Custom_Search_Edit")) {
 					position = i;
-					int mysearchID = b.get(position);
+					String mysearchID = b.get(position);
 					Response res0 = RestAssured.given().log().everything().header("Authorization", authToken)
 
 					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + mysearchID);
 
 					JsonPath jp0 = res0.jsonPath();
 					Assert.assertEquals(jp0.get("name"), "Custom_Search_Edit");
-					Assert.assertEquals(jp0.get("id"), +mysearchID);
+					Assert.assertEquals(jp0.get("id"), mysearchID);
 					Assert.assertEquals(jp0.get("description"), "mydb.mydomain error logs (ORA*)!!!");
-					Assert.assertEquals(jp0.getMap("category").get("id"), catid);
-					Assert.assertEquals(jp0.getMap("folder").get("id"), folderid);
+					Assert.assertEquals(jp0.getMap("category").get("id"), catid.toString());
+					Assert.assertEquals(jp0.getMap("folder").get("id"), folderid.toString());
 					Assert.assertEquals(jp0.get("href"), "http://" + HOSTNAME + ":" + portno + "/savedsearch/v1/search/"
 							+ mysearchID);
 					Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
@@ -1133,121 +1113,6 @@ public class SearchesCRUD
 
 		}*/
 
-	@Test
-	/**
-	 * set last access time to a search using PUT method
-	 */
-	public void setlastaccesstime_Tosearch()
-	{
-
-			String jsonString1 = "{\"name\":\"SearchSet1\",\"category\":{\"id\":" + catid1 + "},\"folder\":{\"id\":" + folderid1
-					+ "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
-					.post("/search");
-
-			JsonPath jp1 = res1.jsonPath();
-			Assert.assertTrue(res1.getStatusCode() == 201, "status code: " + res1.getStatusCode());
-			try{
-				Thread.sleep(2000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-
-			String jsonString2 = "{\"name\":\"SearchSet2\",\"category\":{\"id\":" + catid1 + "},\"folder\":{\"id\":" + folderid1
-					+ "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2).when()
-					.post("/search");
-
-			JsonPath jp2 = res2.jsonPath();
-			String str_lastAccessTime = jp2.get("lastAccessDate");
-			Assert.assertTrue(res2.getStatusCode() == 201);
-			try{
-				Thread.sleep(3000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.get("/searches?lastAccessCount=2");
-
-			JsonPath jp3 = res3.jsonPath();
-			try{
-				Thread.sleep(3000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-
-			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-
-			.put("/search/" + jp3.get("id[1]") + "?updateLastAccessTime=true");
-			// JsonPath jp4 = res4.jsonPath();
-			String str_updateTime = res4.asString();
-			Assert.assertTrue(res4.getStatusCode() == 200);
-			Response res4_1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.get("/search/" + jp3.get("id[1]"));
-
-			JsonPath jp4_1 = res4_1.jsonPath();
-			Assert.assertTrue(res4_1.getStatusCode() == 200);
-			Assert.assertEquals(jp4_1.get("lastAccessDate"), str_updateTime);
-
-			try {
-				Thread.sleep(2000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-
-			Response res4_3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-
-			.put("/search/" + jp3.get("id[0]") + "?updateLastAccessTime=false");
-			// JsonPath jp4 = res4.jsonPath();
-			Assert.assertTrue(res4_3.getStatusCode() == 200);
-			Response res4_4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.get("/search/" + jp3.get("id[0]"));
-
-			JsonPath jp4_2 = res4_4.jsonPath();
-			Assert.assertTrue(res4_4.getStatusCode() == 200);
-			Assert.assertEquals(jp4_2.get("lastAccessDate"), str_lastAccessTime);
-			try{
-				Thread.sleep(2000);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-
-			RestAssured.given().contentType(ContentType.JSON).log().everything()
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.get("/searches?lastAccessCount=2");
-			Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.delete("/search/" + jp1.get("id"));
-			Assert.assertTrue(res6.getStatusCode() == 204);
-			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-
-			.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
-					.delete("/search/" + jp2.get("id"));
-
-			Assert.assertTrue(res7.getStatusCode() == 204);
-
-	}
-
 	/**
 	 * set last access time to a search using PUT method, but the query parameter is not complete
 	 */
@@ -1255,8 +1120,8 @@ public class SearchesCRUD
 	public void setlastaccesstime_Tosearch_badParameter()
 	{
 
-			String jsonString1 = "{\"name\":\"SearchSetLastAccess\",\"category\":{\"id\":" + catid1 + "},\"folder\":{\"id\":"
-					+ folderid + "},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
+			String jsonString1 = "{\"name\":\"SearchSetLastAccess\",\"category\":{\"id\":\"" + catid1 + "\"},\"folder\":{\"id\":\""
+					+ folderid + "\"},\"description\":\"mydb.err logs!!!\",\"queryStr\": \"target.name=mydb.mydomain ERR*\"}";
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
 					.post("/search");
@@ -1330,11 +1195,11 @@ public class SearchesCRUD
 
 	@Test
 	public void testDeleteSearchByName(){
-		String inputJson = "{\"name\":\"SearchTestDeletedByName\",\"category\":{\"id\":"
+		String inputJson = "{\"name\":\"SearchTestDeletedByName\",\"category\":{\"id\":\""
 				+ 5
-				+ "},\"folder\":{\"id\":"
+				+ "\"},\"folder\":{\"id\":\""
 				+ 6
-				+ "}"
+				+ "\"}"
 				+ ",\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"deletedlater\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING,\"value\":\"my_value\"}]}";
 		RestAssured.given().contentType(ContentType.JSON).log().everything()
 				.header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(inputJson).when()
@@ -1364,40 +1229,40 @@ public class SearchesCRUD
 	@Test
 	public void testGetSearchList() {
 		// create 2 searches
-		String jsonString1 = "{\"name\":\"Search_List_1\",\"category\":{\"id\":"
+		String jsonString1 = "{\"name\":\"Search_List_1\",\"category\":{\"id\":\""
 				+ catid
-				+ "},\"folder\":{\"id\":"
+				+ "\"},\"folder\":{\"id\":\""
 				+ folderid
-				+ "},\"description\":\"test get search list 1\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
+				+ "\"},\"description\":\"test get search list 1\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log()
 				.everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1)
 				.when().post("/search");
 		Assert.assertEquals(res1.getStatusCode(), 201);
-		Long id1 = res1.jsonPath().getLong("id");
-		String jsonString2 = "{\"name\":\"Search_List_2\",\"category\":{\"id\":"
+		String id1 = res1.jsonPath().getString("id");
+		String jsonString2 = "{\"name\":\"Search_List_2\",\"category\":{\"id\":\""
 				+ catid
-				+ "},\"folder\":{\"id\":"
+				+ "\"},\"folder\":{\"id\":\""
 				+ folderid
-				+ "},\"description\":\"test get search list 2\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
+				+ "\"},\"description\":\"test get search list 2\",\"parameters\":[{\"name\":\"sample\",\"type\":STRING,\"value\":\"my_value\"}]}";
 		Response res2 = RestAssured.given().contentType(ContentType.JSON).log()
 				.everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString2)
 				.when().post("/search");
 		Assert.assertEquals(res2.getStatusCode(), 201);
-		Long id2 = res2.jsonPath().getLong("id");
+		String id2 = res2.jsonPath().getString("id");
 		
 		// get 2 searches by getSearchList
-		String ids = "[" + id1 + "," + id2 + "]";
+		String[] ids = new String[]{id1, id2};
 		Response res3 = RestAssured.given().contentType(ContentType.JSON).log()
 				.everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(ids)
 				.when().put("/search/list");
 		Assert.assertEquals(res3.getStatusCode(), 200);
-		List<Integer> result = res3.jsonPath().getList("id");
-		Assert.assertEquals(result.size(), 2);
-		Assert.assertTrue(result.contains(Integer.valueOf(id1.toString())));
-		Assert.assertTrue(result.contains(Integer.valueOf(id2.toString())));
+		List<String> resultList = res3.jsonPath().get();
+		Assert.assertEquals(resultList.size(), 2);
+		Assert.assertTrue(resultList.get(0).contains(id1) || resultList.get(1).contains(id1));
+		Assert.assertTrue(resultList.get(0).contains(id2) || resultList.get(1).contains(id2));
 		
 		// clean the searches
 		Response res4 = RestAssured.given().contentType(ContentType.JSON).log()

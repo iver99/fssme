@@ -2,14 +2,12 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.math.BigInteger;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -17,12 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
@@ -38,20 +35,16 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.deleted=0 AND (o.owner in (:userName) OR o.systemFolder =1)"),
 		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)"),
 		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)") })
-@SequenceGenerator(name = "EMS_ANALYTICS_FOLDERS_SEQ", sequenceName = "EMS_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
-public class EmAnalyticsFolder implements Serializable
+//@SequenceGenerator(name = "EMS_ANALYTICS_FOLDERS_SEQ", sequenceName = "EMS_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
+public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "FOLDER_ID")
-	@GeneratedValue(generator = "EMS_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
-	private long folderId;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATION_DATE")
-	private Date creationDate;
-
+//	@GeneratedValue(generator = "EMS_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
+	private BigInteger folderId;
+	
 	private String description;
 
 	@Column(name = "DESCRIPTION_NLSID")
@@ -62,10 +55,6 @@ public class EmAnalyticsFolder implements Serializable
 
 	@Column(name = "EM_PLUGIN_ID")
 	private String emPluginId;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "LAST_MODIFICATION_DATE")
-	private Date lastModificationDate;
 
 	@Column(name = "LAST_MODIFIED_BY")
 	private String lastModifiedBy;
@@ -88,7 +77,7 @@ public class EmAnalyticsFolder implements Serializable
 	private BigDecimal uiHidden;
 
 	@Column(name = "DELETED")
-	private long deleted;
+	private BigInteger deleted;
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@OneToMany(mappedBy = "emAnalyticsFolder")
@@ -112,12 +101,7 @@ public class EmAnalyticsFolder implements Serializable
 	{
 	}
 
-	public Date getCreationDate()
-	{
-		return creationDate;
-	}
-
-	public long getDeleted()
+	public BigInteger getDeleted()
 	{
 		return deleted;
 	}
@@ -135,7 +119,7 @@ public class EmAnalyticsFolder implements Serializable
 	public String getDescriptionSubsystem()
 	{
 		return descriptionSubsystem;
-	}
+	}	
 
 	public Set<EmAnalyticsCategory> getEmAnalyticsCategories()
 	{
@@ -162,14 +146,9 @@ public class EmAnalyticsFolder implements Serializable
 		return emPluginId;
 	}
 
-	public long getFolderId()
+	public BigInteger getFolderId()
 	{
 		return folderId;
-	}
-
-	public Date getLastModificationDate()
-	{
-		return lastModificationDate;
 	}
 
 	public String getLastModifiedBy()
@@ -207,12 +186,7 @@ public class EmAnalyticsFolder implements Serializable
 		return uiHidden;
 	}
 
-	public void setCreationDate(Date creationDate)
-	{
-		this.creationDate = creationDate;
-	}
-
-	public void setDeleted(long deleted)
+	public void setDeleted(BigInteger deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -257,14 +231,9 @@ public class EmAnalyticsFolder implements Serializable
 		this.emPluginId = emPluginId;
 	}
 
-	public void setFolderId(long folderId)
+	public void setFolderId(BigInteger folderId)
 	{
 		this.folderId = folderId;
-	}
-
-	public void setLastModificationDate(Date lastModificationDate)
-	{
-		this.lastModificationDate = lastModificationDate;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy)

@@ -16,6 +16,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogDirection;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,9 +28,6 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogDirection;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-
 /**
  * @author guochen
  */
@@ -35,6 +35,7 @@ public class RestClient
 {
 	private static final Logger LOGGER = LogManager.getLogger(RestClient.class);
 	private static final Logger LOGGERITR = LogUtil.getInteractionLogger();
+	private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 
 	public RestClient()
 	{
@@ -60,12 +61,13 @@ public class RestClient
 		}
 		else {
 			LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-			LOGGERITR.info(
-					"RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is get.",
+			LOGGERITR
+			.info("RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is get.",
 					url);
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+				.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
 		return builder.get(String.class);
 	}
 
@@ -100,14 +102,18 @@ public class RestClient
 		}
 		else {
 			LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-			LOGGERITR.info(
-					"RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
+			LOGGERITR
+			.info("RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
 					url);
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+				.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
 		if (headers != null) {
 			for (String key : headers.keySet()) {
+				if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
+					continue;
+				}
 				Object value = headers.get(key);
 				if (value == null) {
 					continue;

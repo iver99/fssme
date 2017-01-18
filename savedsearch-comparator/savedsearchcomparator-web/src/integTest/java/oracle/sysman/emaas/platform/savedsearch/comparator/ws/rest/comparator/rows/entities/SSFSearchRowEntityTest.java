@@ -1,0 +1,150 @@
+package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities;
+
+import java.math.BigInteger;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+@Test(groups = { "s1" })
+public class SSFSearchRowEntityTest {
+
+	@Test
+	public void testEquals() {
+		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity();
+		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity();
+		Assert.assertEquals(entity1,entity2);
+		
+		entity1.setCreationDate("2016-07-22 08:23:32.517");
+		entity2.setCreationDate("2016-07-22 08:23:32.517");
+		Assert.assertEquals(entity1,entity2);
+		
+		entity1.setDashboardIneligible("ineligible");
+		entity2.setDashboardIneligible("ineligible2");
+		Assert.assertNotEquals(entity1,entity2);
+		
+		entity1.setDeleted(new BigInteger("1"));
+		entity2.setDeleted(new BigInteger("1"));
+		Assert.assertNotEquals(entity1,entity2);
+		
+		entity1.setDescription("des");
+		entity2.setDescription("des");
+		entity2.setDashboardIneligible("ineligible");
+		Assert.assertEquals(entity1,entity2);
+		
+		entity1.setDescriptionNlsid("des");
+		entity2.setDescriptionNlsid("des2");
+		Assert.assertNotEquals(entity1,entity2);
+		
+		
+		entity1.setDescriptionSubsystem("desSubSys");
+		Assert.assertNotEquals(entity1,entity2);
+		entity2.setDescriptionSubsystem("desSubSys");
+		Assert.assertNotEquals(entity1,entity2);
+		
+		entity2.setDescriptionNlsid("des");
+		entity1.setIsLocked(1);
+		entity2.setIsLocked(1);
+		Assert.assertEquals(entity1,entity2);
+		
+		entity1.setIsWidget(1);
+		entity2.setIsWidget(1);
+		Assert.assertEquals(entity1,entity2);
+		
+		entity1.setLastModificationDate("2016-07-22 08:23:32.517");
+		entity2.setLastModificationDate("2016-07-22 08:23:32.518");
+		Assert.assertNotEquals(entity1,entity2);
+		entity2.setLastModificationDate("2016-07-22 08:23:32.517");
+		
+		entity1.setCreationDate("creationDate");
+		entity1.setDashboardIneligible("dashboardIneligible");
+		entity1.setDescription("description");
+		entity1.setDescriptionNlsid("descriptionNlsid");
+		entity1.setDescriptionSubsystem("descriptionSubsystem");
+		entity1.setEmPluginId("emPluginId");
+		entity1.setIsLocked(1);
+		entity1.setIsWidget(1);
+		entity1.setNameNlsid("nameNlsid");
+		entity1.setNameSubsystem("nameSubsystem");
+		entity1.setNameWidgetSource("nameWidgetSource");
+		entity1.setOwner("owner");
+		entity1.setMetadataClob("metadataClob");
+		entity1.setUiHidden(1);
+		entity1.setWidgetViewModel("widgetViewModel");
+		entity1.setWidgetTemplate("widgetTemplate");;
+		entity1.setWidgetSupportTimeControl("widgetSupportTimeControl");
+		entity1.setWidgetScreenshotHref("widgetScreenshotHref");
+		entity1.setWidgetLinkedDashboard(1l);
+		entity1.setWidgetKocName("widgetKocName");
+		entity1.setWidgetIcon("widgetIcon");
+		entity1.setWidgetGroupName("widgetGroupName");
+		entity1.setWidgetDefaulWidth(1l);
+		entity1.setWidgetDefaultHeight(1l);
+		
+		entity1.getCreationDate();
+		entity1.getDashboardIneligible();
+		entity1.getWidgetViewModel();
+		entity1.getWidgetTemplate();
+		entity1.getWidgetSupportTimeControl();
+		entity1.getWidgetScreenshotHref();
+		entity1.getWidgetLinkedDashboard();
+		entity1.getWidgetKocName();
+		entity1.getWidgetIcon();
+		entity1.getWidgetGroupName();
+		entity1.getWidgetDefaulWidth();
+		entity1.getWidgetDefaultHeight();
+		entity1.getUiHidden();
+		entity1.getTenantId();
+		entity1.getCreationDate();
+		entity1.getDashboardIneligible();
+		entity1.getDeleted();
+		entity1.getDescription();
+		
+	}
+	
+	@Test
+	public void testHashcode() {
+		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity();
+		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity();
+		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
+		
+		entity1.setCreationDate("2016-07-22 08:23:32.517");
+		entity2.setCreationDate("2016-07-22 08:23:32.517");
+		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
+		
+		entity1.setDashboardIneligible("ineligible");
+		entity2.setDashboardIneligible("ineligible2");
+		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
+		
+		entity1.setDeleted(new BigInteger("1"));
+		entity2.setDeleted(new BigInteger("1"));
+		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
+		
+		entity1.setDescription("des");
+		entity2.setDescription("des");
+		entity2.setDashboardIneligible("ineligible");
+		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
+		
+		entity1.setDescriptionNlsid("des");
+		entity2.setDescriptionNlsid("des2");
+		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
+		
+		
+		entity1.setDescriptionSubsystem("desSubSys");
+		Assert.assertNotEquals(entity1,entity2);
+		entity2.setDescriptionSubsystem("desSubSys");
+		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
+		
+		entity2.setDescriptionNlsid("des");
+		entity1.setIsLocked(1);
+		entity2.setIsLocked(1);
+		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
+		
+		entity1.setIsWidget(1);
+		entity2.setIsWidget(1);
+		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
+		
+		entity1.setLastModificationDate("2016-07-22 08:23:32.517");
+		entity2.setLastModificationDate("2016-07-22 08:23:32.518");
+		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
+		
+	}
+}

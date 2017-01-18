@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,7 +18,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
@@ -32,13 +35,16 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @NamedQueries({
 	@NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
 })
-public class EmAnalyticsSearchParam implements Serializable
+public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "SEARCH_ID", insertable = false, updatable = false, nullable = false)
-	private long searchId;
+	private BigInteger searchId;
+	
+	@Column(name = "DELETED", nullable = false, length = 1)
+	private Boolean deleted;
 
 	@Id
 	private String name;
@@ -67,6 +73,7 @@ public class EmAnalyticsSearchParam implements Serializable
 
 	public EmAnalyticsSearchParam()
 	{
+		this.deleted = false;
 	}
 
 	/* (non-Javadoc)
@@ -130,6 +137,16 @@ public class EmAnalyticsSearchParam implements Serializable
 		}
 		return true;
 	}
+	
+	
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
 
 	public EmAnalyticsSearch getEmAnalyticsSearch()
 	{
@@ -169,7 +186,7 @@ public class EmAnalyticsSearchParam implements Serializable
 		return paramValueStr;
 	}
 
-	public long getSearchId()
+	public BigInteger getSearchId()
 	{
 		return searchId;
 	}
@@ -187,7 +204,7 @@ public class EmAnalyticsSearchParam implements Serializable
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (searchId ^ searchId >>> 32);
+		result = prime * result + (searchId == null ? 0 : (int) (searchId.intValue() ^ searchId.intValue() >>> 32));
 		result = prime * result + (name == null ? 0 : name.hashCode());
 		result = prime * result + (paramAttributes == null ? 0 : paramAttributes.hashCode());
 		result = prime * result + (paramType == null ? 0 : paramType.hashCode());
@@ -229,7 +246,7 @@ public class EmAnalyticsSearchParam implements Serializable
 		this.paramValueStr = paramValueStr;
 	}
 
-	public void setSearchId(long searchId)
+	public void setSearchId(BigInteger searchId)
 	{
 		this.searchId = searchId;
 	}

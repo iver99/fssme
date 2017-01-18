@@ -1,5 +1,6 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +107,7 @@ public class CategoryDetails
 	}
 
 	@XmlElement(name = "Id")
-	protected Integer id;
+	protected BigInteger id;
 	@XmlElement(required = true, name = "Name")
 	protected String name;
 	@XmlElement(name = "Description")
@@ -120,7 +121,7 @@ public class CategoryDetails
 	@XmlElement(name = "ProviderAssetRoot")
 	protected String providerAssetRoot;
 	@XmlElement(name = "DefaultFolderId")
-	protected Integer defaultFolderId;
+	protected BigInteger defaultFolderId;
 
 	@XmlElement(name = "Parameters")
 	protected CategoryDetails.Parameters parameters;
@@ -130,7 +131,7 @@ public class CategoryDetails
 	 * 
 	 * @return possible object is {@link Integer }
 	 */
-	public Integer getDefaultFolderId()
+	public BigInteger getDefaultFolderId()
 	{
 		return defaultFolderId;
 	}
@@ -150,7 +151,7 @@ public class CategoryDetails
 	 * 
 	 * @return possible object is {@link Integer }
 	 */
-	public Integer getId()
+	public BigInteger getId()
 	{
 		return id;
 	}
@@ -221,7 +222,7 @@ public class CategoryDetails
 	 * @param value
 	 *            allowed object is {@link Integer }
 	 */
-	public void setDefaultFolderId(Integer value)
+	public void setDefaultFolderId(BigInteger value)
 	{
 		defaultFolderId = value;
 	}
@@ -243,7 +244,7 @@ public class CategoryDetails
 	 * @param value
 	 *            allowed object is {@link Integer }
 	 */
-	public void setId(Integer value)
+	public void setId(BigInteger value)
 	{
 		id = value;
 	}

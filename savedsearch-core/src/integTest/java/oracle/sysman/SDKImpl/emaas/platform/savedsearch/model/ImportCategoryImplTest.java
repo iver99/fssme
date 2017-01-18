@@ -1,13 +1,16 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ParameterDetails;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import java.math.BigInteger;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ParameterDetails;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author qianqi
@@ -71,8 +74,8 @@ public class ImportCategoryImplTest {
     }
 
     @Test
-    public void testGetId(){
-        Integer integer = new Integer(111);
+    public void testGetId() {
+        BigInteger integer = new BigInteger("111");
         importCategory.setId(integer);
         Assert.assertEquals(importCategory.getId(),integer);
     }

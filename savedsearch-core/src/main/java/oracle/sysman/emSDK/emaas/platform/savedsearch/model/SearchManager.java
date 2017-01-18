@@ -1,7 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 
+import java.math.BigInteger;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
@@ -46,7 +46,7 @@ public abstract class SearchManager
 	 * @return 
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract EmAnalyticsSearch deleteSearch(long searchId, boolean permanently) throws EMAnalyticsFwkException;
+	public abstract EmAnalyticsSearch deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException;
 
 	/**
 	 *
@@ -54,7 +54,7 @@ public abstract class SearchManager
 	 * @param permanently
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract void deleteTargetCard(long searchId, boolean permanently) throws EMAnalyticsFwkException;
+	public abstract void deleteTargetCard(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException;
 	/**
 	 *
 	 * @param searchName
@@ -99,7 +99,7 @@ public abstract class SearchManager
 	 * @return search
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Search getSearch(long searchId) throws EMAnalyticsFwkException;
+	public abstract Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Return the search in tenant scope. Don't care the owner of this search.
@@ -107,7 +107,7 @@ public abstract class SearchManager
 	 * @return
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Search getSearchWithoutOwner(long searchId) throws EMAnalyticsFwkException;
+	public abstract Search getSearchWithoutOwner(BigInteger searchId) throws EMAnalyticsFwkException;
 
 	/**
 	 * @param name
@@ -115,7 +115,7 @@ public abstract class SearchManager
 	 * @return
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Search getSearchByName(String name, long folderId) throws EMAnalyticsFwkException;
+	public abstract Search getSearchByName(String name, BigInteger folderId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the count of (accessible) search entities in a folder.
@@ -125,7 +125,7 @@ public abstract class SearchManager
 	 * @return count of seacrh entities
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract int getSearchCountByFolderId(long folderId) throws EMAnalyticsFwkException;
+	public abstract int getSearchCountByFolderId(BigInteger folderId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the list of search entities belonging to a category.
@@ -135,7 +135,7 @@ public abstract class SearchManager
 	 * @return list of search entities belonging to a category
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract List<Search> getSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException;
+	public abstract List<Search> getSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the list of search entities contained (directly) in the specified folder.
@@ -145,7 +145,7 @@ public abstract class SearchManager
 	 * @return list of search entities (<code>null</code> if none are contained)
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract List<Search> getSearchListByFolderId(long folderId) throws EMAnalyticsFwkException;
+	public abstract List<Search> getSearchListByFolderId(BigInteger folderId) throws EMAnalyticsFwkException;
 
 	public List<Search> getSearchListByLastAccessDate(int count) throws EMAnalyticsFwkException
 	{
@@ -153,7 +153,7 @@ public abstract class SearchManager
 		return Collections.emptyList();
 	}
 
-	public abstract List<Search> getSystemSearchListByCategoryId(long categoryId) throws EMAnalyticsFwkException;
+	public abstract List<Search> getSystemSearchListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the list of widgets belonging to a category.
@@ -163,7 +163,7 @@ public abstract class SearchManager
 	 * @return list of widgets belonging to a category
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract List<Search> getWidgetListByCategoryId(long categoryId) throws EMAnalyticsFwkException;
+	public abstract List<Search> getWidgetListByCategoryId(BigInteger categoryId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the list of widgets belonging to the categories specified by provider names
@@ -186,9 +186,7 @@ public abstract class SearchManager
 	 * @return screenshot of widget
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract ScreenshotData getWidgetScreenshotById(long widgetId) throws EMAnalyticsFwkException;
-
-	public abstract Date modifyLastAccessDate(long searchId) throws EMAnalyticsFwkException;
+	public abstract ScreenshotData getWidgetScreenshotById(BigInteger widgetId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Saves a completely specified search entity in the analytics sub-system.
@@ -215,7 +213,7 @@ public abstract class SearchManager
 	 * @return
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract String getSearchParamByName(long searchId, String paramName) throws EMAnalyticsFwkException;
+	public abstract String getSearchParamByName(BigInteger searchId, String paramName) throws EMAnalyticsFwkException;
 	
 	/**
 	 * get search list by a list of id
@@ -223,13 +221,6 @@ public abstract class SearchManager
 	 * @return
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract List<Search> getSearchListByIds(List<Long> ids) throws EMAnalyticsFwkException;
+	public abstract List<Search> getSearchListByIds(List<BigInteger> ids) throws EMAnalyticsFwkException;
 	
-	/**
-	 * update last access of searches by a list of id
-	 * @param ids
-	 * @return how many rows has been updated
-	 * @throws EMAnalyticsFwkException
-	 */
-	public abstract int updateLastAccessDate(List<Long> ids) throws EMAnalyticsFwkException;
 }

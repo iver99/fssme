@@ -188,7 +188,7 @@ public class ImportCategorySet
 			JSONArray jsonArray = new JSONArray();
 			for (Category categoryImpl : addedList) {
 				JSONObject jObj = new JSONObject();
-				jObj.put("id", categoryImpl.getId());
+				jObj.put("id", categoryImpl.getId().toString());
 				jObj.put("name", categoryImpl.getName());
 				jsonArray.put(jObj);
 			}

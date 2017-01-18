@@ -6,6 +6,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
  *  @since   release specific (what release of product did this appear in)
  */
 
+import java.math.BigInteger;
 import java.util.List;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryManagerImpl;
@@ -35,7 +36,7 @@ public abstract class CategoryManager
 	 * @param permanently
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract void deleteCategory(long categoryId, boolean permanently) throws EMAnalyticsFwkException;
+	public abstract void deleteCategory(BigInteger categoryId, boolean permanently) throws EMAnalyticsFwkException;
 
 	/**
 	 * Edits an existing Category entity in the analytics sub-system.
@@ -63,7 +64,7 @@ public abstract class CategoryManager
 	 * @return category
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Category getCategory(long categoryId) throws EMAnalyticsFwkException;
+	public abstract Category getCategory(BigInteger categoryId) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the category identified by its internal name.

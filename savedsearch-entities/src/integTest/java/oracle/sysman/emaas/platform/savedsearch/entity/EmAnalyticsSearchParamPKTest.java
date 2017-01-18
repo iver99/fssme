@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.entity;
 
+import java.math.BigInteger;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -17,7 +19,7 @@ public class EmAnalyticsSearchParamPKTest
 	public void setUp()
 	{
 		emAnalyticsSearchParamPK = new EmAnalyticsSearchParamPK();
-		emAnalyticsSearchParamPK.setSearchId(111L);
+		emAnalyticsSearchParamPK.setSearchId(BigInteger.TEN);
 		emAnalyticsSearchParamPK.setName("name1");
 		emAnalyticsSearchParamPK.setTenantId(1234L);
 	}
@@ -30,7 +32,7 @@ public class EmAnalyticsSearchParamPKTest
 		Assert.assertFalse(emAnalyticsSearchParamPK.equals(new String("astring")));
 
 		EmAnalyticsSearchParamPK emAnalyticsSearchParamPK2 = new EmAnalyticsSearchParamPK();
-		emAnalyticsSearchParamPK2.setSearchId(111L);
+		emAnalyticsSearchParamPK2.setSearchId(BigInteger.TEN);
 		emAnalyticsSearchParamPK2.setName("name1");
 		emAnalyticsSearchParamPK2.setTenantId(1234L);
 		Assert.assertTrue(emAnalyticsSearchParamPK.equals(emAnalyticsSearchParamPK2));
@@ -47,9 +49,8 @@ public class EmAnalyticsSearchParamPKTest
 	@Test(groups = { "s1" })
 	public void testGetSearchId()
 	{
-		long searchid = 333L;
-		emAnalyticsSearchParamPK.setSearchId(searchid);
-		Assert.assertEquals(searchid, emAnalyticsSearchParamPK.getSearchId());
+		emAnalyticsSearchParamPK.setSearchId(BigInteger.TEN);
+		Assert.assertEquals(BigInteger.TEN, emAnalyticsSearchParamPK.getSearchId());
 	}
 
 	@Test(groups = { "s1" })
@@ -58,7 +59,7 @@ public class EmAnalyticsSearchParamPKTest
 		Assert.assertEquals(emAnalyticsSearchParamPK.hashCode(), emAnalyticsSearchParamPK.hashCode());
 
 		EmAnalyticsSearchParamPK emAnalyticsSearchParamPK2 = new EmAnalyticsSearchParamPK();
-		emAnalyticsSearchParamPK2.setSearchId(111L);
+		emAnalyticsSearchParamPK2.setSearchId(BigInteger.TEN);
 		emAnalyticsSearchParamPK2.setName("name1");
 		emAnalyticsSearchParamPK2.setTenantId(1234L);
 		Assert.assertEquals(emAnalyticsSearchParamPK2.hashCode(), emAnalyticsSearchParamPK.hashCode());

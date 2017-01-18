@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.savedsearch.targetmodel.services;
 
+import java.math.BigInteger;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
@@ -106,7 +108,7 @@ public class OdsDataServiceImpl implements OdsDataService
 	}
 
 	@Override
-	public void deleteOdsEntity(long searchId) throws EMAnalyticsFwkException
+	public void deleteOdsEntity(BigInteger searchId) throws EMAnalyticsFwkException
 	{
 		// get ODS entity id from search parameters
 		SearchManager sman = SearchManager.getInstance();

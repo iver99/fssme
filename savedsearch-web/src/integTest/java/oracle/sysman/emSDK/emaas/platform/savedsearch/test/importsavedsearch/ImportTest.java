@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -241,7 +242,7 @@ public class ImportTest
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			Assert.assertTrue(verifyCategory(jsonObj.getInt("id"), jsonObj.getString("name")) == true);
+			Assert.assertTrue(verifyCategory(jsonObj.getString("id"), jsonObj.getString("name")) == true);
 			Assert.assertTrue(jsonObj.getInt("id") > 1);
 		}
 	}
@@ -295,8 +296,8 @@ public class ImportTest
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			Assert.assertTrue(verifyFolder(jsonObj.getInt("id"), jsonObj.getString("name")) == true);
-			Assert.assertTrue(deleteFolder(jsonObj.getInt("id")) == true);
+			Assert.assertTrue(verifyFolder(jsonObj.getString("id"), jsonObj.getString("name")) == true);
+			Assert.assertTrue(deleteFolder(jsonObj.getString("id")) == true);
 		}
 	}
 
@@ -311,8 +312,8 @@ public class ImportTest
 		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importsearches");
 
-		Set<Integer> folderList1 = new HashSet<Integer>();
-		Set<Integer> searchList1 = new HashSet<Integer>();
+		Set<String> folderList1 = new HashSet<String>();
+		Set<String> searchList1 = new HashSet<String>();
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
@@ -321,79 +322,84 @@ public class ImportTest
 			JsonPath jp = res.jsonPath();
 
 			if (res.getStatusCode() == 200) {
-				Assert.assertTrue(deleteSearch(jsonObj.getInt("id")) == true);
+				Assert.assertTrue(deleteSearch(jsonObj.getString("id")) == true);
 
-				searchList1.add(jsonObj.getInt("id"));
-				if ((int) jp.getMap("folder").get("id") > 1) {
+				searchList1.add(jsonObj.getString("id"));
+				BigInteger folderId = new BigInteger(jp.getMap("folder").get("id").toString());
+				if (BigInteger.ONE.compareTo(folderId) == -1) {
 
-					if (!folderList1.contains((int) jp.getMap("folder").get("id"))) {
-						folderList1.add((int) jp.getMap("folder").get("id"));
+					if (!folderList1.contains(folderId)) {
+						folderList1.add(folderId.toString());
 					}
 				}
 			}
 		}
 
-		Set<Integer> folderList = new HashSet<Integer>();
-		Set<Integer> slist = new HashSet<Integer>();
+		Set<String> folderList = new HashSet<String>();
+		Set<String> slist = new HashSet<String>();
 		res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(-1, 1)).when().post("/importsearches");
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef("-1", 1)).when().post("/importsearches");
 		arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 
 			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
 			JsonPath jp = res1.jsonPath();
-			if ((int) jp.getMap("folder").get("id") > 1) {
-				folderList.add((int) jp.getMap("folder").get("id"));
+			BigInteger tempId = new BigInteger(jp.getMap("folder").get("id").toString());
+			if (BigInteger.ONE.compareTo(tempId) == -1) {
+				folderList.add(tempId.toString());
 			}
-			slist.add(jsonObj.getInt("id"));
+			slist.add(jsonObj.getString("id"));
 			res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getInt("id"), 1)).when()
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getString("id"), 1)).when()
 					.post("/importsearches");
 			arrfld = new JSONArray(res1.getBody().asString());
 			jsonObj = arrfld.getJSONObject(index);
 			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
 			jp = res1.jsonPath();
-			if ((int) jp.getMap("folder").get("id") > 1) {
-				folderList.add((int) jp.getMap("folder").get("id"));
+			tempId = new BigInteger(jp.getMap("folder").get("id").toString());
+			if (BigInteger.ONE.compareTo(tempId) == -1) {
+				folderList.add(tempId.toString());
 			}
 		}
 
 		res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(-1, 2)).when().post("/importsearches");
+				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef("-1", 2)).when().post("/importsearches");
 		arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 
 			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
 			JsonPath jp = res1.jsonPath();
-			if ((int) jp.getMap("folder").get("id") > 1) {
-				folderList.add((int) jp.getMap("folder").get("id"));
+			BigInteger tempId = new BigInteger(jp.getMap("folder").get("id").toString());
+			if (BigInteger.ONE.compareTo(tempId) == -1) {
+				folderList.add(tempId.toString());
 			}
 
 			res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getInt("id"), 2)).when()
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getString("id"), 2)).when()
 					.post("/importsearches");
 			arrfld = new JSONArray(res1.getBody().asString());
 			jsonObj = arrfld.getJSONObject(index);
 			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
 			jp = res1.jsonPath();
-			if ((int) jp.getMap("folder").get("id") > 1) {
-				folderList.add((int) jp.getMap("folder").get("id"));
+			tempId = new BigInteger(jp.getMap("folder").get("id").toString());
+			if (BigInteger.ONE.compareTo(tempId) == -1) {
+				folderList.add(tempId.toString());
 			}
 		}
 
-		for (Integer tmp : slist) {
-			if (tmp > 1) {
+		for (String tmp : slist) {
+			if (BigInteger.ONE.compareTo(new BigInteger(tmp)) == -1) {
 				Assert.assertTrue(deleteSearch(tmp) == true);
 			}
 		}
-		for (Integer tmp : folderList) {
-			if (tmp > 1) {
+		for (String tmp : folderList) {
+			if (BigInteger.ONE.compareTo(new BigInteger(tmp)) == -1) {
 				Assert.assertTrue(deleteFolder(tmp) == true);
 			}
 		}
@@ -422,7 +428,7 @@ public class ImportTest
 
 	}
 
-	private boolean deleteFolder(int myfolderID)
+	private boolean deleteFolder(String myfolderID)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + myfolderID);
@@ -430,7 +436,7 @@ public class ImportTest
 
 	}
 
-	private boolean deleteSearch(int mySearchId)
+	private boolean deleteSearch(String mySearchId)
 	{
 		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + mySearchId);
@@ -438,7 +444,7 @@ public class ImportTest
 
 	}
 
-	private String getSearchDef(long id, long option)
+	private String getSearchDef(String id, long option)
 	{
 
 		String xml = "";
@@ -446,7 +452,7 @@ public class ImportTest
 			xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 			xml = xml + "<SearchSet>";
 			xml = xml + "<Search>";
-			if (id != -1) {
+			if (!"-1".equals(id)) {
 				xml = xml + "<Id>" + id + "</Id>";
 			}
 			xml = xml + "     <Name>Test_Multiplewe</Name> ";
@@ -480,7 +486,7 @@ public class ImportTest
 			xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 			xml = xml + "<SearchSet>";
 			xml = xml + "<Search>";
-			if (id != -1) {
+			if (!"-1".equals(id)) {
 				xml = xml + "<Id>" + id + "</Id>";
 			}
 			xml = xml + "     <Name>Test_Multiplewe</Name> ";
@@ -506,7 +512,7 @@ public class ImportTest
 
 	}
 
-	private Boolean verifyCategory(int mycatID, String mycatName)
+	private Boolean verifyCategory(String mycatID, String mycatName)
 	{
 		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + mycatID);
@@ -527,7 +533,7 @@ public class ImportTest
 
 	}
 
-	private boolean verifyFolder(int myfolderID, String myfolderName)
+	private boolean verifyFolder(String myfolderID, String myfolderName)
 	{
 		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/folder/" + myfolderID);
@@ -547,11 +553,6 @@ public class ImportTest
 		if (jp.get("systemFolder").equals(true)) {
 			return false;
 		}
-		return true;
-	}
-
-	private boolean verifySearch(int mysearchID)
-	{
 		return true;
 	}
 

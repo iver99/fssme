@@ -158,7 +158,7 @@ public class ImportFolderSet
 			JSONArray jsonArray = new JSONArray();
 			for (FolderImpl folderImpl : addedList) {
 				JSONObject jObj = new JSONObject();
-				jObj.put("id", folderImpl.getId());
+				jObj.put("id", folderImpl.getId().toString());
 				jObj.put("name", folderImpl.getName());
 				jsonArray.put(jObj);
 			}
