@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -41,6 +42,8 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.config.ResultType;
 import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
 import org.eclipse.persistence.jpa.JpaEntityManager;
 import org.eclipse.persistence.queries.DatabaseQuery;
@@ -1597,5 +1600,58 @@ public class SearchManagerImpl extends SearchManager
 		}
 
 	}
+	
+	private String getQueryCondition(List<BigInteger> ids) {
+		if (ids != null && !ids.isEmpty()) {
+			StringBuilder parameters = new StringBuilder();
+			int flag = 0;
+			for (BigInteger id : ids) {
+				if (flag++ > 0) {
+					parameters.append(",");
+				}
+				parameters.append(id);
+			}
+			return parameters.toString();
+		}
+		return null;
+	}
+	
+	private List<Map<String, Object>> getTableData(String nativeSql)
+	{
+		if (StringUtil.isEmpty(nativeSql)) {
+			LOGGER.error("Can't query database table with null or empty SQL statement!");
+			return null;
+		}
+		
+		EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		Query query = em.createNativeQuery(nativeSql);
+		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> list = query.getResultList();
+		return list;
+	}
+
+	@Override
+	public List<Map<String, Object>> getSearchDataByIds(List<BigInteger> ids, Long tenantId) {
+		if (ids != null && !ids.isEmpty()) {
+			String sql = "SELECT * FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = ? AND SEARCH_ID IN ( " +
+					getQueryCondition(ids) + ")";
+			return getTableData(sql);
+		}
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> getSearchParamsDataByIds(
+			List<BigInteger> ids, Long tenantId) {
+		if (ids != null && !ids.isEmpty()) {
+			String sql = "SELECT * FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE TENANT_ID = ? AND SEARCH_ID IN ( " +
+					getQueryCondition(ids) + ")";
+			return getTableData(sql);
+		}
+		return null;
+	}
+	
+	
 
 }

@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -67,6 +68,8 @@ public class SearchAPI
 
 	//private static final String FOLDER_PATH = "flattenedFolderPath";
 	private static final Logger LOGGER = LogManager.getLogger(SearchAPI.class);
+	private static final String SEARCH_TABLE_NAME = "EMS_ANALYTICS_SEARCH";
+	private static final String SEARCH_PARAMS_TABLE_NAME  = "EMS_ANALYTICS_SEARCH_PARAMS";
 	@Context
 	UriInfo uri;
 
@@ -824,6 +827,71 @@ public class SearchAPI
 					e.getStatusCode());
 		}
 		return Response.status(statusCode).entity(message).build();
+	}
+	
+	@PUT
+	@Path("/all")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSearchData(JSONArray inputJsonArray) throws JSONException
+	{
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/all");
+		List<BigInteger> searchIdList = new ArrayList<BigInteger>();
+		Long tenantId = TenantContext.getContext().getTenantInternalId();
+		try {
+			for(int i = 0; i < inputJsonArray.length(); i++) {
+				searchIdList.add(new BigInteger(inputJsonArray.getString(i)));
+			}
+		} catch(NullPointerException npe) {
+			return Response.status(404).entity("search id list is empty").build();
+		} catch(JSONException je) {
+			return Response.status(404).entity("invalid search id in search id list").build();
+		} catch(NumberFormatException nfe) {
+			return Response.status(404).entity("invalid search id in search id list").build();
+		}
+		
+		String message = null;
+		int statusCode = 200;
+		JSONObject outputJsonObject = new JSONObject();
+		SearchManager manager = SearchManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			List<Map<String,Object>> searchData = manager.getSearchDataByIds(searchIdList, tenantId);
+			JSONArray searchArray = getJSONArrayFromListOfObjects(SEARCH_TABLE_NAME,searchData);
+			if (searchArray != null) {
+				outputJsonObject.put(SEARCH_TABLE_NAME, searchArray);
+			}
+			
+			List<Map<String,Object>> searchParamsData = manager.getSearchParamsDataByIds(searchIdList, tenantId);
+			JSONArray searchParamsArray = getJSONArrayFromListOfObjects(SEARCH_PARAMS_TABLE_NAME,searchParamsData);
+			if (searchParamsArray != null) {
+				outputJsonObject.put(SEARCH_PARAMS_TABLE_NAME, searchParamsArray);
+			}
+			
+		} catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
+			statusCode = e.getStatusCode();
+			message = e.getMessage();
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+					e.getStatusCode());
+		}
+		return Response.status(statusCode).entity(outputJsonObject).build();
+	}
+	
+	private JSONArray getJSONArrayFromListOfObjects(String dataName, List<Map<String, Object>> list)
+	{
+		if (list == null || list.size() < 1) {
+			LOGGER.warn("Trying to get a JSON object for {} from a null object/list. Returning null JSON object", dataName);
+			return null;
+		}
+		JSONArray array = new JSONArray();
+		for (Map<String, Object> row : list) {
+			array.put(row);
+		}
+		LOGGER.debug("Retrieved table data for {} is \"{}\"", dataName, array.toString());
+		return array;
 	}
 	
 	@GET
