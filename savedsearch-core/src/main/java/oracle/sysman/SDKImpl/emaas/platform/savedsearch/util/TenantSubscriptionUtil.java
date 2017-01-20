@@ -22,13 +22,13 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingColl
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 
 import org.apache.logging.log4j.LogManager;
@@ -152,16 +152,16 @@ public class TenantSubscriptionUtil
 			return cachedApps;
 		}
 
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenant);
+		VersionedLink domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", tenant);
 		if (domainLink == null || StringUtil.isEmpty(domainLink.getHref())) {
 			LOGGER.warn("Checking tenant (" + tenant
 					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
 			return Collections.emptyList();
 		}
-		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
+		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainHref);
 		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref);
+		String domainsResponse = rc.get(domainHref, domainLink.getAuthToken());
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		ObjectMapper mapper = JSONUtil.buildNormalMapper();
 		try {
@@ -185,7 +185,7 @@ public class TenantSubscriptionUtil
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 			LOGGER.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
 					+ appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl);
+			String appMappingJson = rc.get(appMappingUrl, domainLink.getAuthToken()); // TODO: not sure the auth token
 			LOGGER.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return Collections.emptyList();
