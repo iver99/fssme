@@ -1589,7 +1589,7 @@ public class SearchManagerImpl extends SearchManager
 			EmAnalyticsSearch searchEntity = (EmAnalyticsSearch) em.createNamedQuery("Search.getSearchByName")
 					.setParameter("folderId", search.getFolderId()).setParameter("searchName", search.getName())
 					.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername()).getSingleResult();
-			String result = EntityJsonUtil.getErrorJsonObject(searchEntity.getId(),
+			String result = EntityJsonUtil.getErrorJsonObject(searchEntity.getId().toString(),
 					"Search name '" + search.getName() + "' already exist", EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME)
 					.toString();
 			throw new EMAnalyticsFwkException(result, EMAnalyticsFwkException.ERR_SEARCH_DUP_NAME,

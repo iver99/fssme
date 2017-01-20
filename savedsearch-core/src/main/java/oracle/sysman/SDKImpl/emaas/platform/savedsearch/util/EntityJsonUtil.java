@@ -133,7 +133,7 @@ public class EntityJsonUtil
 
 	private static final String DEFAULT_DB_VALUE = "0";
 
-	public static JSONObject getErrorJsonObject(BigInteger id, String message, long errorcode) throws EMAnalyticsFwkException
+	public static JSONObject getErrorJsonObject(String id, String message, long errorcode) throws EMAnalyticsFwkException
 	{
 		JSONObject errorObj = new JSONObject();
 		try {
