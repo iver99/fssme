@@ -111,6 +111,8 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPI
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGroupAPITest.class"
 		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/XSDErrorUtilTest.class"
 		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/targetcard/TargetCardLinksFilterAPITest.class"
+		 include "oracle/sysman/emaas/savedsearch/ExceptionTest.class"
+		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
 
 
 
@@ -188,6 +190,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptio
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotElementTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/common/ExecutionContextTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/CategorySetTest.class"
+	   include "oracle/sysman/emaas/savedsearch/FolderSetTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryImplTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderImplTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchImplTest.class"
@@ -197,6 +200,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptio
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/ObjectFactoryTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplForTargetCardTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/zdt/DataManagerTest.class"
+	   include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	useRestAssured =true
 ext.set("testType", "unit")
 
