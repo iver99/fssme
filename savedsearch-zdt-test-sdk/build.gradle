@@ -73,7 +73,7 @@ dependencies {
 
 	compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
 	
-	compile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
+	compile(group: 'com.oracle.emaas.emcpsrvs.sdk', name: 'emaas-platform-tenant-sdk', version: '2.0.+') {
 		exclude group: 'emaas.platform', module: 'registry-lookup-client'
 		exclude group: 'emaas.platform', module: 'registry-client'
 	}
