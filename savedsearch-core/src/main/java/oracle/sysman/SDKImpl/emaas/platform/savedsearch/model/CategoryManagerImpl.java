@@ -380,7 +380,6 @@ public class CategoryManagerImpl extends CategoryManager
 		}
 		catch (Exception e) {
 			LOGGER.error("Error while getting the category object by Name ", e);
-			e.printStackTrace();
 			throw new EMAnalyticsFwkException("Category object by Name: " + categoryName + " does not exist",
 					EMAnalyticsFwkException.ERR_GET_CATEGORY_BY_NAME, new Object[] { categoryName }, e);
 		}
@@ -532,7 +531,6 @@ public class CategoryManagerImpl extends CategoryManager
 		}
 		catch (Exception e) {
 			importedList.clear();
-			e.printStackTrace();
 			LOGGER.error("Error in saveMultipleCategory", e);
 			// throw e;
 		}

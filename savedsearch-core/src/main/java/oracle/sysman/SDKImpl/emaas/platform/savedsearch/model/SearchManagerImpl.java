@@ -1033,7 +1033,7 @@ public class SearchManagerImpl extends SearchManager
 		catch (Exception e) {
 			importedList.clear();
 			LOGGER.error("Error in saveMultipleSearches", e);
-			e.printStackTrace();
+			LOGGER.error(e.getLocalizedMessage());
 			throw e;
 		}
 		finally {

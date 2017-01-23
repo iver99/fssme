@@ -13,6 +13,8 @@ import javax.persistence.Persistence;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.SessionInfoUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PersistenceManager
 {
@@ -23,6 +25,8 @@ public class PersistenceManager
 		private PersistenceManagerHelper() {
 		}
 	}
+
+	private static final Logger LOGGER = LogManager.getLogger(PersistenceManager.class);
 
 	/**
 	 * An internal property to know whether test env is in use true: test env is in use null or non-true: test env is NOT in use
@@ -118,7 +122,7 @@ public class PersistenceManager
 		try {
 			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getLocalizedMessage());
 		} 
 		return em;
 	}
@@ -141,7 +145,7 @@ public class PersistenceManager
 			return connectionProps;
 		}
 		catch (Exception ex) {
-			ex.printStackTrace();
+			LOGGER.error(ex.getLocalizedMessage());
 
 		}
 		finally {
