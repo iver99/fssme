@@ -94,6 +94,31 @@ public class SearchNonGroupsTest extends BaseTest{
 
     }
 
+    @AfterClass
+    public static void testDelete() throws Exception
+    {
+
+        try {
+            SearchManager objSearch = SearchManagerImpl.getInstance();
+            Search search = objSearch.getSearch(searchId);
+            AssertJUnit.assertNotNull(search);
+            objSearch.deleteSearch(search.getId(), true);
+
+            CategoryManager objcategory = CategoryManagerImpl.getInstance();
+            objcategory.deleteCategory(search.getCategoryId(), true);
+
+            FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+            objFolder.deleteFolder(search.getFolderId(), true);
+
+        }
+        catch (Exception e) {
+            Assert.fail(e.getLocalizedMessage());
+        }
+        finally {
+            TenantContext.clearContext();
+        }
+    }
+
     @Test
     public void testBigQueryStr() throws Exception
     {
