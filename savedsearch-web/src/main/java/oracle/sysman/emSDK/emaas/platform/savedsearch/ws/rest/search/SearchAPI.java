@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,11 +21,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
@@ -42,6 +45,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetDeletionN
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotificationType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importData.ImportDataHandler;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importData.ImportRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
@@ -52,6 +57,7 @@ import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServ
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -683,6 +689,25 @@ public class SearchAPI
 		else {
 			return Response.status(400).entity("please give the value for updateLastAccessTime").build();
 		}
+	}
+	
+	@PUT
+	@Path("import")
+	public Response importData(JSONObject importedData) {
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import");
+		ImportRowEntity rowEntity = null;
+		try {
+			rowEntity = JSONUtil.fromJson(new ObjectMapper(), importedData.toString(), ImportRowEntity.class);
+			ImportDataHandler handler = new ImportDataHandler();
+			handler.saveImportedData(rowEntity);
+			return Response.status(Status.NO_CONTENT).build();
+		} catch (IOException e) {
+			LOGGER.error("can not get ImportRowEntity from JSONObject",e.getLocalizedMessage());
+			return Response.status(500).entity(e.getLocalizedMessage()).build();
+		}
+		
+		
+		
 	}
 
 	/**

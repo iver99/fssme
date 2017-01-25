@@ -9,6 +9,7 @@ import javax.ws.rs.core.Application;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.navigation.SavedSearchAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.category.CategoryAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.folder.FolderAPI;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importData.ImportSavedSearchAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportCategorySet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportFolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportSearchSet;

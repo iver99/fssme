@@ -3,6 +3,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,6 +78,23 @@ public class SearchManagerImpl extends SearchManager
 			+ "AND (pm.paramValueStr IS NULL OR pm.paramValueStr<>'1')";
 
 	private static final String DEFAULT_DB_VALUE = "0";
+	
+	private static final String SQL_INSERT_SEARCH_PARAM = "INSERT INTO EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
+			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE) VALUES(?,?,?,?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
+	private static final String SQL_INSERT_SEARCH = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
+			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,"
+			+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,"
+			+ "EM_PLUGIN_ID,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
+			+ "DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
+			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
+			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
+			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
+			+ "to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,?,?,?,"
+			+ "?,?,?,?,?,"
+			+ "?,?,?,?,?,"
+			+ "?,?,?,?,?,"
+			+ "?,?,?,?,?,"
+			+ "?,?,?,?,?," + "?,?,?)";
 
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
@@ -1650,6 +1668,115 @@ public class SearchManagerImpl extends SearchManager
 			return getTableData(sql);
 		}
 		return null;
+	}
+
+	@Override
+	public void saveSearchData(BigInteger searchId, String name, String owner,
+			String creationDate, String lastModificationDate,
+			String lastModifiedBy, String description, BigInteger folderId,
+			BigInteger categoryId, String nameNlsid, String nameSubsystem,
+			String descriptionNlsid, String descriptionSubsystem,
+			Integer systemSearch, String emPluginId, Integer isLocked,
+			String metaDataClob, String searchDisplayStr, Integer uiHidden,
+			BigInteger deleted, Integer isWidget, Long tenantId,
+			String nameWidgetSource, String widgetGroupName,
+			String widgetScreenshotHref, String widgetIcon,
+			String widgetKocName, String viewModel, String widgetTemplate,
+			String widgetSupportTimeControl, Long widgetLinkedDashboard,
+			Long widgetDefaultWidth, Long widgetDefaultHeight,
+			String dashboardIneligible, String providerName,
+			String providerVersion, String providerAssetRoot) {
+
+		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
+		EntityManager em = null;
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
+		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
+		List<Object> result = q1.getResultList();
+		boolean flag = true;
+		if (result != null && result.size() > 0) {
+			flag = false;
+		}
+
+		try {
+			if (flag) {
+				//execute insert action
+				LOGGER.debug("Data does not exist in table EMS_ANALYTICS_SEARCH,insert it.");
+				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, null).setParameter(3, name)
+				.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
+				.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
+				.setParameter(10, categoryId).setParameter(11, nameNlsid).setParameter(12, nameSubsystem)
+				.setParameter(13, descriptionNlsid).setParameter(14, descriptionSubsystem).setParameter(15, systemSearch)
+				.setParameter(16, emPluginId).setParameter(17, isLocked).setParameter(18, metaDataClob)
+				.setParameter(19, searchDisplayStr).setParameter(20, uiHidden).setParameter(21, deleted)
+				.setParameter(22, isWidget).setParameter(23, tenantId).setParameter(24, nameWidgetSource)
+				.setParameter(25, widgetGroupName).setParameter(26, widgetScreenshotHref).setParameter(27, widgetIcon)
+				.setParameter(28, widgetKocName).setParameter(29, viewModel).setParameter(30, widgetTemplate)
+				.setParameter(31, widgetSupportTimeControl).setParameter(32, widgetLinkedDashboard)
+				.setParameter(33, widgetDefaultWidth).setParameter(34, widgetDefaultHeight)
+				.setParameter(35, providerName).setParameter(36, providerVersion).setParameter(37, providerAssetRoot)
+				.setParameter(38, dashboardIneligible).executeUpdate();
+			}
+			else {
+				// do nothing
+			}
+			em.getTransaction().commit();
+		}
+		catch (Exception e) {
+			LOGGER.error("Error occured when save search table data!");
+			e.printStackTrace();
+		}
+		finally {
+			em.close();
+		}
+		
+	}
+
+	@Override
+	public void saveSearchParamData(BigInteger searchId, String name,
+			String paramAttributes, Long paramType, String paramValueStr,
+			String paramValueClob, Long tenantId, String creationDate,
+			String lastModificationDate) {
+
+		String sql = "select count(1) from EMS_ANALYTICS_SEARCH_PARAMS t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";
+		EntityManager em = null;
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
+		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
+		List<Object> result = q1.getResultList();
+		boolean flag = true;
+		if (result != null && result.size() > 0) {
+			flag = false;
+		}
+
+		try {
+			if (flag) {
+				//execute insert action
+				LOGGER.debug("Data does not exist in table EMS_ANALYTICS_SEARCH_PARAMS,insert it.");
+				em.createNativeQuery(SQL_INSERT_SEARCH_PARAM).setParameter(1, searchId).setParameter(2, name)
+						.setParameter(3, paramAttributes).setParameter(4, paramType).setParameter(5, paramValueStr)
+						.setParameter(6, paramValueClob).setParameter(7, tenantId).setParameter(8, creationDate)
+						.setParameter(9, lastModificationDate).executeUpdate();
+			}
+			else {
+				// do nothing
+
+			}
+			//sync Data
+			em.getTransaction().commit();
+		}
+		catch (Exception e) {
+			LOGGER.error("Error occured when save search param table data!");
+			e.printStackTrace();
+		}
+		finally {
+			em.close();
+		}
+		
 	}
 	
 	
