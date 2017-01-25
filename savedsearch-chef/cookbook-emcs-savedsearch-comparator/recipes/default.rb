@@ -56,8 +56,5 @@ include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
 #common setup/start for a managed Server
 include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_setup'
 
-#common datasource recipe to setup data source based on properties in ../attributes/default.rb
-include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_common'
-
 # common app deployment to managed server
 include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_deployApp'

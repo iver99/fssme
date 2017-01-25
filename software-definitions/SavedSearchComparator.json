@@ -1,5 +1,5 @@
 {
-    "name": "SavedSearchService-comparator",
+    "name": "SavedsearchService-comparator",
     "serviceName": "SavedsearchService-comparator",
     "version": "SERVICEVERSION",
     "ephemeral": true,
@@ -13,7 +13,7 @@
             "operation": "undeploy",
             "configurations": [{
                 "name": "applicationName",
-                "defaultValue": "SavedSearchComparator"
+                "defaultValue": "SavedsearchService-comparator"
             }]
         },
         {
@@ -21,7 +21,7 @@
             "operation": "start",
             "configurations": [{
                 "name": "applicationName",
-                "defaultValue": "SavedSearchComparator"
+                "defaultValue": "SavedsearchService-comparator"
             }]
         },
         {
@@ -29,7 +29,7 @@
             "operation": "stop",
             "configurations": [{
                 "name": "applicationName",
-                "defaultValue": "SavedSearchComparator"
+                "defaultValue": "SavedsearchService-comparator"
             }]
         }
     ],
@@ -41,5 +41,5 @@
         "rel": "link\/gzip",
         "href": "<software>"
     },
-    "microServices":["SavedSearchService-comparator"]
+    "microServices":["SavedsearchService-comparator"]
 }
