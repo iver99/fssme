@@ -47,7 +47,7 @@ public class WidgetChangeNotificationTest
 		wcn.notify((WidgetNotifyEntity) null);
 
 		final WidgetNotifyEntity wne = new WidgetNotifyEntity();
-		wne.setUniqueId(BigInteger.ONE);
+		wne.setUniqueId("1");
 		wne.setName("Test Widget");
 		wne.setType(WidgetNotificationType.UPDATE_NAME);
 		wne.setAffactedObjects(2);

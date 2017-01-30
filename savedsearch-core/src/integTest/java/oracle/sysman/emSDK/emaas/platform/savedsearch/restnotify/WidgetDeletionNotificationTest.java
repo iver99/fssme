@@ -60,7 +60,7 @@ public class WidgetDeletionNotificationTest
 		wcn.notify((WidgetNotifyEntity) null);
 
 		final WidgetNotifyEntity wne = new WidgetNotifyEntity();
-		wne.setUniqueId(BigInteger.ONE);
+		wne.setUniqueId("1");
 		wne.setName("Test Widget");
 		wne.setNotifyTime(new Date());
 		wne.setAffactedObjects(2);
