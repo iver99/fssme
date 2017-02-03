@@ -188,7 +188,7 @@ public class SavedSearchCORSFilter implements Filter
 				chain.doFilter(oamRequest, response);
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error(e.getLocalizedMessage());
 			}
 		}
 		else {

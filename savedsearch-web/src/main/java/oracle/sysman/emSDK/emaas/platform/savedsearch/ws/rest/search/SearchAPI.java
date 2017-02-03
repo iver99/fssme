@@ -51,6 +51,8 @@ import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServ
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -804,7 +806,7 @@ public class SearchAPI
 		
 		String message = null;
 		int statusCode = 200;
-		JSONArray outputJsonArray = new JSONArray();
+		ArrayNode outputJsonArray = new ObjectMapper().createArrayNode();
 		SearchManager sman = SearchManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
@@ -813,7 +815,7 @@ public class SearchAPI
 			
 			List<Search> searchList = sman.getSearchListByIds(searchIdList);
 			for(Search searchObj : searchList) {
-				outputJsonArray.put(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj));
+				outputJsonArray.add(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj));
 			}
 			message = outputJsonArray.toString();
 		} catch (EMAnalyticsFwkException e) {

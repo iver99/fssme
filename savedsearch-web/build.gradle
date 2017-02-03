@@ -181,10 +181,6 @@ dependencies {
 
 	providedCompile getProjectArtifact('groovy-all')
 	
-	/*providedCompile(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
-		exclude group: 'emaas.platform', module: 'registry-lookup-client'
-		exclude group: 'emaas.platform', module: 'registry-client'
-	}*/
 	providedCompile getProjectArtifact('emaas-platform-tenant-sdk')
 	providedCompile getProjectArtifact('enunciate-core')
 	
