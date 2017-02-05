@@ -148,13 +148,13 @@ public class SavedSearchCategoryParamRowEntityTest {
         savedSearchSchemaVerRowEntity.toString();
     }
 
-    private SavedSearchSearchParamRowEntity savedSearchSearchParamRowEntity = new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null);
+    private SavedSearchSearchParamRowEntity savedSearchSearchParamRowEntity = new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null,0);
     @Test
     public void testSavedSearchSearchParamRowEntity(){
         savedSearchSearchParamRowEntity.equals(null);
         savedSearchSearchParamRowEntity.equals(new Object());
         savedSearchSearchParamRowEntity.equals(savedSearchSearchParamRowEntity);
-        savedSearchSearchParamRowEntity.equals( new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null));
+        savedSearchSearchParamRowEntity.equals( new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null,0));
         savedSearchSearchParamRowEntity.setLastModificationDate(null);
         savedSearchSearchParamRowEntity.setCreationDate(null);
         savedSearchSearchParamRowEntity.setName(null);
@@ -192,14 +192,10 @@ public class SavedSearchCategoryParamRowEntityTest {
                 null, null, null, null, null, null, null, null, null, null, null, null, null));
         savedSearchSearchRowEntity.setSearchId(null);
         savedSearchSearchRowEntity.setDescription(null);
-        savedSearchSearchRowEntity.setDescriptionNlsid(null);
-        savedSearchSearchRowEntity.setDescriptionSubsystem(null);
-        savedSearchSearchRowEntity.setEmPluginId(null);
+       
         savedSearchSearchRowEntity.setIsLocked(null);
         savedSearchSearchRowEntity.setMetadataClob(null);
         savedSearchSearchRowEntity.setName(null);
-        savedSearchSearchRowEntity.setNameNlsid(null);
-        savedSearchSearchRowEntity.setNameSubsystem(null);
         savedSearchSearchRowEntity.setOwner(null);
         savedSearchSearchRowEntity.setSearchDisplayStr(null);
         savedSearchSearchRowEntity.setSystemSearch(null);
@@ -229,14 +225,9 @@ public class SavedSearchCategoryParamRowEntityTest {
         savedSearchSearchRowEntity.setLastModifiedBy(null);
         savedSearchSearchRowEntity.getSearchId();
         savedSearchSearchRowEntity.getDescription();
-        savedSearchSearchRowEntity.getDescriptionNlsid();
-        savedSearchSearchRowEntity.getDescriptionSubsystem();
-        savedSearchSearchRowEntity.getEmPluginId();
         savedSearchSearchRowEntity.getIsLocked();
         savedSearchSearchRowEntity.getMetadataClob();
         savedSearchSearchRowEntity.getName();
-        savedSearchSearchRowEntity.getNameNlsid();
-        savedSearchSearchRowEntity.getNameSubsystem();
         savedSearchSearchRowEntity.getOwner();
         savedSearchSearchRowEntity.getSearchDisplayStr();
         savedSearchSearchRowEntity.getSystemSearch();

@@ -12,11 +12,11 @@ public class SSFSearchParamRowEntityTest {
 		SavedSearchSearchParamRowEntity entity1 = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
 				"paramAttributes", 1L, "paramValueClob",
 				"paramValueStr", 1L, "creationDate",
-				"lastModificationDate");
+				"lastModificationDate", 0);
 		SavedSearchSearchParamRowEntity entity2 = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
 				"paramAttributes", 1L, "paramValueClob",
 				"paramValueStr", 1L, "creationDate",
-				"lastModificationDate");
+				"lastModificationDate", 0);
 		entity1.setCreationDate("2016-07-22 08:23:32.517");
 		entity2.setCreationDate("2016-07-22 08:23:32.517");
 		Assert.assertEquals(entity1, entity2);
@@ -56,11 +56,11 @@ public class SSFSearchParamRowEntityTest {
 		SavedSearchSearchParamRowEntity entity1 = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
 				"paramAttributes", 1L, "paramValueClob",
 				"paramValueStr", 1L, "creationDate",
-				"lastModificationDate");
+				"lastModificationDate", 0);
 		SavedSearchSearchParamRowEntity entity2 = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
 				"paramAttributes", 1L, "paramValueClob",
 				"paramValueStr", 1L, "creationDate",
-				"lastModificationDate");
+				"lastModificationDate", 0);
 		entity1.setCreationDate("2016-07-22 08:23:32.517");
 		entity2.setCreationDate("2016-07-22 08:23:32.517");
 		Assert.assertEquals(entity1.hashCode(), entity2.hashCode());

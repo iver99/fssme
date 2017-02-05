@@ -60,11 +60,11 @@ public class RowEntityTest {
 	SavedSearchSearchParamRowEntity searchParam = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
 			"paramAttributes", 1L, "paramValueClob",
 			"paramValueStr", 1L, "creationDate",
-			"lastModificationDate");
+			"lastModificationDate", 0);
 	SavedSearchSearchParamRowEntity searchParam2 = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
 			"paramAttributes", 1L, "paramValueClob",
 			"paramValueStr", 1L, "creationDate",
-			"lastModificationDate");
+			"lastModificationDate", 0);
 	SavedSearchSearchRowEntity searchEntity = new SavedSearchSearchRowEntity(new BigInteger("1"), "description",
 			"descriptionNlsid", "descriptionSubsystem",
 			"emPluginId", new Integer("1"), "lastModifiedBy",

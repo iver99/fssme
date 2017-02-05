@@ -46,6 +46,9 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
 	
+	@JsonProperty("DELETED")
+	private Integer deleted;
+	
 	
 
 	public SavedSearchSearchParamRowEntity() {
@@ -55,7 +58,7 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	public SavedSearchSearchParamRowEntity(BigInteger searchId, String name,
 			String paramAttributes, Long paramType, String paramValueClob,
 			String paramValueStr, Long tenantId, String creationDate,
-			String lastModificationDate) {
+			String lastModificationDate, Integer deleted) {
 		super();
 		this.searchId = searchId;
 		this.name = name;
@@ -66,6 +69,7 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 		this.tenantId = tenantId;
 		this.creationDate = creationDate;
 		this.lastModificationDate = lastModificationDate;
+		this.deleted = deleted;
 	}
 
 	/* (non-Javadoc)
@@ -173,6 +177,16 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	public String getName()
 	{
 		return name;
+	}
+	
+	
+
+	public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
 	}
 
 	/**

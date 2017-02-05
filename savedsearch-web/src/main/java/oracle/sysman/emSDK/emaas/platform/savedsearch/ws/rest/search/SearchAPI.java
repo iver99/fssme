@@ -692,7 +692,7 @@ public class SearchAPI
 	}
 	
 	@PUT
-	@Path("import")
+	@Path("/import")
 	public Response importData(JSONObject importedData) {
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import");
 		ImportRowEntity rowEntity = null;

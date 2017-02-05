@@ -26,15 +26,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	@JsonProperty("DESCRIPTION")
 	private String description;
 
-	@JsonProperty("DESCRIPTION_NLSID")
-	private String descriptionNlsid;
-
-	@JsonProperty("DESCRIPTION_SUBSYSTEM")
-	private String descriptionSubsystem;
-
-	@JsonProperty("EM_PLUGIN_ID")
-	private String emPluginId;
-
 	@JsonProperty("IS_LOCKED")
 	private Integer isLocked;
 
@@ -45,24 +36,15 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private String metadataClob;
 
 	@JsonProperty("NAME")
-	private String name;
-
-	@JsonProperty("NAME_NLSID")
-	private String nameNlsid;
-
-	@JsonProperty("NAME_SUBSYSTEM")
-	private String nameSubsystem;
+	private String name;	
 
 	@JsonProperty("OWNER")
 	private String owner;
 
 	@JsonProperty("SEARCH_DISPLAY_STR")
 	private String searchDisplayStr;
-	/**
-	 * This column is useless, do not need to compare it.
-	 */
-	//	@JsonProperty("SEARCH_GUID")
-	@JsonIgnore
+	
+	@JsonProperty("SEARCH_GUID")
 	private String searchGuid;
 
 	@JsonProperty("SYSTEM_SEARCH")
@@ -83,7 +65,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
 
-	@JsonProperty("NAME_WIDGET_SOURCE")
+	@JsonProperty("WIDGET_SOURCE")
 	private String nameWidgetSource;
 
 	@JsonProperty("WIDGET_GROUP_NAME")
@@ -162,15 +144,10 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		super();
 		this.searchId = searchId;
 		this.description = description;
-		this.descriptionNlsid = descriptionNlsid;
-		this.descriptionSubsystem = descriptionSubsystem;
-		this.emPluginId = emPluginId;
 		this.isLocked = isLocked;
 		this.lastModifiedBy = lastModifiedBy;
 		this.metadataClob = metadataClob;
 		this.name = name;
-		this.nameNlsid = nameNlsid;
-		this.nameSubsystem = nameSubsystem;
 		this.owner = owner;
 		this.searchDisplayStr = searchDisplayStr;
 		this.searchGuid = searchGuid;
@@ -198,6 +175,14 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		this.providerName = providerName;
 		this.providerVersion = providerVersion;
 		this.providerAssetRoot = providerAssetRoot;
+	}
+
+	public String getSearchGuid() {
+		return searchGuid;
+	}
+
+	public void setSearchGuid(String searchGuid) {
+		this.searchGuid = searchGuid;
 	}
 
 	/* (non-Javadoc)
@@ -248,30 +233,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		else if (!description.equals(other.description)) {
 			return false;
 		}
-		if (descriptionNlsid == null) {
-			if (other.descriptionNlsid != null) {
-				return false;
-			}
-		}
-		else if (!descriptionNlsid.equals(other.descriptionNlsid)) {
-			return false;
-		}
-		if (descriptionSubsystem == null) {
-			if (other.descriptionSubsystem != null) {
-				return false;
-			}
-		}
-		else if (!descriptionSubsystem.equals(other.descriptionSubsystem)) {
-			return false;
-		}
-		if (emPluginId == null) {
-			if (other.emPluginId != null) {
-				return false;
-			}
-		}
-		else if (!emPluginId.equals(other.emPluginId)) {
-			return false;
-		}
+		
 		if (isLocked == null) {
 			if (other.isLocked != null) {
 				return false;
@@ -320,22 +282,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		else if (!name.equals(other.name)) {
 			return false;
 		}
-		if (nameNlsid == null) {
-			if (other.nameNlsid != null) {
-				return false;
-			}
-		}
-		else if (!nameNlsid.equals(other.nameNlsid)) {
-			return false;
-		}
-		if (nameSubsystem == null) {
-			if (other.nameSubsystem != null) {
-				return false;
-			}
-		}
-		else if (!nameSubsystem.equals(other.nameSubsystem)) {
-			return false;
-		}
+	
 		if (nameWidgetSource == null) {
 			if (other.nameWidgetSource != null) {
 				return false;
@@ -517,30 +464,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
-	 * @return the descriptionNlsid
-	 */
-	public String getDescriptionNlsid()
-	{
-		return descriptionNlsid;
-	}
-
-	/**
-	 * @return the descriptionSubsystem
-	 */
-	public String getDescriptionSubsystem()
-	{
-		return descriptionSubsystem;
-	}
-
-	/**
-	 * @return the emPluginId
-	 */
-	public String getEmPluginId()
-	{
-		return emPluginId;
-	}
-
-	/**
 	 * @return the folderId
 	 */
 	public BigInteger getFolderId()
@@ -594,22 +517,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	public String getName()
 	{
 		return name;
-	}
-
-	/**
-	 * @return the nameNlsid
-	 */
-	public String getNameNlsid()
-	{
-		return nameNlsid;
-	}
-
-	/**
-	 * @return the nameSubsystem
-	 */
-	public String getNameSubsystem()
-	{
-		return nameSubsystem;
 	}
 
 	/**
@@ -784,17 +691,12 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		result = prime * result + (dashboardIneligible == null ? 0 : dashboardIneligible.hashCode());
 		result = prime * result + (deleted == null ? 0 : deleted.hashCode());
 		result = prime * result + (description == null ? 0 : description.hashCode());
-		result = prime * result + (descriptionNlsid == null ? 0 : descriptionNlsid.hashCode());
-		result = prime * result + (descriptionSubsystem == null ? 0 : descriptionSubsystem.hashCode());
-		result = prime * result + (emPluginId == null ? 0 : emPluginId.hashCode());
 		result = prime * result + (isLocked == null ? 0 : isLocked.hashCode());
 		result = prime * result + (isWidget == null ? 0 : isWidget.hashCode());
 		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
 		result = prime * result + (lastModifiedBy == null ? 0 : lastModifiedBy.hashCode());
 		result = prime * result + (metadataClob == null ? 0 : metadataClob.hashCode());
 		result = prime * result + (name == null ? 0 : name.hashCode());
-		result = prime * result + (nameNlsid == null ? 0 : nameNlsid.hashCode());
-		result = prime * result + (nameSubsystem == null ? 0 : nameSubsystem.hashCode());
 		result = prime * result + (nameWidgetSource == null ? 0 : nameWidgetSource.hashCode());
 		result = prime * result + (owner == null ? 0 : owner.hashCode());
 		result = prime * result + (searchDisplayStr == null ? 0 : searchDisplayStr.hashCode());
@@ -861,33 +763,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
-	 * @param descriptionNlsid
-	 *            the descriptionNlsid to set
-	 */
-	public void setDescriptionNlsid(String descriptionNlsid)
-	{
-		this.descriptionNlsid = descriptionNlsid;
-	}
-
-	/**
-	 * @param descriptionSubsystem
-	 *            the descriptionSubsystem to set
-	 */
-	public void setDescriptionSubsystem(String descriptionSubsystem)
-	{
-		this.descriptionSubsystem = descriptionSubsystem;
-	}
-
-	/**
-	 * @param emPluginId
-	 *            the emPluginId to set
-	 */
-	public void setEmPluginId(String emPluginId)
-	{
-		this.emPluginId = emPluginId;
-	}
-
-	/**
 	 * @param folderId
 	 *            the folderId to set
 	 */
@@ -948,24 +823,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	/**
-	 * @param nameNlsid
-	 *            the nameNlsid to set
-	 */
-	public void setNameNlsid(String nameNlsid)
-	{
-		this.nameNlsid = nameNlsid;
-	}
-
-	/**
-	 * @param nameSubsystem
-	 *            the nameSubsystem to set
-	 */
-	public void setNameSubsystem(String nameSubsystem)
-	{
-		this.nameSubsystem = nameSubsystem;
 	}
 
 	/**
@@ -1154,10 +1011,9 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	@Override
 	public String toString()
 	{
-		return "SavedSearchSearchRowEntity [searchId=" + searchId + ", description=" + description + ", descriptionNlsid="
-				+ descriptionNlsid + ", descriptionSubsystem=" + descriptionSubsystem + ", emPluginId=" + emPluginId
+		return "SavedSearchSearchRowEntity [searchId=" + searchId + ", description=" + description
 				+ ", isLocked=" + isLocked + ", lastModifiedBy=" + lastModifiedBy + ", metadataClob=" + metadataClob + ", name="
-				+ name + ", nameNlsid=" + nameNlsid + ", nameSubsystem=" + nameSubsystem + ", owner=" + owner
+				+ name  + ", owner=" + owner
 				+ ", searchDisplayStr=" + searchDisplayStr + ", systemSearch=" + systemSearch + ", uiHidden=" + uiHidden
 				+ ", deleted=" + deleted + ", isWidget=" + isWidget + ", creationDate=" + creationDate
 				+ ", lastModificationDate=" + lastModificationDate + ", nameWidgetSource=" + nameWidgetSource

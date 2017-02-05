@@ -41,7 +41,7 @@ public class ZDTSynchronizerTest {
 		List<SavedSearchSchemaVerRowEntity> savedSearchSchemaVer = new ArrayList<SavedSearchSchemaVerRowEntity>();
 		savedSearchSchemaVer.add(new SavedSearchSchemaVerRowEntity(null, null, null, null));
 		List<SavedSearchSearchParamRowEntity> savedSearchSearchParams = new ArrayList<SavedSearchSearchParamRowEntity>();
-		savedSearchSearchParams.add(new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null));
+		savedSearchSearchParams.add(new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null,0));
 		List<SavedSearchSearchRowEntity> savedSearchSearch = new ArrayList<SavedSearchSearchRowEntity>();
 		savedSearchSearch.add(new SavedSearchSearchRowEntity(null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
@@ -59,7 +59,7 @@ public class ZDTSynchronizerTest {
 				dm.syncFolderTable((BigInteger) any, anyString, (BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString,
 						anyString, anyString, anyString, anyInt, anyString, anyInt, (BigInteger) any, anyLong);
 				dm.syncSearchTable((BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString, (BigInteger) any, 
-						(BigInteger) any, anyString, anyString, anyString, anyString, anyInt, anyString, anyInt, anyString, anyString, 
+						(BigInteger) any, anyInt, anyInt, anyString, anyString, 
 						anyInt, (BigInteger) any, anyInt, anyLong, anyString, anyString, anyString, anyString, anyString, anyString, anyString, 
 						anyString, anyLong, anyLong, anyLong, anyString, anyString, anyString, anyString);
 				dm.syncSearchParamsTable((BigInteger) any, anyString, anyString, anyLong, anyString, anyString, anyLong, anyString, anyString);

@@ -118,8 +118,7 @@ public class ZDTSynchronizer
 		for (SavedSearchSearchRowEntity e : rows) {
 			DataManager.getInstance().syncSearchTable(e.getSearchId()/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
 					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId(),
-					e.getCategoryId(), e.getNameNlsid(), e.getNameSubsystem(), e.getDescriptionNlsid(),
-					e.getDescriptionSubsystem(), e.getSystemSearch(), e.getEmPluginId(), e.getIsLocked(), e.getMetadataClob(),
+					e.getCategoryId(), e.getSystemSearch(), e.getIsLocked(), e.getMetadataClob(),
 					e.getSearchDisplayStr(), e.getUiHidden(), e.getDeleted(), e.getIsWidget(), e.getTenantId(),
 					e.getNameWidgetSource(), e.getWidgetGroupName(), e.getWidgetScreenshotHref(), e.getWidgetIcon(),
 					e.getWidgetKocName(), e.getWidgetViewModel(), e.getWidgetTemplate(), e.getWidgetSupportTimeControl(),

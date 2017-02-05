@@ -495,8 +495,7 @@ public class DataManager
 
 	public void syncSearchTable(BigInteger searchId/*, String searchGuid*/, String name, String owner, String creationDate,
 			String lastModificationDate, String lastModifiedBy, String description, BigInteger folderId, BigInteger categoryId,
-			String nameNlsid, String nameSubsystem, String descriptionNlsid, String descriptionSubsystem, Integer systemSearch,
-			String emPluginId, Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
+			Integer systemSearch,Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
 			Integer isWidget, Long tenantId, String nameWidgetSource, String widgetGroupName, String widgetScreenshotHref,
 			String widgetIcon, String widgetKocName, String viewModel, String widgetTemplate, String widgetSupportTimeControl,
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
@@ -522,9 +521,7 @@ public class DataManager
 				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, null).setParameter(3, name)
 				.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
 				.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
-				.setParameter(10, categoryId).setParameter(11, nameNlsid).setParameter(12, nameSubsystem)
-				.setParameter(13, descriptionNlsid).setParameter(14, descriptionSubsystem).setParameter(15, systemSearch)
-				.setParameter(16, emPluginId).setParameter(17, isLocked).setParameter(18, metaDataClob)
+				.setParameter(10, categoryId).setParameter(15, systemSearch).setParameter(17, isLocked).setParameter(18, metaDataClob)
 				.setParameter(19, searchDisplayStr).setParameter(20, uiHidden).setParameter(21, deleted)
 				.setParameter(22, isWidget).setParameter(23, tenantId).setParameter(24, nameWidgetSource)
 				.setParameter(25, widgetGroupName).setParameter(26, widgetScreenshotHref).setParameter(27, widgetIcon)
@@ -546,9 +543,7 @@ public class DataManager
 					em.createNativeQuery(SQL_UPDATE_SEARCH).setParameter(1, null).setParameter(2, name).setParameter(3, owner)
 							.setParameter(4, creationDate).setParameter(5, lastModificationDate).setParameter(6, lastModifiedBy)
 							.setParameter(7, description).setParameter(8, folderId).setParameter(9, categoryId)
-							.setParameter(10, nameNlsid).setParameter(11, nameSubsystem).setParameter(12, descriptionNlsid)
-							.setParameter(13, descriptionSubsystem).setParameter(14, systemSearch).setParameter(15, emPluginId)
-							.setParameter(16, isLocked).setParameter(17, metaDataClob).setParameter(18, searchDisplayStr)
+							.setParameter(14, systemSearch).setParameter(16, isLocked).setParameter(17, metaDataClob).setParameter(18, searchDisplayStr)
 							.setParameter(19, uiHidden).setParameter(20, deleted).setParameter(21, isWidget)
 							.setParameter(22, nameWidgetSource).setParameter(23, widgetGroupName)
 							.setParameter(24, widgetScreenshotHref).setParameter(25, widgetIcon).setParameter(26, widgetKocName)

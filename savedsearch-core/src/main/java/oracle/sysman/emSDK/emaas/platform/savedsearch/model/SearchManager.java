@@ -230,14 +230,13 @@ public abstract class SearchManager
 	
 	public abstract void saveSearchData(BigInteger searchId, String name, String owner, String creationDate,
 			String lastModificationDate, String lastModifiedBy, String description, BigInteger folderId, BigInteger categoryId,
-			String nameNlsid, String nameSubsystem, String descriptionNlsid, String descriptionSubsystem, Integer systemSearch,
-			String emPluginId, Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
+			Integer systemSearch,Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
 			Integer isWidget, Long tenantId, String nameWidgetSource, String widgetGroupName, String widgetScreenshotHref,
 			String widgetIcon, String widgetKocName, String viewModel, String widgetTemplate, String widgetSupportTimeControl,
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot);
 	
 	public abstract void saveSearchParamData(BigInteger searchId, String name, String paramAttributes, Long paramType,
-			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate);
+			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate, Integer deleted);
 	
 }

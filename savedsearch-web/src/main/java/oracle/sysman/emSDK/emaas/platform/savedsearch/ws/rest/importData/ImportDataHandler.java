@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importData;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
@@ -36,7 +37,7 @@ public class ImportDataHandler {
 		for (SavedSearchSearchParamRowEntity e : rows) {
 			searchManager.saveSearchParamData(e.getSearchId(), e.getName(), e.getParamAttributes(),
 					e.getParamType(), e.getParamValueStr(), e.getParamValueClob(), e.getTenantId(), e.getCreationDate(),
-					e.getLastModificationDate());
+					e.getLastModificationDate(),e.getDeleted());
 		}
 		LOGGER.debug("Finished to save table EMS_ANALYTICS__SEARCH_PARAMS table");
 	}
@@ -52,8 +53,7 @@ public class ImportDataHandler {
 		for (SavedSearchSearchRowEntity e : rows) {
 			searchManager.saveSearchData(e.getSearchId(), e.getName(), e.getOwner(),
 					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId(),
-					e.getCategoryId(), e.getNameNlsid(), e.getNameSubsystem(), e.getDescriptionNlsid(),
-					e.getDescriptionSubsystem(), e.getSystemSearch(), e.getEmPluginId(), e.getIsLocked(), e.getMetadataClob(),
+					e.getCategoryId(),e.getSystemSearch(),e.getIsLocked(), e.getMetadataClob(),
 					e.getSearchDisplayStr(), e.getUiHidden(), e.getDeleted(), e.getIsWidget(), e.getTenantId(),
 					e.getNameWidgetSource(), e.getWidgetGroupName(), e.getWidgetScreenshotHref(), e.getWidgetIcon(),
 					e.getWidgetKocName(), e.getWidgetViewModel(), e.getWidgetTemplate(), e.getWidgetSupportTimeControl(),
@@ -61,6 +61,7 @@ public class ImportDataHandler {
 					e.getDashboardIneligible(), e.getProviderName(), e.getProviderVersion(), e.getProviderAssetRoot());
 
 		}
+		
 		LOGGER.debug("Finished to save table EMS_ANALYTICS__SEARCH table");
 	}
 
