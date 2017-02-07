@@ -11,7 +11,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
 import java.util.Date;
-import java.math.BigInteger;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
@@ -21,7 +20,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
  */
 public class WidgetNotifyEntity
 {
-	private BigInteger uniqueId;
+	private String uniqueId;
 	private String name;
 	private WidgetNotificationType type;
 	private Date notifyTime;
@@ -40,7 +39,7 @@ public class WidgetNotifyEntity
 		if (search == null) {
 			return;
 		}
-		uniqueId = search.getId();
+		uniqueId = search.getId() == null ? null : search.getId().toString();
 		name = search.getName();
 		this.notifyTime = notifyTime;
 		this.type = type;
@@ -51,7 +50,7 @@ public class WidgetNotifyEntity
 		if (eas == null) {
 			return;
 		}
-		uniqueId = eas.getId();
+		uniqueId = eas.getId() == null ? null : eas.getId().toString();
 		name = eas.getName();
 		this.notifyTime = notifyTime;
 		this.type = type;
@@ -81,7 +80,7 @@ public class WidgetNotifyEntity
 	/**
 	 * @return the uniqueId
 	 */
-	public BigInteger getUniqueId()
+	public String getUniqueId()
 	{
 		return uniqueId;
 	}
@@ -113,7 +112,7 @@ public class WidgetNotifyEntity
 	 * @param uniqueId
 	 *            the uniqueId to set
 	 */
-	public void setUniqueId(BigInteger uniqueId)
+	public void setUniqueId(String uniqueId)
 	{
 		this.uniqueId = uniqueId;
 	}

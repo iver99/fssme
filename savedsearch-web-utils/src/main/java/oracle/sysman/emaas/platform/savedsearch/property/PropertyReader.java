@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.savedsearch.property;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,6 +14,7 @@ public class PropertyReader
 	private PropertyReader() {
 	}
 
+	private static final Logger LOGGER = LogManager.getLogger(PropertyReader.class);
 	private static final boolean RUNNING_IN_CONTAINER = getRunningInContainer();
 	public static final String CONFIG_DIR = "/opt/ORCLemaas/Applications/SavedSearchService/init/";//getInstallDir() + "config";
 
@@ -27,7 +31,7 @@ public class PropertyReader
 
 		}
 		catch (IOException ex) {
-			ex.printStackTrace();
+			LOGGER.error(ex.getLocalizedMessage());
 		}
 		finally {
 			if (input != null) {
@@ -35,7 +39,7 @@ public class PropertyReader
 					input.close();
 				}
 				catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.error(e.getLocalizedMessage());
 				}
 			}
 		}

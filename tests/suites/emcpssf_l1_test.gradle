@@ -73,14 +73,7 @@ dependencies {
   	testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
   	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
         testConfig(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-
-
-
-
-
-
-
-	 testConfig(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
+	 testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name: 'emaas-platform-tenant-sdk', version: '2.0.+') {
       exclude group: 'emaas.platform', module: 'registry-lookup-client'
       exclude group: 'emaas.platform', module: 'registry-client'
   
@@ -137,7 +130,7 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/S
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchRowEntityTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/ZDTTableRowEntityTest.class"
 
-
+/*
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedSearchComparatorCORSFilterTest.class"
 include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/services/ZDTAPITest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/property/PropertyReaderTest.class"
@@ -157,7 +150,7 @@ include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/management
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/CountsEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFFolderRowEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedsearchComparatorApplicationTest.class"
-
+*/
 
         useRestAssured=true
 ext.set("testType", "integration")

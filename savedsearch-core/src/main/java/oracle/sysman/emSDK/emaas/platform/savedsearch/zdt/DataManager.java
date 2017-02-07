@@ -128,7 +128,6 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occured when get all category count!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -297,11 +296,9 @@ public class DataManager
 		}
 		catch (ParseException e) {
 			logger.error("Error occurred when parse LastModificationDate!");
-			e.printStackTrace();
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync Category param table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -361,11 +358,9 @@ public class DataManager
 		}
 		catch (ParseException e) {
 			logger.error("Error occurred when parse LastModificationDate!");
-			e.printStackTrace();
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync Category table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -423,11 +418,9 @@ public class DataManager
 		}
 		catch (ParseException e) {
 			logger.error("Error occurred when parse LastModificationDate!");
-			e.printStackTrace();
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync folders table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -481,11 +474,9 @@ public class DataManager
 		}
 		catch (ParseException e) {
 			logger.error("Error occurred when parse LastModificationDate!");
-			e.printStackTrace();
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync search param table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -560,7 +551,6 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync search table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -624,7 +614,6 @@ public class DataManager
 				throw new Exception("LastModificationDate in DB or Sync data should not be empty!");
 			}
 			catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 		logger.debug("Before formation,syncLastmodificationDate is " + syncLastModificationDate);
@@ -670,7 +659,6 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occured when execute SQL:[" + nativeSql + "]");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
