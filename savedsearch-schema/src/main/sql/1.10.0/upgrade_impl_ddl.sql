@@ -17,14 +17,6 @@ BEGIN
 			DBMS_OUTPUT.PUT_LINE('Schema object: EMS_ANALYTICS_SEARCH.WIDGET_SOURCE exists already, no change is needed');
 		END IF;
 		
-		--delete incorrected column 'NAME_WIDGET_SOURCE'
-		SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_ANALYTICS_SEARCH' AND column_name='NAME_WIDGET_SOURCE';
-		IF v_count>0 THEN
-			DBMS_OUTPUT.PUT_LINE('Schema object: DELETING COLUMN:NAME_WIDGET_SOURCE IN EMS_ANALYTICS_SEARCH TABLE');
-			EXECUTE IMMEDIATE 'ALTER TABLE EMS_ANALYTICS_SEARCH DROP COLUMN NAME_WIDGET_SOURCE';
-		ELSE
-			DBMS_OUTPUT.PUT_LINE('Schema object: EMS_ANALYTICS_SEARCH.NAME_WIDGET_SOURCE is not exists, no deletion is needed');
-		END IF;
 	EXCEPTION
 	  WHEN OTHERS THEN
 		ROLLBACK;

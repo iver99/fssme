@@ -48,8 +48,6 @@ DECLARE
 	  DBMS_OUTPUT.PUT_LINE('INSERING OOB searches for &TENANT_ID ');
     END;
 /
-@&EMSAAS_SQL_ROOT/1.10.0/emaas_insert_column.sql
-@&EMSAAS_SQL_ROOT/1.12.0/emaas_savesearch_add_column.sql
 
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_savesearch_seed_data_la.sql  &TENANT_ID
@@ -120,14 +118,12 @@ COMMIT;
 @&EMSAAS_SQL_ROOT/1.9.1/emaas_savesearch_seed_data_ocs.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.9.1/emaas_savesearch_seed_data_ui_gallery.sql  &TENANT_ID
 
-@&EMSAAS_SQL_ROOT/1.10.0/emaas_drop_column.sql
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_savesearch_seed_data_la.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_savesearch_seed_data.sql  &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_seed_data_ta.sql  &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.11.0/emaas_savesearch_seed_data_ocs.sql  &TENANT_ID
-@&EMSAAS_SQL_ROOT/1.12.0/emaas_savesearch_drop_column.sql
 @&EMSAAS_SQL_ROOT/1.12.0/emaas_savesearch_seed_data_ude.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.13.0/emaas_savesearch_seed_data.sql &TENANT_ID
@@ -139,6 +135,11 @@ COMMIT;
 @&EMSAAS_SQL_ROOT/1.15.0/emaas_savedsearch_cos_widget_update.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.15.0/emaas_savedsearch_seed_data_cos.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.15.0/emaas_savedsearch_seed_data_la.sql &TENANT_ID
+
+/**
+--PLEASE READ!! 
+--NO DDL IS ALLOWED in this file!! See EMCPDF-3333/EMCPSSF-465
+**/
 
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Inserting OOB searches for &TENANT_ID is completed');
