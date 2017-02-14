@@ -21,7 +21,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchSearchRowEntity implements RowEntity
 {
 	@JsonProperty("SEARCH_ID")
-	private BigInteger searchId;
+	private String searchId;
 
 	@JsonProperty("DESCRIPTION")
 	private String description;
@@ -54,7 +54,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private Integer uiHidden;
 
 	@JsonProperty("DELETED")
-	private BigInteger deleted;
+	private String deleted;
 
 	@JsonProperty("IS_WIDGET")
 	private Integer isWidget;
@@ -105,10 +105,10 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private Long tenantId;
 
 	@JsonProperty("FOLDER_ID")
-	private BigInteger folderId;
+	private String folderId;
 
 	@JsonProperty("CATEGORY_ID")
-	private BigInteger categoryId;
+	private String categoryId;
 
 	@JsonProperty("PROVIDER_NAME")
 	private String providerName;
@@ -125,20 +125,20 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		super();
 	}
 
-	public SavedSearchSearchRowEntity(BigInteger searchId, String description,
+	public SavedSearchSearchRowEntity(String searchId, String description,
 			String descriptionNlsid, String descriptionSubsystem,
 			String emPluginId, Integer isLocked, String lastModifiedBy,
 			String metadataClob, String name, String nameNlsid,
 			String nameSubsystem, String owner, String searchDisplayStr,
 			String searchGuid, Integer systemSearch, Integer uiHidden,
-			BigInteger deleted, Integer isWidget, String creationDate,
+			String deleted, Integer isWidget, String creationDate,
 			String lastModificationDate, String nameWidgetSource,
 			String widgetGroupName, String widgetScreenshotHref,
 			String widgetIcon, String widgetKocName, String widgetViewModel,
 			String widgetTemplate, String widgetSupportTimeControl,
 			Long widgetLinkedDashboard, Long widgetDefaulWidth,
 			Long widgetDefaultHeight, String dashboardIneligible,
-			Long tenantId, BigInteger folderId, BigInteger categoryId,
+			Long tenantId, String folderId, String categoryId,
 			String providerName, String providerVersion,
 			String providerAssetRoot) {
 		super();
@@ -426,7 +426,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the categoryId
 	 */
-	public BigInteger getCategoryId()
+	public String getCategoryId()
 	{
 		return categoryId;
 	}
@@ -450,7 +450,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public BigInteger getDeleted()
+	public String getDeleted()
 	{
 		return deleted;
 	}
@@ -466,7 +466,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the folderId
 	 */
-	public BigInteger getFolderId()
+	public String getFolderId()
 	{
 		return folderId;
 	}
@@ -570,7 +570,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the searchId
 	 */
-	public BigInteger getSearchId()
+	public String getSearchId()
 	{
 		return searchId;
 	}
@@ -721,7 +721,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param categoryId
 	 *            the categoryId to set
 	 */
-	public void setCategoryId(BigInteger categoryId)
+	public void setCategoryId(String categoryId)
 	{
 		this.categoryId = categoryId;
 	}
@@ -748,7 +748,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(BigInteger deleted)
+	public void setDeleted(String deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -766,7 +766,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param folderId
 	 *            the folderId to set
 	 */
-	public void setFolderId(BigInteger folderId)
+	public void setFolderId(String folderId)
 	{
 		this.folderId = folderId;
 	}
@@ -883,7 +883,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param searchId
 	 *            the searchId to set
 	 */
-	public void setSearchId(BigInteger searchId)
+	public void setSearchId(String searchId)
 	{
 		this.searchId = searchId;
 	}
