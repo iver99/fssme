@@ -494,7 +494,7 @@ public class DataManager
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
 				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
-				+ "(t.name = ? and folder_id = ? and category_id=? and deleted = ? ";//check if the data is existing.
+				+ "(t.name = ? and folder_id = ? and category_id=? and deleted = ? )";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
 		if (!em.getTransaction().isActive()) {
