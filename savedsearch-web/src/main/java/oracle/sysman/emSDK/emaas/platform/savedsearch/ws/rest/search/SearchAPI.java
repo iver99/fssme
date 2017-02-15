@@ -695,6 +695,8 @@ public class SearchAPI
 	
 	@PUT
 	@Path("/import")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response importData(JSONObject importedData) {
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import");
 		Long tenantId = TenantContext.getContext().getTenantInternalId();

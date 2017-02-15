@@ -101,7 +101,7 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH_PARAMS table");
 		for (SavedSearchSearchParamRowEntity e : rows) {
-			DataManager.getInstance().syncSearchParamsTable(new BigInteger(e.getSearchId()), e.getName(), e.getParamAttributes(),
+			DataManager.getInstance().syncSearchParamsTable(e.getSearchId() == null? null:new BigInteger(e.getSearchId()), e.getName(), e.getParamAttributes(),
 					e.getParamType(), e.getParamValueStr(), e.getParamValueClob(), e.getTenantId(), e.getCreationDate(),
 					e.getLastModificationDate());
 		}
@@ -117,10 +117,10 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
 		for (SavedSearchSearchRowEntity e : rows) {
-			DataManager.getInstance().syncSearchTable(new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
-					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), new BigInteger(e.getFolderId()),
-					new BigInteger(e.getCategoryId()), e.getSystemSearch(), e.getIsLocked(), e.getMetadataClob(),
-					e.getSearchDisplayStr(), e.getUiHidden(), new BigInteger(e.getDeleted()), e.getIsWidget(), e.getTenantId(),
+			DataManager.getInstance().syncSearchTable(e.getSearchId() == null? null:new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
+					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId() == null? null:new BigInteger(e.getFolderId()),
+					e.getCategoryId() == null? null:new BigInteger(e.getCategoryId()), e.getSystemSearch(), e.getIsLocked(), e.getMetadataClob(),
+					e.getSearchDisplayStr(), e.getUiHidden(), e.getDeleted() == null? null:new BigInteger(e.getDeleted()), e.getIsWidget(), e.getTenantId(),
 					e.getNameWidgetSource(), e.getWidgetGroupName(), e.getWidgetScreenshotHref(), e.getWidgetIcon(),
 					e.getWidgetKocName(), e.getWidgetViewModel(), e.getWidgetTemplate(), e.getWidgetSupportTimeControl(),
 					e.getWidgetLinkedDashboard(), e.getWidgetDefaulWidth(), e.getWidgetDefaultHeight(),

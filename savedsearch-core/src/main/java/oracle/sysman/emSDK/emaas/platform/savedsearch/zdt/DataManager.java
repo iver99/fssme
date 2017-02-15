@@ -492,13 +492,19 @@ public class DataManager
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
+				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
+				+ "(t.name = ? and folder_id = ? and category_id=? and deleted = ? ";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
-		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, tenantId)
+				.setParameter(3, name)
+				.setParameter(4, folderId)
+				.setParameter(5, categoryId)
+				.setParameter(6, deleted);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {

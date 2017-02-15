@@ -123,6 +123,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 
 	public SavedSearchSearchRowEntity() {
 		super();
+	
 	}
 
 	public SavedSearchSearchRowEntity(String searchId, String description,
