@@ -40,13 +40,6 @@ DECLARE
 	WHEN VALUE_ERROR THEN
 	 RAISE_APPLICATION_ERROR(-21000, ' Please  specify valid internale tenant id');
 	END;
-	
-       SELECT * INTO V_RootFolder FROM EMS_ANALYTICS_FOLDERS WHERE FOLDER_ID =1 AND TENANT_ID ='&TENANT_ID';
-       DBMS_OUTPUT.PUT_LINE('OOB searches for &TENANT_ID is already present');        
-       RAISE_APPLICATION_ERROR(-20000, ' OOB searches for &TENANT_ID is already present');
-    EXCEPTION	
-         WHEN NO_DATA_FOUND THEN
-	  DBMS_OUTPUT.PUT_LINE('INSERING OOB searches for &TENANT_ID ');
     END;
 /
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_insert_column.sql
