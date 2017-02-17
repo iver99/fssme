@@ -1277,11 +1277,11 @@ public class SearchManagerImpl extends SearchManager
 				param.setName(paramVORow.getName());
 				param.setType(ParameterType.fromIntValue(paramVORow.getParamType().intValue()));
 
+				if(!loadScreenshot && EntityJsonUtil.NAME_WIDGET_VISUAL.equals(param.getName())) continue;
 				if (ParameterType.STRING.equals(param.getType())) {
 					param.setValue(paramVORow.getParamValueStr());
 				}
-				else if (loadScreenshot && EntityJsonUtil.NAME_WIDGET_VISUAL.equals(param.getName())
-						&& ParameterType.CLOB.equals(param.getType())) {
+				else if (ParameterType.CLOB.equals(param.getType())) {
 					if (paramVORow.getParamValueClob() != null) {
 						char[] charArr = new char[paramVORow.getParamValueClob().length()];
 						Reader reader = new StringReader(new String(paramVORow.getParamValueClob()));

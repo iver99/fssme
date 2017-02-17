@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,7 @@ import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServ
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import org.codehaus.jackson.node.ArrayNode;
@@ -816,18 +818,19 @@ public class SearchAPI
 	@Path("/list")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearchList(JSONArray inputJsonArray)
+	public Response getSearchList(String inputIdList)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/list");
 		List<BigInteger> searchIdList = new ArrayList<BigInteger>();
 		try {
-			for(int i = 0; i < inputJsonArray.length(); i++) {
-				searchIdList.add(new BigInteger(inputJsonArray.getString(i)));
+			JsonNode inputJsonArray = new ObjectMapper().readTree(inputIdList);
+			for(Iterator<JsonNode> i = inputJsonArray.getElements(); i.hasNext(); ) {
+				searchIdList.add(new BigInteger(i.next().asText()));
 			}
+		} catch (IOException e) {
+			return Response.status(404).entity("search id list can be parsed").build();
 		} catch(NullPointerException npe) {
 			return Response.status(404).entity("search id list is empty").build();
-		} catch(JSONException je) {
-			return Response.status(404).entity("invalid search id in search id list").build();
 		} catch(NumberFormatException nfe) {
 			return Response.status(404).entity("invalid search id in search id list").build();
 		}
