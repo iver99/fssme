@@ -26,6 +26,8 @@ import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -993,11 +995,11 @@ public class SearchAPITest {
             }
         };
         Assert.assertEquals(api.getSearchList(null).getStatus(), 404);
-        JSONArray wrongJson = new JSONArray();
-        wrongJson.put("abc");
-        Assert.assertEquals(api.getSearchList(wrongJson).getStatus(), 404);
-    	JSONArray inputJson = new JSONArray();
-    	inputJson.put(1234L);
-        Assert.assertNotNull(api.getSearchList(inputJson));
+        ArrayNode wrongJson = new ObjectMapper().createArrayNode();
+        wrongJson.add("abc");
+        Assert.assertEquals(api.getSearchList(wrongJson.toString()).getStatus(), 404);
+        ArrayNode inputJson = new ObjectMapper().createArrayNode();
+        inputJson.add(1234L);
+        Assert.assertNotNull(api.getSearchList(inputJson.toString()));
     }
 }
