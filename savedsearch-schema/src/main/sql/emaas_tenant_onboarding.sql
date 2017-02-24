@@ -27,20 +27,17 @@ DEFINE  TENANT_ID = '&1'
 DEFINE EMSAAS_SQL_ROOT = '&2'
 
 DECLARE	
-      V_RootFolder EMS_ANALYTICS_FOLDERS%rowtype;
-       Valid_Input NUMBER;
-       BEGIN
--- If the root folder not present then insert the OOB serches , otherwise do nothing 
--- for given tenant.
-	BEGIN
-
-	Valid_Input := TO_NUMBER( &TENANT_ID);
+  V_RootFolder EMS_ANALYTICS_FOLDERS%rowtype;
+  Valid_Input NUMBER;
+--If the root folder not present then insert the OOB serches , otherwise do nothing 
+--for given tenant.
+  BEGIN
+    Valid_Input := TO_NUMBER( &TENANT_ID);
 
 	EXCEPTION 
 	WHEN VALUE_ERROR THEN
-	 RAISE_APPLICATION_ERROR(-21000, ' Please  specify valid internale tenant id');
-	END;
-    END;
+	  RAISE_APPLICATION_ERROR(-21000, ' Please  specify valid internale tenant id');
+  END;
 /
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_insert_column.sql
 @&EMSAAS_SQL_ROOT/1.12.0/emaas_savesearch_add_column.sql
