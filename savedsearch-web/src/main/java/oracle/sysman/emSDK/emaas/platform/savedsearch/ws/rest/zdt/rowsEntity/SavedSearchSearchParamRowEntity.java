@@ -20,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchSearchParamRowEntity implements RowEntity
 {
 	@JsonProperty("SEARCH_ID")
-	private BigInteger searchId;
+	private String searchId;
 
 	@JsonProperty("NAME")
 	private String name;
@@ -55,7 +55,7 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 		super();
 	}
 
-	public SavedSearchSearchParamRowEntity(BigInteger searchId, String name,
+	public SavedSearchSearchParamRowEntity(String searchId, String name,
 			String paramAttributes, Long paramType, String paramValueClob,
 			String paramValueStr, Long tenantId, String creationDate,
 			String lastModificationDate, Integer deleted) {
@@ -224,7 +224,7 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	/**
 	 * @return the searchId
 	 */
-	public BigInteger getSearchId()
+	public String getSearchId()
 	{
 		return searchId;
 	}
@@ -323,7 +323,7 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	 * @param searchId
 	 *            the searchId to set
 	 */
-	public void setSearchId(BigInteger searchId)
+	public void setSearchId(String searchId)
 	{
 		this.searchId = searchId;
 	}

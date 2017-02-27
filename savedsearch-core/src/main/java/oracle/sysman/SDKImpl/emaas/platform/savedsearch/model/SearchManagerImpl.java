@@ -1650,7 +1650,14 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public List<Map<String, Object>> getSearchDataByIds(List<BigInteger> ids, Long tenantId) {
 		if (ids != null && !ids.isEmpty()) {
-			String sql = "SELECT * FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID =" + tenantId + " AND SEARCH_ID IN ( " +
+			String sql = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
+			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,TO_CHAR(FOLDER_ID) AS FOLDER_ID, TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,"
+			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
+			+ "TO_CHAR(DELETED) AS DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
+			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
+			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
+			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE "
+			+ "FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID =" + tenantId + " AND SEARCH_ID IN ( " +
 					getQueryCondition(ids) + ")";
 			return getTableData(sql);
 		}
@@ -1661,7 +1668,9 @@ public class SearchManagerImpl extends SearchManager
 	public List<Map<String, Object>> getSearchParamsDataByIds(
 			List<BigInteger> ids, Long tenantId) {
 		if (ids != null && !ids.isEmpty()) {
-			String sql = "SELECT * FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE TENANT_ID =" + tenantId + " AND SEARCH_ID IN ( " +
+			String sql = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
+			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED"
+			+ " FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE TENANT_ID =" + tenantId + " AND SEARCH_ID IN ( " +
 					getQueryCondition(ids) + ")";
 			return getTableData(sql);
 		}
@@ -1683,13 +1692,19 @@ public class SearchManagerImpl extends SearchManager
 			String dashboardIneligible, String providerName,
 			String providerVersion, String providerAssetRoot) {
 
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
+				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
+				+ "(t.name = ? and folder_id = ? and category_id=? and deleted = ? )";//check if the data is existing.
 		EntityManager em = null;
 		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
-		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, tenantId)
+				.setParameter(3, name)
+				.setParameter(4, folderId)
+				.setParameter(5, categoryId)
+				.setParameter(6, deleted);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;
 		if (result != null && result.size() > 0) {

@@ -697,13 +697,16 @@ public class SearchAPI
 	
 	@PUT
 	@Path("/import")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response importData(JSONObject importedData) {
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import");
+		Long tenantId = TenantContext.getContext().getTenantInternalId();
 		ImportRowEntity rowEntity = null;
 		try {
 			rowEntity = JSONUtil.fromJson(new ObjectMapper(), importedData.toString(), ImportRowEntity.class);
 			ImportDataHandler handler = new ImportDataHandler();
-			handler.saveImportedData(rowEntity);
+			handler.saveImportedData(rowEntity, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		} catch (IOException e) {
 			LOGGER.error("can not get ImportRowEntity from JSONObject",e.getLocalizedMessage());
@@ -890,15 +893,13 @@ public class SearchAPI
 			}
 			List<Map<String,Object>> searchData = manager.getSearchDataByIds(searchIdList, tenantId);
 			JSONArray searchArray = getJSONArrayFromListOfObjects(SEARCH_TABLE_NAME,searchData);
-			if (searchArray != null) {
-				outputJsonObject.put(SEARCH_TABLE_NAME, searchArray);
-			}
+			outputJsonObject.put(SEARCH_TABLE_NAME, searchArray);
+			
 			
 			List<Map<String,Object>> searchParamsData = manager.getSearchParamsDataByIds(searchIdList, tenantId);
 			JSONArray searchParamsArray = getJSONArrayFromListOfObjects(SEARCH_PARAMS_TABLE_NAME,searchParamsData);
-			if (searchParamsArray != null) {
-				outputJsonObject.put(SEARCH_PARAMS_TABLE_NAME, searchParamsArray);
-			}
+			outputJsonObject.put(SEARCH_PARAMS_TABLE_NAME, searchParamsArray);
+			
 			
 		} catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());

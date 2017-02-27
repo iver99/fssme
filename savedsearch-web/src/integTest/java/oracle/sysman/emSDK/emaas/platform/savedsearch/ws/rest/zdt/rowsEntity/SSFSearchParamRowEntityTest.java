@@ -9,11 +9,11 @@ public class SSFSearchParamRowEntityTest {
 
 	@Test
 	public void testEquals() {
-		SavedSearchSearchParamRowEntity entity1 = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
+		SavedSearchSearchParamRowEntity entity1 = new SavedSearchSearchParamRowEntity("1","name",
 				"paramAttributes", 1L, "paramValueClob",
 				"paramValueStr", 1L, "creationDate",
 				"lastModificationDate", 0);
-		SavedSearchSearchParamRowEntity entity2 = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
+		SavedSearchSearchParamRowEntity entity2 = new SavedSearchSearchParamRowEntity("1","name",
 				"paramAttributes", 1L, "paramValueClob",
 				"paramValueStr", 1L, "creationDate",
 				"lastModificationDate", 0);
@@ -53,11 +53,11 @@ public class SSFSearchParamRowEntityTest {
 	
 	@Test
 	public void testHashcode() {
-		SavedSearchSearchParamRowEntity entity1 = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
+		SavedSearchSearchParamRowEntity entity1 = new SavedSearchSearchParamRowEntity("1","name",
 				"paramAttributes", 1L, "paramValueClob",
 				"paramValueStr", 1L, "creationDate",
 				"lastModificationDate", 0);
-		SavedSearchSearchParamRowEntity entity2 = new SavedSearchSearchParamRowEntity(new BigInteger("1"),"name",
+		SavedSearchSearchParamRowEntity entity2 = new SavedSearchSearchParamRowEntity("1","name",
 				"paramAttributes", 1L, "paramValueClob",
 				"paramValueStr", 1L, "creationDate",
 				"lastModificationDate", 0);
