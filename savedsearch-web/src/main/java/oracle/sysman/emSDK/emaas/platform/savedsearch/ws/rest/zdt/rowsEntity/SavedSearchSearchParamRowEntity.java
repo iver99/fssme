@@ -20,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchSearchParamRowEntity implements RowEntity
 {
 	@JsonProperty("SEARCH_ID")
-	private BigInteger searchId;
+	private String searchId;
 
 	@JsonProperty("NAME")
 	private String name;
@@ -45,6 +45,32 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
+	
+	@JsonProperty("DELETED")
+	private Integer deleted;
+	
+	
+
+	public SavedSearchSearchParamRowEntity() {
+		super();
+	}
+
+	public SavedSearchSearchParamRowEntity(String searchId, String name,
+			String paramAttributes, Long paramType, String paramValueClob,
+			String paramValueStr, Long tenantId, String creationDate,
+			String lastModificationDate, Integer deleted) {
+		super();
+		this.searchId = searchId;
+		this.name = name;
+		this.paramAttributes = paramAttributes;
+		this.paramType = paramType;
+		this.paramValueClob = paramValueClob;
+		this.paramValueStr = paramValueStr;
+		this.tenantId = tenantId;
+		this.creationDate = creationDate;
+		this.lastModificationDate = lastModificationDate;
+		this.deleted = deleted;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -152,6 +178,16 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	{
 		return name;
 	}
+	
+	
+
+	public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
+	}
 
 	/**
 	 * @return the paramAttributes
@@ -188,7 +224,7 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	/**
 	 * @return the searchId
 	 */
-	public BigInteger getSearchId()
+	public String getSearchId()
 	{
 		return searchId;
 	}
@@ -287,7 +323,7 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	 * @param searchId
 	 *            the searchId to set
 	 */
-	public void setSearchId(BigInteger searchId)
+	public void setSearchId(String searchId)
 	{
 		this.searchId = searchId;
 	}

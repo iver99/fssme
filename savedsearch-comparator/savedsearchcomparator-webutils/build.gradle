@@ -9,16 +9,17 @@ jar {
         }
 }
 
-
-
 test {
-	useTestNG()		
-	{
-		//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
-		//if you wish to run ALL tests within this projet - remove following.
-		includeGroups 's1' ,'s2'
-	}
+        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
+        useTestNG()
+        {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+        }
 }
+build.dependsOn integTestJar
+
 
 publishing.publications {
     integTest(MavenPublication) {
@@ -66,7 +67,7 @@ dependencies {
 	compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 } 
 
-build.dependsOn integTestJar
+
 
 sourceSets {
         test{

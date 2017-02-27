@@ -1259,10 +1259,10 @@ public class SearchesCRUD
 				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(ids)
 				.when().put("/search/list");
 		Assert.assertEquals(res3.getStatusCode(), 200);
-		List<String> resultList = res3.jsonPath().get();
+		List<String> resultList = res3.jsonPath().getList("id");
 		Assert.assertEquals(resultList.size(), 2);
-		Assert.assertTrue(resultList.get(0).contains(id1) || resultList.get(1).contains(id1));
-		Assert.assertTrue(resultList.get(0).contains(id2) || resultList.get(1).contains(id2));
+		Assert.assertTrue(resultList.get(0).equals(id1) || resultList.get(1).equals(id1));
+		Assert.assertTrue(resultList.get(0).equals(id2) || resultList.get(1).equals(id2));
 		
 		// clean the searches
 		Response res4 = RestAssured.given().contentType(ContentType.JSON).log()

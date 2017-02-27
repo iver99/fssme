@@ -30,6 +30,10 @@ public class SavedSearchSchemaVerRowEntity implements RowEntity
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
 
+	public SavedSearchSchemaVerRowEntity() {
+		super();
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -79,6 +83,15 @@ public class SavedSearchSchemaVerRowEntity implements RowEntity
 			return false;
 		}
 		return true;
+	}
+
+	public SavedSearchSchemaVerRowEntity(Long major, Long minor,
+			String creationDate, String lastModificationDate) {
+		super();
+		this.major = major;
+		this.minor = minor;
+		this.creationDate = creationDate;
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**

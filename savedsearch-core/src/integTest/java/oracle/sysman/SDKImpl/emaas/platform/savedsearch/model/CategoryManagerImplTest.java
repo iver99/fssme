@@ -394,7 +394,7 @@ public class CategoryManagerImplTest {
                 result = query;
                 query.getSingleResult();
                 result = exception;
-                exception.printStackTrace();
+//                exception.printStackTrace();
             }
         };
         categoryManager.getCategory("");

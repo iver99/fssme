@@ -46,7 +46,6 @@ public class DataManager
 	private static final String SQL_ALL_FOLDER_ROWS = "SELECT * FROM EMS_ANALYTICS_FOLDERS";
 	private static final String SQL_ALL_SEARCH_ROWS = "SELECT * FROM EMS_ANALYTICS_SEARCH";
 	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS = "SELECT * FROM EMS_ANALYTICS_CATEGORY_PARAMS";
-	private static final String SQL_ALL_LAST_ACCESS_ROWS = "SELECT * FROM EMS_ANALYTICS_LAST_ACCESS";
 	private static final String SQL_ALL_SCHEMA_VER_ROWS = "SELECT * FROM EMS_ANALYTICS_SCHEMA_VER_SSF";
 	private static final String SQL_ALL_SEARCH_PARAMS_ROWS = "SELECT * FROM EMS_ANALYTICS_SEARCH_PARAMS";
 
@@ -73,11 +72,6 @@ public class DataManager
 			+ "t.OWNER=?,t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFIED_BY=?,t.NAME_NLSID=?,"
 			+ "t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,t.DESCRIPTION_SUBSYSTEM=?,t.SYSTEM_FOLDER=?,t.EM_PLUGIN_ID=?,"
 			+ "t.UI_HIDDEN=?,t.DELETED=? where t.FOLDER_ID=? and t.TENANT_ID=?";
-
-	private static final String SQL_INSERT_LAST_ACCESS = "INSERT INTO EMS_ANALYTICS_LAST_ACCESS (OBJECT_ID,ACCESSED_BY,OBJECT_TYPE,ACCESS_DATE,"
-			+ "TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE) VALUES(?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
-	private static final String SQL_UPDATE_LAST_ACCESS = "UPDATE EMS_ANALYTICS_LAST_ACCESS t SET t.ACCESS_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') "
-			+ "where t.OBJECT_ID=? and t.ACCESSED_BY=? and t.OBJECT_TYPE=? and t.TENANT_ID=?";
 
 	private static final String SQL_INSERT_SEARCH = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,"
@@ -134,7 +128,6 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occured when get all category count!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -229,17 +222,6 @@ public class DataManager
 	}
 
 	/**
-	 * Get all rows in last access table
-	 *
-	 * @return
-	 */
-
-	public List<Map<String, Object>> getLastAccessTableData()
-	{
-		return getDatabaseTableData(SQL_ALL_LAST_ACCESS_ROWS);
-	}
-
-	/**
 	 * Get all rows in search version table
 	 *
 	 * @return
@@ -281,8 +263,8 @@ public class DataManager
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}		
-		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId).setParameter(3, name);
-		List<Object> result = q1.getResultList();
+		Query query = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId).setParameter(3, name);
+		List<Object> result = query.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
 			flag = false;
@@ -314,11 +296,9 @@ public class DataManager
 		}
 		catch (ParseException e) {
 			logger.error("Error occurred when parse LastModificationDate!");
-			e.printStackTrace();
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync Category param table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -378,11 +358,9 @@ public class DataManager
 		}
 		catch (ParseException e) {
 			logger.error("Error occurred when parse LastModificationDate!");
-			e.printStackTrace();
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync Category table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -440,11 +418,9 @@ public class DataManager
 		}
 		catch (ParseException e) {
 			logger.error("Error occurred when parse LastModificationDate!");
-			e.printStackTrace();
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync folders table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -498,11 +474,9 @@ public class DataManager
 		}
 		catch (ParseException e) {
 			logger.error("Error occurred when parse LastModificationDate!");
-			e.printStackTrace();
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync search param table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -512,20 +486,25 @@ public class DataManager
 
 	public void syncSearchTable(BigInteger searchId/*, String searchGuid*/, String name, String owner, String creationDate,
 			String lastModificationDate, String lastModifiedBy, String description, BigInteger folderId, BigInteger categoryId,
-			String nameNlsid, String nameSubsystem, String descriptionNlsid, String descriptionSubsystem, Integer systemSearch,
-			String emPluginId, Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
+			Integer systemSearch,Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
 			Integer isWidget, Long tenantId, String nameWidgetSource, String widgetGroupName, String widgetScreenshotHref,
 			String widgetIcon, String widgetKocName, String viewModel, String widgetTemplate, String widgetSupportTimeControl,
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
+				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
+				+ "(t.name = ? and folder_id = ? and category_id=? and deleted = ? )";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
-		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, tenantId)
+				.setParameter(3, name)
+				.setParameter(4, folderId)
+				.setParameter(5, categoryId)
+				.setParameter(6, deleted);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
@@ -539,9 +518,7 @@ public class DataManager
 				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, null).setParameter(3, name)
 				.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
 				.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
-				.setParameter(10, categoryId).setParameter(11, nameNlsid).setParameter(12, nameSubsystem)
-				.setParameter(13, descriptionNlsid).setParameter(14, descriptionSubsystem).setParameter(15, systemSearch)
-				.setParameter(16, emPluginId).setParameter(17, isLocked).setParameter(18, metaDataClob)
+				.setParameter(10, categoryId).setParameter(15, systemSearch).setParameter(17, isLocked).setParameter(18, metaDataClob)
 				.setParameter(19, searchDisplayStr).setParameter(20, uiHidden).setParameter(21, deleted)
 				.setParameter(22, isWidget).setParameter(23, tenantId).setParameter(24, nameWidgetSource)
 				.setParameter(25, widgetGroupName).setParameter(26, widgetScreenshotHref).setParameter(27, widgetIcon)
@@ -563,9 +540,7 @@ public class DataManager
 					em.createNativeQuery(SQL_UPDATE_SEARCH).setParameter(1, null).setParameter(2, name).setParameter(3, owner)
 							.setParameter(4, creationDate).setParameter(5, lastModificationDate).setParameter(6, lastModifiedBy)
 							.setParameter(7, description).setParameter(8, folderId).setParameter(9, categoryId)
-							.setParameter(10, nameNlsid).setParameter(11, nameSubsystem).setParameter(12, descriptionNlsid)
-							.setParameter(13, descriptionSubsystem).setParameter(14, systemSearch).setParameter(15, emPluginId)
-							.setParameter(16, isLocked).setParameter(17, metaDataClob).setParameter(18, searchDisplayStr)
+							.setParameter(14, systemSearch).setParameter(16, isLocked).setParameter(17, metaDataClob).setParameter(18, searchDisplayStr)
 							.setParameter(19, uiHidden).setParameter(20, deleted).setParameter(21, isWidget)
 							.setParameter(22, nameWidgetSource).setParameter(23, widgetGroupName)
 							.setParameter(24, widgetScreenshotHref).setParameter(25, widgetIcon).setParameter(26, widgetKocName)
@@ -582,7 +557,6 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync search table data!");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();
@@ -646,7 +620,6 @@ public class DataManager
 				throw new Exception("LastModificationDate in DB or Sync data should not be empty!");
 			}
 			catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 		logger.debug("Before formation,syncLastmodificationDate is " + syncLastModificationDate);
@@ -692,7 +665,6 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occured when execute SQL:[" + nativeSql + "]");
-			e.printStackTrace();
 		}
 		finally {
 			em.close();

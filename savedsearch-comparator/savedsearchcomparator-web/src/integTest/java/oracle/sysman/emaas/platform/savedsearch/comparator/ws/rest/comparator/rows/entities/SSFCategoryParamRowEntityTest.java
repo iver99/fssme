@@ -15,6 +15,9 @@ public class SSFCategoryParamRowEntityTest {
 		entity1.setCategoryId(new BigInteger("1"));
 		entity2.setCategoryId(new BigInteger("1"));
 		Assert.assertEquals(entity1, entity2);
+		entity2.setCategoryId(new BigInteger("2"));
+		Assert.assertNotEquals(entity1, entity2);
+		entity2.setCategoryId(new BigInteger("1"));
 		
 		entity1.setCreationDate("2016-07-22 08:23:32.517");
 		entity2.setCreationDate("2016-07-22 08:23:32.517");

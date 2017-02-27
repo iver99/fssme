@@ -19,7 +19,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * @author guochen
@@ -66,7 +65,7 @@ public class CacheManager
 
 	private CacheManager()
 	{
-		this.isCacheEnabled = Boolean.TRUE;
+		isCacheEnabled = Boolean.TRUE;
 		lastLogTime=System.currentTimeMillis();
 		keyGen = new DefaultKeyGenerator();
 		LOGGER.info("Initialization LRU CacheManager!!");

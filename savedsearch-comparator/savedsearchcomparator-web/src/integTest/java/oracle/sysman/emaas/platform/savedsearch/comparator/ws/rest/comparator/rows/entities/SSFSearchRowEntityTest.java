@@ -52,7 +52,51 @@ public class SSFSearchRowEntityTest {
 		entity1.setLastModificationDate("2016-07-22 08:23:32.517");
 		entity2.setLastModificationDate("2016-07-22 08:23:32.518");
 		Assert.assertNotEquals(entity1,entity2);
+		entity2.setLastModificationDate("2016-07-22 08:23:32.517");
 		
+		entity1.setCreationDate("creationDate");
+		entity1.setDashboardIneligible("dashboardIneligible");
+		entity1.setDescription("description");
+		entity1.setDescriptionNlsid("descriptionNlsid");
+		entity1.setDescriptionSubsystem("descriptionSubsystem");
+		entity1.setEmPluginId("emPluginId");
+		entity1.setIsLocked(1);
+		entity1.setIsWidget(1);
+		entity1.setNameNlsid("nameNlsid");
+		entity1.setNameSubsystem("nameSubsystem");
+		entity1.setNameWidgetSource("nameWidgetSource");
+		entity1.setOwner("owner");
+		entity1.setMetadataClob("metadataClob");
+		entity1.setUiHidden(1);
+		entity1.setWidgetViewModel("widgetViewModel");
+		entity1.setWidgetTemplate("widgetTemplate");;
+		entity1.setWidgetSupportTimeControl("widgetSupportTimeControl");
+		entity1.setWidgetScreenshotHref("widgetScreenshotHref");
+		entity1.setWidgetLinkedDashboard(1l);
+		entity1.setWidgetKocName("widgetKocName");
+		entity1.setWidgetIcon("widgetIcon");
+		entity1.setWidgetGroupName("widgetGroupName");
+		entity1.setWidgetDefaulWidth(1l);
+		entity1.setWidgetDefaultHeight(1l);
+		
+		entity1.getCreationDate();
+		entity1.getDashboardIneligible();
+		entity1.getWidgetViewModel();
+		entity1.getWidgetTemplate();
+		entity1.getWidgetSupportTimeControl();
+		entity1.getWidgetScreenshotHref();
+		entity1.getWidgetLinkedDashboard();
+		entity1.getWidgetKocName();
+		entity1.getWidgetIcon();
+		entity1.getWidgetGroupName();
+		entity1.getWidgetDefaulWidth();
+		entity1.getWidgetDefaultHeight();
+		entity1.getUiHidden();
+		entity1.getTenantId();
+		entity1.getCreationDate();
+		entity1.getDashboardIneligible();
+		entity1.getDeleted();
+		entity1.getDescription();
 		
 	}
 	

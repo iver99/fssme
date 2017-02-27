@@ -44,14 +44,17 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
-	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web', version: "${REPO_BID}") {transitive = false}
+	/*testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-webutils', version: "${REPO_BID}") {transitive = false}
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-webutils-integ-tests', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web-integ-tests', version: "${REPO_BID}") {transitive = false}
+	*/
+	testConfig(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
-	 testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17'){ transitive = false }
-        testConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
-        testConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){transitive = false}
+	testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17'){ transitive = false }
+    testConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
+    testConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){transitive = false}
 	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
 	testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
 	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
@@ -59,29 +62,17 @@ dependencies {
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 	testConfig(group: 'com.sun.jersey', name: 'jersey-servlet', version: '1.17.1')
 	testConfig('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
-
-
-
-
 	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
 	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5'){ transitive = false }
-
 	testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2'){ transitive = false }	
  	testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'){transitive = false}
   	testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
   	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
-        testConfig(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
+    testConfig(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
 
-
-
-
-
-
-
-	 testConfig(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
+	testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name: 'emaas-platform-tenant-sdk', version: '2.0.+') {
       exclude group: 'emaas.platform', module: 'registry-lookup-client'
       exclude group: 'emaas.platform', module: 'registry-client'
-  
 	}
 	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: regLookupClientVer)
 	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: regClientVer)
@@ -120,13 +111,35 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPI
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGroupAPITest.class"
 		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/XSDErrorUtilTest.class"
 		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/targetcard/TargetCardLinksFilterAPITest.class"
+		 include "oracle/sysman/emaas/savedsearch/ExceptionTest.class"
+		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
 
 
 
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/JAXBUtilTestS2.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPIMoreTest.class"
 
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/RowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/ZDTCountEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/ZDTAPITest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/ZDTSynchronizerTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SavedSearchCategoryParamRowEntityTest.class"
 
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFCategoryParamRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFCategoryRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFFolderRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchParamRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/ZDTTableRowEntityTest.class"
+/*
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedSearchComparatorCORSFilterTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/ZDTAPITest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/AppMappingCollectionTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/JsonUtilTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/LogUtilTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/StringUtilTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/TenantSubscriptionUtilTest.class"
+*/
         useRestAssured=true
 ext.set("testType", "integration")
 }
@@ -147,7 +160,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtil
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/SchemaVersionTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/WidgetChangeNotificationTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplTest.class"
-include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/SearchPaurameterDetailsTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/SearchParameterDetailsTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/DBConnectionManagerTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderManagerImplTest.java"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/WidgetManagerImplTest.class"
@@ -169,20 +182,25 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RegistryLookupUti
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RestClientTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptionUtilTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheFactoryTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheLinkedHashMapTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheManagerTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/CachedLinkTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/BinaryTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotCacheManagerTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotElementTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/common/ExecutionContextTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/CategorySetTest.class"
+	   include "oracle/sysman/emaas/savedsearch/FolderSetTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryImplTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderImplTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchImplTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchSummaryImplTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/EntityJsonUtilTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/CategoryDetailsTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/ObjectFactoryTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplForTargetCardTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/zdt/DataManagerTest.class"
+	   include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	useRestAssured =true
 ext.set("testType", "unit")
 
@@ -216,13 +234,20 @@ include "oracle/sysman/emaas/platform/savedsearch/utils/RestRequestUtilTest.clas
 	 include "oracle/sysman/emaas/platform/savedsearch/services/ApplicationLifecycleServiceTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/services/AvailabilityServiceManagerTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/services/EMTargetMXBeanImplTest.class"
-	 
+	/* 
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SaveSearchRowsComparatorTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFCategoryParamRowEntityTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFCategoryRowEntityTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchLastAccessRowEntityTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchParamRowEntityTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFSearchRowEntityTest.class"
+	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/ZDTTableRowEntityTest.class"
+
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/CountsEntityTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFFolderRowEntityTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedsearchComparatorApplicationTest.class"
+*/
+
 
 useRestAssured =true
 ext.set("testType", "unit")

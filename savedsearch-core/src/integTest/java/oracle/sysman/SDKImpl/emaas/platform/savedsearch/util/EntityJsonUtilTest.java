@@ -110,7 +110,7 @@ public class EntityJsonUtilTest
 	@Test
 	public void testGetErrorJsonObject() throws EMAnalyticsFwkException
 	{
-		EntityJsonUtil.getErrorJsonObject(BigInteger.ONE, "err_message", 1000L);
+		EntityJsonUtil.getErrorJsonObject("1", "err_message", 1000L);
 	}
 
 	@Test

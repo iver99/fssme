@@ -67,26 +67,26 @@ dependencies {
 
 task DEVTest(type:EMTest,dependsOn: omcSetup){	
 		
-	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
-	include "oracle/sysman/emaas/savedsearch/JSONUtilTest.class"
+//	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
+//	include "oracle/sysman/emaas/savedsearch/JSONUtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"			
 	include "oracle/sysman/emaas/savedsearch/CategoryTest.class"
-	include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
+//	include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
 	include "oracle/sysman/emaas/savedsearch/SearchParamTest.class"
 	include "oracle/sysman/emaas/savedsearch/SearchTest.class"
-	include "oracle/sysman/emaas/savedsearch/CategoryManagerTest.class"
+//	include "oracle/sysman/emaas/savedsearch/CategoryManagerTest.class"
 	include "oracle/sysman/emaas/savedsearch/SearchManagerTest.class"
 	include "oracle/sysman/emaas/savedsearch/VersionManagerTest.class"
-	include "oracle/sysman/emaas/savedsearch/ExceptionTest.class"
-	include "oracle/sysman/emaas/savedsearch/CategoryDetailsTest.class"
+//	include "oracle/sysman/emaas/savedsearch/ExceptionTest.class"
+//	include "oracle/sysman/emaas/savedsearch/CategoryDetailsTest.class"
 	include "oracle/sysman/emaas/savedsearch/ImportTest.class"
 	include "oracle/sysman/emaas/savedsearch/MultitenentFolderTest.class"
 	include "oracle/sysman/emaas/savedsearch/MultitenentCategoryTest"
 	include "oracle/sysman/emaas/savedsearch/MultitenentSearchTest.class"
 	include "oracle/sysman/emaas/savedsearch/DBConnectionManagerTest.class"	
-	include "oracle/sysman/emaas/savedsearch/FolderSetTest.class"
+//	include "oracle/sysman/emaas/savedsearch/FolderSetTest.class"
 	include "oracle/sysman/emaas/savedsearch/TenantDataLeakTest.class"
-	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
+//	include "oracle/sysman/emaas/savedsearch/UtilTest.class"
 	include "oracle/sysman/emaas/savedsearch/SearchManagerTestMockup.class"
 	include "oracle/sysman/emaas/savedsearch/SavedSearchDbExceptionTest.class"
 	include "oracle/sysman/emaas/savedsearch/SearchNonGroupsTest.class"
@@ -97,13 +97,14 @@ task DEVTest(type:EMTest,dependsOn: omcSetup){
 	ext.set("testType", "unit")
 }
 
-task DEVTest1(type:EMTest,dependsOn: DEVTest){	
-	include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
-	useRestAssured =true
-	ext.set("testType", "unit")
-}
+//task DEVTest1(type:EMTest,dependsOn: DEVTest){
+//task DEVTest1(type:EMTest,dependsOn: DEVTest){
+//	include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
+//	useRestAssured =true
+//	ext.set("testType", "unit")
+//}
 
-task DEVTest2(type:EMTest,dependsOn: DEVTest1){	
+task DEVTest2(type:EMTest,dependsOn: DEVTest){
 	include "oracle/sysman/emaas/savedsearch/Cleanup.class"
 	useRestAssured =true
 	ext.set("testType", "unit")
@@ -116,7 +117,7 @@ task QATest(type:EMTest,dependsOn: DEVTest2){
 	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/*"
 	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
 	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/search/*"
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
+//	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
 	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
 	//useWebdriver = true
 	// include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"

@@ -276,8 +276,14 @@ public class SearchManagerTest extends BaseTest
 		AssertJUnit.assertNotNull(queried);
 		if (queried != null) {
 			AssertJUnit.assertEquals(2, queried.size());
-			assertSearchEquals(search1, queried.get(0));
-			assertSearchEquals(search2, queried.get(1));
+			//EMCPSSF-452
+			if(queried.get(0).getName()!=null && queried.get(0).getName().equals(search1.getName())){
+				assertSearchEquals(search1, queried.get(0));
+				assertSearchEquals(search2, queried.get(1));
+			}else{
+				assertSearchEquals(search1, queried.get(1));
+				assertSearchEquals(search2, queried.get(0));
+			}
 		}
 		sm.deleteSearch(search1.getId(), true);
 		sm.deleteSearch(search2.getId(), true);
@@ -351,8 +357,9 @@ public class SearchManagerTest extends BaseTest
 		searches = sm.getSearchListByLastAccessDate(2);
 		AssertJUnit.assertNotNull(searches);
 		AssertJUnit.assertEquals(2, searches.size());
-		AssertJUnit.assertEquals(search1.getId(), searches.get(0).getId());
-		AssertJUnit.assertEquals(search2.getId(), searches.get(1).getId());
+		//EMCPSSF-452
+		AssertJUnit.assertTrue(search1.getId().equals(searches.get(0).getId()) || search1.getId().equals(searches.get(1).getId()));
+		AssertJUnit.assertTrue(search2.getId().equals(searches.get(0).getId()) || search2.getId().equals(searches.get(1).getId()));
 
 		sm.deleteSearch(search2.getId(), true);
 		sm.deleteSearch(search1.getId(), true);

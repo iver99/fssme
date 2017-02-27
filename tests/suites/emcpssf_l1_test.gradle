@@ -73,14 +73,7 @@ dependencies {
   	testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){transitive = false}
   	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){transitive = false}
         testConfig(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-
-
-
-
-
-
-
-	 testConfig(group: 'com.oracle.emaas', name: 'emaas-platform-tenant-sdk', version: '0.2') {
+	 testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name: 'emaas-platform-tenant-sdk', version: '2.0.+') {
       exclude group: 'emaas.platform', module: 'registry-lookup-client'
       exclude group: 'emaas.platform', module: 'registry-client'
   
@@ -125,6 +118,39 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGro
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/JAXBUtilTestS2.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPIMoreTest.class"
 
+
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/RowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/ZDTCountEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/ZDTAPITest.class"
+
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFCategoryParamRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFCategoryRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFFolderRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchParamRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchRowEntityTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/ZDTTableRowEntityTest.class"
+
+/*
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedSearchComparatorCORSFilterTest.class"
+include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/services/ZDTAPITest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/property/PropertyReaderTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/services/LoggingServiceManagerTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/targetmodel/services/SavedSearchStatusTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/AppMappingCollectionTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/GlobalStatusTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/JsonUtilTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/LogUtilTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/SavedSearchComparatorStatusTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/lifecycle/SavedsearchComparatorLifeCycleServiceTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/management/AppLoggingManageMXBeanTest.class"
+
+
+
+
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/CountsEntityTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFFolderRowEntityTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedsearchComparatorApplicationTest.class"
+*/
 
         useRestAssured=true
 ext.set("testType", "integration")

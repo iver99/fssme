@@ -2,6 +2,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.lru;
 
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.DefaultKeyGenerator;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.ICacheFetchFactory;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
@@ -9,29 +10,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Test(groups = { "s1" })
 public class CacheManagerTest
 {
-	/*@Test
-	public void testCacheExpires() throws Exception
-	{
-		String putValue = "value";
-		CacheManager cm = CacheManager.getInstance();
-		cm.putCacheable("lookupCache", new Keys("test"), putValue);
-		String value = (String) cm.getCacheable("lookupCache", new Keys("test"));
-		Assert.assertEquals(value, putValue);
-		Thread.sleep(8500);
-		value = (String) cm.getCacheable("lookupCache", new Keys("test"));
-		Assert.assertNull(value);
-	}*/
-
-	/*@Test
-	public void testNotExistsCache()
-	{
-		CacheManager cm = CacheManager.getInstance();
-		CacheUnit nc = cm.getCache("NotExistingCache");
-		Assert.assertNull(nc);
-	}*/
-
 	@Test
 	public void testPutGetRemoveCacheable() throws Exception
 	{
@@ -58,6 +39,14 @@ public class CacheManagerTest
 		Assert.assertEquals(value, Integer.valueOf(1));
 		cm.putCacheable("eternalCache", "test2", null);
 		Assert.assertNull(cm.getCacheable("eternalCache", new Keys("test2")));
+		Assert.assertNull(cm.getCacheable("notExistingCache", new Keys("notExistingKey")));
+		Assert.assertNull(cm.getCacheable("eternalCache", "notExistingKey"));
+		Assert.assertNull(cm.getCacheable(null, new Keys("notExistingKey")));
+		Assert.assertNull(cm.getCache(""));
+		Assert.assertNotNull(cm.getCache("notExistingCache"));
+		Assert.assertEquals(cm.putCache("key", "value").toString(), "value");
+		
+		cm.logCacheStatus();
 	}
 
 	@Test
@@ -105,7 +94,7 @@ public class CacheManagerTest
 		value = (Integer) cm.getCacheable(tenant1, "eternalCache", new Keys("test"));
 		Assert.assertEquals(value, cachedValue);
 		cm.removeCacheable(tenant1, "eternalCache", new Keys("test"));
-		value = (Integer) cm.getCacheable(tenant1, "eternalCache", new Keys("test"));
+		value = (Integer) cm.getCacheable(tenant1, "eternalCache", "test");
 		Assert.assertNull(value);
 		value = (Integer) cm.getCacheable(tenant1, "eternalCache", new Keys("test"), new ICacheFetchFactory() {
 			@Override
@@ -116,7 +105,21 @@ public class CacheManagerTest
 
 		});
 		Assert.assertEquals(value, cachedValue);
-		value = (Integer) cm.getCacheable(tenant1, "eternalCache", new Keys("test"));
+		value = (Integer) cm.getCacheable(tenant1, "eternalCache", "test", null);
 		Assert.assertEquals(value, cachedValue);
+		Assert.assertEquals(cm.removeCacheable(tenant1, "eternalCache", "test"), cachedValue);
+	}
+	
+	@Test
+	public void testDisableEnableCache() {
+		final Integer cachedValue = 1;
+		CacheManager cm = CacheManager.getInstance();
+		cm.disableCacheManager();
+		cm.logCacheStatus();
+		cm.removeCacheable("cacheName", new Keys("keys"));
+		Assert.assertNull(cm.putCacheable(null, "eternalCache", "test", cachedValue));
+		
+		cm.enableCacheManager();
+		cm.setKeyGenerator(new DefaultKeyGenerator());
 	}
 }
