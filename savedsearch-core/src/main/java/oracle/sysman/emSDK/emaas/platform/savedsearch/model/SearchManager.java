@@ -224,19 +224,4 @@ public abstract class SearchManager
 	 */
 	public abstract List<Search> getSearchListByIds(List<BigInteger> ids) throws EMAnalyticsFwkException;
 	
-	public abstract List<Map<String,Object>> getSearchDataByIds(List<BigInteger> ids, Long tenantId); 
-	
-	public abstract List<Map<String,Object>> getSearchParamsDataByIds(List<BigInteger> ids, Long tenantId);
-	
-	public abstract void saveSearchData(BigInteger searchId, String name, String owner, String creationDate,
-			String lastModificationDate, String lastModifiedBy, String description, BigInteger folderId, BigInteger categoryId,
-			Integer systemSearch,Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
-			Integer isWidget, Long tenantId, String nameWidgetSource, String widgetGroupName, String widgetScreenshotHref,
-			String widgetIcon, String widgetKocName, String viewModel, String widgetTemplate, String widgetSupportTimeControl,
-			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
-			String providerName, String providerVersion, String providerAssetRoot);
-	
-	public abstract void saveSearchParamData(BigInteger searchId, String name, String paramAttributes, Long paramType,
-			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate, Integer deleted);
-	
 }

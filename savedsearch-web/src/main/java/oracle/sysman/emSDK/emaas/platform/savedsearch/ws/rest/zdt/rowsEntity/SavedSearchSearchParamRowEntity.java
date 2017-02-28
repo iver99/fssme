@@ -72,89 +72,6 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 		this.deleted = deleted;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		SavedSearchSearchParamRowEntity other = (SavedSearchSearchParamRowEntity) obj;
-		if (creationDate == null) {
-			if (other.creationDate != null) {
-				return false;
-			}
-		}
-		else if (!creationDate.equals(other.creationDate)) {
-			return false;
-		}
-		if (lastModificationDate == null) {
-			if (other.lastModificationDate != null) {
-				return false;
-			}
-		}
-		else if (!lastModificationDate.equals(other.lastModificationDate)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		}
-		else if (!name.equals(other.name)) {
-			return false;
-		}
-		if (paramAttributes == null) {
-			if (other.paramAttributes != null) {
-				return false;
-			}
-		}
-		else if (!paramAttributes.equals(other.paramAttributes)) {
-			return false;
-		}
-		if (paramType == null) {
-			if (other.paramType != null) {
-				return false;
-			}
-		}
-		else if (!paramType.equals(other.paramType)) {
-			return false;
-		}
-		if (paramValueClob == null) {
-			if (other.paramValueClob != null) {
-				return false;
-			}
-		}
-		else if (!paramValueClob.equals(other.paramValueClob)) {
-			return false;
-		}
-		if (paramValueStr == null) {
-			if (other.paramValueStr != null) {
-				return false;
-			}
-		}
-		else if (!paramValueStr.equals(other.paramValueStr)) {
-			return false;
-		}
-		if (tenantId == null) {
-			if (other.tenantId != null) {
-				return false;
-			}
-		}
-		else if (!tenantId.equals(other.tenantId)) {
-			return false;
-		}
-		return true;
-	}
-
 	/**
 	 * @return the creationDate
 	 */
@@ -236,26 +153,7 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 	{
 		return tenantId;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
-		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
-		result = prime * result + (name == null ? 0 : name.hashCode());
-		result = prime * result + (paramAttributes == null ? 0 : paramAttributes.hashCode());
-		result = prime * result + (paramType == null ? 0 : paramType.hashCode());
-		result = prime * result + (paramValueClob == null ? 0 : paramValueClob.hashCode());
-		result = prime * result + (paramValueStr == null ? 0 : paramValueStr.hashCode());
-		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
-		return result;
-	}
-
+	
 	/**
 	 * @param creationDate
 	 *            the creationDate to set
@@ -346,6 +244,95 @@ public class SavedSearchSearchParamRowEntity implements RowEntity
 		return "SavedSearchSearchParamRowEntity [name=" + name + ", paramAttributes=" + paramAttributes + ", paramType="
 				+ paramType + ", paramValueClob=" + paramValueClob + ", paramValueStr=" + paramValueStr + ", tenantId="
 				+ tenantId + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
+		result = prime
+				* result
+				+ ((lastModificationDate == null) ? 0 : lastModificationDate
+						.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((paramAttributes == null) ? 0 : paramAttributes.hashCode());
+		result = prime * result
+				+ ((paramType == null) ? 0 : paramType.hashCode());
+		result = prime * result
+				+ ((paramValueClob == null) ? 0 : paramValueClob.hashCode());
+		result = prime * result
+				+ ((paramValueStr == null) ? 0 : paramValueStr.hashCode());
+		result = prime * result
+				+ ((searchId == null) ? 0 : searchId.hashCode());
+		result = prime * result
+				+ ((tenantId == null) ? 0 : tenantId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SavedSearchSearchParamRowEntity other = (SavedSearchSearchParamRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
+		if (deleted == null) {
+			if (other.deleted != null)
+				return false;
+		} else if (!deleted.equals(other.deleted))
+			return false;
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null)
+				return false;
+		} else if (!lastModificationDate.equals(other.lastModificationDate))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (paramAttributes == null) {
+			if (other.paramAttributes != null)
+				return false;
+		} else if (!paramAttributes.equals(other.paramAttributes))
+			return false;
+		if (paramType == null) {
+			if (other.paramType != null)
+				return false;
+		} else if (!paramType.equals(other.paramType))
+			return false;
+		if (paramValueClob == null) {
+			if (other.paramValueClob != null)
+				return false;
+		} else if (!paramValueClob.equals(other.paramValueClob))
+			return false;
+		if (paramValueStr == null) {
+			if (other.paramValueStr != null)
+				return false;
+		} else if (!paramValueStr.equals(other.paramValueStr))
+			return false;
+		if (searchId == null) {
+			if (other.searchId != null)
+				return false;
+		} else if (!searchId.equals(other.searchId))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		return true;
 	}
 
 }

@@ -186,244 +186,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		this.searchGuid = searchGuid;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		SavedSearchSearchRowEntity other = (SavedSearchSearchRowEntity) obj;
-		if (creationDate == null) {
-			if (other.creationDate != null) {
-				return false;
-			}
-		}
-		else if (!creationDate.equals(other.creationDate)) {
-			return false;
-		}
-		if (dashboardIneligible == null) {
-			if (other.dashboardIneligible != null) {
-				return false;
-			}
-		}
-		else if (!dashboardIneligible.equals(other.dashboardIneligible)) {
-			return false;
-		}
-		if (deleted == null) {
-			if (other.deleted != null) {
-				return false;
-			}
-		}
-		else if (!deleted.equals(other.deleted)) {
-			return false;
-		}
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		}
-		else if (!description.equals(other.description)) {
-			return false;
-		}
-		
-		if (isLocked == null) {
-			if (other.isLocked != null) {
-				return false;
-			}
-		}
-		else if (!isLocked.equals(other.isLocked)) {
-			return false;
-		}
-		if (isWidget == null) {
-			if (other.isWidget != null) {
-				return false;
-			}
-		}
-		else if (!isWidget.equals(other.isWidget)) {
-			return false;
-		}
-		if (lastModificationDate == null) {
-			if (other.lastModificationDate != null) {
-				return false;
-			}
-		}
-		else if (!lastModificationDate.equals(other.lastModificationDate)) {
-			return false;
-		}
-		if (lastModifiedBy == null) {
-			if (other.lastModifiedBy != null) {
-				return false;
-			}
-		}
-		else if (!lastModifiedBy.equals(other.lastModifiedBy)) {
-			return false;
-		}
-		if (metadataClob == null) {
-			if (other.metadataClob != null) {
-				return false;
-			}
-		}
-		else if (!metadataClob.equals(other.metadataClob)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		}
-		else if (!name.equals(other.name)) {
-			return false;
-		}
-	
-		if (nameWidgetSource == null) {
-			if (other.nameWidgetSource != null) {
-				return false;
-			}
-		}
-		else if (!nameWidgetSource.equals(other.nameWidgetSource)) {
-			return false;
-		}
-		if (owner == null) {
-			if (other.owner != null) {
-				return false;
-			}
-		}
-		else if (!owner.equals(other.owner)) {
-			return false;
-		}
-		if (searchDisplayStr == null) {
-			if (other.searchDisplayStr != null) {
-				return false;
-			}
-		}
-		else if (!searchDisplayStr.equals(other.searchDisplayStr)) {
-			return false;
-		}
-
-		if (searchId == null) {
-			if (other.searchId != null) {
-				return false;
-			}
-		}
-		else if (!searchId.equals(other.searchId)) {
-			return false;
-		}
-		if (systemSearch == null) {
-			if (other.systemSearch != null) {
-				return false;
-			}
-		}
-		else if (!systemSearch.equals(other.systemSearch)) {
-			return false;
-		}
-		if (tenantId == null) {
-			if (other.tenantId != null) {
-				return false;
-			}
-		}
-		else if (!tenantId.equals(other.tenantId)) {
-			return false;
-		}
-		if (uiHidden == null) {
-			if (other.uiHidden != null) {
-				return false;
-			}
-		}
-		else if (!uiHidden.equals(other.uiHidden)) {
-			return false;
-		}
-		if (widgetDefaulWidth == null) {
-			if (other.widgetDefaulWidth != null) {
-				return false;
-			}
-		}
-		else if (!widgetDefaulWidth.equals(other.widgetDefaulWidth)) {
-			return false;
-		}
-		if (widgetDefaultHeight == null) {
-			if (other.widgetDefaultHeight != null) {
-				return false;
-			}
-		}
-		else if (!widgetDefaultHeight.equals(other.widgetDefaultHeight)) {
-			return false;
-		}
-		if (widgetGroupName == null) {
-			if (other.widgetGroupName != null) {
-				return false;
-			}
-		}
-		else if (!widgetGroupName.equals(other.widgetGroupName)) {
-			return false;
-		}
-		if (widgetIcon == null) {
-			if (other.widgetIcon != null) {
-				return false;
-			}
-		}
-		else if (!widgetIcon.equals(other.widgetIcon)) {
-			return false;
-		}
-		if (widgetKocName == null) {
-			if (other.widgetKocName != null) {
-				return false;
-			}
-		}
-		else if (!widgetKocName.equals(other.widgetKocName)) {
-			return false;
-		}
-		if (widgetLinkedDashboard == null) {
-			if (other.widgetLinkedDashboard != null) {
-				return false;
-			}
-		}
-		else if (!widgetLinkedDashboard.equals(other.widgetLinkedDashboard)) {
-			return false;
-		}
-		if (widgetScreenshotHref == null) {
-			if (other.widgetScreenshotHref != null) {
-				return false;
-			}
-		}
-		else if (!widgetScreenshotHref.equals(other.widgetScreenshotHref)) {
-			return false;
-		}
-		if (widgetSupportTimeControl == null) {
-			if (other.widgetSupportTimeControl != null) {
-				return false;
-			}
-		}
-		else if (!widgetSupportTimeControl.equals(other.widgetSupportTimeControl)) {
-			return false;
-		}
-		if (widgetTemplate == null) {
-			if (other.widgetTemplate != null) {
-				return false;
-			}
-		}
-		else if (!widgetTemplate.equals(other.widgetTemplate)) {
-			return false;
-		}
-		if (widgetViewModel == null) {
-			if (other.widgetViewModel != null) {
-				return false;
-			}
-		}
-		else if (!widgetViewModel.equals(other.widgetViewModel)) {
-			return false;
-		}
-		return true;
-	}
-
 	/**
 	 * @return the categoryId
 	 */
@@ -678,44 +440,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	public String getWidgetViewModel()
 	{
 		return widgetViewModel;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
-		result = prime * result + (dashboardIneligible == null ? 0 : dashboardIneligible.hashCode());
-		result = prime * result + (deleted == null ? 0 : deleted.hashCode());
-		result = prime * result + (description == null ? 0 : description.hashCode());
-		result = prime * result + (isLocked == null ? 0 : isLocked.hashCode());
-		result = prime * result + (isWidget == null ? 0 : isWidget.hashCode());
-		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
-		result = prime * result + (lastModifiedBy == null ? 0 : lastModifiedBy.hashCode());
-		result = prime * result + (metadataClob == null ? 0 : metadataClob.hashCode());
-		result = prime * result + (name == null ? 0 : name.hashCode());
-		result = prime * result + (nameWidgetSource == null ? 0 : nameWidgetSource.hashCode());
-		result = prime * result + (owner == null ? 0 : owner.hashCode());
-		result = prime * result + (searchDisplayStr == null ? 0 : searchDisplayStr.hashCode());
-		result = prime * result + (searchId == null ? 0 : searchId.hashCode());
-		result = prime * result + (systemSearch == null ? 0 : systemSearch.hashCode());
-		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
-		result = prime * result + (uiHidden == null ? 0 : uiHidden.hashCode());
-		result = prime * result + (widgetDefaulWidth == null ? 0 : widgetDefaulWidth.hashCode());
-		result = prime * result + (widgetDefaultHeight == null ? 0 : widgetDefaultHeight.hashCode());
-		result = prime * result + (widgetGroupName == null ? 0 : widgetGroupName.hashCode());
-		result = prime * result + (widgetIcon == null ? 0 : widgetIcon.hashCode());
-		result = prime * result + (widgetKocName == null ? 0 : widgetKocName.hashCode());
-		result = prime * result + (widgetLinkedDashboard == null ? 0 : widgetLinkedDashboard.hashCode());
-		result = prime * result + (widgetScreenshotHref == null ? 0 : widgetScreenshotHref.hashCode());
-		result = prime * result + (widgetSupportTimeControl == null ? 0 : widgetSupportTimeControl.hashCode());
-		result = prime * result + (widgetTemplate == null ? 0 : widgetTemplate.hashCode());
-		result = prime * result + (widgetViewModel == null ? 0 : widgetViewModel.hashCode());
-		return result;
 	}
 
 	/**
@@ -1025,6 +749,272 @@ public class SavedSearchSearchRowEntity implements RowEntity
 				+ widgetDefaultHeight + ", dashboardIneligible=" + dashboardIneligible + ", tenantId=" + tenantId + ", folderId="
 				+ folderId + ", categoryId=" + categoryId + ", providerName=" + providerName + ", providerVersion="
 				+ providerVersion + ", providerAssetRoot=" + providerAssetRoot + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((categoryId == null) ? 0 : categoryId.hashCode());
+		result = prime * result
+				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime
+				* result
+				+ ((dashboardIneligible == null) ? 0 : dashboardIneligible
+						.hashCode());
+		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
+		result = prime * result
+				+ ((folderId == null) ? 0 : folderId.hashCode());
+		result = prime * result
+				+ ((isLocked == null) ? 0 : isLocked.hashCode());
+		result = prime * result
+				+ ((isWidget == null) ? 0 : isWidget.hashCode());
+		result = prime
+				* result
+				+ ((lastModificationDate == null) ? 0 : lastModificationDate
+						.hashCode());
+		result = prime * result
+				+ ((lastModifiedBy == null) ? 0 : lastModifiedBy.hashCode());
+		result = prime * result
+				+ ((metadataClob == null) ? 0 : metadataClob.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime
+				* result
+				+ ((nameWidgetSource == null) ? 0 : nameWidgetSource.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+		result = prime
+				* result
+				+ ((providerAssetRoot == null) ? 0 : providerAssetRoot
+						.hashCode());
+		result = prime * result
+				+ ((providerName == null) ? 0 : providerName.hashCode());
+		result = prime * result
+				+ ((providerVersion == null) ? 0 : providerVersion.hashCode());
+		result = prime
+				* result
+				+ ((searchDisplayStr == null) ? 0 : searchDisplayStr.hashCode());
+		result = prime * result
+				+ ((searchGuid == null) ? 0 : searchGuid.hashCode());
+		result = prime * result
+				+ ((searchId == null) ? 0 : searchId.hashCode());
+		result = prime * result
+				+ ((systemSearch == null) ? 0 : systemSearch.hashCode());
+		result = prime * result
+				+ ((tenantId == null) ? 0 : tenantId.hashCode());
+		result = prime * result
+				+ ((uiHidden == null) ? 0 : uiHidden.hashCode());
+		result = prime
+				* result
+				+ ((widgetDefaulWidth == null) ? 0 : widgetDefaulWidth
+						.hashCode());
+		result = prime
+				* result
+				+ ((widgetDefaultHeight == null) ? 0 : widgetDefaultHeight
+						.hashCode());
+		result = prime * result
+				+ ((widgetGroupName == null) ? 0 : widgetGroupName.hashCode());
+		result = prime * result
+				+ ((widgetIcon == null) ? 0 : widgetIcon.hashCode());
+		result = prime * result
+				+ ((widgetKocName == null) ? 0 : widgetKocName.hashCode());
+		result = prime
+				* result
+				+ ((widgetLinkedDashboard == null) ? 0 : widgetLinkedDashboard
+						.hashCode());
+		result = prime
+				* result
+				+ ((widgetScreenshotHref == null) ? 0 : widgetScreenshotHref
+						.hashCode());
+		result = prime
+				* result
+				+ ((widgetSupportTimeControl == null) ? 0
+						: widgetSupportTimeControl.hashCode());
+		result = prime * result
+				+ ((widgetTemplate == null) ? 0 : widgetTemplate.hashCode());
+		result = prime * result
+				+ ((widgetViewModel == null) ? 0 : widgetViewModel.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SavedSearchSearchRowEntity other = (SavedSearchSearchRowEntity) obj;
+		if (categoryId == null) {
+			if (other.categoryId != null)
+				return false;
+		} else if (!categoryId.equals(other.categoryId))
+			return false;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
+		if (dashboardIneligible == null) {
+			if (other.dashboardIneligible != null)
+				return false;
+		} else if (!dashboardIneligible.equals(other.dashboardIneligible))
+			return false;
+		if (deleted == null) {
+			if (other.deleted != null)
+				return false;
+		} else if (!deleted.equals(other.deleted))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (folderId == null) {
+			if (other.folderId != null)
+				return false;
+		} else if (!folderId.equals(other.folderId))
+			return false;
+		if (isLocked == null) {
+			if (other.isLocked != null)
+				return false;
+		} else if (!isLocked.equals(other.isLocked))
+			return false;
+		if (isWidget == null) {
+			if (other.isWidget != null)
+				return false;
+		} else if (!isWidget.equals(other.isWidget))
+			return false;
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null)
+				return false;
+		} else if (!lastModificationDate.equals(other.lastModificationDate))
+			return false;
+		if (lastModifiedBy == null) {
+			if (other.lastModifiedBy != null)
+				return false;
+		} else if (!lastModifiedBy.equals(other.lastModifiedBy))
+			return false;
+		if (metadataClob == null) {
+			if (other.metadataClob != null)
+				return false;
+		} else if (!metadataClob.equals(other.metadataClob))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (nameWidgetSource == null) {
+			if (other.nameWidgetSource != null)
+				return false;
+		} else if (!nameWidgetSource.equals(other.nameWidgetSource))
+			return false;
+		if (owner == null) {
+			if (other.owner != null)
+				return false;
+		} else if (!owner.equals(other.owner))
+			return false;
+		if (providerAssetRoot == null) {
+			if (other.providerAssetRoot != null)
+				return false;
+		} else if (!providerAssetRoot.equals(other.providerAssetRoot))
+			return false;
+		if (providerName == null) {
+			if (other.providerName != null)
+				return false;
+		} else if (!providerName.equals(other.providerName))
+			return false;
+		if (providerVersion == null) {
+			if (other.providerVersion != null)
+				return false;
+		} else if (!providerVersion.equals(other.providerVersion))
+			return false;
+		if (searchDisplayStr == null) {
+			if (other.searchDisplayStr != null)
+				return false;
+		} else if (!searchDisplayStr.equals(other.searchDisplayStr))
+			return false;
+		if (searchGuid == null) {
+			if (other.searchGuid != null)
+				return false;
+		} else if (!searchGuid.equals(other.searchGuid))
+			return false;
+		if (searchId == null) {
+			if (other.searchId != null)
+				return false;
+		} else if (!searchId.equals(other.searchId))
+			return false;
+		if (systemSearch == null) {
+			if (other.systemSearch != null)
+				return false;
+		} else if (!systemSearch.equals(other.systemSearch))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		if (uiHidden == null) {
+			if (other.uiHidden != null)
+				return false;
+		} else if (!uiHidden.equals(other.uiHidden))
+			return false;
+		if (widgetDefaulWidth == null) {
+			if (other.widgetDefaulWidth != null)
+				return false;
+		} else if (!widgetDefaulWidth.equals(other.widgetDefaulWidth))
+			return false;
+		if (widgetDefaultHeight == null) {
+			if (other.widgetDefaultHeight != null)
+				return false;
+		} else if (!widgetDefaultHeight.equals(other.widgetDefaultHeight))
+			return false;
+		if (widgetGroupName == null) {
+			if (other.widgetGroupName != null)
+				return false;
+		} else if (!widgetGroupName.equals(other.widgetGroupName))
+			return false;
+		if (widgetIcon == null) {
+			if (other.widgetIcon != null)
+				return false;
+		} else if (!widgetIcon.equals(other.widgetIcon))
+			return false;
+		if (widgetKocName == null) {
+			if (other.widgetKocName != null)
+				return false;
+		} else if (!widgetKocName.equals(other.widgetKocName))
+			return false;
+		if (widgetLinkedDashboard == null) {
+			if (other.widgetLinkedDashboard != null)
+				return false;
+		} else if (!widgetLinkedDashboard.equals(other.widgetLinkedDashboard))
+			return false;
+		if (widgetScreenshotHref == null) {
+			if (other.widgetScreenshotHref != null)
+				return false;
+		} else if (!widgetScreenshotHref.equals(other.widgetScreenshotHref))
+			return false;
+		if (widgetSupportTimeControl == null) {
+			if (other.widgetSupportTimeControl != null)
+				return false;
+		} else if (!widgetSupportTimeControl
+				.equals(other.widgetSupportTimeControl))
+			return false;
+		if (widgetTemplate == null) {
+			if (other.widgetTemplate != null)
+				return false;
+		} else if (!widgetTemplate.equals(other.widgetTemplate))
+			return false;
+		if (widgetViewModel == null) {
+			if (other.widgetViewModel != null)
+				return false;
+		} else if (!widgetViewModel.equals(other.widgetViewModel))
+			return false;
+		return true;
 	}
 
 }

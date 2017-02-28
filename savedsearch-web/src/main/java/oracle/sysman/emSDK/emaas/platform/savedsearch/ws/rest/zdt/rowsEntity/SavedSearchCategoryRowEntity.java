@@ -20,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchCategoryRowEntity implements RowEntity
 {
 	@JsonProperty("CATEGORY_ID")
-	private BigInteger categoryId;
+	private String categoryId;
 
 	@JsonProperty("DESCRIPTION")
 	private String description;
@@ -47,7 +47,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	private String owner;
 
 	@JsonProperty("DELETED")
-	private BigInteger deleted;
+	private String deleted;
 
 	@JsonProperty("PROVIDER_NAME")
 	private String providerName;
@@ -71,7 +71,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	private String creationDate;
 
 	@JsonProperty("DEFAULT_FOLDER_ID")
-	private Long defaultFolderId;
+	private String defaultFolderId;
 
 	@JsonProperty("DASHBOARD_INELIGIBLE")
 	private String dashboardIneligible;
@@ -82,14 +82,14 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 		super();
 	}
 
-	public SavedSearchCategoryRowEntity(BigInteger categoryId,
+	public SavedSearchCategoryRowEntity(String categoryId,
 			String description, String descriptionNlsid,
 			String descriptionSubsystem, String emPluginId, String name,
 			String nameNlsid, String nameSubsystem, String owner,
-			BigInteger deleted, String providerName, String providerVersion,
+			String deleted, String providerName, String providerVersion,
 			String providerDiscovery, String providerAssetRoot,
 			String lastModificationDate, Long tenantId, String creationDate,
-			Long defaultFolderId, String dashboardIneligible) {
+			String defaultFolderId, String dashboardIneligible) {
 		super();
 		this.categoryId = categoryId;
 		this.description = description;
@@ -262,7 +262,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	/**
 	 * @return the categoryId
 	 */
-	public BigInteger getCategoryId()
+	public String getCategoryId()
 	{
 		return categoryId;
 	}
@@ -286,7 +286,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	/**
 	 * @return the defaultFolderId
 	 */
-	public Long getDefaultFolderId()
+	public String getDefaultFolderId()
 	{
 		return defaultFolderId;
 	}
@@ -294,7 +294,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public BigInteger getDeleted()
+	public String getDeleted()
 	{
 		return deleted;
 	}
@@ -442,7 +442,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	 * @param categoryId
 	 *            the categoryId to set
 	 */
-	public void setCategoryId(BigInteger categoryId)
+	public void setCategoryId(String categoryId)
 	{
 		this.categoryId = categoryId;
 	}
@@ -469,7 +469,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	 * @param defaultFolderId
 	 *            the defaultFolderId to set
 	 */
-	public void setDefaultFolderId(Long defaultFolderId)
+	public void setDefaultFolderId(String defaultFolderId)
 	{
 		this.defaultFolderId = defaultFolderId;
 	}
@@ -478,7 +478,7 @@ public class SavedSearchCategoryRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(BigInteger deleted)
+	public void setDeleted(String deleted)
 	{
 		this.deleted = deleted;
 	}

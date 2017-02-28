@@ -46,8 +46,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetDeletionN
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotificationType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importData.ImportDataHandler;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importData.ImportRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
@@ -694,28 +692,6 @@ public class SearchAPI
 			return Response.status(400).entity("please give the value for updateLastAccessTime").build();
 		}
 	}
-	
-	@PUT
-	@Path("/import")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response importData(JSONObject importedData) {
-		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import");
-		Long tenantId = TenantContext.getContext().getTenantInternalId();
-		ImportRowEntity rowEntity = null;
-		try {
-			rowEntity = JSONUtil.fromJson(new ObjectMapper(), importedData.toString(), ImportRowEntity.class);
-			ImportDataHandler handler = new ImportDataHandler();
-			handler.saveImportedData(rowEntity, tenantId);
-			return Response.status(Status.NO_CONTENT).build();
-		} catch (IOException e) {
-			LOGGER.error("can not get ImportRowEntity from JSONObject",e.getLocalizedMessage());
-			return Response.status(500).entity(e.getLocalizedMessage()).build();
-		}
-		
-		
-		
-	}
 
 	/**
 	 * Get details of saved-search with given id<br>
@@ -860,55 +836,6 @@ public class SearchAPI
 					e.getStatusCode());
 		}
 		return Response.status(statusCode).entity(message).build();
-	}
-	
-	@PUT
-	@Path("/all")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearchData(JSONArray inputJsonArray) throws JSONException
-	{
-		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/all");
-		List<BigInteger> searchIdList = new ArrayList<BigInteger>();
-		Long tenantId = TenantContext.getContext().getTenantInternalId();
-		try {
-			for(int i = 0; i < inputJsonArray.length(); i++) {
-				searchIdList.add(new BigInteger(inputJsonArray.getString(i)));
-			}
-		} catch(NullPointerException npe) {
-			return Response.status(404).entity("search id list is empty").build();
-		} catch(JSONException je) {
-			return Response.status(404).entity("invalid search id in search id list").build();
-		} catch(NumberFormatException nfe) {
-			return Response.status(404).entity("invalid search id in search id list").build();
-		}
-		
-		String message = null;
-		int statusCode = 200;
-		JSONObject outputJsonObject = new JSONObject();
-		SearchManager manager = SearchManager.getInstance();
-		try {
-			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavailException();
-			}
-			List<Map<String,Object>> searchData = manager.getSearchDataByIds(searchIdList, tenantId);
-			JSONArray searchArray = getJSONArrayFromListOfObjects(SEARCH_TABLE_NAME,searchData);
-			outputJsonObject.put(SEARCH_TABLE_NAME, searchArray);
-			
-			
-			List<Map<String,Object>> searchParamsData = manager.getSearchParamsDataByIds(searchIdList, tenantId);
-			JSONArray searchParamsArray = getJSONArrayFromListOfObjects(SEARCH_PARAMS_TABLE_NAME,searchParamsData);
-			outputJsonObject.put(SEARCH_PARAMS_TABLE_NAME, searchParamsArray);
-			
-			
-		} catch (EMAnalyticsFwkException e) {
-			LOGGER.error(e.getLocalizedMessage());
-			statusCode = e.getStatusCode();
-			message = e.getMessage();
-			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
-					e.getStatusCode());
-		}
-		return Response.status(statusCode).entity(outputJsonObject).build();
 	}
 	
 	private JSONArray getJSONArrayFromListOfObjects(String dataName, List<Map<String, Object>> list)
