@@ -210,6 +210,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String STATIC_WIDGETS = "static/savedsearch.widgets";
 	private static final String STATIC_WIDGETGROUPS = "static/savedsearch.widgetgroups";
 	private static final String REL_LOG_CONFIG = "log/configuration";
+	
+	 private static final String NAV_ZDT_COUNTS = NAV_BASE + "/zdt/counts";
+     private static final String NAV_ZDT_TABLEROWS = NAV_BASE + "/zdt/tablerows";
+     private static final String NAV_ZDT_SYNC = NAV_BASE + "/zdt/sync";
+
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -372,6 +377,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_WIDGETS).withHref(applicationUrl + NAV_WIDGETS));
 				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrl + NAV_WIDGETGROUPS));
 				links.add(new Link().withRel(REL_LOG_CONFIG).withHref(applicationUrl + NAV_LOGCONFIGS));
+				links.add(new Link().withRel("zdt/counts").withHref(applicationUrl + NAV_ZDT_COUNTS));
+				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrl + NAV_ZDT_TABLEROWS));
+				links.add(new Link().withRel("zdt/sync").withHref(applicationUrl + NAV_ZDT_SYNC));
 			}
 			if (applicationUrlSSL != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
@@ -388,6 +396,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_WIDGETS).withHref(applicationUrlSSL + NAV_WIDGETS));
 				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
 				links.add(new Link().withRel(REL_LOG_CONFIG).withHref(applicationUrlSSL + NAV_LOGCONFIGS));
+				links.add(new Link().withRel("zdt/counts").withHref(applicationUrlSSL + NAV_ZDT_COUNTS));
+				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrlSSL + NAV_ZDT_TABLEROWS));
+				links.add(new Link().withRel("zdt/sync").withHref(applicationUrlSSL + NAV_ZDT_SYNC));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 

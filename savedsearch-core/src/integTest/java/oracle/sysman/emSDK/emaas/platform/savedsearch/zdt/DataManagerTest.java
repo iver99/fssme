@@ -176,23 +176,7 @@ public class DataManagerTest
 		dataManager.getFolderTableData();
 
 	}
-	
-	@Test
-	public void testGetSchemaVerTableData(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query)
-	{
-		final List<Map<String, Object>> list = new ArrayList<>();
-		new Expectations(){
-			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
-				query.getResultList();
-				result = list;
-			}
-		};
-		dataManager.getSchemaVerTableData();
-	}
-	
+
 	@Test
 	public void testGetSearchParamTableData(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
@@ -268,6 +252,7 @@ public class DataManagerTest
 		Long tenantId = 1L;
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
+		Integer deleted = new Integer("0");
 		new Expectations(){
 			{
 				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
@@ -279,7 +264,7 @@ public class DataManagerTest
 				
 			}
 		};
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, creationDate, lastModificationDate);
+		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
 	}
 	
 	
@@ -292,6 +277,7 @@ public class DataManagerTest
 		Long tenantId = 1L;
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
+		Integer deleted = new Integer("0");
 		new Expectations(){
 			{
 				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
@@ -301,13 +287,13 @@ public class DataManagerTest
 				
 			}
 		};
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(null, name, paramValue, tenantId, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, null, paramValue, tenantId, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, name, null, tenantId, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, null, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, null, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, creationDate, null);
+		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(null, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(categoryId, null, paramValue, tenantId, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(categoryId, name, null, tenantId, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(categoryId, name, paramValue, null, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, null, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, creationDate, null,deleted);
 	}
 	
 	@Test
@@ -647,7 +633,7 @@ public class DataManagerTest
 		String descriptionNlsid = "descriptionNlsid";
 		String descriptionSubSystem = "descriptionSubSystem";
 		String emPluginId = "emPluginId";
-		Long defaultFolderId = 1L;
+		BigInteger defaultFolderId =new BigInteger("1");
 		BigInteger deleted = new BigInteger("0");
 		String providerName = "providerName";
 		String providerVersion = "providerVersion";
@@ -726,7 +712,7 @@ public class DataManagerTest
 		String descriptionNlsid = "descriptionNlsid";
 		String descriptionSubSystem = "descriptionSubSystem";
 		String emPluginId = "emPluginId";
-		Long defaultFolderId = 1L;
+		BigInteger defaultFolderId =new BigInteger("1");
 		BigInteger deleted = new BigInteger("0");
 		String providerName = "providerName";
 		String providerVersion = "providerVersion";

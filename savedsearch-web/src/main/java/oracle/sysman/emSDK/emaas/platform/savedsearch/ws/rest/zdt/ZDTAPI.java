@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -80,8 +81,6 @@ public class ZDTAPI
 			obj.put(TABLE_SEARCH, tableData);
 			tableData = getSearchParamsTableData();
 			obj.put(TABLE_SEARCH_PARAMS, tableData);
-			tableData = getSchemaVersionTableData();
-			obj.put(TABLE_SCHEMA_VERSION, tableData);
 		}
 		catch (JSONException e) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -119,6 +118,8 @@ public class ZDTAPI
 
 	@PUT
 	@Path("sync")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
 	public Response sync(JSONObject dataToSync)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/sync");
@@ -168,12 +169,6 @@ public class ZDTAPI
 		}
 		logger.debug("Retrieved table data for {} is \"{}\"", dataName, array.toString());
 		return array;
-	}
-
-	private JSONArray getSchemaVersionTableData()
-	{
-		List<Map<String, Object>> list = DataManager.getInstance().getSchemaVerTableData();
-		return getJSONArrayForListOfObjects(TABLE_SCHEMA_VERSION, list);
 	}
 
 	private JSONArray getSearchParamsTableData()

@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -39,7 +40,7 @@ public class ZDTAPI
 
 		public InstanceCounts(InstanceData<CountsEntity> data)
 		{
-			instanceName = data.getInstance().getKey();
+			instanceName = data.getKey();
 			counts = data.getData();
 		}
 
@@ -138,12 +139,13 @@ public class ZDTAPI
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response compareOnSSF()
+	public Response compareOnSSF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant)
 	{
 		logger.info("There is an incoming call from ZDT comparator API to compare");
 		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects, and return the counts for each instance
 		SavedsearchCountsComparator dcc = new SavedsearchCountsComparator();
-		InstancesComparedData<CountsEntity> result = dcc.compare();
+		InstancesComparedData<CountsEntity> result = dcc.compare(tenantIdParam, userTenant);
 		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
 				new InstanceCounts(result.getInstance2()));
 		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();
@@ -152,14 +154,15 @@ public class ZDTAPI
 	@PUT
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response syncOnSSF()
+	public Response syncOnSSF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant)
 	{
 		logger.info("There is an incoming call from ZDT comparator API to sync");
 		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
 		SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
-		InstancesComparedData<ZDTTableRowEntity> result = dcc.compare();
+		InstancesComparedData<ZDTTableRowEntity> result = dcc.compare(tenantIdParam, userTenant);
 		try {
-			dcc.sync(result);
+			dcc.sync(result, tenantIdParam, userTenant);
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (Exception e) {

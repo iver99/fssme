@@ -7,7 +7,6 @@ import java.util.List;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchFolderRowEntity;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSchemaVerRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTTableRowEntity;
@@ -17,46 +16,42 @@ import org.testng.annotations.Test;
 
 @Test(groups = { "s1" })
 public class RowEntityTest {
-	SavedSearchCategoryParamRowEntity categoryParamEntity = new SavedSearchCategoryParamRowEntity(new BigInteger("1"),
+	SavedSearchCategoryParamRowEntity categoryParamEntity = new SavedSearchCategoryParamRowEntity("1",
 			"name","value", 1L, "creationDate",
 			"lastModificationDate");
-	SavedSearchCategoryParamRowEntity categoryParamEntity2 = new SavedSearchCategoryParamRowEntity(new BigInteger("1"),
+	SavedSearchCategoryParamRowEntity categoryParamEntity2 = new SavedSearchCategoryParamRowEntity("1",
 			"name1","value1", 2L, "creationDate1",
 			"lastModificationDate1");
-	SavedSearchCategoryRowEntity categoryEntity = new SavedSearchCategoryRowEntity(new BigInteger("1"),
+	SavedSearchCategoryRowEntity categoryEntity = new SavedSearchCategoryRowEntity("1",
 			"description", "descriptionNlsid",
 			"descriptionSubsystem", "emPluginId", "name",
 			"nameNlsid", "nameSubsystem", "owner",
-			new BigInteger("1"), "providerName", "providerVersion",
+			"1", "providerName", "providerVersion",
 			"providerDiscovery", "providerAssetRoot",
 			"lastModificationDate", 1L, "creationDate",
-			2l, "dashboardIneligible");
-	SavedSearchCategoryRowEntity categoryEntity2 = new SavedSearchCategoryRowEntity(new BigInteger("2"),
+			"2", "dashboardIneligible");
+	SavedSearchCategoryRowEntity categoryEntity2 = new SavedSearchCategoryRowEntity("2",
 			"description1", "descriptionNlsid1",
 			"descriptionSubsystem1", "emPluginId1", "name1",
 			"nameNlsid1", "nameSubsystem1", "owner1",
-			new BigInteger("2"), "providerName1", "providerVersion1",
+			"2", "providerName1", "providerVersion1",
 			"providerDiscovery1", "providerAssetRoot1",
 			"lastModificationDate1", 2L, "creationDate1",
-			2l, "dashboardIneligible");
-	SavedSearchFolderRowEntity folderEntity = new SavedSearchFolderRowEntity(new BigInteger("1"), "description",
+			"2", "dashboardIneligible");
+	SavedSearchFolderRowEntity folderEntity = new SavedSearchFolderRowEntity("1", "description",
 			"descriptionNlsid", "descriptionSubsystem",
 			"emPluginId", "lastModifiedBy",
 			"lastModificationDate", "name", "nameNlsid",
 			"nameSubsystem", "owner", new Integer("1"),
-			new Integer("1"), new BigInteger("1"), 1L,
-			new BigInteger("1"), "creationDate");
-	SavedSearchFolderRowEntity folderEntity2 = new SavedSearchFolderRowEntity(new BigInteger("1"), "description",
+			new Integer("1"), "1", 1L,
+			"1", "creationDate");
+	SavedSearchFolderRowEntity folderEntity2 = new SavedSearchFolderRowEntity("1", "description",
 			"descriptionNlsid", "descriptionSubsystem",
 			"emPluginId", "lastModifiedBy",
 			"lastModificationDate", "name", "nameNlsid",
 			"nameSubsystem", "owner", new Integer("1"),
-			new Integer("1"), new BigInteger("1"), 1L,
-			new BigInteger("1"), "creationDate");
-	SavedSearchSchemaVerRowEntity schemaVer = new SavedSearchSchemaVerRowEntity(1L, 1L,
-			"creationDate", "lastModificationDate");
-	SavedSearchSchemaVerRowEntity schemaVer2 = new SavedSearchSchemaVerRowEntity(1L, 1L,
-			"creationDate", "lastModificationDate");
+			new Integer("1"), "1", 1L,
+			"1", "creationDate");
 	SavedSearchSearchParamRowEntity searchParam = new SavedSearchSearchParamRowEntity("1","name",
 			"paramAttributes", 1L, "paramValueClob",
 			"paramValueStr", 1L, "creationDate",
@@ -106,8 +101,6 @@ public class RowEntityTest {
 		categoryList1.add(categoryEntity);
 		List<SavedSearchFolderRowEntity> folderList1 = new ArrayList<SavedSearchFolderRowEntity>();
 		folderList1.add(folderEntity);
-		List<SavedSearchSchemaVerRowEntity> schemaVerList1 = new ArrayList<SavedSearchSchemaVerRowEntity>();
-		schemaVerList1.add(schemaVer);
 		List<SavedSearchSearchParamRowEntity> searchParamList1 = new ArrayList<SavedSearchSearchParamRowEntity>();
 		searchParamList1.add(searchParam);
 		List<SavedSearchSearchRowEntity> searchList1 = new ArrayList<SavedSearchSearchRowEntity>();
@@ -116,7 +109,6 @@ public class RowEntityTest {
 		ZDTTableRowEntity zdtTaleRow1 = new ZDTTableRowEntity(categoryList1,
 				categoryParamList1,
 				folderList1,
-				schemaVerList1,
 				searchParamList1,
 				searchList1);
 		
@@ -126,8 +118,6 @@ public class RowEntityTest {
 		categoryList2.add(categoryEntity2);
 		List<SavedSearchFolderRowEntity> folderList2 = new ArrayList<SavedSearchFolderRowEntity>();
 		folderList2.add(folderEntity2);
-		List<SavedSearchSchemaVerRowEntity> schemaVerList2 = new ArrayList<SavedSearchSchemaVerRowEntity>();
-		schemaVerList2.add(schemaVer2);
 		List<SavedSearchSearchParamRowEntity> searchParamList2 = new ArrayList<SavedSearchSearchParamRowEntity>();
 		searchParamList2.add(searchParam2);
 		List<SavedSearchSearchRowEntity> searchList2= new ArrayList<SavedSearchSearchRowEntity>();
@@ -136,7 +126,6 @@ public class RowEntityTest {
 		ZDTTableRowEntity zdtTaleRow2 = new ZDTTableRowEntity(categoryList2,
 				categoryParamList2,
 				folderList2,
-				schemaVerList2,
 				searchParamList2,
 				searchList2);
 		

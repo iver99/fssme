@@ -50,8 +50,8 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY_PARAMS table");
 		for (SavedSearchCategoryParamRowEntity e : rows) {
-			DataManager.getInstance().syncCategoryParamTable(e.getCategoryId(), e.getName(), e.getValue(), e.getTenantId(),
-					e.getCreationDate(), e.getLastModificationDate());
+			DataManager.getInstance().syncCategoryParamTable(e.getCategoryId()==null?new BigInteger(e.getCategoryId()):null, e.getName(), e.getValue(), e.getTenantId(),
+					e.getCreationDate(), e.getLastModificationDate(),e.getDeleted());
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS_CATEGORY_PARAMS table");
 	}
@@ -65,9 +65,10 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY table");
 		for (SavedSearchCategoryRowEntity e : rows) {
-			DataManager.getInstance().syncCategoryTable(e.getCategoryId(), e.getName(), e.getDescription(), e.getOwner(),
+			DataManager.getInstance().syncCategoryTable(e.getCategoryId() ==null? new BigInteger(e.getCategoryId()): null, e.getName(), e.getDescription(), e.getOwner(),
 					e.getCreationDate(), e.getNameNlsid(), e.getNameSubsystem(), e.getDescriptionNlsid(),
-					e.getDescriptionSubsystem(), e.getEmPluginId(), e.getDefaultFolderId(), e.getDeleted(), e.getProviderName(),
+					e.getDescriptionSubsystem(), e.getEmPluginId(), e.getDefaultFolderId() ==null? new BigInteger(e.getDefaultFolderId()):null, 
+							e.getDeleted()==null? new BigInteger(e.getDeleted()):null, e.getProviderName(),
 					e.getProviderVersion(), e.getProviderDiscovery(), e.getProviderAssetRoot(), e.getTenantId(),
 					e.getDashboardIneligible(), e.getLastModificationDate());
 		}
@@ -84,10 +85,10 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY table");
 		for (SavedSearchFolderRowEntity e : rows) {
-			DataManager.getInstance().syncFolderTable(e.getFolderId(), e.getName(), e.getParentId(), e.getDescription(),
+			DataManager.getInstance().syncFolderTable(e.getFolderId() == null? new BigInteger(e.getFolderId()) : null, e.getName(), new BigInteger(e.getParentId()), e.getDescription(),
 					e.getCreationDate(), e.getOwner(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getNameNlsid(),
 					e.getNameSubsystem(), e.getDescriptionNlsid(), e.getDescriptionSubsystem(), e.getSystemFolder(),
-					e.getEmPluginId(), e.getUiHidden(), e.getDeleted(), e.getTenantId());
+					e.getEmPluginId(), e.getUiHidden(), e.getDeleted()==null? new BigInteger(e.getDeleted()): null, e.getTenantId());
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS_FOLDERS table");
 	}

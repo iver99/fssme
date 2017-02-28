@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -30,32 +31,47 @@ public class SavedsearchRowsComparator extends AbstractComparator
 {
 	private static final Logger logger = LogManager.getLogger(SavedsearchRowsComparator.class);
 
-	public InstancesComparedData<ZDTTableRowEntity> compare()
+	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant)
 	{
 		try {
 			logger.info("Starts to compare the two ssf OMC instances: table by table and row by row");
-			Entry<String, LookupClient>[] instances = getOMCInstances();
+			HashMap<String, LookupClient> instances = getOMCInstances();
 			if (instances == null) {
 				logger.error("Failed to retrieve ZDT OMC instances: null retrieved");
 				return null;
 			}
-			Entry<String, LookupClient> ins1 = instances[0];
-			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(ins1.getValue());
+			
+			String key1 = null;
+ 			String key2 = null;
+ 			LookupClient client1 = null;
+ 			LookupClient client2 = null;
+ 			for (String key : instances.keySet()) {
+ 				if (client1 == null) {
+ 					client1 = instances.get(key);
+ 					key1 = key;
+ 				} else {
+ 					if (client2 == null)
+ 					client2 = instances.get(key);
+ 					key2 = key;
+ 				}
+ 			}
+ 			
+ 			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1);
+			
 			if (tre1 == null) {
-				logger.error("Failed to retrieve ZDT table rows entity for instance {}", ins1.getKey());
+				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 				logger.info("Completed to compare the two ssf OMC instances");
 				return null;
 			}
 
-			Entry<String, LookupClient> ins2 = instances[1];
-			ZDTTableRowEntity tre2 = retrieveRowsForSingleInstance(ins2.getValue());
+			ZDTTableRowEntity tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2);
 			if (tre2 == null) {
-				logger.error("Failed to retrieve ZDT table rows entity for instance {}", ins2.getKey());
+				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
 				logger.info("Completed to compare the two SSF OMC instances");
 				return null;
 			}
-			InstancesComparedData<ZDTTableRowEntity> cd = compareInstancesData(new InstanceData<ZDTTableRowEntity>(ins1, tre1),
-					new InstanceData<ZDTTableRowEntity>(ins2, tre2));
+			InstancesComparedData<ZDTTableRowEntity> cd = compareInstancesData(new InstanceData<ZDTTableRowEntity>(key1, client1, tre1),
+					new InstanceData<ZDTTableRowEntity>(key2, client2, tre2));
 			logger.info("Completed to compare the two SSF OMC instances");
 			return cd;
 		}
@@ -65,19 +81,21 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		}
 	}
 
-	public void sync(InstancesComparedData<ZDTTableRowEntity> instancesData) throws Exception
+	public void sync(InstancesComparedData<ZDTTableRowEntity> instancesData,String tenantId, String userTenant) throws Exception
 	{
 		if (instancesData == null) {
 			return;
 		}
 		// switch the data for the instances for sync
-		InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>(instancesData.getInstance1().getInstance(),
+		InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>(instancesData.getInstance1().getKey(),
+				instancesData.getInstance1().getClient(),
 				instancesData.getInstance2().getData());
-		InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>(instancesData.getInstance2().getInstance(),
+		InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>(instancesData.getInstance2().getKey(),
+				instancesData.getInstance2().getClient(),
 				instancesData.getInstance1().getData());
 		InstancesComparedData<ZDTTableRowEntity> syncData = new InstancesComparedData<ZDTTableRowEntity>(instance1, instance2);
-		syncForInstance(syncData.getInstance1());
-		syncForInstance(syncData.getInstance2());
+		syncForInstance( tenantId, userTenant,syncData.getInstance1());
+		syncForInstance(tenantId, userTenant,syncData.getInstance2());
 	}
 
 	/**
@@ -188,8 +206,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			return null;
 		}
 		// prepare the output compared data
-		InstanceData<ZDTTableRowEntity> outData1 = new InstanceData<ZDTTableRowEntity>(insData1.getInstance(), new ZDTTableRowEntity());
-		InstanceData<ZDTTableRowEntity> outData2 = new InstanceData<ZDTTableRowEntity>(insData2.getInstance(), new ZDTTableRowEntity());
+		InstanceData<ZDTTableRowEntity> outData1 = new InstanceData<ZDTTableRowEntity>(insData1.getKey(),insData1.getClient(), new ZDTTableRowEntity());
+		InstanceData<ZDTTableRowEntity> outData2 = new InstanceData<ZDTTableRowEntity>(insData2.getKey(),insData2.getClient(), new ZDTTableRowEntity());
 		InstancesComparedData<ZDTTableRowEntity> cd = new InstancesComparedData<ZDTTableRowEntity>(outData1, outData2);
 		compareSSFCategoryRows(insData1.getData().getSavedSearchCategory(), insData2.getData().getSavedSearchCategory(), cd);
 		compareSSFCategoryParamRows(insData1.getData().getSavedSearchCategoryParams(), insData2.getData().getSavedSearchCategoryParams(),
@@ -226,27 +244,32 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private ZDTTableRowEntity retrieveRowsForSingleInstance(LookupClient lc) throws Exception, IOException
+	private ZDTTableRowEntity retrieveRowsForSingleInstance(String tenantId, String userTenant,LookupClient lc) throws Exception, IOException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), null);
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		logger.info("Checking SSF OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
 
-	private String syncForInstance(InstanceData<ZDTTableRowEntity> instance) throws Exception
+	private String syncForInstance(String tenantId, String userTenant,InstanceData<ZDTTableRowEntity> instance) throws Exception
 	{
-		Link lk = getSingleInstanceUrl(instance.getInstance().getValue(), "zdt/sync", "http");
+		Link lk = getSingleInstanceUrl(instance.getClient(), "zdt/sync", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), instance.getData(), null);
-		logger.info("Checking SSF OMC instance table rows. Response is " + response);
+		ZDTTableRowEntity entity = instance.getData();
+ 		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
+ 		jsonUtil.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+ 		String entityStr = jsonUtil.toJson(entity);
+ 		logger.info("print the put data {} !",entityStr);
+ 		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
+ 		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}
 }

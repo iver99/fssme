@@ -42,15 +42,32 @@ public class DataManager
 	private static final String SQL_ALL_FOLDER_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_FOLDERS WHERE DELETED <> 1";
 	private static final String SQL_ALL_SEARCH_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_FOLDERS WHERE DELETED <> 1";
 
-	private static final String SQL_ALL_CATEGORY_ROWS = "SELECT * FROM EMS_ANALYTICS_CATEGORY";
-	private static final String SQL_ALL_FOLDER_ROWS = "SELECT * FROM EMS_ANALYTICS_FOLDERS";
-	private static final String SQL_ALL_SEARCH_ROWS = "SELECT * FROM EMS_ANALYTICS_SEARCH";
-	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS = "SELECT * FROM EMS_ANALYTICS_CATEGORY_PARAMS";
-	private static final String SQL_ALL_SCHEMA_VER_ROWS = "SELECT * FROM EMS_ANALYTICS_SCHEMA_VER_SSF";
-	private static final String SQL_ALL_SEARCH_PARAMS_ROWS = "SELECT * FROM EMS_ANALYTICS_SEARCH_PARAMS";
+	private static final String SQL_ALL_CATEGORY_ROWS = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,DESCRIPTION,OWNER,CREATION_DATE,"
+			+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,EM_PLUGIN_ID,"
+			+ "TO_CHAR(DEFAULT_FOLDER_ID) AS DEFAULT_FOLDER_ID,DELETED,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_DISCOVERY,"
+			+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE FROM EMS_ANALYTICS_CATEGORY";
+	
+	private static final String SQL_ALL_FOLDER_ROWS = "SELECT TO_CHAR(FOLDER_ID) AS FOLDER_ID,NAME, TO_CHAR(PARENT_ID) AS PARENT_ID, DESCRIPTION,CREATION_DATE,OWNER,"
+			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
+			+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS";
+	
+	private static final String SQL_ALL_SEARCH_ROWS = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,OWNER,CREATION_DATE,"
+			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,TO_CHAR(FOLDER_ID) AS FOLDER_ID, TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,"
+			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
+			+ "DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
+			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
+			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
+			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE FROM EMS_ANALYTICS_SEARCH";
+	
+	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED FROM EMS_ANALYTICS_CATEGORY_PARAMS";
+	
+	private static final String SQL_ALL_SEARCH_PARAMS_ROWS = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
+			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS";
 
+	
 	private static final String SQL_INSERT_CATEGORY_PARAM = "INSERT INTO EMS_ANALYTICS_CATEGORY_PARAMS (CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED) "
 			+ "VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?)";
+	
 	private static final String SQL_UPDATE_CATEGORY_PARAM = "UPDATE EMS_ANALYTICS_CATEGORY_PARAMS T SET T.PARAM_VALUE=?,T.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "T.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),T.DELETED=? where T.CATEGORY_ID=? and T.NAME=? and T.TENANT_ID=?";
 
@@ -59,6 +76,7 @@ public class DataManager
 			+ "DEFAULT_FOLDER_ID,DELETED,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_DISCOVERY,"
 			+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "?,?,?,?,?," + "?,?,?,?,?," + "?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
+	
 	private static final String SQL_UPDATE_CATEGORY = "UPDATE EMS_ANALYTICS_CATEGORY t set t.NAME=?,t.DESCRIPTION=?,t.OWNER=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "t.NAME_NLSID=?,t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,t.DESCRIPTION_SUBSYSTEM=?,t.EM_PLUGIN_ID=?,"
 			+ "t.DEFAULT_FOLDER_ID=?,t.DELETED=?,t.PROVIDER_NAME=?,t.PROVIDER_VERSION=?,t.PROVIDER_DISCOVERY=?,"
@@ -68,35 +86,37 @@ public class DataManager
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
 			+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,?,?," + "?,?,?,?,?," + "?,?)";
+	
 	private static final String SQL_UPDATE_FOLDER = "UPDATE EMS_ANALYTICS_FOLDERS t SET t.NAME=?,t.PARENT_ID=?,t.DESCRIPTION=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "t.OWNER=?,t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFIED_BY=?,t.NAME_NLSID=?,"
 			+ "t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,t.DESCRIPTION_SUBSYSTEM=?,t.SYSTEM_FOLDER=?,t.EM_PLUGIN_ID=?,"
 			+ "t.UI_HIDDEN=?,t.DELETED=? where t.FOLDER_ID=? and t.TENANT_ID=?";
 
-	private static final String SQL_INSERT_SEARCH = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
+	private static final String SQL_INSERT_SEARCH = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,"
-			+ "DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,"
-			+ "EM_PLUGIN_ID,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
+			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
 			+ "DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
 			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
 			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
-			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
+			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE) VALUES(?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,?,?,?,"
 			+ "?,?,?,?,?,"
 			+ "?,?,?,?,?,"
 			+ "?,?,?,?,?,"
-			+ "?,?,?,?,?,"
 			+ "?,?,?,?,?," + "?,?,?)";
-	private static final String SQL_UPDATE_SEARCH = "UPDATE EMS_ANALYTICS_SEARCH t set t.SEARCH_GUID=?,t.NAME=?,t.OWNER=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
-			+ "t.LAST_MODIFIED_BY=?,t.DESCRIPTION=?,t.FOLDER_ID=?,t.CATEGORY_ID=?,t.NAME_NLSID=?,t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,"
-			+ "t.DESCRIPTION_SUBSYSTEM=?,t.SYSTEM_SEARCH=?,t.EM_PLUGIN_ID=?,t.IS_LOCKED=?,t.METADATA_CLOB=?,t.SEARCH_DISPLAY_STR=?,t.UI_HIDDEN=?,"
+	
+	private static final String SQL_UPDATE_SEARCH = "UPDATE EMS_ANALYTICS_SEARCH t set t.NAME=?,t.OWNER=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
+			+ "t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
+			+ "t.LAST_MODIFIED_BY=?,t.DESCRIPTION=?,t.FOLDER_ID=?,t.CATEGORY_ID=?,"
+			+ "t.SYSTEM_SEARCH=?,t.IS_LOCKED=?,t.METADATA_CLOB=?,t.SEARCH_DISPLAY_STR=?,t.UI_HIDDEN=?,"
 			+ "t.DELETED=?,t.IS_WIDGET=?,t.WIDGET_SOURCE=?,t.WIDGET_GROUP_NAME=?,t.WIDGET_SCREENSHOT_HREF=?,t.WIDGET_ICON=?,"
 			+ "t.WIDGET_KOC_NAME=?,t.WIDGET_VIEWMODEL=?,t.WIDGET_TEMPLATE=?,t.WIDGET_SUPPORT_TIME_CONTROL=?,t.WIDGET_LINKED_DASHBOARD=?,"
 			+ "t.WIDGET_DEFAULT_WIDTH=?,t.WIDGET_DEFAULT_HEIGHT=?,t.PROVIDER_NAME=?,t.PROVIDER_VERSION=?,t.PROVIDER_ASSET_ROOT=?,"
 			+ "t.DASHBOARD_INELIGIBLE=? where t.SEARCH_ID=? and t.TENANT_ID=?";
 
 	private static final String SQL_INSERT_SEARCH_PARAM = "INSERT INTO EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
-			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE) VALUES(?,?,?,?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
+			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED) VALUES(?,?,?,?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?)";
+	
 	private static final String SQL_UPDATE_SEARCH_PARAM = "UPDATE EMS_ANALYTICS_SEARCH_PARAMS t set t.PARAM_ATTRIBUTES=?,t.PARAM_TYPE=?,t.PARAM_VALUE_STR=?,"
 			+ "t.PARAM_VALUE_CLOB=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";
 
@@ -222,17 +242,6 @@ public class DataManager
 	}
 
 	/**
-	 * Get all rows in search version table
-	 *
-	 * @return
-	 */
-
-	public List<Map<String, Object>> getSchemaVerTableData()
-	{
-		return getDatabaseTableData(SQL_ALL_SCHEMA_VER_ROWS);
-	}
-
-	/**
 	 * get all rows in search param table
 	 *
 	 * @return
@@ -255,9 +264,10 @@ public class DataManager
 	}
 
 	public void syncCategoryParamTable(BigInteger categoryId, String name, String paramValue, Long tenantId, String creationDate,
-			String lastModificationDate)
+			String lastModificationDate, Integer deleted)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY_PARAMS t where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
+		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY_PARAMS t "
+				+ "where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
 		if (!em.getTransaction().isActive()) {
@@ -275,7 +285,7 @@ public class DataManager
 				logger.debug("Data not exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute insert action.");
 				em.createNativeQuery(SQL_INSERT_CATEGORY_PARAM).setParameter(1, categoryId).setParameter(2, name)
 				.setParameter(3, paramValue).setParameter(4, tenantId).setParameter(5, creationDate)
-				.setParameter(6, lastModificationDate).executeUpdate();
+				.setParameter(6, lastModificationDate).setParameter(7, deleted).executeUpdate();
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
@@ -288,7 +298,7 @@ public class DataManager
 					logger.debug("Data exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute update action.");
 					em.createNativeQuery(SQL_UPDATE_CATEGORY_PARAM).setParameter(1, paramValue).setParameter(2, creationDate)
 							.setParameter(3, lastModificationDate).setParameter(4, categoryId).setParameter(5, name)
-							.setParameter(6, tenantId).executeUpdate();
+							.setParameter(6, tenantId).setParameter(7, deleted).executeUpdate();
 				}
 
 			}
@@ -308,16 +318,19 @@ public class DataManager
 
 	public void syncCategoryTable(BigInteger categoryId, String name, String description, String owner, String creationDate,
 			String nameNlsid, String nameSubSystem, String descriptionNlsid, String descriptionSubSystem, String emPluginId,
-			Long defaultFolderId, BigInteger deleted, String providerName, String providerVersion, String providerDiscovery,
+			BigInteger defaultFolderId, BigInteger deleted, String providerName, String providerVersion, String providerDiscovery,
 			String providerAssetroot, Long tenantId, String dashboardIneligible, String lastModificationDate)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY t where t.CATEGORY_ID=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY t "
+				+ "where (t.CATEGORY_ID=? and t.TENANT_ID=?) OR (t.name = ? and t.deleted=? and t.owner=? and t.tenant_id = ?)";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
-		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId)
+				.setParameter(3, name).setParameter(4, deleted).setParameter(5, owner)
+				.setParameter(6, tenantId);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
@@ -371,13 +384,16 @@ public class DataManager
 			String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem, String descriptionNlsid,
 			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t where t.FOLDER_ID=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t "
+				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=?, and t.parent_id=? and t.deleted=? and t.tenant_id = ?)";//check if the data is existing.
 		EntityManager em = null;
 		em = getEntityManager();
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
-		Query q1 = em.createNativeQuery(sql).setParameter(1, folderId).setParameter(2, tenantId);
+		Query q1 = em.createNativeQuery(sql).setParameter(1, folderId).setParameter(2, tenantId)
+				.setParameter(3, name).setParameter(4, parentId).setParameter(5, deleted)
+				.setParameter(6, tenantId);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
@@ -484,7 +500,7 @@ public class DataManager
 
 	}
 
-	public void syncSearchTable(BigInteger searchId/*, String searchGuid*/, String name, String owner, String creationDate,
+	public void syncSearchTable(BigInteger searchId, String name, String owner, String creationDate,
 			String lastModificationDate, String lastModifiedBy, String description, BigInteger folderId, BigInteger categoryId,
 			Integer systemSearch,Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
 			Integer isWidget, Long tenantId, String nameWidgetSource, String widgetGroupName, String widgetScreenshotHref,
@@ -515,18 +531,18 @@ public class DataManager
 			if (flag) {
 				//execute insert action
 				logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH,execute insert action.");
-				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, null).setParameter(3, name)
-				.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
-				.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
-				.setParameter(10, categoryId).setParameter(15, systemSearch).setParameter(17, isLocked).setParameter(18, metaDataClob)
-				.setParameter(19, searchDisplayStr).setParameter(20, uiHidden).setParameter(21, deleted)
-				.setParameter(22, isWidget).setParameter(23, tenantId).setParameter(24, nameWidgetSource)
-				.setParameter(25, widgetGroupName).setParameter(26, widgetScreenshotHref).setParameter(27, widgetIcon)
-				.setParameter(28, widgetKocName).setParameter(29, viewModel).setParameter(30, widgetTemplate)
-				.setParameter(31, widgetSupportTimeControl).setParameter(32, widgetLinkedDashboard)
-				.setParameter(33, widgetDefaultWidth).setParameter(34, widgetDefaultHeight)
-				.setParameter(35, providerName).setParameter(36, providerVersion).setParameter(37, providerAssetRoot)
-				.setParameter(38, dashboardIneligible).executeUpdate();
+				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, name)
+				.setParameter(3, owner).setParameter(4, creationDate).setParameter(5, lastModificationDate)
+				.setParameter(6, lastModifiedBy).setParameter(7, description).setParameter(8, folderId)
+				.setParameter(9, categoryId).setParameter(10, systemSearch).setParameter(11, isLocked).setParameter(12, metaDataClob)
+				.setParameter(13, searchDisplayStr).setParameter(14, uiHidden).setParameter(15, deleted)
+				.setParameter(16, isWidget).setParameter(17, tenantId).setParameter(18, nameWidgetSource)
+				.setParameter(19, widgetGroupName).setParameter(20, widgetScreenshotHref).setParameter(21, widgetIcon)
+				.setParameter(22, widgetKocName).setParameter(23, viewModel).setParameter(24, widgetTemplate)
+				.setParameter(25, widgetSupportTimeControl).setParameter(26, widgetLinkedDashboard)
+				.setParameter(27, widgetDefaultWidth).setParameter(28, widgetDefaultHeight)
+				.setParameter(29, providerName).setParameter(30, providerVersion).setParameter(31, providerAssetRoot)
+				.setParameter(32, dashboardIneligible).executeUpdate();
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
@@ -537,18 +553,18 @@ public class DataManager
 				else {
 					//execute update action
 					logger.debug("Data exist in table EMS_ANALYTICS_SEARCH,execute update action.");
-					em.createNativeQuery(SQL_UPDATE_SEARCH).setParameter(1, null).setParameter(2, name).setParameter(3, owner)
-							.setParameter(4, creationDate).setParameter(5, lastModificationDate).setParameter(6, lastModifiedBy)
-							.setParameter(7, description).setParameter(8, folderId).setParameter(9, categoryId)
-							.setParameter(14, systemSearch).setParameter(16, isLocked).setParameter(17, metaDataClob).setParameter(18, searchDisplayStr)
-							.setParameter(19, uiHidden).setParameter(20, deleted).setParameter(21, isWidget)
-							.setParameter(22, nameWidgetSource).setParameter(23, widgetGroupName)
-							.setParameter(24, widgetScreenshotHref).setParameter(25, widgetIcon).setParameter(26, widgetKocName)
-							.setParameter(27, viewModel).setParameter(28, widgetTemplate)
-							.setParameter(29, widgetSupportTimeControl).setParameter(30, widgetLinkedDashboard)
-							.setParameter(31, widgetDefaultWidth).setParameter(32, widgetDefaultHeight)
-							.setParameter(33, providerName).setParameter(34, providerVersion).setParameter(35, providerAssetRoot)
-							.setParameter(36, dashboardIneligible).setParameter(37, searchId).setParameter(38, tenantId)
+					em.createNativeQuery(SQL_UPDATE_SEARCH).setParameter(1, name).setParameter(2, owner)
+							.setParameter(3, creationDate).setParameter(4, lastModificationDate).setParameter(5, lastModifiedBy)
+							.setParameter(6, description).setParameter(7, folderId).setParameter(8, categoryId)
+							.setParameter(9, systemSearch).setParameter(10, isLocked).setParameter(11, metaDataClob).setParameter(12, searchDisplayStr)
+							.setParameter(13, uiHidden).setParameter(14, deleted).setParameter(15, isWidget)
+							.setParameter(16, nameWidgetSource).setParameter(17, widgetGroupName)
+							.setParameter(18, widgetScreenshotHref).setParameter(19, widgetIcon).setParameter(20, widgetKocName)
+							.setParameter(21, viewModel).setParameter(22, widgetTemplate)
+							.setParameter(23, widgetSupportTimeControl).setParameter(24, widgetLinkedDashboard)
+							.setParameter(25, widgetDefaultWidth).setParameter(26, widgetDefaultHeight)
+							.setParameter(27, providerName).setParameter(28, providerVersion).setParameter(29, providerAssetRoot)
+							.setParameter(30, dashboardIneligible).setParameter(31, searchId).setParameter(32, tenantId)
 							.executeUpdate();
 				}
 

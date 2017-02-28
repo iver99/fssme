@@ -128,26 +128,6 @@ public class SavedSearchCategoryParamRowEntityTest {
 
     }
 
-    private SavedSearchSchemaVerRowEntity savedSearchSchemaVerRowEntity = new SavedSearchSchemaVerRowEntity(null, null, null, null);
-
-    @Test
-    public void testSavedSearchSchemaVerRowEntity(){
-        savedSearchSchemaVerRowEntity.equals(null);
-        savedSearchSchemaVerRowEntity.equals(new Object());
-        savedSearchSchemaVerRowEntity.equals(savedSearchSchemaVerRowEntity);
-        savedSearchSchemaVerRowEntity.equals(new SavedSearchSchemaVerRowEntity(null, null, null, null));
-        savedSearchSchemaVerRowEntity.setCreationDate(null);
-        savedSearchSchemaVerRowEntity.getCreationDate();
-        savedSearchSchemaVerRowEntity.setLastModificationDate(null);
-        savedSearchSchemaVerRowEntity.getLastModificationDate();
-        savedSearchSchemaVerRowEntity.setMajor(null);
-        savedSearchSchemaVerRowEntity.getMajor();
-        savedSearchSchemaVerRowEntity.setMinor(null);
-        savedSearchSchemaVerRowEntity.getMinor();
-        savedSearchSchemaVerRowEntity.hashCode();
-        savedSearchSchemaVerRowEntity.toString();
-    }
-
     private SavedSearchSearchParamRowEntity savedSearchSearchParamRowEntity = new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null,0);
     @Test
     public void testSavedSearchSearchParamRowEntity(){
@@ -260,23 +240,21 @@ public class SavedSearchCategoryParamRowEntityTest {
 
 
     }
-    private ZDTTableRowEntity zdtTableRowEntity = new ZDTTableRowEntity(null, null, null, null, null, null);
+    private ZDTTableRowEntity zdtTableRowEntity = new ZDTTableRowEntity(null, null, null, null, null);
     @Test
     public void testZDTTableRowEntity(){
         zdtTableRowEntity.equals(zdtTableRowEntity);
         zdtTableRowEntity.equals(null);
         zdtTableRowEntity.equals(new Object());
-        zdtTableRowEntity.equals(new ZDTTableRowEntity(null, null, null, null, null, null));
+        zdtTableRowEntity.equals(new ZDTTableRowEntity(null, null, null, null, null));
         zdtTableRowEntity.setSavedSearchCategory(null);
         zdtTableRowEntity.setSavedSearchCategoryParams(null);
         zdtTableRowEntity.setSavedSearchFoldersy(null);
-        zdtTableRowEntity.setSavedSearchSchemaVer(null);
         zdtTableRowEntity.setSavedSearchSearch(null);
         zdtTableRowEntity.setSavedSearchSearchParams(null);
         zdtTableRowEntity.getSavedSearchCategory();
         zdtTableRowEntity.getSavedSearchCategoryParams();
         zdtTableRowEntity.getSavedSearchFoldersy();
-        zdtTableRowEntity.getSavedSearchSchemaVer();
         zdtTableRowEntity.getSavedSearchSearch();
         zdtTableRowEntity.getSavedSearchSearchParams();
 

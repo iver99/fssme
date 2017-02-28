@@ -27,6 +27,10 @@ public class ZDTAPITest {
     CountsEntity count;
     @Mocked
     Throwable throwable;
+    @Mocked
+    String tenant;
+    @Mocked
+    String userTenant;
     @Test(expectedExceptions={NullPointerException.class})
     public void testCompareOnDF(){
         new Expectations(){
@@ -35,11 +39,11 @@ public class ZDTAPITest {
                 result = null;
             }
         };
-        zdtapi.compareOnSSF();
+        zdtapi.compareOnSSF(tenant, userTenant);
     }
     @Test
     public void testSyncOnDF(){
-        zdtapi.syncOnSSF();
+        zdtapi.syncOnSSF(tenant, userTenant);
     }
     @Test
     public void testInnerClasses(){

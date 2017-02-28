@@ -29,9 +29,6 @@ public class ZDTTableRowEntity
 	@JsonProperty("EMS_ANALYTICS_FOLDERS")
 	private List<SavedSearchFolderRowEntity> savedSearchFoldersy;
 
-	@JsonProperty("EMS_ANALYTICS_SCHEMA_VER_SSF")
-	private List<SavedSearchSchemaVerRowEntity> savedSearchSchemaVer;
-
 	@JsonProperty("EMS_ANALYTICS_SEARCH_PARAMS")
 	private List<SavedSearchSearchParamRowEntity> savedSearchSearchParams;
 
@@ -48,14 +45,12 @@ public class ZDTTableRowEntity
 			List<SavedSearchCategoryRowEntity> savedSearchCategory,
 			List<SavedSearchCategoryParamRowEntity> savedSearchCategoryParams,
 			List<SavedSearchFolderRowEntity> savedSearchFoldersy,
-			List<SavedSearchSchemaVerRowEntity> savedSearchSchemaVer,
 			List<SavedSearchSearchParamRowEntity> savedSearchSearchParams,
 			List<SavedSearchSearchRowEntity> savedSearchSearch) {
 		super();
 		this.savedSearchCategory = savedSearchCategory;
 		this.savedSearchCategoryParams = savedSearchCategoryParams;
 		this.savedSearchFoldersy = savedSearchFoldersy;
-		this.savedSearchSchemaVer = savedSearchSchemaVer;
 		this.savedSearchSearchParams = savedSearchSearchParams;
 		this.savedSearchSearch = savedSearchSearch;
 	}
@@ -101,14 +96,7 @@ public class ZDTTableRowEntity
 			return false;
 		}
 		
-		if (savedSearchSchemaVer == null) {
-			if (other.savedSearchSchemaVer != null) {
-				return false;
-			}
-		}
-		else if (!savedSearchSchemaVer.equals(other.savedSearchSchemaVer)) {
-			return false;
-		}
+	
 		if (savedSearchSearch == null) {
 			if (other.savedSearchSearch != null) {
 				return false;
@@ -152,15 +140,6 @@ public class ZDTTableRowEntity
 		return savedSearchFoldersy;
 	}
 
-	
-	/**
-	 * @return the savedSearchSchemaVer
-	 */
-	public List<SavedSearchSchemaVerRowEntity> getSavedSearchSchemaVer()
-	{
-		return savedSearchSchemaVer;
-	}
-
 	/**
 	 * @return the savedSearchSearch
 	 */
@@ -188,7 +167,6 @@ public class ZDTTableRowEntity
 		result = prime * result + (savedSearchCategory == null ? 0 : savedSearchCategory.hashCode());
 		result = prime * result + (savedSearchCategoryParams == null ? 0 : savedSearchCategoryParams.hashCode());
 		result = prime * result + (savedSearchFoldersy == null ? 0 : savedSearchFoldersy.hashCode());
-		result = prime * result + (savedSearchSchemaVer == null ? 0 : savedSearchSchemaVer.hashCode());
 		result = prime * result + (savedSearchSearch == null ? 0 : savedSearchSearch.hashCode());
 		result = prime * result + (savedSearchSearchParams == null ? 0 : savedSearchSearchParams.hashCode());
 		return result;
@@ -222,15 +200,6 @@ public class ZDTTableRowEntity
 	}
 
 	/**
-	 * @param savedSearchSchemaVer
-	 *            the savedSearchSchemaVer to set
-	 */
-	public void setSavedSearchSchemaVer(List<SavedSearchSchemaVerRowEntity> savedSearchSchemaVer)
-	{
-		this.savedSearchSchemaVer = savedSearchSchemaVer;
-	}
-
-	/**
 	 * @param savedSearchSearch
 	 *            the savedSearchSearch to set
 	 */
@@ -255,7 +224,7 @@ public class ZDTTableRowEntity
 	public String toString()
 	{
 		return "ZDTTableRowEntity [savedSearchCategory=" + savedSearchCategory + ", savedSearchCategoryParams="
-				+ savedSearchCategoryParams + ", savedSearchFoldersy=" + savedSearchFoldersy + ", savedSearchSchemaVer=" + savedSearchSchemaVer + ", savedSearchSearchParams="
+				+ savedSearchCategoryParams + ", savedSearchFoldersy=" + savedSearchFoldersy  + ", savedSearchSearchParams="
 				+ savedSearchSearchParams + ", savedSearchSearch=" + savedSearchSearch + "]";
 	}
 
