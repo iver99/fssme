@@ -1,7 +1,7 @@
 <?xml version="1.0"?> 
  
 <service-artifacts name="SavedsearchService-comparator"> 
-      <file name='../savedsearch-comparator/savedsearchcomparator-ee/build/libs/emaas-applications-savedsearchservice-comparator'
+      <file name='../savedsearch-comparator/savedsearchcomparator-ee/build/libs/emaas-applications-savedsearch-comparator'
             serviceName='SavedsearchService-comparator'> 
             <version>SERVICEVERSION</version> 
             <extension>ear</extension> 

@@ -21,7 +21,7 @@ default["java_home"] = "#{node["jdk_dir"]}/jdk1.7.0_51"
 default["SAAS_API_version"] = "1.0"
 default["oracle_base"]="#{node["run_dir"]}"/oracle"
 
-default["myApplicationName"]="emaas-applications-savedsearchservice-comparator-ear"
+default["myApplicationName"]="emaas-applications-savedsearch-comparator-ear"
 default["target"]="#{node["wls_adminserver_name"]}"
 
 
@@ -29,6 +29,6 @@ default["target"]="#{node["wls_adminserver_name"]}"
 default["is_db_lookup"]="true"
 
 default["SAAS_earSelfCheck"]="emaas"
-default["SAAS_earfile"]="emaas-applications-savedsearchservice-comparator-ear-#{node["SAAS_version"]}.ear"
+default["SAAS_earfile"]="emaas-applications-savedsearch-comparator-ear-#{node["SAAS_version"]}.ear"
 
 default["SAAS_deploymentUuid"]="0"
