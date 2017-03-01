@@ -1,12 +1,10 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.json;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json;
 
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 
-/**
- * Created by chehao on 2017/1/10.
- */
+
 @Test(groups = {"s2"})
 public class AppMappingEntityTest {
 

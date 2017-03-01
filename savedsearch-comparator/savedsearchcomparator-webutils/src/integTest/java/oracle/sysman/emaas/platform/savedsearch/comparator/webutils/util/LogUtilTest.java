@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
@@ -14,9 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-/**
- * Created by chehao on 2017/1/10.
- */
+
 @Test(groups = {"s2"})
 public class LogUtilTest {
 

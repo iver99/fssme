@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.services;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.services;
 
 import mockit.Mocked;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -10,11 +10,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by chehao on 2017/1/10.
- */
+
 @Test(groups = {"s2"})
-public class DashboardComparatorLifecycleServiceTest {
+public class SavedsearchComparatorLifecycleServiceTest {
 
     @Mocked
     ApplicationLifecycleEvent applicationLifecycleEvent;

@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.services;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.services;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
@@ -10,9 +10,7 @@ import javax.management.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-/**
- * Created by chehao on 2017/1/12.
- */
+
 @Test(groups = {"s2"})
 public class RegistryServiceManagerTest {
 

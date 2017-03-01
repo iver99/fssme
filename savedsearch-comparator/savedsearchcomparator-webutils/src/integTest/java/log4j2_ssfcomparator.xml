@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration debug="false">
 	<Properties>
-        <Property name="dir">/var/opt/ORCLemaas/logs/dashboardsService</Property>
-        <Property name="mainLog">dashboardsComparatorService.log</Property>
-	    <Property name="mainPattern">[%d{DEFAULT}{UTC}] [%p] [%t] [EMSAAS] [Dashboard-Comparator] [%c{36}] T[%X{tenantId}] %m%n</Property>
-        <Property name="errorLog">dashboardsComparatorService_error.log</Property>
-	    <Property name="mainPatternDefault">[%d{DEFAULT}{UTC}] [%p] [%t] [EMSAAS] [Dashboard-Comparator] [%c{36}] T[N/A] %m%n</Property>
-        <Property name="startupShutdownLog">dashboardsComparatorService_startup_shutdown.log</Property>
-	    <Property name="startupShutdownPattern">[%d{DEFAULT}{UTC}] [%p] [%t] [EMAAS] [Dashboard-Comparator] %m%n</Property>
-        <Property name="interactionLog">dashboardsComparatorService_interaction.log</Property>
+        <Property name="dir">/var/opt/ORCLemaas/logs/savedsearchService</Property>
+        <Property name="mainLog">savedsearchComparatorService.log</Property>
+	    <Property name="mainPattern">[%d{DEFAULT}{UTC}] [%p] [%t] [EMSAAS] [Savedsearch-Comparator] [%c{36}] T[%X{tenantId}] %m%n</Property>
+        <Property name="errorLog">savedsearchComparatorService_error.log</Property>
+	    <Property name="mainPatternDefault">[%d{DEFAULT}{UTC}] [%p] [%t] [EMSAAS] [Savedsearch-Comparator] [%c{36}] T[N/A] %m%n</Property>
+        <Property name="startupShutdownLog">savedsearchComparatorService_startup_shutdown.log</Property>
+	    <Property name="startupShutdownPattern">[%d{DEFAULT}{UTC}] [%p] [%t] [EMAAS] [Savedsearch-Comparator] %m%n</Property>
+        <Property name="interactionLog">savedsearchComparatorService_interaction.log</Property>
 	    <Property name="interactionPattern">[%d{DEFAULT}{UTC}] [%p] [%t] T[%X{tenantId}] [EMSAAS] [%X{serviceInvoked}] [%X{direction}] %m%n</Property>
     </Properties>
 	<Appenders>

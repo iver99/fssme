@@ -63,7 +63,10 @@ dependencies {
 	testConfig('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
 
 
-
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web', version: "${REPO_BID}") {transitive = false}
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-webutils', version: "${REPO_BID}") {transitive = false}
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-webutils-integ-tests', version: "${REPO_BID}") {transitive = false}
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web-integ-tests', version: "${REPO_BID}") {transitive = false}
 
 	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0'){transitive = false}
 	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5'){ transitive = false }
@@ -130,7 +133,7 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/S
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchRowEntityTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/ZDTTableRowEntityTest.class"
 
-/*
+
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedSearchComparatorCORSFilterTest.class"
 include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/services/ZDTAPITest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/property/PropertyReaderTest.class"
@@ -150,7 +153,7 @@ include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/management
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/CountsEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFFolderRowEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedsearchComparatorApplicationTest.class"
-*/
+
 
         useRestAssured=true
 ext.set("testType", "integration")

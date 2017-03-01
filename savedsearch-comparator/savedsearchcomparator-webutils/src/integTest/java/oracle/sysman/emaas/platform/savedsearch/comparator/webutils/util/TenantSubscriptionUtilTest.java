@@ -1,30 +1,30 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+
 import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingCollection;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json.AppMappingCollection;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json.AppMappingEntity;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json.DomainEntity;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json.DomainsEntity;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by chehao on 2017/1/11.
- */
 @Test(groups = {"s2"})
 public class TenantSubscriptionUtilTest {
 

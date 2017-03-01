@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.services;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,9 +8,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.Properties;
 
-/**
- * Created by chehao on 2017/1/10.
- */
+
 @Test(groups = {"s2"})
 public class PropertyReaderTest {
 

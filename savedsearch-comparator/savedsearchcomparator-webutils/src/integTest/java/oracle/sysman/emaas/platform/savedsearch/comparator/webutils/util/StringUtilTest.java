@@ -1,11 +1,9 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * Created by chehao on 2017/1/10.
- */
+
 @Test(groups = {"s2"})
 public class StringUtilTest {
 

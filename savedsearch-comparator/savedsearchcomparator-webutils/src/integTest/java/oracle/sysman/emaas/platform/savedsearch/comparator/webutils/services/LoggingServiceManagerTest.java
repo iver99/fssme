@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.services;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.services;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -13,9 +13,7 @@ import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
 
-/**
- * Created by chehao on 2017/1/11.
- */
+
 @Test(groups = {"s2"})
 public class LoggingServiceManagerTest {
 

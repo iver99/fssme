@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.targetmodel.services;
+package oracle.sysman.emaas.platform.savedsearch.comparator.targetmodel.services;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -6,40 +6,38 @@ import org.testng.annotations.Test;
 
 import javax.management.*;
 
-/**
- * Created by chehao on 2017/1/10.
- */
+
 @Test(groups = {"s2"})
-public class DashboardComparatorStatusTest {
+public class SavedsearchComparatorStatusTest {
 
 
     @Mocked
     GlobalStatus globalStatus;
-    private DashboardComparatorStatus dashboardComparatorStatus = new DashboardComparatorStatus();
+    private SavedsearchComparatorStatus SavedsearchComparatorStatus = new SavedsearchComparatorStatus();
     @Test
     public void testGetStatus(){
         new Expectations(){
             {
-                globalStatus.isDashboardComparatorUp();
+                globalStatus.isSavedsearchComparatorUp();
                 result = false;
             }
         };
-        dashboardComparatorStatus.getStatus();
-        dashboardComparatorStatus.getStatusMsg();
-        dashboardComparatorStatus.equals(dashboardComparatorStatus);
+        SavedsearchComparatorStatus.getStatus();
+        SavedsearchComparatorStatus.getStatusMsg();
+        SavedsearchComparatorStatus.equals(SavedsearchComparatorStatus);
     }
 
     @Test
     public void testGetStatus2nd(){
         new Expectations(){
             {
-                globalStatus.isDashboardComparatorUp();
+                globalStatus.isSavedsearchComparatorUp();
                 result = true;
             }
         };
-        dashboardComparatorStatus.getStatus();
-        dashboardComparatorStatus.getStatusMsg();
-        dashboardComparatorStatus.equals(dashboardComparatorStatus);
+        SavedsearchComparatorStatus.getStatus();
+        SavedsearchComparatorStatus.getStatusMsg();
+        SavedsearchComparatorStatus.equals(SavedsearchComparatorStatus);
     }
     private JMXUtil jmxUtil = JMXUtil.getInstance();
     @Test

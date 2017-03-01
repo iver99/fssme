@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util;
 
 import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
@@ -20,9 +20,7 @@ import java.util.List;
 
 import static org.testng.Assert.*;
 
-/**
- * Created by xiadai on 2017/1/10.
- */
+
 public class RegistryLookupUtilTest {
     private static final String END_POINT_HTTP = "http://sample.endpoint.com";
     private static final String END_POINT_HTTPS = "https://sample.endpoint.com";

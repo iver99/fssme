@@ -188,7 +188,7 @@ public class SaveSearchRowsComparatorTest
 		Assert.assertEquals(tre.getSavedSearchCategory().get(0).getName(), "Target Card");
 		Assert.assertEquals(tre.getSavedSearchCategoryParams().get(0).getName(), "DASHBOARD_INELIGIBLE");
 		Assert.assertEquals(tre.getSavedSearchFoldersy().get(0).getName(), "All Searches");
-		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId(), 2024);
+		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId(), "2024");
 		Assert.assertEquals(tre.getSavedSearchSearchParams().get(0).getName(), "meId");
 	}
 	

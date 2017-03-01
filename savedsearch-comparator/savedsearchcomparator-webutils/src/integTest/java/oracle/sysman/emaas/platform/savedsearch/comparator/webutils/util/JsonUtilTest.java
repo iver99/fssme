@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
@@ -10,9 +10,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-/**
- * Created by chehao on 2017/1/10.
- */
+
 @Test(groups = {"s1"})
 public class JsonUtilTest {
 

@@ -1,12 +1,9 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.targetmodel.services;
+package oracle.sysman.emaas.platform.savedsearch.comparator.targetmodel.services;
 
 import org.testng.annotations.Test;
 
 import javax.management.*;
 
-/**
- * Created by chehao on 2017/1/10.
- */
 @Test(groups = {"s2"})
 public class JMXUtilTest {
     @Test
