@@ -1,6 +1,6 @@
-Cookbook
+cookbook
 ===================
-This cookbook deploys an create a DB user, creates data-source in WLS & deploys an ear in wuch WLS
+This cookbook deploys the savedsearch comparator application to WLS
 
 Requirements
 ------------
@@ -14,4 +14,5 @@ TODO: Write usage instructions for each cookbook.
 
 License and Authors
 -------------------
-Authors: Deepti Vaidya, Sachin Dhamdhere
+Authors: ping.w.wu
+

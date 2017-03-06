@@ -1,10 +1,9 @@
 #
-# Cookbook Name::savedsearchComparator
+# Cookbook Name::savedsearch-comparator
 #
 # This recipe creates the service manager properties file & then calls common recipes to ...
 #			1. perform WLS managed server setup
-#			2. setup data source for this app
-#			3. perform app deploy to managed server setup in #1
+#			2. perform app deploy to managed server setup in #1
 #	
 #	Refer https://confluence.oraclecorp.com/confluence/display/EMS/Cutover+to+deployment+on+WLS+Managed+Servers for details
 #
@@ -14,7 +13,6 @@ ruby_block "set_ENVs" do
   end
   action :create
 end
-
 #Block to create the servicemanager.properties file
 bash "create_servicemanger_properties_file"  do
   code <<-EOH
@@ -29,7 +27,6 @@ bash "create_servicemanger_properties_file"  do
     EOH
 end
 
-#
 # set the MW_HOME environment variable
 # so we can start the WLS server
 #
@@ -49,9 +46,6 @@ end
 
 #common WLS recipe
 include_recipe 'cookbook-emcs-emsaas-weblogic::default'
-
-#Populate db details
-include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
 
 #common setup/start for a managed Server
 include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_setup'
