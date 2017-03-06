@@ -19,7 +19,7 @@ default["jdk_dir"] = "#{node["infra_dir"]}/java"
 default["java_home"] = "#{node["jdk_dir"]}/jdk1.7.0_51"
 
 default["SAAS_API_version"] = "1.0"
-default["oracle_base"]="#{node["run_dir"]}"/oracle"
+default["oracle_base"]="#{node["run_dir"]}/oracle"
 
 default["myApplicationName"]="emaas-applications-savedsearch-comparator-ear"
 default["target"]="#{node["wls_adminserver_name"]}"
