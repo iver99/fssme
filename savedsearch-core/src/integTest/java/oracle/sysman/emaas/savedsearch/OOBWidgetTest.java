@@ -83,4 +83,20 @@ public class OOBWidgetTest {
             TenantContext.clearContext();
         }
     }
+
+    @Test
+    public void testOrchestrationWidgetExecutionDetails() throws EMAnalyticsFwkException {
+        TenantContext.setContext(new TenantInfo(
+                TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+                TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+        try {
+            SearchManager searchManager = SearchManager.getInstance();
+            Search search = searchManager.getSearch(new BigInteger("5020"));
+            boolean isExist = false;
+            isExist = "Execution Details".equals(search.getName());
+            Assert.assertTrue(isExist);
+        }finally{
+            TenantContext.clearContext();
+        }
+    }
 }
