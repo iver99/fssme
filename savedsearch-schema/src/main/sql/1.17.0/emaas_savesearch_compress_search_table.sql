@@ -4,6 +4,9 @@ Rem    MODIFIED   (MM/DD/YY)
 Rem    Pamela    03/07/2017 - created
 Rem
 Rem
+
+SET FEEDBACK ON
+SET SERVEROUTPUT ON
 DECLARE
   FLAG     VARCHAR(10);
 BEGIN
