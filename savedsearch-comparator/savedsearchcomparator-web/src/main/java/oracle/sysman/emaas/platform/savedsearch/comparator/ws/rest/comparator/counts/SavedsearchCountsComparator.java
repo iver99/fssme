@@ -116,7 +116,7 @@ public class SavedsearchCountsComparator extends AbstractComparator
 			logger.error("Searchs count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
 					key1, ze1.getCountOfSearch(), key2, ze2.getCountOfSearch());
 			differentCountsForInstance1.setcountOfSearch(ze1.getCountOfSearch());
-			differentCountsForInstance2.setcountOfSearch(ze2.getCountOfFolder());
+			differentCountsForInstance2.setcountOfSearch(ze2.getCountOfSearch());
 			allMatch = false;
 		}
 		if (allMatch) {
