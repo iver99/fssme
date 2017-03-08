@@ -56,7 +56,8 @@ public class SavedsearchCountsComparator extends AbstractComparator
  					key2 = key;
  				}
  			}
-
+ 			logger.info("client1 = ",client1);
+ 			logger.info("client2 = ",client2);
  			CountsEntity ze1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1);
 			if (ze1 == null) {
 				logger.error("Failed to retrieve ZDT count entity for instance {}", key1);
@@ -139,7 +140,7 @@ public class SavedsearchCountsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		logger.info("lookup link is {}", lk.getHref());
+		logger.info("*****lookup link is {}", lk.getHref());
 		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
 		logger.info("Checking savedsearch OMC instance counts. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();

@@ -146,6 +146,7 @@ public class ZDTAPI
 		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects, and return the counts for each instance
 		SavedsearchCountsComparator dcc = new SavedsearchCountsComparator();
 		InstancesComparedData<CountsEntity> result = dcc.compare(tenantIdParam, userTenant);
+		
 		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
 				new InstanceCounts(result.getInstance2()));
 		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();

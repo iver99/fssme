@@ -31,7 +31,7 @@ public abstract class AbstractComparator
 {
 	private static final Logger logger = LogManager.getLogger(AbstractComparator.class);
 
-	protected static final String SAVEDSEARCH_SERVICE_NAME = "Savedsearch-API";
+	protected static final String SAVEDSEARCH_SERVICE_NAME = "SavedSearch";
 	protected static final String SAVEDSEARCH_VERSION = "1.0+";
 	protected static final int ZDT_INSTANCES_AMOUNT = 2;
 
