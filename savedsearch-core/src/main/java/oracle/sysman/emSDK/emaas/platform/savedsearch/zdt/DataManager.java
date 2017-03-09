@@ -40,7 +40,7 @@ public class DataManager
 
 	private static final String SQL_ALL_CATEGORY_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_CATEGORY WHERE DELETED <> 1";
 	private static final String SQL_ALL_FOLDER_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_FOLDERS WHERE DELETED <> 1";
-	private static final String SQL_ALL_SEARCH_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_FOLDERS WHERE DELETED <> 1";
+	private static final String SQL_ALL_SEARCH_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH WHERE DELETED <> 1";
 
 	private static final String SQL_ALL_CATEGORY_ROWS = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,DESCRIPTION,OWNER,CREATION_DATE,"
 			+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,EM_PLUGIN_ID,"
@@ -92,13 +92,13 @@ public class DataManager
 			+ "t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,t.DESCRIPTION_SUBSYSTEM=?,t.SYSTEM_FOLDER=?,t.EM_PLUGIN_ID=?,"
 			+ "t.UI_HIDDEN=?,t.DELETED=? where t.FOLDER_ID=? and t.TENANT_ID=?";
 
-	private static final String SQL_INSERT_SEARCH = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,"
+	private static final String SQL_INSERT_SEARCH = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,"
 			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
 			+ "DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
 			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
 			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
-			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE) VALUES(?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
+			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,?,?,?,"
 			+ "?,?,?,?,?,"
 			+ "?,?,?,?,?,"
@@ -142,7 +142,7 @@ public class DataManager
 		long count = 0L;
 		EntityManager em = null;
 		try {
-			em = getEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_COUNT);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
@@ -168,7 +168,7 @@ public class DataManager
 		EntityManager em = null;
 		long count = 0l;
 		try {
-			em = getEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
@@ -194,7 +194,7 @@ public class DataManager
 		EntityManager em = null;
 		long count = 0l;
 		try {
-			em = getEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			Query query = em.createNativeQuery(SQL_ALL_SEARCH_COUNT);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
@@ -269,7 +269,7 @@ public class DataManager
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY_PARAMS t "
 				+ "where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
 		EntityManager em = null;
-		em = getEntityManager();
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}		
@@ -311,6 +311,7 @@ public class DataManager
 			logger.error("Error occured when sync Category param table data!");
 		}
 		finally {
+			if (em != null) 
 			em.close();
 		}
 
@@ -324,7 +325,7 @@ public class DataManager
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY t "
 				+ "where (t.CATEGORY_ID=? and t.TENANT_ID=?) OR (t.name = ? and t.deleted=? and t.owner=? and t.tenant_id = ?)";//check if the data is existing.
 		EntityManager em = null;
-		em = getEntityManager();
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -376,6 +377,7 @@ public class DataManager
 			logger.error("Error occured when sync Category table data!");
 		}
 		finally {
+			if (em != null) 
 			em.close();
 		}
 	}
@@ -387,7 +389,7 @@ public class DataManager
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t "
 				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=?, and t.parent_id=? and t.deleted=? and t.tenant_id = ?)";//check if the data is existing.
 		EntityManager em = null;
-		em = getEntityManager();
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -439,17 +441,19 @@ public class DataManager
 			logger.error("Error occured when sync folders table data!");
 		}
 		finally {
+			if (em != null) 
 			em.close();
 		}
 
 	}
 
 	public void syncSearchParamsTable(BigInteger searchId, String name, String paramAttributes, Long paramType,
-			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate)
+			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate, Integer deleted)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH_PARAMS t where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
+		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH_PARAMS t "
+				+ "where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
 		EntityManager em = null;
-		em = getEntityManager();
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -467,7 +471,7 @@ public class DataManager
 				em.createNativeQuery(SQL_INSERT_SEARCH_PARAM).setParameter(1, searchId).setParameter(2, name)
 						.setParameter(3, paramAttributes).setParameter(4, paramType).setParameter(5, paramValueStr)
 						.setParameter(6, paramValueClob).setParameter(7, tenantId).setParameter(8, creationDate)
-						.setParameter(9, lastModificationDate).executeUpdate();
+						.setParameter(9, lastModificationDate).setParameter(10, deleted).executeUpdate();
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
@@ -481,7 +485,7 @@ public class DataManager
 					em.createNativeQuery(SQL_UPDATE_SEARCH_PARAM).setParameter(1, paramAttributes).setParameter(2, paramType)
 							.setParameter(3, paramValueStr).setParameter(4, paramValueClob).setParameter(5, creationDate)
 							.setParameter(6, lastModificationDate).setParameter(7, searchId).setParameter(8, name)
-							.setParameter(9, tenantId).executeUpdate();
+							.setParameter(9, tenantId).setParameter(10, deleted).executeUpdate();
 				}
 
 			}
@@ -495,6 +499,7 @@ public class DataManager
 			logger.error("Error occured when sync search param table data!");
 		}
 		finally {
+			if (em != null) 
 			em.close();
 		}
 
@@ -510,9 +515,9 @@ public class DataManager
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
 				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
-				+ "(t.name = ? and folder_id = ? and category_id=? and deleted = ? )";//check if the data is existing.
+				+ "(t.name = ? and t.folder_id = ? and t.category_id=? and t.deleted = ? )";//check if the data is existing.
 		EntityManager em = null;
-		em = getEntityManager();
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -531,18 +536,18 @@ public class DataManager
 			if (flag) {
 				//execute insert action
 				logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH,execute insert action.");
-				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, name)
-				.setParameter(3, owner).setParameter(4, creationDate).setParameter(5, lastModificationDate)
-				.setParameter(6, lastModifiedBy).setParameter(7, description).setParameter(8, folderId)
-				.setParameter(9, categoryId).setParameter(10, systemSearch).setParameter(11, isLocked).setParameter(12, metaDataClob)
-				.setParameter(13, searchDisplayStr).setParameter(14, uiHidden).setParameter(15, deleted)
-				.setParameter(16, isWidget).setParameter(17, tenantId).setParameter(18, nameWidgetSource)
-				.setParameter(19, widgetGroupName).setParameter(20, widgetScreenshotHref).setParameter(21, widgetIcon)
-				.setParameter(22, widgetKocName).setParameter(23, viewModel).setParameter(24, widgetTemplate)
-				.setParameter(25, widgetSupportTimeControl).setParameter(26, widgetLinkedDashboard)
-				.setParameter(27, widgetDefaultWidth).setParameter(28, widgetDefaultHeight)
-				.setParameter(29, providerName).setParameter(30, providerVersion).setParameter(31, providerAssetRoot)
-				.setParameter(32, dashboardIneligible).executeUpdate();
+				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, null).setParameter(3, name)
+				.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
+				.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
+				.setParameter(10, categoryId).setParameter(11, systemSearch).setParameter(12, isLocked).setParameter(13, metaDataClob)
+				.setParameter(14, searchDisplayStr).setParameter(15, uiHidden).setParameter(16, deleted)
+				.setParameter(17, isWidget).setParameter(18, tenantId).setParameter(19, nameWidgetSource)
+				.setParameter(20, widgetGroupName).setParameter(21, widgetScreenshotHref).setParameter(22, widgetIcon)
+				.setParameter(23, widgetKocName).setParameter(24, viewModel).setParameter(25, widgetTemplate)
+				.setParameter(26, widgetSupportTimeControl).setParameter(27, widgetLinkedDashboard)
+				.setParameter(28, widgetDefaultWidth).setParameter(29, widgetDefaultHeight)
+				.setParameter(30, providerName).setParameter(31, providerVersion).setParameter(32, providerAssetRoot)
+				.setParameter(33, dashboardIneligible).executeUpdate();
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
@@ -575,6 +580,7 @@ public class DataManager
 			logger.error("Error occured when sync search table data!");
 		}
 		finally {
+			if (em != null) 
 			em.close();
 		}
 
@@ -674,7 +680,7 @@ public class DataManager
 		EntityManager em = null;
 		List<Map<String, Object>> list = null;
 		try {
-			em = getEntityManager();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			Query query = em.createNativeQuery(nativeSql);
 			query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 			list = query.getResultList();
@@ -683,20 +689,11 @@ public class DataManager
 			logger.error("Error occured when execute SQL:[" + nativeSql + "]");
 		}
 		finally {
+			if (em != null) 
 			em.close();
 		}
 
 		return list;
-	}
-
-	private EntityManager getEntityManager()
-	{
-		EntityManager em;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-		if (em == null) {
-			logger.error("Can't get persistence entity manager");
-		}
-		return em;
 	}
 
 }

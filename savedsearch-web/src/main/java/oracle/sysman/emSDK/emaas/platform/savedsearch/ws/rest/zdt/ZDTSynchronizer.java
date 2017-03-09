@@ -104,7 +104,7 @@ public class ZDTSynchronizer
 		for (SavedSearchSearchParamRowEntity e : rows) {
 			DataManager.getInstance().syncSearchParamsTable(e.getSearchId() == null? null:new BigInteger(e.getSearchId()), e.getName(), e.getParamAttributes(),
 					e.getParamType(), e.getParamValueStr(), e.getParamValueClob(), e.getTenantId(), e.getCreationDate(),
-					e.getLastModificationDate());
+					e.getLastModificationDate(),e.getDeleted());
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH_PARAMS table");
 	}

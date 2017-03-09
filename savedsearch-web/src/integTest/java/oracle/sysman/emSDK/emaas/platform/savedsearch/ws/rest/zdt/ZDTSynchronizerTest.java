@@ -58,7 +58,7 @@ public class ZDTSynchronizerTest {
 						(BigInteger) any, anyInt, anyInt, anyString, anyString, 
 						anyInt, (BigInteger) any, anyInt, anyLong, anyString, anyString, anyString, anyString, anyString, anyString, anyString, 
 						anyString, anyLong, anyLong, anyLong, anyString, anyString, anyString, anyString);
-				dm.syncSearchParamsTable((BigInteger) any, anyString, anyString, anyLong, anyString, anyString, anyLong, anyString, anyString);
+				dm.syncSearchParamsTable((BigInteger) any, anyString, anyString, anyLong, anyString, anyString, anyLong, anyString, anyString,(Integer)any);
 			}
 		};
 		

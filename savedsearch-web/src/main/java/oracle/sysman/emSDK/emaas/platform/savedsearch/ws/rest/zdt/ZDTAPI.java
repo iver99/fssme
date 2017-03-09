@@ -50,10 +50,8 @@ public class ZDTAPI
 	private static final String TABLE_CATEGORY = "EMS_ANALYTICS_CATEGORY";
 	private static final String TABLE_CATEGORY_PARAMS = "EMS_ANALYTICS_CATEGORY_PARAMS";
 	private static final String TABLE_FOLDERS = "EMS_ANALYTICS_FOLDERS";
-	private static final String TABLE_LAST_ACCESS = "EMS_ANALYTICS_LAST_ACCESS";
 	private static final String TABLE_SEARCH = "EMS_ANALYTICS_SEARCH";
 	private static final String TABLE_SEARCH_PARAMS = "EMS_ANALYTICS_SEARCH_PARAMS";
-	private static final String TABLE_SCHEMA_VERSION = "EMS_ANALYTICS_SCHEMA_VER_SSF";
 
 	public ZDTAPI()
 	{

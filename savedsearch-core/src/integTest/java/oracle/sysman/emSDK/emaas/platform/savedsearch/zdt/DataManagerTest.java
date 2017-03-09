@@ -405,6 +405,7 @@ public class DataManagerTest
 		Long tenantId=1L; 
 		String creationDate="creationDate"; 
 		String lastModificationDate="lastModificationDate";
+		Integer deleted = new Integer("0");
 		new Expectations(){
 			{
 				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
@@ -414,25 +415,25 @@ public class DataManagerTest
 			}
 		};
 		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
 		dataManager.syncSearchParamsTable(null, name, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
 		dataManager.syncSearchParamsTable(searchId, null, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
 		dataManager.syncSearchParamsTable(searchId, name, null, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
 		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, null, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
 		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, paramType, null, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
 		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, null);
+				paramValueClob, tenantId, creationDate, null,deleted);
 		
 	}
 	
@@ -448,6 +449,7 @@ public class DataManagerTest
 		Long tenantId=1L; 
 		String creationDate="creationDate"; 
 		String lastModificationDate="lastModificationDate";
+		Integer deleted = new Integer("0");
 		new Expectations(){
 			{
 				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
@@ -457,7 +459,7 @@ public class DataManagerTest
 			}
 		};
 		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 	
 	}
 	
