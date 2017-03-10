@@ -4,14 +4,20 @@
 #
 #--------------------------------------------------------------------------------------------------------
 # Recipe for schema upgrade
+require 'fileutils'
 
 log_file = "#{node["log_dir"]}/SavedSearchService_schema_#{node["schema_id"]}.out"
+old_log_file = "#{node["log_dir"]}/SavedSearchService_schema_#{node["schema_id"]}.out.old"
 
-# remove old log file if exists
-ruby_block "remove_old_log" do
+# remove old logs that is more than one release old
+# move the logs for last release to old
+ruby_block "deal_upgrade_log" do
   block do
-    if File.exists?(log_file)
-      File.delete(log_file)
+    if File.exist?(old_log_file)
+      File.delete old_log_file
+    end
+    if File.exist?(log_file)
+      File.rename log_file, old_log_file
     end
   end
   action :create
@@ -25,12 +31,14 @@ ruby_block "Runtime checks - Post Upgrade" do
     puts "************** Inside Runtime checks - Post Upgrade "
 
     #Check whether there are any SQL errors
-    if File.exists?(log_file)
+    if File.exist?(log_file)
       errors = File.foreach(log_file).grep /^ORA-|^SP2-/
       if errors.count > 0
         puts "Found SQL errors: " + errors[0].to_s
         Chef::Application.fatal!("SQL errors found. Please look into: " + log_file);
       end
+    else
+      puts "Warning...no expected log file: " + log_file
     end
   end
   action :run
@@ -41,4 +49,31 @@ end
 #
 execute "log_file" do
   command "echo Please look into log file: #{log_file} for more info."
+end
+
+#-------------------------------------------------------------------------------
+# deal tenant hydration logs
+#
+history_onboard_log = "#{node["log_dir"]}/savedSearchDatasource.log"
+onboard_log_folder = "#{node["log_dir"]}/savedSearchOnboarding"
+old_onboard_log_folder = "#{node["log_dir"]}/savedSearchOnboardingOld"
+
+ruby_block "deal_tenant_hydration_log" do
+  block do
+    if File.exist?(history_onboard_log)
+      File.delete history_onboard_log
+      
+      destFilePattern = "#{node["log_dir"]}/savedSearchDatasource_*.log"
+      Dir[destFilePattern].each{|child|
+        File.delete (child)
+      }
+    end
+    if File.exist?(old_onboard_log_folder)
+      FileUtils.rm_r old_onboard_log_folder
+    end
+    if File.exist?(onboard_log_folder)
+      FileUtils.mv onboard_log_folder, old_onboard_log_folder
+    end
+  end
+  action :create
 end
