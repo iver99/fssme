@@ -83,4 +83,49 @@ public class OOBWidgetTest {
             TenantContext.clearContext();
         }
     }
+
+
+    @Test
+    public void testSecurityDNSWidget() throws EMAnalyticsFwkException {
+        TenantContext.setContext(new TenantInfo(
+                TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+                TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+        try {
+            SearchManager searchManager = SearchManager.getInstance();
+            Search search = searchManager.getSearch(new BigInteger("3300"));
+            boolean isExist;
+            isExist = "Total DNS Messages".equals(search.getName());
+            Assert.assertTrue(isExist, "Total DNS Messages does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3301"));
+            isExist = "Unique DNS Queries".equals(search.getName());
+            Assert.assertTrue(isExist, "Unique DNS Queries does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3302"));
+            isExist = "Top 10 DNS Domains".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 DNS Domains does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3303"));
+            isExist = "Top 10 DNS Sources".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 DNS Sources does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3304"));
+            isExist = "Top 10 DNS Sources with TXT Lookup".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 DNS Sources with TXT Lookup does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3305"));
+            isExist = "Top 10 DNS Non-Standard TLDs".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 DNS Non-Standard TLDs does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3306"));
+            isExist = "DNS Queries Per Domain".equals(search.getName());
+            Assert.assertTrue(isExist, "DNS Queries Per Domain does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3307"));
+            isExist = "DNS Responses by Type".equals(search.getName());
+            Assert.assertTrue(isExist, "DNS Responses by Type does not exist");
+        }finally{
+            TenantContext.clearContext();
+        }
+    }
 }
