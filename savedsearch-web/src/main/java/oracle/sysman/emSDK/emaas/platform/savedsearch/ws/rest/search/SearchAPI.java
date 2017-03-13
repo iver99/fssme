@@ -76,8 +76,6 @@ public class SearchAPI
 
 	//private static final String FOLDER_PATH = "flattenedFolderPath";
 	private static final Logger LOGGER = LogManager.getLogger(SearchAPI.class);
-	private static final String SEARCH_TABLE_NAME = "EMS_ANALYTICS_SEARCH";
-	private static final String SEARCH_PARAMS_TABLE_NAME  = "EMS_ANALYTICS_SEARCH_PARAMS";
 	@Context
 	UriInfo uri;
 
@@ -837,21 +835,7 @@ public class SearchAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-	
-	private JSONArray getJSONArrayFromListOfObjects(String dataName, List<Map<String, Object>> list)
-	{
-		if (list == null || list.size() < 1) {
-			LOGGER.warn("Trying to get a JSON object for {} from a null object/list. Returning null JSON object", dataName);
-			return null;
-		}
-		JSONArray array = new JSONArray();
-		for (Map<String, Object> row : list) {
-			array.put(row);
-		}
-		LOGGER.debug("Retrieved table data for {} is \"{}\"", dataName, array.toString());
-		return array;
-	}
-	
+
 	@GET
 	@Path("{id: [0-9]*}/assetroot")
 	public Response getAssetRoot(@PathParam("id") BigInteger searchid){
