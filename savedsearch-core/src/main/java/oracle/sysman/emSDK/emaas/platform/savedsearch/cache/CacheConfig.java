@@ -1,12 +1,13 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.cache;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
  * Created by chehao on 2016/10/26.
  */
 public class CacheConfig {
-    static ResourceBundle conf = ResourceBundle.getBundle("cache_config");
+    static ResourceBundle conf = ResourceBundle.getBundle("cache_config", Locale.US);
     //all cache group's expiration time
     public static final Integer ADMIN_LINK_CACHE_EXPIRE_TIME = Integer.valueOf(conf.getString("ADMIN_LINK_CACHE_EXPIRE_TIME"));
     public static final Integer CLOUD_SERVICE_LINK_EXPIRE_TIME = Integer.valueOf(conf.getString("CLOUD_SERVICE_LINK_EXPIRE_TIME"));
