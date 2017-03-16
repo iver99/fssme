@@ -51,7 +51,7 @@ V_SEARCH_DISPLAY_STR                  CLOB           ;
 V_UI_HIDDEN                           NUMBER           ;
 V_DELETED                             NUMBER         ;
 V_IS_WIDGET                           NUMBER         ;
-V_TENANT_ID                           NUMBER         ;
+V_TENANT_ID                           NUMBER       :='&TENANT_ID'  ;
 
 
 V_PARAM_ATTRIBUTES         VARCHAR2(1024 BYTE)             ;
@@ -59,8 +59,13 @@ V_PARAM_TYPE               NUMBER(38,0)                    ;
 V_PARAM_VALUE_STR          VARCHAR2(1024 BYTE)             ;
 V_PARAM_VALUE_CLOB         NCLOB                           ;
 
-BEGIN
+V_COUNT                    NUMBER;
 
+BEGIN
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2000;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data has been added before, no need to add again for ' || V_TENANT_ID);
+ ELSE
  V_SEARCH_ID                          	:=2000;
  V_NAME                                  :='Top Log Sources';
  V_OWNER                 				:='ORACLE';
@@ -235,6 +240,11 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2001;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data All Logs Trend has been added before, no need to add again for ' || V_TENANT_ID);
+ ELSE
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2001,'All Logs Trend','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram of all log entries from all sources.',2,1,null,null,null,null,1,null,0,'*',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2001,'VISUALIZATION_TYPE_KEY',null,1,'HISTOGRAM',null,'&TENANT_ID');
@@ -445,7 +455,11 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2002;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Database Log Trends has been added before, no need to add again for ' || V_TENANT_ID);
+ ELSE
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2002,'Database Log Trends','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram of all log entries from Database targets.',2,1,null,null,null,null,1,null,0,'''Target Type'' IN (''Database Instance'', ''Automatic Storage Management'', ''Listener'', ''Cluster'')',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2002,'VISUALIZATION_TYPE_KEY',null,1,'HISTOGRAM',null,'&TENANT_ID');
@@ -652,7 +666,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2003,'Enterprise Manager Logs Trend','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram of all log entries from Enterprise Manager targets',2,1,null,null,null,null,1,null,0,'''Target Type'' IN (''Agent'', ''Harvester'', ''Gateway'', ''Oracle Management Service'', ''Lama'')',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2003,'VISUALIZATION_TYPE_KEY',null,1,'HISTOGRAM',null,'&TENANT_ID');
@@ -660,7 +674,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2003,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganHistogram.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2003,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/results/loganSearchChartsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2003,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
-
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2003;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Enterprise Manager Logs Trend has been added before, no need to add again for ' || V_TENANT_ID);
+ ELSE
  V_SEARCH_ID                          	:=   2003;
  V_NAME                                  :=   'Enterprise Manager Logs Trend';
  V_OWNER                 				:=   'ORACLE';
@@ -863,7 +880,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2004,'Host Logs Trend','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram of all log entries from Host targets',2,1,null,null,null,null,1,null,0,'''Target Type'' IN (''Host'')',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2004,'VISUALIZATION_TYPE_KEY',null,1,'HISTOGRAM',null,'&TENANT_ID');
@@ -871,6 +888,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2004,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganHistogram.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2004,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/results/loganSearchChartsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2004,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2004;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Host Logs Trend has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=    2004;
  V_NAME                                  :=    'Host Logs Trend';
  V_OWNER                 				:=    'ORACLE';
@@ -1072,7 +1093,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2005,'Top Database Targets with Log Errors','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 Database targets that have the most log entries with ERROR or SEVERE severity.',2,1,null,null,null,null,1,null,0,'''Target Type'' IN (''Database Instance'', ''Automatic Storage Management'', ''Listener'', ''Cluster'') AND Severity IN (''error'', ''ERROR'', ''SEVERE'', ''severe'')  |stats count as ''Error Count'' by target |top limit=10 ''Error Count''',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2005,'VISUALIZATION_TYPE_KEY',null,1,'PIE',null,'&TENANT_ID');
@@ -1080,6 +1101,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2005,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganPieChart.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2005,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2005,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2005;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top Database Targets with Log Errors has been added before, no need to add again for ' || V_TENANT_ID);
+ ELSE
  V_SEARCH_ID                          	:=    2005;
  V_NAME                                  :=    'Top Database Targets with Log Errors';
  V_OWNER                 				:=    'ORACLE';
@@ -1281,7 +1306,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2006,'Middleware Logs Trend','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram of all log entries from Middleware targets',2,1,null,null,null,null,1,null,0,'''Target Type'' IN (''Oracle WebLogic Server'', ''Oracle Internet Directory'', ''Oracle HTTP Server'', ''Oracle Access Management Server'', ''Oracle WebLogic Domain'')',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2006,'VISUALIZATION_TYPE_KEY',null,1,'HISTOGRAM',null,'&TENANT_ID');
@@ -1289,6 +1314,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2006,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganHistogram.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2006,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/results/loganSearchChartsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2006,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2006;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Middleware Logs Trend has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=    2006;
  V_NAME                                  :=    'Middleware Logs Trend';
  V_OWNER                 				:=    'ORACLE';
@@ -1491,7 +1520,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2007,'Web Server Top Accessed Pages','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 recently accessed web pages in Middleware access logs.',2,1,null,null,null,null,1,null,0,'''log source'' in (''FMW WLS Server Access Log'',''FMW OHS Access Log'') |stats count as ''Request Count'' by URI |top limit=10 ''Request Count''',0,0,1,'&TENANT_ID');
@@ -1500,6 +1529,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2007,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganBarChart.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2007,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2007,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2007;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Web Server Top Accessed Pages has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=     2007;
  V_NAME                                  :=    'Web Server Top Accessed Pages';
  V_OWNER                 				:=    'ORACLE';
@@ -1702,6 +1735,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2008,'Web Server Failed HTTP Requests','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram of recent HTTP request failures.',2,1,null,null,null,null,1,null,0,'''log source'' IN (''FMW WLS Server Access Log'', ''FMW OHS Access Log'') AND Status IN (''400'', ''401'', ''402'', ''403'', ''404'', ''405'', ''406'', ''407'', ''408'', ''409'', ''410'', ''411'', ''412'', ''413'', ''414'', ''415'', ''416'', ''417'', ''500'', ''501'', ''502'', ''503'', ''504'', ''505'')',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2008,'VISUALIZATION_TYPE_KEY',null,1,'HISTOGRAM',null,'&TENANT_ID');
@@ -1709,6 +1743,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2008,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganHistogram.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2008,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/results/loganSearchChartsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2008,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2008;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Web Server Failed HTTP Requests has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=    2008;
  V_NAME                                  :=    'Web Server Failed HTTP Requests';
  V_OWNER                 				:=    'ORACLE';
@@ -1913,6 +1951,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2009,'Top Web Server Targets by Requests','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 web server targets with the most HTTP requests.',2,1,null,null,null,null,1,null,0,'''log source'' in (''FMW WLS Server Access Log'',''FMW OHS Access Log'') |stats count as ''Request Count'' by target |top limit=10 ''Request Count''',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2009,'VISUALIZATION_TYPE_KEY',null,1,'PIE',null,'&TENANT_ID');
@@ -1920,6 +1959,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2009,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganPieChart.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2009,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2009,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2009;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top Web Server Targets by Requests has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=    2009;
  V_NAME                                  :=    'Top Web Server Targets by Requests';
  V_OWNER                 				:=    'ORACLE';
@@ -2122,6 +2165,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2010,'Top Middleware Error Codes','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 most common recent Middleware errors codes (such as BEA-XXXXXX).',2,1,null,null,null,null,1,null,0,'''target type'' in (''Oracle WebLogic Server'', ''Oracle Internet Directory'',''Oracle HTTP Server'',''Oracle Access Management Server'',''Oracle WebLogic Domain'') AND ''Error ID'' != ''bea-000000'' |stats count as cnt by ''error id'' |top limit=10 cnt',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2010,'VISUALIZATION_TYPE_KEY',null,1,'PIE',null,'&TENANT_ID');
@@ -2129,6 +2173,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2010,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganPieChart.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2010,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2010,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2010;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top Middleware Error Codes has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=     2010;
  V_NAME                                  :=     'Top Middleware Error Codes';
  V_OWNER                 				:=     'ORACLE';
@@ -2332,7 +2380,11 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2011;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top ECIDs with BEA Errors has been added before, no need to add again for ' || V_TENANT_ID);
+ ELSE
  V_SEARCH_ID                          	:=      2011;
  V_NAME                                  :=      'Top ECIDs with BEA Errors';
  V_OWNER                 				:=      'ORACLE';
@@ -2537,7 +2589,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2012,'Top Middleware Targets with Errors','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 Middleware targets that have the most log entries with ERROR or SEVERE severity.',2,1,null,null,null,null,1,null,0,'''target type'' in (''Oracle WebLogic Server'',''Oracle Internet Directory'',''Oracle HTTP Server'',''Oracle Access Management Server'', ''Oracle WebLogic Domain'') AND severity  in (''error'',''ERROR'',''SEVERE'',''severe'') |stats count as ''Error Count'' by target |top limit=10 ''Error Count''',0,0,1,'&TENANT_ID');
@@ -2546,6 +2598,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2012,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganPieChart.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2012,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2012,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2012;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top Middleware Targets with Errors has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=   2012;
  V_NAME                                  :=   'Top Middleware Targets with Errors';
  V_OWNER                 				:=   'ORACLE';
@@ -2751,6 +2807,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2013,'Database Errors Trend','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram of all errors from Database targets.',2,1,null,null,null,null,1,null,0,'''Target Type'' IN (''Database Instance'', ''Automatic Storage Management'', ''Listener'', ''Cluster'') AND ''Message Group'' IN (''ORA'', ''NZE'', ''EXP'', ''IMP'', ''SQL*Loader'', ''KUP'', ''UDE'', ''UDI'', ''DBV'', ''NID'', ''DGM'', ''DIA'', ''LCD'', ''OCI'', ''QSM'', ''RMAN'', ''LRM'', ''LFI'', ''PLS'', ''PLW'', ''AMD'', ''CLSR'', ''CLSS'', ''CRS'', ''EVM'', ''CLST'', ''CLSD'', ''PROC'', ''PROT'', ''TNS'', ''NNC'', ''NNO'', ''NPL'', ''NNF'', ''NMP'', ''NCR'', ''O2F'', ''O2I'', ''O2U'', ''PCB'', ''PCC'', ''SQL'', ''AUD'', ''IMG'', ''VID'', ''DRG'', ''LPX'', ''LSX'', ''PGA'', ''PGU'') OR ''Message Group'' LIKE ''%NNL''',0,0,1,'&TENANT_ID');
@@ -2760,6 +2817,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2013,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2013,'VISUALIZATION_TYPE_KEY',null,1,'HISTOGRAM',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2013,'TARGET_FILTER',null,2,'',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2013;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Database Errors Trend has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=    2013;
  V_NAME                                  :=    'Database Errors Trend';
  V_OWNER                 				:=    'ORACLE';
@@ -2987,6 +3048,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2014,'Failed Host Password Attempts','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram showing count of failed passwords while attempting to log into a user account',2,1,null,null,null,null,1,null,0,'''Target Type'' = ''Host'' AND (''failed password for'' OR ''authentication failure'')',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2014,'WIDGET_KOC_NAME',null,1,'LA_WIDGET_HISTOGRAM',null,'&TENANT_ID');
@@ -2995,6 +3057,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2014,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/results/loganSearchChartsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2014,'VISUALIZATION_TYPE_KEY',null,1,'HISTOGRAM',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2014,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2014;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Failed Host Password Attempts has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=     2014;
  V_NAME                                  :=    'Failed Host Password Attempts';
  V_OWNER                 				:=    'ORACLE';
@@ -3226,7 +3292,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2015,'Database Top Errors','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 Database Errors that have recently occurred.',2,1,null,null,null,null,1,null,0,' ''Target Type'' IN (''Database Instance'', ''Automatic Storage Management'', ''Listener'', ''Cluster'') AND ''Message Group'' in ( ''ORA'',''NZE'',''EXP'', ''IMP'',''SQL*Loader'', ''KUP'',''UDE'', ''UDI'',''DBV'', ''NID'', ''DGM'',''DIA'',''LCD'',''OCI'', ''QSM'', ''RMAN'',''LRM'',''LFI'',''PLS'', ''PLW'',''AMD'',''CLSR'',''CLSS'',''CRS'' ,''EVM'', ''CLST'',''CLSD'',''PROC'', ''PROT'',''TNS'',''NNC'',''NNO'',''NPL'', ''NNF'', ''NMP'',''NCR'', ''O2F'', ''O2I'',''O2U'',''PCB'',''PCC'',''SQL'',''AUD'',''IMG'', ''VID'', ''DRG'',''LPX'',''LSX'',''PGA'', ''PGU'') OR ''Message Group'' like ''%NNL''  |stats count as ''Errors'' by ''Message ID'' |top limit=10 ''Errors''',0,0,1,'&TENANT_ID');
@@ -3236,6 +3302,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2015,'WIDGET_KOC_NAME',null,1,'LA_WIDGET_BAR',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2015,'VISUALIZATION_TYPE_KEY',null,1,'BAR',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2015,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganBarChart.html',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2015;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Database Top Errors has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=     2015;
  V_NAME                                  :=     'Database Top Errors';
  V_OWNER                 				:=     'ORACLE';
@@ -3467,7 +3537,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2016,'Database Critical Incidents by Target Type','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Database critical errors based on Error ID grouped by by target type',2,1,null,null,null,null,1,null,0,'''Target Type'' IN (''Database Instance'', ''Automatic Storage Management'', ''Listener'', ''Cluster'') and ''Error ID'' IN ( ''ORA-00600'',''ORA-00603'',''ORA-07445'', ''ORA-04030'',''ORA-04031'',''ORA-00227'',''ORA-00239'', ''ORA-00240'',''ORA-00255'',''ORA-00353'', ''ORA-00355'',''ORA-00356'',''ORA-00445'',''ORA-00494'',''ORA-01578'', ''OCI-03106'',''ORA-03113'',''OCI-03113%'', ''OCI-03135'', ''ORA-03137'',''ORA-04036'',''ORA-24982'',''ORA-25319'', ''ORA-29740'',''ORA-29770'', ''ORA-29771'', ''ORA-32701'',''ORA-32703'',''ORA-32704'',''ORA-06512'', ''ORA-15173'' ) |stats count as ''Critical Errors'' by ''Target Type''',0,0,1,'&TENANT_ID');
@@ -3477,7 +3547,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2016,'TARGET_FILTER',null,2,'',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2016,'VISUALIZATION_TYPE_KEY',null,1,'BAR',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2016,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
-
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2016;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Database Critical Incidents by Target Type has been added before, no need to add again for ' || V_TENANT_ID);
+ ELSE
  V_SEARCH_ID                          	:=      2016;
  V_NAME                                  :=      'Database Critical Incidents by Target Type';
  V_OWNER                 				:=      'ORACLE';
@@ -3711,6 +3784,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2017,'Access Log Error Status Codes','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 4xx and 5xx errors codes in HTTP Access Logs. ',2,1,null,null,null,null,1,null,0,'''Log Source'' LIKE "*Access Logs*" AND Status IN (''400'', ''401'', ''402'', ''403'', ''404'', ''405'', ''406'', ''407'', ''408'', ''409'', ''410'', ''411'', ''412'', ''413'', ''414'', ''415'', ''416'', ''417'', ''500'', ''501'', ''502'', ''503'', ''504'', ''505'') | stats count by ''log source''',0,0,1,'&TENANT_ID');
@@ -3720,6 +3794,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2017,'WIDGET_KOC_NAME',null,1,'LA_WIDGET_PIE',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2017,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2017,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganPieChart.html',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2017;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Access Log Error Status Codes has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=  2017;
  V_NAME                                  :=  'Access Log Error Status Codes';
  V_OWNER                 				:=  'ORACLE';
@@ -3950,6 +4028,11 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2018;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Web Server Top Accessed Pages (Excluding Assets) has been added before, no need to add again for ' || V_TENANT_ID);
+ ELSE
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2018,'Web Server Top Accessed Pages (Excluding Assets)','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Graph of top 10 Top URIs for application pages excluding external assets such as images, javascript, css files. ',2,1,null,null,null,null,1,null,0,'''Log Source'' LIKE "*Access Logs*" and URI != null and "File Extension" not in ("gif","png","jpg","js","css","swf","ico") and URI not like "*/blank.html" | stats count as "Request Count" by URI |top limit=10 "Request Count"',0,0,1,'&TENANT_ID');
@@ -4188,7 +4271,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2019,'Top Hosts by Log Entries','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 hosts by number of log entries',2,1,null,null,null,null,1,null,0,'''Target Type''= ''Host'' | STATS COUNT AS "Log Entries" BY Target | TOP LIMIT=10 "Log Entries"',0,0,1,'&TENANT_ID');
@@ -4198,6 +4281,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2019,'WIDGET_KOC_NAME',null,1,'LA_WIDGET_PIE',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2019,'TARGET_FILTER',null,2,'',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2019,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganPieChart.html',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2019;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top Hosts by Log Entries has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:= 2019;
  V_NAME                                  := 'Top Hosts by Log Entries';
  V_OWNER                 				:= 'ORACLE';
@@ -4428,6 +4515,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2020,'Top Host Log Sources','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 Log Sources for Host Target Type by number of log entries',2,1,null,null,null,null,1,null,0,'''Target Type'' = ''Host'' | stats count as "Log Entries" by ''Log Source'' | top limit = 10 "Log Entries"',0,0,1,'&TENANT_ID');
@@ -4437,6 +4525,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2020,'WIDGET_KOC_NAME',null,1,'LA_WIDGET_BAR',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2020,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2020,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganBarChart.html',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2020;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top Host Log Sources has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:= 2020;
  V_NAME                                  := 'Top Host Log Sources';
  V_OWNER                 				:= 'ORACLE';
@@ -4666,7 +4758,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2021,'Top Commands Run with SUDO','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 most recent commands that are run using SUDO',2,1,null,null,null,null,1,null,0,'''log entity'' like ''/var/log/sudo.log*'' |stats count as ''Execution Count'' by command |top limit=10 ''Execution Count''',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2021,'TARGET_FILTER',null,2,'',null,'&TENANT_ID');
@@ -4675,6 +4767,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2021,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganHoriBarChart.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2021,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2021,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2021;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top Commands Run with SUDO has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=  2021;
  V_NAME                                  :=  'Top Commands Run with SUDO';
  V_OWNER                 				:=  'ORACLE';
@@ -4903,6 +4999,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2022,'Top SUDO Users','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Top 10 recent users initiating SUDO requests.',2,1,null,null,null,null,1,null,0,'''Log Entity'' like ''/var/log/sudo.log*''| stats count by ''User Name (Originating)''',0,0,1,'&TENANT_ID');
@@ -4912,6 +5009,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2022,'WIDGET_KOC_NAME',null,1,'LA_WIDGET_PIE',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2022,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganPieChart.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2022,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2022;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top SUDO Users has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=   2022;
  V_NAME                                  :=   'Top SUDO Users';
  V_OWNER                 				:=   'ORACLE';
@@ -5143,6 +5244,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2023,'Invalid Host User Login Attempts','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram showing count of attempts to log into an invalid or unknown user account',2,1,null,null,null,null,1,null,0,'''Target Type'' = ''Host'' AND (''invalid user'' OR ''user unknown'')',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2023,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/results/loganSearchChartsViewModel.js',null,'&TENANT_ID');
@@ -5151,6 +5253,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2023,'TARGET_FILTER',null,2,'',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2023,'WIDGET_KOC_NAME',null,1,'LA_WIDGET_HISTOGRAM',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2023,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganHistogram.html',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2023;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Invalid Host User Login Attempts has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=    2023;
  V_NAME                                  :=    'Invalid Host User Login Attempts';
  V_OWNER                 				:=    'ORACLE';
@@ -5377,6 +5483,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2024,'All Linux Package Lifecycle Activities','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Time-based histogram showing count of package changes (install,update,delete) for all packages',2,1,null,null,null,null,1,null,0,'''Log Entity'' LIKE ''/var/log/yum.log*''',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2024,'WIDGET_KOC_NAME',null,1,'LA_WIDGET_HISTOGRAM',null,'&TENANT_ID');
@@ -5385,6 +5492,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2024,'VISUALIZATION_TYPE_KEY',null,1,'HISTOGRAM',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2024,'TARGET_FILTER',null,2,'',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2024,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2024;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data All Linux Package Lifecycle Activities has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=    2024;
  V_NAME                                  :=    'All Linux Package Lifecycle Activities';
  V_OWNER                 				:=    'ORACLE';
@@ -5613,7 +5724,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
-
+END IF;
 --
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2025,'Web Server Top Users By Pages (Excluding Assets)','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Graph of top 10 Top Users for application pages excluding requests for external assets such as images, javascript, css files.',2,1,null,null,null,null,1,null,0,'''Log Source'' LIKE "*Access Logs*" and URI != null and "File Extension" not in ("gif","png","jpg","js","css","swf","ico") and URI not like "*/blank.html" | stats count as "Request Count" by "User Name" |top limit=10 "Request Count"',0,0,1,'&TENANT_ID');
@@ -5623,6 +5734,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2025,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganBarChart.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2025,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2025,'VISUALIZATION_TYPE_KEY',null,1,'BAR',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2025;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Web Server Top Users By Pages (Excluding Assets) has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=     2025;
  V_NAME                                  :=     'Web Server Top Users By Pages (Excluding Assets)';
  V_OWNER                 				:=     'ORACLE';
@@ -5851,6 +5966,7 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
 --Insert into EMS_ANALYTICS_SEARCH (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,SYSTEM_SEARCH,EM_PLUGIN_ID,IS_LOCKED,SEARCH_DISPLAY_STR,UI_HIDDEN,DELETED,IS_WIDGET,TENANT_ID)
 --values (2026,'Top Host Log Entries by Service','ORACLE',SYS_EXTRACT_UTC(SYSTIMESTAMP),SYS_EXTRACT_UTC(SYSTIMESTAMP),'ORACLE','Distribution of log entries across all monitored hosts by service',2,1,null,null,null,null,1,null,0, '''Target Type''= ''Host'' | STATS COUNT AS ''Log Entries'' BY SERVICE | TOP LIMIT=10 ''Log Entries''',0,0,1,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2026,'VISUALIZATION_TYPE_KEY',null,1,'PIE',null,'&TENANT_ID');
@@ -5858,6 +5974,10 @@ V_TENANT_ID
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2026,'WIDGET_TEMPLATE',null,1,'/html/search/widgets/loganPieChart.html',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2026,'WIDGET_VIEWMODEL',null,1,'/js/viewmodel/search/visualization/loganVisStatsViewModel.js',null,'&TENANT_ID');
 --Insert into EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID) values (2026,'time',null,1,'{"type":"relative", "duration":"60", "timeUnit":"MINUTE"}',null,'&TENANT_ID');
+  SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 2026;
+  IF V_COUNT > 0 THEN
+     DBMS_OUTPUT.PUT_LINE('LA WIDGET meta data Top Host Log Entries by Service has been added before, no need to add again for ' || V_TENANT_ID);
+  ELSE
  V_SEARCH_ID                          	:=   2026;
  V_NAME                                  :=   'Top Host Log Entries by Service';
  V_OWNER                 				:=   'ORACLE';
@@ -6059,7 +6179,20 @@ V_PARAM_VALUE_STR,
 V_PARAM_VALUE_CLOB,
 V_TENANT_ID
 );
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND OBJECT_ID >= 2000 AND OBJECT_ID <= 2999;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('last access data has been added before, no need to add again');
+ ELSE
 insert into EMS_ANALYTICS_LAST_ACCESS(OBJECT_ID,ACCESSED_BY,OBJECT_TYPE,ACCESS_DATE,TENANT_ID)
 select SEARCH_ID,'ORACLE',2,SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID' from EMS_ANALYTICS_SEARCH where search_id>=2000 and search_id<=2999 and TENANT_ID ='&TENANT_ID';
+END IF;
+  COMMIT;
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('>>>SSF DML ERROR<<<');
+    DBMS_OUTPUT.PUT_LINE('Failed to add LA WIDGET meta data  due to error '||SQLERRM);
+    RAISE;
 END;
 /
