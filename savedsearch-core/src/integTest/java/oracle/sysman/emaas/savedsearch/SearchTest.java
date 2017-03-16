@@ -114,7 +114,7 @@ public class SearchTest extends BaseTest
 		}
 	}
 
-	@Test (groups = {"s1"})
+	@Test
 	public void testEditSystemSearch() throws Exception
 	{
 		boolean bresult = false;
@@ -137,7 +137,7 @@ public class SearchTest extends BaseTest
 		Assert.assertEquals(bresult, true);
 	}
 
-	@Test (groups = {"s1"})
+	@Test
 	public void testGetInstance()
 	{
 		try {
@@ -179,8 +179,8 @@ public class SearchTest extends BaseTest
 		}
 	}*/
 
-	@Test (groups = {"s1"})
-	public void testGetSearchByInvalidFolderId(@Mocked final Persistence persistence) throws Exception
+	@Test
+	public void testGetSearchByInvalidFolderId() throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();
 		try {
@@ -238,7 +238,7 @@ public class SearchTest extends BaseTest
 		}
 	}*/
 
-	@Test (groups = {"s1"})
+	@Test
 	public void testSearchNotExist() throws Exception
 	{
 		SearchManager search = SearchManager.getInstance();
