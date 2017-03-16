@@ -6,6 +6,5 @@ Rem    Rex Liang    06/29/2016 - created
 Rem
 Rem
 
-@&EMSAAS_SQL_ROOT/1.12.0/emaas_savesearch_drop_column.sql
 
 

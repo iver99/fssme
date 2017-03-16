@@ -99,13 +99,17 @@ UI_HIDDEN                             NUMBER         ;
 TENANT_ID                             NUMBER         ;
 IS_WIDGET                             NUMBER         ;
 
-
+V_COUNT                               NUMBER         ;
 DELETED                         NUMBER(38,0)                    ;
 PARAM_ATTRIBUTES                VARCHAR2(1024 BYTE)             ;
 PARAM_TYPE                      NUMBER(38,0)                    ;
 PARAM_VALUE_STR                 VARCHAR2(1024 BYTE)             ;
 PARAM_VALUE_CLOB                NCLOB                           ;
 BEGIN
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3000;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data WebLogic Servers with their Patch IDs has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 -- base TA folder is 4
 -- search id 3000 - 3999 are reserved for TA searches
 SEARCH_ID                  :=              3000                                                                                        ;
@@ -569,8 +573,12 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
+END IF;
 
-
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3001;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data WebLogic Servers with small Maximum Heap Size has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  :=   3001                                                                                                                   ;
 NAME                       :=   'WebLogic Servers with small Maximum Heap Size'                                                                        ;
 OWNER                      :=   'ORACLE'                                                                                                               ;
@@ -1025,6 +1033,11 @@ PARAM_VALUE_CLOB,
 TENANT_ID
 );
 
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3002;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data WebLogic Servers and their Ports has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  :=   3002;
 NAME                       :=   'WebLogic Servers and their Ports';
 OWNER                      :=   'ORACLE';
@@ -1475,7 +1488,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3003;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Databases with Autoextend ON and size greater than 10GB has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  :=    3003;
 NAME                       :=    'Databases with Autoextend ON and size greater than 10GB';
 OWNER                      :=    'ORACLE';
@@ -1925,7 +1942,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3004;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Top 10 Listeners by Load has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  := 3004;
 NAME                       := 'Top 10 Listeners by Load';
 OWNER                      := 'ORACLE';
@@ -2374,7 +2395,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3018;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Host Inventory By Platform has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  := 3018;
 NAME                       := 'Host Inventory By Platform';
 OWNER                      := 'ORACLE';
@@ -2825,7 +2850,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3019;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Top 25 Databases by Resource Consumption has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  :=3019;
 NAME                       :='Top 25 Databases by Resource Consumption';
 OWNER                      :='ORACLE';
@@ -3277,7 +3306,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3020;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Database Configuration and Storage By Version has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  := 3020                                                                                                      ;
 NAME                       := 'Database Configuration and Storage By Version'                                                           ;
 OWNER                      := 'ORACLE'                                                                                                  ;
@@ -3729,7 +3762,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3021;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Top 25 WebLogic Servers by Heap Usage has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  := 3021                                                                                                                                                        ;
 NAME                       := 'Top 25 WebLogic Servers by Heap Usage'                                                                                                                     ;
 OWNER                      := 'ORACLE'                                                                                                                                                    ;
@@ -4181,7 +4218,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3022;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Top 25 WebLogic Servers by Load has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  :=  3022                                                                                                                                                  ;
 NAME                       :=  'Top 25 WebLogic Servers by Load'                                                                                                                     ;
 OWNER                      :=  'ORACLE'                                                                                                                                              ;
@@ -4633,7 +4674,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3023;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data WebLogic Servers by JDK Version has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                  :=  3023                                      ;
 NAME                       :=  'WebLogic Servers by JDK Version'         ;
 OWNER                      :=  'ORACLE'                                  ;
@@ -5082,7 +5127,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3024;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Top 5 Databases has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID     			:= 3024                                                                                                       ;
 NAME     				:= 'Top 5 Databases'                                                                                          ;
 OWNER     				:= 'ORACLE'                                                                                                   ;
@@ -5533,7 +5582,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3025;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Top 5 Hosts has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                           :=3025                                                                                                  ;
 NAME                                :='Top 5 Hosts'                                                                                         ;
 OWNER                               :='ORACLE'                                                                                              ;
@@ -5984,7 +6037,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3026;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Top 5 WebLogic Servers has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                           :=3026                                                                                     ;
 NAME                                :='Top 5 WebLogic Servers'                                                                 ;
 OWNER                               :='ORACLE'                                                                                 ;
@@ -6436,7 +6493,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3027;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Top 5 Application Deployments has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                           :=3027                                                                                                                   ;
 NAME                                :='Top 5 Application Deployments '                                                                                       ;
 OWNER                               :='ORACLE'                                                                                                               ;
@@ -6887,7 +6948,11 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE TENANT_ID = '&TENANT_ID' AND SEARCH_ID = 3028;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TA WIDGET meta data Targets Status has been added before, no need to add again for ' || '&TENANT_ID');
+ ELSE
 SEARCH_ID                           :=3028                                                                                              ;
 NAME                                :='Targets Status'                                                                                  ;
 OWNER                               :='ORACLE'                                                                                          ;
@@ -7351,9 +7416,20 @@ PARAM_VALUE_STR,
 PARAM_VALUE_CLOB,
 TENANT_ID
 );
-
+END IF;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND OBJECT_ID >= 3000 AND OBJECT_ID <= 3999;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('last access data has been added before, no need to add again');
+ ELSE
 insert into EMS_ANALYTICS_LAST_ACCESS(OBJECT_ID,ACCESSED_BY,OBJECT_TYPE,ACCESS_DATE,TENANT_ID) 
 select SEARCH_ID,'ORACLE',2,SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID' from EMS_ANALYTICS_SEARCH where search_id>=3000 and search_id<=3999 and TENANT_ID ='&TENANT_ID';
-
+END IF;
+COMMIT;
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('>>>SSF DML ERROR<<<');
+    DBMS_OUTPUT.PUT_LINE('Failed to add TA WIDGET meta data due to error '||SQLERRM);
+    RAISE;
 END;
 /
