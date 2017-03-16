@@ -479,7 +479,7 @@ BEGIN
        V_DELETED                            :=0;
        V_IS_WIDGET                          :=1;
        V_METADATA                           :=null;
-       V_SEARCH_STR                         :='''SEF Action'' = named and ''Response Type'' = ''TXT +'' | stats count as TXT by ''SEF Actor Endpoint Network Address'' | top TXT';
+       V_SEARCH_STR                         :='''SEF Action'' = named and ''Response Type'' = ''TXT'' | stats count as TXT by ''SEF Actor Endpoint Network Address'' | top TXT';
        V_WIDGET_SOURCE                      :='1';
        V_WIDGET_GROUP_NAME                  :='Log Analytics';
        V_WIDGET_ICON                        :=null;
