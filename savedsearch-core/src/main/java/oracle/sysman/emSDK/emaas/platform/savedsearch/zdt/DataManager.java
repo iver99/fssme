@@ -480,12 +480,13 @@ public class DataManager
 					//do nothing
 				}
 				else {
+					  
 					//execute update action
 					logger.debug("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
 					em.createNativeQuery(SQL_UPDATE_SEARCH_PARAM).setParameter(1, paramAttributes).setParameter(2, paramType)
 							.setParameter(3, paramValueStr).setParameter(4, paramValueClob).setParameter(5, creationDate)
-							.setParameter(6, lastModificationDate).setParameter(7, searchId).setParameter(8, name)
-							.setParameter(9, tenantId).setParameter(10, deleted).executeUpdate();
+							.setParameter(6, lastModificationDate).setParameter(7, deleted).setParameter(8, searchId).setParameter(9, name)
+							.setParameter(10, tenantId).executeUpdate();
 				}
 
 			}
