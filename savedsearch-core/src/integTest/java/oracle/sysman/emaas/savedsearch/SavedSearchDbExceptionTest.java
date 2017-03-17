@@ -123,7 +123,7 @@ public class SavedSearchDbExceptionTest extends BaseTest
 		}
 	}
 
-	@Test (groups = {"s1"})
+	@Test
 	public void testCrudDelete() throws Exception
 	{
 		boolean bResult = false;
