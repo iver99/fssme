@@ -387,7 +387,7 @@ public class DataManager
 			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId)
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t "
-				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=?, and t.parent_id=? and t.deleted=? and t.tenant_id = ?)";//check if the data is existing.
+				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=? and t.parent_id=? and t.deleted=? and t.tenant_id = ?)";//check if the data is existing.
 		EntityManager em = null;
 		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
