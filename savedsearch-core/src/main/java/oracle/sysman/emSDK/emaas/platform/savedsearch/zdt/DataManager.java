@@ -289,7 +289,7 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -351,7 +351,7 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -415,7 +415,7 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -475,7 +475,7 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -552,7 +552,7 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -632,7 +632,7 @@ public class DataManager
 	 * @return
 	 * @throws ParseException
 	 * @throws Exception
-	 */
+	 
 	private int compareLastModificationDate(String dbLastModificationDate, String syncLastModificationDate)
 			throws ParseException, Exception
 	{
@@ -657,7 +657,7 @@ public class DataManager
 		 * syncLastModificationDate is not stable,so we keep 3 digits of syncLastModificationDate too(if shorter than 3 digits,we
 		 * add 0 in the tail,if longer than 3 digits,remove the extra digits). In other word,ZDT's sync work is on milli-second
 		 * level!
-		 */
+		
 		logger.debug("DBLastmodificationDate is " + dbLastModificationDate);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss.S");
 		Date dbDate = sdf.parse(dbLastModificationDate);
@@ -665,7 +665,18 @@ public class DataManager
 		return dbDate.compareTo(syncDate);
 
 	}
+*/
 
+	 private boolean isAfter(String thisDate, String comparedDate){
+         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+         try{
+                 return simpleDateFormat.parse(thisDate).after(simpleDateFormat.parse(comparedDate));
+         }catch (Exception e){
+                 logger.debug(e.getLocalizedMessage());
+                 return false;
+         }
+ }
+	
 	/**
 	 * Retrieves database data rows for specific native SQL for all tenant
 	 *
