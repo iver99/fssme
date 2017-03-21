@@ -129,7 +129,7 @@ COMMIT;
 @&EMSAAS_SQL_ROOT/1.15.0/emaas_savedsearch_seed_data_la.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.17.0/emaas_savedsearch_seed_data_cos.sql &TENANT_ID
-
+@&EMSAAS_SQL_ROOT/1.17.0/emaas_savedsearch_seed_data_la.sql &TENANT_ID
 /**
 --PLEASE READ!!
 --NO DDL IS ALLOWED in this file!! See EMCPDF-3333/EMCPSSF-465
