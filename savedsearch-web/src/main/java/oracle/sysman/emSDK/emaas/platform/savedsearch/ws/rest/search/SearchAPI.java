@@ -697,22 +697,56 @@ public class SearchAPI
 	@Path("/import")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response importData(JSONObject importedData) {
+	public Response importData(JSONArray importedData) {
+
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import");
-		Long tenantId = TenantContext.getContext().getTenantInternalId();
-		ImportRowEntity rowEntity = null;
+		String message = "";
+		int statusCode = 201;
+		SearchManager searchManager = SearchManager.getInstance();
 		try {
-			rowEntity = JSONUtil.fromJson(new ObjectMapper(), importedData.toString(), ImportRowEntity.class);
-			ImportDataHandler handler = new ImportDataHandler();
-			handler.saveImportedData(rowEntity, tenantId);
-			return Response.status(Status.NO_CONTENT).build();
-		} catch (IOException e) {
-			LOGGER.error("can not get ImportRowEntity from JSONObject",e.getLocalizedMessage());
-			return Response.status(500).entity(e.getLocalizedMessage()).build();
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			int count = importedData.length();
+			for (int i = 0; i < count; i++) {
+				JSONObject inputJsonObj = importedData.getJSONObject(i);
+				Search searchObj = createSearchObjectForAdd(inputJsonObj);
+				Search savedSearch = searchManager.saveSearch(searchObj);
+				
+				// see if an ODS entity needs to be create
+				if(searchObj != null && searchObj.getParameters() != null) {
+					for (SearchParameter param : searchObj.getParameters()) {
+						if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
+								&& "TRUE".equalsIgnoreCase(param.getValue())) {
+							OdsDataService ods = OdsDataServiceImpl.getInstance();
+							String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
+								
+							// add ODS Entity ID as one of search parameters of the saved search
+							savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
+							
+							// store the whole saved search again
+							// TODO provide new API to add a search parameter solely
+							savedSearch = searchManager.editSearch(savedSearch);
+							break;
+						}
+					}
+				}				
+				message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+			}			
 		}
-		
-		
-		
+		catch (EMAnalyticsFwkException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+		}
+		catch (EMAnalyticsWSException e) {
+			message = e.getMessage();
+			statusCode = e.getStatusCode();
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
+		} catch (JSONException e) {
+			LOGGER.error("errors while getting single savedsearch json object from json array - {}", e.getLocalizedMessage());
+		}
+		return Response.status(statusCode).entity(message).build();		
 	}
 
 	/**
