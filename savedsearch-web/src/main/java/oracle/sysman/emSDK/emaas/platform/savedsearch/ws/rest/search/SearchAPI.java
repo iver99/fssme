@@ -45,8 +45,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetDeletionN
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotificationType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importData.ImportDataHandler;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importData.ImportRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
@@ -900,46 +898,33 @@ public class SearchAPI
 	public Response getSearchData(JSONArray inputJsonArray) throws JSONException
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/all");
-		List<BigInteger> searchIdList = new ArrayList<BigInteger>();
-		Long tenantId = TenantContext.getContext().getTenantInternalId();
-		try {
-			for(int i = 0; i < inputJsonArray.length(); i++) {
-				searchIdList.add(new BigInteger(inputJsonArray.getString(i)));
-			}
-		} catch(NullPointerException npe) {
-			return Response.status(404).entity("search id list is empty").build();
-		} catch(JSONException je) {
-			return Response.status(404).entity("invalid search id in search id list").build();
-		} catch(NumberFormatException nfe) {
-			return Response.status(404).entity("invalid search id in search id list").build();
-		}
-		
 		String message = null;
 		int statusCode = 200;
-		JSONObject outputJsonObject = new JSONObject();
-		SearchManager manager = SearchManager.getInstance();
+		SearchManager sman = SearchManager.getInstance();	
+		ArrayNode outputJsonArray = new ObjectMapper().createArrayNode();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
 				throw new EMAnalyticsDatabaseUnavailException();
 			}
-			List<Map<String,Object>> searchData = manager.getSearchDataByIds(searchIdList, tenantId);
-			JSONArray searchArray = getJSONArrayFromListOfObjects(SEARCH_TABLE_NAME,searchData);
-			outputJsonObject.put(SEARCH_TABLE_NAME, searchArray);
-			
-			
-			List<Map<String,Object>> searchParamsData = manager.getSearchParamsDataByIds(searchIdList, tenantId);
-			JSONArray searchParamsArray = getJSONArrayFromListOfObjects(SEARCH_PARAMS_TABLE_NAME,searchParamsData);
-			outputJsonObject.put(SEARCH_PARAMS_TABLE_NAME, searchParamsArray);
-			
-			
-		} catch (EMAnalyticsFwkException e) {
+			List<BigInteger> searchIdList = new ArrayList<BigInteger>();
+			for(int i = 0; i < inputJsonArray.length(); i++) {
+				searchIdList.add(new BigInteger(inputJsonArray.getString(i)));
+			}			
+			for (BigInteger id : searchIdList) {
+				Search searchObj = sman.getSearchWithoutOwner(id);
+				outputJsonArray.add(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj));
+			}
+			message = outputJsonArray.toString();
+		}
+		catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());
 			statusCode = e.getStatusCode();
-			message = e.getMessage();
+			message= e.getMessage();
 			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
 					e.getStatusCode());
 		}
-		return Response.status(statusCode).entity(outputJsonObject).build();
+
+		return Response.status(statusCode).entity(message).build();
 	}
 	
 	private JSONArray getJSONArrayFromListOfObjects(String dataName, List<Map<String, Object>> list)
