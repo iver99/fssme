@@ -13,7 +13,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-Rem    MISANDOV    03/09/17 - update widget 2004
+Rem    MISANDOV    03/09/17 - update widgets 2004,2028
 Rem
 
 DEFINE TENANT_ID ='&1'
@@ -41,6 +41,10 @@ BEGIN
      V_SEARCH_ID := 2004;
      V_SEARCH_DISPLAY_STR := '''Entity Type'' like ''Host%''';
      Update EMS_ANALYTICS_SEARCH set SEARCH_DISPLAY_STR=V_SEARCH_DISPLAY_STR WHERE SEARCH_ID=V_SEARCH_ID and TENANT_ID=V_TENANT_ID;
+
+     V_SEARCH_ID := 2028;
+     V_SEARCH_DISPLAY_STR := '''Entity Type'' like ''Host%''';
+     Update EMS_ANALYTICS_SEARCH set SEARCH_DISPLAY_STR=V_SEARCH_DISPLAY_STR WHERE SEARCH_ID=V_SEARCH_ID and TENANT_ID=V_TENANT_ID;
  
   IF (V_TID<>-1) THEN
     EXIT;
@@ -48,12 +52,12 @@ BEGIN
   END LOOP;
   CLOSE TENANT_CURSOR;
   COMMIT;
-  DBMS_OUTPUT.PUT_LINE('Query string of LA widget (id: 2004 name: Host Logs Trend) has been updated to:  Entity Type like Host%');
+  DBMS_OUTPUT.PUT_LINE('Query string of LA widgets (id: 2004 name: Host Logs Trend)  (id: 2028 name: Host Log Trend) have been updated to:  Entity Type like Host%');
 
 EXCEPTION
   WHEN OTHERS THEN
     ROLLBACK;
-    DBMS_OUTPUT.PUT_LINE('Failed to update Query string of LA widget (id: 2004 name: Host Logs Trend) due to '||SQLERRM);
+    DBMS_OUTPUT.PUT_LINE('Failed to update Query string of LA widgets (id: 2004 name: Host Logs Trend)  (id: 2028 name: Host Log Trend) due to '||SQLERRM);
     RAISE;
 END;
 /
