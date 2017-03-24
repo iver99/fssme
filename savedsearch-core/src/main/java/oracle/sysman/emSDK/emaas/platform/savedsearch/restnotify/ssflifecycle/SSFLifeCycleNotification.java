@@ -40,13 +40,11 @@ public class SSFLifeCycleNotification {
 			return;
 		}
 		RestClient rc = new RestClient();
-		Map<String, Object> headers = new HashMap<String, Object>();
-		headers.put("X-USER-IDENTITY-DOMAIN-NAME", "SSF_NOTIFY_COMMON_TENANT");
 		SSFLifeCycleNotifyEntity lcne = new SSFLifeCycleNotifyEntity(type);
 		for (Link link : links) {
 			long innerStart = System.currentTimeMillis();
 			// TODO: will be replaced by the RestClient impl from dashboards-sdk once it could be used by SSF
-			rc.post(link.getHref(), lcne, null);
+			rc.post(link.getHref(), lcne, "CloudServices");
 			long innerEnd = System.currentTimeMillis();
 			LOGGER.info(
 						"Notification of SSF lifecycle notification to link {} . It takes {} ms",
