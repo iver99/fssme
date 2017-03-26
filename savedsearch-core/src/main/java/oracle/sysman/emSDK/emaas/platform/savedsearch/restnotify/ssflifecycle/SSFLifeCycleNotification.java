@@ -2,17 +2,13 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle.SSFLifeCycleNotifyEntity.SSFNotificationType;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by guochen on 3/16/17.
