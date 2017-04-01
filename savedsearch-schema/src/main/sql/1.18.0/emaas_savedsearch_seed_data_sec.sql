@@ -188,7 +188,7 @@ BEGIN
        V_DELETED                            :=0;
        V_IS_WIDGET                          :=1;
        V_METADATA                           :=null;
-       V_SEARCH_STR                         :='''SEF Observer Endpoint Product'' = cisco_asa and ''SEF Category'' = network.connection.deny | head | timestats count by ''SEF Actor Endpoint Network Address''';
+       V_SEARCH_STR                         :='''SEF Observer Endpoint Product'' = cisco_asa and ''SEF Category'' = network.connection.deny | timestats count by ''SEF Actor Endpoint Network Address''';
        V_WIDGET_SOURCE                      :='1';
        V_WIDGET_GROUP_NAME                  :=null;
        V_WIDGET_ICON                        :=null;
