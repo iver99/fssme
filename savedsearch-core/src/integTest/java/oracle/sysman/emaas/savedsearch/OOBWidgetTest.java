@@ -53,7 +53,7 @@ public class OOBWidgetTest {
                 TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
         try {
             SearchManager searchManager = SearchManager.getInstance();
-            String[] searchIds = {"5009", "5007", "5006"};
+            String[] searchIds = {"5009", "5007", "5006", "5008", "5010", "5011", "5012"};
             for (String searchId : searchIds) {
                 Search search = searchManager.getSearch(new BigInteger(searchId));
                 Assert.assertNull(search);
@@ -99,6 +99,22 @@ public class OOBWidgetTest {
             TenantContext.clearContext();
         }
     }
+    @Test
+    public void testOrchestrationOverView() throws EMAnalyticsFwkException {
+        TenantContext.setContext(new TenantInfo(
+                TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+                TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+        try {
+            SearchManager searchManager = SearchManager.getInstance();
+            Search search = searchManager.getSearch(new BigInteger("5005"));
+            boolean isExist = false;
+            isExist = "Overview".equals(search.getName());
+            Assert.assertTrue(isExist);
+        }finally{
+            TenantContext.clearContext();
+        }
+    }
+
 
     @Test
     public void testSecurityDNSWidget() throws EMAnalyticsFwkException {
