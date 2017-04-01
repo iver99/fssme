@@ -125,6 +125,12 @@ public class JSONUtil
 	public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta) throws IOException
 	{
 		ObjectMapper mapper = new ObjectMapper();
+        //set inclusion attribute
+        mapper.setSerializationInclusion(Inclusion.ALWAYS);
+        //ignore those exist in json but not in java
+        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //forbid the deserialize int for Enum order()
+        mapper.configure(DeserializationConfig.Feature.FAIL_ON_NUMBERS_FOR_ENUMS, true);
 		return (List<T>) JSONUtil.fromJson(mapper, jsonString, JSONUtil.constructParametricType(mapper, List.class, classMeta));
 	}
 

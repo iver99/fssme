@@ -109,6 +109,11 @@ public class RegistryLookupUtil
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, false);
 	}
 
+    public static Link getServiceInternalLinkHttp(String serviceName, String version, String rel, String tenantName)
+    {
+        return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
+    }
+
 	public static Link replaceWithVanityUrl(Link lk, String tenantName, String serviceName)
 	{
 		if (lk == null || StringUtil.isEmpty(serviceName)) {
@@ -399,7 +404,6 @@ public class RegistryLookupUtil
 				if (lk != null) {
 					return lk;
 				}
-
 				//https link is not found, then find http link
 				for (InstanceInfo internalInstance : result) {
 					List<Link> links = null;
