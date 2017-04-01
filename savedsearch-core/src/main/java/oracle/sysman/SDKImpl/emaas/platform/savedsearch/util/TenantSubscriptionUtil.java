@@ -10,6 +10,9 @@
 
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -21,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -128,25 +132,34 @@ public class TenantSubscriptionUtil
 	public static List<String> getTenantSubscribedServices(String tenant,TenantSubscriptionInfo tenantSubscriptionInfo)
 	{
 		// try to load from subscribeCache
-		/*CacheManager cm = CacheManager.getInstance();
+		CacheManager cm = CacheManager.getInstance();
 		Tenant cacheTenant = new Tenant(tenant);
+        Keys tenantSubscriptionInfoKey = new Keys(CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,"tenantSubscriptionInfoKey");
 		List<String> cachedApps;
 		try {
 			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-		}
+            // getCacheable(Tenant tenant, String cacheName, Keys keys) throws Excepti
+            TenantSubscriptionInfo tenantSubscriptionInfo1 =  (TenantSubscriptionInfo)cm.getCacheable(cacheTenant,CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE, tenantSubscriptionInfoKey);
+		    if(tenantSubscriptionInfo1!=null){
+                LOGGER.info("Retrieving TenantSubscriptionInfo object from cache..");
+                //Copy value into tenantSubscriptionInfo
+                copyTenantSubscriptionInfo(tenantSubscriptionInfo1,tenantSubscriptionInfo);
+            }else{
+                LOGGER.info("TenantSubscriptionInfo object from cache is null");
+            }
+        }
 		catch (Exception e) {
 			LOGGER.error(e);
 			return Collections.emptyList();
 		}
 		if (cachedApps != null) {
-			LOGGER.debug(
-					"retrieved subscribed apps for tenant {} from subscribe cache: "
-							+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
+			LOGGER.info(
+                    "retrieved subscribed apps for tenant {} from subscribe cache: {}", tenant, cachedApps);
 			return cachedApps;
-		}*/
+		}
 
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("TenantService", "1.0+", "collection/tenants", tenant);
+		Link domainLink = RegistryLookupUtil.getServiceInternalLinkHttp("TenantService", "1.0+", "collection/tenants", tenant);
 		if (domainLink == null || StringUtil.isEmpty(domainLink.getHref())) {
 			LOGGER.warn("Checking serviceRequest for (" + tenant
 					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
@@ -156,8 +169,7 @@ public class TenantSubscriptionUtil
 		String domainHref = domainLink.getHref() + "/" + tenant + "/serviceRequest";
 		RestClient rc = new RestClient();
 		String domainsResponse = rc.get(domainHref);
-		LOGGER.info("Checking serviceRequest api for (" + tenant + ") subscriptions. subscribapps response is " + domainsResponse);
-		ObjectMapper mapper = JSONUtil.buildNormalMapper();
+		LOGGER.debug("Checking serviceRequest api for (" + tenant + ") subscriptions. subscribapps response is " + domainsResponse);
 		try {
 			List<ServiceRequestCollection> src = JSONUtil.fromJsonToList(domainsResponse, ServiceRequestCollection.class);
 			if(src == null || src.isEmpty()){
@@ -196,9 +208,12 @@ public class TenantSubscriptionUtil
 				LOGGER.error("After Mapping action,Empty subscription list found!");
 				return Collections.emptyList();
 			}
-			/*cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
-					origAppsList);*/
-//                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey,subscribeAppsList);
+            LOGGER.info("Putting {} into cache",subscribeAppsList);
+			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
+                    subscribeAppsList);
+            LOGGER.info("Putting {} into cache",tenantSubscriptionInfo);
+            cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE, tenantSubscriptionInfoKey,
+                    tenantSubscriptionInfo);
 			return subscribeAppsList;
 
 		}
@@ -247,6 +262,16 @@ public class TenantSubscriptionUtil
 		return true;
 
 	}
+
+    private static void copyTenantSubscriptionInfo(TenantSubscriptionInfo from, TenantSubscriptionInfo to){
+        if(from == null || to == null){
+            LOGGER.error("Cannot copy value into or from null object!");
+            return;
+        }
+        List<AppsInfo> toAppsInfoList  = new ArrayList<AppsInfo>();
+        toAppsInfoList.addAll(from.getAppsInfoList());
+        to.setAppsInfoList(toAppsInfoList);
+    }
 
 	private TenantSubscriptionUtil()
 	{
