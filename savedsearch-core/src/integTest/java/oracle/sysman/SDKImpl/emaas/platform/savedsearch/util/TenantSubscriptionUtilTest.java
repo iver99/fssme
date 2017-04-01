@@ -12,6 +12,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.TenantSubscriptionInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
 
@@ -145,7 +146,7 @@ public class TenantSubscriptionUtilTest
                 result = "LogAnalytics,ITAnalytics,APM";
 			}
 		};
-		TenantSubscriptionUtil.getTenantSubscribedServices("testtenant");
+		TenantSubscriptionUtil.getTenantSubscribedServices("testtenant",new TenantSubscriptionInfo());
 	}
 	@Test
 	public void testGetProviderNameFromServiceName(){
