@@ -14,6 +14,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.cache.CacheInconsistencyException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
@@ -135,28 +136,25 @@ public class TenantSubscriptionUtil
 		CacheManager cm = CacheManager.getInstance();
 		Tenant cacheTenant = new Tenant(tenant);
         Keys tenantSubscriptionInfoKey = new Keys(CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,"tenantSubscriptionInfoKey");
-		List<String> cachedApps;
+		List<String> cachedApps = null;
 		try {
 			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
             // getCacheable(Tenant tenant, String cacheName, Keys keys) throws Excepti
             TenantSubscriptionInfo tenantSubscriptionInfo1 =  (TenantSubscriptionInfo)cm.getCacheable(cacheTenant,CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE, tenantSubscriptionInfoKey);
-		    if(tenantSubscriptionInfo1!=null){
-                LOGGER.info("Retrieving TenantSubscriptionInfo object from cache..");
-                //Copy value into tenantSubscriptionInfo
-                copyTenantSubscriptionInfo(tenantSubscriptionInfo1,tenantSubscriptionInfo);
-            }else{
-                LOGGER.info("TenantSubscriptionInfo object from cache is null");
-            }
-        }
-		catch (Exception e) {
+		    if(tenantSubscriptionInfo1 == null || cachedApps == null || (cachedApps!=null && cachedApps.isEmpty())){
+				throw new CacheInconsistencyException();
+			}
+			//Copy value into tenantSubscriptionInfo
+			copyTenantSubscriptionInfo(tenantSubscriptionInfo1,tenantSubscriptionInfo);
+			LOGGER.info(
+					"retrieved subscribed apps for tenant {} from subscribe cache: {} and tenantSubscriptinoInfo is {}", tenant, cachedApps,tenantSubscriptionInfo1);
+			return cachedApps;
+		}catch(CacheInconsistencyException e){
+			LOGGER.warn("Retrieving null TenantSubscriptionInfo or null subscribedapps data from cache.., will not use cache!");
+		}catch (Exception e) {
 			LOGGER.error(e);
 			return Collections.emptyList();
-		}
-		if (cachedApps != null) {
-			LOGGER.info(
-                    "retrieved subscribed apps for tenant {} from subscribe cache: {}", tenant, cachedApps);
-			return cachedApps;
 		}
 
 		Link domainLink = RegistryLookupUtil.getServiceInternalLinkHttp("TenantService", "1.0+", "collection/tenants", tenant);
