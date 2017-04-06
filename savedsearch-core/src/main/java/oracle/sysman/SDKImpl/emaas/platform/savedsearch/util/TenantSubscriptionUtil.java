@@ -10,6 +10,19 @@
 
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingCollection;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
@@ -20,6 +33,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -157,7 +172,7 @@ public class TenantSubscriptionUtil
 			return Collections.emptyList();
 		}
 
-		Link domainLink = RegistryLookupUtil.getServiceInternalLinkHttp("TenantService", "1.0+", "collection/tenants", tenant);
+		VersionedLink domainLink = RegistryLookupUtil.getServiceInternalLinkHttp("TenantService", "1.0+", "collection/tenants", tenant);
 		if (domainLink == null || StringUtil.isEmpty(domainLink.getHref())) {
 			LOGGER.warn("Checking serviceRequest for (" + tenant
 					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
@@ -166,7 +181,7 @@ public class TenantSubscriptionUtil
 		LOGGER.info("Checking serviceRequest for (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref() + "/" + tenant + "/serviceRequest";
 		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref);
+		String domainsResponse = rc.get(domainHref,domainLink.getAuthToken());
 		LOGGER.debug("Checking serviceRequest api for (" + tenant + ") subscriptions. subscribapps response is " + domainsResponse);
 		try {
 			List<ServiceRequestCollection> src = JSONUtil.fromJsonToList(domainsResponse, ServiceRequestCollection.class);

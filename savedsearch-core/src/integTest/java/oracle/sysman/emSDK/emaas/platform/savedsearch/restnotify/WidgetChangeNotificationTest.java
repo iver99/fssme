@@ -12,6 +12,7 @@ import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -25,7 +26,7 @@ import org.testng.annotations.Test;
 public class WidgetChangeNotificationTest
 {
 	private Link link;
-	private List<Link> links;
+	private List<VersionedLink> links;
 
 	@BeforeMethod
 	public void beforeMethod()
@@ -33,8 +34,8 @@ public class WidgetChangeNotificationTest
 		link = new Link();
 		link.withHref("http://test.link.com");
 		link.withRel("ssf.widget.changed");
-		links = new ArrayList<Link>();
-		links.add(link);
+		links = new ArrayList<VersionedLink>();
+		links.add(new VersionedLink(link, "auth"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -58,7 +59,7 @@ public class WidgetChangeNotificationTest
 				result = links;
 				TenantContext.getContext().gettenantName();
 				result = "emaastesttenant1";
-				anyRestClient.post(anyString, (Map<String, Object>) any, any, anyString);
+				anyRestClient.post(anyString, (Map<String, Object>) any, any, anyString, anyString);
 				result = wne;
 			}
 		};
