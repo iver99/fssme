@@ -29,6 +29,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -46,6 +47,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWS
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
@@ -862,11 +864,11 @@ public class SearchAPI
 				LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + "The version is wrong",version);
 				version +="+";
 			}
-			oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link link = RegistryLookupUtil.getServiceExternalLink(serviceName,version,rel, TenantContext.getContext().gettenantName());
-			if(link == null) {
+			VersionedLink linkInfo = RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, TenantContext.getContext().gettenantName());
+			if(linkInfo == null) {
 				return Response.status(Response.Status.NOT_FOUND).entity("Failed:"+serviceName+","+version+","+rel+","+TenantContext.getContext().gettenantName()).build();
 			}
-			link = RegistryLookupUtil.replaceWithVanityUrl(link, TenantContext.getContext().gettenantName(),serviceName);
+			Link link = RegistryLookupUtil.replaceWithVanityUrl(linkInfo, TenantContext.getContext().gettenantName(), serviceName);
 			if(link == null) {
 				return Response.status(Response.Status.NOT_FOUND).entity("The link is null").build();
 			}

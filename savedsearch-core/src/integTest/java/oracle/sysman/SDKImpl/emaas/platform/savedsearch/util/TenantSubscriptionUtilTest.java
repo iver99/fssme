@@ -7,25 +7,23 @@ import java.util.List;
 
 import javax.ws.rs.core.UriBuilder;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.testng.annotations.Test;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingCollection;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.annotations.Test;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 
 /**
  * Created by xidai on 2/29/2016.
@@ -34,13 +32,11 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.R
 public class TenantSubscriptionUtilTest
 {
 	@Mocked
-	Link link;
+	VersionedLink linkInfo;
 	@Mocked
 	RegistryLookupUtil registryLookupUtil;
 	@Mocked
 	StringUtil stringUtil;
-	@Mocked
-	RegistrationManager registrationManager;
 	@Mocked
 	UriBuilder uriBuilder;
 	@Mocked
@@ -94,7 +90,6 @@ public class TenantSubscriptionUtilTest
 
 	@Test
 	public void testGetTenantSubscribedServices() throws IOException {
-		final char[] authToken = { 'a', 'b', 'c' };
 		final List<DomainEntity> list = new ArrayList<>();
 		list.add(domainEntity);
 		final List<AppMappingEntity> amecList = new ArrayList<>();
@@ -104,13 +99,9 @@ public class TenantSubscriptionUtilTest
         new Expectations() {
 			{
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
-				result = link;
+				result = linkInfo;
 				StringUtil.isEmpty(anyString);
 				result = false;
-				RegistrationManager.getInstance();
-				result = registrationManager;
-				registrationManager.getAuthorizationToken();
-				result = authToken;
 				UriBuilder.fromUri(anyString);
 				result = uriBuilder;
 				uriBuilder.build();
@@ -158,7 +149,6 @@ public class TenantSubscriptionUtilTest
 
 	@Test
 	public void tesGetTenantSubscribedServiceProviders() throws IOException {
-		final char[] authToken = { 'a', 'b', 'c' };
 		final List<DomainEntity> list = new ArrayList<>();
 		list.add(domainEntity);
 		final List<AppMappingEntity> amecList = new ArrayList<>();
@@ -168,13 +158,9 @@ public class TenantSubscriptionUtilTest
 		new Expectations() {
 			{
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
-				result = link;
+				result = linkInfo;
 				StringUtil.isEmpty(anyString);
 				result = false;
-				RegistrationManager.getInstance();
-				result = registrationManager;
-				registrationManager.getAuthorizationToken();
-				result = authToken;
 				UriBuilder.fromUri(anyString);
 				result = uriBuilder;
 				uriBuilder.build();
