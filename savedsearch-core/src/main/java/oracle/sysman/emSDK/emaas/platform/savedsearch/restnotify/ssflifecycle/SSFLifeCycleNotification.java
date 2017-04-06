@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle;
 
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
@@ -41,7 +43,16 @@ public class SSFLifeCycleNotification {
 		for (VersionedLink link : links) {
 			long innerStart = System.currentTimeMillis();
 			// TODO: will be replaced by the RestClient impl from dashboards-sdk once it could be used by SSF
-			rc.post(link.getHref(), lcne, "CloudServices", link.getAuthToken());
+			try {
+				rc.post(link.getHref(), lcne, "CloudServices", link.getAuthToken());
+			} catch (UniformInterfaceException e) {
+				ClientResponse res = e.getResponse();
+				if (res != null && res.getStatus() == 204) { // this is expected result
+					LOGGER.info("Got expected 204 status code for link {}", link.getHref());
+				} else { // for other scenarios, we just log an error and continue the next notification
+					LOGGER.error(e);
+				}
+			}
 			long innerEnd = System.currentTimeMillis();
 			LOGGER.info(
 						"Notification of SSF lifecycle notification to link {} . It takes {} ms",
