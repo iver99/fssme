@@ -2,6 +2,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle.SSFLifeCycleNotifyEntity.SSFNotificationType;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +25,7 @@ public class SSFLifeCycleNotification {
 		}
 		LOGGER.info("Starts to notify an SSF lifecycle event. The entity type is {}", type);
 		long start = System.currentTimeMillis();
-		List<Link> links = null;
+		List<VersionedLink> links = null;
 		try {
 			links = RegistryLookupUtil.getAllServicesInternalLinksByRel(SSF_LIFECYCLE_REL);
 		}
@@ -37,10 +38,10 @@ public class SSFLifeCycleNotification {
 		}
 		RestClient rc = new RestClient();
 		SSFLifeCycleNotifyEntity lcne = new SSFLifeCycleNotifyEntity(type);
-		for (Link link : links) {
+		for (VersionedLink link : links) {
 			long innerStart = System.currentTimeMillis();
 			// TODO: will be replaced by the RestClient impl from dashboards-sdk once it could be used by SSF
-			rc.post(link.getHref(), lcne, "CloudServices");
+			rc.post(link.getHref(), lcne, "CloudServices", link.getAuthToken());
 			long innerEnd = System.currentTimeMillis();
 			LOGGER.info(
 						"Notification of SSF lifecycle notification to link {} . It takes {} ms",
