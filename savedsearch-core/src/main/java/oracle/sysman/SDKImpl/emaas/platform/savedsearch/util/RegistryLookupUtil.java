@@ -116,9 +116,11 @@ public class RegistryLookupUtil
 		return new VersionedLink(link, authToken);
 	}
 
-    public static Link getServiceInternalLinkHttp(String serviceName, String version, String rel, String tenantName)
+    public static VersionedLink getServiceInternalLinkHttp(String serviceName, String version, String rel, String tenantName)
     {
-        return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
+		Link link = RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
+		String authToken = RegistryLookupUtil.getAuthorizationToken(serviceName, version);
+		return new VersionedLink(link, authToken);
     }
 
 	public static Link replaceWithVanityUrl(Link lk, String tenantName, String serviceName)
