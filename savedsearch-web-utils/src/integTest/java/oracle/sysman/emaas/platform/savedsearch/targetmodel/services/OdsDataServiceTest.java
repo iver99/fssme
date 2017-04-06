@@ -5,27 +5,25 @@ import java.math.BigInteger;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
-import org.apache.http.HttpException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.net.URISyntaxException;
 
 @Test(groups = {"s2"})
 public class OdsDataServiceTest {
 	public static final String MOCKED_RESULT = "{\"meClass\":\"TARGET\", \"meId\":\"odsentityid\"}";
+	public static final String MOCKED_AUTH = "authToken";
 	OdsDataService odsService = OdsDataServiceImpl.getInstance();
 	
-	public void testCreateOdsEntity(@Mocked final RegistryLookupUtil registryLookupUtil, @Mocked final Link link,
+	public void testCreateOdsEntity(@Mocked final RegistryLookupUtil registryLookupUtil, 
 			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws Exception {
+			@Mocked final TenantInfo info, @Mocked final VersionedLink linkInfo) throws Exception {
 		new Expectations() {
 			{
 				TenantContext.getContext();
@@ -33,12 +31,14 @@ public class OdsDataServiceTest {
 				info.gettenantName();
 				result = "tenant";
 				RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, anyString);
-				result = link;
-				link.getHref();
+				result = linkInfo;
+				linkInfo.getHref();
 				result = "http://xxx";
-				RestRequestUtil.restGet(anyString);
+				linkInfo.getAuthToken();
+				result = MOCKED_AUTH;
+				RestRequestUtil.restGet(anyString, anyString);
 				result = MOCKED_RESULT;
-				RestRequestUtil.restPost(anyString, anyString);
+				RestRequestUtil.restPost(anyString, anyString, anyString);
 				result = MOCKED_RESULT;
 			}
 		};
@@ -47,8 +47,8 @@ public class OdsDataServiceTest {
 	}
 	
 	public void testDeleteOdsEntity(@Mocked final SearchManager sman, @Mocked final RegistryLookupUtil registryLookupUtil, 
-			@Mocked final Link link, @Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws Exception {
+			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
+			@Mocked final TenantInfo info, @Mocked final VersionedLink linkInfo) throws Exception {
 		new Expectations() {
 			{
 				TenantContext.getContext();
@@ -56,12 +56,14 @@ public class OdsDataServiceTest {
 				info.gettenantName();
 				result = "tenant";
 				RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, anyString);
-				result = link;
-				link.getHref();
+				result = linkInfo;
+				linkInfo.getHref();
 				result = "http://xxx";
+				linkInfo.getAuthToken();
+				result = MOCKED_AUTH;
 				sman.getSearchParamByName((BigInteger) any, anyString);
 				result = "meid";
-				RestRequestUtil.restDelete(anyString);
+				RestRequestUtil.restDelete(anyString, anyString);
 				result = MOCKED_RESULT;
 			};
 		};
@@ -69,9 +71,9 @@ public class OdsDataServiceTest {
 		odsService.deleteOdsEntity(new BigInteger("999"));
 	}
 	
-	public void testCreateOdsEntityType(@Mocked final RegistryLookupUtil registryLookupUtil, @Mocked final Link link,
+	public void testCreateOdsEntityType(@Mocked final RegistryLookupUtil registryLookupUtil, 
 			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info) throws Exception {
+			@Mocked final TenantInfo info, @Mocked final VersionedLink linkInfo) throws Exception {
 		new Expectations() {
 			{
 				TenantContext.getContext();
@@ -79,13 +81,15 @@ public class OdsDataServiceTest {
 				info.gettenantName();
 				result = "tenant";
 				RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, anyString);
-				result = link;
-				link.getHref();
+				result = linkInfo;
+				linkInfo.getHref();
 				result = "http://xxx";
-				RestRequestUtil.restGet(anyString);
+				linkInfo.getAuthToken();
+				result = MOCKED_AUTH;
+				RestRequestUtil.restGet(anyString, anyString);
 				result = MOCKED_RESULT;
 				result = new EMAnalyticsFwkException("testCreateOdsEntityType", 1, null);
-				RestRequestUtil.restPost(anyString, anyString);
+				RestRequestUtil.restPost(anyString, anyString, anyString);
 				result = MOCKED_RESULT;
 			}
 		};

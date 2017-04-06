@@ -10,8 +10,8 @@
 
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
-import java.sql.Timestamp;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +24,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceM
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
@@ -31,7 +32,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -240,9 +240,12 @@ public class WidgetManagerImpl extends WidgetManager
 
 	private String getWidgetAPIUrl(String tenantName)
 	{
-		Link lnk = RegistryLookupUtil.getServiceExternalLink(WIDGET_API_SERVICENAME, WIDGET_API_VERSION, WIDGET_API_STATIC_REL,
+		VersionedLink lnk = RegistryLookupUtil.getServiceExternalLink(WIDGET_API_SERVICENAME, WIDGET_API_VERSION, WIDGET_API_STATIC_REL,
 				tenantName);
-		String url = lnk == null ? null : lnk.getHref();
+		String url = null;
+		if (lnk != null) {
+			url = lnk.getHref();
+		}
 		LOGGER.debug("We get widget api url is {}", url);
 		return url;
 	}
