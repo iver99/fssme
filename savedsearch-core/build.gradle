@@ -4,7 +4,7 @@ import java.util.Date
 apply from: 'test.gradle'
 
 
-dfversion = project.ext.getServiceVersion('SavedSearchService')
+def dfversion = project.ext.getServiceVersion('SavedSearchService')
 def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 /*
