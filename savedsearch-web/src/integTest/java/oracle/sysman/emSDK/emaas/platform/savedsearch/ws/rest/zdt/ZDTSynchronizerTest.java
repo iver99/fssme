@@ -4,8 +4,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchFolderRowEntity;
@@ -18,9 +21,9 @@ import org.testng.annotations.Test;
 
 public class ZDTSynchronizerTest {
 	@Mocked DataManager dm;
-	
 	@Test (groups = {"s1"})
-	public void testSyncNull() {
+	public void testSyncNull(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager em) {
 		ZDTSynchronizer syn = new ZDTSynchronizer();
 		syn.sync(null);
 		ZDTTableRowEntity row = new ZDTTableRowEntity(null, null, null, null, null);
@@ -28,7 +31,8 @@ public class ZDTSynchronizerTest {
 	}
 
 	@Test (groups = {"s1"})
-	public void testSync() {
+	public void testSync(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager em) {
 		List<SavedSearchCategoryRowEntity> savedSearchCategory = new ArrayList<SavedSearchCategoryRowEntity>();
 		savedSearchCategory.add(new SavedSearchCategoryRowEntity(null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null));
@@ -49,16 +53,16 @@ public class ZDTSynchronizerTest {
 			{
 				DataManager.getInstance();
 				result = dm;
-				dm.syncCategoryTable((BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString, anyString,
+				dm.syncCategoryTable(em,(BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString, anyString,
 						anyString, anyString, (BigInteger) any, (BigInteger) any, anyString, anyString, anyString, anyString, anyLong, anyString, anyString);
-				dm.syncCategoryParamTable((BigInteger) any, anyString, anyString, anyLong, anyString, anyString, (Integer)any);
-				dm.syncFolderTable((BigInteger) any, anyString, (BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString,
+				dm.syncCategoryParamTable(em,(BigInteger) any, anyString, anyString, anyLong, anyString, anyString, (Integer)any);
+				dm.syncFolderTable(em,(BigInteger) any, anyString, (BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString,
 						anyString, anyString, anyString, anyInt, anyString, anyInt, (BigInteger) any, anyLong);
-				dm.syncSearchTable((BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString, (BigInteger) any, 
+				dm.syncSearchTable(em,(BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString, (BigInteger) any, 
 						(BigInteger) any, anyInt, anyInt, anyString, anyString, 
 						anyInt, (BigInteger) any, anyInt, anyLong, anyString, anyString, anyString, anyString, anyString, anyString, anyString, 
 						anyString, anyLong, anyLong, anyLong, anyString, anyString, anyString, anyString);
-				dm.syncSearchParamsTable((BigInteger) any, anyString, anyString, anyLong, anyString, anyString, anyLong, anyString, anyString,(Integer)any);
+				dm.syncSearchParamsTable(em,(BigInteger) any, anyString, anyString, anyLong, anyString, anyString, anyLong, anyString, anyString,(Integer)any);
 			}
 		};
 		

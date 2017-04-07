@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -66,22 +68,28 @@ public class ZDTAPI
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/tablerows");
 
 		JSONObject obj = new JSONObject();
+		EntityManager em = null;
 		try {
-			JSONArray tableData = getCategoryTableData();
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			JSONArray tableData = getCategoryTableData(em);
 			obj.put(TABLE_CATEGORY, tableData);
-			tableData = getCategoryParamTableData();
+			tableData = getCategoryParamTableData(em);
 			obj.put(TABLE_CATEGORY_PARAMS, tableData);
-			tableData = getFolderTableData();
+			tableData = getFolderTableData(em);
 			obj.put(TABLE_FOLDERS, tableData);
-			tableData = getFolderTableData();
+			tableData = getFolderTableData(em);
 			obj.put(TABLE_FOLDERS, tableData);
-			tableData = getSearchTableData();
+			tableData = getSearchTableData(em);
 			obj.put(TABLE_SEARCH, tableData);
-			tableData = getSearchParamsTableData();
+			tableData = getSearchParamsTableData(em);
 			obj.put(TABLE_SEARCH_PARAMS, tableData);
 		}
 		catch (JSONException e) {
 			logger.error(e.getLocalizedMessage(), e);
+		} finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 		return Response.status(Status.OK).entity(obj).build();
 	}
@@ -92,24 +100,37 @@ public class ZDTAPI
 	public Response getEntitiesCount()
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/counts");
-		long categoryCount = DataManager.getInstance().getAllCategoryCount();
-		long folderCount = DataManager.getInstance().getAllFolderCount();
-		long searcheCount = DataManager.getInstance().getAllSearchCount();
-		logger.debug("ZDT counters: category count - {}, folder count - {}, search count - {}", categoryCount, folderCount,
-				searcheCount);
-		ZDTCountEntity zdte = new ZDTCountEntity(categoryCount, folderCount, searcheCount);
+		EntityManager em = null;
 		String message = null;
 		int statusCode = 200;
 		try {
-			message = JSONUtil.objectToJSONString(zdte);
-		}
-		catch (EMAnalyticsFwkException e) {
-			message = e.getLocalizedMessage();
-			statusCode = e.getErrorCode();
-			logger.error(
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			long categoryCount = DataManager.getInstance().getAllCategoryCount(em);
+			long folderCount = DataManager.getInstance().getAllFolderCount(em);
+			long searcheCount = DataManager.getInstance().getAllSearchCount(em);
+			logger.debug("ZDT counters: category count - {}, folder count - {}, search count - {}", categoryCount, folderCount,
+				searcheCount);
+			ZDTCountEntity zdte = new ZDTCountEntity(categoryCount, folderCount, searcheCount);
+			
+			try {
+				message = JSONUtil.objectToJSONString(zdte);
+			}
+			catch (EMAnalyticsFwkException e) {
+				message = e.getLocalizedMessage();
+				statusCode = e.getErrorCode();
+				logger.error(
 					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
 							+ "An error occurredh while retrieving all table counts, statusCode:" + e.getStatusCode()
 							+ " ,error:" + e.getMessage(), e);
+			}
+		} 
+		catch (Exception e) {
+			logger.error("errors while getting counts for tables -",e.getLocalizedMessage());
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -133,21 +154,21 @@ public class ZDTAPI
 		}
 	}
 
-	private JSONArray getCategoryParamTableData()
+	private JSONArray getCategoryParamTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryParamTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getCategoryParamTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_CATEGORY_PARAMS, list);
 	}
 
-	private JSONArray getCategoryTableData()
+	private JSONArray getCategoryTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getCategoryTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_CATEGORY, list);
 	}
 
-	private JSONArray getFolderTableData()
+	private JSONArray getFolderTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getFolderTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getFolderTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_FOLDERS, list);
 	}
 
@@ -169,15 +190,15 @@ public class ZDTAPI
 		return array;
 	}
 
-	private JSONArray getSearchParamsTableData()
+	private JSONArray getSearchParamsTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getSearchParamTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getSearchParamTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_SEARCH_PARAMS, list);
 	}
 
-	private JSONArray getSearchTableData()
+	private JSONArray getSearchTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getSearchTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getSearchTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_SEARCH, list);
 	}
 

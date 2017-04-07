@@ -13,16 +13,13 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.zdt;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -120,6 +117,7 @@ public class DataManager
 	private static final String SQL_UPDATE_SEARCH_PARAM = "UPDATE EMS_ANALYTICS_SEARCH_PARAMS t set t.PARAM_ATTRIBUTES=?,t.PARAM_TYPE=?,t.PARAM_VALUE_STR=?,"
 			+ "t.PARAM_VALUE_CLOB=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.deleted=? where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";
 
+
 	/**
 	 * Return the singleton for data manager
 	 *
@@ -137,20 +135,15 @@ public class DataManager
 	 * @return
 	 */
 
-	public long getAllCategoryCount()
+	public long getAllCategoryCount(EntityManager em)
 	{
 		long count = 0L;
-		EntityManager em = null;
 		try {
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_COUNT);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
 		catch (Exception e) {
-			logger.error("Error occured when get all category count!");
-		}
-		finally {
-			em.close();
+			logger.error("Error occured when get all category count!" , e.getLocalizedMessage());
 		}
 
 		return count;
@@ -163,21 +156,15 @@ public class DataManager
 	 * @return
 	 */
 
-	public long getAllFolderCount()
+	public long getAllFolderCount(EntityManager em)
 	{
-		EntityManager em = null;
 		long count = 0l;
 		try {
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
 		catch (Exception e) {
-
-		}
-		finally {
-			logger.error("Error occured when get all folder count!");
-			em.close();
+			logger.error("Error occured when get all folder count!" , e.getLocalizedMessage());
 		}
 
 		return count;
@@ -189,21 +176,15 @@ public class DataManager
 	 * @return
 	 */
 
-	public long getAllSearchCount()
+	public long getAllSearchCount(EntityManager em)
 	{
-		EntityManager em = null;
 		long count = 0l;
 		try {
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			Query query = em.createNativeQuery(SQL_ALL_SEARCH_COUNT);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
 		catch (Exception e) {
-
-		}
-		finally {
-			logger.error("Error occured when get all search count!");
-			em.close();
+			logger.error("Error occured when get all search count!",e.getLocalizedMessage());
 		}
 		return count;
 
@@ -215,9 +196,9 @@ public class DataManager
 	 * @return
 	 */
 
-	public List<Map<String, Object>> getCategoryParamTableData()
+	public List<Map<String, Object>> getCategoryParamTableData(EntityManager em)
 	{
-		return getDatabaseTableData(SQL_ALL_CATEGORY_PARAMS_ROWS);
+		return getDatabaseTableData(em,SQL_ALL_CATEGORY_PARAMS_ROWS);
 	}
 
 	/**
@@ -226,9 +207,9 @@ public class DataManager
 	 * @return
 	 */
 
-	public List<Map<String, Object>> getCategoryTableData()
+	public List<Map<String, Object>> getCategoryTableData(EntityManager em)
 	{
-		return getDatabaseTableData(SQL_ALL_CATEGORY_ROWS);
+		return getDatabaseTableData(em,SQL_ALL_CATEGORY_ROWS);
 	}
 
 	/**
@@ -236,9 +217,9 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getFolderTableData()
+	public List<Map<String, Object>> getFolderTableData(EntityManager em)
 	{
-		return getDatabaseTableData(SQL_ALL_FOLDER_ROWS);
+		return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS);
 	}
 
 	/**
@@ -247,9 +228,9 @@ public class DataManager
 	 * @return
 	 */
 
-	public List<Map<String, Object>> getSearchParamTableData()
+	public List<Map<String, Object>> getSearchParamTableData(EntityManager em)
 	{
-		return getDatabaseTableData(SQL_ALL_SEARCH_PARAMS_ROWS);
+		return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS);
 	}
 
 	/**
@@ -258,18 +239,16 @@ public class DataManager
 	 * @return
 	 */
 
-	public List<Map<String, Object>> getSearchTableData()
+	public List<Map<String, Object>> getSearchTableData(EntityManager em)
 	{
-		return getDatabaseTableData(SQL_ALL_SEARCH_ROWS);
+		return getDatabaseTableData(em, SQL_ALL_SEARCH_ROWS);
 	}
 
-	public void syncCategoryParamTable(BigInteger categoryId, String name, String paramValue, Long tenantId, String creationDate,
+	public void syncCategoryParamTable(EntityManager em,BigInteger categoryId, String name, String paramValue, Long tenantId, String creationDate,
 			String lastModificationDate, Integer deleted)
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY_PARAMS t "
 				+ "where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
-		EntityManager em = null;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}		
@@ -289,7 +268,7 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -297,35 +276,24 @@ public class DataManager
 					//execute update action
 					logger.debug("Data exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute update action.");
 					em.createNativeQuery(SQL_UPDATE_CATEGORY_PARAM).setParameter(1, paramValue).setParameter(2, creationDate)
-							.setParameter(3, lastModificationDate).setParameter(4, categoryId).setParameter(5, name)
-							.setParameter(6, tenantId).setParameter(7, deleted).executeUpdate();
+							.setParameter(3, lastModificationDate).setParameter(4, deleted).setParameter(5, categoryId)
+							.setParameter(6, name).setParameter(7, tenantId).executeUpdate();
 				}
 
 			}
-			em.getTransaction().commit();
-		}
-		catch (ParseException e) {
-			logger.error("Error occurred when parse LastModificationDate!");
 		}
 		catch (Exception e) {
-			logger.error("Error occured when sync Category param table data!");
+			logger.error("Error occured when sync Category param table data! {}",e.getLocalizedMessage());
 		}
-		finally {
-			if (em != null) 
-			em.close();
-		}
-
 	}
 
-	public void syncCategoryTable(BigInteger categoryId, String name, String description, String owner, String creationDate,
+	public void syncCategoryTable(EntityManager em,BigInteger categoryId, String name, String description, String owner, String creationDate,
 			String nameNlsid, String nameSubSystem, String descriptionNlsid, String descriptionSubSystem, String emPluginId,
 			BigInteger defaultFolderId, BigInteger deleted, String providerName, String providerVersion, String providerDiscovery,
 			String providerAssetroot, Long tenantId, String dashboardIneligible, String lastModificationDate)
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY t "
 				+ "where (t.CATEGORY_ID=? and t.TENANT_ID=?) OR (t.name = ? and t.deleted=? and t.owner=? and t.tenant_id = ?)";//check if the data is existing.
-		EntityManager em = null;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -351,7 +319,7 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -368,28 +336,18 @@ public class DataManager
 							.setParameter(18, categoryId).setParameter(19, tenantId).executeUpdate();
 				}
 			}
-			em.getTransaction().commit();
-		}
-		catch (ParseException e) {
-			logger.error("Error occurred when parse LastModificationDate!");
 		}
 		catch (Exception e) {
-			logger.error("Error occured when sync Category table data!");
-		}
-		finally {
-			if (em != null) 
-			em.close();
+			logger.error("Error occured when sync Category table data! {}",e.getLocalizedMessage());
 		}
 	}
 
-	public void syncFolderTable(BigInteger folderId, String name, BigInteger parentId, String description, String creationDate, String owner,
+	public void syncFolderTable(EntityManager em, BigInteger folderId, String name, BigInteger parentId, String description, String creationDate, String owner,
 			String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem, String descriptionNlsid,
 			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId)
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t "
 				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=? and t.parent_id=? and t.deleted=? and t.tenant_id = ?)";//check if the data is existing.
-		EntityManager em = null;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -415,7 +373,7 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -432,28 +390,17 @@ public class DataManager
 				}
 
 			}
-			em.getTransaction().commit();
-		}
-		catch (ParseException e) {
-			logger.error("Error occurred when parse LastModificationDate!");
 		}
 		catch (Exception e) {
-			logger.error("Error occured when sync folders table data!");
+			logger.error("Error occured when sync folders table data! {}",e.getLocalizedMessage());
 		}
-		finally {
-			if (em != null) 
-			em.close();
-		}
-
 	}
 
-	public void syncSearchParamsTable(BigInteger searchId, String name, String paramAttributes, Long paramType,
+	public void syncSearchParamsTable(EntityManager em, BigInteger searchId, String name, String paramAttributes, Long paramType,
 			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate, Integer deleted)
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH_PARAMS t "
 				+ "where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
-		EntityManager em = null;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -475,11 +422,12 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
 				else {
+					  
 					//execute update action
 					logger.debug("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
 					em.createNativeQuery(SQL_UPDATE_SEARCH_PARAM).setParameter(1, paramAttributes).setParameter(2, paramType)
@@ -489,23 +437,14 @@ public class DataManager
 				}
 
 			}
-			//sync Data
-			em.getTransaction().commit();
-		}
-		catch (ParseException e) {
-			logger.error("Error occurred when parse LastModificationDate!");
+			
 		}
 		catch (Exception e) {
-			logger.error("Error occured when sync search param table data!");
+			logger.error("Error occured when sync search param table data! {}", e.getLocalizedMessage());
 		}
-		finally {
-			if (em != null) 
-			em.close();
-		}
-
 	}
 
-	public void syncSearchTable(BigInteger searchId, String name, String owner, String creationDate,
+	public void syncSearchTable(EntityManager em,BigInteger searchId, String name, String owner, String creationDate,
 			String lastModificationDate, String lastModifiedBy, String description, BigInteger folderId, BigInteger categoryId,
 			Integer systemSearch,Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
 			Integer isWidget, Long tenantId, String nameWidgetSource, String widgetGroupName, String widgetScreenshotHref,
@@ -516,8 +455,6 @@ public class DataManager
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
 				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
 				+ "(t.name = ? and t.folder_id = ? and t.category_id=? and t.deleted = ? )";//check if the data is existing.
-		EntityManager em = null;
-		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -551,7 +488,7 @@ public class DataManager
 			}
 			else {
 				String dBLastModificationDate = (String) result.get(0);
-				if (compareLastModificationDate(dBLastModificationDate, lastModificationDate) >= 0) {
+				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -574,16 +511,11 @@ public class DataManager
 				}
 
 			}
-			em.getTransaction().commit();
+			
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync search table data!");
 		}
-		finally {
-			if (em != null) 
-			em.close();
-		}
-
 	}
 
 	private String checkFormat(String dateStr)
@@ -631,7 +563,7 @@ public class DataManager
 	 * @return
 	 * @throws ParseException
 	 * @throws Exception
-	 */
+	 
 	private int compareLastModificationDate(String dbLastModificationDate, String syncLastModificationDate)
 			throws ParseException, Exception
 	{
@@ -656,7 +588,7 @@ public class DataManager
 		 * syncLastModificationDate is not stable,so we keep 3 digits of syncLastModificationDate too(if shorter than 3 digits,we
 		 * add 0 in the tail,if longer than 3 digits,remove the extra digits). In other word,ZDT's sync work is on milli-second
 		 * level!
-		 */
+		
 		logger.debug("DBLastmodificationDate is " + dbLastModificationDate);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss.S");
 		Date dbDate = sdf.parse(dbLastModificationDate);
@@ -664,33 +596,38 @@ public class DataManager
 		return dbDate.compareTo(syncDate);
 
 	}
+*/
 
+	 private boolean isAfter(String thisDate, String comparedDate){
+         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+         try{
+                 return simpleDateFormat.parse(thisDate).after(simpleDateFormat.parse(comparedDate));
+         }catch (Exception e){
+                 logger.debug(e.getLocalizedMessage());
+                 return false;
+         }
+ }
+	
 	/**
 	 * Retrieves database data rows for specific native SQL for all tenant
 	 *
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private List<Map<String, Object>> getDatabaseTableData(String nativeSql)
+	private List<Map<String, Object>> getDatabaseTableData(EntityManager em,String nativeSql)
 	{
 		if (StringUtil.isEmpty(nativeSql)) {
 			logger.error("Can't query database table with null or empty SQL statement!");
 			return null;
 		}
-		EntityManager em = null;
 		List<Map<String, Object>> list = null;
 		try {
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			Query query = em.createNativeQuery(nativeSql);
 			query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 			list = query.getResultList();
 		}
 		catch (Exception e) {
 			logger.error("Error occured when execute SQL:[" + nativeSql + "]");
-		}
-		finally {
-			if (em != null) 
-			em.close();
 		}
 
 		return list;
