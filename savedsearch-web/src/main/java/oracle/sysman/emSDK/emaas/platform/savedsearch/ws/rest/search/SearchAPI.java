@@ -56,7 +56,6 @@ import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServ
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
-
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONArray;
@@ -695,41 +694,86 @@ public class SearchAPI
 	@Path("/import")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response importData(JSONArray importedData) {
+	public Response importData(@QueryParam("override") boolean override, JSONArray importedData) {
 
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import");
 		String message = "";
 		int statusCode = 201;
 		SearchManager searchManager = SearchManager.getInstance();
 		try {
-			if (!DependencyStatus.getInstance().isDatabaseUp()) {
-				throw new EMAnalyticsDatabaseUnavailException();
-			}
+		
 			int count = importedData.length();
 			for (int i = 0; i < count; i++) {
 				JSONObject inputJsonObj = importedData.getJSONObject(i);
-				Search searchObj = createSearchObjectForAdd(inputJsonObj);
-				Search savedSearch = searchManager.saveSearch(searchObj);
-				
-				// see if an ODS entity needs to be create
-				if(searchObj != null && searchObj.getParameters() != null) {
-					for (SearchParameter param : searchObj.getParameters()) {
-						if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
-								&& "TRUE".equalsIgnoreCase(param.getValue())) {
-							OdsDataService ods = OdsDataServiceImpl.getInstance();
-							String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
+				List<Map<String, Object>> idAndNameList = getIdAndNameByUniqueKey(inputJsonObj);
+				Search searchObj = null;
+			    if (idAndNameList != null && !idAndNameList.isEmpty()) {
+			    	Map<String, Object> idAndName = idAndNameList.get(0);
+			    	BigInteger id  = new BigInteger(idAndName.get("SEARCH_ID").toString());
+			    	String name = idAndName.get("NAME").toString();
+			    	// unique key conflicts
+			    	if (override) {
+			    		// override existing row
+			    		if (inputJsonObj.getBoolean("editable")) {
+			    			searchObj = createSearchObjectForEdit(inputJsonObj, searchManager.getSearch(id), false);
+				    		Search savedSearch = searchManager.editSearch(searchObj);
+							message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+			    		} else {
+			    			message = message + "System search can not be edited, no update operation needed!";
+			    		}
+			    		
+			    	} else {
+			    		// insert new row
+			    		searchObj = createSearchObjectForAdd(inputJsonObj);
+			    		String newName = name + "_" + Math.random()*100;
+			    		searchObj.setName(newName);
+						Search savedSearch = searchManager.saveSearch(searchObj);
+					
+						// see if an ODS entity needs to be create
+						if(searchObj != null && searchObj.getParameters() != null) {
+							for (SearchParameter param : searchObj.getParameters()) {
+								if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
+										&& "TRUE".equalsIgnoreCase(param.getValue())) {
+									OdsDataService ods = OdsDataServiceImpl.getInstance();
+									String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
+										
+									// add ODS Entity ID as one of search parameters of the saved search
+									savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
+									
+									// store the whole saved search again
+									// TODO provide new API to add a search parameter solely
+									savedSearch = searchManager.editSearch(savedSearch);
+									break;
+								}
+							}
+						}				
+						message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+			    	}
+			    } else {
+			    	searchObj = createSearchObjectForAdd(inputJsonObj);
+					Search savedSearch = searchManager.saveSearch(searchObj);
+					
+					// see if an ODS entity needs to be create
+					if(searchObj != null && searchObj.getParameters() != null) {
+						for (SearchParameter param : searchObj.getParameters()) {
+							if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
+									&& "TRUE".equalsIgnoreCase(param.getValue())) {
+								OdsDataService ods = OdsDataServiceImpl.getInstance();
+								String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
+									
+								// add ODS Entity ID as one of search parameters of the saved search
+								savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
 								
-							// add ODS Entity ID as one of search parameters of the saved search
-							savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
-							
-							// store the whole saved search again
-							// TODO provide new API to add a search parameter solely
-							savedSearch = searchManager.editSearch(savedSearch);
-							break;
+								// store the whole saved search again
+								// TODO provide new API to add a search parameter solely
+								savedSearch = searchManager.editSearch(savedSearch);
+								break;
+							}
 						}
-					}
-				}				
-				message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+					}				
+					message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+			    }
+				
 			}			
 		}
 		catch (EMAnalyticsFwkException e) {
@@ -926,21 +970,7 @@ public class SearchAPI
 
 		return Response.status(statusCode).entity(message).build();
 	}
-	
-	private JSONArray getJSONArrayFromListOfObjects(String dataName, List<Map<String, Object>> list)
-	{
-		if (list == null || list.size() < 1) {
-			LOGGER.warn("Trying to get a JSON object for {} from a null object/list. Returning null JSON object", dataName);
-			return null;
-		}
-		JSONArray array = new JSONArray();
-		for (Map<String, Object> row : list) {
-			array.put(row);
-		}
-		LOGGER.debug("Retrieved table data for {} is \"{}\"", dataName, array.toString());
-		return array;
-	}
-	
+
 	@GET
 	@Path("{id: [0-9]*}/assetroot")
 	public Response getAssetRoot(@PathParam("id") BigInteger searchid){
@@ -986,6 +1016,28 @@ public class SearchAPI
 			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
 		}
 	}
+	
+	private List<Map<String, Object>> getIdAndNameByUniqueKey(JSONObject json) {
+		try {
+			String name = json.getString("name");
+			if (name != null && "".equals(name.trim())) {
+				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
+						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+			}
+		  String categoryIdStr = json.getJSONObject("category").getString("id");
+		  BigInteger categoryId = new BigInteger(categoryIdStr);
+		  String folderIdStr = json.getJSONObject("folder").getString("id");
+		  BigInteger folderId = new BigInteger(folderIdStr);
+		  BigInteger deleted = new BigInteger("0");
+		  String owner = json.getString("owner");
+		  SearchManager searchManager = SearchManager.getInstance();
+		  return searchManager.getSearchIdAndNameByUniqueKey(name, folderId, categoryId, deleted,owner);
+		} catch(Exception e) {
+			LOGGER.error(e);
+		}
+		return null;
+	}
+	
 	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException
 	{
 		Search searchObj = new SearchImpl();
