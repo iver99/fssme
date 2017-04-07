@@ -30,6 +30,8 @@ dependencies
 	earlib (project(':savedsearch-core')){transitive = false}
 	earlib (project(':savedsearch-entities')){transitive = false}
 	earlib (project(':savedsearch-web-utils')){transitive = false}
+	earlib getProjectArtifact('jersey-servlet')
+	earlib getProjectArtifact('security-client')
 	earlib getProjectArtifact('registry-lookup-client')
 	earlib getProjectArtifact('registry-client')
 	earlib getProjectArtifact('zookeeper')
