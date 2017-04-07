@@ -4,7 +4,6 @@ import java.net.URI;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpException;
@@ -28,27 +27,27 @@ public class RestRequestUtil {
 	private RestRequestUtil() {
 	}
 
-	public static String restGet(String baseUrl) throws Exception {
+	public static String restGet(String baseUrl, String authToken) throws Exception {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();
 
-		// Construct DELETE Request
+		// Construct GET Request
 		HttpGet request = new HttpGet(restUri);
 		
-		return sendRequest(request);
+		return sendRequest(request, authToken);
 	}
 	
-	public static String restDelete(String baseUrl) throws Exception {
+	public static String restDelete(String baseUrl, String authToken) throws Exception {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();
 
 		// Construct DELETE Request
 		HttpDelete request = new HttpDelete(restUri);
 		
-		return sendRequest(request);
+		return sendRequest(request, authToken);
 	}
 	
-	public static String restPost(String baseUrl, String json) throws Exception {
+	public static String restPost(String baseUrl, String json, String authToken) throws Exception {
 		// Construct URL
 		URI restUri = new URIBuilder(baseUrl).build();
 
@@ -60,7 +59,7 @@ public class RestRequestUtil {
 		StringEntity s = new StringEntity(json, contentType);
 		request.setEntity(s);
 		
-		return sendRequest(request);
+		return sendRequest(request, authToken);
 	}
 	
 	/**
@@ -69,7 +68,7 @@ public class RestRequestUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	private static String sendRequest(HttpRequestBase request) throws Exception {
+	private static String sendRequest(HttpRequestBase request, String authToken) throws Exception {
 		HttpClient client = HttpClientBuilder.create().build();
 		
 		// Set Request Headers
@@ -78,7 +77,7 @@ public class RestRequestUtil {
 			request.setHeader(TENANT_HEADER, tenantName);
 		}
 
-		request.setHeader(AUTHORIZATION_HEADER, new String(LookupManager.getInstance().getAuthorizationToken()));
+		request.setHeader(AUTHORIZATION_HEADER, authToken);
 		
 		// Run request
 		HttpResponse response = null;

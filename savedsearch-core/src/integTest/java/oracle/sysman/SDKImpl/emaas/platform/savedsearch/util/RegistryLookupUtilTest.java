@@ -5,11 +5,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CachedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
@@ -21,13 +19,15 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Sanitized
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 /**
  * Created by xidai on 2/26/2016.
  */
 @Test(groups = { "s2" })
 public class RegistryLookupUtilTest
 {
-	private RegistryLookupUtil registryLookupUtil;
 	@Mocked
 	LookupManager lookupManager;
 	@Mocked
@@ -45,7 +45,7 @@ public class RegistryLookupUtilTest
 	@Mocked
 	Tenant tenant;
 	@Mocked
-	Link link;
+	VersionedLink link;
 	@Mocked
 	SanitizedInstanceInfo sanitizedInstanceInfo;
 	@Mocked
@@ -56,9 +56,6 @@ public class RegistryLookupUtilTest
 			@Mocked final LookupClient anyLookupClient, @Mocked final InstanceInfo anyInstanceInfo,
 			@Mocked final List<InstanceInfo> anyInstanceInfoList) throws IOException
 	{
-		//		Link testLink = new Link();
-		//		testLink.withHref("http://test.link.com");
-		//		testLink.withRel("ssf.widget.changed");
 		final List<Link> links = new ArrayList<Link>();
 		links.add(link);
 		final List<InstanceInfo> iiList = new ArrayList<InstanceInfo>();
@@ -78,10 +75,10 @@ public class RegistryLookupUtilTest
 				result = "http://test.link.com";
 			}
 		};
-		List<Link> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
+		List<VersionedLink> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
 		Assert.assertNotNull(linkList);
 		Assert.assertEquals(linkList.size(), 1);
-		Assert.assertEquals(linkList.get(0), link);
+		Assert.assertEquals(linkList.get(0).getHref(), link.getHref());
 	}
 
 	@Test
@@ -101,7 +98,7 @@ public class RegistryLookupUtilTest
 				result = new Exception(throwable);
 			}
 		};
-		List<Link> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
+		List<VersionedLink> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
 		Assert.assertNotNull(linkList);
 	}
 
@@ -122,7 +119,7 @@ public class RegistryLookupUtilTest
 				result = null;
 			}
 		};
-		List<Link> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
+		List<VersionedLink> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
 		Assert.assertNotNull(linkList);
 	}
 
@@ -138,7 +135,7 @@ public class RegistryLookupUtilTest
 				result = null;
 			}
 		};
-		List<Link> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
+		List<VersionedLink> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
 		Assert.assertNotNull(linkList);
 	}
 

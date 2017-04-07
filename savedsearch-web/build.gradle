@@ -157,6 +157,7 @@ dependencies {
 	providedCompile project(':savedsearch-core')
 	providedCompile project(':savedsearch-web-utils')
 	
+	providedCompile getProjectArtifact('security-client')
 	providedCompile getProjectArtifact('wls-api')
 	providedCompile getProjectArtifact('registry-lookup-client')
 	providedCompile getProjectArtifact('registry-client')
