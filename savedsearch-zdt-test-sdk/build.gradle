@@ -3,8 +3,8 @@ apply from:'test.gradle'
 publishing {
     publications {
      integTest(MavenPublication) {
-                setArtifactId(project.name)
-                setGroupId('com.oracle.emaas.emcpssf.testsdk')
+                setArtifactId(project.name+ '-' + integTestJar.appendix)
+                setGroupId project.publishGroup
                 artifact integTestJar.archivePath
 		pom.withXml customPomDefinition
         }
