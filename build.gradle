@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------------
 // Enable this to be a rootProject which uses project common files.
 //
@@ -9,17 +10,27 @@ buildscript {
   if (System.env.BRANCH_TOP_DIR) {
     project.ext.commonBranchTopDir = System.env.BRANCH_TOP_DIR
   } else {
-    def command = "cd '$rootDir' && git rev-parse --show-toplevel"
+    if ( ! project.hasProperty('PUB_SHELL') || ! project.PUB_SHELL) {
+      project.ext.PUB_SHELL = System.env.PUB_SHELL ?: "bash"
+    }
+    def command = null
+    if ( ! System.env.APM_CYGWIN) {
+      command = "cd '$project.rootDir' && git rev-parse --show-toplevel"
+    } else {
+      // cygwin support: convert to a windows path
+      command = "cd '$project.rootDir' && cygpath -w `git rev-parse --show-toplevel`"
+    }
     def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
     try {
-      def proc = new ProcessBuilder("sh", "-c", command).start()
+      def proc = new ProcessBuilder("$project.PUB_SHELL", "-c", command).start()
       proc.waitForProcessOutput(stdout, stderr); exitCode = proc.exitValue()
     } catch (Exception e) { stderr << e.message }
     if (exitCode) {
-      throw new GradleException (
-        "[ERROR] sh or git command is not found or pwd=${System.properties.'user.dir'} is not a git project dir\n" +
-        "[Note] If git is not available, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set\n" +
-        "[Command] sh -c \"$command\"\n" + "[Error] $stderr")
+      throw new GradleException(
+        "[ERROR] $project.PUB_SHELL or git command is not found or $project.rootDir is not a git project dir\n" +
+        "[Note] If the git command is not found, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set\n" +
+        "[Note] Setting the PUB_SHELL property or env variable will override the default PUB_SHELL=bash\n" +
+        "[Command] $project.PUB_SHELL -c \"$command\"\n" + "[Error] $stderr")
     } else {
       project.ext.commonBranchTopDir = "$stdout".trim()
     }
@@ -39,7 +50,14 @@ apply from: new File(pubAllprojects).isAbsolute() ?
 //
 //-----------------------------------------------------------------------------
 
-//apply plugin: 'DevInfraPlugin'
+allprojects {
+    /* The name of your repository, either hardcoded or from a property */
+    project.group = "${project.baseGroup}.emcpssf"
+    if (project != rootProject) {
+        project.group += project.path.replaceAll(~/:/, '.')
+    }
+}
+
 import org.gradle.api.artifacts.Configuration.State  
  ext.regClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
     ext.registryClientResolver = 'com.oracle.emaas.emcpsm:registry-client:'+ regClientVer
@@ -81,8 +99,8 @@ allprojects {
 	}
 	 
 task s1tests(type: Test) {
+        ignoreFailures = true
         useTestNG() {
-            ignoreFailures = true
             includeGroups 's1'
         }
         afterSuite { TestDescriptor desc, TestResult testResult ->
@@ -101,8 +119,8 @@ task s1tests(type: Test) {
     // Run s2 test group - the second stage unit test group
     // Tests in this group are more complex and may take a longer time to run
     task s2tests(type: Test) {
+        ignoreFailures = true
         useTestNG() {
-            ignoreFailures = true
             includeGroups 's2'
         }
         afterSuite { TestDescriptor desc, TestResult testResult ->
@@ -317,3 +335,5 @@ task cleanUpDB4LocalLRG<<{
 	println "\t================================"
     }
 }
+
+
