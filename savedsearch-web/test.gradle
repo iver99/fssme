@@ -10,8 +10,8 @@ task integTestJar (type:Jar) {
     appendix = 'integ-tests'
 }
 dependencies {
-	testConfig project(':savedsearch-web'){ transitive = false } 
-	testConfig project(':savedsearch-entities'){ transitive = false }
+	testConfig (project(':savedsearch-web')) // { transitive = false } 
+	testConfig (project(':savedsearch-entities')) // { transitive = false }
 	testConfig getProjectArtifact('servlet-api')
 	testConfig getProjectArtifact('log4j-core')
 	testConfig getProjectArtifact('log4j-api')

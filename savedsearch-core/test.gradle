@@ -4,7 +4,7 @@ sourceSets {
         compileClasspath = configurations.testNG+configurations.restAssured+configurations.testConfig
     }
 	resources {	
-			srcDirs = ['src/main/java', 'src/resources/java']
+			ext.srcDirs = ['src/main/java', 'src/resources/java']
 		}	
 }
 task integTestJar (type:Jar) {

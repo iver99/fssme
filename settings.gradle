@@ -1,2 +1,10 @@
-include 'savedsearch-core','savedsearch-entities','savedsearch-web','savedsearch-web-utils','savedsearch-ear','savedsearch-schema','savedsearch-zdt-test-sdk' 
+// alphabetical
+include \
+  'savedsearch-core',
+  'savedsearch-ear',
+  'savedsearch-entities',
+  'savedsearch-schema',
+  'savedsearch-web',
+  'savedsearch-web-utils',
+  'savedsearch-zdt-test-sdk'
 

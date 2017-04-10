@@ -18,6 +18,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.ServiceRequestCollection;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.TenantSubscriptionInfo;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
@@ -56,7 +58,7 @@ public class TenantSubscriptionUtilTest
 	@Mocked
 	DomainEntity domainEntity;
 	@Mocked
-	AppMappingCollection appMappingCollection;
+    ServiceRequestCollection serviceRequestCollection;
 	@Mocked
 	AppMappingEntity appMappingEntity;
 	@Mocked
@@ -98,7 +100,7 @@ public class TenantSubscriptionUtilTest
         appMappingValues.add(appMappingValue);
         new Expectations() {
 			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceInternalLinkHttp(anyString, anyString, anyString, anyString);
 				result = linkInfo;
 				StringUtil.isEmpty(anyString);
 				result = false;
@@ -116,27 +118,27 @@ public class TenantSubscriptionUtilTest
 				result = builder;
 				builder.get(String.class);
 				result = "uri.uri";
-				JSONUtil.fromJson(mapper, anyString, DomainsEntity.class);
-				result = domainsEntity;
-				domainsEntity.getItems();
+				/*JSONUtil.fromJsonToList(anyString, ServiceRequestCollection.class);
+				result = serviceRequestCollection;*/
+				/*domainsEntity.getItems();
 				result = list;
 				domainEntity.getDomainName();
 				result = "TenantApplicationMapping";
 				domainEntity.getCanonicalUrl();
-				result = "httyp://";
-				JSONUtil.fromJson(mapper, anyString, AppMappingCollection.class);
-				result = appMappingCollection;
-				appMappingCollection.getItems();
+				result = "httyp://";*/
+				JSONUtil.fromJsonToList(anyString, ServiceRequestCollection.class);
+				result = serviceRequestCollection;
+				/*appMappingCollection.getItems();
 				result = amecList;
                 appMappingEntity.getValues();
                 result = appMappingValues;
                 appMappingValue.getOpcTenantId();
                 result = "testtenant";
                 appMappingValue.getApplicationNames();
-                result = "LogAnalytics,ITAnalytics,APM";
+                result = "LogAnalytics,ITAnalytics,APM";*/
 			}
 		};
-		TenantSubscriptionUtil.getTenantSubscribedServices("testtenant");
+		TenantSubscriptionUtil.getTenantSubscribedServices("testtenant",new TenantSubscriptionInfo());
 	}
 	@Test
 	public void testGetProviderNameFromServiceName(){
@@ -157,7 +159,7 @@ public class TenantSubscriptionUtilTest
 		appMappingValues.add(appMappingValue);
 		new Expectations() {
 			{
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceInternalLinkHttp(anyString, anyString, anyString, anyString);
 				result = linkInfo;
 				StringUtil.isEmpty(anyString);
 				result = false;
@@ -175,24 +177,20 @@ public class TenantSubscriptionUtilTest
 				result = builder;
 				builder.get(String.class);
 				result = "uri.uri";
-				JSONUtil.fromJson(mapper, anyString, DomainsEntity.class);
-				result = domainsEntity;
-				domainsEntity.getItems();
-				result = list;
-				domainEntity.getDomainName();
+				/*domainEntity.getDomainName();
 				result = "TenantApplicationMapping";
 				domainEntity.getCanonicalUrl();
-				result = "httyp://";
-				JSONUtil.fromJson(mapper, anyString, AppMappingCollection.class);
-				result = appMappingCollection;
-				appMappingCollection.getItems();
+				result = "httyp://";*/
+				JSONUtil.fromJsonToList(anyString, ServiceRequestCollection.class);
+				result = serviceRequestCollection;
+				/*appMappingCollection.getItems();
 				result = amecList;
 				appMappingEntity.getValues();
 				result = appMappingValues;
 				appMappingValue.getOpcTenantId();
 				result = "testtenant";
 				appMappingValue.getApplicationNames();
-				result = "LogAnalytics,ITAnalytics,APM";
+				result = "LogAnalytics,ITAnalytics,APM";*/
 			}
 		};
 		TenantSubscriptionUtil.getTenantSubscribedServiceProviders("testtenant");
