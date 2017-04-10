@@ -3,8 +3,8 @@ apply from:'test.gradle'
 publishing {
     publications {
      integTest(MavenPublication) {
-                setArtifactId(project.name)
-                setGroupId('com.oracle.emaas.emcpssf.testsdk')
+                setArtifactId(project.name+ '-' + integTestJar.appendix)
+                setGroupId project.publishGroup
                 artifact integTestJar.archivePath
 		pom.withXml customPomDefinition
         }
@@ -41,9 +41,9 @@ artifactoryPublish{
      publications('integTest')
 }
 dependencies {
-	compile project(':savedsearch-entities'){transitive = false}
-	compile project(':savedsearch-core'){transitive = false}
-	compile project(':savedsearch-web-utils'){transitive = false}
+	compile (project(':savedsearch-entities')) // {transitive = false}
+	compile (project(':savedsearch-core')) // {transitive = false}
+	compile (project(':savedsearch-web-utils')) // {transitive = false}
 	
 	//compile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){transitive = false}
 	compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')

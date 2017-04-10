@@ -22,18 +22,18 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.R
 public class RestClientTest
 {
 	@Test(groups = { "s2" })
-	public void testPost_Null()
+	public void testPostNull()
 	{
 		RestClient rc = new RestClient();
-		Object rtn = rc.post(null, null, null, null);
+		Object rtn = rc.post(null, null, null, null, null);
 		Assert.assertNull(rtn);
 
-		rtn = rc.post("url", null, null, null);
+		rtn = rc.post("url", null, null, null, null);
 		Assert.assertNull(rtn);
 	}
 
 	@Test(groups = { "s2" })
-	public void testPost_NullAuth_S2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+	public void testPostNullAuthS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
 			@Mocked final Map<String, Boolean> anyMap, @Mocked final RegistrationManager anyRegistrationManager,
 			@Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final StringUtil anyStringUtil)
@@ -51,10 +51,9 @@ public class RestClientTest
 				result = false;
 			}
 		};
-		new RestClient().post("http://test.link.com", null, new String("test"), "emaastesttenant1");
+		new RestClient().post("http://test.link.com", null, new String("test"), "emaastesttenant1", "auth");
 		new Verifications() {
 			{
-				RegistrationManager.getInstance().getAuthorizationToken();
 				UriBuilder.fromUri(anyString).build();
 				anyClient.resource(anyUri).header(anyString, any);
 				anyBuilder.post(String.class, any);
@@ -63,7 +62,7 @@ public class RestClientTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testPost_S2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+	public void testPostS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
 			@Mocked final Map<String, Boolean> anyMap, @Mocked final RegistrationManager anyRegistrationManager,
 			@Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) throws Exception
@@ -79,10 +78,9 @@ public class RestClientTest
 		};
 		Map<String, Object> headers = new HashMap<String, Object>();
 		headers.put("X-USER-IDENTITY-DOMAIN-NAME", "emaastesttenant1");
-		new RestClient().post("http://test.link.com", headers, new String("test"), "emaastesttenant1");
+		new RestClient().post("http://test.link.com", headers, new String("test"), "emaastesttenant1", "auth");
 		new Verifications() {
 			{
-				RegistrationManager.getInstance().getAuthorizationToken();
 				UriBuilder.fromUri(anyString).build();
 				anyClient.resource(anyUri).header(anyString, any);
 				anyBuilder.post(String.class, any);
@@ -91,14 +89,14 @@ public class RestClientTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testRestClientGet_Null()
+	public void testRestClientGetNull()
 	{
-		String res = new RestClient().get(null, null);
+		String res = new RestClient().get(null, null, null);
 		Assert.assertNull(res);
 	}
 
 	@Test(groups = { "s2" })
-	public void testRestClientGet_NullAuth_S2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+	public void testRestClientGetNullAuthS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
 			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
 			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final StringUtil anyStringUtil)
@@ -112,10 +110,9 @@ public class RestClientTest
 				result = false;
 			}
 		};
-		new RestClient().get("http://test.link.com", "emaastesttenant1");
+		new RestClient().get("http://test.link.com", "emaastesttenant1", "auth");
 		new Verifications() {
 			{
-				RegistrationManager.getInstance().getAuthorizationToken();
 				UriBuilder.fromUri(anyString).build();
 				anyClient.resource(anyUri).header(anyString, any);
 				anyBuilder.get(String.class);
@@ -124,7 +121,7 @@ public class RestClientTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testRestClientGet_S2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+	public void testRestClientGetS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
 			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
 			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) throws Exception
@@ -135,10 +132,9 @@ public class RestClientTest
 				Client.create(anyClientConfig);
 			}
 		};
-		new RestClient().get("http://test.link.com", "emaastesttenant1");
+		new RestClient().get("http://test.link.com", "emaastesttenant1", "auth");
 		new Verifications() {
 			{
-				RegistrationManager.getInstance().getAuthorizationToken();
 				UriBuilder.fromUri(anyString).build();
 				anyClient.resource(anyUri).header(anyString, any);
 				anyBuilder.get(String.class);

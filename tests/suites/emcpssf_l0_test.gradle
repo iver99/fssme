@@ -114,7 +114,8 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGro
 		 include "oracle/sysman/emaas/savedsearch/ExceptionTest.class"
 		 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
 
-
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/ssflifecycle/SSFLifeCycleNotificationTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/ssflifecycle/SSFLifeCycleNotifyEntityTest.class"
 
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/JAXBUtilTestS2.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPIMoreTest.class"

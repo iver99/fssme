@@ -11,13 +11,14 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CachedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
@@ -48,7 +49,7 @@ public class RegistryLookupUtil
 	public static final String COMPLIANCE_SERVICE = "ComplianceUIService";
 	public static final String ORCHESTRATION_SERVICE = "CosUIService";
 
-	public static List<Link> getAllServicesInternalLinksByRel(String rel) throws IOException
+	public static List<VersionedLink> getAllServicesInternalLinksByRel(String rel) throws IOException
 	{
 		LOGGER.debug("/getInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
 		//.initComponent() reads the default "looup-client.properties" file in class path
@@ -63,7 +64,7 @@ public class RegistryLookupUtil
 			LOGGER.warn("Found no instances with specified http rel {}", rel);
 			return Collections.emptyList();
 		}
-		Map<String, Link> serviceLinksMap = new HashMap<String, Link>();
+		Map<String, VersionedLink> serviceLinksMap = new HashMap<String, VersionedLink>();
 		for (InstanceInfo ii : instanceList) {
 			List<Link> links = null;
 			try {
@@ -76,7 +77,7 @@ public class RegistryLookupUtil
 						ii.getServiceName(), StringUtil.arrayToCommaDelimitedString(links.toArray()));
 				for (Link link : links) {
 					if (link.getHref().startsWith("http://")) {
-						serviceLinksMap.put(ii.getServiceName(), links.get(0));
+						serviceLinksMap.put(ii.getServiceName(), new VersionedLink(links.get(0), getAuthorizationToken(ii)));
 					}
 				}
 			}
@@ -90,24 +91,37 @@ public class RegistryLookupUtil
 		}
 		else {
 			LOGGER.info("Widget notification links: {}", serviceLinksMap);
-			return new ArrayList<Link>(serviceLinksMap.values());
+			return new ArrayList<VersionedLink>(serviceLinksMap.values());
 		}
 	}
 
-	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
+	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
+		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
+		String authToken = RegistryLookupUtil.getAuthorizationToken(serviceName, version);
+		return new VersionedLink(link, authToken);
 	}
 
-	public static Link getServiceInternalHttpLink(String serviceName, String version, String rel, String tenantName)
+	public static VersionedLink getServiceInternalHttpLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
+		Link link = RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
+		String authToken = RegistryLookupUtil.getAuthorizationToken(serviceName, version);
+		return new VersionedLink(link, authToken);
 	}
 
-	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
+	public static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, false);
+		Link link = RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, false);
+		String authToken = RegistryLookupUtil.getAuthorizationToken(serviceName, version);
+		return new VersionedLink(link, authToken);
 	}
+
+    public static VersionedLink getServiceInternalLinkHttp(String serviceName, String version, String rel, String tenantName)
+    {
+		Link link = RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
+		String authToken = RegistryLookupUtil.getAuthorizationToken(serviceName, version);
+		return new VersionedLink(link, authToken);
+    }
 
 	public static Link replaceWithVanityUrl(Link lk, String tenantName, String serviceName)
 	{
@@ -120,6 +134,24 @@ public class RegistryLookupUtil
 			LOGGER.debug("Completed to (try to) replace URL with vanity URL. Updated url is {}", lk.getHref());
 		}
 		return lk;
+	}
+	
+	private static String getAuthorizationToken(InstanceInfo instanceInfo) {
+		char[] authToken = LookupManager.getInstance().getAuthorizationAccessToken(instanceInfo);
+		return new String(authToken);
+	}
+	
+	private static String getAuthorizationToken(String serviceName, String version) {
+		InstanceInfo instanceInfo = RegistryLookupUtil.getInstanceInfo(serviceName, version);
+		return getAuthorizationToken(instanceInfo);
+	}
+	
+	private static InstanceInfo getInstanceInfo (String serviceName, String version) {
+		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
+		if (!StringUtil.isEmpty(version)) {
+			builder = builder.withVersion(version);
+		}
+		return builder.build();
 	}
 
 	private static List<Link> getLinksWithProtocol(String protocol, List<Link> links)
@@ -196,12 +228,8 @@ public class RegistryLookupUtil
 		catch (Exception e) {
 			LOGGER.error("Error to retrieve external link from cache. Try to lookup the link", e);
 		}
-
-		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
-		if (!StringUtil.isEmpty(version)) {
-			builder = builder.withVersion(version);
-		}
-		InstanceInfo info = builder.build();
+		
+		InstanceInfo info = RegistryLookupUtil.getInstanceInfo(serviceName, version);
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		Link lk = null;
 		try {
@@ -366,7 +394,7 @@ public class RegistryLookupUtil
 			LOGGER.error("Error to retrieve internal link from cache. Try to lookup the link", e);
 		}
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		InstanceInfo info = RegistryLookupUtil.getInstanceInfo(serviceName, version);
 		Link lk = null;
 		try {
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
@@ -399,7 +427,6 @@ public class RegistryLookupUtil
 				if (lk != null) {
 					return lk;
 				}
-
 				//https link is not found, then find http link
 				for (InstanceInfo internalInstance : result) {
 					List<Link> links = null;
@@ -441,7 +468,7 @@ public class RegistryLookupUtil
 		catch (Exception e) {
 			LOGGER.error(e);
 		}
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName("OHS").build();
+		InstanceInfo info = RegistryLookupUtil.getInstanceInfo("OHS", null);
 		Link lk = null;
 		map = new HashMap<String, String>();
 		try {

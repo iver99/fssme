@@ -17,19 +17,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author guochen
@@ -38,7 +39,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupM
 public class WidgetDeletionNotificationTest
 {
 	private Link link;
-	private List<Link> links;
+	private List<VersionedLink> links;
 
 	@BeforeMethod
 	public void beforeMethod()
@@ -46,8 +47,8 @@ public class WidgetDeletionNotificationTest
 		link = new Link();
 		link.withHref("http://test.link.com");
 		link.withRel("ssf.widget.changed");
-		links = new ArrayList<Link>();
-		links.add(link);
+		links = new ArrayList<VersionedLink>();
+		links.add(new VersionedLink(link, "auth"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -71,7 +72,7 @@ public class WidgetDeletionNotificationTest
 				result = links;
 				TenantContext.getContext().gettenantName();
 				result = "emaastesttenant1";
-				anyRestClient.post(anyString, (Map<String, Object>) any, any, anyString);
+				anyRestClient.post(anyString, (Map<String, Object>) any, any, anyString, anyString);
 				result = wne;
 			}
 		};
