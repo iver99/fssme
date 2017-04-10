@@ -145,7 +145,7 @@ public class OOBWidgetTest {
             Assert.assertTrue(isExist, "Top 10 Denied Sources does not exist");
 
             search = searchManager.getSearch(new BigInteger("3328"));
-            isExist = "TTop 10 Oracle DBs by Anomalies".equals(search.getName());
+            isExist = "Top 10 Oracle DBs by Anomalies".equals(search.getName());
             Assert.assertTrue(isExist, "Top 10 Oracle DBs by Anomalies does not exist");
         }finally{
             TenantContext.clearContext();
