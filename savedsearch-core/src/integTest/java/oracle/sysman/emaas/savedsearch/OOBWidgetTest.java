@@ -139,6 +139,14 @@ public class OOBWidgetTest {
             search = searchManager.getSearch(new BigInteger("3307"));
             isExist = "DNS Responses by Type".equals(search.getName());
             Assert.assertTrue(isExist, "DNS Responses by Type does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3308"));
+            isExist = "Top 10 Denied Sources".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 Denied Sources does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3328"));
+            isExist = "Top 10 Oracle DBs by Anomalies".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 Oracle DBs by Anomalies does not exist");
         }finally{
             TenantContext.clearContext();
         }
