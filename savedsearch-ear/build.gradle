@@ -6,7 +6,6 @@ configurations {
 }
 
 version = project.ext.getServiceVersion("SavedSearchService")
-group = 'emaas/applications/savedsearch-framework'
 
 def artifactId = appName 
 def groupId = group 

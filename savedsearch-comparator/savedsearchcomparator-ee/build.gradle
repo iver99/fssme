@@ -7,10 +7,8 @@ configurations {
 
 //version = '1.0.0'
 version = project.ext.getServiceVersion("SavedsearchService-comparator")
-group = 'emaas/applications/savedsearch-framework'
 deployname=artifactPrefix+'savedsearch-comparator'
 def artifactId = 'savedsearchcomparator' 
-def groupId = group 
 def versionNumber = version
 
 ear 
