@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -716,6 +717,7 @@ public class SearchAPI
 			    		// override existing row
 			    		if (inputJsonObj.getBoolean("editable")) {
 			    			searchObj = createSearchObjectForEdit(inputJsonObj, searchManager.getSearch(id), false);
+			    			searchObj.setEditable(true);
 				    		Search savedSearch = searchManager.editSearch(searchObj);
 							message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
 			    		} else {
@@ -725,7 +727,9 @@ public class SearchAPI
 			    	} else {
 			    		// insert new row
 			    		searchObj = createSearchObjectForAdd(inputJsonObj);
-			    		String newName = name + "_" + Math.random()*100;
+			    		searchObj.setEditable(true);
+			    		int num = new Random().nextInt(100);
+			    		String newName = name + "_" + num;
 			    		searchObj.setName(newName);
 						Search savedSearch = searchManager.saveSearch(searchObj);
 					
@@ -751,6 +755,7 @@ public class SearchAPI
 			    	}
 			    } else {
 			    	searchObj = createSearchObjectForAdd(inputJsonObj);
+			    	searchObj.setEditable(true);
 					Search savedSearch = searchManager.saveSearch(searchObj);
 					
 					// see if an ODS entity needs to be create
