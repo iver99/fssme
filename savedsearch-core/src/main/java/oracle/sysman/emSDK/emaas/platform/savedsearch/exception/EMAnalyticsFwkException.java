@@ -82,6 +82,7 @@ public class EMAnalyticsFwkException extends Exception
 	public static final Integer DASHBOARD_CACHE_ERROR_CODE=50000;
 	public static final Integer DASHBOARD_CACHE_GROUP_NOT_FOUND_ERROR_CODE=50001;
 	public static final Integer DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR_CODE=50002;
+	public static final Integer DASHBOARD_CACHE_INCONSISTENCY_ERROR_CODE=50003;
 	// important: don't assign value larger than this value to dashboard cache errors
 	public static final Integer DASHBOARD_CACHE_MAX_ERROR_CODE=59999;
 
