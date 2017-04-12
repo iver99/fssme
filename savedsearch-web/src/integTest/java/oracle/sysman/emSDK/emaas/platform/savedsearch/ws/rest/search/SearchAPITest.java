@@ -11,6 +11,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -914,6 +915,8 @@ public class SearchAPITest {
     private TenantContext tenantContext;
     @Mocked
     private Link link;
+    @Mocked
+    private VersionedLink linkInfo;
     @Test
     public void testGetAssetRoot() throws JSONException, EMAnalyticsFwkException {
         new Expectations() {
@@ -935,8 +938,8 @@ public class SearchAPITest {
                 TenantContext.getContext().gettenantName();
                 result = "emasstesttenant1";
                 RegistryLookupUtil.getServiceExternalLink(anyString,anyString,anyString,anyString);
-                result = link;
-                RegistryLookupUtil.replaceWithVanityUrl(link,anyString,anyString);
+                result = linkInfo;
+                RegistryLookupUtil.replaceWithVanityUrl(linkInfo,anyString,anyString);
                 result = link;
             }
         };

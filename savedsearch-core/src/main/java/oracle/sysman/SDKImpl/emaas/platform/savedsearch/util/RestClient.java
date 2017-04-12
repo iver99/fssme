@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil.InteractionLogDirection;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,12 +40,12 @@ public class RestClient
 	{
 	}
 
-	public String get(String url)
+	public String get(String url, String auth)
 	{
-		return get(url, null);
+		return get(url, null, auth);
 	}
 
-	public String get(String url, String tenant)
+	public String get(String url, String tenant, String auth)
 	{
 		if (StringUtil.isEmpty(url)) {
 			return null;
@@ -54,8 +53,6 @@ public class RestClient
 
 		ClientConfig cc = new DefaultClientConfig();
 		Client client = Client.create(cc);
-		char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-		String auth = String.copyValueOf(authToken);
 		if (StringUtil.isEmpty(auth)) {
 			LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 		}
@@ -81,7 +78,7 @@ public class RestClient
 	 * @param tenant
 	 * @return
 	 */
-	public Object post(String url, Map<String, Object> headers, Object requestEntity, String tenant)
+	public Object post(String url, Map<String, Object> headers, Object requestEntity, String tenant, String auth)
 	{
 		if (StringUtil.isEmpty(url)) {
 			LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
@@ -95,8 +92,6 @@ public class RestClient
 		ClientConfig cc = new DefaultClientConfig();
 		cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 		Client client = Client.create(cc);
-		char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-		String auth = String.copyValueOf(authToken);
 		if (StringUtil.isEmpty(auth)) {
 			LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 		}
@@ -107,8 +102,12 @@ public class RestClient
 					url);
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-				.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON);
+		// tenant could be null and needs to handle the header then
+		if (!StringUtil.isEmpty(tenant)) {
+			builder.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
+		}
 		if (headers != null) {
 			for (String key : headers.keySet()) {
 				if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
@@ -133,8 +132,8 @@ public class RestClient
 	 * @param tenant
 	 * @return
 	 */
-	public Object post(String url, Object requestEntity, String tenant)
+	public Object post(String url, Object requestEntity, String tenant, String auth)
 	{
-		return post(url, null, requestEntity, tenant);
+		return post(url, null, requestEntity, tenant, auth);
 	}
 }

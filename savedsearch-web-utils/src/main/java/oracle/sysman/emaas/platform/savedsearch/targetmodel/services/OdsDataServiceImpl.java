@@ -3,10 +3,10 @@ package oracle.sysman.emaas.platform.savedsearch.targetmodel.services;
 import java.math.BigInteger;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
 import org.apache.logging.log4j.LogManager;
@@ -49,12 +49,13 @@ public class OdsDataServiceImpl implements OdsDataService
 		String odsEntity = OdsDataServiceImpl.generateOdsEntityJson(searchId, searchName, ENTITY_CLASS);
 		LOGGER.info("ODS Entity's string value is:" + odsEntity);
 		// send to ODS
-		String baseUrl = retriveEndpoint(REL_DATA_RESOURCE, DATA_MES);
+		EndPointInfo endPointInfo = retriveEndpoint(REL_DATA_RESOURCE, DATA_MES);
+		String baseUrl = endPointInfo.getBaseUrl();
 		LOGGER.info("base URL is:" + baseUrl);
 		String meId = null;
 		// see if there is already an ODS entity created
 		try {
-			String result = RestRequestUtil.restGet(baseUrl + "?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId);
+			String result = RestRequestUtil.restGet(baseUrl + "?entityType=" + ENTITY_TYPE_NAME + "&entityName=" + searchId, endPointInfo.getAuthToken());
 			LOGGER.info("result is" + result);
 			JSONObject jsonObj = new JSONObject(result);
 			if (jsonObj.getInt("count") > 0) {
@@ -68,7 +69,7 @@ public class OdsDataServiceImpl implements OdsDataService
 		// no existing ODS entity then create one
 		if (meId == null || meId.isEmpty()) {
 			try {
-				String result = RestRequestUtil.restPost(baseUrl, odsEntity);
+				String result = RestRequestUtil.restPost(baseUrl, odsEntity, endPointInfo.getAuthToken());
 				LOGGER.info("RestRequestUtil.restPost(baseUrl, odsEntity) is executed,and result is " + result);
 				JSONObject jsonObj = new JSONObject(result);
 				meId = jsonObj.getString(ENTITY_ID);
@@ -87,14 +88,15 @@ public class OdsDataServiceImpl implements OdsDataService
 	@Override
 	public String createOdsEntityType(String entityType) throws EMAnalyticsFwkException
 	{
-		String baseUrl = retriveEndpoint(REL_METADATA_RESOURCE, METADATA_METYPES);
+		EndPointInfo endPointInfo = retriveEndpoint(REL_METADATA_RESOURCE, METADATA_METYPES);
+		String baseUrl = endPointInfo.getBaseUrl();
 		String result = null;
 		try {
-			result = RestRequestUtil.restGet(baseUrl + HTTP_DELIMITER + ENTITY_TYPE_NAME);
+			result = RestRequestUtil.restGet(baseUrl + HTTP_DELIMITER + ENTITY_TYPE_NAME, endPointInfo.getAuthToken());
 		}
 		catch (EMAnalyticsFwkException emExc) {
 			try {
-				result = RestRequestUtil.restPost(baseUrl, entityType);
+				result = RestRequestUtil.restPost(baseUrl, entityType, endPointInfo.getAuthToken());
 			}
 			catch (Exception e) {
 				throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
@@ -120,10 +122,11 @@ public class OdsDataServiceImpl implements OdsDataService
 		}
 
 		// send the meid to ODS for deleting
+		EndPointInfo endPointInfo = retriveEndpoint(REL_DATA_RESOURCE, DATA_MES);
 		StringBuilder baseUrl = new StringBuilder();
-		baseUrl.append(retriveEndpoint(REL_DATA_RESOURCE, DATA_MES)).append(HTTP_DELIMITER).append(meid);
+		baseUrl.append(endPointInfo.getBaseUrl()).append(HTTP_DELIMITER).append(meid);
 		try {
-			RestRequestUtil.restDelete(baseUrl.toString());
+			RestRequestUtil.restDelete(baseUrl.toString(), endPointInfo.getAuthToken());
 		}
 		catch (Exception e) {
 			throw new EMAnalyticsFwkException(EMAnalyticsFwkException.ERR_GENERIC, e);
@@ -135,13 +138,30 @@ public class OdsDataServiceImpl implements OdsDataService
 	 * @param resource
 	 * @return http://host:port/targetmodel/api/v1/rel/resource
 	 */
-	private String retriveEndpoint(String rel, String resource)
+	private EndPointInfo retriveEndpoint(String rel, String resource)
 	{
-		Link link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, TenantContext.getContext()
+		VersionedLink link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, TenantContext.getContext()
 				.gettenantName());
 		StringBuilder mesUrl = new StringBuilder();
 		mesUrl.append(link.getHref()).append(HTTP_DELIMITER).append(resource);
-		return mesUrl.toString();
+		return new EndPointInfo(mesUrl.toString(), link.getAuthToken());
 	}
 
+	private class EndPointInfo {
+		private String baseUrl;
+		private String authToken;
+		
+		public EndPointInfo(String baseUrl, String authToken) {
+			this.baseUrl = baseUrl;
+			this.authToken = authToken;
+		}
+
+		public String getBaseUrl() {
+			return baseUrl;
+		}
+
+		public String getAuthToken() {
+			return authToken;
+		}
+	}
 }

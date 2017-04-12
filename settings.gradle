@@ -1,2 +1,14 @@
-include 'savedsearch-core','savedsearch-entities','savedsearch-web','savedsearch-web-utils','savedsearch-ear','savedsearch-schema','savedsearch-zdt-test-sdk','savedsearch-comparator','savedsearch-comparator:savedsearchcomparator-web','savedsearch-comparator:savedsearchcomparator-webutils','savedsearch-comparator:savedsearchcomparator-ee'
+// alphabetical
+include \
+  'savedsearch-core',
+        'savedsearch-comparator',
+        'savedsearch-comparator:savedsearchcomparator-web',
+        'savedsearch-comparator:savedsearchcomparator-webutils',
+        'savedsearch-comparator:savedsearchcomparator-ee',
+  'savedsearch-ear',
+  'savedsearch-entities',
+  'savedsearch-schema',
+  'savedsearch-web',
+  'savedsearch-web-utils',
+  'savedsearch-zdt-test-sdk'
 

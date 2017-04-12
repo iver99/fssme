@@ -327,13 +327,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			LOGGER.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
-			//			LOGGER.info("Checking RegistryService");
-			//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
-			//				setRegistrationComplete(Boolean.FALSE);
-			//				LOGGER.error("Failed to found registryService. Saved search service registration is not complete.");
-			//				return false;
-			//			}
-
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
 
@@ -405,6 +398,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			LOGGER.info("Registering service with 'Service Registry'");
 			RegistrationManager.getInstance().getRegistrationClient().register();
 			RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
+			//register OAuth ready status with Service Registry
+			RegistrationManager.getInstance().getRegistrationClient().setOauthReady(true);
 
 			setRegistrationComplete(Boolean.TRUE);
 			LOGGER.info("Service manager is up. Completed saved search service registration");
