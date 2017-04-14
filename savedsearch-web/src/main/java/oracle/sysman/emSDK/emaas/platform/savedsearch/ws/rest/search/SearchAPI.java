@@ -1101,12 +1101,15 @@ public class SearchAPI
 		}
 		String desc = "";
 		try {
-			desc = json.getString("description");
-			if (StringUtil.isSpecialCharFound(desc)) {
-				throw new EMAnalyticsWSException(
-						"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
-						EMAnalyticsWSException.JSON_INVALID_CHAR);
+			if (json.has("description")) {
+				desc = json.getString("description");
+				if (StringUtil.isSpecialCharFound(desc)) {
+					throw new EMAnalyticsWSException(
+							"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
+							EMAnalyticsWSException.JSON_INVALID_CHAR);
+				}
 			}
+			
 
 		}
 		catch (JSONException je) {
