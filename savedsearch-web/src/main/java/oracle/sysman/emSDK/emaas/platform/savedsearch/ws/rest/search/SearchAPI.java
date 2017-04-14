@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -701,63 +703,67 @@ public class SearchAPI
 		String message = "";
 		int statusCode = 201;
 		SearchManager searchManager = SearchManager.getInstance();
-		try {
+		Map<String, String> idMaps = new HashMap<String, String>();
 		
-			int count = importedData.length();
+		try {
+		   int count = importedData.length();
 			for (int i = 0; i < count; i++) {
 				JSONObject inputJsonObj = importedData.getJSONObject(i);
+				String originalId = inputJsonObj.getString("id");
 				List<Map<String, Object>> idAndNameList = getIdAndNameByUniqueKey(inputJsonObj);
 				Search searchObj = null;
 			    if (idAndNameList != null && !idAndNameList.isEmpty()) {
 			    	Map<String, Object> idAndName = idAndNameList.get(0);
 			    	BigInteger id  = new BigInteger(idAndName.get("SEARCH_ID").toString());
 			    	String name = idAndName.get("NAME").toString();
-			    	// unique key conflicts
 			    	if (override) {
-			    		// override existing row
-			    		if (inputJsonObj.getBoolean("editable")) {
-			    			searchObj = createSearchObjectForEdit(inputJsonObj, searchManager.getSearch(id), false);
-			    			searchObj.setEditable(true);
-				    		Search savedSearch = searchManager.editSearch(searchObj);
-							message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
-			    		} else {
-			    			message = message + "System search can not be edited, no update operation needed!";
-			    		}
-			    		
-			    	} else {
-			    		// insert new row
-			    		searchObj = createSearchObjectForAdd(inputJsonObj);
-			    		searchObj.setEditable(true);
-			    		int num = new Random().nextInt(100);
-			    		String newName = name + "_" + num;
-			    		searchObj.setName(newName);
-						Search savedSearch = searchManager.saveSearch(searchObj);
-					
-						// see if an ODS entity needs to be create
-						if(searchObj != null && searchObj.getParameters() != null) {
-							for (SearchParameter param : searchObj.getParameters()) {
-								if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
-										&& "TRUE".equalsIgnoreCase(param.getValue())) {
-									OdsDataService ods = OdsDataServiceImpl.getInstance();
-									String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
+				    		// override existing row
+				    		if (inputJsonObj.getBoolean("editable")) {
+				    			searchObj = createSearchObjectForEdit(inputJsonObj, searchManager.getSearch(id), false);
+				    			searchObj.setEditable(true);
+					    		Search savedSearch = searchManager.editSearch(searchObj);
+					    		idMaps.put(originalId.toString(), id.toString());
+								//message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+				    		} else {
+				    			message = message + "System search can not be edited, no update operation needed!";
+				    		}
+				    		
+				    	} else {
+				    		// insert new row
+				    		searchObj = createSearchObjectForAdd(inputJsonObj);
+				    		searchObj.setEditable(true);
+				    		int num = new Random().nextInt(100);
+				    		String newName = name + "_" + num;
+				    		searchObj.setName(newName);
+							Search savedSearch = searchManager.saveSearch(searchObj);
+						    idMaps.put(originalId.toString(), savedSearch.getId().toString());
+							// see if an ODS entity needs to be create
+							if(searchObj != null && searchObj.getParameters() != null) {
+								for (SearchParameter param : searchObj.getParameters()) {
+									if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
+											&& "TRUE".equalsIgnoreCase(param.getValue())) {
+										OdsDataService ods = OdsDataServiceImpl.getInstance();
+										String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
+											
+										// add ODS Entity ID as one of search parameters of the saved search
+										savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
 										
-									// add ODS Entity ID as one of search parameters of the saved search
-									savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
-									
-									// store the whole saved search again
-									// TODO provide new API to add a search parameter solely
-									savedSearch = searchManager.editSearch(savedSearch);
-									break;
+										// store the whole saved search again
+										// TODO provide new API to add a search parameter solely
+										savedSearch = searchManager.editSearch(savedSearch);
+										break;
+									}
 								}
-							}
-						}				
-						message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
-			    	}
+							}				
+							//message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+				    	}
+			    	
 			    } else {
 			    	searchObj = createSearchObjectForAdd(inputJsonObj);
 			    	searchObj.setEditable(true);
 					Search savedSearch = searchManager.saveSearch(searchObj);
 					
+					idMaps.put(originalId.toString(), savedSearch.getId().toString());
 					// see if an ODS entity needs to be create
 					if(searchObj != null && searchObj.getParameters() != null) {
 						for (SearchParameter param : searchObj.getParameters()) {
@@ -776,7 +782,7 @@ public class SearchAPI
 							}
 						}
 					}				
-					message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+					//message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
 			    }
 				
 			}			
@@ -793,7 +799,21 @@ public class SearchAPI
 		} catch (JSONException e) {
 			LOGGER.error("errors while getting single savedsearch json object from json array - {}", e.getLocalizedMessage());
 		}
-		return Response.status(statusCode).entity(message).build();		
+		if (!idMaps.isEmpty()) {
+			Set<String> keySet = idMaps.keySet();
+			JSONObject obj = new JSONObject();
+			for (String key : keySet) {				
+				try {
+					obj.put(key, idMaps.get(key));
+				} catch (JSONException e) {
+					LOGGER.error("errors while convert id map to JSONObject, {}",e.getLocalizedMessage());
+				}
+			}
+			return Response.status(statusCode).entity(obj.toString()).build();
+		} else {
+			return Response.status(statusCode).entity(message).build();	
+		}
+			
 	}
 
 	/**
@@ -1048,7 +1068,9 @@ public class SearchAPI
 		Search searchObj = new SearchImpl();
 		
 		// set id provided by gateway
+	
 		searchObj.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
+		
 		
 		// Data population !
 		try {
