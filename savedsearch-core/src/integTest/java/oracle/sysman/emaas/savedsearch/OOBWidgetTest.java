@@ -53,7 +53,7 @@ public class OOBWidgetTest {
                 TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
         try {
             SearchManager searchManager = SearchManager.getInstance();
-            String[] searchIds = {"5009", "5007", "5006"};
+            String[] searchIds = {"5009", "5007", "5006", "5008", "5010", "5011", "5012"};
             for (String searchId : searchIds) {
                 Search search = searchManager.getSearch(new BigInteger(searchId));
                 Assert.assertNull(search);
@@ -79,6 +79,90 @@ public class OOBWidgetTest {
                 }
             }
             Assert.assertTrue(isExist);
+        }finally{
+            TenantContext.clearContext();
+        }
+    }
+
+    @Test
+    public void testOrchestrationWidgetExecutionDetails() throws EMAnalyticsFwkException {
+        TenantContext.setContext(new TenantInfo(
+                TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+                TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+        try {
+            SearchManager searchManager = SearchManager.getInstance();
+            Search search = searchManager.getSearch(new BigInteger("5020"));
+            boolean isExist = false;
+            isExist = "Execution Details".equals(search.getName());
+            Assert.assertTrue(isExist);
+        }finally{
+            TenantContext.clearContext();
+        }
+    }
+    @Test
+    public void testOrchestrationOverView() throws EMAnalyticsFwkException {
+        TenantContext.setContext(new TenantInfo(
+                TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+                TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+        try {
+            SearchManager searchManager = SearchManager.getInstance();
+            Search search = searchManager.getSearch(new BigInteger("5005"));
+            boolean isExist = false;
+            isExist = "Overview".equals(search.getName());
+            Assert.assertTrue(isExist);
+        }finally{
+            TenantContext.clearContext();
+        }
+    }
+
+
+    @Test
+    public void testSecurityDNSWidget() throws EMAnalyticsFwkException {
+        TenantContext.setContext(new TenantInfo(
+                TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+                TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+        try {
+            SearchManager searchManager = SearchManager.getInstance();
+            Search search = searchManager.getSearch(new BigInteger("3300"));
+            boolean isExist;
+            isExist = "Total DNS Messages".equals(search.getName());
+            Assert.assertTrue(isExist, "Total DNS Messages does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3301"));
+            isExist = "Unique DNS Queries".equals(search.getName());
+            Assert.assertTrue(isExist, "Unique DNS Queries does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3302"));
+            isExist = "Top 10 DNS Domains".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 DNS Domains does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3303"));
+            isExist = "Top 10 DNS Sources".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 DNS Sources does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3304"));
+            isExist = "Top 10 DNS Sources with TXT Lookup".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 DNS Sources with TXT Lookup does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3305"));
+            isExist = "Top 10 DNS Non-Standard TLDs".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 DNS Non-Standard TLDs does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3306"));
+            isExist = "DNS Queries Per Domain".equals(search.getName());
+            Assert.assertTrue(isExist, "DNS Queries Per Domain does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3307"));
+            isExist = "DNS Responses by Type".equals(search.getName());
+            Assert.assertTrue(isExist, "DNS Responses by Type does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3308"));
+            isExist = "Top 10 Denied Sources".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 Denied Sources does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3328"));
+            isExist = "Top 10 Oracle DBs by Anomalies".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 Oracle DBs by Anomalies does not exist");
         }finally{
             TenantContext.clearContext();
         }

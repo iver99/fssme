@@ -11,19 +11,20 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author guochen
@@ -53,7 +54,7 @@ public class WidgetDeletionNotification implements IWidgetNotification
 		LOGGER.info("Notify to end points with rel={} of widget deletion. Widget unique ID={}, widget name={}",
 				WIDGET_DELETION_SERVICE_REL, wne.getUniqueId(), wne.getName());
 		long start = System.currentTimeMillis();
-		List<Link> links = null;
+		List<VersionedLink> links = null;
 		try {
 			links = RegistryLookupUtil.getAllServicesInternalLinksByRel(WIDGET_DELETION_SERVICE_REL);
 		}
@@ -67,10 +68,19 @@ public class WidgetDeletionNotification implements IWidgetNotification
 		RestClient rc = new RestClient();
 		Map<String, Object> headers = new HashMap<String, Object>();
 		headers.put("X-USER-IDENTITY-DOMAIN-NAME", TenantContext.getContext().gettenantName());
-		for (Link link : links) {
+		UUID reqId = ZDTContext.getRequestId();
+		if (reqId != null) {
+			headers.put("X-ORCL-OMC-APIGW-REQGUID", reqId);
+		}
+		Long reqTime = ZDTContext.getRequestTime();
+		if (reqTime != null) {
+			headers.put("X-ORCL-OMC-APIGW-REQTIME", reqTime);
+		}
+		LOGGER.info("Notify widget deletion, ZDT request ID is {}, ZDT request time is {}", reqId, reqTime);
+		for (VersionedLink link : links) {
 			long innerStart = System.currentTimeMillis();
 			WidgetNotifyEntity rtn = (WidgetNotifyEntity) rc.post(link.getHref(), headers, wne,
-					TenantContext.getContext().gettenantName());
+					TenantContext.getContext().gettenantName(), link.getAuthToken());
 			long innerEnd = System.currentTimeMillis();
 			if (rtn != null) {
 				LOGGER.info(

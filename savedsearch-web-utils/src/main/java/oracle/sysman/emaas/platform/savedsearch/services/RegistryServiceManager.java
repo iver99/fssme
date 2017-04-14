@@ -322,13 +322,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			LOGGER.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
-			//			LOGGER.info("Checking RegistryService");
-			//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
-			//				setRegistrationComplete(Boolean.FALSE);
-			//				LOGGER.error("Failed to found registryService. Saved search service registration is not complete.");
-			//				return false;
-			//			}
-
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
 
@@ -355,15 +348,17 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			RegistrationManager.getInstance().initComponent(builder.build());
 
 			List<Link> links = new ArrayList<Link>();
+			HashMap<String, String> overriedTypes = new HashMap<String,String>();
+			overriedTypes.put("POST", "INGEST_WRITE_NO_PIPELINE");
 			if (applicationUrl != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrl + NAV_BASE));
-				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrl + NAV_FOLDER));
+				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrl + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(OBSOLETE_CATEGORY).withHref(applicationUrl + NAV_CATEGORY));
-				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrl + NAV_SEARCH));
+				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrl + NAV_SEARCH).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_NAV).withHref(applicationUrl + NAV_BASE));
-				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrl + NAV_FOLDER));
+				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrl + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrl + NAV_CATEGORY));
-				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrl + NAV_SEARCH));
+				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrl + NAV_SEARCH).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrl + NAV_SEARCHES));
 				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrl + NAV_ENTITIES));
 				links.add(new Link().withRel(STATIC_CATEGORIES).withHref(applicationUrl + NAV_CATEGORIES));
@@ -373,13 +368,13 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			if (applicationUrlSSL != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
-				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER));
+				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(OBSOLETE_CATEGORY).withHref(applicationUrlSSL + NAV_CATEGORY));
-				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
+				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_NAV).withHref(applicationUrlSSL + NAV_BASE));
-				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER));
+				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrlSSL + NAV_CATEGORY));
-				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
+				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrlSSL + NAV_SEARCHES));
 				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrlSSL + NAV_ENTITIES));
 				links.add(new Link().withRel(STATIC_CATEGORIES).withHref(applicationUrlSSL + NAV_CATEGORIES));
@@ -392,6 +387,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			LOGGER.info("Registering service with 'Service Registry'");
 			RegistrationManager.getInstance().getRegistrationClient().register();
 			RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
+			//register OAuth ready status with Service Registry
+			RegistrationManager.getInstance().getRegistrationClient().setOauthReady(true);
 
 			setRegistrationComplete(Boolean.TRUE);
 			LOGGER.info("Service manager is up. Completed saved search service registration");

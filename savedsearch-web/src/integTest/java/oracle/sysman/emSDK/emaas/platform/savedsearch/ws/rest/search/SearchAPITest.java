@@ -11,6 +11,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -26,6 +27,8 @@ import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -912,6 +915,8 @@ public class SearchAPITest {
     private TenantContext tenantContext;
     @Mocked
     private Link link;
+    @Mocked
+    private VersionedLink linkInfo;
     @Test
     public void testGetAssetRoot() throws JSONException, EMAnalyticsFwkException {
         new Expectations() {
@@ -933,8 +938,8 @@ public class SearchAPITest {
                 TenantContext.getContext().gettenantName();
                 result = "emasstesttenant1";
                 RegistryLookupUtil.getServiceExternalLink(anyString,anyString,anyString,anyString);
-                result = link;
-                RegistryLookupUtil.replaceWithVanityUrl(link,anyString,anyString);
+                result = linkInfo;
+                RegistryLookupUtil.replaceWithVanityUrl(linkInfo,anyString,anyString);
                 result = link;
             }
         };
@@ -993,11 +998,11 @@ public class SearchAPITest {
             }
         };
         Assert.assertEquals(api.getSearchList(null).getStatus(), 404);
-        JSONArray wrongJson = new JSONArray();
-        wrongJson.put("abc");
-        Assert.assertEquals(api.getSearchList(wrongJson).getStatus(), 404);
-    	JSONArray inputJson = new JSONArray();
-    	inputJson.put(1234L);
-        Assert.assertNotNull(api.getSearchList(inputJson));
+        ArrayNode wrongJson = new ObjectMapper().createArrayNode();
+        wrongJson.add("abc");
+        Assert.assertEquals(api.getSearchList(wrongJson.toString()).getStatus(), 404);
+        ArrayNode inputJson = new ObjectMapper().createArrayNode();
+        inputJson.add(1234L);
+        Assert.assertNotNull(api.getSearchList(inputJson.toString()));
     }
 }

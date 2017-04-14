@@ -14,6 +14,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
@@ -78,13 +79,14 @@ public class WidgetManagerImplTest
 	@Test
 	public void testGetSpelledJsonFromQueryResult() throws EMAnalyticsFwkException
 	{
+		final Link link = new Link();
+		link.withRel("href");
+		link.withHref("http://widget");
+		final VersionedLink linkInfo = new VersionedLink(link, "auth");
 		new Expectations() {
 			{
-				Link link = new Link();
-				link.withRel("href");
-				link.withHref("http://widget");
 				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
-				result = link;
+				result = linkInfo;
 			}
 
 		};
@@ -132,13 +134,14 @@ public class WidgetManagerImplTest
 	@Test
 	public void testGetWidgetJsonStringFromWidgetList() throws EMAnalyticsFwkException
 	{
+		final Link link = new Link();
+		link.withRel("href");
+		link.withHref("http://widget");
+		final VersionedLink linkInfo = new VersionedLink(link, "auth");
 		new Expectations() {
 			{
-				Link link = new Link();
-				link.withRel("href");
-				link.withHref("http://widget");
 				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
-				result = link;
+				result = linkInfo;
 			}
 
 		};
@@ -208,7 +211,7 @@ public class WidgetManagerImplTest
 	@Mocked
 	JpaEntityManager jpaEntityManager;
 	@Mocked
-	EJBQueryImpl ejbQuery;
+	EJBQueryImpl<?> ejbQuery;
 	@Mocked
 	DatabaseQuery databaseQuery;
 	@Test

@@ -6,7 +6,6 @@ configurations {
 }
 
 version = project.ext.getServiceVersion("SavedSearchService")
-group = 'emaas/applications/savedsearch-framework'
 
 def artifactId = appName 
 def groupId = group 
@@ -30,6 +29,8 @@ dependencies
 	earlib (project(':savedsearch-core')){transitive = false}
 	earlib (project(':savedsearch-entities')){transitive = false}
 	earlib (project(':savedsearch-web-utils')){transitive = false}
+	earlib getProjectArtifact('jersey-servlet')
+	earlib getProjectArtifact('security-client')
 	earlib getProjectArtifact('registry-lookup-client')
 	earlib getProjectArtifact('registry-client')
 	earlib getProjectArtifact('zookeeper')
@@ -49,11 +50,11 @@ loadConfiguration()
 def loadConfiguration() {
 
     def environment = hasProperty('env') ? env : 'dev'
-    setProperty 'environment', environment
+    project.ext.environment = environment
     
     def configFile = file('../appServerConfig.config')
     def appServerconfig = new ConfigSlurper(environment).parse(configFile.toURL())
-    setProperty 'appServerconfig', appServerconfig
+    project.ext.appServerconfig = appServerconfig
 }
 
 task appServerInit << {

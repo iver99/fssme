@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -34,6 +35,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -51,6 +53,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWS
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
@@ -58,6 +61,7 @@ import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServ
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
@@ -920,18 +924,19 @@ public class SearchAPI
 	@Path("/list")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSearchList(JSONArray inputJsonArray)
+	public Response getSearchList(String inputIdList)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/list");
 		List<BigInteger> searchIdList = new ArrayList<BigInteger>();
 		try {
-			for(int i = 0; i < inputJsonArray.length(); i++) {
-				searchIdList.add(new BigInteger(inputJsonArray.getString(i)));
+			JsonNode inputJsonArray = new ObjectMapper().readTree(inputIdList);
+			for(Iterator<JsonNode> i = inputJsonArray.getElements(); i.hasNext(); ) {
+				searchIdList.add(new BigInteger(i.next().asText()));
 			}
+		} catch (IOException e) {
+			return Response.status(404).entity("search id list can be parsed").build();
 		} catch(NullPointerException npe) {
 			return Response.status(404).entity("search id list is empty").build();
-		} catch(JSONException je) {
-			return Response.status(404).entity("invalid search id in search id list").build();
 		} catch(NumberFormatException nfe) {
 			return Response.status(404).entity("invalid search id in search id list").build();
 		}
@@ -1026,11 +1031,11 @@ public class SearchAPI
 				LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + "The version is wrong",version);
 				version +="+";
 			}
-			oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link link = RegistryLookupUtil.getServiceExternalLink(serviceName,version,rel, TenantContext.getContext().gettenantName());
-			if(link == null) {
+			VersionedLink linkInfo = RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, TenantContext.getContext().gettenantName());
+			if(linkInfo == null) {
 				return Response.status(Response.Status.NOT_FOUND).entity("Failed:"+serviceName+","+version+","+rel+","+TenantContext.getContext().gettenantName()).build();
 			}
-			link = RegistryLookupUtil.replaceWithVanityUrl(link, TenantContext.getContext().gettenantName(),serviceName);
+			Link link = RegistryLookupUtil.replaceWithVanityUrl(linkInfo, TenantContext.getContext().gettenantName(), serviceName);
 			if(link == null) {
 				return Response.status(Response.Status.NOT_FOUND).entity("The link is null").build();
 			}

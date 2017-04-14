@@ -25,8 +25,8 @@
 buildscript {
  		apply from: 'test-buildscript-apply.gradle'   
 }
-apply from: 'setup.gradle'
 apply from: 'test-project-apply.gradle'
+apply from: 'setup.gradle'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -114,6 +114,8 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetGro
 	 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/XSDErrorUtilTest.class"
 	 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/targetcard/TargetCardLinksFilterAPITest.class"
 
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/ssflifecycle/SSFLifeCycleNotificationTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/ssflifecycle/SSFLifeCycleNotifyEntityTest.class"
 
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/util/JAXBUtilTestS2.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/widget/WidgetAPIMoreTest.class"
