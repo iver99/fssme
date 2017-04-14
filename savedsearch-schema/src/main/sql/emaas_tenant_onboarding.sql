@@ -133,6 +133,7 @@ COMMIT;
 @&EMSAAS_SQL_ROOT/1.17.0/emaas_savedsearch_seed_data_sec.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.18.0/emaas_savedsearch_seed_data_sec.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.18.0/emaas_savedsearch_seed_data_cos.sql &TENANT_ID
 
 /**
 --PLEASE READ!!
