@@ -136,7 +136,7 @@ public class TenantSubscriptionUtil
 			}
 		}
 		//handle v2/v3
-		if(!checkLicVersion(tenantSubscriptionInfo) && !providers.isEmpty() && !providers.contains(SERVICE_PROVIDER_NAME_TA)){
+		if(!checkLicVersion(tenantSubscriptionInfo) && !subscribedApps.isEmpty() && !providers.contains(SERVICE_PROVIDER_NAME_TA)){
 			providers.add(SERVICE_PROVIDER_NAME_TA);
 		}
 		LOGGER.debug("Get subscribed provider names: {} for tenant {}",
