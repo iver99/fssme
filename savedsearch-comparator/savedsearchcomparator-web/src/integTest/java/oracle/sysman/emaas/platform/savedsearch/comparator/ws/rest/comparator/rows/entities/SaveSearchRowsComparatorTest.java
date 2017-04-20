@@ -142,7 +142,7 @@ public class SaveSearchRowsComparatorTest
 		ZDTTableRowEntity tre2 = Deencapsulation.invoke(src1, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
 		InstancesComparedData<ZDTTableRowEntity> cd = Deencapsulation.invoke(src1, "compareInstancesData",
-				new InstanceData<ZDTTableRowEntity>(null,null, tre1), new InstanceData<ZDTTableRowEntity>(null,null, tre2));
+				new InstanceData<ZDTTableRowEntity>(null,null, tre1,0), new InstanceData<ZDTTableRowEntity>(null,null, tre2,0));
 		// the 2 instances have the same data, so there is no difference from the compared result
 		ZDTTableRowEntity result1 = cd.getInstance1().getData();
 		ZDTTableRowEntity result2 = cd.getInstance1().getData();
@@ -169,8 +169,8 @@ public class SaveSearchRowsComparatorTest
 		sscr2.setDeleted("0");
 		tre2.getSavedSearchCategory().add(sscr2);
 
-		cd = Deencapsulation.invoke(src2, "compareInstancesData", new InstanceData<ZDTTableRowEntity>(null, null,tre1),
-				new InstanceData<ZDTTableRowEntity>(null,null, tre2));
+		cd = Deencapsulation.invoke(src2, "compareInstancesData", new InstanceData<ZDTTableRowEntity>(null, null,tre1,0),
+				new InstanceData<ZDTTableRowEntity>(null,null, tre2,0));
 		result1 = cd.getInstance1().getData();
 		result2 = cd.getInstance2().getData();
 		Assert.assertEquals(result1.getSavedSearchCategory().get(0), sscr1);

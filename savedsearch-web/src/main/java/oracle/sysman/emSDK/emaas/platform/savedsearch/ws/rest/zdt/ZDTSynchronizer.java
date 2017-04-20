@@ -32,11 +32,11 @@ public class ZDTSynchronizer
 {
 	private static final Logger logger = LogManager.getLogger(ZDTSynchronizer.class);
 
-	public void sync(ZDTTableRowEntity data)
+	public String sync(ZDTTableRowEntity data)
 	{
 		if (data == null) {
 			logger.error("Failed to sync as input data is null");
-			return;
+			return "Errors:Failed to sync as input data is null";
 		}
 		EntityManager em = null;
 		try{
@@ -50,11 +50,13 @@ public class ZDTSynchronizer
 		}
 		catch (Exception e) {
 			logger.error("errors while syc for tables -",e.getLocalizedMessage());
+			return "Errors:Failed to sync - "+ e.getLocalizedMessage();
 		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
+		return "sync for tables is successful";
 	}
 
 	private void syncCategoryParamsTableRows(EntityManager em, List<SavedSearchCategoryParamRowEntity> rows)

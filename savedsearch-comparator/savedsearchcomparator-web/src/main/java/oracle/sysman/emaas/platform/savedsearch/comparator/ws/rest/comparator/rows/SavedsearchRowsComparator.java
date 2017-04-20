@@ -57,7 +57,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
  			}
  			
  			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1);
-			
+ 			int rowNum1 = countForComparedRows(tre1);
 			if (tre1 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 				logger.info("Completed to compare the two ssf OMC instances");
@@ -65,13 +65,14 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			}
 
 			ZDTTableRowEntity tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2);
+			int rowNum2 = countForComparedRows(tre2);
 			if (tre2 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
 				logger.info("Completed to compare the two SSF OMC instances");
 				return null;
 			}
-			InstancesComparedData<ZDTTableRowEntity> cd = compareInstancesData(new InstanceData<ZDTTableRowEntity>(key1, client1, tre1),
-					new InstanceData<ZDTTableRowEntity>(key2, client2, tre2));
+			InstancesComparedData<ZDTTableRowEntity> cd = compareInstancesData(new InstanceData<ZDTTableRowEntity>(key1, client1, tre1, rowNum1),
+					new InstanceData<ZDTTableRowEntity>(key2, client2, tre2, rowNum2));
 			logger.info("Completed to compare the two SSF OMC instances");
 			return cd;
 		}
@@ -80,22 +81,38 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			return null;
 		}
 	}
+	
+	public int countForComparedRows(ZDTTableRowEntity tableRow) {
+ 		int count = 0;		
+ 		count = count + (tableRow.getSavedSearchCategory()==null?0:tableRow.getSavedSearchCategory().size());
+ 		count = count + (tableRow.getSavedSearchCategoryParams()==null?0:tableRow.getSavedSearchCategoryParams().size());
+ 		count = count + (tableRow.getSavedSearchFoldersy()==null?0:tableRow.getSavedSearchFoldersy().size());
+ 		count = count + (tableRow.getSavedSearchSearchParams()==null?0:tableRow.getSavedSearchSearchParams().size());
+ 		count = count + (tableRow.getSavedSearchSearch()==null?0:tableRow.getSavedSearchSearch().size());
+ 		return count;
+ 	}
 
-	public void sync(InstancesComparedData<ZDTTableRowEntity> instancesData,String tenantId, String userTenant) throws Exception
+	public String sync(InstancesComparedData<ZDTTableRowEntity> instancesData,String tenantId, String userTenant) throws Exception
 	{
 		if (instancesData == null) {
-			return;
+			return "Errors: Failed to retrieve ZDT OMC instances: null retrieved!";
 		}
 		// switch the data for the instances for sync
 		InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>(instancesData.getInstance1().getKey(),
 				instancesData.getInstance1().getClient(),
-				instancesData.getInstance2().getData());
+				instancesData.getInstance2().getData(),
+				0);
 		InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>(instancesData.getInstance2().getKey(),
 				instancesData.getInstance2().getClient(),
-				instancesData.getInstance1().getData());
+				instancesData.getInstance1().getData(),
+				0);
 		InstancesComparedData<ZDTTableRowEntity> syncData = new InstancesComparedData<ZDTTableRowEntity>(instance1, instance2);
-		syncForInstance( tenantId, userTenant,syncData.getInstance1());
-		syncForInstance(tenantId, userTenant,syncData.getInstance2());
+		String message1 = syncForInstance( tenantId, userTenant,syncData.getInstance1());
+		String message2 = syncForInstance(tenantId, userTenant,syncData.getInstance2());
+		if (message1 == null || message2 == null) {
+			return "Errors: Get a null or empty link for one single instance!";
+		}
+		return "{"+message1 + "}" + "{"+ message2+"}";
 	}
 
 	/**
@@ -206,8 +223,10 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			return null;
 		}
 		// prepare the output compared data
-		InstanceData<ZDTTableRowEntity> outData1 = new InstanceData<ZDTTableRowEntity>(insData1.getKey(),insData1.getClient(), new ZDTTableRowEntity());
-		InstanceData<ZDTTableRowEntity> outData2 = new InstanceData<ZDTTableRowEntity>(insData2.getKey(),insData2.getClient(), new ZDTTableRowEntity());
+		InstanceData<ZDTTableRowEntity> outData1 = new InstanceData<ZDTTableRowEntity>(insData1.getKey(),insData1.getClient(), new ZDTTableRowEntity(),
+				insData1.getTotalRowNum());
+		InstanceData<ZDTTableRowEntity> outData2 = new InstanceData<ZDTTableRowEntity>(insData2.getKey(),insData2.getClient(), new ZDTTableRowEntity(),
+				insData2.getTotalRowNum());
 		InstancesComparedData<ZDTTableRowEntity> cd = new InstancesComparedData<ZDTTableRowEntity>(outData1, outData2);
 		compareSSFCategoryRows(insData1.getData().getSavedSearchCategory(), insData2.getData().getSavedSearchCategory(), cd);
 		compareSSFCategoryParamRows(insData1.getData().getSavedSearchCategoryParams(), insData2.getData().getSavedSearchCategoryParams(),
