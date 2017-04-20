@@ -112,7 +112,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		if (message1 == null || message2 == null) {
 			return "Errors: Get a null or empty link for one single instance!";
 		}
-		return "{"+message1 + "}" + "{"+ message2+"}";
+		return "cloud1: "+ message1 + "__cloud2: " + "{"+ message2+"}";
 	}
 
 	/**
