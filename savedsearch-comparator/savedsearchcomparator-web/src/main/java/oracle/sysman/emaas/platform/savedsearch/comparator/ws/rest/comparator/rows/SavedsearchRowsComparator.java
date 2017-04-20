@@ -84,11 +84,14 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	
 	public int countForComparedRows(ZDTTableRowEntity tableRow) {
  		int count = 0;		
- 		count = count + (tableRow.getSavedSearchCategory()==null?0:tableRow.getSavedSearchCategory().size());
- 		count = count + (tableRow.getSavedSearchCategoryParams()==null?0:tableRow.getSavedSearchCategoryParams().size());
- 		count = count + (tableRow.getSavedSearchFoldersy()==null?0:tableRow.getSavedSearchFoldersy().size());
- 		count = count + (tableRow.getSavedSearchSearchParams()==null?0:tableRow.getSavedSearchSearchParams().size());
- 		count = count + (tableRow.getSavedSearchSearch()==null?0:tableRow.getSavedSearchSearch().size());
+ 		if (tableRow != null) {
+ 			count = count + (tableRow.getSavedSearchCategory()==null?0:tableRow.getSavedSearchCategory().size());
+ 	 		count = count + (tableRow.getSavedSearchCategoryParams()==null?0:tableRow.getSavedSearchCategoryParams().size());
+ 	 		count = count + (tableRow.getSavedSearchFoldersy()==null?0:tableRow.getSavedSearchFoldersy().size());
+ 	 		count = count + (tableRow.getSavedSearchSearchParams()==null?0:tableRow.getSavedSearchSearchParams().size());
+ 	 		count = count + (tableRow.getSavedSearchSearch()==null?0:tableRow.getSavedSearchSearch().size());
+ 		}
+ 		
  		return count;
  	}
 
@@ -109,10 +112,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		InstancesComparedData<ZDTTableRowEntity> syncData = new InstancesComparedData<ZDTTableRowEntity>(instance1, instance2);
 		String message1 = syncForInstance( tenantId, userTenant,syncData.getInstance1());
 		String message2 = syncForInstance(tenantId, userTenant,syncData.getInstance2());
-		if (message1 == null || message2 == null) {
-			return "Errors: Get a null or empty link for one single instance!";
-		}
-		return "cloud1: "+ message1 + "__cloud2: " + "{"+ message2+"}";
+		
+		return "cloud1: {"+ (message1==null?"":message1) + "}" + "__cloud2: {" + (message2==null?"":message2)+"}";
 	}
 
 	/**
@@ -280,7 +281,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		Link lk = getSingleInstanceUrl(instance.getClient(), "zdt/sync", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
-			return null;
+			return "Errors:Get a null or empty link for one single instance!";
 		}
 		ZDTTableRowEntity entity = instance.getData();
  		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
