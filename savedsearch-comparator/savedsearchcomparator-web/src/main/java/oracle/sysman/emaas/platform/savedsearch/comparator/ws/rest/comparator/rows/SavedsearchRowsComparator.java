@@ -113,7 +113,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		String message1 = syncForInstance( tenantId, userTenant,syncData.getInstance1());
 		String message2 = syncForInstance(tenantId, userTenant,syncData.getInstance2());
 		
-		return "cloud1: {"+ (message1==null?"":message1) + "}" + "__cloud2: {" + (message2==null?"":message2)+"}";
+		return instancesData.getInstance1().getKey()+": {"+ (message1==null?"":message1) + "}" 
+		+ "____" + instancesData.getInstance2().getKey()+": {" + (message2==null?"":message2)+"}";
 	}
 
 	/**
