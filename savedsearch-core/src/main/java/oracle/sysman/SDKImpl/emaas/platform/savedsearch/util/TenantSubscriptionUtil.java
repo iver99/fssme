@@ -10,18 +10,6 @@
 
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingCollection;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
@@ -32,15 +20,11 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.*;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-
+import oracle.sysman.emaas.platform.emcpdf.tenant.SubscriptionAppsUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -103,8 +87,14 @@ public class TenantSubscriptionUtil
 			return resultList;
 		}
 		CategoryManager catMan = CategoryManager.getInstance();
+		//v1:true, v2/v3:false
+		boolean isV1Tenant = false;
 		List<Category> catList = catMan.getAllCategories();
-		List<String> subscribedServices = TenantSubscriptionUtil.getTenantSubscribedServices(tenant,new TenantSubscriptionInfo());
+		LOGGER.info("Cat list is {}", catList);
+		TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
+		List<String> subscribedServices = TenantSubscriptionUtil.getTenantSubscribedServices(tenant,tenantSubscriptionInfo);
+		isV1Tenant = checkTenantVersion(tenantSubscriptionInfo);
+		LOGGER.info("Tenant version check: Is tenant v1 tenant? {}", isV1Tenant);
 		if (catList != null && !catList.isEmpty() && subscribedServices != null && !subscribedServices.isEmpty()) {
 			for (Category cat : catList) {
 				//EMCPDF-997 If a widget group has special parameter DASHBOARD_INELIGIBLE=true,
@@ -118,6 +108,26 @@ public class TenantSubscriptionUtil
 
 		return resultList;
 			}
+
+	/**
+	 * if v1 tenant, return true, v2/v3 return false;
+	 * @param tenantSubscriptionInfo
+	 * @return
+	 */
+	private static boolean checkTenantVersion(TenantSubscriptionInfo tenantSubscriptionInfo){
+		if(tenantSubscriptionInfo.getAppsInfoList()!=null && !tenantSubscriptionInfo.getAppsInfoList().isEmpty()){
+			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
+				if(SubscriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion()) ||
+						SubscriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion())){
+					LOGGER.info("Check tenant version is V1/V2 tenant.");
+					return false;
+				}
+			}
+		}
+		LOGGER.info("Check tenant version is V1 tenant.");
+		//v1
+		return true;
+	}
 
 	public static List<String> getTenantSubscribedServiceProviders(String tenant) throws IOException
 	{
