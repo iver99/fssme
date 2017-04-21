@@ -20,7 +20,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.*;
-import oracle.sysman.emaas.platform.emcpdf.tenant.SubscriptionAppsUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -117,8 +116,8 @@ public class TenantSubscriptionUtil
 	private static boolean checkTenantVersion(TenantSubscriptionInfo tenantSubscriptionInfo){
 		if(tenantSubscriptionInfo.getAppsInfoList()!=null && !tenantSubscriptionInfo.getAppsInfoList().isEmpty()){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
-				if(SubscriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion()) ||
-						SubscriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion())){
+				if(SubsriptionApps2Util.V2_TENANT.equals(appsInfo.getLicVersion()) ||
+                        SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion())){
 					LOGGER.info("Check tenant version is V1/V2 tenant.");
 					return false;
 				}
