@@ -102,6 +102,11 @@ public class TenantSubscriptionUtil
 						&& !TenantSubscriptionUtil.isCategoryHiddenInWidgetSelector(cat, includeDashboardIneligible)) {
 					resultList.add(cat);
 				}
+				//only current cat is UDE cat, and for v2/v3 tenant, and result list did not contains it yet, then we add.
+				if("Data Explorer".equals(cat.getName()) && !isV1Tenant && !resultList.contains(cat)){
+					resultList.add(cat);
+					LOGGER.info("Adding UDE widget group info into result for v2/v3 tenant");
+				}
 			}
 		}
 
