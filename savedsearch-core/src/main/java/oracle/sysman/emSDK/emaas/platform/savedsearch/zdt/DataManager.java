@@ -347,13 +347,13 @@ public class DataManager
 			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId)
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t "
-				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=? and t.parent_id=? and t.deleted=? and t.tenant_id = ?)";//check if the data is existing.
+				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=? and t.parent_id=? and t.deleted=? and t.tenant_id =? and t.owner=?)";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
 		Query q1 = em.createNativeQuery(sql).setParameter(1, folderId).setParameter(2, tenantId)
 				.setParameter(3, name).setParameter(4, parentId).setParameter(5, deleted)
-				.setParameter(6, tenantId);
+				.setParameter(6, tenantId).setParameter(7,owner);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
@@ -454,7 +454,8 @@ public class DataManager
 	{
 		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
 				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
-				+ "(t.name = ? and t.folder_id = ? and t.category_id=? and t.deleted = ? )";//check if the data is existing.
+				+ "(t.name = ? and t.folder_id = ? and t.category_id=? and t.deleted = ? "
+				+ "and t.tenant_id = ? and t.owner = ?)";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -462,7 +463,9 @@ public class DataManager
 				.setParameter(3, name)
 				.setParameter(4, folderId)
 				.setParameter(5, categoryId)
-				.setParameter(6, deleted);
+				.setParameter(6, deleted)
+				.setParameter(7,tenantId)
+				.setParameter(8,owner);
 		List<Object> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
