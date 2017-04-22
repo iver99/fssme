@@ -158,6 +158,7 @@ ext.set("testType", "integration")
      task DEVTest(type:EMTest,dependsOn: QATest){	
 
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryManagerImplTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/SubscriptionAppsUtilTest.class"
 /*include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/QueryParameterConstantTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/TenantInfoTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/exception/EMAnalyticsFwkExceptionTest.class"
@@ -182,6 +183,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/WidgetManagerImp
 include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
 //include "oracle/sysman/emaas/savedsearch/SearchTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryManagerImplTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/subscription2/AppsInfoTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/DBConnectionManagerTestS2.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/EmAnalyticsObjectUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderManagerImplTest.class"
