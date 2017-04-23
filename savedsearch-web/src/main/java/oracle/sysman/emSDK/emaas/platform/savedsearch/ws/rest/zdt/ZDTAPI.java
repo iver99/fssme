@@ -150,7 +150,7 @@ public class ZDTAPI
 			if (response.contains("Errors:")) {
 				return Response.status(500).entity(response).build();
 			}
-			return Response.status(Status.NO_CONTENT).entity(response).build();
+			return Response.ok(response).build();
 		}
 		catch (IOException e) {
 			logger.error(e.getLocalizedMessage(), e);

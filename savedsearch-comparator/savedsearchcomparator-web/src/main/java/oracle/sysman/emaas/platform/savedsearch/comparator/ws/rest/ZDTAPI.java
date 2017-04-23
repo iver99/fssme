@@ -239,7 +239,7 @@ public class ZDTAPI
 			if (response.contains("Errors:")) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(response).build();
 			}
-			return Response.status(Status.NO_CONTENT).entity(response).build();
+			return Response.ok(response).build();
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);

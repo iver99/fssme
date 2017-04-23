@@ -56,7 +56,7 @@ public class ZDTSynchronizer
 				em.close();
 			}
 		}
-		return "sync for tables is successful";
+		return "sync is successful";
 	}
 
 	private void syncCategoryParamsTableRows(EntityManager em, List<SavedSearchCategoryParamRowEntity> rows)
