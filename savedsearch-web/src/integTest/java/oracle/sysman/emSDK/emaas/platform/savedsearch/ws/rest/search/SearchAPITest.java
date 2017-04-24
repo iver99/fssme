@@ -3,13 +3,18 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.ws.rs.core.UriInfo;
 
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -21,6 +26,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
@@ -841,6 +847,22 @@ public class SearchAPITest {
         };
         Assert.assertNotNull(api.getSearch(TEST_ID_10,true));
     }
+    
+    @Test
+    public void testGetExportedSearch() throws JSONException {
+    	JSONArray array = new JSONArray();
+    	array.put("12345");
+    	new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                SearchManager.getInstance();
+                result = searchManager;
+            }
+        };
+        api.getSearchData(array);
+    }
+    
     @Test
     public void testGetSearch2nd() throws JSONException, EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();
@@ -857,7 +879,204 @@ public class SearchAPITest {
         };
         Assert.assertNotNull(api.getSearch(TEST_ID_10,true));
     }
+    
+    @Test
+    public void testGetExportedSearchException() throws JSONException, EMAnalyticsFwkException {
+    	JSONArray array = new JSONArray();
+    	array.put("12345");
+    	final List<Search> searches = new ArrayList<Search>();
+        for (int i = 0; i <= 2; i++) {
+            searches.add(new SearchImpl());
+        }
+    	new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchWithoutOwner((BigInteger)any);
+                result = new EMAnalyticsFwkException(throwable);
+            }
+        };
+        api.getSearchData(array);
+    }
+    
+    @Test
+    public void testImportSearchUpdate(@Mocked final PersistenceManager persistenceManager, 
+    		@Mocked final TenantInfo tenantInfo,
+    		@Mocked final EntityManager em,
+    		@Mocked final Query query) throws JSONException, EMAnalyticsFwkException {
+    	JSONArray array = new JSONArray();
+        JSONObject inputJson = new JSONObject();
+        JSONObject category = new JSONObject();
+        JSONObject folder = new JSONObject();
+        JSONArray parameter = new JSONArray();
+        JSONObject p1 = new JSONObject();
+        JSONObject p2 = new JSONObject();
+        p1.put("name","time");
+        p1.put("type","STRING");
+        p1.put("value","ALL");
+        p2.put("name","additionalInfo");
+        p2.put("type","CLOB");
+        p2.put("value","this is a demo");
+        parameter.put(p1);
+        parameter.put(p2);
+        folder.put("id","999");
+        category.put("id","1119");
+        inputJson.put("name","Demo Search");
+        inputJson.put("category",category);
+        inputJson.put("description","Search for demo");
+        inputJson.put("folder",folder);
+        inputJson.put("parameters",parameter);
+        inputJson.put("owner", "me");
+        inputJson.put("id", "123456");
+        inputJson.put("editable", true);
+        array.put(inputJson);
+        final List<Map<String, Object>> idAndNameList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> idMap = new HashMap<String, Object>();
+        idMap.put("SEARCH_ID", "123456");
+        idMap.put("NAME", "Demo Search");
+        idAndNameList.add(idMap);
+        final Search search = new SearchImpl();
+        new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchIdAndNameByUniqueKey("Demo Search", new BigInteger("999"), new BigInteger("1119"), new BigInteger("0"),"me");
+                result = idAndNameList;
+                searchManager.editSearch((Search)any);
+                result = search;
+            }
+        };
+        api.importData(true,array);
+    }
 
+    
+    @Test
+    public void testImportSearchInsert1() throws JSONException, EMAnalyticsFwkException {
+    	JSONArray array = new JSONArray();
+        JSONObject inputJson = new JSONObject();
+        JSONObject category = new JSONObject();
+        JSONObject folder = new JSONObject();
+        JSONArray parameter = new JSONArray();
+        JSONObject p1 = new JSONObject();
+        JSONObject p2 = new JSONObject();
+        p1.put("name","time");
+        p1.put("type","STRING");
+        p1.put("value","ALL");
+        p1.put("name","ODS_ENTITY");
+        p1.put("type","STRING");
+        p1.put("value","TRUE");
+        p2.put("name","additionalInfo");
+        p2.put("type","CLOB");
+        p2.put("value","this is a demo");
+        parameter.put(p1);
+        parameter.put(p2);
+        folder.put("id","999");
+        category.put("id","1119");
+        inputJson.put("name","Demo Search");
+        inputJson.put("category",category);
+        inputJson.put("description","Search for demo");
+        inputJson.put("folder",folder);
+        inputJson.put("parameters",parameter);
+        inputJson.put("owner", "me");
+        inputJson.put("id", "123456");
+        inputJson.put("editable", true);
+        array.put(inputJson);
+        final List<Map<String, Object>> idAndNameList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> idMap = new HashMap<String, Object>();
+        idMap.put("SEARCH_ID", "123456");
+        idMap.put("NAME", "Demo Search");
+        idAndNameList.add(idMap);
+        
+        final Search search = new SearchImpl();
+        search.setId(new BigInteger("56789"));
+        search.setName("updatedName");
+        search.setParameters(new ArrayList<SearchParameter>());
+        new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchIdAndNameByUniqueKey("Demo Search", new BigInteger("999"), new BigInteger("1119"), new BigInteger("0"),"me");
+                result = idAndNameList;
+                searchManager.saveSearch((Search)any);
+                result = search;
+                OdsDataServiceImpl.getInstance();
+                result = odsDataServiceImpl;
+                odsDataServiceImpl.createOdsEntity(anyString,anyString);
+                result = "odsentitymeid";
+                
+                searchManager.editSearch(search);
+                result = search;
+            }
+        };
+        api.importData(false,array);
+    }
+    
+    @Test
+    public void testImportSearchInsert2() throws JSONException, EMAnalyticsFwkException {
+    	JSONArray array = new JSONArray();
+        JSONObject inputJson = new JSONObject();
+        JSONObject category = new JSONObject();
+        JSONObject folder = new JSONObject();
+        JSONArray parameter = new JSONArray();
+        JSONObject p1 = new JSONObject();
+        JSONObject p2 = new JSONObject();
+        p1.put("name","time");
+        p1.put("type","STRING");
+        p1.put("value","ALL");
+        p1.put("name","ODS_ENTITY");
+        p1.put("type","STRING");
+        p1.put("value","TRUE");
+        p2.put("name","additionalInfo");
+        p2.put("type","CLOB");
+        p2.put("value","this is a demo");
+        parameter.put(p1);
+        parameter.put(p2);
+        folder.put("id","999");
+        category.put("id","1119");
+        inputJson.put("name","Demo Search");
+        inputJson.put("category",category);
+        inputJson.put("description","Search for demo");
+        inputJson.put("folder",folder);
+        inputJson.put("parameters",parameter);
+        inputJson.put("owner", "me");
+        inputJson.put("id", "123456");
+        inputJson.put("editable", true);
+        array.put(inputJson);
+        final List<Map<String, Object>> idAndNameList = new ArrayList<Map<String, Object>>();
+        
+        
+        final Search search = new SearchImpl();
+        search.setId(new BigInteger("56789"));
+        search.setName("updatedName");
+        search.setParameters(new ArrayList<SearchParameter>());
+        new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                SearchManager.getInstance();
+                result = searchManager;
+                searchManager.getSearchIdAndNameByUniqueKey("Demo Search", new BigInteger("999"), new BigInteger("1119"), new BigInteger("0"),"me");
+                result = idAndNameList;
+                searchManager.saveSearch((Search)any);
+                result = search;
+                OdsDataServiceImpl.getInstance();
+                result = odsDataServiceImpl;
+                odsDataServiceImpl.createOdsEntity(anyString,anyString);
+                result = "odsentitymeid";
+                
+                searchManager.editSearch(search);
+                result = search;
+            }
+        };
+        api.importData(false,array);
+    }
+    
     @Test
     public void testGetSearchEMAnalyticsFwkException() throws JSONException, EMAnalyticsFwkException {
         final List<Search> searches = new ArrayList<Search>();

@@ -710,6 +710,9 @@ public class SearchAPI
 		Map<String, String> idMaps = new HashMap<String, String>();
 		
 		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
 		   int count = importedData.length();
 			for (int i = 0; i < count; i++) {
 				JSONObject inputJsonObj = importedData.getJSONObject(i);
