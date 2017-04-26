@@ -6,3 +6,6 @@ Rem
 Rem
 
 @&EMSAAS_SQL_ROOT/1.18.0/emaas_savesearch_compress_search_table.sql
+
+
+

@@ -155,6 +155,7 @@ ext.set("testType", "integration")
 
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryManagerImplTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/QueryParameterConstantTest.class"
+include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/SubscriptionAppsUtilTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/TenantInfoTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/exception/EMAnalyticsFwkExceptionTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/EmAnalyticsObjectUtilTest.class"
@@ -200,6 +201,7 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptio
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/CategorySetTest.class"
 	   include "oracle/sysman/emaas/savedsearch/FolderSetTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/CategoryImplTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/subscription2/AppsInfoTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/FolderImplTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchImplTest.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchSummaryImplTest.class"
