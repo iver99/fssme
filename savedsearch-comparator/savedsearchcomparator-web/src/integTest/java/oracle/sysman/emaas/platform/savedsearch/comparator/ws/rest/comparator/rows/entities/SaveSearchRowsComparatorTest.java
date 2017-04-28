@@ -4,6 +4,7 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 import java.io.IOException;
 import java.math.BigInteger;
 
+import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
@@ -194,7 +195,7 @@ public class SaveSearchRowsComparatorTest
 	
 	@Test
 	public void testCompare(@Mocked final AbstractComparator abstractComparator, 
-			@Mocked final InstancesComparedData<ZDTTableRowEntity> zdtTableRowsEntity) {
+			@Mocked final InstancesComparedData<ZDTTableRowEntity> zdtTableRowsEntity) throws ZDTException {
 		SavedsearchRowsComparator src = new SavedsearchRowsComparator();
 		 new Expectations(){
 	            {

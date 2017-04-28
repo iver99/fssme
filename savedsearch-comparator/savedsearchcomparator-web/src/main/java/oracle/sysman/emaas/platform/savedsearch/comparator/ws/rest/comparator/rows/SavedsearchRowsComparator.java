@@ -20,6 +20,8 @@ import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTErrorConstants;
+import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
@@ -31,16 +33,16 @@ public class SavedsearchRowsComparator extends AbstractComparator
 {
 	private static final Logger logger = LogManager.getLogger(SavedsearchRowsComparator.class);
 
-	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant)
+	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant) throws ZDTException
 	{
 		try {
 			logger.info("Starts to compare the two ssf OMC instances: table by table and row by row");
 			HashMap<String, LookupClient> instances = getOMCInstances();
 			if (instances == null) {
 				logger.error("Failed to retrieve ZDT OMC instances: null retrieved");
-				return null;
+				throw new ZDTException(ZDTErrorConstants.NULL_RETRIEVED_ERROR_CODE,ZDTErrorConstants.NULL_RETRIEVED_ERROR_MESSAGE);
 			}
-			
+			 
 			String key1 = null;
  			String key2 = null;
  			LookupClient client1 = null;
@@ -271,14 +273,15 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	 * @param response
 	 * @return
 	 * @throws IOException
+	 * @throws ZDTException 
 	 */
-	private ZDTTableRowEntity retrieveRowsEntityFromJsonForSingleInstance(String response) throws IOException
+	private ZDTTableRowEntity retrieveRowsEntityFromJsonForSingleInstance(String response) throws IOException, ZDTException
 	{
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		ZDTTableRowEntity tre = ju.fromJson(response, ZDTTableRowEntity.class);
 		if (tre == null) {
 			logger.warn("Checking SSF OMC instance table rows: null/empty entity retrieved.");
-			return null;
+			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
 		return tre;
 	}
@@ -287,12 +290,12 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private ZDTTableRowEntity retrieveRowsForSingleInstance(String tenantId, String userTenant,LookupClient lc) throws Exception, IOException
+	private ZDTTableRowEntity retrieveRowsForSingleInstance(String tenantId, String userTenant,LookupClient lc) throws Exception, IOException, ZDTException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
-			return null;
+			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
 		}
 		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		logger.info("Checking SSF OMC instance table rows. Response is " + response);

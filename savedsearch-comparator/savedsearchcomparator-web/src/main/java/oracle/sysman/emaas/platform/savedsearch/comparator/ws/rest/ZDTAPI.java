@@ -31,6 +31,8 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ErrorEntity;
+import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.SavedsearchCountsComparator;
@@ -147,7 +149,7 @@ public class ZDTAPI
 		super();
 	}
 	
-	private Date getCurrentUTCTime()
+	public Date getCurrentUTCTime()
 	{
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		long localNow = System.currentTimeMillis();
@@ -157,7 +159,7 @@ public class ZDTAPI
 		return utcDate;
 	}
 	
-	private String getTimeString(Date date)
+	public String getTimeString(Date date)
 	{
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 		String dateStr = sdf.format(date);
@@ -176,10 +178,7 @@ public class ZDTAPI
 			SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
 			InstancesComparedData<ZDTTableRowEntity> result = dcc.compare(tenantIdParam, userTenant);
 			
-			if (result == null) {
-				message = "Errors while comparing the two OMC instances.";
-				status = 500;
-			} else {
+			if (result != null) {
 				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
 				logger.info("comparedNum={}",comparedDataNum);
 				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
@@ -201,10 +200,11 @@ public class ZDTAPI
 				ZDTStatusRowEntity statusRow = new ZDTStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage);
 				message = JsonUtil.buildNormalMapper().toJson(statusRow);
 			}
-		} catch (Exception e) {
-			message = "Errors while comparing the two OMC instances, "+ e.getLocalizedMessage();
-			status = 500;
-		}
+		}  catch(ZDTException zdtE) {
+ 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
+ 		} catch (Exception e) {
+ 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
+ 		}
 		
 		return Response.status(status).entity(message).build();
 	}
@@ -233,17 +233,17 @@ public class ZDTAPI
 		logger.info("There is an incoming call from ZDT comparator API to sync");
 		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
 		SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
-		InstancesComparedData<ZDTTableRowEntity> result = dcc.compare(tenantIdParam, userTenant);
+		InstancesComparedData<ZDTTableRowEntity> result = null;
 		try {
+			result = dcc.compare(tenantIdParam, userTenant);
 			String response = dcc.sync(result, tenantIdParam, userTenant);
-			if (response.contains("Errors:")) {
-				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(response).build();
-			}
+			
 			return Response.ok(response).build();
-		}
-		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Failed to sync data for the 2 instances").build();
-		}
+		} catch(ZDTException zdtE) {
+ 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
+ 		} catch (Exception e) {
+ 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
+ 		}
+		
 	}
 }
