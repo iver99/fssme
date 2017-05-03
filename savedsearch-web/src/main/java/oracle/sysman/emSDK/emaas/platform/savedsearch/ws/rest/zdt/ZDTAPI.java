@@ -86,6 +86,7 @@ public class ZDTAPI
 		}
 		catch (JSONException e) {
 			logger.error(e.getLocalizedMessage(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
 		} finally {
 			if (em != null) {
 				em.close();
@@ -145,8 +146,11 @@ public class ZDTAPI
 		ZDTTableRowEntity data = null;
 		try {
 			data = JSONUtil.fromJson(new ObjectMapper(), dataToSync.toString(), ZDTTableRowEntity.class);
-			new ZDTSynchronizer().sync(data);
-			return Response.status(Status.NO_CONTENT).build();
+			String response = new ZDTSynchronizer().sync(data);
+			if (response.contains("Errors:")) {
+				return Response.status(500).entity(response).build();
+			}
+			return Response.ok(response).build();
 		}
 		catch (IOException e) {
 			logger.error(e.getLocalizedMessage(), e);

@@ -247,13 +247,15 @@ public class DataManager
 	public void syncCategoryParamTable(EntityManager em,BigInteger categoryId, String name, String paramValue, Long tenantId, String creationDate,
 			String lastModificationDate, Integer deleted)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY_PARAMS t "
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY_PARAMS t "
 				+ "where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}		
 		Query query = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId).setParameter(3, name);
-		List<Object> result = query.getResultList();
+		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> result = query.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
 			flag = false;
@@ -267,7 +269,19 @@ public class DataManager
 				.setParameter(6, lastModificationDate).setParameter(7, deleted).executeUpdate();
 			}
 			else {
-				String dBLastModificationDate = (String) result.get(0);
+				Map<String, Object> dateMap = result.get(0);
+		    	String creationD  = dateMap.get("CREATION_DATE").toString();
+		    	if (creationD == null) {
+		    		return;
+		    	}
+		    	String dBLastModificationDate = null;
+		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
+		    	if (lastModifiedObj == null) {
+		    		dBLastModificationDate = creationD;
+		    	} else {
+		    		dBLastModificationDate = (String)lastModifiedObj;
+		    	}
+				
 				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
@@ -292,7 +306,7 @@ public class DataManager
 			BigInteger defaultFolderId, BigInteger deleted, String providerName, String providerVersion, String providerDiscovery,
 			String providerAssetroot, Long tenantId, String dashboardIneligible, String lastModificationDate)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY t "
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY t "
 				+ "where (t.CATEGORY_ID=? and t.TENANT_ID=?) OR (t.name = ? and t.deleted=? and t.owner=? and t.tenant_id = ?)";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
@@ -300,7 +314,10 @@ public class DataManager
 		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId)
 				.setParameter(3, name).setParameter(4, deleted).setParameter(5, owner)
 				.setParameter(6, tenantId);
-		List<Object> result = q1.getResultList();
+		q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> result = q1.getResultList();
+		
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
 			flag = false;
@@ -318,7 +335,18 @@ public class DataManager
 						.setParameter(18, dashboardIneligible).setParameter(19, lastModificationDate).executeUpdate();
 			}
 			else {
-				String dBLastModificationDate = (String) result.get(0);
+				Map<String, Object> dateMap = result.get(0);
+		    	String creationD  = dateMap.get("CREATION_DATE").toString();
+		    	if (creationD == null) {
+		    		return;
+		    	}
+		    	String dBLastModificationDate = null;
+		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
+		    	if (lastModifiedObj == null) {
+		    		dBLastModificationDate = creationD;
+		    	} else {
+		    		dBLastModificationDate = (String)lastModifiedObj;
+		    	}
 				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
@@ -346,15 +374,17 @@ public class DataManager
 			String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem, String descriptionNlsid,
 			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t "
-				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=? and t.parent_id=? and t.deleted=? and t.tenant_id = ?)";//check if the data is existing.
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t "
+				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=? and t.parent_id=? and t.deleted=? and t.tenant_id =? and t.owner=?)";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
 		Query q1 = em.createNativeQuery(sql).setParameter(1, folderId).setParameter(2, tenantId)
 				.setParameter(3, name).setParameter(4, parentId).setParameter(5, deleted)
-				.setParameter(6, tenantId);
-		List<Object> result = q1.getResultList();
+				.setParameter(6, tenantId).setParameter(7,owner);
+		q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
 			flag = false;
@@ -372,7 +402,18 @@ public class DataManager
 						.setParameter(15, uiHidden).setParameter(16, deleted).setParameter(17, tenantId).executeUpdate();
 			}
 			else {
-				String dBLastModificationDate = (String) result.get(0);
+				Map<String, Object> dateMap = result.get(0);
+		    	String creationD  = dateMap.get("CREATION_DATE").toString();
+		    	if (creationD == null) {
+		    		return;
+		    	}
+		    	String dBLastModificationDate = null;
+		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
+		    	if (lastModifiedObj == null) {
+		    		dBLastModificationDate = creationD;
+		    	} else {
+		    		dBLastModificationDate = (String)lastModifiedObj;
+		    	}
 				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
@@ -399,13 +440,15 @@ public class DataManager
 	public void syncSearchParamsTable(EntityManager em, BigInteger searchId, String name, String paramAttributes, Long paramType,
 			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate, Integer deleted)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH_PARAMS t "
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH_PARAMS t "
 				+ "where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
 		Query q1 = em.createNativeQuery(sql).setParameter(1, searchId).setParameter(2, name).setParameter(3, tenantId);
-		List<Object> result = q1.getResultList();
+		q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
 			flag = false;
@@ -421,7 +464,18 @@ public class DataManager
 						.setParameter(9, lastModificationDate).setParameter(10, deleted).executeUpdate();
 			}
 			else {
-				String dBLastModificationDate = (String) result.get(0);
+				Map<String, Object> dateMap = result.get(0);
+		    	String creationD  = dateMap.get("CREATION_DATE").toString();
+		    	if (creationD == null) {
+		    		return;
+		    	}
+		    	String dBLastModificationDate = null;
+		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
+		    	if (lastModifiedObj == null) {
+		    		dBLastModificationDate = creationD;
+		    	} else {
+		    		dBLastModificationDate = (String)lastModifiedObj;
+		    	}
 				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
@@ -452,9 +506,10 @@ public class DataManager
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot)
 	{
-		String sql = "select to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
 				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
-				+ "(t.name = ? and t.folder_id = ? and t.category_id=? and t.deleted = ? )";//check if the data is existing.
+				+ "(t.name = ? and t.folder_id = ? and t.category_id=? and t.deleted = ? "
+				+ "and t.tenant_id = ? and t.owner = ?)";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -462,8 +517,12 @@ public class DataManager
 				.setParameter(3, name)
 				.setParameter(4, folderId)
 				.setParameter(5, categoryId)
-				.setParameter(6, deleted);
-		List<Object> result = q1.getResultList();
+				.setParameter(6, deleted)
+				.setParameter(7,tenantId)
+				.setParameter(8,owner);
+		q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> result = q1.getResultList();
 		boolean flag = true;//true=>insert,false=>update
 		if (result != null && result.size() > 0) {
 			flag = false;
@@ -487,7 +546,18 @@ public class DataManager
 				.setParameter(33, dashboardIneligible).executeUpdate();
 			}
 			else {
-				String dBLastModificationDate = (String) result.get(0);
+				Map<String, Object> dateMap = result.get(0);
+		    	String creationD  = dateMap.get("CREATION_DATE").toString();
+		    	if (creationD == null) {
+		    		return;
+		    	}
+		    	String dBLastModificationDate = null;
+		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
+		    	if (lastModifiedObj == null) {
+		    		dBLastModificationDate = creationD;
+		    	} else {
+		    		dBLastModificationDate = (String)lastModifiedObj;
+		    	}
 				if (isAfter(dBLastModificationDate, lastModificationDate)) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
@@ -517,7 +587,7 @@ public class DataManager
 			logger.error("Error occured when sync search table data!");
 		}
 	}
-
+/*
 	private String checkFormat(String dateStr)
 	{
 		if (null == dateStr) {
@@ -552,7 +622,7 @@ public class DataManager
 		logger.debug("checkFormat is about to return  null!");
 		return null;
 	}
-
+*/
 	/**
 	 * Returns: the value 0 if the syncLastModificationDate is equal to dbLastModificationDate; a value less than 0 if this
 	 * dbLastModificationDate is before the syncLastModificationDate; and a value greater than 0 if dbLastModificationDate is
