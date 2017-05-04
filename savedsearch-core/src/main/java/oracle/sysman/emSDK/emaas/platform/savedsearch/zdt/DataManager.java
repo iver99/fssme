@@ -15,6 +15,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -269,7 +271,7 @@ public class DataManager
 	public void syncCategoryParamTable(EntityManager em,BigInteger categoryId, String name, String paramValue, Long tenantId, String creationDate,
 			String lastModificationDate, Integer deleted)
 	{
-		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY_PARAMS t "
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE from EMS_ANALYTICS_CATEGORY_PARAMS t "
 				+ "where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
@@ -296,15 +298,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
 				
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
+				if (check) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -328,7 +330,7 @@ public class DataManager
 			BigInteger defaultFolderId, BigInteger deleted, String providerName, String providerVersion, String providerDiscovery,
 			String providerAssetroot, Long tenantId, String dashboardIneligible, String lastModificationDate)
 	{
-		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_CATEGORY t "
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE from EMS_ANALYTICS_CATEGORY t "
 				+ "where (t.CATEGORY_ID=? and t.TENANT_ID=?) OR (t.name = ? and t.deleted=? and t.owner=? and t.tenant_id = ?)";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
@@ -362,14 +364,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -396,7 +399,7 @@ public class DataManager
 			String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem, String descriptionNlsid,
 			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId)
 	{
-		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_FOLDERS t "
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE from EMS_ANALYTICS_FOLDERS t "
 				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=? and t.parent_id=? and t.deleted=? and t.tenant_id =? and t.owner=?)";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
@@ -429,14 +432,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -462,7 +466,7 @@ public class DataManager
 	public void syncSearchParamsTable(EntityManager em, BigInteger searchId, String name, String paramAttributes, Long paramType,
 			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate, Integer deleted)
 	{
-		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') from EMS_ANALYTICS_SEARCH_PARAMS t "
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE from EMS_ANALYTICS_SEARCH_PARAMS t "
 				+ "where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
@@ -479,7 +483,7 @@ public class DataManager
 		try {
 			if (flag) {
 				//execute insert action
-				logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute insert action.");
+				logger.info("Data not exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute insert action.");
 				em.createNativeQuery(SQL_INSERT_SEARCH_PARAM).setParameter(1, searchId).setParameter(2, name)
 						.setParameter(3, paramAttributes).setParameter(4, paramType).setParameter(5, paramValueStr)
 						.setParameter(6, paramValueClob).setParameter(7, tenantId).setParameter(8, creationDate)
@@ -487,25 +491,25 @@ public class DataManager
 			}
 			else {
 				Map<String, Object> dateMap = result.get(0);
+				
 		    	String creationD  = dateMap.get("CREATION_DATE").toString();
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
-					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
+		    	if (check) {
+					logger.info("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
 				else {
-					  
 					//execute update action
-					logger.debug("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
+					logger.info("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
 					em.createNativeQuery(SQL_UPDATE_SEARCH_PARAM).setParameter(1, paramAttributes).setParameter(2, paramType)
 							.setParameter(3, paramValueStr).setParameter(4, paramValueClob).setParameter(5, creationDate)
 							.setParameter(6, lastModificationDate).setParameter(7, deleted).setParameter(8, searchId).setParameter(9, name)
@@ -528,7 +532,7 @@ public class DataManager
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot)
 	{
-		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') "
+		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as  LAST_MODIFICATION_DATE"
 				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
 				+ "(t.name = ? and t.folder_id = ? and t.category_id=? and t.deleted = ? "
 				+ "and t.tenant_id = ? and t.owner = ?)";//check if the data is existing.
@@ -573,14 +577,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}

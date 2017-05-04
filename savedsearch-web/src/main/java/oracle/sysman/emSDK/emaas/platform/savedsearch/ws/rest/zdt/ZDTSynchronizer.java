@@ -47,6 +47,7 @@ public class ZDTSynchronizer
 			syncSearchTableRows(em, data.getSavedSearchSearch());
 			syncSearchParamsTableRows(em, data.getSavedSearchSearchParams());
 			em.getTransaction().commit();
+			return "sync is successful";
 		}
 		catch (Exception e) {
 			logger.error("errors while syc for tables -",e.getLocalizedMessage());
@@ -56,7 +57,6 @@ public class ZDTSynchronizer
 				em.close();
 			}
 		}
-		return "sync is successful";
 	}
 
 	private void syncCategoryParamsTableRows(EntityManager em, List<SavedSearchCategoryParamRowEntity> rows)
@@ -68,9 +68,7 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY_PARAMS table");
 		for (SavedSearchCategoryParamRowEntity e : rows) {
-			if (e.getLastModificationDate() == null) {
-				e.setLastModificationDate(e.getCreationDate());
-			}
+			
 			DataManager.getInstance().syncCategoryParamTable(em,e.getCategoryId()!=null?new BigInteger(e.getCategoryId()):null, e.getName(), e.getValue(), e.getTenantId(),
 					e.getCreationDate(), e.getLastModificationDate(),e.getDeleted());
 		}
@@ -86,9 +84,7 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY table");
 		for (SavedSearchCategoryRowEntity e : rows) {
-			if (e.getLastModificationDate() == null) {
-				e.setLastModificationDate(e.getCreationDate());
-			}
+		
 			DataManager.getInstance().syncCategoryTable(em,e.getCategoryId() !=null? new BigInteger(e.getCategoryId()): null, e.getName(), e.getDescription(), e.getOwner(),
 					e.getCreationDate(), e.getNameNlsid(), e.getNameSubsystem(), e.getDescriptionNlsid(),
 					e.getDescriptionSubsystem(), e.getEmPluginId(), e.getDefaultFolderId() !=null? new BigInteger(e.getDefaultFolderId()):null, 
@@ -109,9 +105,7 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY table");
 		for (SavedSearchFolderRowEntity e : rows) {
-			if (e.getLastModificationDate() == null) {
-				e.setLastModificationDate(e.getCreationDate());
-			}
+			
 			DataManager.getInstance().syncFolderTable(em, e.getFolderId() != null? new BigInteger(e.getFolderId()) : null, e.getName(), e.getParentId()!=null?new BigInteger(e.getParentId()):null, e.getDescription(),
 					e.getCreationDate(), e.getOwner(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getNameNlsid(),
 					e.getNameSubsystem(), e.getDescriptionNlsid(), e.getDescriptionSubsystem(), e.getSystemFolder(),
@@ -129,9 +123,7 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH_PARAMS table");
 		for (SavedSearchSearchParamRowEntity e : rows) {
-			if (e.getLastModificationDate() == null) {
-				e.setLastModificationDate(e.getCreationDate());
-			}
+			
 			DataManager.getInstance().syncSearchParamsTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId()), e.getName(), e.getParamAttributes(),
 					e.getParamType(), e.getParamValueStr(), e.getParamValueClob(), e.getTenantId(), e.getCreationDate(),
 					e.getLastModificationDate(),e.getDeleted());
@@ -146,11 +138,9 @@ public class ZDTSynchronizer
 			logger.debug("List<SavedSearchSearchRowEntity> is null,no sync action is needed");
 			return;
 		}
-		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
+	try {	logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
 		for (SavedSearchSearchRowEntity e : rows) {
-			if (e.getLastModificationDate() == null) {
-				e.setLastModificationDate(e.getCreationDate());
-			}
+			
 			DataManager.getInstance().syncSearchTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
 					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId() == null? null:new BigInteger(e.getFolderId()),
 					e.getCategoryId() == null? null:new BigInteger(e.getCategoryId()), e.getSystemSearch(), e.getIsLocked(), e.getMetadataClob(),
@@ -162,5 +152,8 @@ public class ZDTSynchronizer
 
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH table");
+	} catch (Exception e) {
+		logger.error(e);
+	}
 	}
 }
