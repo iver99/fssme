@@ -117,6 +117,8 @@ public class DataManager
 	private static final String SQL_UPDATE_SEARCH_PARAM = "UPDATE EMS_ANALYTICS_SEARCH_PARAMS t set t.PARAM_ATTRIBUTES=?,t.PARAM_TYPE=?,t.PARAM_VALUE_STR=?,"
 			+ "t.PARAM_VALUE_CLOB=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.deleted=? where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";
 
+	private static final String SQL_INSERT_TO_ZDT_COMPARISON_TABLE = "insert into ems_analytics_zdt_comparator (comparison_date, comparison_type, comparison_result, divergence_percentage) "
+			+ "values (to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, ?, 0.12)";
 
 	/**
 	 * Return the singleton for data manager
@@ -127,6 +129,26 @@ public class DataManager
 	{
 		return instance;
 
+	}
+	
+	public int saveToComparatorTable(EntityManager em, String comparisonDate, int comparisonType,
+			String comparisonResult, double divergencePercentage) {
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
+		try {
+			em.createNativeQuery(SQL_INSERT_TO_ZDT_COMPARISON_TABLE).setParameter(1, comparisonDate).setParameter(2, comparisonType)
+			.setParameter(3, comparisonResult).setParameter(4, divergencePercentage).executeUpdate();
+			em.getTransaction().commit();
+			return 0;
+		} catch (Exception e) {
+			logger.error("errors occurs in saveToComparatorTalbe, ", e.getLocalizedMessage());
+			return -1;
+		} finally {
+			if (em !=null) {
+				em.close();
+			}
+		}
 	}
 
 	/**

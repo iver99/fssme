@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -156,6 +157,52 @@ public class ZDTAPI
 			logger.error(e.getLocalizedMessage(), e);
 			return Response.status(400).entity(e.getLocalizedMessage()).build();
 		}
+	}
+	
+	@POST
+	@Path("status")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveComparatorData(JSONObject jsonObj) {
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/status");
+		EntityManager em = null;
+		String message = null;
+		int statusCode = 200;
+		String comparisonDate = null;
+		int comparisonType = 0;
+		String comparisonResult = null;
+		double divergencePercentage = 0;
+		if (jsonObj != null) {
+			try {
+				if (jsonObj.getString("lastComparisonDateTime") == null) {
+					message = "comparison date time can not be null";
+					statusCode = 500;
+				} else {
+					try {
+						comparisonDate = jsonObj.getString("lastComparisonDateTime");
+						comparisonType = jsonObj.getInt("comparisonType");
+						comparisonResult = jsonObj.getString("comparisonResult");
+						divergencePercentage = jsonObj.getDouble("divergencePercentage");
+					
+						em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+						int result = DataManager.getInstance().saveToComparatorTable(em, comparisonDate,
+								comparisonType, comparisonResult, divergencePercentage);
+						if (result < 0) {
+							message = "error occurs while saving data to zdt comparator table";
+							statusCode = 500;
+						} else {
+							message = "succeed to save data to zdt comparator table";
+						}		
+					} catch (Exception e) {
+						logger.error("could not save data to comparator table, ",e.getLocalizedMessage());
+					}
+				}
+			} catch (JSONException e) {
+				logger.error("could not save data to comparator table, ",e.getLocalizedMessage());
+			}
+		}
+	
+		return Response.status(statusCode).entity(message).build();
 	}
 
 	private JSONArray getCategoryParamTableData(EntityManager em)
