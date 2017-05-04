@@ -47,6 +47,7 @@ public class ZDTSynchronizer
 			syncSearchTableRows(em, data.getSavedSearchSearch());
 			syncSearchParamsTableRows(em, data.getSavedSearchSearchParams());
 			em.getTransaction().commit();
+			return "sync is successful";
 		}
 		catch (Exception e) {
 			logger.error("errors while syc for tables -",e.getLocalizedMessage());
@@ -56,7 +57,6 @@ public class ZDTSynchronizer
 				em.close();
 			}
 		}
-		return "sync is successful";
 	}
 
 	private void syncCategoryParamsTableRows(EntityManager em, List<SavedSearchCategoryParamRowEntity> rows)
@@ -138,7 +138,7 @@ public class ZDTSynchronizer
 			logger.debug("List<SavedSearchSearchRowEntity> is null,no sync action is needed");
 			return;
 		}
-		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
+	try {	logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
 		for (SavedSearchSearchRowEntity e : rows) {
 			
 			DataManager.getInstance().syncSearchTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
@@ -152,5 +152,8 @@ public class ZDTSynchronizer
 
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH table");
+	} catch (Exception e) {
+		logger.error(e);
+	}
 	}
 }
