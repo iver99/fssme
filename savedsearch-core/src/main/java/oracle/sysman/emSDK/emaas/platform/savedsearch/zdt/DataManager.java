@@ -274,15 +274,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
 				
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
+				if (check) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -340,14 +340,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -407,14 +408,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -469,14 +471,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
@@ -551,14 +554,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return;
 		    	}
-		    	String dBLastModificationDate = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		dBLastModificationDate = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		dBLastModificationDate = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(dBLastModificationDate, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
 					//do nothing
 				}
