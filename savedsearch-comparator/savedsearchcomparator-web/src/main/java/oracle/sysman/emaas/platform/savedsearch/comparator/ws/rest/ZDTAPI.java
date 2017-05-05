@@ -39,7 +39,7 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.co
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
-import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.ZDTStatusRowEntity;
+import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.ZDTComparatorStatusRowEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.ZDTTableRowEntity;
 
 @Path("/v1/comparator")
@@ -197,7 +197,7 @@ public class ZDTAPI
 				if (compareType.equals("incremental")) {
 					type = "incremental";
 				}
-				ZDTStatusRowEntity statusRow = new ZDTStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage);
+				ZDTComparatorStatusRowEntity statusRow = new ZDTComparatorStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage);
 				message = JsonUtil.buildNormalMapper().toJson(statusRow);
 			}
 		}  catch(ZDTException zdtE) {

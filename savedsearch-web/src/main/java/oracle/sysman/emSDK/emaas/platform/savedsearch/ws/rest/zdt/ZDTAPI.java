@@ -31,6 +31,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.countEntity.ZDTCountEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTComparatorStatusRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTTableRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.DataManager;
 
@@ -159,12 +160,46 @@ public class ZDTAPI
 		}
 	}
 	
-	@POST
-	@Path("status")
+	@GET
+	@Path("compare/status")
+	public Response getComparisonStatus() {
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/compare/status");
+		EntityManager em = null;
+		String message = null;
+		int statusCode = 200;
+		String comparison_date = null;
+		String comparison_type = null;
+		//String comparison_result = null;
+		String next_schedule_date = null;
+		double percentage = 0.0;
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		List<Map<String, Object>> result = DataManager.getInstance().getComparatorStatus(em);
+		if (result != null && result.size() == 1) {
+				Map<String, Object> resultMap = result.get(0);
+				comparison_date = resultMap.get("COMPARISON_DATE").toString();
+				comparison_type = resultMap.get("COMPARISON_TYPE").toString();
+				next_schedule_date =  resultMap.get("NEXT_SCHEDULE_COMPARISON_DATE").toString();
+				//	comparison_result = resultMap.get("").toString();
+				percentage = Double.parseDouble(resultMap.get("DIVERGENCE_PERCENTAGE").toString());
+		}
+		ZDTComparatorStatusRowEntity comparatorStatus = new ZDTComparatorStatusRowEntity(comparison_date,comparison_type, next_schedule_date, percentage);
+		try {
+			message = JSONUtil.objectToJSONString(comparatorStatus);
+			return Response.status(statusCode).entity(message).build();
+		} catch (EMAnalyticsFwkException e) {
+			message = "Errors:" + e.getLocalizedMessage();
+			statusCode = 500;
+			logger.error("Errors while transfer comparator status object to json string {}",e.getLocalizedMessage());
+		}
+		return Response.status(statusCode).entity(message).build();
+	}
+	
+	@PUT
+	@Path("compare/result")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveComparatorData(JSONObject jsonObj) {
-		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/status");
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/compare/result");
 		EntityManager em = null;
 		String message = null;
 		int statusCode = 200;
@@ -188,7 +223,7 @@ public class ZDTAPI
 						int result = DataManager.getInstance().saveToComparatorTable(em, comparisonDate,
 								comparisonType, comparisonResult, divergencePercentage);
 						if (result < 0) {
-							message = "error occurs while saving data to zdt comparator table";
+							message = "Error: error occurs while saving data to zdt comparator table";
 							statusCode = 500;
 						} else {
 							message = "succeed to save data to zdt comparator table";

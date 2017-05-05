@@ -120,7 +120,10 @@ public class DataManager
 			+ "t.PARAM_VALUE_CLOB=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.deleted=? where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";
 
 	private static final String SQL_INSERT_TO_ZDT_COMPARISON_TABLE = "insert into ems_analytics_zdt_comparator (comparison_date, comparison_type, comparison_result, divergence_percentage) "
-			+ "values (to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, ?, 0.12)";
+			+ "values (to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, ?, ?)";
+	
+	private static final String SQL_GET_COMPARISON_STATUS = "select * from (SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, to_char(NEXT_SCHEDULE_COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_COMPARISON_DATE,COMPARISON_TYPE, divergence_percentage "
+			+ "from ems_analytics_zdt_comparator order by comparison_date desc) where rownum = 1";
 
 	/**
 	 * Return the singleton for data manager
@@ -151,6 +154,20 @@ public class DataManager
 				em.close();
 			}
 		}
+	}
+	
+	public List<Map<String, Object>> getComparatorStatus(EntityManager em) {
+		try {
+			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_COMPARISON_STATUS);
+			
+		} catch (Exception e) {
+			logger.error(e);
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		return null;
 	}
 
 	/**
