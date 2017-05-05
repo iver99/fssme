@@ -11,10 +11,11 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
@@ -66,6 +67,15 @@ public class WidgetChangeNotification implements IWidgetNotification
 		RestClient rc = new RestClient();
 		Map<String, Object> headers = new HashMap<String, Object>();
 		headers.put("X-USER-IDENTITY-DOMAIN-NAME", TenantContext.getContext().gettenantName());
+		UUID reqId = ZDTContext.getRequestId();
+		if (reqId != null) {
+			headers.put("X-ORCL-OMC-APIGW-REQGUID", reqId);
+		}
+		Long reqTime = ZDTContext.getRequestTime();
+		if (reqTime != null) {
+			headers.put("X-ORCL-OMC-APIGW-REQTIME", reqTime);
+		}
+		LOGGER.info("Notify widget change, ZDT request ID is {}, ZDT request time is {}", reqId, reqTime);
 		for (VersionedLink link : links) {
 			long innerStart = System.currentTimeMillis();
 			WidgetNotifyEntity rtn = (WidgetNotifyEntity) rc.post(link.getHref(), headers, wne,

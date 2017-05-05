@@ -1,5 +1,4 @@
 jar.archiveName='emcpssf_update_test.jar'
-group = 'com.oracle.emaas.emcpssf'
 version = '1.0.1'
 
 sourceSets {
