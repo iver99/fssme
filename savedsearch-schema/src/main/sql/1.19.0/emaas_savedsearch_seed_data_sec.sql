@@ -81,7 +81,7 @@ BEGIN
        V_LAST_MODIFICATION_DATE             :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
        V_LAST_MODIFIED_BY                   :='ORACLE';
        V_DESCRIPTION                        :='Top 10 MySQL Databases by Threats';
-       V_FOLDER_ID                          :=2;
+       V_FOLDER_ID                          :=7;
        V_CATEGORY_ID                        :=6;
        V_SYSTEM_SEARCH                      :=1;
        V_IS_LOCKED                          :=0;
@@ -164,7 +164,7 @@ BEGIN
        V_LAST_MODIFICATION_DATE             :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
        V_LAST_MODIFIED_BY                   :='ORACLE';
        V_DESCRIPTION                        :='Threat Trend on MySQL Databases';
-       V_FOLDER_ID                          :=2;
+       V_FOLDER_ID                          :=7;
        V_CATEGORY_ID                        :=6;
        V_SYSTEM_SEARCH                      :=1;
        V_IS_LOCKED                          :=0;
@@ -172,7 +172,7 @@ BEGIN
        V_DELETED                            :=0;
        V_IS_WIDGET                          :=1;
        V_METADATA                           :=null;
-       V_SEARCH_STR                         :='''SEF Record Type'' = correlation and ''SEF Destination Type'' like ''*Oracle Database*'' and ''SEF Category'' != anomaly | timestats count as Threats by ''SEF Category''';
+       V_SEARCH_STR                         :='''SEF Record Type'' = correlation and ''SEF Destination Type'' like ''MySQL Database'' and ''SEF Category'' != anomaly | timestats count as Threats by ''SEF Category''';
        V_WIDGET_SOURCE                      :='1';
        V_WIDGET_GROUP_NAME                  :=null;
        V_WIDGET_ICON                        :=null;
@@ -274,7 +274,7 @@ BEGIN
        V_LAST_MODIFICATION_DATE             :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
        V_LAST_MODIFIED_BY                   :='ORACLE';
        V_DESCRIPTION                        :='Top 10 MySQL Databases by Activity';
-       V_FOLDER_ID                          :=2;
+       V_FOLDER_ID                          :=7;
        V_CATEGORY_ID                        :=6;
        V_SYSTEM_SEARCH                      :=1;
        V_IS_LOCKED                          :=0;
@@ -355,7 +355,7 @@ BEGIN
        V_LAST_MODIFICATION_DATE             :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
        V_LAST_MODIFIED_BY                   :='ORACLE';
        V_DESCRIPTION                        :='Activity Trend on MySQL Databases.';
-       V_FOLDER_ID                          :=2;
+       V_FOLDER_ID                          :=7;
        V_CATEGORY_ID                        :=6;
        V_SYSTEM_SEARCH                      :=1;
        V_IS_LOCKED                          :=0;
@@ -468,7 +468,7 @@ BEGIN
        V_LAST_MODIFICATION_DATE             :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
        V_LAST_MODIFIED_BY                   :='ORACLE';
        V_DESCRIPTION                        :='Top 10 MySQL Databases with Account Modifications on high privileges.';
-       V_FOLDER_ID                          :=2;
+       V_FOLDER_ID                          :=7;
        V_CATEGORY_ID                        :=6;
        V_SYSTEM_SEARCH                      :=1;
        V_IS_LOCKED                          :=0;
@@ -550,7 +550,7 @@ BEGIN
        V_LAST_MODIFICATION_DATE             :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
        V_LAST_MODIFIED_BY                   :='ORACLE';
        V_DESCRIPTION                        :='Top 10 MySQL Databases with Sensitive Object Accesses.';
-       V_FOLDER_ID                          :=2;
+       V_FOLDER_ID                          :=7;
        V_CATEGORY_ID                        :=6;
        V_SYSTEM_SEARCH                      :=1;
        V_IS_LOCKED                          :=0;
@@ -632,7 +632,7 @@ BEGIN
        V_LAST_MODIFICATION_DATE             :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
        V_LAST_MODIFIED_BY                   :='ORACLE';
        V_DESCRIPTION                        :='Top 10 MySQL Databases with Startups/Shutdowns.';
-       V_FOLDER_ID                          :=2;
+       V_FOLDER_ID                          :=7;
        V_CATEGORY_ID                        :=6;
        V_SYSTEM_SEARCH                      :=1;
        V_IS_LOCKED                          :=0;
@@ -714,7 +714,7 @@ BEGIN
        V_LAST_MODIFICATION_DATE             :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
        V_LAST_MODIFIED_BY                   :='ORACLE';
        V_DESCRIPTION                        :='Top 10 MySQL Databases with Account Modifications.';
-       V_FOLDER_ID                          :=2;
+       V_FOLDER_ID                          :=7;
        V_CATEGORY_ID                        :=6;
        V_SYSTEM_SEARCH                      :=1;
        V_IS_LOCKED                          :=0;
@@ -796,7 +796,7 @@ BEGIN
        V_LAST_MODIFICATION_DATE             :=SYS_EXTRACT_UTC(SYSTIMESTAMP);
        V_LAST_MODIFIED_BY                   :='ORACLE';
        V_DESCRIPTION                        :='Top 10 MySQL Databases with Schema Changes.';
-       V_FOLDER_ID                          :=2;
+       V_FOLDER_ID                          :=7;
        V_CATEGORY_ID                        :=6;
        V_SYSTEM_SEARCH                      :=1;
        V_IS_LOCKED                          :=0;
@@ -865,6 +865,8 @@ BEGIN
         V_PARAM_VALUE_CLOB      :='[]';
         INSERT INTO EMS_ANALYTICS_SEARCH_PARAMS(SEARCH_ID,NAME,  PARAM_TYPE,PARAM_VALUE_STR,PARAM_VALUE_CLOB,TENANT_ID)
         VALUES(V_SEARCH_ID,V_NAME,V_PARAM_TYPE,V_PARAM_VALUE_STR,V_PARAM_VALUE_CLOB,V_TENANT_ID);
+
+        UPDATE EMS_ANALYTICS_SEARCH SET FOLDER_ID = 7, CATEGORY_ID = 6 WHERE SEARCH_ID > 3299 AND SEARCH_ID < 3328 AND TENANT_ID = V_TENANT_ID;
   DBMS_OUTPUT.PUT_LINE('Security Analytics OOB WIDGET Top 10 MySQL DBs with Schema Changes has been added for TENANT: '||V_TENANT_ID);
   END IF;
 
