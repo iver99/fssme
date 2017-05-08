@@ -80,8 +80,6 @@ public class SearchAPI
 
 	//private static final String FOLDER_PATH = "flattenedFolderPath";
 	private static final Logger LOGGER = LogManager.getLogger(SearchAPI.class);
-	private static final String SEARCH_TABLE_NAME = "EMS_ANALYTICS_SEARCH";
-	private static final String SEARCH_PARAMS_TABLE_NAME  = "EMS_ANALYTICS_SEARCH_PARAMS";
 	@Context
 	UriInfo uri;
 
