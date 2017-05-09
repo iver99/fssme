@@ -1,5 +1,5 @@
 apply from:'test.gradle'
-
+def emcpsrvsSDKVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
 publishing {
     publications {
      integTest(MavenPublication) {
@@ -73,7 +73,7 @@ dependencies {
 
 	compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
 	
-	compile(group: 'com.oracle.emaas.emcpsrvs.sdk', name: 'emaas-platform-tenant-sdk', version: '2.0.+') {
+	compile(group: 'com.oracle.emaas.emcpsrvs.sdk', name: 'emaas-platform-tenant-sdk', version: emcpsrvsSDKVer) {
 		exclude group: 'emaas.platform', module: 'registry-lookup-client'
 		exclude group: 'emaas.platform', module: 'registry-client'
 	}
