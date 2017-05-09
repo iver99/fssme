@@ -135,7 +135,7 @@ public class SaveSearchRowsComparatorTest
 			+ "}";
 
 	@Test
-	public void testCompareInstancesData() throws IOException
+	public void testCompareInstancesData() throws IOException, ZDTException
 	{
 		SavedsearchRowsComparator src1 = new SavedsearchRowsComparator();
 		ZDTTableRowEntity tre1 = Deencapsulation.invoke(src1, "retrieveRowsEntityFromJsonForSingleInstance",
@@ -180,7 +180,7 @@ public class SaveSearchRowsComparatorTest
 	}
 
 	@Test
-	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException
+	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException, ZDTException
 	{
 		SavedsearchRowsComparator src = new SavedsearchRowsComparator();
 		ZDTTableRowEntity tre = Deencapsulation.invoke(src, "retrieveRowsEntityFromJsonForSingleInstance",

@@ -96,7 +96,7 @@ public class TenantSubscriptionUtil
 				logger.error("Unable to put to an empty URL");
 				return null;
 			}
-			if (requestEntity == null || "".equals(requestEntity)) {
+			if (requestEntity == null) {
 				logger.error("Unable to put an empty request entity");
 				return null;
 			}

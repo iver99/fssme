@@ -11,6 +11,11 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +26,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -32,6 +38,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.countEntity.ZDTCountEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTComparatorStatusRowEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTSyncStatusRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTTableRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.DataManager;
 
@@ -65,25 +72,26 @@ public class ZDTAPI
 	@GET
 	@Path("tablerows")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllTableData()
+	public Response getAllTableData(@QueryParam("comparisonType") String type)
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/tablerows");
-
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/tablerows?comparisonType=");
 		JSONObject obj = new JSONObject();
 		EntityManager em = null;
+		
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			JSONArray tableData = getCategoryTableData(em);
+			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
+			JSONArray tableData = getCategoryTableData(em,type, lastComparisonDate);
 			obj.put(TABLE_CATEGORY, tableData);
-			tableData = getCategoryParamTableData(em);
+			tableData = getCategoryParamTableData(em,type, lastComparisonDate);
 			obj.put(TABLE_CATEGORY_PARAMS, tableData);
-			tableData = getFolderTableData(em);
+			tableData = getFolderTableData(em,type, lastComparisonDate);
 			obj.put(TABLE_FOLDERS, tableData);
-			tableData = getFolderTableData(em);
+			tableData = getFolderTableData(em,type, lastComparisonDate);
 			obj.put(TABLE_FOLDERS, tableData);
-			tableData = getSearchTableData(em);
+			tableData = getSearchTableData(em,type, lastComparisonDate);
 			obj.put(TABLE_SEARCH, tableData);
-			tableData = getSearchParamsTableData(em);
+			tableData = getSearchParamsTableData(em,type, lastComparisonDate);
 			obj.put(TABLE_SEARCH_PARAMS, tableData);
 		}
 		catch (JSONException e) {
@@ -137,7 +145,7 @@ public class ZDTAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-
+/*
 	@PUT
 	@Path("sync")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -159,9 +167,130 @@ public class ZDTAPI
 			return Response.status(400).entity(e.getLocalizedMessage()).build();
 		}
 	}
+	*/
+/*	@GET
+	@Path("sync")
+	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
+	{
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/sync?syncType=xx&syncDate=xx");
+		ZDTTableRowEntity data = null;
+		try {
+			data = JSONUtil.fromJson(new ObjectMapper(), dataToSync.toString(), ZDTTableRowEntity.class);
+			String response = new ZDTSynchronizer().sync(data);
+			if (response.contains("Errors:")) {
+				return Response.status(500).entity(response).build();
+			}
+			return Response.ok(response).build();
+		}
+		catch (IOException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return Response.status(400).entity(e.getLocalizedMessage()).build();
+		}
+	}
+*/
+	@GET
+	@Path("sync")
+	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
+	{
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/sync?syncType=xx&syncDate=xx");
+		EntityManager em = null;
+		ZDTTableRowEntity data = null;
+		String lastCompareDate = null;
+		try {
+			String lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
+			List<Map<String, Object>> comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
+			if (comparedDataToSync != null && !comparedDataToSync.isEmpty()) {
+				for (Map<String, Object> dataMap : comparedDataToSync) {
+					Object compareResult = dataMap.get("COMPARISON_RESULT");
+					Object compareDate = dataMap.get("COMPARISON_DATE");
+					data = JSONUtil.fromJson(new ObjectMapper(), compareResult.toString(), ZDTTableRowEntity.class);
+					String response = new ZDTSynchronizer().sync(data);
+					lastCompareDate = (String) compareDate;
+					if (response.contains("Errors:")) {
+						saveToSyncTable(em, syncDate, type, "FAILED",lastCompareDate);
+						return Response.status(500).entity(response).build();
+					}
+				}
+				saveToSyncTable(em, syncDate, type, "SUCCESSFUL",lastCompareDate);
+			}
+			
+			
+			
+			return Response.ok("Sync is successful!").build();
+		}
+		catch (IOException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return Response.status(400).entity(e.getLocalizedMessage()).build();
+		}
+	}
+	
+	private void saveToSyncTable(EntityManager em, String syncDateStr, String type, String syncResult, String lastComparisonDate) {
+		Date syncDate = null;
+		try {  
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+		    syncDate = sdf.parse(syncDateStr);  
+		} catch (ParseException e) {  
+		    logger.error(e);
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(syncDate);
+		cal.add(Calendar.HOUR_OF_DAY, 6);
+		Date nextScheduleDate = cal.getTime();
+		String nextScheduleDateStr = getTimeString(nextScheduleDate);
+		// TO DO... currently each sync operation will sync all of the existing compared result, 
+		// so for the existing compared result the divergence percentage will always be 0.0
+		// In the future, it is better to add logic to check the divergence percentage for the rows which are not compared;
+		double divergencePercentage = 0.0; 
+		DataManager.getInstance().saveToSyncTable(em, syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
+		
+	}
+	
+	private String getTimeString(Date date)
+	{
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+		String dateStr = sdf.format(date);
+		return dateStr;
+	}
+	
+	
+	
+	@GET
+	@Path("sync/status")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSyncStatus() {
+
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync/status");
+		EntityManager em = null;
+		String message = null;
+		int statusCode = 200;
+		String sync_date = null;
+		String sync_type = null;
+		String next_schedule_date = null;
+		double percentage = 0.0;
+		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		List<Map<String, Object>> result = DataManager.getInstance().getSyncStatus(em);
+		if (result != null && result.size() == 1) {
+				Map<String, Object> resultMap = result.get(0);
+				sync_date = resultMap.get("SYNC_DATE").toString();
+				sync_type = resultMap.get("SYNC_DATE").toString();
+				next_schedule_date =  resultMap.get("NEXT_SCHEDULE_SYNC_DATE").toString();
+				percentage = Double.parseDouble(resultMap.get("DIVERGENCE_PERCENTAGE").toString());
+		}
+		ZDTSyncStatusRowEntity syncStatus = new ZDTSyncStatusRowEntity(sync_date,sync_type, next_schedule_date, percentage);
+		try {
+			message = JSONUtil.objectToJSONString(syncStatus);
+			return Response.status(statusCode).entity(message).build();
+		} catch (EMAnalyticsFwkException e) {
+			message = "Errors:" + e.getLocalizedMessage();
+			statusCode = 500;
+			logger.error("Errors while transfer sync status object to json string {}",e.getLocalizedMessage());
+		}
+		return Response.status(statusCode).entity(message).build();
+	}
 	
 	@GET
 	@Path("compare/status")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getComparisonStatus() {
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/compare/status");
 		EntityManager em = null;
@@ -193,7 +322,7 @@ public class ZDTAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-	
+
 	@PUT
 	@Path("compare/result")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -204,6 +333,7 @@ public class ZDTAPI
 		String message = null;
 		int statusCode = 200;
 		String comparisonDate = null;
+		String nextScheduleDate = null;
 		int comparisonType = 0;
 		String comparisonResult = null;
 		double divergencePercentage = 0;
@@ -218,9 +348,9 @@ public class ZDTAPI
 						comparisonType = jsonObj.getInt("comparisonType");
 						comparisonResult = jsonObj.getString("comparisonResult");
 						divergencePercentage = jsonObj.getDouble("divergencePercentage");
-					
+						nextScheduleDate = jsonObj.getString("nextScheduledComparisonDateTime");
 						em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-						int result = DataManager.getInstance().saveToComparatorTable(em, comparisonDate,
+						int result = DataManager.getInstance().saveToComparatorTable(em, comparisonDate,nextScheduleDate,
 								comparisonType, comparisonResult, divergencePercentage);
 						if (result < 0) {
 							message = "Error: error occurs while saving data to zdt comparator table";
@@ -240,21 +370,21 @@ public class ZDTAPI
 		return Response.status(statusCode).entity(message).build();
 	}
 
-	private JSONArray getCategoryParamTableData(EntityManager em)
+	private JSONArray getCategoryParamTableData(EntityManager em, String type, String date)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryParamTableData(em);
+		List<Map<String, Object>> list = DataManager.getInstance().getCategoryParamTableData(em,type, date);
 		return getJSONArrayForListOfObjects(TABLE_CATEGORY_PARAMS, list);
 	}
 
-	private JSONArray getCategoryTableData(EntityManager em)
+	private JSONArray getCategoryTableData(EntityManager em, String type, String date)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryTableData(em);
+		List<Map<String, Object>> list = DataManager.getInstance().getCategoryTableData(em,type, date);
 		return getJSONArrayForListOfObjects(TABLE_CATEGORY, list);
 	}
 
-	private JSONArray getFolderTableData(EntityManager em)
+	private JSONArray getFolderTableData(EntityManager em, String type, String date)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getFolderTableData(em);
+		List<Map<String, Object>> list = DataManager.getInstance().getFolderTableData(em,type, date);
 		return getJSONArrayForListOfObjects(TABLE_FOLDERS, list);
 	}
 
@@ -276,15 +406,15 @@ public class ZDTAPI
 		return array;
 	}
 
-	private JSONArray getSearchParamsTableData(EntityManager em)
+	private JSONArray getSearchParamsTableData(EntityManager em, String type, String date)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getSearchParamTableData(em);
+		List<Map<String, Object>> list = DataManager.getInstance().getSearchParamTableData(em,type, date);
 		return getJSONArrayForListOfObjects(TABLE_SEARCH_PARAMS, list);
 	}
 
-	private JSONArray getSearchTableData(EntityManager em)
+	private JSONArray getSearchTableData(EntityManager em, String type, String date)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getSearchTableData(em);
+		List<Map<String, Object>> list = DataManager.getInstance().getSearchTableData(em,type, date);
 		return getJSONArrayForListOfObjects(TABLE_SEARCH, list);
 	}
 

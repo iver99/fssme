@@ -76,7 +76,7 @@ public class ZDTAPITest {
     			result = tableRow1;
     		}
     	};
-        zdtapi.syncOnSSF(tenant, userTenant);
+        zdtapi.syncOnSSF(tenant, userTenant, "full");
     }
    @Test
     public void testInnerClasses(){

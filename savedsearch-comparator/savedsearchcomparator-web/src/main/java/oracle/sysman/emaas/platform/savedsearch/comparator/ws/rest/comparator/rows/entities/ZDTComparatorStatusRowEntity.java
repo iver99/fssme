@@ -17,6 +17,9 @@ public class ZDTComparatorStatusRowEntity {
 	@JsonProperty("divergencePercentage")
 	private double divergencePercentage;
 	
+	@JsonProperty("comparisonResult")
+	private String comparisonResult;
+	
 	
 	public String getComparisonDate() {
 		return comparisonDate;
@@ -51,12 +54,13 @@ public class ZDTComparatorStatusRowEntity {
 	}
 
 	public ZDTComparatorStatusRowEntity(String comparisonDate, String comparisonType,
-			String nextComparisonDate, double divergencePercentage) {
+			String nextComparisonDate, double divergencePercentage, String comparisonResult) {
 		super();
 		this.comparisonDate = comparisonDate;
 		this.comparisonType = comparisonType;
 		this.nextComparisonDate = nextComparisonDate;
 		this.divergencePercentage = divergencePercentage;
+		this.comparisonResult = comparisonResult;
 	}
 
 	public ZDTComparatorStatusRowEntity() {

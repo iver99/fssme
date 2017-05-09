@@ -32,32 +32,40 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.ro
 public class SavedsearchRowsComparator extends AbstractComparator
 {
 	private static final Logger logger = LogManager.getLogger(SavedsearchRowsComparator.class);
+	
+	private  String key1 = null;
+	private String key2 = null;
+	private  LookupClient client1 = null;
+	private  LookupClient client2 = null;
+	
+	
+	
+
+	public SavedsearchRowsComparator() throws ZDTException {
+		super();
+		HashMap<String, LookupClient> instances = getOMCInstances();
+		if (instances == null) {
+			logger.error("Failed to retrieve ZDT OMC instances: null retrieved");
+			throw new ZDTException(ZDTErrorConstants.NULL_RETRIEVED_ERROR_CODE,ZDTErrorConstants.NULL_RETRIEVED_ERROR_MESSAGE);
+		}
+		 
+		for (String key : instances.keySet()) {
+				if (client1 == null) {
+					client1 = instances.get(key);
+					key1 = key;
+				} else {
+					if (client2 == null)
+					client2 = instances.get(key);
+					key2 = key;
+				}
+			}
+	}
 
 	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant) throws ZDTException
 	{
 		try {
 			logger.info("Starts to compare the two ssf OMC instances: table by table and row by row");
-			HashMap<String, LookupClient> instances = getOMCInstances();
-			if (instances == null) {
-				logger.error("Failed to retrieve ZDT OMC instances: null retrieved");
-				throw new ZDTException(ZDTErrorConstants.NULL_RETRIEVED_ERROR_CODE,ZDTErrorConstants.NULL_RETRIEVED_ERROR_MESSAGE);
-			}
-			 
-			String key1 = null;
- 			String key2 = null;
- 			LookupClient client1 = null;
- 			LookupClient client2 = null;
- 			for (String key : instances.keySet()) {
- 				if (client1 == null) {
- 					client1 = instances.get(key);
- 					key1 = key;
- 				} else {
- 					if (client2 == null)
- 					client2 = instances.get(key);
- 					key2 = key;
- 				}
- 			}
- 			
+			
  			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1);
  			int rowNum1 = countForComparedRows(tre1);
 			if (tre1 == null) {
@@ -96,7 +104,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
  		
  		return count;
  	}
-
+/*
 	public String sync(InstancesComparedData<ZDTTableRowEntity> instancesData,String tenantId, String userTenant) throws Exception
 	{
 		if (instancesData == null) {
@@ -140,7 +148,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		}
 		return false;
 	}
-
+*/
 	/**
 	 * Compares the SSF category rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
 	 * object
@@ -301,7 +309,47 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		logger.info("Checking SSF OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
+	
+	public String retrieveComparatorStatusForOmcInstance(String tenantId, String userTenant) throws Exception {
+		Link lk = getSingleInstanceUrl(client1, "zdt/compare/status", "http");
+		if (lk == null) {
+			logger.warn("Get a null or empty link for one single instance!");
+			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
+		}
+		String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
+		logger.info("checking comparator status is " + response);
+		
+		return response;
+	}
+	
+	public String saveComparatorStatus(String tenantId, String userTenant, LookupClient client, ZDTComparatorStatusRowEntity statusRowEntity) throws Exception{
+		Link lk = getSingleInstanceUrl(client, "zdt/compare/result", "http");
+		if (lk == null) {
+			logger.warn("Get a null or empty link for one single instance!");
+			return "Errors:Get a null or empty link for one single instance!";
+		}
+		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
+		String entityStr = jsonUtil.toJson(statusRowEntity);
+ 		logger.info("print the put data {} !",entityStr);
+ 		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
+ 		logger.info("Checking sync reponse. Response is " + response);
+		return response;
+	}
 
+	
+	public String syncForInstance(String tenantId, String userTenant, LookupClient client, String type, String syncDate) throws Exception {
+		Link lk = getSingleInstanceUrl(client, "zdt/sync", "http");
+		if (lk == null) {
+			logger.warn("Get a null or empty link for one single instance!");
+			return "Errors:Get a null or empty link for one single instance!";
+		}
+		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + syncDate;
+		logger.info("sync url is "+ url);
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(),  tenantId, userTenant);
+ 		logger.info("Checking sync reponse. Response is " + response);
+		return response;
+	} 
+/*
 	private String syncForInstance(String tenantId, String userTenant,InstanceData<ZDTTableRowEntity> instance) throws Exception
 	{
 		Link lk = getSingleInstanceUrl(instance.getClient(), "zdt/sync", "http");
@@ -318,4 +366,39 @@ public class SavedsearchRowsComparator extends AbstractComparator
  		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}
+	*/
+
+	public String getKey1() {
+		return key1;
+	}
+
+	public void setKey1(String key1) {
+		this.key1 = key1;
+	}
+
+	public String getKey2() {
+		return key2;
+	}
+
+	public void setKey2(String key2) {
+		this.key2 = key2;
+	}
+
+	public LookupClient getClient1() {
+		return client1;
+	}
+
+	public void setClient1(LookupClient client1) {
+		this.client1 = client1;
+	}
+
+	public LookupClient getClient2() {
+		return client2;
+	}
+
+	public void setClient2(LookupClient client2) {
+		this.client2 = client2;
+	}
+	
+	
 }

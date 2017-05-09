@@ -30,7 +30,9 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONObject;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ErrorEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.JsonUtil;
@@ -167,6 +169,26 @@ public class ZDTAPI
 	}
 	
 	@GET
+	@Path("compare/status")
+	public Response getCompareStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant) {
+		logger.info("incoming call from zdt comparator to get comparitor status");
+		SavedsearchRowsComparator dcc = null;
+		String response = null;
+		try {
+			dcc = new SavedsearchRowsComparator();
+			response = dcc.retrieveComparatorStatusForOmcInstance(tenantIdParam, userTenant);
+		} catch (ZDTException e1) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e1))).build();
+		} catch (Exception e2) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e2))).build();
+		}
+		
+		return Response.status(Status.OK).entity(response).build();
+		
+	}
+	
+	@GET
 	@Path("compare")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response compareRows(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
@@ -197,8 +219,35 @@ public class ZDTAPI
 				if (compareType.equals("incremental")) {
 					type = "incremental";
 				}
-				ZDTComparatorStatusRowEntity statusRow = new ZDTComparatorStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage);
-				message = JsonUtil.buildNormalMapper().toJson(statusRow);
+				JsonUtil jsonUtil = JsonUtil.buildNormalMapper();
+				
+				ZDTTableRowEntity data1 = result.getInstance1().getData();
+				String result1 = jsonUtil.toJson(data1);
+				ZDTComparatorStatusRowEntity statusRow1 = new ZDTComparatorStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage, result1);
+								
+				ZDTTableRowEntity data2 = result.getInstance2().getData();
+				String result2 = jsonUtil.toJson(data2);
+				ZDTComparatorStatusRowEntity statusRow2 = new ZDTComparatorStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage, result2);
+				
+				// save status information for client 1  -- switch data for sync
+				LookupClient client1 = result.getInstance1().getClient();
+				dcc.saveComparatorStatus(tenantIdParam,userTenant, client1, statusRow2);
+				
+				// save status informantion for client 2 -- switch data for sync
+				LookupClient client2 = result.getInstance2().getClient();
+				dcc.saveComparatorStatus(tenantIdParam,userTenant, client2, statusRow1);
+				
+				JSONObject obj = new JSONObject();
+				obj.put("comparisonDateTime", comparisonDate);
+				obj.put("comparisonType", type);
+				obj.put("comparisonDateTime", percentage);
+				
+				JSONObject subObj = new JSONObject();
+				subObj.put(result.getInstance1().getKey(), result2);
+				subObj.put(result.getInstance2().getKey(), result1);
+				obj.put("divergenceSummary", subObj);
+				
+				message = obj.toString();
 			}
 		}  catch(ZDTException zdtE) {
  			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
@@ -223,27 +272,55 @@ public class ZDTAPI
 				new InstanceCounts(result.getInstance2()));
 		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();
 	}
-
+/*
 	@PUT
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response syncOnSSF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant)
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant,@DefaultValue("full")  String syncType)
 	{
 		logger.info("There is an incoming call from ZDT comparator API to sync");
 		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
-		SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
-		InstancesComparedData<ZDTTableRowEntity> result = null;
+		SavedsearchRowsComparator dcc;
 		try {
+			dcc = new SavedsearchRowsComparator();		
+			InstancesComparedData<ZDTTableRowEntity> result = null;
+		
 			result = dcc.compare(tenantIdParam, userTenant);
 			String response = dcc.sync(result, tenantIdParam, userTenant);
 			
 			return Response.ok(response).build();
-		} catch(ZDTException zdtE) {
+	    } catch(ZDTException zdtE) {
  			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
  		} catch (Exception e) {
  			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
  		}
 		
 	}
+	*/
+	
+	@GET
+	@Path("sync")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response syncOnSSF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant,@QueryParam("type") @DefaultValue("full")  String syncType)
+	{
+		logger.info("There is an incoming call from ZDT comparator API to sync");
+		SavedsearchRowsComparator dcc;
+		try {
+			dcc = new SavedsearchRowsComparator();		
+			Date currentUtcDate = getCurrentUTCTime();
+			String syncDate = getTimeString(currentUtcDate);
+			
+			String message1 = dcc.syncForInstance(tenantIdParam,  userTenant,  dcc.getClient1(),  syncType,  syncDate);
+			String message2 = dcc.syncForInstance(tenantIdParam,  userTenant,  dcc.getClient2(),  syncType,  syncDate);
+			return Response.ok(dcc.getKey1() + ":{"+ message1 + "} " + dcc.getKey2() + ":{"+ message2 + "}").build();
+	    } catch(ZDTException zdtE) {
+ 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
+ 		} catch (Exception e) {
+ 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
+ 		}
+		
+	}
+	
 }

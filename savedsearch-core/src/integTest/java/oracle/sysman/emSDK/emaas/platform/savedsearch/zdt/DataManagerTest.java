@@ -166,7 +166,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getFolderTableData(entityManager);
+		dataManager.getFolderTableData(entityManager,"full", "2017-05-09 14:35:21");
 
 	}
 
@@ -181,7 +181,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getSearchParamTableData(entityManager);		
+		dataManager.getSearchParamTableData(entityManager,"full", "2017-05-09 14:35:21");		
 	}
 	
 	@Test
@@ -196,7 +196,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getSearchTableData(entityManager);
+		dataManager.getSearchTableData(entityManager,"full", "2017-05-09 14:35:21");
 		
 	}
 	
@@ -211,7 +211,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getCategoryTableData(entityManager);
+		dataManager.getCategoryTableData(entityManager,"full", "2017-05-09 14:35:21");
 	}
 	
 	@Test
@@ -225,7 +225,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getCategoryParamTableData(entityManager);
+		dataManager.getCategoryParamTableData(entityManager,"full", "2017-05-09 14:35:21");
 	}
 	
 	@Test
