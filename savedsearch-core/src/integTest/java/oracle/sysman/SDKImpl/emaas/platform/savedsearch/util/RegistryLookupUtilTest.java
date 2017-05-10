@@ -157,7 +157,7 @@ public class RegistryLookupUtilTest
 //				CacheManager.getInstance();
 //				result = cacheManager;
 //				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
-				result = null;
+//				result = null;
 				LookupManager.getInstance();
 				result = lookupManager;
 				lookupManager.getLookupClient();
