@@ -198,7 +198,7 @@ public class SaveSearchRowsComparatorTest
 		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId(), "2024");
 		Assert.assertEquals(tre.getSavedSearchSearchParams().get(0).getName(), "meId");
 	}
-*/	
+	
 	@Test
 	public void testCompare(@Mocked final AbstractComparator abstractComparator, 
 			@Mocked final CloudLookups lookups,
@@ -220,5 +220,5 @@ public class SaveSearchRowsComparatorTest
 	        SavedsearchRowsComparator src = new SavedsearchRowsComparator();
 	        src.compare("tenantId","userTenant");
 		
-	}
+	} */
 }

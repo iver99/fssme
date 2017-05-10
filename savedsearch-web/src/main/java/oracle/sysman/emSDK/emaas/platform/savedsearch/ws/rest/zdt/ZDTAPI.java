@@ -212,10 +212,10 @@ public class ZDTAPI
 					}
 				}
 				saveToSyncTable(em, syncDate, type, "SUCCESSFUL",lastCompareDate);
+			} else {
+				return Response.ok("Nothing to sync as no compared data").build();
 			}
-			
-			
-			
+						
 			return Response.ok("Sync is successful!").build();
 		}
 		catch (IOException e) {
@@ -263,9 +263,9 @@ public class ZDTAPI
 		EntityManager em = null;
 		String message = null;
 		int statusCode = 200;
-		String sync_date = null;
-		String sync_type = null;
-		String next_schedule_date = null;
+		String sync_date = "";
+		String sync_type = "";
+		String next_schedule_date = "";
 		double percentage = 0.0;
 		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		List<Map<String, Object>> result = DataManager.getInstance().getSyncStatus(em);
@@ -296,10 +296,10 @@ public class ZDTAPI
 		EntityManager em = null;
 		String message = null;
 		int statusCode = 200;
-		String comparison_date = null;
-		String comparison_type = null;
+		String comparison_date = "";
+		String comparison_type = "";
 		//String comparison_result = null;
-		String next_schedule_date = null;
+		String next_schedule_date = "";
 		double percentage = 0.0;
 		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		List<Map<String, Object>> result = DataManager.getInstance().getComparatorStatus(em);
