@@ -31,7 +31,7 @@
 		"method": "artifactFilterSdkVersion",
 		"group": "com.oracle.emaas.emcpdf",
 		"name": "dashboards-sdk",
-		"version": "1.0.1-20170509184546-master",
+		"version": "1.+",
 		"transitive": false
 	}
 }
