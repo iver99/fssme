@@ -14,8 +14,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEnti
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.ServiceRequestCollection;
@@ -66,10 +64,6 @@ public class TenantSubscriptionUtilTest
 	@Mocked
     CategoryManager categoryManager;
     @Mocked
-    CacheManager cacheManager;
-    @Mocked
-    Tenant tenant;
-    @Mocked
     AppMappingEntity.AppMappingValue appMappingValue;
 	@Test
 	public void testGetTenantSubscribedCategories() throws Exception {
@@ -83,7 +77,7 @@ public class TenantSubscriptionUtilTest
                 result =categoryManager;
                 categoryManager.getAllCategories();
                 result = categories;
-                cacheManager.getCacheable(withAny(tenant), anyString, anyString);
+//                cacheManager.getCacheable(withAny(tenant), anyString, anyString);
                 result = cachedApps;
             }
         };

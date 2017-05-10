@@ -6,30 +6,6 @@
     </cache-group>
 
     <cache-group>
-        <name>adminLinkCache</name>
-        <capacity>1000</capacity>
-        <expiry>60</expiry>
-    </cache-group>
-
-    <cache-group>
-        <name>cloudServiceLinkCache</name>
-        <capacity>1000</capacity>
-        <expiry>60</expiry>
-    </cache-group>
-
-    <cache-group>
-        <name>homeLinkCache</name>
-        <capacity>1000</capacity>
-        <expiry>60</expiry>
-    </cache-group>
-
-    <cache-group>
-        <name>visualAnalyzerLinkCache</name>
-        <capacity>1000</capacity>
-        <expiry>60</expiry>
-    </cache-group>
-
-    <!--<cache-group>
         <name>externalLinkCache</name>
         <capacity>1000</capacity>
         <expiry>60</expiry>
@@ -39,7 +15,7 @@
         <name>internalLinkCache</name>
         <capacity>1000</capacity>
         <expiry>60</expiry>
-    </cache-group>-->
+    </cache-group>
 
     <cache-group>
         <name>vanityBaseUrlCache</name>
@@ -47,17 +23,6 @@
         <expiry>60</expiry>
     </cache-group>
 
-    <cache-group>
-        <name>domainsDataCache</name>
-        <capacity>1000</capacity>
-        <expiry>60</expiry>
-    </cache-group>
-
-    <cache-group>
-        <name>tenantAppMappingCache</name>
-        <capacity>1000</capacity>
-        <expiry>60</expiry>
-    </cache-group>
 
     <cache-group>
         <name>SsoLogoutCache</name>
