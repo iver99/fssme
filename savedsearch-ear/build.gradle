@@ -41,6 +41,7 @@ dependencies
 	earlib getProjectArtifact('log4j-api')
 	earlib getProjectArtifact('log4j-core')
 	earlib getProjectArtifact('log4j-web')
+	earlib getProjectArtifact('dashboards-sdk')
 }
 
 // All WLS Related things

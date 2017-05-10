@@ -104,5 +104,6 @@ dependencies {
 	compile getProjectArtifact('registry-client')
 	compile getProjectArtifact('registry-lookup-client')
 	compile getProjectArtifact('emaas-platform-tenant-sdk')
+	compile getProjectArtifact('dashboards-sdk')
 	testCompile getProjectArtifact('jmockit')
 }
