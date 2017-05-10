@@ -23,17 +23,8 @@ public class CacheServiceManager implements ApplicationServiceManager {
     @Override
     public void postStart(ApplicationLifecycleEvent evt) throws Exception {
         LOGGER.info("Post starting cache service...");
-//        CacheConfig cacheConfig = new CacheConfig();
-        CacheConfig cacheConfig1 = new CacheConfig();
-        cacheConfig1.setName("testCacheGrp");
-        cacheConfig1.setCapacity(0);
-        cacheConfig1.setExpiry(0L);
-        CacheConfig.cacheConfigList.add(cacheConfig1);
-
-        LOGGER.info("cache config size "+CacheConfig.cacheConfigList.size());
-        for(CacheConfig cacheConfig : CacheConfig.cacheConfigList){
-            LRUCacheManager.getInstance().getCache(cacheConfig.getName(), cacheConfig.getCapacity(), cacheConfig.getExpiry());
-        }
+        LRUCacheManager.getInstance();
+        LRUScreenshotCacheManager.getInstance();
         LOGGER.info("Post starting cache service finished...");
     }
 
