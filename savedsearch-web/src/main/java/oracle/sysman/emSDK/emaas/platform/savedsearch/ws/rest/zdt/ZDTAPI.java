@@ -77,7 +77,9 @@ public class ZDTAPI
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/tablerows?comparisonType=");
 		JSONObject obj = new JSONObject();
 		EntityManager em = null;
-		
+		if (type == null) {
+			type = "full";
+		}
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
@@ -192,13 +194,28 @@ public class ZDTAPI
 	@Path("sync")
 	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/sync?syncType=xx&syncDate=xx");
-		EntityManager em = null;
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync?syncType=xx&syncDate=xx");
 		ZDTTableRowEntity data = null;
 		String lastCompareDate = null;
-		try {
-			String lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
-			List<Map<String, Object>> comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
+		if (type == null) {
+			type = "full";
+		}
+		EntityManager em = null;
+		String lastComparisonDateForSync = null;
+		List<Map<String, Object>> comparedDataToSync = null;
+		try {			
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
+			comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
+		} catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return Response.status(400).entity(e.getLocalizedMessage()).build();				
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		try {	
 			if (comparedDataToSync != null && !comparedDataToSync.isEmpty()) {
 				for (Map<String, Object> dataMap : comparedDataToSync) {
 					Object compareResult = dataMap.get("COMPARISON_RESULT");
@@ -207,11 +224,14 @@ public class ZDTAPI
 					String response = new ZDTSynchronizer().sync(data);
 					lastCompareDate = (String) compareDate;
 					if (response.contains("Errors:")) {
-						saveToSyncTable(em, syncDate, type, "FAILED",lastCompareDate);
+						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
 						return Response.status(500).entity(response).build();
 					}
 				}
-				saveToSyncTable(em, syncDate, type, "SUCCESSFUL",lastCompareDate);
+				int flag = saveToSyncTable(syncDate, type, "SUCCESSFUL",lastCompareDate);
+				if (flag < 0) {
+					return Response.status(500).entity("Fail to save sync status data").build();
+				}
 			} else {
 				return Response.ok("Nothing to sync as no compared data").build();
 			}
@@ -220,11 +240,11 @@ public class ZDTAPI
 		}
 		catch (IOException e) {
 			logger.error(e.getLocalizedMessage(), e);
-			return Response.status(400).entity(e.getLocalizedMessage()).build();
-		}
+			return Response.status(400).entity("Errors: " + e.getLocalizedMessage()).build();
+		} 
 	}
 	
-	private void saveToSyncTable(EntityManager em, String syncDateStr, String type, String syncResult, String lastComparisonDate) {
+	private int saveToSyncTable(String syncDateStr, String type, String syncResult, String lastComparisonDate) {
 		Date syncDate = null;
 		try {  
 		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
@@ -241,7 +261,7 @@ public class ZDTAPI
 		// so for the existing compared result the divergence percentage will always be 0.0
 		// In the future, it is better to add logic to check the divergence percentage for the rows which are not compared;
 		double divergencePercentage = 0.0; 
-		DataManager.getInstance().saveToSyncTable(em, syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
+		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
 		
 	}
 	
@@ -284,6 +304,10 @@ public class ZDTAPI
 			message = "Errors:" + e.getLocalizedMessage();
 			statusCode = 500;
 			logger.error("Errors while transfer sync status object to json string {}",e.getLocalizedMessage());
+		} finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -319,6 +343,10 @@ public class ZDTAPI
 			message = "Errors:" + e.getLocalizedMessage();
 			statusCode = 500;
 			logger.error("Errors while transfer comparator status object to json string {}",e.getLocalizedMessage());
+		} finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
@@ -334,7 +362,7 @@ public class ZDTAPI
 		int statusCode = 200;
 		String comparisonDate = null;
 		String nextScheduleDate = null;
-		int comparisonType = 0;
+		String comparisonType = null;
 		String comparisonResult = null;
 		double divergencePercentage = 0;
 		if (jsonObj != null) {
@@ -345,7 +373,7 @@ public class ZDTAPI
 				} else {
 					try {
 						comparisonDate = jsonObj.getString("lastComparisonDateTime");
-						comparisonType = jsonObj.getInt("comparisonType");
+						comparisonType = jsonObj.getString("comparisonType");
 						comparisonResult = jsonObj.getString("comparisonResult");
 						divergencePercentage = jsonObj.getDouble("divergencePercentage");
 						nextScheduleDate = jsonObj.getString("nextScheduledComparisonDateTime");
@@ -359,11 +387,19 @@ public class ZDTAPI
 							message = "succeed to save data to zdt comparator table";
 						}		
 					} catch (Exception e) {
-						logger.error("could not save data to comparator table, ",e.getLocalizedMessage());
+						statusCode = 500;
+						logger.error("could not save data to comparator table, "+e.getLocalizedMessage());
+						return Response.status(statusCode).entity("could not save data to comparator table").build();						
+					} finally {
+						if (em != null) {
+							em.close();
+						}
 					}
 				}
 			} catch (JSONException e) {
-				logger.error("could not save data to comparator table, ",e.getLocalizedMessage());
+				statusCode = 500;
+				logger.error("could not save data to comparator table, "+e.getLocalizedMessage());
+				return Response.status(statusCode).entity("could not save data to comparator table").build();	
 			}
 		}
 	

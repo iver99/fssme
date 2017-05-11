@@ -376,9 +376,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrl + NAV_ZDT_COUNTS));
 				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrl + NAV_ZDT_TABLEROWS));
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrl + NAV_ZDT_SYNC));
-				links.add(new Link().withRel("/zdt/sync/status").withHref(applicationUrl + NAV_ZDT_SYNC_STATUS));
-				links.add(new Link().withRel("/zdt/compare/status").withHref(applicationUrl + NAV_ZDT_COMPARE_STATUS));
-				links.add(new Link().withRel("/zdt/compare/result").withHref(applicationUrl + NAV_ZDT_COMPARE_RESULT));
+				links.add(new Link().withRel("zdt/sync/status").withHref(applicationUrl + NAV_ZDT_SYNC_STATUS));
+				links.add(new Link().withRel("zdt/compare/status").withHref(applicationUrl + NAV_ZDT_COMPARE_STATUS));
+				links.add(new Link().withRel("zdt/compare/result").withHref(applicationUrl + NAV_ZDT_COMPARE_RESULT));
 			}
 			if (applicationUrlSSL != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
@@ -398,9 +398,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrlSSL + NAV_ZDT_COUNTS));
 				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrlSSL + NAV_ZDT_TABLEROWS));
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrlSSL + NAV_ZDT_SYNC));
-				links.add(new Link().withRel("/zdt/sync/status").withHref(applicationUrlSSL + NAV_ZDT_SYNC_STATUS));
-				links.add(new Link().withRel("/zdt/compare/status").withHref(applicationUrlSSL + NAV_ZDT_COMPARE_STATUS));
-				links.add(new Link().withRel("/zdt/compare/result").withHref(applicationUrlSSL + NAV_ZDT_COMPARE_RESULT));
+				links.add(new Link().withRel("zdt/sync/status").withHref(applicationUrlSSL + NAV_ZDT_SYNC_STATUS));
+				links.add(new Link().withRel("zdt/compare/status").withHref(applicationUrlSSL + NAV_ZDT_COMPARE_STATUS));
+				links.add(new Link().withRel("zdt/compare/result").withHref(applicationUrlSSL + NAV_ZDT_COMPARE_RESULT));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 

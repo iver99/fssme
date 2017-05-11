@@ -13,6 +13,7 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.Ab
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
+import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.SavedSearchCategoryRowEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.ZDTTableRowEntity;
 
@@ -118,14 +119,14 @@ public class ZDTAPITest {
     			result = lookupEntry;
     			lookupEntry.put("omc1",client1);
     	    	lookupEntry.put("omc2",client2);
-    			
+    		/*	
     			JsonUtil.buildNormalMapper();
     			result = jsonUtil;
     			jsonUtil.fromJson(anyString,ZDTTableRowEntity.class);
-    			result = tableRow1;
+    			result = tableRow1;  */
     		}
     	};
-    	
+    	SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
     	zdtapi.compareRows(tenant, userTenant,"full");
     }
 

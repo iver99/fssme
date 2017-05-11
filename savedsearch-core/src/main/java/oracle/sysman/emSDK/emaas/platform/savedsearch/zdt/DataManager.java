@@ -22,7 +22,9 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -157,9 +159,9 @@ public class DataManager
 	
 	private static final String SQL_GET_SYNC_STATUS = "select * from (SELECT to_char(SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as SYNC_DATE, to_char(NEXT_SCHEDULE_SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_SYNC_DATE,SYNC_TYPE, divergence_percentage from ems_analytics_zdt_sync order by sync_date desc) where rownum = 1";
 	
-	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "select SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_analytics_zdt_comparator where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "select SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_analytics_zdt_comparator where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and comparison_result is not null";
 	
-	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "select SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_analytics_zdt_comparator";
+	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_analytics_zdt_comparator where comparison_result is not null";
 	
 	/**
 	 * Return the singleton for data manager
@@ -172,7 +174,7 @@ public class DataManager
 
 	}
 	
-	public int saveToComparatorTable(EntityManager em, String comparisonDate, String nextCompareDate, int comparisonType,
+	public int saveToComparatorTable(EntityManager em, String comparisonDate, String nextCompareDate, String comparisonType,
 			String comparisonResult, double divergencePercentage) {
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
@@ -183,17 +185,14 @@ public class DataManager
 			em.getTransaction().commit();
 			return 0;
 		} catch (Exception e) {
-			logger.error("errors occurs in saveToComparatorTalbe, ", e.getLocalizedMessage());
+			logger.error("errors occurs in saveToComparatorTalbe, "+e.getLocalizedMessage());
 			return -1;
-		} finally {
-			if (em !=null) {
-				em.close();
-			}
 		}
 	}
 	
-	public int saveToSyncTable(EntityManager em, String syncDate, String nextSyncDate, String SyncType, 
+	public int saveToSyncTable(String syncDate, String nextSyncDate, String SyncType, 
 			String syncResult, double divergencePercentage, String lastComparisonDate) {
+		EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 		}
@@ -206,7 +205,7 @@ public class DataManager
 			logger.error("errors occurs in saveToComparatorTalbe, ", e.getLocalizedMessage());
 			return -1;
 		} finally {
-			if (em !=null) {
+			if (em != null) {
 				em.close();
 			}
 		}
@@ -228,13 +227,19 @@ public class DataManager
 	} 
 	
 	public String getLastComparisonDateForSync(EntityManager em) {
-		Object result = getSingleTableData(em,SQL_GET_LAST_COMPARISON_DATE_FOR_SYNC);
-		return (String)result;
+		List<Object> result = getSingleTableData(em,SQL_GET_LAST_COMPARISON_DATE_FOR_SYNC);
+		if (result != null && result.size() == 1) {
+			return (String)result.get(0);
+		}
+		return null;
 	}
 	
 	public String getLatestComparisonDateForCompare(EntityManager em) {
-		Object result = getSingleTableData(em,SQL_GET_LATEST_COMPARISON_DATE);
-		return (String)result;
+		List<Object> result = getSingleTableData(em,SQL_GET_LATEST_COMPARISON_DATE);
+		if (result != null && result.size() == 1) {
+			return (String)result.get(0);
+		}
+		return null;
 	}
 	
 	public List<Map<String, Object>> getSyncStatus(EntityManager em) {
@@ -243,11 +248,7 @@ public class DataManager
 			return result;
 		} catch (Exception e) {
 			logger.error(e);
-		} finally {
-			if (em != null) {
-				em.close();
-			}
-		}
+		} 
 		return null;
 	}
  	
@@ -257,11 +258,7 @@ public class DataManager
 			return result;
 		} catch (Exception e) {
 			logger.error(e);
-		} finally {
-			if (em != null) {
-				em.close();
-			}
-		}
+		} 
 		return null;
 	}
 
@@ -869,16 +866,17 @@ public class DataManager
 		return list;
 	}
 	
-	private Object getSingleTableData(EntityManager em, String nativeSql) {
+	private List<Object> getSingleTableData(EntityManager em, String nativeSql) {
 		if (StringUtil.isEmpty(nativeSql)) {
 			logger.error("can not query database with empty sql statement!");
 			return null;
 		}
-		Object result = null;
+		List<Object>  result = null;
 		try {
 			Query query = em.createNativeQuery(nativeSql);
-			result = query.getSingleResult();
+			result = query.getResultList();
 		}catch(Exception e) {
+			logger.error(e);
 			logger.error("error occurs while executing sql:" + nativeSql);
 		}
 		return result;

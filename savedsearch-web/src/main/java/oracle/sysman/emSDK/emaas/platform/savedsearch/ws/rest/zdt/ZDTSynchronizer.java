@@ -41,6 +41,9 @@ public class ZDTSynchronizer
 		EntityManager em = null;
 		try{
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			syncCategoryTableRows(em, data.getSavedSearchCategory());
 			syncCategoryParamsTableRows(em, data.getSavedSearchCategoryParams());
 			syncFoldersTableRows(em, data.getSavedSearchFoldersy());

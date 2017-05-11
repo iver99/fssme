@@ -61,12 +61,12 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			}
 	}
 
-	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant) throws ZDTException
+	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant, String comparisonType) throws ZDTException
 	{
 		try {
 			logger.info("Starts to compare the two ssf OMC instances: table by table and row by row");
 			
- 			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1);
+ 			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType);
  			int rowNum1 = countForComparedRows(tre1);
 			if (tre1 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
@@ -74,7 +74,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 				return null;
 			}
 
-			ZDTTableRowEntity tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2);
+			ZDTTableRowEntity tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType);
 			int rowNum2 = countForComparedRows(tre2);
 			if (tre2 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
@@ -298,14 +298,15 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private ZDTTableRowEntity retrieveRowsForSingleInstance(String tenantId, String userTenant,LookupClient lc) throws Exception, IOException, ZDTException
+	private ZDTTableRowEntity retrieveRowsForSingleInstance(String tenantId, String userTenant,LookupClient lc, String comparisonType) throws Exception, IOException, ZDTException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
 		}
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
+		String url = lk.getHref() + "?comparisonType="+comparisonType;
+		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
 		logger.info("Checking SSF OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
@@ -314,10 +315,22 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		Link lk = getSingleInstanceUrl(client1, "zdt/compare/status", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
-			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
+			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
 		String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		logger.info("checking comparator status is " + response);
+		
+		return response;
+	}
+	
+	public String retrieveSyncStatusForOmcInstance(String tenantId, String userTenant) throws Exception {
+		Link lk = getSingleInstanceUrl(client1, "zdt/sync/status", "http");
+		if (lk == null) {
+			logger.warn("Get a null or empty link for one single instance!");
+			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
+		}
+		String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
+		logger.info("checking sync status is " + response);
 		
 		return response;
 	}
@@ -345,7 +358,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		}
 		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + syncDate;
 		logger.info("sync url is "+ url);
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(),  tenantId, userTenant);
+		String response = new TenantSubscriptionUtil.RestClient().get(url,  tenantId, userTenant);
  		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	} 
