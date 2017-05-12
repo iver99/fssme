@@ -4,6 +4,7 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 import java.io.IOException;
 import java.math.BigInteger;
 
+import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
@@ -142,7 +143,7 @@ public class SaveSearchRowsComparatorTest
 		ZDTTableRowEntity tre2 = Deencapsulation.invoke(src1, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
 		InstancesComparedData<ZDTTableRowEntity> cd = Deencapsulation.invoke(src1, "compareInstancesData",
-				new InstanceData<ZDTTableRowEntity>(null, tre1), new InstanceData<ZDTTableRowEntity>(null, tre2));
+				new InstanceData<ZDTTableRowEntity>(null,null, tre1,0), new InstanceData<ZDTTableRowEntity>(null,null, tre2,0));
 		// the 2 instances have the same data, so there is no difference from the compared result
 		ZDTTableRowEntity result1 = cd.getInstance1().getData();
 		ZDTTableRowEntity result2 = cd.getInstance1().getData();
@@ -161,16 +162,16 @@ public class SaveSearchRowsComparatorTest
 		tre1 = Deencapsulation.invoke(src2, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
 		tre2 = Deencapsulation.invoke(src2, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
 		SavedSearchCategoryRowEntity sscr1 = new SavedSearchCategoryRowEntity();
-		sscr1.setCategoryId(new BigInteger("12"));
-		sscr1.setDeleted(new BigInteger("2"));
+		sscr1.setCategoryId("12");
+		sscr1.setDeleted("2");
 		tre1.getSavedSearchCategory().add(sscr1);
 		SavedSearchCategoryRowEntity sscr2 = new SavedSearchCategoryRowEntity();
-		sscr2.setCategoryId(new BigInteger("10"));
-		sscr2.setDeleted(new BigInteger("0"));
+		sscr2.setCategoryId("10");
+		sscr2.setDeleted("0");
 		tre2.getSavedSearchCategory().add(sscr2);
 
-		cd = Deencapsulation.invoke(src2, "compareInstancesData", new InstanceData<ZDTTableRowEntity>(null, tre1),
-				new InstanceData<ZDTTableRowEntity>(null, tre2));
+		cd = Deencapsulation.invoke(src2, "compareInstancesData", new InstanceData<ZDTTableRowEntity>(null, null,tre1,0),
+				new InstanceData<ZDTTableRowEntity>(null,null, tre2,0));
 		result1 = cd.getInstance1().getData();
 		result2 = cd.getInstance2().getData();
 		Assert.assertEquals(result1.getSavedSearchCategory().get(0), sscr1);
@@ -188,13 +189,13 @@ public class SaveSearchRowsComparatorTest
 		Assert.assertEquals(tre.getSavedSearchCategory().get(0).getName(), "Target Card");
 		Assert.assertEquals(tre.getSavedSearchCategoryParams().get(0).getName(), "DASHBOARD_INELIGIBLE");
 		Assert.assertEquals(tre.getSavedSearchFoldersy().get(0).getName(), "All Searches");
-		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId().longValue(), 2024);
+		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId(), "2024");
 		Assert.assertEquals(tre.getSavedSearchSearchParams().get(0).getName(), "meId");
 	}
 	
 	@Test
 	public void testCompare(@Mocked final AbstractComparator abstractComparator, 
-			@Mocked final InstancesComparedData<ZDTTableRowEntity> zdtTableRowsEntity) {
+			@Mocked final InstancesComparedData<ZDTTableRowEntity> zdtTableRowsEntity) throws ZDTException {
 		SavedsearchRowsComparator src = new SavedsearchRowsComparator();
 		 new Expectations(){
 	            {
@@ -202,7 +203,7 @@ public class SaveSearchRowsComparatorTest
 	                result = null;
 	            }
 	        };
-	        src.compare();
+	        src.compare("tenantId","userTenant");
 		
 	}
 }

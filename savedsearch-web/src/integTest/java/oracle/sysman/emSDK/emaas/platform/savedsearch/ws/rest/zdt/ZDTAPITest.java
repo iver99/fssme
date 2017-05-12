@@ -2,6 +2,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.DataManager;
 
 import org.codehaus.jettison.json.JSONException;
@@ -11,6 +12,8 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.EntityManager;
 
 import static org.testng.Assert.*;
 
@@ -26,13 +29,14 @@ public class ZDTAPITest {
     @Mocked
     Throwable throwable;
     @Test
-    public void testGetAllTableData() throws Exception {
+    public void testGetAllTableData(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager em) throws Exception {
         final List<Map<String, Object>> list = new ArrayList<>();
         new Expectations(){
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getSearchTableData();
+                dataManager.getSearchTableData(em);
                 result = list;
             }
         };
@@ -40,13 +44,14 @@ public class ZDTAPITest {
     }
 
     @Test
-    public void testGetAllTableDataException() throws Exception {
+    public void testGetAllTableDataException(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager em) throws Exception {
         final List<Map<String, Object>> list = new ArrayList<>();
         new Expectations(){
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getSearchTableData();
+                dataManager.getSearchTableData(em);
                 result = new JSONException(throwable);
             }
         };
@@ -54,16 +59,17 @@ public class ZDTAPITest {
     }
 
     @Test
-    public void testGetEntitiesCoung() throws Exception {
+    public void testGetEntitiesCoung(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager em) throws Exception {
         new Expectations(){
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getAllCategoryCount();
+                dataManager.getAllCategoryCount(em);
                 result = 1;
-                dataManager.getAllFolderCount();
+                dataManager.getAllFolderCount(em);
                 result = 1;
-                dataManager.getAllSearchCount();
+                dataManager.getAllSearchCount(em);
                 result = 1;
             }
         };
@@ -71,7 +77,8 @@ public class ZDTAPITest {
     }
 
     @Test
-    public void testSync() throws Exception {
+    public void testSync(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager em) throws Exception {
         zdtapi.sync(new JSONObject());
     }
 

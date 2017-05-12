@@ -3,9 +3,11 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -41,6 +43,8 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.config.ResultType;
 import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
 import org.eclipse.persistence.jpa.JpaEntityManager;
 import org.eclipse.persistence.queries.DatabaseQuery;
@@ -74,6 +78,21 @@ public class SearchManagerImpl extends SearchManager
 			+ "AND (pm.paramValueStr IS NULL OR pm.paramValueStr<>'1')";
 
 	private static final String DEFAULT_DB_VALUE = "0";
+	
+	private static final String SQL_INSERT_SEARCH_PARAM = "INSERT INTO EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
+			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED) VALUES(?,?,?,?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?)";
+	private static final String SQL_INSERT_SEARCH = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
+			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,"
+			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
+			+ "DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
+			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
+			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
+			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
+			+ "to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,?,?,?,"
+			+ "?,?,?,?,?,"
+			+ "?,?,?,?,?,"
+			+ "?,?,?,?,?,"
+			+ "?,?,?,?,?," + "?,?,?)";
 
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
@@ -1597,5 +1616,5 @@ public class SearchManagerImpl extends SearchManager
 		}
 
 	}
-
+	
 }

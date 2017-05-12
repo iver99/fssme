@@ -10,8 +10,13 @@
 
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt;
 
+import java.math.BigInteger;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchFolderRowEntity;
@@ -27,20 +32,34 @@ public class ZDTSynchronizer
 {
 	private static final Logger logger = LogManager.getLogger(ZDTSynchronizer.class);
 
-	public void sync(ZDTTableRowEntity data)
+	public String sync(ZDTTableRowEntity data)
 	{
 		if (data == null) {
 			logger.error("Failed to sync as input data is null");
-			return;
+			return "Errors:Failed to sync as input data is null";
 		}
-		syncCategoryTableRows(data.getSavedSearchCategory());
-		syncCategoryParamsTableRows(data.getSavedSearchCategoryParams());
-		syncFoldersTableRows(data.getSavedSearchFoldersy());
-		syncSearchTableRows(data.getSavedSearchSearch());
-		syncSearchParamsTableRows(data.getSavedSearchSearchParams());
+		EntityManager em = null;
+		try{
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			syncCategoryTableRows(em, data.getSavedSearchCategory());
+			syncCategoryParamsTableRows(em, data.getSavedSearchCategoryParams());
+			syncFoldersTableRows(em, data.getSavedSearchFoldersy());
+			syncSearchTableRows(em, data.getSavedSearchSearch());
+			syncSearchParamsTableRows(em, data.getSavedSearchSearchParams());
+			em.getTransaction().commit();
+			return "sync is successful";
+		}
+		catch (Exception e) {
+			logger.error("errors while syc for tables -",e.getLocalizedMessage());
+			return "Errors:Failed to sync - "+ e.getLocalizedMessage();
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
-	private void syncCategoryParamsTableRows(List<SavedSearchCategoryParamRowEntity> rows)
+	private void syncCategoryParamsTableRows(EntityManager em, List<SavedSearchCategoryParamRowEntity> rows)
 	{
 		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
@@ -49,13 +68,14 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY_PARAMS table");
 		for (SavedSearchCategoryParamRowEntity e : rows) {
-			DataManager.getInstance().syncCategoryParamTable(e.getCategoryId(), e.getName(), e.getValue(), e.getTenantId(),
-					e.getCreationDate(), e.getLastModificationDate());
+			
+			DataManager.getInstance().syncCategoryParamTable(em,e.getCategoryId()!=null?new BigInteger(e.getCategoryId()):null, e.getName(), e.getValue(), e.getTenantId(),
+					e.getCreationDate(), e.getLastModificationDate(),e.getDeleted());
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS_CATEGORY_PARAMS table");
 	}
 
-	private void syncCategoryTableRows(List<SavedSearchCategoryRowEntity> rows)
+	private void syncCategoryTableRows(EntityManager em, List<SavedSearchCategoryRowEntity> rows)
 	{
 		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
@@ -64,9 +84,11 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY table");
 		for (SavedSearchCategoryRowEntity e : rows) {
-			DataManager.getInstance().syncCategoryTable(e.getCategoryId(), e.getName(), e.getDescription(), e.getOwner(),
+		
+			DataManager.getInstance().syncCategoryTable(em,e.getCategoryId() !=null? new BigInteger(e.getCategoryId()): null, e.getName(), e.getDescription(), e.getOwner(),
 					e.getCreationDate(), e.getNameNlsid(), e.getNameSubsystem(), e.getDescriptionNlsid(),
-					e.getDescriptionSubsystem(), e.getEmPluginId(), e.getDefaultFolderId(), e.getDeleted(), e.getProviderName(),
+					e.getDescriptionSubsystem(), e.getEmPluginId(), e.getDefaultFolderId() !=null? new BigInteger(e.getDefaultFolderId()):null, 
+							e.getDeleted()!=null? new BigInteger(e.getDeleted()):null, e.getProviderName(),
 					e.getProviderVersion(), e.getProviderDiscovery(), e.getProviderAssetRoot(), e.getTenantId(),
 					e.getDashboardIneligible(), e.getLastModificationDate());
 		}
@@ -74,7 +96,7 @@ public class ZDTSynchronizer
 
 	}
 
-	private void syncFoldersTableRows(List<SavedSearchFolderRowEntity> rows)
+	private void syncFoldersTableRows(EntityManager em, List<SavedSearchFolderRowEntity> rows)
 	{
 		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
@@ -83,15 +105,16 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY table");
 		for (SavedSearchFolderRowEntity e : rows) {
-			DataManager.getInstance().syncFolderTable(e.getFolderId(), e.getName(), e.getParentId(), e.getDescription(),
+			
+			DataManager.getInstance().syncFolderTable(em, e.getFolderId() != null? new BigInteger(e.getFolderId()) : null, e.getName(), e.getParentId()!=null?new BigInteger(e.getParentId()):null, e.getDescription(),
 					e.getCreationDate(), e.getOwner(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getNameNlsid(),
 					e.getNameSubsystem(), e.getDescriptionNlsid(), e.getDescriptionSubsystem(), e.getSystemFolder(),
-					e.getEmPluginId(), e.getUiHidden(), e.getDeleted(), e.getTenantId());
+					e.getEmPluginId(), e.getUiHidden(), e.getDeleted()!=null? new BigInteger(e.getDeleted()): null, e.getTenantId());
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS_FOLDERS table");
 	}
 
-	private void syncSearchParamsTableRows(List<SavedSearchSearchParamRowEntity> rows)
+	private void syncSearchParamsTableRows(EntityManager em, List<SavedSearchSearchParamRowEntity> rows)
 	{
 		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
@@ -100,27 +123,28 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH_PARAMS table");
 		for (SavedSearchSearchParamRowEntity e : rows) {
-			DataManager.getInstance().syncSearchParamsTable(e.getSearchId(), e.getName(), e.getParamAttributes(),
+			
+			DataManager.getInstance().syncSearchParamsTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId()), e.getName(), e.getParamAttributes(),
 					e.getParamType(), e.getParamValueStr(), e.getParamValueClob(), e.getTenantId(), e.getCreationDate(),
-					e.getLastModificationDate());
+					e.getLastModificationDate(),e.getDeleted());
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH_PARAMS table");
 	}
 
-	private void syncSearchTableRows(List<SavedSearchSearchRowEntity> rows)
+	private void syncSearchTableRows(EntityManager em, List<SavedSearchSearchRowEntity> rows)
 	{
 		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
 			logger.debug("List<SavedSearchSearchRowEntity> is null,no sync action is needed");
 			return;
 		}
-		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
+	try {	logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
 		for (SavedSearchSearchRowEntity e : rows) {
-			DataManager.getInstance().syncSearchTable(e.getSearchId()/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
-					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId(),
-					e.getCategoryId(), e.getNameNlsid(), e.getNameSubsystem(), e.getDescriptionNlsid(),
-					e.getDescriptionSubsystem(), e.getSystemSearch(), e.getEmPluginId(), e.getIsLocked(), e.getMetadataClob(),
-					e.getSearchDisplayStr(), e.getUiHidden(), e.getDeleted(), e.getIsWidget(), e.getTenantId(),
+			
+			DataManager.getInstance().syncSearchTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
+					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId() == null? null:new BigInteger(e.getFolderId()),
+					e.getCategoryId() == null? null:new BigInteger(e.getCategoryId()), e.getSystemSearch(), e.getIsLocked(), e.getMetadataClob(),
+					e.getSearchDisplayStr(), e.getUiHidden(), e.getDeleted() == null? null:new BigInteger(e.getDeleted()), e.getIsWidget(), e.getTenantId(),
 					e.getNameWidgetSource(), e.getWidgetGroupName(), e.getWidgetScreenshotHref(), e.getWidgetIcon(),
 					e.getWidgetKocName(), e.getWidgetViewModel(), e.getWidgetTemplate(), e.getWidgetSupportTimeControl(),
 					e.getWidgetLinkedDashboard(), e.getWidgetDefaulWidth(), e.getWidgetDefaultHeight(),
@@ -128,5 +152,8 @@ public class ZDTSynchronizer
 
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH table");
+	} catch (Exception e) {
+		logger.error(e);
+	}
 	}
 }

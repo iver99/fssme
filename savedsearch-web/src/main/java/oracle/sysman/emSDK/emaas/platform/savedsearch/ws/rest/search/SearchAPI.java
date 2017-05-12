@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,11 +22,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
@@ -57,6 +60,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONArray;
@@ -833,7 +837,7 @@ public class SearchAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-	
+
 	@GET
 	@Path("{id: [0-9]*}/assetroot")
 	public Response getAssetRoot(@PathParam("id") BigInteger searchid){

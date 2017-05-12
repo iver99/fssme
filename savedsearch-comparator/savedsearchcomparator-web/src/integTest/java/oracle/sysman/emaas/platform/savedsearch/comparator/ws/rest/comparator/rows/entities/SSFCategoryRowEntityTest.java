@@ -20,12 +20,12 @@ public class SSFCategoryRowEntityTest {
 		SavedSearchCategoryRowEntity entity2 = new SavedSearchCategoryRowEntity();
 		Assert.assertEquals(entity1,entity2);
 		
-		entity1.setCategoryId(new BigInteger("10"));
-		entity2.setCategoryId(new BigInteger("10"));
+		entity1.setCategoryId("10");
+		entity2.setCategoryId("10");
 		Assert.assertEquals(entity1,entity2);
 		
-		entity1.setDeleted(new BigInteger("1"));
-		entity2.setDeleted(new BigInteger("1"));
+		entity1.setDeleted("1");
+		entity2.setDeleted("1");
 		Assert.assertEquals(entity1,entity2);
 		
 		entity1.setDescription("des");
@@ -68,12 +68,12 @@ public class SSFCategoryRowEntityTest {
 		SavedSearchCategoryRowEntity entity2 = new SavedSearchCategoryRowEntity();
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
 		
-		entity1.setCategoryId(new BigInteger("1"));
-		entity2.setCategoryId(new BigInteger("1"));
+		entity1.setCategoryId("1");
+		entity2.setCategoryId("1");
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
 		
-		entity1.setDeleted(new BigInteger("1"));
-		entity2.setDeleted(new BigInteger("1"));
+		entity1.setDeleted("1");
+		entity2.setDeleted("1");
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
 		
 		entity1.setDescription("des");

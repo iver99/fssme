@@ -16,30 +16,30 @@ public class SSFCategoryRowEntityTest {
 
 	@Test
 	public void testEquals(){
-		SavedSearchCategoryRowEntity entity1 = new SavedSearchCategoryRowEntity(new BigInteger("1"),
+		SavedSearchCategoryRowEntity entity1 = new SavedSearchCategoryRowEntity("1",
 				"description", "descriptionNlsid",
 				"descriptionSubsystem", "emPluginId", "name",
 				"nameNlsid", "nameSubsystem", "owner",
-				new BigInteger("1"), "providerName", "providerVersion",
+				"1", "providerName", "providerVersion",
 				"providerDiscovery", "providerAssetRoot",
 				"lastModificationDate", 1L, "creationDate",
-				2l, "dashboardIneligible");
-		SavedSearchCategoryRowEntity entity2 = new SavedSearchCategoryRowEntity(new BigInteger("1"),
+				"2", "dashboardIneligible");
+		SavedSearchCategoryRowEntity entity2 = new SavedSearchCategoryRowEntity("1",
 				"description", "descriptionNlsid",
 				"descriptionSubsystem", "emPluginId", "name",
 				"nameNlsid", "nameSubsystem", "owner",
-				new BigInteger("1"), "providerName", "providerVersion",
+				"1", "providerName", "providerVersion",
 				"providerDiscovery", "providerAssetRoot",
 				"lastModificationDate", 1L, "creationDate",
-				2l, "dashboardIneligible");
+				"2", "dashboardIneligible");
 		Assert.assertEquals(entity1,entity2);
 		
-		entity1.setCategoryId(new BigInteger("10"));
-		entity2.setCategoryId(new BigInteger("10"));
+		entity1.setCategoryId("10");
+		entity2.setCategoryId("10");
 		Assert.assertEquals(entity1,entity2);
 		
-		entity1.setDeleted(new BigInteger("1"));
-		entity2.setDeleted(new BigInteger("1"));
+		entity1.setDeleted("1");
+		entity2.setDeleted("1");
 		Assert.assertEquals(entity1,entity2);
 		
 		entity1.setDescription("des");
@@ -78,30 +78,30 @@ public class SSFCategoryRowEntityTest {
 	
 	@Test
 	public void testHashcode(){
-		SavedSearchCategoryRowEntity entity1 = new SavedSearchCategoryRowEntity(new BigInteger("1"),
+		SavedSearchCategoryRowEntity entity1 = new SavedSearchCategoryRowEntity("1",
 				"description", "descriptionNlsid",
 				"descriptionSubsystem", "emPluginId", "name",
 				"nameNlsid", "nameSubsystem", "owner",
-				new BigInteger("1"), "providerName", "providerVersion",
+				"1", "providerName", "providerVersion",
 				"providerDiscovery", "providerAssetRoot",
 				"lastModificationDate", 1L, "creationDate",
-				2l, "dashboardIneligible");;
-		SavedSearchCategoryRowEntity entity2 = new SavedSearchCategoryRowEntity(new BigInteger("1"),
+				"2", "dashboardIneligible");;
+		SavedSearchCategoryRowEntity entity2 = new SavedSearchCategoryRowEntity("1",
 				"description", "descriptionNlsid",
 				"descriptionSubsystem", "emPluginId", "name",
 				"nameNlsid", "nameSubsystem", "owner",
-				new BigInteger("1"), "providerName", "providerVersion",
+				"1", "providerName", "providerVersion",
 				"providerDiscovery", "providerAssetRoot",
 				"lastModificationDate", 1L, "creationDate",
-				2l, "dashboardIneligible");
+				"2", "dashboardIneligible");
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
 		
-		entity1.setCategoryId(new BigInteger("1"));
-		entity2.setCategoryId(new BigInteger("1"));
+		entity1.setCategoryId("1");
+		entity2.setCategoryId("1");
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
 		
-		entity1.setDeleted(new BigInteger("1"));
-		entity2.setDeleted(new BigInteger("1"));
+		entity1.setDeleted("1");
+		entity2.setDeleted("1");
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
 		
 		entity1.setDescription("des");

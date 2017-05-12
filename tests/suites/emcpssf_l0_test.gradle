@@ -45,11 +45,11 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = false}
-	/*testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web', version: "${REPO_BID}") {transitive = false}
+	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-webutils', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-webutils-integ-tests', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web-integ-tests', version: "${REPO_BID}") {transitive = false}
-	*/
+	
 	testConfig(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
@@ -133,15 +133,24 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/S
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchParamRowEntityTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchRowEntityTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/ZDTTableRowEntityTest.class"
-/*
+
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedSearchComparatorCORSFilterTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/ZDTAPITest.class"
+
+include "oracle/sysman/emaas/platform/savedsearch/comparator/exception/*.class"
+
+/*
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/AppMappingCollectionTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/JsonUtilTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/LogUtilTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/StringUtilTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/utils/TenantSubscriptionUtilTest.class"
 */
+ //***************below are savedsearchcomparator-webutils project test cases***************//
+        include "oracle/sysman/emaas/platform/savedsearch/comparator/targetmodel/services/*.class"
+        include "oracle/sysman/emaas/platform/savedsearch/comparator/webutils/**/*.class"
+
+
         useRestAssured=true
 ext.set("testType", "integration")
 }
@@ -238,7 +247,7 @@ include "oracle/sysman/emaas/platform/savedsearch/utils/RestRequestUtilTest.clas
 	 include "oracle/sysman/emaas/platform/savedsearch/services/ApplicationLifecycleServiceTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/services/AvailabilityServiceManagerTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/services/EMTargetMXBeanImplTest.class"
-	/* 
+	
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SaveSearchRowsComparatorTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFCategoryParamRowEntityTest.class"
 	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFCategoryRowEntityTest.class"
@@ -250,7 +259,7 @@ include "oracle/sysman/emaas/platform/savedsearch/utils/RestRequestUtilTest.clas
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/CountsEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFFolderRowEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedsearchComparatorApplicationTest.class"
-*/
+
 
 
 useRestAssured =true

@@ -19,8 +19,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
  */
 public class SavedSearchFolderRowEntity implements RowEntity
 {
+	public SavedSearchFolderRowEntity() {
+		super();
+	}
+
 	@JsonProperty("FOLDER_ID")
-	private BigInteger folderId;
+	private String folderId;
 
 	@JsonProperty("DESCRIPTION")
 	private String description;
@@ -59,167 +63,58 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	private Integer uiHidden;
 
 	@JsonProperty("DELETED")
-	private BigInteger deleted;
+	private String deleted;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
 	@JsonProperty("PARENT_ID")
-	private BigInteger parentId;
+	private String parentId;
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	@JsonProperty("CREATION_DATE")
+	private String creationDate;
+
+	/**
+	 * @return the creationDate
 	 */
-	@Override
-	public boolean equals(Object obj)
+	public String getCreationDate()
 	{
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		SavedSearchFolderRowEntity other = (SavedSearchFolderRowEntity) obj;
-		if (deleted == null) {
-			if (other.deleted != null) {
-				return false;
-			}
-		}
-		else if (!deleted.equals(other.deleted)) {
-			return false;
-		}
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		}
-		else if (!description.equals(other.description)) {
-			return false;
-		}
-		if (descriptionNlsid == null) {
-			if (other.descriptionNlsid != null) {
-				return false;
-			}
-		}
-		else if (!descriptionNlsid.equals(other.descriptionNlsid)) {
-			return false;
-		}
-		if (descriptionSubsystem == null) {
-			if (other.descriptionSubsystem != null) {
-				return false;
-			}
-		}
-		else if (!descriptionSubsystem.equals(other.descriptionSubsystem)) {
-			return false;
-		}
-		if (emPluginId == null) {
-			if (other.emPluginId != null) {
-				return false;
-			}
-		}
-		else if (!emPluginId.equals(other.emPluginId)) {
-			return false;
-		}
-		if (folderId == null) {
-			if (other.folderId != null) {
-				return false;
-			}
-		}
-		else if (!folderId.equals(other.folderId)) {
-			return false;
-		}
-		if (lastModificationDate == null) {
-			if (other.lastModificationDate != null) {
-				return false;
-			}
-		}
-		else if (!lastModificationDate.equals(other.lastModificationDate)) {
-			return false;
-		}
-		if (lastModifiedBy == null) {
-			if (other.lastModifiedBy != null) {
-				return false;
-			}
-		}
-		else if (!lastModifiedBy.equals(other.lastModifiedBy)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		}
-		else if (!name.equals(other.name)) {
-			return false;
-		}
-		if (nameNlsid == null) {
-			if (other.nameNlsid != null) {
-				return false;
-			}
-		}
-		else if (!nameNlsid.equals(other.nameNlsid)) {
-			return false;
-		}
-		if (nameSubsystem == null) {
-			if (other.nameSubsystem != null) {
-				return false;
-			}
-		}
-		else if (!nameSubsystem.equals(other.nameSubsystem)) {
-			return false;
-		}
-		if (owner == null) {
-			if (other.owner != null) {
-				return false;
-			}
-		}
-		else if (!owner.equals(other.owner)) {
-			return false;
-		}
-		if (parentId == null) {
-			if (other.parentId != null) {
-				return false;
-			}
-		}
-		else if (!parentId.equals(other.parentId)) {
-			return false;
-		}
-		if (systemFolder == null) {
-			if (other.systemFolder != null) {
-				return false;
-			}
-		}
-		else if (!systemFolder.equals(other.systemFolder)) {
-			return false;
-		}
-		if (tenantId == null) {
-			if (other.tenantId != null) {
-				return false;
-			}
-		}
-		else if (!tenantId.equals(other.tenantId)) {
-			return false;
-		}
-		if (uiHidden == null) {
-			if (other.uiHidden != null) {
-				return false;
-			}
-		}
-		else if (!uiHidden.equals(other.uiHidden)) {
-			return false;
-		}
-		return true;
+		return creationDate;
 	}
 
 	/**
 	 * @return the deleted
 	 */
-	public BigInteger getDeleted()
+	public String getDeleted()
 	{
 		return deleted;
+	}
+
+	public SavedSearchFolderRowEntity(String folderId, String description,
+			String descriptionNlsid, String descriptionSubsystem,
+			String emPluginId, String lastModifiedBy,
+			String lastModificationDate, String name, String nameNlsid,
+			String nameSubsystem, String owner, Integer systemFolder,
+			Integer uiHidden, String deleted, Long tenantId,
+			String parentId, String creationDate) {
+		super();
+		this.folderId = folderId;
+		this.description = description;
+		this.descriptionNlsid = descriptionNlsid;
+		this.descriptionSubsystem = descriptionSubsystem;
+		this.emPluginId = emPluginId;
+		this.lastModifiedBy = lastModifiedBy;
+		this.lastModificationDate = lastModificationDate;
+		this.name = name;
+		this.nameNlsid = nameNlsid;
+		this.nameSubsystem = nameSubsystem;
+		this.owner = owner;
+		this.systemFolder = systemFolder;
+		this.uiHidden = uiHidden;
+		this.deleted = deleted;
+		this.tenantId = tenantId;
+		this.parentId = parentId;
+		this.creationDate = creationDate;
 	}
 
 	/**
@@ -257,7 +152,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	/**
 	 * @return the folderId
 	 */
-	public BigInteger getFolderId()
+	public String getFolderId()
 	{
 		return folderId;
 	}
@@ -313,7 +208,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	/**
 	 * @return the parentId
 	 */
-	public BigInteger getParentId()
+	public String getParentId()
 	{
 		return parentId;
 	}
@@ -342,38 +237,20 @@ public class SavedSearchFolderRowEntity implements RowEntity
 		return uiHidden;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
 	 */
-	@Override
-	public int hashCode()
+	public void setCreationDate(String creationDate)
 	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (deleted == null ? 0 : deleted.hashCode());
-		result = prime * result + (description == null ? 0 : description.hashCode());
-		result = prime * result + (descriptionNlsid == null ? 0 : descriptionNlsid.hashCode());
-		result = prime * result + (descriptionSubsystem == null ? 0 : descriptionSubsystem.hashCode());
-		result = prime * result + (emPluginId == null ? 0 : emPluginId.hashCode());
-		result = prime * result + (folderId == null ? 0 : folderId.hashCode());
-		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
-		result = prime * result + (lastModifiedBy == null ? 0 : lastModifiedBy.hashCode());
-		result = prime * result + (name == null ? 0 : name.hashCode());
-		result = prime * result + (nameNlsid == null ? 0 : nameNlsid.hashCode());
-		result = prime * result + (nameSubsystem == null ? 0 : nameSubsystem.hashCode());
-		result = prime * result + (owner == null ? 0 : owner.hashCode());
-		result = prime * result + (parentId == null ? 0 : parentId.hashCode());
-		result = prime * result + (systemFolder == null ? 0 : systemFolder.hashCode());
-		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
-		result = prime * result + (uiHidden == null ? 0 : uiHidden.hashCode());
-		return result;
+		this.creationDate = creationDate;
 	}
 
 	/**
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(BigInteger deleted)
+	public void setDeleted(String deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -418,7 +295,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	 * @param folderId
 	 *            the folderId to set
 	 */
-	public void setFolderId(BigInteger folderId)
+	public void setFolderId(String folderId)
 	{
 		this.folderId = folderId;
 	}
@@ -481,7 +358,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	 * @param parentId
 	 *            the parentId to set
 	 */
-	public void setParentId(BigInteger parentId)
+	public void setParentId(String parentId)
 	{
 		this.parentId = parentId;
 	}
@@ -524,7 +401,149 @@ public class SavedSearchFolderRowEntity implements RowEntity
 				+ ", lastModifiedBy=" + lastModifiedBy + ", lastModificationDate=" + lastModificationDate + ", name=" + name
 				+ ", nameNlsid=" + nameNlsid + ", nameSubsystem=" + nameSubsystem + ", owner=" + owner + ", systemFolder="
 				+ systemFolder + ", uiHidden=" + uiHidden + ", deleted=" + deleted + ", tenantId=" + tenantId + ", parentId="
-				+ parentId + "]";
+				+ parentId + ", creationDate=" + creationDate + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
+		result = prime
+				* result
+				+ ((descriptionNlsid == null) ? 0 : descriptionNlsid.hashCode());
+		result = prime
+				* result
+				+ ((descriptionSubsystem == null) ? 0 : descriptionSubsystem
+						.hashCode());
+		result = prime * result
+				+ ((emPluginId == null) ? 0 : emPluginId.hashCode());
+		result = prime * result
+				+ ((folderId == null) ? 0 : folderId.hashCode());
+		result = prime
+				* result
+				+ ((lastModificationDate == null) ? 0 : lastModificationDate
+						.hashCode());
+		result = prime * result
+				+ ((lastModifiedBy == null) ? 0 : lastModifiedBy.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((nameNlsid == null) ? 0 : nameNlsid.hashCode());
+		result = prime * result
+				+ ((nameSubsystem == null) ? 0 : nameSubsystem.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+		result = prime * result
+				+ ((parentId == null) ? 0 : parentId.hashCode());
+		result = prime * result
+				+ ((systemFolder == null) ? 0 : systemFolder.hashCode());
+		result = prime * result
+				+ ((tenantId == null) ? 0 : tenantId.hashCode());
+		result = prime * result
+				+ ((uiHidden == null) ? 0 : uiHidden.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SavedSearchFolderRowEntity other = (SavedSearchFolderRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
+		if (deleted == null) {
+			if (other.deleted != null)
+				return false;
+		} else if (!deleted.equals(other.deleted))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (descriptionNlsid == null) {
+			if (other.descriptionNlsid != null)
+				return false;
+		} else if (!descriptionNlsid.equals(other.descriptionNlsid))
+			return false;
+		if (descriptionSubsystem == null) {
+			if (other.descriptionSubsystem != null)
+				return false;
+		} else if (!descriptionSubsystem.equals(other.descriptionSubsystem))
+			return false;
+		if (emPluginId == null) {
+			if (other.emPluginId != null)
+				return false;
+		} else if (!emPluginId.equals(other.emPluginId))
+			return false;
+		if (folderId == null) {
+			if (other.folderId != null)
+				return false;
+		} else if (!folderId.equals(other.folderId))
+			return false;
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null)
+				return false;
+		} else if (!lastModificationDate.equals(other.lastModificationDate))
+			return false;
+		if (lastModifiedBy == null) {
+			if (other.lastModifiedBy != null)
+				return false;
+		} else if (!lastModifiedBy.equals(other.lastModifiedBy))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (nameNlsid == null) {
+			if (other.nameNlsid != null)
+				return false;
+		} else if (!nameNlsid.equals(other.nameNlsid))
+			return false;
+		if (nameSubsystem == null) {
+			if (other.nameSubsystem != null)
+				return false;
+		} else if (!nameSubsystem.equals(other.nameSubsystem))
+			return false;
+		if (owner == null) {
+			if (other.owner != null)
+				return false;
+		} else if (!owner.equals(other.owner))
+			return false;
+		if (parentId == null) {
+			if (other.parentId != null)
+				return false;
+		} else if (!parentId.equals(other.parentId))
+			return false;
+		if (systemFolder == null) {
+			if (other.systemFolder != null)
+				return false;
+		} else if (!systemFolder.equals(other.systemFolder))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		if (uiHidden == null) {
+			if (other.uiHidden != null)
+				return false;
+		} else if (!uiHidden.equals(other.uiHidden))
+			return false;
+		return true;
+	}
+	
+	
 
 }
