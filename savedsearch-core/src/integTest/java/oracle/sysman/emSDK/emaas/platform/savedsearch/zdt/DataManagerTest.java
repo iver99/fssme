@@ -14,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,108 @@ import org.testng.annotations.Test;
 public class DataManagerTest
 {
 	private DataManager dataManager = DataManager.getInstance();
+	
+	@Test
+	public void testSaveToComparatorTable(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+	/*	final List<Map<String, Object>> list = new ArrayList<>();
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};*/
+		dataManager.saveToComparatorTable(entityManager, "2017-05-12 11:21:23", "2017-05-12 11:21:23", "full", "", 0.11);
+	}
+	
+	@Test
+	public void testSaveToSyncTable(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		/*final List<Map<String, Object>> list = new ArrayList<>();
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};*/
+		dataManager.saveToSyncTable("2017-05-12 11:21:23", "2017-05-12 11:21:23", "full", "", 0.11,"2017-05-12 11:21:23");
+	}
+	
+	
+	@Test
+	public void testGetComparedDataToSync(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Map<String, Object>> list = new ArrayList<>();
+		String date = "2017-05-12 11:21:23";
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getComparedDataToSync(entityManager, date);
+		dataManager.getComparedDataToSync(entityManager, null);
+		
+	}
+	
+	@Test
+	public void testGetSyncStatus(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Map<String, Object>> list = new ArrayList<>();
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getComparatorStatus(entityManager);
+		
+	}
+	
+	@Test
+	public void testGetCompareStatus(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Map<String, Object>> list = new ArrayList<>();
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getSyncStatus(entityManager);
+		
+	}
+	
+	@Test
+	public void testGetLastComparisonDateForSync(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Object> list = new ArrayList<>();
+		list.add("2017-05-12 11:21:23");
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getLastComparisonDateForSync(entityManager);
+		
+	}
+	
+	@Test
+	public void testGetLatestComparisonDateForCompare(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Object> list = new ArrayList<>();
+		list.add("2017-05-12 11:21:23");
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getLatestComparisonDateForCompare(entityManager);
+		
+	}
+
 	
 	
 	@Test
@@ -167,7 +271,7 @@ public class DataManagerTest
 			}
 		};
 		dataManager.getFolderTableData(entityManager,"full", "2017-05-09 14:35:21");
-
+		dataManager.getFolderTableData(entityManager,"incremental", "2017-05-09 14:35:21");
 	}
 
 	@Test
@@ -182,6 +286,7 @@ public class DataManagerTest
 			}
 		};
 		dataManager.getSearchParamTableData(entityManager,"full", "2017-05-09 14:35:21");		
+		dataManager.getSearchParamTableData(entityManager,"incremental", "2017-05-09 14:35:21");		
 	}
 	
 	@Test
@@ -197,7 +302,7 @@ public class DataManagerTest
 			}
 		};
 		dataManager.getSearchTableData(entityManager,"full", "2017-05-09 14:35:21");
-		
+		dataManager.getSearchTableData(entityManager,"incremental", "2017-05-09 14:35:21");
 	}
 	
 	@Test
@@ -226,6 +331,7 @@ public class DataManagerTest
 			}
 		};
 		dataManager.getCategoryParamTableData(entityManager,"full", "2017-05-09 14:35:21");
+		dataManager.getCategoryParamTableData(entityManager,"incremental", "2017-05-09 14:35:21");
 	}
 	
 	@Test
@@ -243,7 +349,7 @@ public class DataManagerTest
 				entityManager.createNativeQuery(anyString);
                 result = query;               
                 query.getResultList();
-                result = 0;
+                result =  new ArrayList<Map<String, Object>>();
 				
 			}
 		};
@@ -261,11 +367,14 @@ public class DataManagerTest
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = new Integer("0");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<>();
-				
+				result = objs;
 			}
 		};
 		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
@@ -298,11 +407,14 @@ public class DataManagerTest
 		BigInteger deleted = new BigInteger("1"); 
 		Long tenantId = 3L;
 		
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<>();
-				
+				result = objs;
 			}
 		};
 		
@@ -360,7 +472,7 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				query.getResultList();
-				result = 0;
+				result =  new ArrayList<Map<String, Object>>();
 				
 			}
 		};
@@ -383,10 +495,14 @@ public class DataManagerTest
 		String creationDate="creationDate"; 
 		String lastModificationDate="lastModificationDate";
 		Integer deleted = new Integer("0");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
 			}
 		};
 		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, paramValueStr, 
@@ -428,7 +544,7 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				query.getResultList();
-				result = 0;
+				result =  new ArrayList<Map<String, Object>>();
 			}
 		};
 		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, paramValueStr, 
@@ -476,11 +592,14 @@ public class DataManagerTest
 		String providerName="providerName"; 
 		String providerVersion="providerVersion"; 
 		String providerAssetRoot="providerAssetRoot"; 
-		
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
 			}
 		};
 		
@@ -578,7 +697,7 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				q1.getResultList();
-				result = 0;
+				result = new ArrayList<Map<String, Object>>();	
 			}
 		};
 		
@@ -613,11 +732,14 @@ public class DataManagerTest
 		Long tenantId = 1L; 
 		String dashboardIneligible = "dashboardIneligible";
 		String lastModificationDate = "lastModificationDate";
-		
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				q1.getResultList();
-				result = new ArrayList<>();
+				result = objs;
 			}
 		};
 		
@@ -694,7 +816,7 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				query.getResultList();
-				result = 0;
+				result =  new ArrayList<Map<String, Object>>();
 			}
 		};
 		
