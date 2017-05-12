@@ -79,20 +79,8 @@ public class SearchManagerImpl extends SearchManager
 
 	private static final String DEFAULT_DB_VALUE = "0";
 	
-	private static final String SQL_INSERT_SEARCH_PARAM = "INSERT INTO EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
-			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED) VALUES(?,?,?,?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?)";
-	private static final String SQL_INSERT_SEARCH = "INSERT INTO EMS_ANALYTICS_SEARCH (SEARCH_ID,SEARCH_GUID,NAME,OWNER,CREATION_DATE,"
-			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,FOLDER_ID,CATEGORY_ID,"
-			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
-			+ "DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
-			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
-			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
-			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
-			+ "to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,?,?,?,"
-			+ "?,?,?,?,?,"
-			+ "?,?,?,?,?,"
-			+ "?,?,?,?,?,"
-			+ "?,?,?,?,?," + "?,?,?)";
+	private static final String SQL_GET_ID_NAME_BY_UNIQUE_KEY = "SELECT SEARCH_ID, NAME FROM EMS_ANALYTICS_SEARCH "
+			+ "WHERE NAME = ? AND CATEGORY_ID=? AND FOLDER_ID = ? AND DELETED=? AND OWNER=?";
 
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
@@ -1617,4 +1605,44 @@ public class SearchManagerImpl extends SearchManager
 
 	}
 	
+
+	private String getQueryCondition(List<BigInteger> ids) {
+		if (ids != null && !ids.isEmpty()) {
+			StringBuilder parameters = new StringBuilder();
+			int flag = 0;
+			for (BigInteger id : ids) {
+				if (flag++ > 0) {
+					parameters.append(",");
+				}
+				parameters.append(id);
+			}
+			return parameters.toString();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name,
+			BigInteger folderId, BigInteger categoryId, BigInteger deleted,String owner) {
+		EntityManager em = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
+			Query q1 = em.createNativeQuery(SQL_GET_ID_NAME_BY_UNIQUE_KEY).setParameter(1, name).setParameter(2, categoryId)
+				.setParameter(3, folderId).setParameter(4, deleted).setParameter(5, owner);
+			q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+			@SuppressWarnings("unchecked")
+			List<Map<String, Object>> result = q1.getResultList();
+		
+			return result;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
 }

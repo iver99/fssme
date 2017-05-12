@@ -223,5 +223,9 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract List<Search> getSearchListByIds(List<BigInteger> ids) throws EMAnalyticsFwkException;
+
+		
+	public abstract List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name, BigInteger folderId,
+			BigInteger categoryId, BigInteger deleted,String owner);
 	
 }
