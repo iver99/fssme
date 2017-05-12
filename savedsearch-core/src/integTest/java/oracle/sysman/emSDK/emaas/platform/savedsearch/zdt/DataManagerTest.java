@@ -14,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -243,7 +245,7 @@ public class DataManagerTest
 				entityManager.createNativeQuery(anyString);
                 result = query;               
                 query.getResultList();
-                result = 0;
+                result =  new ArrayList<Map<String, Object>>();
 				
 			}
 		};
@@ -261,10 +263,14 @@ public class DataManagerTest
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = new Integer("0");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
 				
 			}
 		};
@@ -297,11 +303,14 @@ public class DataManagerTest
 		Integer uiHidden= new Integer("2"); 
 		BigInteger deleted = new BigInteger("1"); 
 		Long tenantId = 3L;
-		
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
 				
 			}
 		};
@@ -360,7 +369,7 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				query.getResultList();
-				result = 0;
+				result = new ArrayList<Map<String, Object>>();
 				
 			}
 		};
@@ -383,10 +392,15 @@ public class DataManagerTest
 		String creationDate="creationDate"; 
 		String lastModificationDate="lastModificationDate";
 		Integer deleted = new Integer("0");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
+				
 			}
 		};
 		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, paramValueStr, 
@@ -428,7 +442,7 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				query.getResultList();
-				result = 0;
+				result = new ArrayList<Map<String, Object>>();
 			}
 		};
 		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, paramValueStr, 
@@ -476,11 +490,15 @@ public class DataManagerTest
 		String providerName="providerName"; 
 		String providerVersion="providerVersion"; 
 		String providerAssetRoot="providerAssetRoot"; 
-		
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
+				
 			}
 		};
 		
@@ -578,7 +596,7 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				q1.getResultList();
-				result = 0;
+				result = new ArrayList<Map<String, Object>>();
 			}
 		};
 		
@@ -614,10 +632,15 @@ public class DataManagerTest
 		String dashboardIneligible = "dashboardIneligible";
 		String lastModificationDate = "lastModificationDate";
 		
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				q1.getResultList();
-				result = new ArrayList<>();
+				result = objs;
+				
 			}
 		};
 		
@@ -694,7 +717,7 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				query.getResultList();
-				result = 0;
+				result =new ArrayList<Map<String, Object>>();
 			}
 		};
 		
