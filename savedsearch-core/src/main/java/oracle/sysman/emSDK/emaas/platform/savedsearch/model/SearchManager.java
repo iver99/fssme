@@ -59,10 +59,31 @@ public abstract class SearchManager
 	 *
 	 * @param searchName
 	 * @param isExactly
-	 * @param permanently
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract void deleteSearchByName(String searchName, boolean isExactly)throws EMAnalyticsFwkException;
+
+
+    /**
+     *
+     * @param categoryId
+     */
+    public abstract List<BigInteger> getSearchIdsByCategory(BigInteger categoryId) throws EMAnalyticsFwkException;
+
+	/**
+	 *
+	 * @param searchIds
+	 * @throws EMAnalyticsFwkException
+     */
+	public abstract void cleanSearchesPermanentlyById(List<BigInteger> searchIds)throws EMAnalyticsFwkException;
+
+	/**
+	 *
+	 * @param search
+	 * @throws EMAnalyticsFwkException
+     */
+	public abstract void saveOobSearch(Search search)throws EMAnalyticsFwkException;
+
 	/**
 	 * Resturns the search by its name dxy
 	 * @param searchName

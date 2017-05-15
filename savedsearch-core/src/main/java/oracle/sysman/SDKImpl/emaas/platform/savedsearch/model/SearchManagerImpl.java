@@ -2,16 +2,14 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
+import javax.persistence.*;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
@@ -20,19 +18,12 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
@@ -52,7 +43,8 @@ public class SearchManagerImpl extends SearchManager
 
 	//  LoggergetSearchListByCategoryId
 	private static final Logger LOGGER = LogManager.getLogger(SearchManagerImpl.class);
-
+	private static final Long DEFAULT_TENANT_ID = -11L;
+	private static final String DEFAULT_CURRENT_USER = "ORACLE";
 	public static final SearchManagerImpl SEARCH_MANAGER = new SearchManagerImpl();
 	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 and e.owner in ('ORACLE',:userName) order by e.lastModificationDate DESC ";
 	private static final String LASTACCESS_ORDERBY_FOR_INTERNAL_TENANT = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.lastModificationDate DESC ";
@@ -61,16 +53,16 @@ public class SearchManagerImpl extends SearchManager
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_2 = "e.emAnalyticsCategory.categoryId=:widgetGroupId AND ";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_3 = "e.emAnalyticsCategory.categoryId in (select c.categoryId from EmAnalyticsCategory c where c.providerName in (";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_4 = "))  "
-			+ "AND e.deleted=0 AND e.isWidget=1 AND e.tenant=:tenantId AND (e.owner=:userName OR e.systemSearch =1)";
+			+ "AND e.deleted=0 AND e.isWidget=1 AND (e.tenant=:tenantId OR e.tenant = -1) AND (e.owner=:userName OR e.systemSearch =1)";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_1 = "SELECT e FROM EmAnalyticsSearch e LEFT JOIN EmAnalyticsSearchParam pm "
-			+ "ON pm.searchId=e.id AND pm.tenantId=:tenantId AND pm.name = 'DASHBOARD_INELIGIBLE' where e.tenant=:tenantId AND ";
+			+ "ON pm.searchId=e.id AND (pm.tenantId=:tenantId OR pm.tenantId = -11) AND pm.name = 'DASHBOARD_INELIGIBLE' where (e.tenant=:tenantId or e.tenant = -11) AND ";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_2 = "e.emAnalyticsCategory.categoryId=:widgetGroupId AND ";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_3 = "e.emAnalyticsCategory.categoryId in "
 			+ "(select c.categoryId from EmAnalyticsCategory c LEFT JOIN EmAnalyticsCategoryParam cm "
-			+ "on cm.categoryId=c.categoryId AND cm.name='DASHBOARD_INELIGIBLE' AND cm.tenantId=:tenantId "
+			+ "on cm.categoryId=c.categoryId AND cm.name='DASHBOARD_INELIGIBLE' AND (cm.tenantId=:tenantId OR cm.tenantId = -11)"
 			+ "where c.providerName in (";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_4 = ") AND (cm.value IS NULL OR cm.value<>'1')) "
-			+ "AND e.deleted=0 AND e.isWidget=1 AND e.tenant=:tenantId AND (e.owner=:userName OR e.systemSearch =1) "
+			+ "AND e.deleted=0 AND e.isWidget=1 AND (e.tenant=:tenantId OR e.tenant = -11) AND (e.owner=:userName OR e.systemSearch =1) "
 			+ "AND (pm.paramValueStr IS NULL OR pm.paramValueStr<>'1')";
 
 	private static final String DEFAULT_DB_VALUE = "0";
@@ -126,6 +118,7 @@ public class SearchManagerImpl extends SearchManager
 			}
 			searchObj.setDeleted(searchId);
 			searchObj.setLastModificationDate(DateUtil.getGatewayTime());
+			searchObj.setTenantId(TenantContext.getContext().getTenantInternalId());
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
@@ -188,6 +181,7 @@ public class SearchManagerImpl extends SearchManager
 			for (EmAnalyticsSearch temp : emAnalyticsSearchList) {
 				LOGGER.debug("START DELETE {}", temp.getId());
 				temp.setDeleted(temp.getId());
+				temp.setTenantId(TenantContext.getContext().getTenantInternalId());
 				entityManager.merge(temp);
 				LOGGER.info("DELETED SEARCH WITH ID: {}", temp.getId());
 			}
@@ -236,6 +230,7 @@ public class SearchManagerImpl extends SearchManager
 									EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
 						}*/
 			targetCardObj.setDeleted(targetCardId);
+			targetCardObj.setTenantId(TenantContext.getContext().getTenantInternalId());
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}			
@@ -286,6 +281,7 @@ public class SearchManagerImpl extends SearchManager
 						"Search with Id: " + searchEntity.getId() + " is system search and NOT allowed to edit",
 						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);
 			}
+			searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
@@ -900,6 +896,7 @@ public class SearchManagerImpl extends SearchManager
 						}
 
 						emSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
+						emSearch.setTenantId(TenantContext.getContext().getTenantInternalId());
 						em.merge(emSearch);
 						tmpImportSrImpl.setId(emSearch.getId());
 						importedList.add(createSearchObject(emSearch, null));
@@ -1055,6 +1052,7 @@ public class SearchManagerImpl extends SearchManager
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
+			searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 			em.persist(searchEntity);
 			em.getTransaction().commit();
 			em.refresh(searchEntity);
@@ -1084,6 +1082,87 @@ public class SearchManagerImpl extends SearchManager
 		}
 	}
 
+
+	@Override
+	public List<BigInteger> getSearchIdsByCategory(BigInteger categoryId) throws EMAnalyticsFwkException {
+		LOGGER.debug("Calling SearchManager.getSearchIdsByCategory");
+		List<BigInteger> searchIds;
+		EntityManager entityManager = null;
+		try {
+			entityManager = PersistenceManager.getInstance().getEntityManager(new TenantInfo(DEFAULT_CURRENT_USER, DEFAULT_TENANT_ID));
+			searchIds = entityManager.createNamedQuery("Search.getSystemSearchIdsByCategoryId").setParameter("categoryId", categoryId).getResultList();
+			return searchIds;
+		}catch (NoResultException nre){
+			LOGGER.info("No Searches Found under category: {}", categoryId);
+			return Collections.emptyList();
+		}catch (Exception e){
+			LOGGER.error("Fall into error while retrieving the list of searches for category " + categoryId, e);
+			throw new EMAnalyticsFwkException("Fall into error while retrieving the list of searches for category " + categoryId,
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+		}finally {
+			if (entityManager != null)entityManager.close();
+		}
+	}
+	@Override
+	public void cleanSearchesPermanentlyById(List<BigInteger> searchIds) throws EMAnalyticsFwkException {
+		LOGGER.debug("Calling SearchManager.cleanSearchesPermanentlyById");
+		EntityManager entityManager = null;
+		try{
+			entityManager = PersistenceManager.getInstance().getEntityManager(new TenantInfo(DEFAULT_CURRENT_USER, DEFAULT_TENANT_ID));
+			if (!entityManager.getTransaction().isActive()) {
+				entityManager.getTransaction().begin();
+			}
+			LOGGER.debug("Cleaning oob search params");
+			entityManager.createNamedQuery("SearchParam.deleteParamsBySearchIds")
+					.setParameter("searchIds", searchIds).executeUpdate();
+			LOGGER.debug("Cleaning oob searches");
+			entityManager.createNamedQuery("Search.deleteSystemSearchByIds")
+					.setParameter("ids", searchIds).executeUpdate();
+			entityManager.getTransaction().commit();
+		}catch (Exception e){
+			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+			LOGGER.error("Fall into error while cleaning system searches by ids", e);
+			throw new EMAnalyticsFwkException("Fall into error while cleaning system searches by ids",
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+		}finally {
+			if (entityManager != null)entityManager.close();
+		}
+
+	}
+
+	@Override
+	public void saveOobSearch(Search search) throws EMAnalyticsFwkException {
+		LOGGER.debug("Calling SearchManager.saveOobSearch");
+		EntityManager entityManager = null;
+		 try{
+			 entityManager = PersistenceManager.getInstance().getEntityManager(new TenantInfo(DEFAULT_CURRENT_USER, DEFAULT_TENANT_ID));
+			 EmAnalyticsSearch emAnalyticsSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, entityManager);
+			 emAnalyticsSearch.setOwner(DEFAULT_CURRENT_USER);
+			 emAnalyticsSearch.setTenantId(DEFAULT_TENANT_ID);
+			 emAnalyticsSearch.setSystemSearch(new BigDecimal("1"));
+			 emAnalyticsSearch.setLastModifiedBy(DEFAULT_CURRENT_USER);
+			 emAnalyticsSearch.setDASHBOARDINELIGIBLE("TRUE".equals(search.getDashboardIneligible().toUpperCase())?"1":"0");
+			 for(EmAnalyticsSearchParam emAnalyticsSearchParam: emAnalyticsSearch.getEmAnalyticsSearchParams())
+				 emAnalyticsSearchParam.setTenantId(DEFAULT_TENANT_ID);
+			 if (!entityManager.getTransaction().isActive()) {
+				 entityManager.getTransaction().begin();
+			 }
+			 entityManager.persist(emAnalyticsSearch);
+			 entityManager.getTransaction().commit();
+		 }catch(PersistenceException pe){
+			 processUniqueConstraints(search, entityManager, pe);
+			 EmAnalyticsProcessingException.processSearchPersistantException(pe, search.getName());
+			 LOGGER.error("Persistence error while saving the search: " + search.getName(), pe);
+			 throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
+					 EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, pe);
+		 }finally {
+			 if (entityManager != null) entityManager.close();
+		 }
+	}
+
+
+
+
 	@Override
 	public Search saveTargetCard(Search targetCard) throws EMAnalyticsFwkException
 	{
@@ -1095,6 +1174,7 @@ public class SearchManagerImpl extends SearchManager
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
+			targetCardEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 			em.persist(targetCardEntity);
 			em.getTransaction().commit();
 			return createSearchObject(targetCardEntity, null);

@@ -19,6 +19,7 @@ import javax.persistence.NonUniqueResultException;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -487,6 +488,7 @@ class EmAnalyticsObjectUtil
 				searchParamEntity.setSearchId(searchEntity.getId());
 				searchParamEntity.setName(param.getName());
 				searchParamEntity.setParamAttributes(param.getAttributes());
+				searchParamEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 				searchParamEntity.setParamType(new BigDecimal(param.getType().getIntValue()));
 				if (param.getType().equals(ParameterType.CLOB)) {
 					searchParamEntity.setParamValueClob(param.getValue());
@@ -566,6 +568,7 @@ class EmAnalyticsObjectUtil
 				newSearchParam.setEmAnalyticsSearch(searchEntity);
 				newSearchParam.setParamAttributes(param.getAttributes());
 				newSearchParam.setParamType(new BigDecimal(param.getType().getIntValue()));
+				newSearchParam.setTenantId(TenantContext.getContext().getTenantInternalId());
 				if (param.getType() == ParameterType.STRING) {
 					newSearchParam.setParamValueStr(param.getValue());
 				}
@@ -617,7 +620,7 @@ class EmAnalyticsObjectUtil
 			if (folderObj != null
 					&& BigInteger.ZERO.equals(folderObj.getDeleted())
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
-							|| folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
+							|| folderObj.getSystemFolder().intValue() == 1 ||folderObj.getOwner().toUpperCase().equals("ORACLE")|| folderObj.getOwner().equals(
 									TenantContext.getContext().getUsername()))) {
 
 				return folderObj;

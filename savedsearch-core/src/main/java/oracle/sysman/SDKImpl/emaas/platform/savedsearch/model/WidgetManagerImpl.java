@@ -63,8 +63,8 @@ public class WidgetManagerImpl extends WidgetManager
 			+ "CASE WHEN s.owner = ? THEN 'true' ELSE 'false' END as WIDGET_EDITABLE "
 			+ "FROM EMS_ANALYTICS_SEARCH s, EMS_ANALYTICS_CATEGORY c ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_2 = "WHERE c.provider_name in (";
-	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_3 = ") " + "AND s.deleted=0 AND s.IS_WIDGET=1 AND s.TENANT_ID=? ";
-	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4 = "AND s.category_id=c.category_id And c.tenant_id=? ";
+	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_3 = ") " + "AND s.deleted=0 AND s.IS_WIDGET=1 AND (s.TENANT_ID=? OR s.TENANT_ID= -11) ";
+	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4 = "AND s.category_id=c.category_id ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_5 = "AND c.CATEGORY_ID=? ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_6 = "AND (s.DASHBOARD_INELIGIBLE IS NULL OR s.DASHBOARD_INELIGIBLE <>'1') ORDER BY s.SEARCH_ID ASC ";
 

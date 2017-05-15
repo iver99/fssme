@@ -34,8 +34,9 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  * The persistent class for the EMS_ANALYTICS_SEARCH database table.
  */
 @Entity
-@Multitenant
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
+//@Multitenant
+//@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
+@AdditionalCriteria("this.tenantId = :tenant or this.tenantId = -11")
 @Table(name = "EMS_ANALYTICS_SEARCH")
 @NamedQueries({
 	@NamedQuery(name = "Search.getSearchListByIds", query = "SELECT e FROM EmAnalyticsSearch e where e.id in :ids AND e.deleted =0 "),
@@ -51,7 +52,9 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Search.getSearchByNameExcludeOOBAndNonDeleted", query = "SELECT e FROM EmAnalyticsSearch e where e.name = :searchName AND e.deleted = 0 AND e.owner in (:userName) AND  e.systemSearch = 0"),
 		@NamedQuery(name = "Search.getSearchByNamePatternExcludeOOBAndNonDeleted", query = "SELECT e FROM EmAnalyticsSearch e where e.name like :searchName escape \'\\\' AND e.deleted = 0 AND e.owner in (:userName) AND e.systemSearch = 0"),
 		@NamedQuery(name = "Search.getSearchByNameExcludeOOBAndNonDeletedFORTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.name = :searchName AND e.deleted = 0 AND e.systemSearch = 0"),
-		@NamedQuery(name = "Search.getSearchByNamePatternExcludeOOBAndNonDeletedFORTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.name like :searchName escape \'\\\' AND e.deleted = 0 AND e.systemSearch = 0")
+		@NamedQuery(name = "Search.getSearchByNamePatternExcludeOOBAndNonDeletedFORTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.name like :searchName escape \'\\\' AND e.deleted = 0 AND e.systemSearch = 0"),
+		@NamedQuery(name = "Search.deleteSystemSearchByIds", query = "DELETE FROM EmAnalyticsSearch e WHERE e.id in :ids"),
+		@NamedQuery(name = "Search.getSystemSearchIdsByCategoryId", query = "SELECT e.id FROM EmAnalyticsSearch e WHERE e.emAnalyticsCategory.categoryId = :categoryId AND e.systemSearch =1")
 })
 //@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
 public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
@@ -154,17 +157,34 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	@Column(name = "PROVIDER_ASSET_ROOT")
 	private String PROVIDER_ASSET_ROOT;
 
+	@Column(name = "TENANT_ID", nullable = false, length = 32, updatable = false)
+	private Long tenantId;
+
+	/**
+	 * @return the tenantId
+	 */
+	public Long getTenantId()
+	{
+		return tenantId;
+	}
+
+	/**
+	 * @param tenantId the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
+	}
+
+
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID"),
-		@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
-	//	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID")
+	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID")})
 	private EmAnalyticsCategory emAnalyticsCategory;
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
 	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "FOLDER_ID", referencedColumnName = "FOLDER_ID"),
-		@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
+	@JoinColumns({ @JoinColumn(name = "FOLDER_ID", referencedColumnName = "FOLDER_ID")})
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	//bi-directional many-to-one association to EmAnalyticsSearchParam
@@ -173,8 +193,6 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	@PrivateOwned
 	private Set<EmAnalyticsSearchParam> emAnalyticsSearchParams;
 
-	@Column(name = "TENANT_ID", insertable = false, updatable = false)
-	long tenant;
 
 	public EmAnalyticsSearch()
 	{

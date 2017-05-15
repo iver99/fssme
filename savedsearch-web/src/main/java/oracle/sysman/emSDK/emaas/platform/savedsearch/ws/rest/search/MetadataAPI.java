@@ -1,5 +1,7 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,14 +13,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+//JUST FOR TEST TO BE DELETED
 @Path("oob")
 public class MetadataAPI {
 	@GET
-	@Path("dashboards")
+	@Path("widgets")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getOobDashboards() {
+        LogUtil.getInteractionLogger().info("Service calling to (GET) WIDGETS");
 	    StringBuilder myMock = new StringBuilder();
-	    InputStream realtimeStreamsInfoStream = MetadataAPI.class.getResourceAsStream("/oob_dashboard.json");
+	    InputStream realtimeStreamsInfoStream = MetadataAPI.class.getResourceAsStream("/widgets.json");
         BufferedReader br = null;
         String line;
         try {

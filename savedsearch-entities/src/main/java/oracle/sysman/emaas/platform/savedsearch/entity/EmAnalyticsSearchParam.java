@@ -28,12 +28,11 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  */
 
 @Entity
-@Multitenant(includeCriteria = false)
 @IdClass(EmAnalyticsSearchParamPK.class)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_SEARCH_PARAMS")
 @NamedQueries({
-	@NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
+	    @NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
+        @NamedQuery(name = "SearchParam.deleteParamsBySearchIds", query = "DELETE FROM EmAnalyticsSearchParam e where e.searchId in :searchIds")
 })
 public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 {
@@ -63,7 +62,7 @@ public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
 	private String paramValueStr;
 
 	@Id
-	@Column(name = "TENANT_ID", insertable = false, updatable = false)
+	@Column(name = "TENANT_ID", updatable = false)
 	private Long tenantId;
 
 	@ManyToOne(optional = false)

@@ -92,6 +92,66 @@ public class SearchManagerImplTest
 		searchManager.createNewSearch();
 	}
 
+	@Test
+	public void testGetSearchIdsByCategoryId() throws EMAnalyticsFwkException {
+		final List<BigInteger> searchIds = new ArrayList<>();
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, searchIds);
+				result = query;
+				query.executeUpdate();
+			}
+		};
+		searchManager = SearchManagerImpl.getInstance();
+		searchManager.cleanSearchesPermanentlyById(searchIds);
+	}
+
+	@Test
+	public void testSaveOobSearch() throws EMAnalyticsFwkException {
+		Search search = new SearchImpl();
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				entityManager.getTransaction().isActive();
+				result = Boolean.TRUE;
+				entityManager.persist((EmAnalyticsSearch)any);
+				entityManager.getTransaction().commit();
+
+			}
+		};
+        searchManager = SearchManagerImpl.getInstance();
+		searchManager.saveOobSearch(search);
+	}
+
+	@Test
+	public void testGetSearchIdCategory() throws EMAnalyticsFwkException {
+		final BigInteger categoryId = new BigInteger("8");
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, categoryId);
+				result = query;
+				query.getResultList();
+			}
+		};
+
+		searchManager = SearchManagerImpl.getInstance();
+		searchManager.getSearchIdsByCategory(categoryId);
+	}
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
 	public void testDeleteSearchException() throws EMAnalyticsFwkException
 	{

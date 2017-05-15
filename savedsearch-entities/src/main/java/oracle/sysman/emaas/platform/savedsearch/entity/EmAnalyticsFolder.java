@@ -26,8 +26,6 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  * The persistent class for the EMS_ANALYTICS_FOLDERS database table.
  */
 @Entity
-@Multitenant
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_FOLDERS")
 @NamedQueries({
 		@NamedQuery(name = "Folder.getSubFolder", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= "
@@ -79,6 +77,10 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 	@Column(name = "DELETED")
 	private BigInteger deleted;
 
+	@Column(name = "TENANT_ID")
+	private Long tenantId;
+
+
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@OneToMany(mappedBy = "emAnalyticsFolder")
 	private Set<EmAnalyticsCategory> emAnalyticsCategories;
@@ -99,6 +101,22 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 
 	public EmAnalyticsFolder()
 	{
+	}
+
+	/**
+	 * @return the tenantId
+	 */
+	public Long getTenantId()
+	{
+		return tenantId;
+	}
+
+	/**
+	 * @param tenantId the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 
 	public BigInteger getDeleted()

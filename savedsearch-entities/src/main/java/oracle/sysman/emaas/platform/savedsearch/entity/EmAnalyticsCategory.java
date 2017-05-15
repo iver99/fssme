@@ -27,8 +27,6 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  * The persistent class for the EMS_ANALYTICS_CATEGORY database table.
  */
 @Entity
-@Multitenant
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_CATEGORY")
 @NamedQueries({
 		@NamedQuery(name = "Category.getCategoryById", query = "SELECT e FROM EmAnalyticsCategory e Where e.categoryId = :id  AND e.deleted =0  AND e.owner in ('ORACLE',:userName)"),
@@ -70,10 +68,12 @@ public class EmAnalyticsCategory extends EmBaseEntity implements Serializable
 	@Column(name = "OWNER")
 	private String owner;
 
+	@Column(name = "TENANT_ID")
+	private Long tenantId;
+
 	//bi-directional many-to-one association to EmAnalyticsFolder
 	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "DEFAULT_FOLDER_ID", referencedColumnName = "FOLDER_ID"),
-			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
+	@JoinColumns({ @JoinColumn(name = "DEFAULT_FOLDER_ID", referencedColumnName = "FOLDER_ID")})
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	@Column(name = "DELETED")
@@ -107,6 +107,22 @@ public class EmAnalyticsCategory extends EmBaseEntity implements Serializable
 	public EmAnalyticsCategory()
 	{
 	}
+	/**
+	 * @return the tenantId
+	 */
+	public Long getTenantId()
+	{
+		return tenantId;
+	}
+
+	/**
+	 * @param tenantId the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
+	}
+
 
 	public BigInteger getCategoryId()
 	{

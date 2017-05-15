@@ -365,7 +365,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_WIDGETS).withHref(applicationUrl + NAV_WIDGETS));
 				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrl + NAV_WIDGETGROUPS));
 				links.add(new Link().withRel(REL_LOG_CONFIG).withHref(applicationUrl + NAV_LOGCONFIGS));
-				links.add(new Link().withRel("oob/dashboards").withHref(applicationUrl + "/savedsearch/v1/oob/dashboards"));
+				//JUST FOR TEST TO BE DELETED
+				links.add(new Link().withRel("oob/widgets").withHref(applicationUrl + "/savedsearch/v1/oob/widgets"));
 			}
 			if (applicationUrlSSL != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
@@ -382,7 +383,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_WIDGETS).withHref(applicationUrlSSL + NAV_WIDGETS));
 				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
 				links.add(new Link().withRel(REL_LOG_CONFIG).withHref(applicationUrlSSL + NAV_LOGCONFIGS));
-				links.add(new Link().withRel("oob/dashboards").withHref(applicationUrl + "/savedsearch/v1/oob/dashboards"));
+				//JUST FOR TEST TO BE DELETED
+				links.add(new Link().withRel("oob/widgets").withHref(applicationUrl + "/savedsearch/v1/oob/widgets"));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 

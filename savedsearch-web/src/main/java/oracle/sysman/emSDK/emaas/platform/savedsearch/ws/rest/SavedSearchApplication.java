@@ -13,6 +13,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.Impor
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportFolderSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.importsearch.ImportSearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.loggingconfig.LoggingConfigAPI;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.metadata.MetadataRefreshAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search.FilterSearchAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search.MetadataAPI;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search.SearchAPI;
@@ -42,6 +43,7 @@ public class SavedSearchApplication extends Application
 		s.add(TargetCardLinksFilterAPI.class);
 		s.add(ZDTAPI.class);
 		s.add(MetadataAPI.class);
+		s.add(MetadataRefreshAPI.class);
 		return s;
 	}
 
