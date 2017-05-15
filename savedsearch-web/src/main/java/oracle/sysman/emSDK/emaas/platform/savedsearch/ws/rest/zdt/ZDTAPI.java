@@ -147,49 +147,7 @@ public class ZDTAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-/*
-	@PUT
-	@Path("sync")
-	@Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-	public Response sync(JSONObject dataToSync)
-	{
-		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/sync");
-		ZDTTableRowEntity data = null;
-		try {
-			data = JSONUtil.fromJson(new ObjectMapper(), dataToSync.toString(), ZDTTableRowEntity.class);
-			String response = new ZDTSynchronizer().sync(data);
-			if (response.contains("Errors:")) {
-				return Response.status(500).entity(response).build();
-			}
-			return Response.ok(response).build();
-		}
-		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return Response.status(400).entity(e.getLocalizedMessage()).build();
-		}
-	}
-	*/
-/*	@GET
-	@Path("sync")
-	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
-	{
-		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/sync?syncType=xx&syncDate=xx");
-		ZDTTableRowEntity data = null;
-		try {
-			data = JSONUtil.fromJson(new ObjectMapper(), dataToSync.toString(), ZDTTableRowEntity.class);
-			String response = new ZDTSynchronizer().sync(data);
-			if (response.contains("Errors:")) {
-				return Response.status(500).entity(response).build();
-			}
-			return Response.ok(response).build();
-		}
-		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return Response.status(400).entity(e.getLocalizedMessage()).build();
-		}
-	}
-*/
+
 	@GET
 	@Path("sync")
 	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
