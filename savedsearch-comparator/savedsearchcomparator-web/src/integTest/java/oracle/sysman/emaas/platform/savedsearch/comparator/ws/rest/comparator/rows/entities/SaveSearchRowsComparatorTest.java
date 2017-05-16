@@ -3,8 +3,14 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.HashMap;
 
+import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookupException;
+import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookups;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.config.ClientConfig;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
@@ -20,7 +26,12 @@ import mockit.Mocked;
 @Test(groups = { "s1" })
 public class SaveSearchRowsComparatorTest
 {
-	
+	@Mocked
+	AbstractComparator abstractComparator;
+	@Mocked
+	LookupClient client1;
+	@Mocked
+	LookupClient client2;
 	private static final String JSON_RESPONSE_DATA_TABLE="{"
 			+ "\"EMS_ANALYTICS_CATEGORY\": [{"
 			+ 		"\"CATEGORY_ID\":5,"
@@ -135,8 +146,17 @@ public class SaveSearchRowsComparatorTest
 			+ "}";
 
 	@Test
-	public void testCompareInstancesData() throws IOException
+	public void testCompareInstancesData() throws IOException, ZDTException
 	{
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
 		SavedsearchRowsComparator src1 = new SavedsearchRowsComparator();
 		ZDTTableRowEntity tre1 = Deencapsulation.invoke(src1, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
@@ -180,8 +200,17 @@ public class SaveSearchRowsComparatorTest
 	}
 
 	@Test
-	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException
+	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException, ZDTException
 	{
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
 		SavedsearchRowsComparator src = new SavedsearchRowsComparator();
 		ZDTTableRowEntity tre = Deencapsulation.invoke(src, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
@@ -192,18 +221,88 @@ public class SaveSearchRowsComparatorTest
 		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId(), "2024");
 		Assert.assertEquals(tre.getSavedSearchSearchParams().get(0).getName(), "meId");
 	}
+
 	
 	@Test
-	public void testCompare(@Mocked final AbstractComparator abstractComparator, 
-			@Mocked final InstancesComparedData<ZDTTableRowEntity> zdtTableRowsEntity) throws ZDTException {
-		SavedsearchRowsComparator src = new SavedsearchRowsComparator();
-		 new Expectations(){
-	            {
-	                abstractComparator.getOMCInstances();
-	                result = null;
-	            }
-	        };
-	        src.compare("tenantId","userTenant");
-		
+	public void testsaveComparatorStatus() throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
+		drc.saveComparatorStatus("tenantId", "userTenant", null, null);
+	}
+	
+	
+	@Test
+	public void testretrieveSyncStatusForOmcInstance() throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
+		drc.retrieveSyncStatusForOmcInstance(null, null);
+	}
+	
+	@Test 
+	public void testretrieveComparatorStatusForOmcInstance() throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
+		drc.retrieveComparatorStatusForOmcInstance(null, null);
+	}
+	
+	@Test
+	 public void testCompare() throws ZDTException {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
+	
+		drc.compare(null, null, null);
+	}
+	
+	@Test
+	public void testcountForComparedRows() throws ZDTException {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
+		ZDTTableRowEntity entity = new ZDTTableRowEntity();
+		entity.setSavedSearchCategory(null);
+		entity.setSavedSearchCategoryParams(null);
+		entity.setSavedSearchFoldersy(null);
+		entity.setSavedSearchSearch(null);
+		entity.setSavedSearchSearchParams(null);
+		drc.countForComparedRows(entity);
 	}
 }
