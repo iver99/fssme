@@ -296,32 +296,6 @@ public class ZDTAPI
 				new InstanceCounts(result.getInstance2()));
 		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();
 	}
-/*
-	@PUT
-	@Path("sync")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response syncOnSSF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant,@DefaultValue("full")  String syncType)
-	{
-		logger.info("There is an incoming call from ZDT comparator API to sync");
-		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
-		SavedsearchRowsComparator dcc;
-		try {
-			dcc = new SavedsearchRowsComparator();		
-			InstancesComparedData<ZDTTableRowEntity> result = null;
-		
-			result = dcc.compare(tenantIdParam, userTenant);
-			String response = dcc.sync(result, tenantIdParam, userTenant);
-			
-			return Response.ok(response).build();
-	    } catch(ZDTException zdtE) {
- 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
- 		} catch (Exception e) {
- 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
- 		}
-		
-	}
-	*/
 	
 	@GET
 	@Path("sync")

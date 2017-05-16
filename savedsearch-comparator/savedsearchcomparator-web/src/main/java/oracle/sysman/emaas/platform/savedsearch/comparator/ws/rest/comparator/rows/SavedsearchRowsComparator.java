@@ -104,51 +104,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
  		
  		return count;
  	}
-/*
-	public String sync(InstancesComparedData<ZDTTableRowEntity> instancesData,String tenantId, String userTenant) throws Exception
-	{
-		if (instancesData == null) {
-			return "Errors: Failed to retrieve ZDT OMC instances: null retrieved!";
-		}
-		// switch the data for the instances for sync
-		InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>(instancesData.getInstance1().getKey(),
-				instancesData.getInstance1().getClient(),
-				instancesData.getInstance2().getData(),
-				0);
-		InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>(instancesData.getInstance2().getKey(),
-				instancesData.getInstance2().getClient(),
-				instancesData.getInstance1().getData(),
-				0);
-		InstancesComparedData<ZDTTableRowEntity> syncData = new InstancesComparedData<ZDTTableRowEntity>(instance1, instance2);
-		
-		String message1 = null;
-		String message2 = null;
-		if (hasSyncData(syncData.getInstance1().getData())) {
-			logger.info("instance1 has data {}",syncData.getInstance1().getData().toString());
-			message1 = syncForInstance( tenantId, userTenant,syncData.getInstance1());
-		}
-		if (hasSyncData(syncData.getInstance2().getData())) {
-			logger.info("instance2 has data {}",syncData.getInstance2().getData().toString());
-			message2 = syncForInstance(tenantId, userTenant,syncData.getInstance2());
-		}
-		
- 		return syncData.getInstance1().getKey() + ":{"+ (message1==null?"sync is successful":message1) + "}" 
- 		+ "____"+syncData.getInstance2().getKey()+":{" + (message2==null?"sync is successful":message2)+"}";
-	
-	}
-	
-	private boolean hasSyncData(ZDTTableRowEntity entity) {
-		if (entity != null) {
-			if (entity.getSavedSearchCategory() != null && !entity.getSavedSearchCategory().isEmpty()) return true;
-			if (entity.getSavedSearchFoldersy() != null && !entity.getSavedSearchFoldersy().isEmpty()) return true;
-			if (entity.getSavedSearchCategoryParams() != null && !entity.getSavedSearchCategoryParams().isEmpty()) return true;
-			if (entity.getSavedSearchSearch() != null && !entity.getSavedSearchSearch().isEmpty()) return true;
-			if (entity.getSavedSearchSearchParams() != null && !entity.getSavedSearchSearchParams().isEmpty()) return true;
-			
-		}
-		return false;
-	}
-*/
+
 	/**
 	 * Compares the SSF category rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
 	 * object
