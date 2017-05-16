@@ -92,7 +92,7 @@ public class SavedsearchCountsComparator extends AbstractComparator
 	 * @param ins2
 	 * @param ze2
 	 */
-	private InstancesComparedData<CountsEntity> compareInstancesCounts(String key1, LookupClient client1, CountsEntity ze1,
+	public InstancesComparedData<CountsEntity> compareInstancesCounts(String key1, LookupClient client1, CountsEntity ze1,
  			String key2, LookupClient client2, CountsEntity ze2)
 	{
 		CountsEntity differentCountsForInstance1 = new CountsEntity();
