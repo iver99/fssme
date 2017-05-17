@@ -1,11 +1,11 @@
 [
   {
     "creationDate": "2017-03-30T14:05:24.962Z",
-    "lastModificationDate": "2017-03-30T14:05:24.963Z",
+    "lastModificationDate": "2017-03-30T14:05:24.962Z",
     "id": "3100",
     "name": "host_ec_16",
     "lastAccessDate": "2017-05-15T03:19:54.193Z",
-    "dashboardIneligible": "true",
+    "dashboardIneligible": "false",
     "parameters": [
       {
         "name": "TA_DONUT_WIDGET_ENABLE_RANKING",
@@ -400,7 +400,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:24.962Z",
     "createdOn": "2017-03-30T14:05:24.962Z"
   },
@@ -805,7 +804,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:24.984Z",
     "createdOn": "2017-03-30T14:05:24.984Z"
   },
@@ -1210,7 +1208,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:24.998Z",
     "createdOn": "2017-03-30T14:05:24.998Z"
   },
@@ -1620,7 +1617,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.144Z",
     "createdOn": "2017-03-30T14:05:31.144Z"
   },
@@ -2030,7 +2026,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.158Z",
     "createdOn": "2017-03-30T14:05:31.158Z"
   },
@@ -2440,7 +2435,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.172Z",
     "createdOn": "2017-03-30T14:05:31.172Z"
   },
@@ -2850,7 +2844,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.129Z",
     "createdOn": "2017-03-30T14:05:31.129Z"
   },
@@ -3260,7 +3253,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.186Z",
     "createdOn": "2017-03-30T14:05:31.186Z"
   },
@@ -3666,7 +3658,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.199Z",
     "createdOn": "2017-03-30T14:05:31.199Z"
   },
@@ -4076,7 +4067,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.214Z",
     "createdOn": "2017-03-30T14:05:31.214Z"
   },
@@ -4491,7 +4481,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.228Z",
     "createdOn": "2017-03-30T14:05:31.228Z"
   },
@@ -4906,7 +4895,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.244Z",
     "createdOn": "2017-03-30T14:05:31.244Z"
   },
@@ -5321,7 +5309,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.259Z",
     "createdOn": "2017-03-30T14:05:31.259Z"
   },
@@ -5731,7 +5718,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.273Z",
     "createdOn": "2017-03-30T14:05:31.273Z"
   },
@@ -6141,7 +6127,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.287Z",
     "createdOn": "2017-03-30T14:05:31.287Z"
   },
@@ -6551,7 +6536,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.304Z",
     "createdOn": "2017-03-30T14:05:31.304Z"
   },
@@ -6961,7 +6945,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.328Z",
     "createdOn": "2017-03-30T14:05:31.328Z"
   },
@@ -7381,7 +7364,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.343Z",
     "createdOn": "2017-03-30T14:05:31.343Z"
   },
@@ -7791,7 +7773,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.357Z",
     "createdOn": "2017-03-30T14:05:31.357Z"
   },
@@ -8201,7 +8182,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.371Z",
     "createdOn": "2017-03-30T14:05:31.371Z"
   },
@@ -8611,7 +8591,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.387Z",
     "createdOn": "2017-03-30T14:05:31.387Z"
   },
@@ -9022,7 +9001,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.402Z",
     "createdOn": "2017-03-30T14:05:31.402Z"
   },
@@ -9433,7 +9411,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.416Z",
     "createdOn": "2017-03-30T14:05:31.416Z"
   },
@@ -9844,7 +9821,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.429Z",
     "createdOn": "2017-03-30T14:05:31.429Z"
   },
@@ -10255,7 +10231,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.443Z",
     "createdOn": "2017-03-30T14:05:31.443Z"
   },
@@ -10666,7 +10641,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.458Z",
     "createdOn": "2017-03-30T14:05:31.458Z"
   },
@@ -11081,7 +11055,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.472Z",
     "createdOn": "2017-03-30T14:05:31.472Z"
   },
@@ -11496,7 +11469,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.487Z",
     "createdOn": "2017-03-30T14:05:31.487Z"
   },
@@ -11907,7 +11879,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.503Z",
     "createdOn": "2017-03-30T14:05:31.503Z"
   },
@@ -12318,7 +12289,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.518Z",
     "createdOn": "2017-03-30T14:05:31.518Z"
   },
@@ -12729,7 +12699,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.532Z",
     "createdOn": "2017-03-30T14:05:31.532Z"
   },
@@ -13149,7 +13118,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.545Z",
     "createdOn": "2017-03-30T14:05:31.545Z"
   },
@@ -13564,7 +13532,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.560Z",
     "createdOn": "2017-03-30T14:05:31.560Z"
   },
@@ -13979,7 +13946,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.575Z",
     "createdOn": "2017-03-30T14:05:31.575Z"
   },
@@ -14399,7 +14365,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.590Z",
     "createdOn": "2017-03-30T14:05:31.590Z"
   },
@@ -14819,7 +14784,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.605Z",
     "createdOn": "2017-03-30T14:05:31.605Z"
   },
@@ -15239,7 +15203,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.620Z",
     "createdOn": "2017-03-30T14:05:31.620Z"
   },
@@ -15659,7 +15622,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.634Z",
     "createdOn": "2017-03-30T14:05:31.634Z"
   },
@@ -16079,7 +16041,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.649Z",
     "createdOn": "2017-03-30T14:05:31.649Z"
   },
@@ -16499,7 +16460,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.663Z",
     "createdOn": "2017-03-30T14:05:31.663Z"
   },
@@ -16919,7 +16879,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.677Z",
     "createdOn": "2017-03-30T14:05:31.677Z"
   },
@@ -17339,7 +17298,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:31.692Z",
     "createdOn": "2017-03-30T14:05:31.692Z"
   },
@@ -17759,7 +17717,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:37.890Z",
     "createdOn": "2017-03-30T14:05:37.890Z"
   },
@@ -18184,7 +18141,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:37.925Z",
     "createdOn": "2017-03-30T14:05:37.925Z"
   },
@@ -18609,7 +18565,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:37.940Z",
     "createdOn": "2017-03-30T14:05:37.940Z"
   },
@@ -19034,7 +18989,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:37.955Z",
     "createdOn": "2017-03-30T14:05:37.954Z"
   },
@@ -19459,7 +19413,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:37.969Z",
     "createdOn": "2017-03-30T14:05:37.969Z"
   },
@@ -19879,7 +19832,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:37.984Z",
     "createdOn": "2017-03-30T14:05:37.984Z"
   },
@@ -20300,7 +20252,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.000Z",
     "createdOn": "2017-03-30T14:05:37.999Z"
   },
@@ -20721,7 +20672,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.019Z",
     "createdOn": "2017-03-30T14:05:38.019Z"
   },
@@ -21141,7 +21091,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.035Z",
     "createdOn": "2017-03-30T14:05:38.035Z"
   },
@@ -21561,7 +21510,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.050Z",
     "createdOn": "2017-03-30T14:05:38.050Z"
   },
@@ -21981,7 +21929,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.064Z",
     "createdOn": "2017-03-30T14:05:38.064Z"
   },
@@ -22401,7 +22348,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.081Z",
     "createdOn": "2017-03-30T14:05:38.081Z"
   },
@@ -22821,7 +22767,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.097Z",
     "createdOn": "2017-03-30T14:05:38.097Z"
   },
@@ -23241,7 +23186,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.114Z",
     "createdOn": "2017-03-30T14:05:38.114Z"
   },
@@ -23661,7 +23605,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.131Z",
     "createdOn": "2017-03-30T14:05:38.131Z"
   },
@@ -24081,7 +24024,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.148Z",
     "createdOn": "2017-03-30T14:05:38.148Z"
   },
@@ -24506,7 +24448,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.200Z",
     "createdOn": "2017-03-30T14:05:38.200Z"
   },
@@ -24931,7 +24872,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.215Z",
     "createdOn": "2017-03-30T14:05:38.215Z"
   },
@@ -24941,7 +24881,7 @@
     "id": "3097",
     "name": "Hosts: Warning Alerts",
     "lastAccessDate": "2017-05-15T03:19:54.722Z",
-    "dashboardIneligible": "false",
+	"dashboardIneligible": "false",
     "parameters": [
       {
         "name": "TA_DONUT_WIDGET_ENABLE_RANKING",
@@ -25356,7 +25296,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.231Z",
     "createdOn": "2017-03-30T14:05:38.231Z"
   },
@@ -25776,7 +25715,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.246Z",
     "createdOn": "2017-03-30T14:05:38.246Z"
   },
@@ -26191,7 +26129,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.269Z",
     "createdOn": "2017-03-30T14:05:38.269Z"
   },
@@ -26616,7 +26553,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.286Z",
     "createdOn": "2017-03-30T14:05:38.286Z"
   },
@@ -27036,7 +26972,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.312Z",
     "createdOn": "2017-03-30T14:05:38.312Z"
   },
@@ -27461,7 +27396,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.329Z",
     "createdOn": "2017-03-30T14:05:38.329Z"
   },
@@ -27886,7 +27820,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.344Z",
     "createdOn": "2017-03-30T14:05:38.344Z"
   },
@@ -28311,7 +28244,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.368Z",
     "createdOn": "2017-03-30T14:05:38.368Z"
   },
@@ -28731,7 +28663,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.384Z",
     "createdOn": "2017-03-30T14:05:38.384Z"
   },
@@ -29151,7 +29082,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.404Z",
     "createdOn": "2017-03-30T14:05:38.404Z"
   },
@@ -29571,7 +29501,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.421Z",
     "createdOn": "2017-03-30T14:05:38.421Z"
   },
@@ -29986,7 +29915,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.435Z",
     "createdOn": "2017-03-30T14:05:38.435Z"
   },
@@ -30401,7 +30329,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.454Z",
     "createdOn": "2017-03-30T14:05:38.454Z"
   },
@@ -30821,7 +30748,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.477Z",
     "createdOn": "2017-03-30T14:05:38.477Z"
   },
@@ -31246,7 +31172,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.494Z",
     "createdOn": "2017-03-30T14:05:38.494Z"
   },
@@ -31671,7 +31596,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.509Z",
     "createdOn": "2017-03-30T14:05:38.509Z"
   },
@@ -32096,7 +32020,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.523Z",
     "createdOn": "2017-03-30T14:05:38.523Z"
   },
@@ -32511,7 +32434,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.538Z",
     "createdOn": "2017-03-30T14:05:38.538Z"
   },
@@ -32931,7 +32853,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.557Z",
     "createdOn": "2017-03-30T14:05:38.557Z"
   },
@@ -32941,9 +32862,8 @@
     "id": "3216",
     "name": "Average Memory Usage",
     "lastAccessDate": "2017-05-15T03:19:54.876Z",
-    "dashboardIneligible": "false",
-    "parameters": [
-      {
+	"dashboardIneligible": "false",
+     "parameters": [{
         "name": "TA_DONUT_WIDGET_ENABLE_RANKING",
         "value": "false",
         "type": "STRING"
@@ -33351,7 +33271,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.576Z",
     "createdOn": "2017-03-30T14:05:38.576Z"
   },
@@ -33771,7 +33690,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.592Z",
     "createdOn": "2017-03-30T14:05:38.592Z"
   },
@@ -34191,7 +34109,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-30T14:05:38.608Z",
     "createdOn": "2017-03-30T14:05:38.608Z"
   },
@@ -34677,7 +34594,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-31T02:52:08.415Z",
     "createdOn": "2017-03-31T02:52:08.415Z"
   },
@@ -35163,7 +35079,6 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-31T02:52:08.431Z",
     "createdOn": "2017-03-31T02:52:08.431Z"
   },
@@ -35649,8 +35564,7 @@
     "locked": false,
     "uiHidden": false,
     "isWidget": true,
-    "editable": false,
     "lastModifiedOn": "2017-03-31T02:52:08.448Z",
     "createdOn": "2017-03-31T02:52:08.448Z"
   }
-]
+] 

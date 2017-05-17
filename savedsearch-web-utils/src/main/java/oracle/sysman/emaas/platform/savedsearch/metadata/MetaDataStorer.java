@@ -27,7 +27,7 @@ public class MetaDataStorer {
 
         try {
             List<BigInteger> searchIds = searchManager.getSearchIdsByCategory(categoryId);
-            if(!searchIds.isEmpty() && searchIds !=null )searchManager.cleanSearchesPermanentlyById(searchIds);
+            searchManager.cleanSearchesPermanentlyById(searchIds);
         } catch (EMAnalyticsFwkException e) {
             LOGGER.error("Fail into error while deleting the oob widget by categoryId: {}, {}", categoryId, e.getLocalizedMessage());
             throw e;

@@ -33,6 +33,13 @@ public class EntityJsonUtilTest
 	@Mocked
 	Throwable throwable;
 
+	@Test
+	public void testGetWidgetObject() throws EMAnalyticsFwkException {
+		Search search = new SearchImpl();
+		search.setDashboardIneligible("1");
+		search.setId(new BigInteger("1"));
+		EntityJsonUtil.getWidgetJsonObject(search);
+	}
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
 	public void getCategoryJsonObjJSONException(@Mocked JSONUtil jsonUtil) throws EMAnalyticsFwkException, JSONException
 	{

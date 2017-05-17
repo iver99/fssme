@@ -138,6 +138,9 @@ public abstract class SearchManager
 	 */
 	public abstract Search getSearchByName(String name, BigInteger folderId) throws EMAnalyticsFwkException;
 
+
+	public abstract List<Search> getWidgetByName(String name) throws EMAnalyticsFwkException;
+
 	/**
 	 * Returns the count of (accessible) search entities in a folder.
 	 *

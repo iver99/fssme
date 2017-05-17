@@ -81,7 +81,6 @@ public class MetaDataRetriever {
         }
         RestClient restClient = new RestClient();
         String response = restClient.get(versionedLink.getHref(),"CloudServices",versionedLink.getAuthToken());
-        LOGGER.error("GET response for fetching oob: {}",response);
         try {
             oobWidgetList = JSONUtil.fromJsonToListUnencoded(response, SearchImpl.class);
         } catch (NullPointerException npe){

@@ -361,6 +361,36 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
+	public List<Search> getWidgetByName(String name) throws EMAnalyticsFwkException {
+		LOGGER.info("Calling SearchManager.getWidgetByName, with name {}", name);
+		EntityManager entityManager = null;
+		List<EmAnalyticsSearch> emAnalyticsSearchList;
+		List<Search> result = new ArrayList<>();
+		try{
+			entityManager = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			emAnalyticsSearchList = entityManager.createNamedQuery("Search.getWidgetByName")
+					.setParameter("widgetName", name)
+					.setParameter(QueryParameterConstant.USER_NAME,TenantContext.getContext().getUsername())
+					.getResultList();
+			for(EmAnalyticsSearch emAnalyticsSearch : emAnalyticsSearchList){
+				entityManager.refresh(emAnalyticsSearch);
+				Search search = createSearchObject(emAnalyticsSearch, null);
+				search.setDashboardIneligible(emAnalyticsSearch.getDASHBOARDINELIGIBLE() == null?"0":emAnalyticsSearch.getDASHBOARDINELIGIBLE());
+				result.add(search);
+			}
+			return result;
+		}catch(Exception e){
+			LOGGER.error("Fall into error while retrieving widget with name: {}", name);
+			throw new EMAnalyticsFwkException("Fall into error while retrieving widget with name: "+name, EMAnalyticsFwkException.ERR_GENERIC, null,e);
+		}finally {
+			if(entityManager != null)
+				entityManager.close();
+		}
+
+	}
+
+
+	@Override
 	public int getSearchCountByFolderId(BigInteger folderId) throws EMAnalyticsFwkException
 	{
 		throw new RuntimeException("getSearchCountByFolderId is not ready to use");
@@ -1106,6 +1136,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public void cleanSearchesPermanentlyById(List<BigInteger> searchIds) throws EMAnalyticsFwkException {
 		LOGGER.debug("Calling SearchManager.cleanSearchesPermanentlyById");
+		if(searchIds.isEmpty() && searchIds ==null ) return;
 		EntityManager entityManager = null;
 		try{
 			entityManager = PersistenceManager.getInstance().getEntityManager(new TenantInfo(DEFAULT_CURRENT_USER, DEFAULT_TENANT_ID));

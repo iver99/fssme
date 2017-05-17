@@ -93,6 +93,29 @@ public class SearchManagerImplTest
 	}
 
 	@Test
+	public void testGetWidgetByName() throws EMAnalyticsFwkException {
+		final List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<>();
+		EmAnalyticsSearch emAnalyticsSearch = new EmAnalyticsSearch();
+		emAnalyticsSearchList.add(emAnalyticsSearch);
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, anyString);
+				result = query;
+				query.getResultList();
+				result = emAnalyticsSearchList;
+			}
+		};
+		searchManager = SearchManagerImpl.getInstance();
+		searchManager.getWidgetByName("widgetName");
+
+	}
+	@Test
 	public void testGetSearchIdsByCategoryId() throws EMAnalyticsFwkException {
 		final List<BigInteger> searchIds = new ArrayList<>();
 		new Expectations(){
@@ -115,6 +138,7 @@ public class SearchManagerImplTest
 	@Test
 	public void testSaveOobSearch() throws EMAnalyticsFwkException {
 		Search search = new SearchImpl();
+		search.setDashboardIneligible("true");
 		new Expectations(){
 			{
 				PersistenceManager.getInstance();
