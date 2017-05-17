@@ -150,10 +150,9 @@ include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/lifecycle/
 include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/management/AppLoggingManageMXBeanTest.class"
 
 
-
-
-include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/CountsEntityTest.class"
-include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFFolderRowEntityTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedSearchComparatorCORSFilterTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/ZDTAPITest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/ZDTComparatorStatusRowEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedsearchComparatorApplicationTest.class"
 
 
