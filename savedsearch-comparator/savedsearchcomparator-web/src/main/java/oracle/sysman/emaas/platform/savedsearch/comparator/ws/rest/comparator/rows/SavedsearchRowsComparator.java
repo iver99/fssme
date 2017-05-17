@@ -25,6 +25,7 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTExceptio
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
+import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.RowEntityComparator.CompareListPair;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.*;
 
@@ -67,16 +68,24 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.info("Starts to compare the two ssf OMC instances: table by table and row by row");
 			
  			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType);
- 			int rowNum1 = countForComparedRows(tre1);
-			if (tre1 == null) {
+ 			CountsEntity entity1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1);
+			if (entity1 == null) {
+				return null;
+			}
+			int rowNum1 = (int)(entity1.getCountOfCategory() + entity1.getCountOfFolder() + entity1.getCountOfSearch());
+ 			if (tre1 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 				logger.info("Completed to compare the two ssf OMC instances");
 				return null;
 			}
 
 			ZDTTableRowEntity tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType);
-			int rowNum2 = countForComparedRows(tre2);
-			if (tre2 == null) {
+			CountsEntity entity2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2);
+			if (entity2 == null) {
+				return null;
+			}
+			int rowNum2 = (int)(entity2.getCountOfCategory() + entity2.getCountOfFolder() + entity2.getCountOfSearch());
+ 			if (tre2 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
 				logger.info("Completed to compare the two SSF OMC instances");
 				return null;
@@ -231,7 +240,28 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		return cd;
 	}
 
-	
+	private CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc) throws Exception, IOException
+	{
+		Link lk = getSingleInstanceUrl(lc, "zdt/counts", "http");
+		if (lk == null) {
+			logger.warn("Get a null or empty link for one single instance!");
+			return null;
+		}
+		logger.info("*****lookup link is {}", lk.getHref());
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
+		logger.info("Checking savedsearch OMC instance counts. Response is " + response);
+		JsonUtil ju = JsonUtil.buildNormalMapper();
+		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
+		if (ze == null) {
+			logger.warn("Checking savedsearch OMC instance counts: null/empty entity retrieved.");
+			return null;
+		}
+		// TODO: for the 1st step implementation, let's log in log files then
+		logger.info(
+				"Retrieved counts for Category OMC instance: savedsearch count - {}, Folders count - {}, Search count - {}",
+				ze.getCountOfCategory(), ze.getCountOfFolder(), ze.getCountOfSearch());
+		return ze;
+	}
 
 	/**
 	 * @param response
