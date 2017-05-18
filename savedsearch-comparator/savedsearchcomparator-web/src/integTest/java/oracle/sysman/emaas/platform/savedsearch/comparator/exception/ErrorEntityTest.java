@@ -15,6 +15,10 @@ public class ErrorEntityTest {
 		
 		Assert.assertEquals(entity.getErrorCode(), entity2.getErrorCode());
 		Assert.assertEquals(entity.getErrorMessage(), entity2.getErrorMessage());
+		
+		ErrorEntity entity3 = new ErrorEntity(new ZDTException(null, null));
+		
+		ErrorEntity entity4 = new ErrorEntity(new Exception(null, null));
 	}
 
 }
