@@ -136,7 +136,7 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/Z
 
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/SavedSearchComparatorCORSFilterTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/ws/test/ZDTAPITest.class"
-
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/AbstractComparatorTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/exception/*.class"
 
 include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/services/ZDTAPITest.class"
@@ -201,9 +201,9 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/LogUtilTest.class
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RegistryLookupUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RestClientTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptionUtilTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheFactoryTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheLinkedHashMapTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheManagerTest.class"
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/*.class"
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheLinkedHashMapTest.class"
+//include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheManagerTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/CachedLinkTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/BinaryTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotCacheManagerTest.class"
