@@ -1,8 +1,12 @@
 package oracle.sysman.emaas.platform.savedsearch.wls.lifecycle;
 
 import mockit.Mocked;
+
 import oracle.sysman.emaas.platform.savedsearch.services.*;
+
 import org.testng.annotations.Test;
+
+import weblogic.application.ApplicationException;
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.i18n.logging.NonCatalogLogger;
 
@@ -13,6 +17,21 @@ import javax.persistence.Persistence;
  * @since 16-2-24.
  */
 public class AbstractApplicationLifecycleServiceTest {
+	 @Test
+	    public void testAddApplicationServiceManager(final @Mocked ApplicationServiceManager manager, final @Mocked ApplicationLifecycleEvent evt) throws ApplicationException {
+	        AbstractApplicationLifecycleService service =new AbstractApplicationLifecycleService();
+
+	        service.addApplicationServiceManager(manager);
+
+	        service.preStart(evt);
+
+	        service.postStart(evt);
+
+	        service.preStop(evt);
+
+	        service.postStop(evt);
+	    }
+	
 //    AbstractApplicationLifecycleService abstractApplicationLifecycleService;
 //
 //    @Mocked
