@@ -16,6 +16,33 @@ public class SSFCategoryRowEntityTest {
 
 	@Test
 	public void testEquals(){
+		SavedSearchCategoryRowEntity entity = new SavedSearchCategoryRowEntity("categoryId",
+				"description", "descriptionNlsid",
+				"descriptionSubsystem", "emPluginId", "name",
+				"nameNlsid", "nameSubsystem", "owner",
+				"deleted", "providerName", "providerVersion",
+				"providerDiscovery","providerAssetRoot",
+				"lastModificationDate", 123L, "creationDate",
+				"defaultFolderId", "dashboardIneligible");
+		entity.getCategoryId();
+		entity.getCreationDate();
+		entity.getDashboardIneligible();
+		entity.getDefaultFolderId();
+		entity.getDeleted();
+		entity.getDescription();
+		entity.getDescriptionNlsid();
+		entity.getDescriptionSubsystem();
+		entity.getTenantId();
+		entity.getProviderVersion();
+		entity.getProviderName();
+		entity.getProviderDiscovery();
+		entity.getProviderAssetRoot();
+		entity.getOwner();
+		entity.getNameSubsystem();
+		entity.getNameNlsid();
+		entity.getName();
+		entity.getLastModificationDate();
+		entity.getEmPluginId();
 		SavedSearchCategoryRowEntity entity1 = new SavedSearchCategoryRowEntity();
 		SavedSearchCategoryRowEntity entity2 = new SavedSearchCategoryRowEntity();
 		Assert.assertEquals(entity1,entity2);

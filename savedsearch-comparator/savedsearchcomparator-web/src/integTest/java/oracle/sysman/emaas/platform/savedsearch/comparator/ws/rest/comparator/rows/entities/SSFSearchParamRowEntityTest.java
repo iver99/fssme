@@ -7,6 +7,19 @@ public class SSFSearchParamRowEntityTest {
 
 	@Test
 	public void testEquals() {
+		SavedSearchSearchParamRowEntity entity = new SavedSearchSearchParamRowEntity("searchId", "name","paramAttributes", 2L,
+				"paramValueClob","paramValueStr", 123L, "2016-07-22 08:23:32.517","2016-07-22 08:23:32.517", 1);
+		Assert.assertEquals(entity.getCreationDate(),"2016-07-22 08:23:32.517");
+		entity.getDeleted();
+		entity.getLastModificationDate();
+		entity.getName();
+		entity.getParamAttributes();
+		entity.getParamValueClob();
+		entity.getParamValueStr();
+		entity.getSearchId();
+		entity.getTenantId();
+		entity.setDeleted(0);
+		
 		SavedSearchSearchParamRowEntity entity1 = new SavedSearchSearchParamRowEntity();
 		SavedSearchSearchParamRowEntity entity2 = new SavedSearchSearchParamRowEntity();
 		entity1.setCreationDate("2016-07-22 08:23:32.517");

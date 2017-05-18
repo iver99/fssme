@@ -44,12 +44,6 @@ public class InstanceData<T>
 
 
 
-	public void setTotalRowNum(int totalRowNum) {
-		this.totalRowNum = totalRowNum;
-	}
-
-
-
 	/**
 	 * @return the data
 	 */
@@ -62,26 +56,16 @@ public class InstanceData<T>
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(T data)
-	{
-		this.data = data;
-	}
 
 	public String getKey() {
 		return key;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
-	}
 
 	public LookupClient getClient() {
 		return client;
 	}
 
-	public void setClient(LookupClient client) {
-		this.client = client;
-	}
 
 	
 }

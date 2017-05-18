@@ -10,6 +10,16 @@ public class SSFCategoryParamRowEntityTest {
 	
 	@Test
 	public void testEquals() {
+		SavedSearchCategoryParamRowEntity entity = new SavedSearchCategoryParamRowEntity("categoryId",
+				"name","value", 123L, "2016-07-22 08:23:32.517",
+				"2016-07-22 08:23:32.517");
+		entity.getCategoryId();
+		entity.getCreationDate();
+		entity.getDeleted();
+		entity.getLastModificationDate();
+		entity.getName();
+		entity.getTenantId();
+		entity.getValue();
 		SavedSearchCategoryParamRowEntity entity1 = new SavedSearchCategoryParamRowEntity();
 		SavedSearchCategoryParamRowEntity entity2 = new SavedSearchCategoryParamRowEntity();
 		entity1.setCategoryId("1");

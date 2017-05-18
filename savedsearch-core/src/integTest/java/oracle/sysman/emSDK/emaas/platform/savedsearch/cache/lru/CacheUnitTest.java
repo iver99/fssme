@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
  *
  */
 @SuppressWarnings("all")
+@Test (groups = {"s2"})
 public class CacheUnitTest {
 	
 	public static Logger logger=Logger.getLogger(CacheUnitTest.class.getName());

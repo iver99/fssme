@@ -3,7 +3,10 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 
 import java.io.IOException;
 import java.math.BigInteger;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookupException;
 import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookups;
@@ -15,6 +18,11 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.Ab
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.LeaseInfo.Builder;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -28,10 +36,12 @@ public class SaveSearchRowsComparatorTest
 {
 	@Mocked
 	AbstractComparator abstractComparator;
+
 	@Mocked
 	LookupClient client1;
 	@Mocked
 	LookupClient client2;
+
 	private static final String JSON_RESPONSE_DATA_TABLE="{"
 			+ "\"EMS_ANALYTICS_CATEGORY\": [{"
 			+ 		"\"CATEGORY_ID\":5,"
@@ -304,5 +314,6 @@ public class SaveSearchRowsComparatorTest
 		entity.setSavedSearchSearch(null);
 		entity.setSavedSearchSearchParams(null);
 		drc.countForComparedRows(entity);
+	
 	}
 }

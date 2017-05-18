@@ -13,7 +13,9 @@ ext.customPomDefinition = {
     }
 }
 
-project.publishing.publications{
+
+project.publishing.publications {
+
      integTest(MavenPublication) {
                 setArtifactId(project.name+ '-' + integTestJar.appendix)
                 setGroupId project.publishGroup
