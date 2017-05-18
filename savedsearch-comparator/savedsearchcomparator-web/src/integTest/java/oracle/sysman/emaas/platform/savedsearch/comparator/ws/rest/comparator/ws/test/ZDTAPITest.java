@@ -101,6 +101,8 @@ public class ZDTAPITest {
     
   /*  @Test 
     public void testgetCompareStatusRows(@Mocked final LookupClient client1, @Mocked final LookupClient client2) {
+    	
+    	
     	ZDTTableRowEntity tableRow1 = new ZDTTableRowEntity();
     	tableRow1.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
     	
@@ -127,7 +129,7 @@ public class ZDTAPITest {
     	zdtapi.getCompareStatusRows(dcc, comparedData, "full");
     	
     }
-   */
+  */
     @Test
     public void testCompareRows2(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2) throws Exception{
     	final ZDTTableRowEntity tableRow1 = new ZDTTableRowEntity();
