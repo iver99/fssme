@@ -237,6 +237,7 @@ include "oracle/sysman/emaas/platform/savedsearch/services/RegistryServiceManage
 include "oracle/sysman/emaas/platform/savedsearch/services/VersionValidationServiceManagerTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/targetmodel/services/SavedSearchStatusTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/wls/lifecycle/AbstractApplicationLifecycleServiceTest.class"
+include "oracle/sysman/emaas/platform/savedsearch/comparator/webutils/wls/lifecycle/AbstractApplicationLifecycleServiceTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/wls/management/AppLoggingManageMXBeanTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/entity/EmAnalyticsSearchTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/entity/EmAnalyticsSearchParamTest.class"
