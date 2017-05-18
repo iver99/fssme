@@ -24,7 +24,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	}
 
 	@JsonProperty("FOLDER_ID")
-	private BigInteger folderId;
+	private String folderId;
 
 	@JsonProperty("DESCRIPTION")
 	private String description;
@@ -63,13 +63,13 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	private Integer uiHidden;
 
 	@JsonProperty("DELETED")
-	private BigInteger deleted;
+	private String deleted;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
 	@JsonProperty("PARENT_ID")
-	private BigInteger parentId;
+	private String parentId;
 
 	@JsonProperty("CREATION_DATE")
 	private String creationDate;
@@ -232,18 +232,18 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public BigInteger getDeleted()
+	public String getDeleted()
 	{
 		return deleted;
 	}
 
-	public SavedSearchFolderRowEntity(BigInteger folderId, String description,
+	public SavedSearchFolderRowEntity(String folderId, String description,
 			String descriptionNlsid, String descriptionSubsystem,
 			String emPluginId, String lastModifiedBy,
 			String lastModificationDate, String name, String nameNlsid,
 			String nameSubsystem, String owner, Integer systemFolder,
-			Integer uiHidden, BigInteger deleted, Long tenantId,
-			BigInteger parentId, String creationDate) {
+			Integer uiHidden, String deleted, Long tenantId,
+			String parentId, String creationDate) {
 		super();
 		this.folderId = folderId;
 		this.description = description;
@@ -299,7 +299,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	/**
 	 * @return the folderId
 	 */
-	public BigInteger getFolderId()
+	public String getFolderId()
 	{
 		return folderId;
 	}
@@ -355,7 +355,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	/**
 	 * @return the parentId
 	 */
-	public BigInteger getParentId()
+	public String getParentId()
 	{
 		return parentId;
 	}
@@ -424,7 +424,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(BigInteger deleted)
+	public void setDeleted(String deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -469,7 +469,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	 * @param folderId
 	 *            the folderId to set
 	 */
-	public void setFolderId(BigInteger folderId)
+	public void setFolderId(String folderId)
 	{
 		this.folderId = folderId;
 	}
@@ -532,7 +532,7 @@ public class SavedSearchFolderRowEntity implements RowEntity
 	 * @param parentId
 	 *            the parentId to set
 	 */
-	public void setParentId(BigInteger parentId)
+	public void setParentId(String parentId)
 	{
 		this.parentId = parentId;
 	}

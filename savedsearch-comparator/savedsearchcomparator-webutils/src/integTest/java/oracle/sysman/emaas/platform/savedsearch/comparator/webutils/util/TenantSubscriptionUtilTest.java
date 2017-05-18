@@ -1,6 +1,8 @@
-package oracle.sysman.emaas.platform.savedsearch.comparator.test.utils;
+package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 import mockit.*;
@@ -8,8 +10,10 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.StringUtil;
-import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json.AppMappingCollection;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json.AppMappingEntity;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json.DomainEntity;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.json.DomainsEntity;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -20,7 +24,6 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Test(groups = {"s2"})
 public class TenantSubscriptionUtilTest {
@@ -343,7 +346,7 @@ public class TenantSubscriptionUtilTest {
 
     @Test(groups = {"s2"})
     public void testRestClientGetNull() {
-        String res = new TenantSubscriptionUtil.RestClient().get(null, null);
+        String res = new TenantSubscriptionUtil.RestClient().get(null, null, null);
         org.testng.Assert.assertNull(res);
     }
 
@@ -361,7 +364,7 @@ public class TenantSubscriptionUtilTest {
                 result = false;
             }
         };
-        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1");
+        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
         new Verifications() {
             {
                 RegistrationManager.getInstance().getAuthorizationToken();
@@ -383,7 +386,7 @@ public class TenantSubscriptionUtilTest {
                 Client.create(anyClientConfig);
             }
         };
-        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1");
+        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
         new Verifications() {
             {
                 RegistrationManager.getInstance().getAuthorizationToken();
@@ -394,20 +397,94 @@ public class TenantSubscriptionUtilTest {
         };
     }
 
-  @Test
-  public void testPutFunction(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
-          @Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
-          @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
-          @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) {
-	  new NonStrictExpectations() {
-          {
-              new DefaultClientConfig();
-              Client.create(anyClientConfig);
-          }
-      };
-	  Assert.assertNull(new TenantSubscriptionUtil.RestClient().put(null,null,null));
-	  new TenantSubscriptionUtil.RestClient().put("http://test.link.com",new StringBuilder(), "emaastesttenant1");
-  }
+    @Mocked
+    private RegistryLookupUtil registryLookupUtil;
+    @Test
+    public void testGetTenantSubscribedServices(@Mocked final DefaultClientConfig anyClientConfig,final @Mocked JsonUtil jsonUtil,
+                                                final @Mocked InstanceInfo instanceInfo,final @Mocked TenantSubscriptionUtil.RestClient rs) throws Exception {
+        final Link link = new Link();
+
+        link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
+        link.withRel("");
+        List<DomainEntity> list=new ArrayList<>();
+        final DomainsEntity de=new DomainsEntity();
+        DomainEntity entity=new DomainEntity();
+        entity.setDomainName("TenantApplicationMapping");
+        entity.setCanonicalUrl("url");
+        list.add(entity);
+        de.setItems(list);
+        final AppMappingCollection ac=new AppMappingCollection();
+        AppMappingEntity appMappingEntity=new AppMappingEntity();
+//        appMappingEntity.setDomainName();
+        appMappingEntity.setCanonicalUrl("url");
+        final String appMappingJson="appMappingJson";
+
+        List<AppMappingEntity> appMappingEntityList=new ArrayList<>();
+        appMappingEntityList.add(appMappingEntity);
+        ac.setItems(appMappingEntityList);
+        List<AppMappingEntity.AppMappingValue> appMappingValueList=new ArrayList<>();
+        appMappingEntity.setValues(appMappingValueList);
+        AppMappingEntity.AppMappingValue value=new AppMappingEntity.AppMappingValue();
+        value.setOpcTenantId("emaastesttenant1");
+        appMappingValueList.add(value);
+
+        new Expectations() {
+            {
+                registryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, "emaastesttenant1");
+                result = link;
+                jsonUtil.fromJson(anyString,DomainsEntity.class);
+                result=de;
+                rs.get(anyString, "emaastesttenant1", anyString);
+                result =appMappingJson;
+                jsonUtil.fromJson(anyString, AppMappingCollection.class);
+                result=ac;
+
+
+            }
+        };
+        TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+    }
+
+    @Mocked
+    private RegistrationManager registrationManager;
+    @Mocked
+    private WebResource.Builder builder;
+
+    @Mocked
+    private Client client;
+    @Mocked
+    private URI uri;
+    @Mocked
+    private WebResource webResource;
+    @Mocked
+    private UriBuilder uriBuilder;
+    @Test
+    public void testRCPut(){
+        final char[] authToke={'a','u','t','h'};
+        final String putResult="result";
+        ClientConfig cc = new DefaultClientConfig();
+        client=Client.create(cc);
+//        UriBuilder.fromUri(url).build()
+        new Expectations(){
+            {
+                registrationManager.getInstance().getAuthorizationToken() ;
+                result=authToke;
+                uriBuilder.fromUri("url");
+                result=uriBuilder;
+                uriBuilder.build();
+                result=uri;
+               /* client.resource(uri);
+                result=webResource;
+                webResource.header(anyString,authToke);
+                result=builder;*/
+                builder.put(String.class, any);
+                result=putResult;
+            }
+        };
+
+        new TenantSubscriptionUtil.RestClient().put("url",new Object(),"emaastesttenant1", null);
+    }
+
 
 }
 

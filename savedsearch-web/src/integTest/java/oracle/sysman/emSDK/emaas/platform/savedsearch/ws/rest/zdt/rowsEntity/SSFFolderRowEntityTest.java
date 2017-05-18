@@ -10,23 +10,23 @@ public class SSFFolderRowEntityTest {
 
 	@Test
 	public void testEquals(){
-		SavedSearchFolderRowEntity  folderEntity = new SavedSearchFolderRowEntity(new BigInteger("1"), "description",
+		SavedSearchFolderRowEntity  folderEntity = new SavedSearchFolderRowEntity("1", "description",
 				"descriptionNlsid", "descriptionSubsystem",
 				"emPluginId", "lastModifiedBy",
 				"lastModificationDate", "name", "nameNlsid",
 				"nameSubsystem", "owner", new Integer("1"),
-				new Integer("1"), new BigInteger("1"), 1L,
-				new BigInteger("1"), "creationDate");
-		SavedSearchFolderRowEntity  folderEntity2 = new SavedSearchFolderRowEntity(new BigInteger("1"), "description",
+				new Integer("1"), "1", 1L,
+				"1", "creationDate");
+		SavedSearchFolderRowEntity  folderEntity2 = new SavedSearchFolderRowEntity("1", "description",
 				"descriptionNlsid", "descriptionSubsystem",
 				"emPluginId", "lastModifiedBy",
 				"lastModificationDate", "name", "nameNlsid",
 				"nameSubsystem", "owner", new Integer("1"),
-				new Integer("1"), new BigInteger("1"), 1L,
-				new BigInteger("1"), "creationDate");
+				new Integer("1"), "1", 1L,
+				"1", "creationDate");
 		Assert.assertEquals(folderEntity,folderEntity2);
-		folderEntity.setDeleted(new BigInteger("1"));
-		folderEntity2.setDeleted(new BigInteger("1"));
+		folderEntity.setDeleted("1");
+		folderEntity2.setDeleted("1");
 		Assert.assertEquals(folderEntity,folderEntity2);
 				
 		folderEntity.setDescription("description");
@@ -44,8 +44,8 @@ public class SSFFolderRowEntityTest {
 		folderEntity2.setEmPluginId("emPluginId");
 		Assert.assertEquals(folderEntity,folderEntity2);
 		
-		folderEntity.setFolderId(new BigInteger("1"));
-		folderEntity2.setFolderId(new BigInteger("1"));
+		folderEntity.setFolderId("1");
+		folderEntity2.setFolderId("1");
 		Assert.assertEquals(folderEntity,folderEntity2);
 		
 		folderEntity.setLastModificationDate("lastModificationDate");
@@ -72,8 +72,8 @@ public class SSFFolderRowEntityTest {
 		folderEntity2.setOwner("owner");
 		Assert.assertEquals(folderEntity,folderEntity2);
 		
-		folderEntity.setParentId(new BigInteger("1"));
-		folderEntity2.setParentId(new BigInteger("1"));
+		folderEntity.setParentId("1");
+		folderEntity2.setParentId("1");
 		
 		Assert.assertEquals(folderEntity,folderEntity2);
 		folderEntity.setTenantId(1l);
@@ -87,23 +87,23 @@ public class SSFFolderRowEntityTest {
 	
 	@Test
 	public void testHashcode(){
-		SavedSearchFolderRowEntity  folderEntity = new SavedSearchFolderRowEntity(new BigInteger("1"), "description",
+		SavedSearchFolderRowEntity  folderEntity = new SavedSearchFolderRowEntity("1", "description",
 				"descriptionNlsid", "descriptionSubsystem",
 				"emPluginId", "lastModifiedBy",
 				"lastModificationDate", "name", "nameNlsid",
 				"nameSubsystem", "owner", new Integer("1"),
-				new Integer("1"), new BigInteger("1"), 1L,
-				new BigInteger("1"), "creationDate");
-		SavedSearchFolderRowEntity  folderEntity2 = new SavedSearchFolderRowEntity(new BigInteger("1"), "description",
+				new Integer("1"), "1", 1L,
+				"1", "creationDate");
+		SavedSearchFolderRowEntity  folderEntity2 = new SavedSearchFolderRowEntity("1", "description",
 				"descriptionNlsid", "descriptionSubsystem",
 				"emPluginId", "lastModifiedBy",
 				"lastModificationDate", "name", "nameNlsid",
 				"nameSubsystem", "owner", new Integer("1"),
-				new Integer("1"), new BigInteger("1"), 1L,
-				new BigInteger("1"), "creationDate");
+				new Integer("1"), "1", 1L,
+				"1", "creationDate");
 		Assert.assertEquals(folderEntity,folderEntity2);
-		folderEntity.setDeleted(new BigInteger("1"));
-		folderEntity2.setDeleted(new BigInteger("1"));
+		folderEntity.setDeleted("1");
+		folderEntity2.setDeleted("1");
 		Assert.assertEquals(folderEntity.hashCode(),folderEntity2.hashCode());
 				
 		folderEntity.setDescription("description");
@@ -121,8 +121,8 @@ public class SSFFolderRowEntityTest {
 		folderEntity2.setEmPluginId("emPluginId");
 		Assert.assertEquals(folderEntity.hashCode(),folderEntity2.hashCode());
 		
-		folderEntity.setFolderId(new BigInteger("1"));
-		folderEntity2.setFolderId(new BigInteger("1"));
+		folderEntity.setFolderId("1");
+		folderEntity2.setFolderId("1");
 		Assert.assertEquals(folderEntity.hashCode(),folderEntity2.hashCode());
 		
 		folderEntity.setLastModificationDate("lastModificationDate");
@@ -149,8 +149,8 @@ public class SSFFolderRowEntityTest {
 		folderEntity2.setOwner("owner");
 		Assert.assertEquals(folderEntity.hashCode(),folderEntity2.hashCode());
 		
-		folderEntity.setParentId(new BigInteger("1"));
-		folderEntity2.setParentId(new BigInteger("1"));
+		folderEntity.setParentId("1");
+		folderEntity2.setParentId("1");
 		
 		Assert.assertEquals(folderEntity.hashCode(),folderEntity2.hashCode());
 		folderEntity.setTenantId(1l);

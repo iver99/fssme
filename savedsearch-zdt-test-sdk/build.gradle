@@ -1,7 +1,20 @@
 apply from:'test.gradle'
+def emcpsrvsSDKVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
 
-publishing {
-    publications {
+ext.customPomDefinition = {
+    def dependencies = asNode().appendNode('dependencies')
+    configurations.testConfig.allDependencies.each { dep ->
+        if (dep.name != 'unspecified') {
+            def dependency = dependencies.appendNode('dependency')
+            dependency.appendNode('groupId', dep.group)
+            dependency.appendNode('artifactId', dep.name)
+            dependency.appendNode('version', dep.version)
+        }
+    }
+}
+
+project.publishing.publications {
+   
      integTest(MavenPublication) {
                 setArtifactId(project.name+ '-' + integTestJar.appendix)
                 setGroupId project.publishGroup
@@ -19,19 +32,8 @@ publishing {
             }
         }
     }
-}
 
-ext.customPomDefinition = {
-    def dependencies = asNode().appendNode('dependencies')
-    configurations.testConfig.allDependencies.each { dep ->
-        if (dep.name != 'unspecified') {
-            def dependency = dependencies.appendNode('dependency')
-            dependency.appendNode('groupId', dep.group)
-            dependency.appendNode('artifactId', dep.name)
-            dependency.appendNode('version', dep.version)
-        }
-    }
-}
+
 
 
 
@@ -73,7 +75,7 @@ dependencies {
 
 	compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
 	
-	compile(group: 'com.oracle.emaas.emcpsrvs.sdk', name: 'emaas-platform-tenant-sdk', version: '2.0.+') {
+	compile(group: 'com.oracle.emaas.emcpsrvs.sdk', name: 'emaas-platform-tenant-sdk', version: emcpsrvsSDKVer) {
 		exclude group: 'emaas.platform', module: 'registry-lookup-client'
 		exclude group: 'emaas.platform', module: 'registry-client'
 	}
