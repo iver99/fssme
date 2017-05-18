@@ -13,6 +13,7 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.Ab
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
+import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.SavedSearchCategoryRowEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.ZDTTableRowEntity;
 
@@ -70,10 +71,10 @@ public class ZDTAPITest {
     			lookupEntry.put("omc1",client1);
     	    	lookupEntry.put("omc2",client2);
     			
-    			JsonUtil.buildNormalMapper();
+    		/*	JsonUtil.buildNormalMapper();
     			result = jsonUtil;
     			jsonUtil.fromJson(anyString,ZDTTableRowEntity.class);
-    			result = tableRow1;
+    			result = tableRow1; */
     		}
     	};
         zdtapi.syncOnSSF(tenant, userTenant);
@@ -97,7 +98,36 @@ public class ZDTAPITest {
     	
     	zdtapi.compareRows(tenant, userTenant,"full");
     }
-   
+    
+  /*  @Test 
+    public void testgetCompareStatusRows(@Mocked final LookupClient client1, @Mocked final LookupClient client2) {
+    	ZDTTableRowEntity tableRow1 = new ZDTTableRowEntity();
+    	tableRow1.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
+    	
+    	ZDTTableRowEntity tableRow2 = new ZDTTableRowEntity();
+    	tableRow2.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
+    	
+    	InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>("", null,tableRow1,  100);
+    	InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>("", null,tableRow2,  100);
+    	
+    	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	
+    	
+    	final InstancesComparedData<ZDTTableRowEntity> comparedData = new InstancesComparedData<ZDTTableRowEntity>(instance1, instance2);  
+    	new Expectations() {
+    		{ 	
+    			abstractComparator.getOMCInstances();
+    			result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+    			
+    		}
+    	};
+    	SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
+    	zdtapi.getCompareStatusRows(dcc, comparedData, "full");
+    	
+    }
+   */
     @Test
     public void testCompareRows2(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2) throws Exception{
     	final ZDTTableRowEntity tableRow1 = new ZDTTableRowEntity();

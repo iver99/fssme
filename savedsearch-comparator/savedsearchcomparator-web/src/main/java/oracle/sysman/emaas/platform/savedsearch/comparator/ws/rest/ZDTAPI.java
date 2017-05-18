@@ -167,6 +167,29 @@ public class ZDTAPI
 		return dateStr;
 	}
 	
+	public ZDTStatusRowEntity getCompareStatusRows(SavedsearchRowsComparator dcc,InstancesComparedData<ZDTTableRowEntity> result, String compareType) {
+		int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
+		logger.info("comparedNum={}",comparedDataNum);
+		int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
+		logger.info("totalRow={}",totalRow);
+		double percen = (double)comparedDataNum/(double)totalRow;
+		DecimalFormat df = new DecimalFormat("#.##");
+		double percentage = Double.parseDouble(df.format(percen));
+		Date currentUtcDate = getCurrentUTCTime();
+		String comparisonDate = getTimeString(currentUtcDate);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentUtcDate);
+		cal.add(Calendar.HOUR_OF_DAY, 6);
+		Date nextScheduleDate = cal.getTime();
+		String nextScheduleDateStr = getTimeString(nextScheduleDate);
+		String type = "full";
+		if (compareType.equals("incremental")) {
+			type = "incremental";
+		}
+		ZDTStatusRowEntity statusRow = new ZDTStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage);
+		return statusRow;
+	}
+	
 	@GET
 	@Path("compare")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -180,25 +203,7 @@ public class ZDTAPI
 			InstancesComparedData<ZDTTableRowEntity> result = dcc.compare(tenantIdParam, userTenant);
 			
 			if (result != null) {
-				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
-				logger.info("comparedNum={}",comparedDataNum);
-				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
-				logger.info("totalRow={}",totalRow);
-				double percen = (double)comparedDataNum/(double)totalRow;
-				DecimalFormat df = new DecimalFormat("#.##");
-				double percentage = Double.parseDouble(df.format(percen));
-				Date currentUtcDate = getCurrentUTCTime();
-				String comparisonDate = getTimeString(currentUtcDate);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(currentUtcDate);
-				cal.add(Calendar.HOUR_OF_DAY, 6);
-				Date nextScheduleDate = cal.getTime();
-				String nextScheduleDateStr = getTimeString(nextScheduleDate);
-				String type = "full";
-				if (compareType.equals("incremental")) {
-					type = "incremental";
-				}
-				ZDTStatusRowEntity statusRow = new ZDTStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage);
+				ZDTStatusRowEntity statusRow = getCompareStatusRows(dcc,result, compareType);
 				message = JsonUtil.buildNormalMapper().toJson(statusRow);
 			} else {
 				Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();

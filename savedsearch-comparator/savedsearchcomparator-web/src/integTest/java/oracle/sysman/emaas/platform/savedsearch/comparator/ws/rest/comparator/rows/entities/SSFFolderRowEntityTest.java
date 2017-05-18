@@ -10,6 +10,31 @@ public class SSFFolderRowEntityTest {
 
 	@Test
 	public void testEquals(){
+		SavedSearchFolderRowEntity entity =  new SavedSearchFolderRowEntity("folderId", "description",
+				"descriptionNlsid", "descriptionSubsystem",
+				"emPluginId", "lastModifiedBy",
+				"lastModificationDate", "name","nameNlsid",
+				"nameSubsystem","owner", 1,
+				1, "deleted", 123L,
+				"parentId", "creationDate");
+		entity.getCreationDate();
+		entity.getDeleted();
+		entity.getDescription();
+		entity.getDescription();
+		entity.getDescriptionNlsid();
+		entity.getDescriptionSubsystem();
+		entity.getEmPluginId();
+		entity.getFolderId();
+		entity.getLastModificationDate();
+		entity.getLastModifiedBy();
+		entity.getName();
+		entity.getNameNlsid();
+		entity.getNameSubsystem();
+		entity.getOwner();
+		entity.getParentId();
+		entity.getSystemFolder();
+		entity.getTenantId();
+		entity.getUiHidden();
 		SavedSearchFolderRowEntity  folderEntity = new SavedSearchFolderRowEntity();
 		SavedSearchFolderRowEntity  folderEntity2 = new SavedSearchFolderRowEntity();
 		Assert.assertEquals(folderEntity,folderEntity2);
