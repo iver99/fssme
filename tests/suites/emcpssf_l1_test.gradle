@@ -32,7 +32,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  ***************************************************************************************************/
  
  
-
+ext.emaasAPIGWVersion = getDependentSdkVersion('com.oracle.emaas.emcpgw.sdk', 'gateway-client', '1.+')
 def regLookupClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 def regClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 def emcpsrvsSDKVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
@@ -50,6 +50,7 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-webutils-integ-tests', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web-integ-tests', version: "${REPO_BID}") {transitive = false}
 	
+	testConfig(group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: "${emaasAPIGWVersion}"){ transitive = false }
 	testConfig(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
