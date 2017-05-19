@@ -80,6 +80,7 @@ public class ZDTAPI
 		if (type == null) {
 			type = "full";
 		}
+		logger.info("comparisonType in tableRows: "+type);
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
@@ -121,9 +122,11 @@ public class ZDTAPI
 			long categoryCount = DataManager.getInstance().getAllCategoryCount(em);
 			long folderCount = DataManager.getInstance().getAllFolderCount(em);
 			long searcheCount = DataManager.getInstance().getAllSearchCount(em);
-			logger.debug("ZDT counters: category count - {}, folder count - {}, search count - {}", categoryCount, folderCount,
-				searcheCount);
-			ZDTCountEntity zdte = new ZDTCountEntity(categoryCount, folderCount, searcheCount);
+			long searchPramCount = DataManager.getInstance().getAllSearchParamsCount(em);
+			long categoryPramCount = DataManager.getInstance().getAllCategoryPramsCount(em);
+			logger.debug("ZDT counters: category count - {}, folder count - {}, search count - {}, searchParams count - {}, categoryParam count - {}"
+					, categoryCount, folderCount,searcheCount, searchPramCount,categoryPramCount);
+			ZDTCountEntity zdte = new ZDTCountEntity(categoryCount, folderCount, searcheCount,searchPramCount,categoryPramCount);
 			
 			try {
 				message = JSONUtil.objectToJSONString(zdte);

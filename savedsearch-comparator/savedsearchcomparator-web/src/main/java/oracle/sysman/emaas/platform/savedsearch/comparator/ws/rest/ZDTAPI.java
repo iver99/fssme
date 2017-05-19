@@ -231,7 +231,7 @@ public class ZDTAPI
 				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
 				logger.info("totalRow={}",totalRow);
 				double percen = (double)comparedDataNum/(double)totalRow;
-				DecimalFormat df = new DecimalFormat("#.#####");
+				DecimalFormat df = new DecimalFormat("#.##########");
 				double percentage = Double.parseDouble(df.format(percen));
 				Date currentUtcDate = getCurrentUTCTime();
 				String comparisonDate = getTimeString(currentUtcDate);
@@ -263,12 +263,12 @@ public class ZDTAPI
 				obj.put("comparisonDateTime", comparisonDate);
 				obj.put("comparisonType", compareType);
 				obj.put("divergencePercentage", percentage);
-			/*	
+				
 				JSONObject subObj = new JSONObject();
 				subObj.put(result.getInstance1().getKey(), result2);
 				subObj.put(result.getInstance2().getKey(), result1);
 				obj.put("divergenceSummary", subObj);
-			*/	
+				
 				message = obj.toString();
 
 			} else {

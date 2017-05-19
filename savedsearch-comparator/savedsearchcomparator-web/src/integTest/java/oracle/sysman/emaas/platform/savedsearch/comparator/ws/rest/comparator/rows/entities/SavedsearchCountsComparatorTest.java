@@ -10,14 +10,14 @@ public class SavedsearchCountsComparatorTest {
 	@Test
 	public void testcompareInstancesCounts() {
 		CountsEntity entity1 = new CountsEntity();
-		entity1.setcountOfCategory(11L);
-		entity1.setcountOfFolder(12L);
-		entity1.setcountOfSearch(13L);
+		entity1.setCountOfCategory(11L);
+		entity1.setCountOfFolders(12L);
+		entity1.setCountOfSearch(13L);
 		
 		CountsEntity entity2 = new CountsEntity();
-		entity2.setcountOfCategory(15L);
-		entity2.setcountOfFolder(16L);
-		entity2.setcountOfSearch(17L);
+		entity2.setCountOfCategory(15L);
+		entity2.setCountOfFolders(16L);
+		entity2.setCountOfSearch(17L);
 		
 		SavedsearchCountsComparator comparator = new SavedsearchCountsComparator();
 		comparator.compareInstancesCounts("key1", null, entity1,

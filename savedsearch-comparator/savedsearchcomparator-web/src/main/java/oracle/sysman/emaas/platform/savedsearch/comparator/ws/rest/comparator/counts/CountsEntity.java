@@ -16,68 +16,65 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.c
 public class CountsEntity
 {
 	private Long countOfCategory;
-	private Long countOfFolder;
+	private Long countOfFolders;
 	private Long countOfSearch;
+	private Long countOfCategoryPrams;
+	private Long countOfSearchParams;
 
 	public CountsEntity()
 	{
 	}
 
-	public CountsEntity(Long countOfCategory, Long countOfFolder, Long countOfSearch)
+	public CountsEntity(Long countOfCategory, Long countOfFolders, Long countOfSearch, Long countOfCategoryPrams, Long countOfSearchParams)
 	{
 		this.countOfCategory = countOfCategory;
-		this.countOfFolder = countOfFolder;
+		this.countOfFolders = countOfFolders;
 		this.countOfSearch = countOfSearch;
+		this.countOfCategoryPrams = countOfCategoryPrams;
+		this.countOfSearchParams = countOfSearchParams;
 	}
 
-	/**
-	 * @return the countOfCategory
-	 */
-	public Long getCountOfCategory()
-	{
+	public Long getCountOfCategory() {
 		return countOfCategory;
 	}
 
-	/**
-	 * @return the countOfFolder
-	 */
-	public Long getCountOfFolder()
-	{
-		return countOfFolder;
-	}
-
-	/**
-	 * @return the countOfSearch
-	 */
-	public Long getCountOfSearch()
-	{
-		return countOfSearch;
-	}
-
-	/**
-	 * @param countOfCategory
-	 *            the countOfCategory to set
-	 */
-	public void setcountOfCategory(Long countOfCategory)
-	{
+	public void setCountOfCategory(Long countOfCategory) {
 		this.countOfCategory = countOfCategory;
 	}
 
-	/**
-	 * @param countOfFolder
-	 *            the countOfFolder to set
-	 */
-	public void setcountOfFolder(Long countOfFolder)
-	{
-		this.countOfFolder = countOfFolder;
+	public Long getCountOfFolders() {
+		return countOfFolders;
 	}
 
-	/**
-	 * @param countOfSearch
-	 *            the countOfSearch to set
-	 */
-	public void setcountOfSearch(Long countOfSearch)
-	{
+	public void setCountOfFolders(Long countOfFolders) {
+		this.countOfFolders = countOfFolders;
+	}
+
+	public Long getCountOfSearch() {
+		return countOfSearch;
+	}
+
+	public void setCountOfSearch(Long countOfSearch) {
 		this.countOfSearch = countOfSearch;
 	}
+
+	public Long getCountOfCategoryPrams() {
+		return countOfCategoryPrams;
+	}
+
+	public void setCountOfCategoryPrams(Long countOfCategoryPrams) {
+		this.countOfCategoryPrams = countOfCategoryPrams;
+	}
+
+	public Long getCountOfSearchParams() {
+		return countOfSearchParams;
+	}
+
+	public void setCountOfSearchParams(Long countOfSearchParams) {
+		this.countOfSearchParams = countOfSearchParams;
+	}
+	
+	
+
+	
 }

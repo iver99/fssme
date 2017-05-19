@@ -41,8 +41,10 @@ public class DataManager
 	private static DataManager instance = new DataManager();
 
 	private static final String SQL_ALL_CATEGORY_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_CATEGORY WHERE DELETED <> 1";
+	private static final String SQL_ALL_CATEGORY_PARAM_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_CATEGORY_PARAMS WHERE DELETED <> 1";
 	private static final String SQL_ALL_FOLDER_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_FOLDERS WHERE DELETED <> 1";
 	private static final String SQL_ALL_SEARCH_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH WHERE DELETED <> 1";
+	private static final String SQL_ALL_SEARCH__PARAM_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE DELETED <> 1";
 
 	private static final String SQL_ALL_CATEGORY_ROWS = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,DESCRIPTION,OWNER,CREATION_DATE,"
 			+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,EM_PLUGIN_ID,"
@@ -159,7 +161,7 @@ public class DataManager
 	
 	private static final String SQL_GET_SYNC_STATUS = "select * from (SELECT to_char(SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as SYNC_DATE, to_char(NEXT_SCHEDULE_SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_SYNC_DATE,SYNC_TYPE, divergence_percentage from ems_analytics_zdt_sync order by sync_date desc) where rownum = 1";
 	
-	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "select SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_analytics_zdt_comparator where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and comparison_result is not null";
+	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_analytics_zdt_comparator where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and comparison_result is not null";
 	
 	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_analytics_zdt_comparator where comparison_result is not null";
 	
@@ -322,6 +324,31 @@ public class DataManager
 		return count;
 
 	}
+	
+	public long getAllSearchParamsCount(EntityManager em){
+		long count = 0l;
+		try {
+			Query query = em.createNativeQuery(SQL_ALL_SEARCH__PARAM_COUNT);
+			count = ((Number) query.getSingleResult()).longValue();
+		}
+		catch (Exception e) {
+			logger.error("Error occured when get all search params count!",e.getLocalizedMessage());
+		}
+		return count;
+	}
+	
+	public long getAllCategoryPramsCount(EntityManager em) {
+		long count = 0l;
+		try {
+			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_PARAM_COUNT);
+			count = ((Number) query.getSingleResult()).longValue();
+		}
+		catch (Exception e) {
+			logger.error("Error occured when get all category params count!",e.getLocalizedMessage());
+		}
+		return count;
+	}
+	
 
 	/**
 	 * Get all rows in category param table

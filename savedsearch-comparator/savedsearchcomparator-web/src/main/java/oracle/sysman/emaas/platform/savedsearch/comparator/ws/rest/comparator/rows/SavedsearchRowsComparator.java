@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -72,7 +73,11 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			if (entity1 == null) {
 				return null;
 			}
-			int rowNum1 = (int)(entity1.getCountOfCategory() + entity1.getCountOfFolder() + entity1.getCountOfSearch());
+			int rowNum1 = (int)((entity1.getCountOfCategory() == null? 0L:entity1.getCountOfCategory())
+					+ (entity1.getCountOfFolders() ==null?0L:entity1.getCountOfFolders())
+					+ (entity1.getCountOfCategoryPrams() ==null?0L:entity1.getCountOfCategoryPrams())
+					+ (entity1.getCountOfCategoryPrams() ==null?0L:entity1.getCountOfCategoryPrams())
+					+ (entity1.getCountOfSearch()==null?0L:entity1.getCountOfSearch()));
  			if (tre1 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 				logger.info("Completed to compare the two ssf OMC instances");
@@ -84,7 +89,11 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			if (entity2 == null) {
 				return null;
 			}
-			int rowNum2 = (int)(entity2.getCountOfCategory() + entity2.getCountOfFolder() + entity2.getCountOfSearch());
+			int rowNum2 = (int)((entity2.getCountOfCategory() == null? 0L:entity2.getCountOfCategory())
+					+ (entity2.getCountOfFolders() ==null?0L:entity2.getCountOfFolders())
+					+ (entity2.getCountOfCategoryPrams() ==null?0L:entity2.getCountOfCategoryPrams())
+					+ (entity2.getCountOfCategoryPrams() ==null?0L:entity2.getCountOfCategoryPrams())
+					+ (entity2.getCountOfSearch()==null?0L:entity2.getCountOfSearch()));
  			if (tre2 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
 				logger.info("Completed to compare the two SSF OMC instances");
@@ -259,7 +268,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		// TODO: for the 1st step implementation, let's log in log files then
 		logger.info(
 				"Retrieved counts for Category OMC instance: savedsearch count - {}, Folders count - {}, Search count - {}",
-				ze.getCountOfCategory(), ze.getCountOfFolder(), ze.getCountOfSearch());
+				ze.getCountOfCategory(), ze.getCountOfFolders(), ze.getCountOfSearch());
 		return ze;
 	}
 
@@ -292,6 +301,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
 		}
 		String url = lk.getHref() + "?comparisonType="+comparisonType;
+		logger.info("get table data url is "+url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
 		logger.info("Checking SSF OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
@@ -342,7 +352,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return "Errors:Get a null or empty link for one single instance!";
 		}
-		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + syncDate;
+		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + URLEncoder.encode(syncDate, "UTF-8");
 		logger.info("sync url is "+ url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url,  tenantId, userTenant);
  		logger.info("Checking sync reponse. Response is " + response);
