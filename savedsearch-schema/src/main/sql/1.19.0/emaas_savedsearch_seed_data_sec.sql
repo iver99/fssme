@@ -172,7 +172,7 @@ BEGIN
        V_DELETED                            :=0;
        V_IS_WIDGET                          :=1;
        V_METADATA                           :=null;
-       V_SEARCH_STR                         :='''SEF Record Type'' = correlation and ''SEF Destination Type'' like ''MySQL Database'' and ''SEF Category'' != anomaly | timestats count as Threats by ''SEF Category''';
+       V_SEARCH_STR                         :='''SEF Record Type'' = correlation and ''SEF Destination Type'' like ''*MySQL Database*'' and ''SEF Category'' != anomaly | timestats count as Threats by ''SEF Category''';
        V_WIDGET_SOURCE                      :='1';
        V_WIDGET_GROUP_NAME                  :=null;
        V_WIDGET_ICON                        :=null;
