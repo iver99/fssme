@@ -14,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,7 @@ import mockit.MockUp;
 import mockit.Mocked;
 import mockit.Verifications;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
 import org.testng.Assert;
@@ -117,15 +120,13 @@ public class DataManagerTest
 	public void testGetAllCategoryCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
-		 new Expectations(){
+		new Expectations(){
 	            {
-	            	PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-					result = entityManager;	            	
-	                query.getSingleResult();
+	            	query.getSingleResult();
 	                result = 1;
 	            }
 	        };
-	        dataManager.getAllCategoryCount();
+	        dataManager.getAllCategoryCount(entityManager);
 	}
 
 	@Test
@@ -134,13 +135,11 @@ public class DataManagerTest
 	{
 		new Expectations(){
             {
-            	PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;	            	
-                query.getSingleResult();
+            	query.getSingleResult();
                 result = 1;
             }
         };
-        dataManager.getAllFolderCount();
+        dataManager.getAllFolderCount(entityManager);
 		
 	}
 
@@ -150,13 +149,11 @@ public class DataManagerTest
 	{
 		new Expectations(){
             {
-            	PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;	            	
-                query.getSingleResult();
+            	query.getSingleResult();
                 result = 1;
             }
         };
-        dataManager.getAllSearchCount();
+        dataManager.getAllSearchCount(entityManager);
 		
 	}
 	
@@ -167,32 +164,14 @@ public class DataManagerTest
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getFolderTableData();
+		dataManager.getFolderTableData(entityManager);
 
 	}
-	
-	@Test
-	public void testGetSchemaVerTableData(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query)
-	{
-		final List<Map<String, Object>> list = new ArrayList<>();
-		new Expectations(){
-			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
-				query.getResultList();
-				result = list;
-			}
-		};
-		dataManager.getSchemaVerTableData();
-	}
-	
+
 	@Test
 	public void testGetSearchParamTableData(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
@@ -200,13 +179,11 @@ public class DataManagerTest
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getSearchParamTableData();		
+		dataManager.getSearchParamTableData(entityManager);		
 	}
 	
 	@Test
@@ -217,13 +194,11 @@ public class DataManagerTest
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getSearchTableData();
+		dataManager.getSearchTableData(entityManager);
 		
 	}
 	
@@ -234,13 +209,11 @@ public class DataManagerTest
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getCategoryTableData();
+		dataManager.getCategoryTableData(entityManager);
 	}
 	
 	@Test
@@ -250,13 +223,11 @@ public class DataManagerTest
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				q1.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getCategoryParamTableData();
+		dataManager.getCategoryParamTableData(entityManager);
 	}
 	
 	@Test
@@ -268,18 +239,17 @@ public class DataManagerTest
 		Long tenantId = 1L;
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
+		Integer deleted = new Integer("0");
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				entityManager.createNativeQuery(anyString);
                 result = query;               
                 query.getResultList();
-                result = 0;
+                result =  new ArrayList<Map<String, Object>>();
 				
 			}
 		};
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, creationDate, lastModificationDate);
+		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
 	}
 	
 	
@@ -292,22 +262,25 @@ public class DataManagerTest
 		Long tenantId = 1L;
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
+		Integer deleted = new Integer("0");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
 				
 			}
 		};
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(null, name, paramValue, tenantId, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, null, paramValue, tenantId, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, name, null, tenantId, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, null, creationDate, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, null, lastModificationDate);
-		dataManager.syncCategoryParamTable(categoryId, name, paramValue, tenantId, creationDate, null);
+		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(entityManager,null, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(entityManager,categoryId, null, paramValue, tenantId, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(entityManager,categoryId, name, null, tenantId, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, null, creationDate, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, null, lastModificationDate,deleted);
+		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, creationDate, null,deleted);
 	}
 	
 	@Test
@@ -330,42 +303,43 @@ public class DataManagerTest
 		Integer uiHidden= new Integer("2"); 
 		BigInteger deleted = new BigInteger("1"); 
 		Long tenantId = 3L;
-		
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
 				
 			}
 		};
 		
-		dataManager.syncFolderTable(folderId, name, parentId, description, creationDate,
+		dataManager.syncFolderTable(entityManager,folderId, name, parentId, description, creationDate,
 				owner, lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem,
 				descriptionNlsid, descriptionSubsystem, systemFolder, emPluginId, uiHidden, deleted, tenantId);
 		
-		dataManager.syncFolderTable(null, name, parentId, description, creationDate,
+		dataManager.syncFolderTable(entityManager,null, name, parentId, description, creationDate,
 				owner, lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem,
 				descriptionNlsid, descriptionSubsystem, systemFolder, emPluginId, uiHidden, deleted, tenantId);
 		
-		dataManager.syncFolderTable(folderId, null, parentId, description, creationDate,
+		dataManager.syncFolderTable(entityManager,folderId, null, parentId, description, creationDate,
 				owner, lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem,
 				descriptionNlsid, descriptionSubsystem, systemFolder, emPluginId, uiHidden, deleted, tenantId);
 		
-		dataManager.syncFolderTable(folderId, name, null, description, creationDate,
+		dataManager.syncFolderTable(entityManager,folderId, name, null, description, creationDate,
 				owner, lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem,
 				descriptionNlsid, descriptionSubsystem, systemFolder, emPluginId, uiHidden, deleted, tenantId);
 		
-		dataManager.syncFolderTable(folderId, name, parentId, description, null,
+		dataManager.syncFolderTable(entityManager,folderId, name, parentId, description, null,
 				owner, lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem,
 				descriptionNlsid, descriptionSubsystem, systemFolder, emPluginId, uiHidden, deleted, tenantId);
 		
-		dataManager.syncFolderTable(folderId, name, parentId, description, creationDate,
+		dataManager.syncFolderTable(entityManager,folderId, name, parentId, description, creationDate,
 				owner, null, lastModifiedBy, nameNlsid, nameSubsystem,
 				descriptionNlsid, descriptionSubsystem, systemFolder, emPluginId, uiHidden, deleted, tenantId);
 		
-		dataManager.syncFolderTable(folderId, name, parentId, description, creationDate,
+		dataManager.syncFolderTable(entityManager,folderId, name, parentId, description, creationDate,
 				owner, lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem,
 				descriptionNlsid, descriptionSubsystem, systemFolder, emPluginId, uiHidden, deleted, null);
 		
@@ -394,15 +368,13 @@ public class DataManagerTest
 		
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
-				result = 0;
+				result = new ArrayList<Map<String, Object>>();
 				
 			}
 		};
 		
-		dataManager.syncFolderTable(folderId, name, parentId, description, creationDate,
+		dataManager.syncFolderTable(entityManager,folderId, name, parentId, description, creationDate,
 				owner, lastModificationDate, lastModifiedBy, nameNlsid, nameSubsystem,
 				descriptionNlsid, descriptionSubsystem, systemFolder, emPluginId, uiHidden, deleted, tenantId);
 	}
@@ -419,34 +391,38 @@ public class DataManagerTest
 		Long tenantId=1L; 
 		String creationDate="creationDate"; 
 		String lastModificationDate="lastModificationDate";
+		Integer deleted = new Integer("0");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
+				
 			}
 		};
-		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, paramValueStr, 
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
-		dataManager.syncSearchParamsTable(null, name, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+		dataManager.syncSearchParamsTable(entityManager,null, name, paramAttributes, paramType, paramValueStr, 
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
-		dataManager.syncSearchParamsTable(searchId, null, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+		dataManager.syncSearchParamsTable(entityManager,searchId, null, paramAttributes, paramType, paramValueStr, 
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
-		dataManager.syncSearchParamsTable(searchId, name, null, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+		dataManager.syncSearchParamsTable(entityManager,searchId, name, null, paramType, paramValueStr, 
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
-		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, null, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, null, paramValueStr, 
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
-		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, paramType, null, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, null, 
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 		
-		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, null);
+		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, paramValueStr, 
+				paramValueClob, tenantId, creationDate, null,deleted);
 		
 	}
 	
@@ -462,16 +438,15 @@ public class DataManagerTest
 		Long tenantId=1L; 
 		String creationDate="creationDate"; 
 		String lastModificationDate="lastModificationDate";
+		Integer deleted = new Integer("0");
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
-				result = 0;
+				result = new ArrayList<Map<String, Object>>();
 			}
 		};
-		dataManager.syncSearchParamsTable(searchId, name, paramAttributes, paramType, paramValueStr, 
-				paramValueClob, tenantId, creationDate, lastModificationDate);
+		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, paramValueStr, 
+				paramValueClob, tenantId, creationDate, lastModificationDate,deleted);
 	
 	}
 	
@@ -515,67 +490,62 @@ public class DataManagerTest
 		String providerName="providerName"; 
 		String providerVersion="providerVersion"; 
 		String providerAssetRoot="providerAssetRoot"; 
-		
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
-				result = new ArrayList<>();
+				result = objs;
+				
 			}
 		};
 		
-		dataManager.syncSearchTable(searchId, name, owner, creationDate, lastModificationDate, 
-				lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem, 
-				descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, 
+		dataManager.syncSearchTable(entityManager,searchId, name, owner, creationDate, lastModificationDate, 
+				lastModifiedBy, description, folderId, categoryId,systemSearch, isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
 				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
 		
-		dataManager.syncSearchTable(null, name, owner, creationDate, lastModificationDate, 
-				lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem, 
-				descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, 
+		dataManager.syncSearchTable(entityManager,null, name, owner, creationDate, lastModificationDate, 
+				lastModifiedBy, description, folderId, categoryId, systemSearch,isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
 				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
 		
-		dataManager.syncSearchTable(searchId, null, owner, creationDate, lastModificationDate, 
-				lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem, 
-				descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, 
+		dataManager.syncSearchTable(entityManager,searchId, null, owner, creationDate, lastModificationDate, 
+				lastModifiedBy, description, folderId, categoryId, systemSearch,isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
 				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
 		
-		dataManager.syncSearchTable(searchId, name, owner, null, lastModificationDate, 
-				lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem, 
-				descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, 
+		dataManager.syncSearchTable(entityManager,searchId, name, owner, null, lastModificationDate, 
+				lastModifiedBy, description, folderId, categoryId, systemSearch, isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
 				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
 		
-		dataManager.syncSearchTable(searchId, name, owner, creationDate, null, 
-				lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem, 
-				descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, 
+		dataManager.syncSearchTable(entityManager,searchId, name, owner, creationDate, null, 
+				lastModifiedBy, description, folderId, categoryId, systemSearch, isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
 				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
 		
-		dataManager.syncSearchTable(searchId, name, owner, creationDate, lastModificationDate, 
-				lastModifiedBy, description, folderId, null, nameNlsid, nameSubsystem, 
-				descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, 
+		dataManager.syncSearchTable(entityManager,searchId, name, owner, creationDate, lastModificationDate, 
+				lastModifiedBy, description, folderId, null,  systemSearch,isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
 				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
 		
-		dataManager.syncSearchTable(searchId, name, owner, creationDate, lastModificationDate, 
-				lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem, 
-				descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, 
+		dataManager.syncSearchTable(entityManager,searchId, name, owner, creationDate, lastModificationDate, 
+				lastModifiedBy, description, folderId, categoryId, systemSearch, isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
@@ -625,16 +595,13 @@ public class DataManagerTest
 		
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				q1.getResultList();
-				result = 0;
+				result = new ArrayList<Map<String, Object>>();
 			}
 		};
 		
-		dataManager.syncSearchTable(searchId, name, owner, creationDate, lastModificationDate, 
-				lastModifiedBy, description, folderId, categoryId, nameNlsid, nameSubsystem, 
-				descriptionNlsid, descriptionSubsystem, systemSearch, emPluginId, isLocked, 
+		dataManager.syncSearchTable(entityManager,searchId, name, owner, creationDate, lastModificationDate, 
+				lastModifiedBy, description, folderId, categoryId,systemSearch, isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
@@ -655,7 +622,7 @@ public class DataManagerTest
 		String descriptionNlsid = "descriptionNlsid";
 		String descriptionSubSystem = "descriptionSubSystem";
 		String emPluginId = "emPluginId";
-		Long defaultFolderId = 1L;
+		BigInteger defaultFolderId =new BigInteger("1");
 		BigInteger deleted = new BigInteger("0");
 		String providerName = "providerName";
 		String providerVersion = "providerVersion";
@@ -665,56 +632,59 @@ public class DataManagerTest
 		String dashboardIneligible = "dashboardIneligible";
 		String lastModificationDate = "lastModificationDate";
 		
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				q1.getResultList();
-				result = new ArrayList<>();
+				result = objs;
+				
 			}
 		};
 		
-		dataManager.syncCategoryTable(categoryId, name, description, owner, 
+		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
 				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
 		
-		dataManager.syncCategoryTable(null, name, description, owner, 
+		dataManager.syncCategoryTable(entityManager,null, name, description, owner, 
 				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
 		
-		dataManager.syncCategoryTable(categoryId, null, description, owner, 
+		dataManager.syncCategoryTable(entityManager,categoryId, null, description, owner, 
 				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
 		
-		dataManager.syncCategoryTable(categoryId, name, null, owner, 
+		dataManager.syncCategoryTable(entityManager,categoryId, name, null, owner, 
 				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
 		
-		dataManager.syncCategoryTable(categoryId, name, description, null, 
+		dataManager.syncCategoryTable(entityManager,categoryId, name, description, null, 
 				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
 		
-		dataManager.syncCategoryTable(categoryId, name, description, owner, 
+		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
 				null, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
 		
-		dataManager.syncCategoryTable(categoryId, name, description, owner, 
+		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
 				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, null, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
 		
-		dataManager.syncCategoryTable(categoryId, name, description, owner, 
+		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
 				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, null, dashboardIneligible, lastModificationDate);
 		
-		dataManager.syncCategoryTable(categoryId, name, description, owner, 
+		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
 				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, null);
@@ -734,7 +704,7 @@ public class DataManagerTest
 		String descriptionNlsid = "descriptionNlsid";
 		String descriptionSubSystem = "descriptionSubSystem";
 		String emPluginId = "emPluginId";
-		Long defaultFolderId = 1L;
+		BigInteger defaultFolderId =new BigInteger("1");
 		BigInteger deleted = new BigInteger("0");
 		String providerName = "providerName";
 		String providerVersion = "providerVersion";
@@ -746,14 +716,12 @@ public class DataManagerTest
 		
 		new Expectations(){
 			{
-				PersistenceManager.getInstance().getEntityManager((TenantInfo) any);
-				result = entityManager;
 				query.getResultList();
-				result = 0;
+				result =new ArrayList<Map<String, Object>>();
 			}
 		};
 		
-		dataManager.syncCategoryTable(categoryId, name, description, owner, 
+		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
 				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
 				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
 				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);

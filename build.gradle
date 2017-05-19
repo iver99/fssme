@@ -49,7 +49,6 @@ apply from: new File(pubAllprojects).isAbsolute() ?
   "$pubAllprojects" : "$project.commonBranchTopDir/$pubAllprojects"
 //
 //-----------------------------------------------------------------------------
-
 allprojects {
     /* The name of your repository, either hardcoded or from a property */
     project.group = "${project.baseGroup}.emcpssf"
@@ -57,8 +56,9 @@ allprojects {
         project.group += project.path.replaceAll(~/:/, '.')
     }
 }
+//apply plugin: 'DevInfraPlugin'
 
-import org.gradle.api.artifacts.Configuration.State  
+import org.gradle.api.artifacts.Configuration.State
  ext.regClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
     ext.registryClientResolver = 'com.oracle.emaas.emcpsm:registry-client:'+ regClientVer
 
