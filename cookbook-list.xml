@@ -2,4 +2,5 @@
  
 <cookbooks> 
   <cookbook name="cookbook-emcs-savedsearchService" dir="savedsearch-chef"/> 
+ <cookbook name="cookbook-emcs-savedsearch-comparator" dir="savedsearch-chef"/>
 </cookbooks> 
