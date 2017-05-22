@@ -29,6 +29,7 @@ public class SavedSearchComparatorCORSFilterTest {
     public void testDestroy() {
         dashboardsComparatorCORSFilter.destroy();
     }
+    
     @Test
     public void testDoFilter() throws Exception {
         new Expectations(){

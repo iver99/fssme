@@ -19,19 +19,30 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupC
  */
 public class InstanceData<T>
 {
-	private Entry<String, LookupClient> instance;
+	private String key;
+	private LookupClient client;
 	private T data;
-
+	private int totalRowNum;
 	/**
 	 * @param instance
 	 * @param data
 	 */
-	public InstanceData(Entry<String, LookupClient> instance, T data)
+	public InstanceData(String key, LookupClient client, T data,  int totalRowNum)
 	{
 		super();
-		this.instance = instance;
+		this.key = key;
+		this.client = client;
 		this.data = data;
+		this.totalRowNum = totalRowNum;
 	}
+	
+	
+
+	public int getTotalRowNum() {
+		return totalRowNum;
+	}
+
+
 
 	/**
 	 * @return the data
@@ -42,28 +53,19 @@ public class InstanceData<T>
 	}
 
 	/**
-	 * @return the instance
-	 */
-	public Entry<String, LookupClient> getInstance()
-	{
-		return instance;
-	}
-
-	/**
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(T data)
-	{
-		this.data = data;
+
+	public String getKey() {
+		return key;
 	}
 
-	/**
-	 * @param instance
-	 *            the instance to set
-	 */
-	public void setInstance(Entry<String, LookupClient> instance)
-	{
-		this.instance = instance;
+
+	public LookupClient getClient() {
+		return client;
 	}
+
+
+	
 }

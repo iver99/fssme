@@ -3,11 +3,20 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.LeaseInfo.Builder;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -19,7 +28,10 @@ import mockit.Mocked;
 @Test(groups = { "s1" })
 public class SaveSearchRowsComparatorTest
 {
+	@Mocked
+	AbstractComparator abstractComparator;
 	
+
 	private static final String JSON_RESPONSE_DATA_TABLE="{"
 			+ "\"EMS_ANALYTICS_CATEGORY\": [{"
 			+ 		"\"CATEGORY_ID\":5,"
@@ -142,7 +154,7 @@ public class SaveSearchRowsComparatorTest
 		ZDTTableRowEntity tre2 = Deencapsulation.invoke(src1, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
 		InstancesComparedData<ZDTTableRowEntity> cd = Deencapsulation.invoke(src1, "compareInstancesData",
-				new InstanceData<ZDTTableRowEntity>(null, tre1), new InstanceData<ZDTTableRowEntity>(null, tre2));
+				new InstanceData<ZDTTableRowEntity>(null,null, tre1,0), new InstanceData<ZDTTableRowEntity>(null,null, tre2,0));
 		// the 2 instances have the same data, so there is no difference from the compared result
 		ZDTTableRowEntity result1 = cd.getInstance1().getData();
 		ZDTTableRowEntity result2 = cd.getInstance1().getData();
@@ -161,16 +173,16 @@ public class SaveSearchRowsComparatorTest
 		tre1 = Deencapsulation.invoke(src2, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
 		tre2 = Deencapsulation.invoke(src2, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
 		SavedSearchCategoryRowEntity sscr1 = new SavedSearchCategoryRowEntity();
-		sscr1.setCategoryId(new BigInteger("12"));
-		sscr1.setDeleted(new BigInteger("2"));
+		sscr1.setCategoryId("12");
+		sscr1.setDeleted("2");
 		tre1.getSavedSearchCategory().add(sscr1);
 		SavedSearchCategoryRowEntity sscr2 = new SavedSearchCategoryRowEntity();
-		sscr2.setCategoryId(new BigInteger("10"));
-		sscr2.setDeleted(new BigInteger("0"));
+		sscr2.setCategoryId("10");
+		sscr2.setDeleted("0");
 		tre2.getSavedSearchCategory().add(sscr2);
 
-		cd = Deencapsulation.invoke(src2, "compareInstancesData", new InstanceData<ZDTTableRowEntity>(null, tre1),
-				new InstanceData<ZDTTableRowEntity>(null, tre2));
+		cd = Deencapsulation.invoke(src2, "compareInstancesData", new InstanceData<ZDTTableRowEntity>(null, null,tre1,0),
+				new InstanceData<ZDTTableRowEntity>(null,null, tre2,0));
 		result1 = cd.getInstance1().getData();
 		result2 = cd.getInstance2().getData();
 		Assert.assertEquals(result1.getSavedSearchCategory().get(0), sscr1);
@@ -188,21 +200,73 @@ public class SaveSearchRowsComparatorTest
 		Assert.assertEquals(tre.getSavedSearchCategory().get(0).getName(), "Target Card");
 		Assert.assertEquals(tre.getSavedSearchCategoryParams().get(0).getName(), "DASHBOARD_INELIGIBLE");
 		Assert.assertEquals(tre.getSavedSearchFoldersy().get(0).getName(), "All Searches");
-		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId().longValue(), 2024);
+		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId(), "2024");
 		Assert.assertEquals(tre.getSavedSearchSearchParams().get(0).getName(), "meId");
 	}
 	
 	@Test
 	public void testCompare(@Mocked final AbstractComparator abstractComparator, 
-			@Mocked final InstancesComparedData<ZDTTableRowEntity> zdtTableRowsEntity) {
-		SavedsearchRowsComparator src = new SavedsearchRowsComparator();
-		 new Expectations(){
+			@Mocked final LookupClient client1, @Mocked final LookupClient client2,
+			@Mocked final InstanceInfo info, @Mocked final InstanceInfo.Builder builder) throws Exception {
+		
+	      final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+	       
+	      /* 	
+	    	new Expectations(){
 	            {
 	                abstractComparator.getOMCInstances();
-	                result = null;
+	                result = lookupEntry;
+	                lookupEntry.put("omc1",client1);
+	    	    	lookupEntry.put("omc2",client2);
+	    	   	
+	    	    	InstanceInfo.Builder.newBuilder();//.withServiceName(SAVEDSEARCH_SERVICE_NAME).withVersion(SAVEDSEARCH_VERSION).build();
+	    			result = builder;
+	    			builder.withServiceName(anyString);
+	    			result = builder;
+	    			builder.withVersion(anyString);
+	    			result = builder;
+	    			builder.build();
+	    			result = info;
+	    			client.lookup(new InstanceQuery(info));
+	    			result = infos;
+    	    	InstanceInfo.Builder.newBuilder().withServiceName(anyString).withVersion(anyString).build();
+	    	    	result = builder;
+	    	    	client.lookup(new InstanceQuery(info));
+	    	    	result = infos;
+	    	    	infos.add(info);
+	    	    	
 	            }
-	        };
-	        src.compare();
+	        };*/
+	        SavedsearchRowsComparator src = new SavedsearchRowsComparator();
+			
+	        src.compare("tenantId","userTenant");
+	}
+
+	
+	@Test
+	public void testSync() throws Exception {
+		SavedsearchRowsComparator src = new SavedsearchRowsComparator();
 		
+		ZDTTableRowEntity tableRow1 = new ZDTTableRowEntity();
+    	tableRow1.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
+    	
+    	ZDTTableRowEntity tableRow2 = new ZDTTableRowEntity();
+    	tableRow2.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
+    	
+    	InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>("", null,tableRow1,  100);
+    	InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>("", null,tableRow2,  100);
+    	
+    	
+    	InstancesComparedData<ZDTTableRowEntity> comparedData = new InstancesComparedData<ZDTTableRowEntity>(instance1, instance2);  
+		
+		src.sync(comparedData,"tenantId", "userTenant");
+	}
+	
+	@Test
+	public void testcountForComparedRows() {
+		ZDTTableRowEntity tableRow1 = new ZDTTableRowEntity();
+    	tableRow1.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
+    	SavedsearchRowsComparator src = new SavedsearchRowsComparator();
+    	src.countForComparedRows(tableRow1);
 	}
 }
