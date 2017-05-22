@@ -20,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchCategoryParamRowEntity implements RowEntity
 {
 	@JsonProperty("CATEGORY_ID")
-	private BigInteger categoryId;
+	private String categoryId;
 
 	@JsonProperty("NAME")
 	private String name;
@@ -36,80 +36,34 @@ public class SavedSearchCategoryParamRowEntity implements RowEntity
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
+	
+	@JsonProperty("DELETED")
+	private Integer deleted;
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		SavedSearchCategoryParamRowEntity other = (SavedSearchCategoryParamRowEntity) obj;
-		if (categoryId == null) {
-			if (other.categoryId != null) {
-				return false;
-			}
-		}
-		else if (!categoryId.equals(other.categoryId)) {
-			return false;
-		}
-		if (creationDate == null) {
-			if (other.creationDate != null) {
-				return false;
-			}
-		}
-		else if (!creationDate.equals(other.creationDate)) {
-			return false;
-		}
-		if (lastModificationDate == null) {
-			if (other.lastModificationDate != null) {
-				return false;
-			}
-		}
-		else if (!lastModificationDate.equals(other.lastModificationDate)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		}
-		else if (!name.equals(other.name)) {
-			return false;
-		}
-		if (tenantId == null) {
-			if (other.tenantId != null) {
-				return false;
-			}
-		}
-		else if (!tenantId.equals(other.tenantId)) {
-			return false;
-		}
-		if (value == null) {
-			if (other.value != null) {
-				return false;
-			}
-		}
-		else if (!value.equals(other.value)) {
-			return false;
-		}
-		return true;
+	
+
+	public SavedSearchCategoryParamRowEntity() {
+		super();
 	}
 
 	/**
 	 * @return the categoryId
 	 */
-	public BigInteger getCategoryId()
+	public String getCategoryId()
 	{
 		return categoryId;
+	}
+
+	public SavedSearchCategoryParamRowEntity(String categoryId,
+			String name, String value, Long tenantId, String creationDate,
+			String lastModificationDate) {
+		super();
+		this.categoryId = categoryId;
+		this.name = name;
+		this.value = value;
+		this.tenantId = tenantId;
+		this.creationDate = creationDate;
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	/**
@@ -152,28 +106,11 @@ public class SavedSearchCategoryParamRowEntity implements RowEntity
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (categoryId == null ? 0 : categoryId.hashCode());
-		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
-		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
-		result = prime * result + (name == null ? 0 : name.hashCode());
-		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
-		result = prime * result + (value == null ? 0 : value.hashCode());
-		return result;
-	}
-
 	/**
 	 * @param categoryId
 	 *            the categoryId to set
 	 */
-	public void setCategoryId(BigInteger categoryId)
+	public void setCategoryId(String categoryId)
 	{
 		this.categoryId = categoryId;
 	}
@@ -233,5 +170,82 @@ public class SavedSearchCategoryParamRowEntity implements RowEntity
 				+ ", tenantId=" + tenantId + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate
 				+ "]";
 	}
+
+	public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((categoryId == null) ? 0 : categoryId.hashCode());
+		result = prime * result
+				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
+		result = prime
+				* result
+				+ ((lastModificationDate == null) ? 0 : lastModificationDate
+						.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((tenantId == null) ? 0 : tenantId.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SavedSearchCategoryParamRowEntity other = (SavedSearchCategoryParamRowEntity) obj;
+		if (categoryId == null) {
+			if (other.categoryId != null)
+				return false;
+		} else if (!categoryId.equals(other.categoryId))
+			return false;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
+		if (deleted == null) {
+			if (other.deleted != null)
+				return false;
+		} else if (!deleted.equals(other.deleted))
+			return false;
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null)
+				return false;
+		} else if (!lastModificationDate.equals(other.lastModificationDate))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
+	
+	
 
 }

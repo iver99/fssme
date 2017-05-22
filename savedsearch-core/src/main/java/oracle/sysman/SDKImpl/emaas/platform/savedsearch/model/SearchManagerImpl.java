@@ -4,9 +4,11 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -32,6 +34,8 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.config.ResultType;
 import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
 import org.eclipse.persistence.jpa.JpaEntityManager;
 import org.eclipse.persistence.queries.DatabaseQuery;
@@ -66,6 +70,9 @@ public class SearchManagerImpl extends SearchManager
 			+ "AND (pm.paramValueStr IS NULL OR pm.paramValueStr<>'1')";
 
 	private static final String DEFAULT_DB_VALUE = "0";
+	
+	private static final String SQL_GET_ID_NAME_BY_UNIQUE_KEY = "SELECT SEARCH_ID, NAME FROM EMS_ANALYTICS_SEARCH "
+			+ "WHERE NAME = ? AND CATEGORY_ID=? AND FOLDER_ID = ? AND DELETED=? AND OWNER=?";
 
 	//+ " EmAnalyticsLastAccess t where e.searchId = t.objectId ";
 
@@ -1707,6 +1714,46 @@ public class SearchManagerImpl extends SearchManager
 					new Object[] { search.getName() });
 		}
 
+	}
+	
+
+	private String getQueryCondition(List<BigInteger> ids) {
+		if (ids != null && !ids.isEmpty()) {
+			StringBuilder parameters = new StringBuilder();
+			int flag = 0;
+			for (BigInteger id : ids) {
+				if (flag++ > 0) {
+					parameters.append(",");
+				}
+				parameters.append(id);
+			}
+			return parameters.toString();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name,
+			BigInteger folderId, BigInteger categoryId, BigInteger deleted,String owner) {
+		EntityManager em = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
+			Query q1 = em.createNativeQuery(SQL_GET_ID_NAME_BY_UNIQUE_KEY).setParameter(1, name).setParameter(2, categoryId)
+				.setParameter(3, folderId).setParameter(4, deleted).setParameter(5, owner);
+			q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+			@SuppressWarnings("unchecked")
+			List<Map<String, Object>> result = q1.getResultList();
+		
+			return result;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 }

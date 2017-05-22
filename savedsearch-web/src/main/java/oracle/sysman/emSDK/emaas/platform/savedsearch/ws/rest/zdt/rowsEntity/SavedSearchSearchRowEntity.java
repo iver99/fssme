@@ -21,19 +21,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchSearchRowEntity implements RowEntity
 {
 	@JsonProperty("SEARCH_ID")
-	private BigInteger searchId;
+	private String searchId;
 
 	@JsonProperty("DESCRIPTION")
 	private String description;
-
-	@JsonProperty("DESCRIPTION_NLSID")
-	private String descriptionNlsid;
-
-	@JsonProperty("DESCRIPTION_SUBSYSTEM")
-	private String descriptionSubsystem;
-
-	@JsonProperty("EM_PLUGIN_ID")
-	private String emPluginId;
 
 	@JsonProperty("IS_LOCKED")
 	private Integer isLocked;
@@ -45,24 +36,15 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private String metadataClob;
 
 	@JsonProperty("NAME")
-	private String name;
-
-	@JsonProperty("NAME_NLSID")
-	private String nameNlsid;
-
-	@JsonProperty("NAME_SUBSYSTEM")
-	private String nameSubsystem;
+	private String name;	
 
 	@JsonProperty("OWNER")
 	private String owner;
 
 	@JsonProperty("SEARCH_DISPLAY_STR")
 	private String searchDisplayStr;
-	/**
-	 * This column is useless, do not need to compare it.
-	 */
-	//	@JsonProperty("SEARCH_GUID")
-	@JsonIgnore
+	
+	@JsonProperty("SEARCH_GUID")
 	private String searchGuid;
 
 	@JsonProperty("SYSTEM_SEARCH")
@@ -72,7 +54,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private Integer uiHidden;
 
 	@JsonProperty("DELETED")
-	private BigInteger deleted;
+	private String deleted;
 
 	@JsonProperty("IS_WIDGET")
 	private Integer isWidget;
@@ -83,7 +65,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
 
-	@JsonProperty("NAME_WIDGET_SOURCE")
+	@JsonProperty("WIDGET_SOURCE")
 	private String nameWidgetSource;
 
 	@JsonProperty("WIDGET_GROUP_NAME")
@@ -123,10 +105,10 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private Long tenantId;
 
 	@JsonProperty("FOLDER_ID")
-	private BigInteger folderId;
+	private String folderId;
 
 	@JsonProperty("CATEGORY_ID")
-	private BigInteger categoryId;
+	private String categoryId;
 
 	@JsonProperty("PROVIDER_NAME")
 	private String providerName;
@@ -141,36 +123,32 @@ public class SavedSearchSearchRowEntity implements RowEntity
 
 	public SavedSearchSearchRowEntity() {
 		super();
+	
 	}
 
-	public SavedSearchSearchRowEntity(BigInteger searchId, String description,
+	public SavedSearchSearchRowEntity(String searchId, String description,
 			String descriptionNlsid, String descriptionSubsystem,
 			String emPluginId, Integer isLocked, String lastModifiedBy,
 			String metadataClob, String name, String nameNlsid,
 			String nameSubsystem, String owner, String searchDisplayStr,
 			String searchGuid, Integer systemSearch, Integer uiHidden,
-			BigInteger deleted, Integer isWidget, String creationDate,
+			String deleted, Integer isWidget, String creationDate,
 			String lastModificationDate, String nameWidgetSource,
 			String widgetGroupName, String widgetScreenshotHref,
 			String widgetIcon, String widgetKocName, String widgetViewModel,
 			String widgetTemplate, String widgetSupportTimeControl,
 			Long widgetLinkedDashboard, Long widgetDefaulWidth,
 			Long widgetDefaultHeight, String dashboardIneligible,
-			Long tenantId, BigInteger folderId, BigInteger categoryId,
+			Long tenantId, String folderId, String categoryId,
 			String providerName, String providerVersion,
 			String providerAssetRoot) {
 		super();
 		this.searchId = searchId;
 		this.description = description;
-		this.descriptionNlsid = descriptionNlsid;
-		this.descriptionSubsystem = descriptionSubsystem;
-		this.emPluginId = emPluginId;
 		this.isLocked = isLocked;
 		this.lastModifiedBy = lastModifiedBy;
 		this.metadataClob = metadataClob;
 		this.name = name;
-		this.nameNlsid = nameNlsid;
-		this.nameSubsystem = nameSubsystem;
 		this.owner = owner;
 		this.searchDisplayStr = searchDisplayStr;
 		this.searchGuid = searchGuid;
@@ -200,286 +178,18 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		this.providerAssetRoot = providerAssetRoot;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		SavedSearchSearchRowEntity other = (SavedSearchSearchRowEntity) obj;
-		if (creationDate == null) {
-			if (other.creationDate != null) {
-				return false;
-			}
-		}
-		else if (!creationDate.equals(other.creationDate)) {
-			return false;
-		}
-		if (dashboardIneligible == null) {
-			if (other.dashboardIneligible != null) {
-				return false;
-			}
-		}
-		else if (!dashboardIneligible.equals(other.dashboardIneligible)) {
-			return false;
-		}
-		if (deleted == null) {
-			if (other.deleted != null) {
-				return false;
-			}
-		}
-		else if (!deleted.equals(other.deleted)) {
-			return false;
-		}
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		}
-		else if (!description.equals(other.description)) {
-			return false;
-		}
-		if (descriptionNlsid == null) {
-			if (other.descriptionNlsid != null) {
-				return false;
-			}
-		}
-		else if (!descriptionNlsid.equals(other.descriptionNlsid)) {
-			return false;
-		}
-		if (descriptionSubsystem == null) {
-			if (other.descriptionSubsystem != null) {
-				return false;
-			}
-		}
-		else if (!descriptionSubsystem.equals(other.descriptionSubsystem)) {
-			return false;
-		}
-		if (emPluginId == null) {
-			if (other.emPluginId != null) {
-				return false;
-			}
-		}
-		else if (!emPluginId.equals(other.emPluginId)) {
-			return false;
-		}
-		if (isLocked == null) {
-			if (other.isLocked != null) {
-				return false;
-			}
-		}
-		else if (!isLocked.equals(other.isLocked)) {
-			return false;
-		}
-		if (isWidget == null) {
-			if (other.isWidget != null) {
-				return false;
-			}
-		}
-		else if (!isWidget.equals(other.isWidget)) {
-			return false;
-		}
-		if (lastModificationDate == null) {
-			if (other.lastModificationDate != null) {
-				return false;
-			}
-		}
-		else if (!lastModificationDate.equals(other.lastModificationDate)) {
-			return false;
-		}
-		if (lastModifiedBy == null) {
-			if (other.lastModifiedBy != null) {
-				return false;
-			}
-		}
-		else if (!lastModifiedBy.equals(other.lastModifiedBy)) {
-			return false;
-		}
-		if (metadataClob == null) {
-			if (other.metadataClob != null) {
-				return false;
-			}
-		}
-		else if (!metadataClob.equals(other.metadataClob)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		}
-		else if (!name.equals(other.name)) {
-			return false;
-		}
-		if (nameNlsid == null) {
-			if (other.nameNlsid != null) {
-				return false;
-			}
-		}
-		else if (!nameNlsid.equals(other.nameNlsid)) {
-			return false;
-		}
-		if (nameSubsystem == null) {
-			if (other.nameSubsystem != null) {
-				return false;
-			}
-		}
-		else if (!nameSubsystem.equals(other.nameSubsystem)) {
-			return false;
-		}
-		if (nameWidgetSource == null) {
-			if (other.nameWidgetSource != null) {
-				return false;
-			}
-		}
-		else if (!nameWidgetSource.equals(other.nameWidgetSource)) {
-			return false;
-		}
-		if (owner == null) {
-			if (other.owner != null) {
-				return false;
-			}
-		}
-		else if (!owner.equals(other.owner)) {
-			return false;
-		}
-		if (searchDisplayStr == null) {
-			if (other.searchDisplayStr != null) {
-				return false;
-			}
-		}
-		else if (!searchDisplayStr.equals(other.searchDisplayStr)) {
-			return false;
-		}
+	public String getSearchGuid() {
+		return searchGuid;
+	}
 
-		if (searchId == null) {
-			if (other.searchId != null) {
-				return false;
-			}
-		}
-		else if (!searchId.equals(other.searchId)) {
-			return false;
-		}
-		if (systemSearch == null) {
-			if (other.systemSearch != null) {
-				return false;
-			}
-		}
-		else if (!systemSearch.equals(other.systemSearch)) {
-			return false;
-		}
-		if (tenantId == null) {
-			if (other.tenantId != null) {
-				return false;
-			}
-		}
-		else if (!tenantId.equals(other.tenantId)) {
-			return false;
-		}
-		if (uiHidden == null) {
-			if (other.uiHidden != null) {
-				return false;
-			}
-		}
-		else if (!uiHidden.equals(other.uiHidden)) {
-			return false;
-		}
-		if (widgetDefaulWidth == null) {
-			if (other.widgetDefaulWidth != null) {
-				return false;
-			}
-		}
-		else if (!widgetDefaulWidth.equals(other.widgetDefaulWidth)) {
-			return false;
-		}
-		if (widgetDefaultHeight == null) {
-			if (other.widgetDefaultHeight != null) {
-				return false;
-			}
-		}
-		else if (!widgetDefaultHeight.equals(other.widgetDefaultHeight)) {
-			return false;
-		}
-		if (widgetGroupName == null) {
-			if (other.widgetGroupName != null) {
-				return false;
-			}
-		}
-		else if (!widgetGroupName.equals(other.widgetGroupName)) {
-			return false;
-		}
-		if (widgetIcon == null) {
-			if (other.widgetIcon != null) {
-				return false;
-			}
-		}
-		else if (!widgetIcon.equals(other.widgetIcon)) {
-			return false;
-		}
-		if (widgetKocName == null) {
-			if (other.widgetKocName != null) {
-				return false;
-			}
-		}
-		else if (!widgetKocName.equals(other.widgetKocName)) {
-			return false;
-		}
-		if (widgetLinkedDashboard == null) {
-			if (other.widgetLinkedDashboard != null) {
-				return false;
-			}
-		}
-		else if (!widgetLinkedDashboard.equals(other.widgetLinkedDashboard)) {
-			return false;
-		}
-		if (widgetScreenshotHref == null) {
-			if (other.widgetScreenshotHref != null) {
-				return false;
-			}
-		}
-		else if (!widgetScreenshotHref.equals(other.widgetScreenshotHref)) {
-			return false;
-		}
-		if (widgetSupportTimeControl == null) {
-			if (other.widgetSupportTimeControl != null) {
-				return false;
-			}
-		}
-		else if (!widgetSupportTimeControl.equals(other.widgetSupportTimeControl)) {
-			return false;
-		}
-		if (widgetTemplate == null) {
-			if (other.widgetTemplate != null) {
-				return false;
-			}
-		}
-		else if (!widgetTemplate.equals(other.widgetTemplate)) {
-			return false;
-		}
-		if (widgetViewModel == null) {
-			if (other.widgetViewModel != null) {
-				return false;
-			}
-		}
-		else if (!widgetViewModel.equals(other.widgetViewModel)) {
-			return false;
-		}
-		return true;
+	public void setSearchGuid(String searchGuid) {
+		this.searchGuid = searchGuid;
 	}
 
 	/**
 	 * @return the categoryId
 	 */
-	public BigInteger getCategoryId()
+	public String getCategoryId()
 	{
 		return categoryId;
 	}
@@ -503,7 +213,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public BigInteger getDeleted()
+	public String getDeleted()
 	{
 		return deleted;
 	}
@@ -517,33 +227,9 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
-	 * @return the descriptionNlsid
-	 */
-	public String getDescriptionNlsid()
-	{
-		return descriptionNlsid;
-	}
-
-	/**
-	 * @return the descriptionSubsystem
-	 */
-	public String getDescriptionSubsystem()
-	{
-		return descriptionSubsystem;
-	}
-
-	/**
-	 * @return the emPluginId
-	 */
-	public String getEmPluginId()
-	{
-		return emPluginId;
-	}
-
-	/**
 	 * @return the folderId
 	 */
-	public BigInteger getFolderId()
+	public String getFolderId()
 	{
 		return folderId;
 	}
@@ -597,22 +283,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
-	 * @return the nameNlsid
-	 */
-	public String getNameNlsid()
-	{
-		return nameNlsid;
-	}
-
-	/**
-	 * @return the nameSubsystem
-	 */
-	public String getNameSubsystem()
-	{
-		return nameSubsystem;
-	}
-
-	/**
 	 * @return the nameWidgetSource
 	 */
 	public String getNameWidgetSource()
@@ -663,7 +333,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	/**
 	 * @return the searchId
 	 */
-	public BigInteger getSearchId()
+	public String getSearchId()
 	{
 		return searchId;
 	}
@@ -772,54 +442,11 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		return widgetViewModel;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
-		result = prime * result + (dashboardIneligible == null ? 0 : dashboardIneligible.hashCode());
-		result = prime * result + (deleted == null ? 0 : deleted.hashCode());
-		result = prime * result + (description == null ? 0 : description.hashCode());
-		result = prime * result + (descriptionNlsid == null ? 0 : descriptionNlsid.hashCode());
-		result = prime * result + (descriptionSubsystem == null ? 0 : descriptionSubsystem.hashCode());
-		result = prime * result + (emPluginId == null ? 0 : emPluginId.hashCode());
-		result = prime * result + (isLocked == null ? 0 : isLocked.hashCode());
-		result = prime * result + (isWidget == null ? 0 : isWidget.hashCode());
-		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
-		result = prime * result + (lastModifiedBy == null ? 0 : lastModifiedBy.hashCode());
-		result = prime * result + (metadataClob == null ? 0 : metadataClob.hashCode());
-		result = prime * result + (name == null ? 0 : name.hashCode());
-		result = prime * result + (nameNlsid == null ? 0 : nameNlsid.hashCode());
-		result = prime * result + (nameSubsystem == null ? 0 : nameSubsystem.hashCode());
-		result = prime * result + (nameWidgetSource == null ? 0 : nameWidgetSource.hashCode());
-		result = prime * result + (owner == null ? 0 : owner.hashCode());
-		result = prime * result + (searchDisplayStr == null ? 0 : searchDisplayStr.hashCode());
-		result = prime * result + (searchId == null ? 0 : searchId.hashCode());
-		result = prime * result + (systemSearch == null ? 0 : systemSearch.hashCode());
-		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
-		result = prime * result + (uiHidden == null ? 0 : uiHidden.hashCode());
-		result = prime * result + (widgetDefaulWidth == null ? 0 : widgetDefaulWidth.hashCode());
-		result = prime * result + (widgetDefaultHeight == null ? 0 : widgetDefaultHeight.hashCode());
-		result = prime * result + (widgetGroupName == null ? 0 : widgetGroupName.hashCode());
-		result = prime * result + (widgetIcon == null ? 0 : widgetIcon.hashCode());
-		result = prime * result + (widgetKocName == null ? 0 : widgetKocName.hashCode());
-		result = prime * result + (widgetLinkedDashboard == null ? 0 : widgetLinkedDashboard.hashCode());
-		result = prime * result + (widgetScreenshotHref == null ? 0 : widgetScreenshotHref.hashCode());
-		result = prime * result + (widgetSupportTimeControl == null ? 0 : widgetSupportTimeControl.hashCode());
-		result = prime * result + (widgetTemplate == null ? 0 : widgetTemplate.hashCode());
-		result = prime * result + (widgetViewModel == null ? 0 : widgetViewModel.hashCode());
-		return result;
-	}
-
 	/**
 	 * @param categoryId
 	 *            the categoryId to set
 	 */
-	public void setCategoryId(BigInteger categoryId)
+	public void setCategoryId(String categoryId)
 	{
 		this.categoryId = categoryId;
 	}
@@ -846,7 +473,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(BigInteger deleted)
+	public void setDeleted(String deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -861,37 +488,10 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	}
 
 	/**
-	 * @param descriptionNlsid
-	 *            the descriptionNlsid to set
-	 */
-	public void setDescriptionNlsid(String descriptionNlsid)
-	{
-		this.descriptionNlsid = descriptionNlsid;
-	}
-
-	/**
-	 * @param descriptionSubsystem
-	 *            the descriptionSubsystem to set
-	 */
-	public void setDescriptionSubsystem(String descriptionSubsystem)
-	{
-		this.descriptionSubsystem = descriptionSubsystem;
-	}
-
-	/**
-	 * @param emPluginId
-	 *            the emPluginId to set
-	 */
-	public void setEmPluginId(String emPluginId)
-	{
-		this.emPluginId = emPluginId;
-	}
-
-	/**
 	 * @param folderId
 	 *            the folderId to set
 	 */
-	public void setFolderId(BigInteger folderId)
+	public void setFolderId(String folderId)
 	{
 		this.folderId = folderId;
 	}
@@ -948,24 +548,6 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	/**
-	 * @param nameNlsid
-	 *            the nameNlsid to set
-	 */
-	public void setNameNlsid(String nameNlsid)
-	{
-		this.nameNlsid = nameNlsid;
-	}
-
-	/**
-	 * @param nameSubsystem
-	 *            the nameSubsystem to set
-	 */
-	public void setNameSubsystem(String nameSubsystem)
-	{
-		this.nameSubsystem = nameSubsystem;
 	}
 
 	/**
@@ -1026,7 +608,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	 * @param searchId
 	 *            the searchId to set
 	 */
-	public void setSearchId(BigInteger searchId)
+	public void setSearchId(String searchId)
 	{
 		this.searchId = searchId;
 	}
@@ -1154,10 +736,9 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	@Override
 	public String toString()
 	{
-		return "SavedSearchSearchRowEntity [searchId=" + searchId + ", description=" + description + ", descriptionNlsid="
-				+ descriptionNlsid + ", descriptionSubsystem=" + descriptionSubsystem + ", emPluginId=" + emPluginId
+		return "SavedSearchSearchRowEntity [searchId=" + searchId + ", description=" + description
 				+ ", isLocked=" + isLocked + ", lastModifiedBy=" + lastModifiedBy + ", metadataClob=" + metadataClob + ", name="
-				+ name + ", nameNlsid=" + nameNlsid + ", nameSubsystem=" + nameSubsystem + ", owner=" + owner
+				+ name  + ", owner=" + owner
 				+ ", searchDisplayStr=" + searchDisplayStr + ", systemSearch=" + systemSearch + ", uiHidden=" + uiHidden
 				+ ", deleted=" + deleted + ", isWidget=" + isWidget + ", creationDate=" + creationDate
 				+ ", lastModificationDate=" + lastModificationDate + ", nameWidgetSource=" + nameWidgetSource
@@ -1168,6 +749,272 @@ public class SavedSearchSearchRowEntity implements RowEntity
 				+ widgetDefaultHeight + ", dashboardIneligible=" + dashboardIneligible + ", tenantId=" + tenantId + ", folderId="
 				+ folderId + ", categoryId=" + categoryId + ", providerName=" + providerName + ", providerVersion="
 				+ providerVersion + ", providerAssetRoot=" + providerAssetRoot + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((categoryId == null) ? 0 : categoryId.hashCode());
+		result = prime * result
+				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime
+				* result
+				+ ((dashboardIneligible == null) ? 0 : dashboardIneligible
+						.hashCode());
+		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
+		result = prime * result
+				+ ((folderId == null) ? 0 : folderId.hashCode());
+		result = prime * result
+				+ ((isLocked == null) ? 0 : isLocked.hashCode());
+		result = prime * result
+				+ ((isWidget == null) ? 0 : isWidget.hashCode());
+		result = prime
+				* result
+				+ ((lastModificationDate == null) ? 0 : lastModificationDate
+						.hashCode());
+		result = prime * result
+				+ ((lastModifiedBy == null) ? 0 : lastModifiedBy.hashCode());
+		result = prime * result
+				+ ((metadataClob == null) ? 0 : metadataClob.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime
+				* result
+				+ ((nameWidgetSource == null) ? 0 : nameWidgetSource.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+		result = prime
+				* result
+				+ ((providerAssetRoot == null) ? 0 : providerAssetRoot
+						.hashCode());
+		result = prime * result
+				+ ((providerName == null) ? 0 : providerName.hashCode());
+		result = prime * result
+				+ ((providerVersion == null) ? 0 : providerVersion.hashCode());
+		result = prime
+				* result
+				+ ((searchDisplayStr == null) ? 0 : searchDisplayStr.hashCode());
+		result = prime * result
+				+ ((searchGuid == null) ? 0 : searchGuid.hashCode());
+		result = prime * result
+				+ ((searchId == null) ? 0 : searchId.hashCode());
+		result = prime * result
+				+ ((systemSearch == null) ? 0 : systemSearch.hashCode());
+		result = prime * result
+				+ ((tenantId == null) ? 0 : tenantId.hashCode());
+		result = prime * result
+				+ ((uiHidden == null) ? 0 : uiHidden.hashCode());
+		result = prime
+				* result
+				+ ((widgetDefaulWidth == null) ? 0 : widgetDefaulWidth
+						.hashCode());
+		result = prime
+				* result
+				+ ((widgetDefaultHeight == null) ? 0 : widgetDefaultHeight
+						.hashCode());
+		result = prime * result
+				+ ((widgetGroupName == null) ? 0 : widgetGroupName.hashCode());
+		result = prime * result
+				+ ((widgetIcon == null) ? 0 : widgetIcon.hashCode());
+		result = prime * result
+				+ ((widgetKocName == null) ? 0 : widgetKocName.hashCode());
+		result = prime
+				* result
+				+ ((widgetLinkedDashboard == null) ? 0 : widgetLinkedDashboard
+						.hashCode());
+		result = prime
+				* result
+				+ ((widgetScreenshotHref == null) ? 0 : widgetScreenshotHref
+						.hashCode());
+		result = prime
+				* result
+				+ ((widgetSupportTimeControl == null) ? 0
+						: widgetSupportTimeControl.hashCode());
+		result = prime * result
+				+ ((widgetTemplate == null) ? 0 : widgetTemplate.hashCode());
+		result = prime * result
+				+ ((widgetViewModel == null) ? 0 : widgetViewModel.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SavedSearchSearchRowEntity other = (SavedSearchSearchRowEntity) obj;
+		if (categoryId == null) {
+			if (other.categoryId != null)
+				return false;
+		} else if (!categoryId.equals(other.categoryId))
+			return false;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
+		if (dashboardIneligible == null) {
+			if (other.dashboardIneligible != null)
+				return false;
+		} else if (!dashboardIneligible.equals(other.dashboardIneligible))
+			return false;
+		if (deleted == null) {
+			if (other.deleted != null)
+				return false;
+		} else if (!deleted.equals(other.deleted))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (folderId == null) {
+			if (other.folderId != null)
+				return false;
+		} else if (!folderId.equals(other.folderId))
+			return false;
+		if (isLocked == null) {
+			if (other.isLocked != null)
+				return false;
+		} else if (!isLocked.equals(other.isLocked))
+			return false;
+		if (isWidget == null) {
+			if (other.isWidget != null)
+				return false;
+		} else if (!isWidget.equals(other.isWidget))
+			return false;
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null)
+				return false;
+		} else if (!lastModificationDate.equals(other.lastModificationDate))
+			return false;
+		if (lastModifiedBy == null) {
+			if (other.lastModifiedBy != null)
+				return false;
+		} else if (!lastModifiedBy.equals(other.lastModifiedBy))
+			return false;
+		if (metadataClob == null) {
+			if (other.metadataClob != null)
+				return false;
+		} else if (!metadataClob.equals(other.metadataClob))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (nameWidgetSource == null) {
+			if (other.nameWidgetSource != null)
+				return false;
+		} else if (!nameWidgetSource.equals(other.nameWidgetSource))
+			return false;
+		if (owner == null) {
+			if (other.owner != null)
+				return false;
+		} else if (!owner.equals(other.owner))
+			return false;
+		if (providerAssetRoot == null) {
+			if (other.providerAssetRoot != null)
+				return false;
+		} else if (!providerAssetRoot.equals(other.providerAssetRoot))
+			return false;
+		if (providerName == null) {
+			if (other.providerName != null)
+				return false;
+		} else if (!providerName.equals(other.providerName))
+			return false;
+		if (providerVersion == null) {
+			if (other.providerVersion != null)
+				return false;
+		} else if (!providerVersion.equals(other.providerVersion))
+			return false;
+		if (searchDisplayStr == null) {
+			if (other.searchDisplayStr != null)
+				return false;
+		} else if (!searchDisplayStr.equals(other.searchDisplayStr))
+			return false;
+		if (searchGuid == null) {
+			if (other.searchGuid != null)
+				return false;
+		} else if (!searchGuid.equals(other.searchGuid))
+			return false;
+		if (searchId == null) {
+			if (other.searchId != null)
+				return false;
+		} else if (!searchId.equals(other.searchId))
+			return false;
+		if (systemSearch == null) {
+			if (other.systemSearch != null)
+				return false;
+		} else if (!systemSearch.equals(other.systemSearch))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		if (uiHidden == null) {
+			if (other.uiHidden != null)
+				return false;
+		} else if (!uiHidden.equals(other.uiHidden))
+			return false;
+		if (widgetDefaulWidth == null) {
+			if (other.widgetDefaulWidth != null)
+				return false;
+		} else if (!widgetDefaulWidth.equals(other.widgetDefaulWidth))
+			return false;
+		if (widgetDefaultHeight == null) {
+			if (other.widgetDefaultHeight != null)
+				return false;
+		} else if (!widgetDefaultHeight.equals(other.widgetDefaultHeight))
+			return false;
+		if (widgetGroupName == null) {
+			if (other.widgetGroupName != null)
+				return false;
+		} else if (!widgetGroupName.equals(other.widgetGroupName))
+			return false;
+		if (widgetIcon == null) {
+			if (other.widgetIcon != null)
+				return false;
+		} else if (!widgetIcon.equals(other.widgetIcon))
+			return false;
+		if (widgetKocName == null) {
+			if (other.widgetKocName != null)
+				return false;
+		} else if (!widgetKocName.equals(other.widgetKocName))
+			return false;
+		if (widgetLinkedDashboard == null) {
+			if (other.widgetLinkedDashboard != null)
+				return false;
+		} else if (!widgetLinkedDashboard.equals(other.widgetLinkedDashboard))
+			return false;
+		if (widgetScreenshotHref == null) {
+			if (other.widgetScreenshotHref != null)
+				return false;
+		} else if (!widgetScreenshotHref.equals(other.widgetScreenshotHref))
+			return false;
+		if (widgetSupportTimeControl == null) {
+			if (other.widgetSupportTimeControl != null)
+				return false;
+		} else if (!widgetSupportTimeControl
+				.equals(other.widgetSupportTimeControl))
+			return false;
+		if (widgetTemplate == null) {
+			if (other.widgetTemplate != null)
+				return false;
+		} else if (!widgetTemplate.equals(other.widgetTemplate))
+			return false;
+		if (widgetViewModel == null) {
+			if (other.widgetViewModel != null)
+				return false;
+		} else if (!widgetViewModel.equals(other.widgetViewModel))
+			return false;
+		return true;
 	}
 
 }

@@ -3,6 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
@@ -246,5 +247,9 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract List<Search> getSearchListByIds(List<BigInteger> ids) throws EMAnalyticsFwkException;
+
+		
+	public abstract List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name, BigInteger folderId,
+			BigInteger categoryId, BigInteger deleted,String owner);
 	
 }

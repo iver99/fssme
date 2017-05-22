@@ -102,8 +102,12 @@ public class RestClient
 					url);
 		}
 		Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-				.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON);
+		// tenant could be null and needs to handle the header then
+		if (!StringUtil.isEmpty(tenant)) {
+			builder.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
+		}
 		if (headers != null) {
 			for (String key : headers.keySet()) {
 				if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
