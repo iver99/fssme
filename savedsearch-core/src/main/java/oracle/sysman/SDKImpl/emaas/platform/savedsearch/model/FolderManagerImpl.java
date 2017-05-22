@@ -264,9 +264,9 @@ public class FolderManagerImpl extends FolderManager
 				em.getTransaction().begin();
 			}
 			EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd(folder, em);
+			folderObj.setTenantId(TenantContext.getContext().getTenantInternalId());
 			em.persist(folderObj);
 			em.getTransaction().commit();
-			em.refresh(folderObj);
 			return createFolderObject(folderObj, folder);
 
 		}

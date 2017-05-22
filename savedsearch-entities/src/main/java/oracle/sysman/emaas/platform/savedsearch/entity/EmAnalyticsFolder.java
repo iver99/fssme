@@ -27,6 +27,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  */
 @Entity
 @Table(name = "EMS_ANALYTICS_FOLDERS")
+@AdditionalCriteria("this.tenantId = :tenant or this.tenantId = -11")
 @NamedQueries({
 		@NamedQuery(name = "Folder.getSubFolder", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= "
 				+ ":parentFolder" + " AND o.deleted=0 AND (o.owner in (:userName) OR o.systemFolder =1)"),
@@ -87,8 +88,8 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
 	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "PARENT_ID", referencedColumnName = "FOLDER_ID"),
-			@JoinColumn(name = "PARENT_ID", referencedColumnName = "FOLDER_ID", insertable = false, updatable = false) })
+	@JoinColumns({
+			@JoinColumn(name = "PARENT_ID", referencedColumnName = "FOLDER_ID", insertable = false, updatable = false)})
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
