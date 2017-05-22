@@ -167,4 +167,28 @@ public class OOBWidgetTest {
             TenantContext.clearContext();
         }
     }
+
+
+    @Test
+    public void testSecurityMySQLWidget() throws EMAnalyticsFwkException {
+        TenantContext.setContext(new TenantInfo(
+                TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
+                TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_NAME).toString())));
+        try {
+            SearchManager searchManager = SearchManager.getInstance();
+            Search search = searchManager.getSearch(new BigInteger("3401"));
+            boolean isExist;
+            isExist = "Top 10 MySQL DBs by Threats".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 MySQL DBs by Threats does not exist");
+
+            search = searchManager.getSearch(new BigInteger("3409"));
+            isExist = "Top 10 MySQL DBs with Schema Changes".equals(search.getName());
+            Assert.assertTrue(isExist, "Top 10 MySQL DBs with Schema Changes does not exist");
+        }finally{
+            TenantContext.clearContext();
+        }
+    }
+
+
+
 }
