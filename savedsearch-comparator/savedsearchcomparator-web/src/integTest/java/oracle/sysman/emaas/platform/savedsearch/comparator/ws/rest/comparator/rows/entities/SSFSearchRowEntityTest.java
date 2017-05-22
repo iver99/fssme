@@ -86,6 +86,41 @@ public class SSFSearchRowEntityTest {
 	
 	@Test
 	public void testHashcode() {
+		SavedSearchSearchRowEntity  entity = new SavedSearchSearchRowEntity("searchId", "description",
+				"descriptionNlsid", "descriptionSubsystem",
+				"emPluginId", new Integer("1"), "lastModifiedBy",
+				"metadataClob", "name", "nameNlsid",
+				"nameSubsystem", "owner","searchDisplayStr",
+				"searchGuid", new Integer("1"), new Integer("1"),
+				"deleted", new Integer("1"), "creationDate",
+				"lastModificationDate", "nameWidgetSource",
+				"widgetGroupName", "widgetScreenshotHref",
+				"widgetIcon", "widgetKocName", "widgetViewModel",
+				"widgetTemplate", "widgetSupportTimeControl",
+				1L, 1L,
+				1L, "dashboardIneligible",
+				1L, "folderId", "categoryId",
+				"providerName", "providerVersion",
+				"providerAssetRoot");
+		entity.getCategoryId();
+		entity.getCreationDate();
+		entity.getDashboardIneligible();
+		entity.getDeleted();
+		entity.getDescription();
+		entity.getFolderId();
+		entity.getIsLocked();
+		entity.getIsWidget();
+		entity.getLastModificationDate();
+		entity.getLastModifiedBy();
+		entity.getMetadataClob();
+		entity.getName();
+		entity.getNameWidgetSource();
+		entity.getOwner();
+		entity.getProviderAssetRoot();
+		entity.getProviderName();
+		entity.getProviderVersion();
+		entity.getSearchDisplayStr();
+		entity.getSystemSearch();
 		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity();
 		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity();
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());

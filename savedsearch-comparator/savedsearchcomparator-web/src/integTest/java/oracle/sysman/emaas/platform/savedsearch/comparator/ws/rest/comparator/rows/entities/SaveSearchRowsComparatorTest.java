@@ -246,6 +246,14 @@ public class SaveSearchRowsComparatorTest
         };
         SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
 		drc.saveComparatorStatus("tenantId", "userTenant", null, null);
+		drc.setClient1(null);
+		drc.setClient2(null);
+		drc.setKey1(null);
+		drc.setKey2(null);
+		drc.getClient1();
+		drc.getClient2();
+		drc.getKey1();
+		drc.getKey2();
 	}
 	
 	

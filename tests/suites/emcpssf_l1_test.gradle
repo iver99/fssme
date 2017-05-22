@@ -265,6 +265,7 @@ include "oracle/sysman/emaas/platform/savedsearch/services/ApplicationLifecycleS
 include "oracle/sysman/emaas/platform/savedsearch/services/AvailabilityServiceManagerTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/services/EMTargetMXBeanImplTest.class"
 	
+include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SaveSearchCountsComparatorTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SaveSearchRowsComparatorTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFCategoryParamRowEntityTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/rows/entities/SSFCategoryRowEntityTest.class"
