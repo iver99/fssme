@@ -2,7 +2,7 @@
 <Configuration debug="false">
 	<Properties>
         <Property name="dir">/var/opt/ORCLemaas/logs/savedsearchService</Property>
-        <Property name="mainLog">savedsearchService.log</Property>
+        <Property name="mainLog">savedsearchComparatorService.log</Property>
 	    <Property name="mainPattern">[%d{DEFAULT}{UTC}] [%p] [%t] [EMSAAS] [Savedsearch-Comparator] [%c{36}] T[%X{tenantId}] %m%n</Property>
         <Property name="errorLog">savedsearchComparatorService_error.log</Property>
 	    <Property name="mainPatternDefault">[%d{DEFAULT}{UTC}] [%p] [%t] [EMSAAS] [Savedsearch-Comparator] [%c{36}] T[N/A] %m%n</Property>

@@ -128,33 +128,13 @@ public class SavedSearchCategoryParamRowEntityTest {
 
     }
 
-    private SavedSearchSchemaVerRowEntity savedSearchSchemaVerRowEntity = new SavedSearchSchemaVerRowEntity(null, null, null, null);
-
-    @Test
-    public void testSavedSearchSchemaVerRowEntity(){
-        savedSearchSchemaVerRowEntity.equals(null);
-        savedSearchSchemaVerRowEntity.equals(new Object());
-        savedSearchSchemaVerRowEntity.equals(savedSearchSchemaVerRowEntity);
-        savedSearchSchemaVerRowEntity.equals(new SavedSearchSchemaVerRowEntity(null, null, null, null));
-        savedSearchSchemaVerRowEntity.setCreationDate(null);
-        savedSearchSchemaVerRowEntity.getCreationDate();
-        savedSearchSchemaVerRowEntity.setLastModificationDate(null);
-        savedSearchSchemaVerRowEntity.getLastModificationDate();
-        savedSearchSchemaVerRowEntity.setMajor(null);
-        savedSearchSchemaVerRowEntity.getMajor();
-        savedSearchSchemaVerRowEntity.setMinor(null);
-        savedSearchSchemaVerRowEntity.getMinor();
-        savedSearchSchemaVerRowEntity.hashCode();
-        savedSearchSchemaVerRowEntity.toString();
-    }
-
-    private SavedSearchSearchParamRowEntity savedSearchSearchParamRowEntity = new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null);
+    private SavedSearchSearchParamRowEntity savedSearchSearchParamRowEntity = new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null,0);
     @Test
     public void testSavedSearchSearchParamRowEntity(){
         savedSearchSearchParamRowEntity.equals(null);
         savedSearchSearchParamRowEntity.equals(new Object());
         savedSearchSearchParamRowEntity.equals(savedSearchSearchParamRowEntity);
-        savedSearchSearchParamRowEntity.equals( new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null));
+        savedSearchSearchParamRowEntity.equals( new SavedSearchSearchParamRowEntity(null, null, null, null, null, null, null, null, null,0));
         savedSearchSearchParamRowEntity.setLastModificationDate(null);
         savedSearchSearchParamRowEntity.setCreationDate(null);
         savedSearchSearchParamRowEntity.setName(null);
@@ -192,14 +172,10 @@ public class SavedSearchCategoryParamRowEntityTest {
                 null, null, null, null, null, null, null, null, null, null, null, null, null));
         savedSearchSearchRowEntity.setSearchId(null);
         savedSearchSearchRowEntity.setDescription(null);
-        savedSearchSearchRowEntity.setDescriptionNlsid(null);
-        savedSearchSearchRowEntity.setDescriptionSubsystem(null);
-        savedSearchSearchRowEntity.setEmPluginId(null);
+       
         savedSearchSearchRowEntity.setIsLocked(null);
         savedSearchSearchRowEntity.setMetadataClob(null);
         savedSearchSearchRowEntity.setName(null);
-        savedSearchSearchRowEntity.setNameNlsid(null);
-        savedSearchSearchRowEntity.setNameSubsystem(null);
         savedSearchSearchRowEntity.setOwner(null);
         savedSearchSearchRowEntity.setSearchDisplayStr(null);
         savedSearchSearchRowEntity.setSystemSearch(null);
@@ -229,14 +205,9 @@ public class SavedSearchCategoryParamRowEntityTest {
         savedSearchSearchRowEntity.setLastModifiedBy(null);
         savedSearchSearchRowEntity.getSearchId();
         savedSearchSearchRowEntity.getDescription();
-        savedSearchSearchRowEntity.getDescriptionNlsid();
-        savedSearchSearchRowEntity.getDescriptionSubsystem();
-        savedSearchSearchRowEntity.getEmPluginId();
         savedSearchSearchRowEntity.getIsLocked();
         savedSearchSearchRowEntity.getMetadataClob();
         savedSearchSearchRowEntity.getName();
-        savedSearchSearchRowEntity.getNameNlsid();
-        savedSearchSearchRowEntity.getNameSubsystem();
         savedSearchSearchRowEntity.getOwner();
         savedSearchSearchRowEntity.getSearchDisplayStr();
         savedSearchSearchRowEntity.getSystemSearch();
@@ -269,23 +240,21 @@ public class SavedSearchCategoryParamRowEntityTest {
 
 
     }
-    private ZDTTableRowEntity zdtTableRowEntity = new ZDTTableRowEntity(null, null, null, null, null, null);
+    private ZDTTableRowEntity zdtTableRowEntity = new ZDTTableRowEntity(null, null, null, null, null);
     @Test
     public void testZDTTableRowEntity(){
         zdtTableRowEntity.equals(zdtTableRowEntity);
         zdtTableRowEntity.equals(null);
         zdtTableRowEntity.equals(new Object());
-        zdtTableRowEntity.equals(new ZDTTableRowEntity(null, null, null, null, null, null));
+        zdtTableRowEntity.equals(new ZDTTableRowEntity(null, null, null, null, null));
         zdtTableRowEntity.setSavedSearchCategory(null);
         zdtTableRowEntity.setSavedSearchCategoryParams(null);
         zdtTableRowEntity.setSavedSearchFoldersy(null);
-        zdtTableRowEntity.setSavedSearchSchemaVer(null);
         zdtTableRowEntity.setSavedSearchSearch(null);
         zdtTableRowEntity.setSavedSearchSearchParams(null);
         zdtTableRowEntity.getSavedSearchCategory();
         zdtTableRowEntity.getSavedSearchCategoryParams();
         zdtTableRowEntity.getSavedSearchFoldersy();
-        zdtTableRowEntity.getSavedSearchSchemaVer();
         zdtTableRowEntity.getSavedSearchSearch();
         zdtTableRowEntity.getSavedSearchSearchParams();
 

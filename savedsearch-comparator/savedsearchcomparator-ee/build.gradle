@@ -7,6 +7,7 @@ configurations {
 
 //version = '1.0.0'
 version = project.ext.getServiceVersion("SavedsearchService-comparator")
+ext.emaasAPIGWVersion = getDependentSdkVersion('com.oracle.emaas.emcpgw.sdk', 'gateway-client', '1.+')
 deployname=artifactPrefix+'savedsearch-comparator'
 def artifactId = 'savedsearchcomparator' 
 def versionNumber = version
@@ -36,7 +37,7 @@ dependencies
     	earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.3.0'){transitive=false }
     	earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.0'){transitive=false }
     	earlib(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
-    	earlib(group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: '1.+')
+    	earlib(group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: "${emaasAPIGWVersion}")
 
     	earlib(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1') { transitive = false }
         earlib(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
@@ -111,7 +112,7 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		name:       "SavedsearchService-Comparator-6",
+		name:       "SavedsearchService-comparator-6",
 		targets:	wlsserver_target,
 		adminurl:   t3URL,  
 		user:       adminUser, 
@@ -131,7 +132,7 @@ task appServerUndeploy{
 		println "Undeploying ${appName_ui}-${version} from ${t3URL}" 
 
 		ant.wldeploy(action:'undeploy',  
-		name:       "SavedsearchService-Comparator-6",
+		name:       "SavedsearchService-comparator-6",
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 

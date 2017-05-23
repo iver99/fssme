@@ -12,12 +12,12 @@ public class SSFCategoryParamRowEntityTest {
 	public void testEquals() {
 		SavedSearchCategoryParamRowEntity entity1 = new SavedSearchCategoryParamRowEntity(null,null,null,null,null,null);
 		SavedSearchCategoryParamRowEntity entity2 = new SavedSearchCategoryParamRowEntity(null,null,null,null,null,null);
-		entity1.setCategoryId(new BigInteger("1"));
-		entity2.setCategoryId(new BigInteger("1"));
+		entity1.setCategoryId("1");
+		entity2.setCategoryId("1");
 		Assert.assertEquals(entity1, entity2);
-		entity2.setCategoryId(new BigInteger("2"));
+		entity2.setCategoryId("2");
 		Assert.assertNotEquals(entity1, entity2);
-		entity2.setCategoryId(new BigInteger("1"));
+		entity2.setCategoryId("1");
 		
 		entity1.setCreationDate("2016-07-22 08:23:32.517");
 		entity2.setCreationDate("2016-07-22 08:23:32.517");
@@ -49,8 +49,8 @@ public class SSFCategoryParamRowEntityTest {
 	public void testHashcode() {
 		SavedSearchCategoryParamRowEntity entity1 = new SavedSearchCategoryParamRowEntity(null,null,null,null,null,null);
 		SavedSearchCategoryParamRowEntity entity2 = new SavedSearchCategoryParamRowEntity(null,null,null,null,null,null);
-		entity1.setCategoryId(new BigInteger("1"));
-		entity2.setCategoryId(new BigInteger("1"));
+		entity1.setCategoryId("1");
+		entity2.setCategoryId("1");
 		Assert.assertEquals(entity1.hashCode(), entity2.hashCode());
 		
 		entity1.setCreationDate("2016-07-22 08:23:32.517");

@@ -9,36 +9,36 @@ public class SSFSearchRowEntityTest {
 
 	@Test
 	public void testEquals() {
-		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity(new BigInteger("1"), "description",
+		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity("1", "description",
 				"descriptionNlsid", "descriptionSubsystem",
 				"emPluginId", new Integer("1"), "lastModifiedBy",
 				"metadataClob", "name", "nameNlsid",
 				"nameSubsystem", "owner", "searchDisplayStr",
 				"searchGuid", new Integer("1"), new Integer("1"),
-				new BigInteger("1"), new Integer("1"), "creationDate",
+				"1", new Integer("1"), "creationDate",
 				"lastModificationDate", "nameWidgetSource",
 				"widgetGroupName", "widgetScreenshotHref",
 				"widgetIcon", "widgetKocName", "widgetViewModel",
 				" widgetTemplate", "widgetSupportTimeControl",
 				1L, 1L,
 				1L, "dashboardIneligible",
-				1L, new BigInteger("1"), new BigInteger("1"),
+				1L, "1", "1",
 				"providerName", "providerVersion",
 				"providerAssetRoot");
-		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity(new BigInteger("1"), "description",
+		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity("1", "description",
 				"descriptionNlsid", "descriptionSubsystem",
 				"emPluginId", new Integer("1"), "lastModifiedBy",
 				"metadataClob", "name", "nameNlsid",
 				"nameSubsystem", "owner", "searchDisplayStr",
 				"searchGuid", new Integer("1"), new Integer("1"),
-				new BigInteger("1"), new Integer("1"), "creationDate",
+				"1", new Integer("1"), "creationDate",
 				"lastModificationDate", "nameWidgetSource",
 				"widgetGroupName", "widgetScreenshotHref",
 				"widgetIcon", "widgetKocName", "widgetViewModel",
 				" widgetTemplate", "widgetSupportTimeControl",
 				1L, 1L,
 				1L, "dashboardIneligible",
-				1L, new BigInteger("1"), new BigInteger("1"),
+				1L, "1", "1",
 				"providerName", "providerVersion",
 				"providerAssetRoot");
 		Assert.assertEquals(entity1,entity2);
@@ -51,26 +51,15 @@ public class SSFSearchRowEntityTest {
 		entity2.setDashboardIneligible("ineligible2");
 		Assert.assertNotEquals(entity1,entity2);
 		
-		entity1.setDeleted(new BigInteger("1"));
-		entity2.setDeleted(new BigInteger("1"));
+		entity1.setDeleted("1");
+		entity2.setDeleted("1");
 		Assert.assertNotEquals(entity1,entity2);
 		
 		entity1.setDescription("des");
 		entity2.setDescription("des");
 		entity2.setDashboardIneligible("ineligible");
 		Assert.assertEquals(entity1,entity2);
-		
-		entity1.setDescriptionNlsid("des");
-		entity2.setDescriptionNlsid("des2");
-		Assert.assertNotEquals(entity1,entity2);
-		
-		
-		entity1.setDescriptionSubsystem("desSubSys");
-		Assert.assertNotEquals(entity1,entity2);
-		entity2.setDescriptionSubsystem("desSubSys");
-		Assert.assertNotEquals(entity1,entity2);
-		
-		entity2.setDescriptionNlsid("des");
+	
 		entity1.setIsLocked(1);
 		entity2.setIsLocked(1);
 		Assert.assertEquals(entity1,entity2);
@@ -87,13 +76,8 @@ public class SSFSearchRowEntityTest {
 		entity1.setCreationDate("creationDate");
 		entity1.setDashboardIneligible("dashboardIneligible");
 		entity1.setDescription("description");
-		entity1.setDescriptionNlsid("descriptionNlsid");
-		entity1.setDescriptionSubsystem("descriptionSubsystem");
-		entity1.setEmPluginId("emPluginId");
 		entity1.setIsLocked(1);
 		entity1.setIsWidget(1);
-		entity1.setNameNlsid("nameNlsid");
-		entity1.setNameSubsystem("nameSubsystem");
 		entity1.setNameWidgetSource("nameWidgetSource");
 		entity1.setOwner("owner");
 		entity1.setMetadataClob("metadataClob");
@@ -132,36 +116,36 @@ public class SSFSearchRowEntityTest {
 	
 	@Test
 	public void testHashcode() {
-		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity(new BigInteger("1"), "description",
+		SavedSearchSearchRowEntity entity1 = new SavedSearchSearchRowEntity("1", "description",
 				"descriptionNlsid", "descriptionSubsystem",
 				"emPluginId", new Integer("1"), "lastModifiedBy",
 				"metadataClob", "name", "nameNlsid",
 				"nameSubsystem", "owner", "searchDisplayStr",
 				"searchGuid", new Integer("1"), new Integer("1"),
-				new BigInteger("1"), new Integer("1"), "creationDate",
+				"1", new Integer("1"), "creationDate",
 				"lastModificationDate", "nameWidgetSource",
 				"widgetGroupName", "widgetScreenshotHref",
 				"widgetIcon", "widgetKocName", "widgetViewModel",
 				" widgetTemplate", "widgetSupportTimeControl",
 				1L, 1L,
 				1L, "dashboardIneligible",
-				1L, new BigInteger("1"), new BigInteger("1"),
+				1L, "1", "1",
 				"providerName", "providerVersion",
 				"providerAssetRoot");
-		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity(new BigInteger("1"), "description",
+		SavedSearchSearchRowEntity entity2 = new SavedSearchSearchRowEntity("1", "description",
 				"descriptionNlsid", "descriptionSubsystem",
 				"emPluginId", new Integer("1"), "lastModifiedBy",
 				"metadataClob", "name", "nameNlsid",
 				"nameSubsystem", "owner", "searchDisplayStr",
 				"searchGuid", new Integer("1"), new Integer("1"),
-				new BigInteger("1"), new Integer("1"), "creationDate",
+				"1", new Integer("1"), "creationDate",
 				"lastModificationDate", "nameWidgetSource",
 				"widgetGroupName", "widgetScreenshotHref",
 				"widgetIcon", "widgetKocName", "widgetViewModel",
 				" widgetTemplate", "widgetSupportTimeControl",
 				1L, 1L,
 				1L, "dashboardIneligible",
-				1L, new BigInteger("1"), new BigInteger("1"),
+				1L, "1", "1",
 				"providerName", "providerVersion",
 				"providerAssetRoot");
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
@@ -174,26 +158,14 @@ public class SSFSearchRowEntityTest {
 		entity2.setDashboardIneligible("ineligible2");
 		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
 		
-		entity1.setDeleted(new BigInteger("1"));
-		entity2.setDeleted(new BigInteger("1"));
+		entity1.setDeleted("1");
+		entity2.setDeleted("1");
 		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
 		
 		entity1.setDescription("des");
 		entity2.setDescription("des");
 		entity2.setDashboardIneligible("ineligible");
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
-		
-		entity1.setDescriptionNlsid("des");
-		entity2.setDescriptionNlsid("des2");
-		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
-		
-		
-		entity1.setDescriptionSubsystem("desSubSys");
-		Assert.assertNotEquals(entity1,entity2);
-		entity2.setDescriptionSubsystem("desSubSys");
-		Assert.assertNotEquals(entity1.hashCode(),entity2.hashCode());
-		
-		entity2.setDescriptionNlsid("des");
 		entity1.setIsLocked(1);
 		entity2.setIsLocked(1);
 		Assert.assertEquals(entity1.hashCode(),entity2.hashCode());
