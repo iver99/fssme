@@ -89,7 +89,7 @@ BEGIN
        V_DELETED                            :=0;
        V_IS_WIDGET                          :=1;
        V_METADATA                           :=null;
-       V_SEARCH_STR                         :='''SEF Record Type'' = correlation and ''SEF Destination Type'' like ''*MySQL Database*'' and ''SEF Category'' != anomaly | stats count as Threats by ''SEF Destination Endpoint Name'', ''SEF Category'' | fields Threats, ''SEF Destination Endpoint Name'' as Database, ''SEF Category'' as ''Threat Category'' | top Threats';
+       V_SEARCH_STR                         :='''SEF Record Type'' = correlation and ''SEF Destination Type'' in (''MySQL Database*'', ''omc_mysql_db*'') and ''SEF Category'' != anomaly | stats count as Threats by ''SEF Destination Endpoint Name'', ''SEF Category'' | fields Threats, ''SEF Destination Endpoint Name'' as Database, ''SEF Category'' as ''Threat Category'' | top Threats';
        V_WIDGET_SOURCE                      :='1';
        V_WIDGET_GROUP_NAME                  :=null;
        V_WIDGET_ICON                        :=null;
@@ -172,7 +172,7 @@ BEGIN
        V_DELETED                            :=0;
        V_IS_WIDGET                          :=1;
        V_METADATA                           :=null;
-       V_SEARCH_STR                         :='''SEF Record Type'' = correlation and ''SEF Destination Type'' like ''*MySQL Database*'' and ''SEF Category'' != anomaly | timestats count as Threats by ''SEF Category''';
+       V_SEARCH_STR                         :='''SEF Record Type'' = correlation and ''SEF Destination Type'' in (''MySQL Database*'', ''omc_mysql_db*'') and ''SEF Category'' != anomaly | timestats count as Threats by ''SEF Category''';
        V_WIDGET_SOURCE                      :='1';
        V_WIDGET_GROUP_NAME                  :=null;
        V_WIDGET_ICON                        :=null;
@@ -879,6 +879,26 @@ BEGIN
    ELSE
         UPDATE EMS_ANALYTICS_SEARCH SET SEARCH_DISPLAY_STR = V_SEARCH_STR WHERE SEARCH_ID = V_SEARCH_ID AND TENANT_ID = V_TENANT_ID;
         DBMS_OUTPUT.PUT_LINE('Last Network Configuration Change has been updated for '||V_TENANT_ID);
+   END IF;
+
+   V_SEARCH_ID  := 3319;
+   V_SEARCH_STR := '''SEF Record Type'' = correlation and ''SEF Destination Type'' in (''Oracle Database*'', ''omc_oracle_database*'') and ''SEF Category'' != anomaly | stats count as Threats by ''SEF Destination Endpoint Name'', ''SEF Category'' | fields Threats, ''SEF Destination Endpoint Name'' as Database, ''SEF Category'' as ''Threat Category'' | top Threats';
+   SELECT COUNT(1) INTO V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE SEARCH_ID = V_SEARCH_ID AND TENANT_ID = V_TENANT_ID;
+   IF V_COUNT < 1 THEN
+        DBMS_OUTPUT.PUT_LINE('Top 10 Oracle DBs by Threats not exist for '||V_TENANT_ID);
+   ELSE
+        UPDATE EMS_ANALYTICS_SEARCH SET SEARCH_DISPLAY_STR = V_SEARCH_STR WHERE SEARCH_ID = V_SEARCH_ID AND TENANT_ID = V_TENANT_ID;
+        DBMS_OUTPUT.PUT_LINE('Top 10 Oracle DBs by Threats has been updated for '||V_TENANT_ID);
+   END IF;
+
+   V_SEARCH_ID  := 3320;
+   V_SEARCH_STR := '''SEF Record Type'' = correlation and ''SEF Destination Type'' in (''Oracle Database*'', ''omc_oracle_database*'') and ''SEF Category'' != anomaly | timestats count as Threats by ''SEF Category''';
+   SELECT COUNT(1) INTO V_COUNT FROM EMS_ANALYTICS_SEARCH WHERE SEARCH_ID = V_SEARCH_ID AND TENANT_ID = V_TENANT_ID;
+   IF V_COUNT < 1 THEN
+        DBMS_OUTPUT.PUT_LINE('Threat Trend on Oracle DBs not exist for '||V_TENANT_ID);
+   ELSE
+        UPDATE EMS_ANALYTICS_SEARCH SET SEARCH_DISPLAY_STR = V_SEARCH_STR WHERE SEARCH_ID = V_SEARCH_ID AND TENANT_ID = V_TENANT_ID;
+        DBMS_OUTPUT.PUT_LINE('Threat Trend on Oracle DBs has been updated for '||V_TENANT_ID);
    END IF;
    --------
 
