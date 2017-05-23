@@ -43,6 +43,6 @@ public class CacheServiceManager implements ApplicationServiceManager {
         LOGGER.info("Pre-stopping cache");
         LRUCacheManager.getInstance().close();
         LRUScreenshotCacheManager.getInstance().close();
-        LOGGER.debug("Pre-stopped cache");
+        LOGGER.info("Pre-stopped cache");
     }
 }
