@@ -184,8 +184,12 @@ public class TenantSubscriptionUtil
 					return cachedApps;
 				}
 			}
-		} catch (ExecutionException e) {
-			LOGGER.error("Error occurred when using cache...");
+		}catch (ExecutionException e) {
+			//if exception occurred, log an error info then retrieve data from API
+			LOGGER.error("ExecutionException occurred when using cache...", e);
+		}catch (Exception e) {
+			//if exception occurred, log an error info then retrieve data from API
+			LOGGER.error("Exception occurred when using cache...", e);
 		}
 
 		VersionedLink domainLink = RegistryLookupUtil.getServiceInternalLinkHttp("TenantService", "1.0+", "collection/tenants", tenant);
