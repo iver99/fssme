@@ -1,7 +1,8 @@
-package oracle.sysman.emaas.savedsearch;
+package oracle.sysman.emaas.savedsearch.ut;
 
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
+import oracle.sysman.emaas.savedsearch.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

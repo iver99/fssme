@@ -82,15 +82,14 @@ dependencies {
 
 
      task QATest(type:EMTest){
-//savedsearch-core project
-include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/json/*.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/**/*.class"
+
 /*include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/ssflifecycle/SSFLifeCycleNotificationTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/ssflifecycle/SSFLifeCycleNotifyEntityTest.class"*/
 
-//savedsearch-web project
+/*****************savedsearch-web project*****************/
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/**/*.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
+include "oracle/sysman/emaas/savedsearch/ut/*.class"
 /*include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/category/CategoryAPITest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/search/FilterSearchAPITest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/folder/FolderAPITest.class"
@@ -131,16 +130,15 @@ include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/S
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/SSFSearchRowEntityTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/zdt/rowsEntity/ZDTTableRowEntityTest.class"*/
 
-		 //TODO below package contains s1/s2 and non-s1/s2 test cases,
-include "oracle/sysman/emaas/savedsearch/ExceptionTest.class"
-include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"
+
+/*include "oracle/sysman/emaas/savedsearch/EntityJsonUtilTest.class"
 include "oracle/sysman/emaas/savedsearch/FolderManagerTest.class"
 include "oracle/sysman/emaas/savedsearch/PersistenceManagerTest.class"
 include "oracle/sysman/emaas/savedsearch/FolderSetTest.class"
-include "oracle/sysman/emaas/savedsearch/UtilTest.class"
+include "oracle/sysman/emaas/savedsearch/UtilTest.class"*/
 
 
-//savedsearch comparator project
+/*****************savedsearch-comparator project*****************/
 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/**/*.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/exception/*.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/targetmodel/services/*.class"
@@ -177,7 +175,9 @@ include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/management
 ext.set("testType", "integration")
 	 }
 task DEVTest(type:EMTest,dependsOn: QATest){
-//savedsearch-core project
+	/*****************savedsearch-core project*****************/
+//	include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/json/*.class"
+//	include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/**/*.class"
 	include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/**/*.class"
 	include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/**/*.class"
 	include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/*.class"
@@ -250,7 +250,7 @@ task DEVTest(type:EMTest,dependsOn: QATest){
 }
 task WebUtilTest(type:EMTest,dependsOn: DEVTest){
 
-	 //savedsearch-webutils project
+	/*****************savedsearch-webutils project*****************/
 include "oracle/sysman/emaas/platform/savedsearch/property/*.class"
 include "oracle/sysman/emaas/platform/savedsearch/services/*.class"
 include "oracle/sysman/emaas/platform/savedsearch/targetmodel/services/*.class"
@@ -269,7 +269,7 @@ include "oracle/sysman/emaas/platform/savedsearch/services/EMTargetMXBeanImplTes
 
 
 
-	 //savedsearch-entities project
+	/*****************savedsearch-entities project*****************/
 include "oracle/sysman/emaas/platform/savedsearch/entity/*.class"
 /*include "oracle/sysman/emaas/platform/savedsearch/entity/EmAnalyticsSearchTest.class"
 include "oracle/sysman/emaas/platform/savedsearch/entity/EmAnalyticsSearchParamTest.class"

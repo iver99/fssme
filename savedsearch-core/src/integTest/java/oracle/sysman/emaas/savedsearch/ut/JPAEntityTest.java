@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.savedsearch;
+package oracle.sysman.emaas.savedsearch.ut;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

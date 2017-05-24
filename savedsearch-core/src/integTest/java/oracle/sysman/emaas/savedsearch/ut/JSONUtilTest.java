@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.savedsearch;
+package oracle.sysman.emaas.savedsearch.ut;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 
+import oracle.sysman.emaas.savedsearch.BaseTest;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jettison.json.JSONException;
 import org.testng.Assert;
