@@ -13,39 +13,37 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot;
 import java.math.BigInteger;
 import java.util.Date;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.*;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.sun.jersey.core.util.Base64;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 
 /**
  * @author guochen
  */
-public class ScreenshotCacheManager
+public class ScreenshotManager
 {
-	private static final Logger LOGGER = LogManager.getLogger(ScreenshotCacheManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(ScreenshotManager.class);
 
-	private static ScreenshotCacheManager instance = new ScreenshotCacheManager();
+	private static ScreenshotManager instance = new ScreenshotManager();
 
-	public static ScreenshotCacheManager getInstance()
+	public static ScreenshotManager getInstance()
 	{
 		return instance;
 	}
 
-	private final CacheManager cm;
-
-	private ScreenshotCacheManager()
-	{
-		cm = CacheManager.getInstance();
-	}
 
 	public ScreenshotElement getScreenshotFromCache(Tenant tenant, BigInteger widgetId, String fileName) throws Exception
 	{
+		ICacheManager scm= CacheManagers.getInstance().build(CacheConstants.LRU_SCREENSHOT_MANAGER);
+		Object cacheKey = DefaultKeyGenerator.getInstance().generate(tenant,new Keys(widgetId));
 		if (widgetId == null || BigInteger.ZERO.compareTo(widgetId) >= 0) {
 			LOGGER.error("Unexpected widget id to get screenshot from cache for tenant={}, widget id={}, fileName={}", tenant,
 					widgetId, fileName);
@@ -55,8 +53,7 @@ public class ScreenshotCacheManager
 			LOGGER.error("Unexpected empty screenshot file name for tenant={}, widget id={}", tenant, widgetId);
 			return null;
 		}
-		ScreenshotElement se = (ScreenshotElement) cm.getCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE,
-				new Keys(widgetId));
+		ScreenshotElement se = (ScreenshotElement) scm.getCache(CacheConstants.CACHES_SCREENSHOT_CACHE).get(cacheKey);
 		if (se == null) {
 			LOGGER.debug("Retrieved null screenshot element from cache for tenant={}, widget id={}, fileName={}", tenant,
 					widgetId, fileName);
@@ -70,16 +67,18 @@ public class ScreenshotCacheManager
 	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, BigInteger widgetId, Date creation, Date modification,
 			String screenshot)
 	{
+		ICacheManager scm= CacheManagers.getInstance().build(CacheConstants.LRU_SCREENSHOT_MANAGER);
+		Object cacheKey = DefaultKeyGenerator.getInstance().generate(tenant,new Keys(widgetId));
 		if (screenshot == null) {
 			return null;
 		}
 		String fileName = ScreenshotPathGenerator.getInstance().generateFileName(widgetId, creation, modification);
 		byte[] decoded = null;
-		if (screenshot.startsWith(ScreenshotConstant.SCREENSHOT_BASE64_PNG_PREFIX)) {
-			decoded = Base64.decode(screenshot.substring(ScreenshotConstant.SCREENSHOT_BASE64_PNG_PREFIX.length()));
+		if (screenshot.startsWith(CacheConstants.SCREENSHOT_BASE64_PNG_PREFIX)) {
+			decoded = Base64.decode(screenshot.substring(CacheConstants.SCREENSHOT_BASE64_PNG_PREFIX.length()));
 		}
-		else if (screenshot.startsWith(ScreenshotConstant.SCREENSHOT_BASE64_JPG_PREFIX)) {
-			decoded = Base64.decode(screenshot.substring(ScreenshotConstant.SCREENSHOT_BASE64_JPG_PREFIX.length()));
+		else if (screenshot.startsWith(CacheConstants.SCREENSHOT_BASE64_JPG_PREFIX)) {
+			decoded = Base64.decode(screenshot.substring(CacheConstants.SCREENSHOT_BASE64_JPG_PREFIX.length()));
 		}
 		else {
 			LOGGER.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
@@ -87,7 +86,7 @@ public class ScreenshotCacheManager
 		}
 		Binary bin = new Binary(decoded);
 		ScreenshotElement se = new ScreenshotElement(fileName, bin);
-		cm.putCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE, new Keys(widgetId), se);
+		scm.getCache(CacheConstants.CACHES_SCREENSHOT_CACHE).put(cacheKey,se);
 		LOGGER.debug(
 				"Cacheable with tenant:{} ,widgetId:{} ,creation:{} , modification:{} ,screenshot:{} is put into screenshot cache",
 				tenant, widgetId, creation, modification, screenshot);
