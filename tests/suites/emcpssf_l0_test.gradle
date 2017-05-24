@@ -126,11 +126,10 @@ task QATest(type: EMTest) {
 
 task DEVTest(type: EMTest, dependsOn: QATest) {
     /*****************savedsearch-core project*****************/
-//	include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/json/*.class"
-//	include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/**/*.class"
     include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/**/*.class"
-    include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/**/*.class"
-    include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/*.class"
+    include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/json/*.class"
+    include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/*.class"
+//    include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/*.class"
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/**/*.class"
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/exception/*.class"
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/**/*.class"
@@ -153,7 +152,7 @@ task WebUtilTest(type: EMTest, dependsOn: DEVTest) {
 /*****************savedsearch-web project*****************/
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/**/*.class"
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
-    include "oracle/sysman/emaas/savedsearch/ut/*.class"
+//    include "oracle/sysman/emaas/savedsearch/ut/*.class"
 
 
     useRestAssured = true
