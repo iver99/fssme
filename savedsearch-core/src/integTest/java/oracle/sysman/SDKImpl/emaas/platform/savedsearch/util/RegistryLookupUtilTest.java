@@ -8,10 +8,6 @@ import java.util.List;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CachedLink;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -36,14 +32,6 @@ public class RegistryLookupUtilTest
 	InstanceInfo instanceInfo;
 	@Mocked
 	InstanceQuery instanceQuery;
-	@Mocked
-	CacheManager cacheManager;
-	@Mocked
-	CachedLink cachedLink;
-	@Mocked
-	Keys keys;
-	@Mocked
-	Tenant tenant;
 	@Mocked
 	VersionedLink link;
 	@Mocked
@@ -148,10 +136,10 @@ public class RegistryLookupUtilTest
 		links.add(link);
 		new Expectations() {
 			{
-				CacheManager.getInstance();
-				result = cacheManager;
-				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
-				result = cachedLink;
+//				CacheManager.getInstance();
+//				result = cacheManager;
+//				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
+//				result = cachedLink;
 			}
 		};
 		RegistryLookupUtil.getServiceExternalLink("Logan Service", "1.0+", "assetroot", "testtenant");
@@ -166,10 +154,10 @@ public class RegistryLookupUtilTest
 		links.add(link);
 		new Expectations() {
 			{
-				CacheManager.getInstance();
-				result = cacheManager;
-				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
-				result = null;
+//				CacheManager.getInstance();
+//				result = cacheManager;
+//				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
+//				result = null;
 				LookupManager.getInstance();
 				result = lookupManager;
 				lookupManager.getLookupClient();
@@ -188,10 +176,10 @@ public class RegistryLookupUtilTest
 		links.add(link);
 		new Expectations() {
 			{
-				CacheManager.getInstance();
-				result = cacheManager;
-				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
-				result = null;
+//				CacheManager.getInstance();
+//				result = cacheManager;
+//				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
+//				result = null;
 				LookupManager.getInstance();
 				result = lookupManager;
 				lookupManager.getLookupClient();
@@ -212,10 +200,10 @@ public class RegistryLookupUtilTest
 		links.add(link);
 		new Expectations() {
 			{
-				CacheManager.getInstance();
-				result = cacheManager;
-				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
-				result = null;
+//				CacheManager.getInstance();
+//				result = cacheManager;
+//				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
+//				result = null;
 				LookupManager.getInstance();
 				result = lookupManager;
 				lookupManager.getLookupClient();
@@ -284,12 +272,12 @@ public class RegistryLookupUtilTest
 		links.add(link);
 		new Expectations() {
 			{
-				CacheManager.getInstance();
-				result = cacheManager;
-				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
-				result = cachedLink;
-				cachedLink.getHref();
-				result = "https://";
+//				CacheManager.getInstance();
+//				result = cacheManager;
+//				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
+////				result = cachedLink;
+////				cachedLink.getHref();
+//				result = "https://";
 			}
 		};
 		RegistryLookupUtil.getServiceInternalLink("", "", "", "");
@@ -304,10 +292,10 @@ public class RegistryLookupUtilTest
 		links.add(link);
 		new Expectations() {
 			{
-				CacheManager.getInstance();
-				result = cacheManager;
-				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
-				result = null;
+//				CacheManager.getInstance();
+//				result = cacheManager;
+//				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
+//				result = null;
 				LookupManager.getInstance();
 				result = lookupManager;
 				lookupManager.getLookupClient();
@@ -328,10 +316,10 @@ public class RegistryLookupUtilTest
 		links.add(link);
 		new Expectations() {
 			{
-				CacheManager.getInstance();
-				result = cacheManager;
-				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
-				result = null;
+//				CacheManager.getInstance();
+//				result = cacheManager;
+//				cacheManager.getCacheable(withAny(tenant), anyString, withAny(keys));
+//				result = null;
 				LookupManager.getInstance();
 				result = lookupManager;
 				lookupManager.getLookupClient();

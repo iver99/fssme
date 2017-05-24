@@ -13,6 +13,7 @@ public class ApplicationLifecycleService extends AbstractApplicationLifecycleSer
 		addApplicationServiceManager(new AvailabilityServiceManager(rsm));
 		addApplicationServiceManager(new EMTargetInitializer());
 		addApplicationServiceManager(new LifecycleNotificationServiceManager());
+		addApplicationServiceManager(new CacheServiceManager());
 	}
 
 }

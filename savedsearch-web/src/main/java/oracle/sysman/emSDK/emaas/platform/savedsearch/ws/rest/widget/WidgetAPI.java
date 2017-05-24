@@ -24,17 +24,17 @@ import javax.ws.rs.core.UriInfo;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotCacheManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotElement;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotPathGenerator;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotElement;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -225,7 +225,7 @@ public class WidgetAPI
 				widgetId, serviceVersion, fileName);
 		String message = null;
 		int statusCode = 200;
-		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
+		ScreenshotManager scm = ScreenshotManager.getInstance();
 		CacheControl cc = new CacheControl();
 		cc.setMaxAge(2592000);
 		Tenant cacheTenant = new Tenant(TenantContext.getContext().getTenantInternalId(), TenantContext.getContext()

@@ -25,12 +25,12 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
 import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 
 import org.apache.logging.log4j.LogManager;
