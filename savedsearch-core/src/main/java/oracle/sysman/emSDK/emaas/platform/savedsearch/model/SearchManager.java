@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 
 /**
@@ -218,7 +218,6 @@ public abstract class SearchManager
 	
 	/**
 	 * get search list by a list of id
-	 * @param widgetIds
 	 * @return
 	 * @throws EMAnalyticsFwkException
 	 */
