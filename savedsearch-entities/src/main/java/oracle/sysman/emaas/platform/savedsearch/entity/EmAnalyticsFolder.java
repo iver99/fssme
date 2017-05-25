@@ -88,8 +88,8 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 
 	//bi-directional many-to-one association to EmAnalyticsFolder
 	@ManyToOne
-	@JoinColumns({
-			@JoinColumn(name = "PARENT_ID", referencedColumnName = "FOLDER_ID", insertable = false, updatable = false)})
+	@JoinColumns({ @JoinColumn(name = "PARENT_ID", referencedColumnName = "FOLDER_ID"),
+			@JoinColumn(name = "PARENT_ID", referencedColumnName = "FOLDER_ID", insertable = false, updatable = false) })
 	private EmAnalyticsFolder emAnalyticsFolder;
 
 	//bi-directional many-to-one association to EmAnalyticsFolder

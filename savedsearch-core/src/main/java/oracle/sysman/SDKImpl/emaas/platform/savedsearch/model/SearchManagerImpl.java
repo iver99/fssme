@@ -57,16 +57,16 @@ public class SearchManagerImpl extends SearchManager
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_2 = "e.emAnalyticsCategory.categoryId=:widgetGroupId AND ";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_3 = "e.emAnalyticsCategory.categoryId in (select c.categoryId from EmAnalyticsCategory c where c.providerName in (";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_4 = "))  "
-			+ "AND e.deleted=0 AND e.isWidget=1 AND (e.tenant=:tenantId OR e.tenant = -1) AND (e.owner=:userName OR e.systemSearch =1)";
+			+ "AND e.deleted=0 AND e.isWidget=1 AND (e.tenantId=:tenantId OR e.tenantId = -11) AND (e.owner=:userName OR e.systemSearch =1)";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_1 = "SELECT e FROM EmAnalyticsSearch e LEFT JOIN EmAnalyticsSearchParam pm "
-			+ "ON pm.searchId=e.id AND (pm.tenantId=:tenantId OR pm.tenantId = -11) AND pm.name = 'DASHBOARD_INELIGIBLE' where (e.tenant=:tenantId or e.tenant = -11) AND ";
+			+ "ON pm.searchId=e.id AND (pm.tenantId=:tenantId OR pm.tenantId = -11) AND pm.name = 'DASHBOARD_INELIGIBLE' where (e.tenantId=:tenantId or e.tenantId = -11) AND ";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_2 = "e.emAnalyticsCategory.categoryId=:widgetGroupId AND ";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_3 = "e.emAnalyticsCategory.categoryId in "
 			+ "(select c.categoryId from EmAnalyticsCategory c LEFT JOIN EmAnalyticsCategoryParam cm "
 			+ "on cm.categoryId=c.categoryId AND cm.name='DASHBOARD_INELIGIBLE' AND (cm.tenantId=:tenantId OR cm.tenantId = -11)"
 			+ "where c.providerName in (";
 	private static final String JPL_WIDGET_LIST_BY_PROVIDERS_WO_INELIGIBLE_4 = ") AND (cm.value IS NULL OR cm.value<>'1')) "
-			+ "AND e.deleted=0 AND e.isWidget=1 AND (e.tenant=:tenantId OR e.tenant = -11) AND (e.owner=:userName OR e.systemSearch =1) "
+			+ "AND e.deleted=0 AND e.isWidget=1 AND (e.tenantId=:tenantId OR e.tenantId = -11) AND (e.owner=:userName OR e.systemSearch =1) "
 			+ "AND (pm.paramValueStr IS NULL OR pm.paramValueStr<>'1')";
 
 	private static final String DEFAULT_DB_VALUE = "0";
@@ -1143,7 +1143,7 @@ public class SearchManagerImpl extends SearchManager
 	@Override
 	public void cleanSearchesPermanentlyById(List<BigInteger> searchIds) throws EMAnalyticsFwkException {
 		LOGGER.debug("Calling SearchManager.cleanSearchesPermanentlyById");
-		if(searchIds.isEmpty() && searchIds ==null ) return;
+		if(searchIds.isEmpty() || searchIds == null ) return;
 		EntityManager entityManager = null;
 		try{
 			entityManager = PersistenceManager.getInstance().getEntityManager(new TenantInfo(DEFAULT_CURRENT_USER, DEFAULT_TENANT_ID));

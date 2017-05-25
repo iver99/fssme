@@ -221,7 +221,7 @@ public class ImportTest extends BaseTest
 			}
 			for (Search objSearch : listobj) {
 				if (objSearch.getId() != null) {
-					obj.deleteSearch(objSearch.getId(), true);
+					obj.deleteSearch(objSearch.getId(), false);
 				}
 			}
 			if (!BigInteger.ZERO.equals(categoryId)) {

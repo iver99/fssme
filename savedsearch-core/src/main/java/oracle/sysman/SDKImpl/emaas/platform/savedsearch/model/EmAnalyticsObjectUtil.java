@@ -208,6 +208,7 @@ class EmAnalyticsObjectUtil
 		categoryObj.setProviderVersion(category.getProviderVersion());
 		categoryObj.setProviderDiscovery(category.getProviderDiscovery());
 		categoryObj.setProviderAssetRoot(category.getProviderAssetRoot());
+		categoryObj.setTenantId(TenantContext.getContext().getTenantInternalId());
 		if (category.getDefaultFolderId() != null) {
 			EmAnalyticsFolder defaultFolderObj = EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em);
 			if (defaultFolderObj == null) {
@@ -235,6 +236,7 @@ class EmAnalyticsObjectUtil
 				categoryParamEntity.setValue(param.getValue());
 				categoryParamEntity.setCreationDate(utcNow);
 				categoryParamEntity.setLastModificationDate(utcNow);
+				categoryParamEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 				categoryObj.getEmAnalyticsCategoryParams().add(categoryParamEntity);
 			}
 		}
@@ -257,6 +259,7 @@ class EmAnalyticsObjectUtil
 		categoryEntity.setProviderAssetRoot(category.getProviderAssetRoot());
 		Date utcNow = DateUtil.getGatewayTime();
 		categoryEntity.setLastModificationDate(utcNow);
+		categoryEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 		if (category.getDefaultFolderId() != null) {
 			categoryEntity.setEmAnalyticsFolder(EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em));
 		}
@@ -278,6 +281,7 @@ class EmAnalyticsObjectUtil
 			newCatParam.setEmAnalyticsCategory(categoryEntity);
 			newCatParam.setCreationDate(utcNow);
 			newCatParam.setLastModificationDate(utcNow);
+			newCatParam.setTenantId(tenantId);
 			newParams.put(newPK, newCatParam);
 		}
 
@@ -478,6 +482,7 @@ class EmAnalyticsObjectUtil
 		searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden() ? 1 : 0));
 		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
 		searchEntity.setDeleted(BigInteger.ZERO);
+		searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 		List<SearchParameter> params = search.getParameters();
 		//move values from search_params table to search table
 		EmAnalyticsObjectUtil.moveParamsToSearchAdd(searchEntity, params);
@@ -499,7 +504,7 @@ class EmAnalyticsObjectUtil
 				
 				searchParamEntity.setCreationDate(utcDate);
 				searchParamEntity.setLastModificationDate(utcDate);
-				
+				searchParamEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 				searchEntity.getEmAnalyticsSearchParams().add(searchParamEntity);
 			}
 		}
@@ -734,6 +739,7 @@ class EmAnalyticsObjectUtil
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
 									TenantContext.getContext().getUsername()))) {
+				searchObj.setTenantId(TenantContext.getContext().getTenantInternalId());
 				return searchObj;
 			}
 			else {

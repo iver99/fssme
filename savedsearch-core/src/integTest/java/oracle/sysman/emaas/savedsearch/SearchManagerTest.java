@@ -584,8 +584,8 @@ public class SearchManagerTest extends BaseTest
 			AssertJUnit.fail();
 		}
 
-		sm.deleteSearch(widget1.getId(), true);
-		sm.deleteSearch(widget2.getId(), true);
+		sm.deleteSearch(widget1.getId(), false);
+		sm.deleteSearch(widget2.getId(), false);
 		cm.deleteCategory(cat.getId(), true);
 		fm.deleteFolder(folder.getId(), true);
 	}
