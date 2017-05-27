@@ -210,20 +210,39 @@ public class ZDTAPI
 		
 	}
 	
+	private String getMaxTimeStampStr(int skipMinutes) {
+		Date currentUtcDate = getCurrentUTCTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentUtcDate);
+		cal.add(Calendar.MINUTE, (skipMinutes * (-1)));
+		Date maxTimeStamp = cal.getTime();
+		String maxTimeStampStr = getTimeString(maxTimeStamp);
+		return maxTimeStampStr;
+	}
+	
 	@GET
 	@Path("compare")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response compareRows(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("type") @DefaultValue("incremental")  String compareType) {
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("type") @DefaultValue("incremental")  String compareType,
+            @QueryParam("before") int skipMinutes) {
 		logger.info("incoming call from zdt comparator to do row comparing");
 		String message = "";
 		int status = 200;
 		if (compareType == null) {
 			compareType = "incremental";
 		}
+		if (skipMinutes <= 0) {
+			skipMinutes = 5;    // to check: what is the accurate default skipping time for comparator?
+		}
+		String maxComparedDate = null;
+		if (skipMinutes > 0) {
+			maxComparedDate = getMaxTimeStampStr(skipMinutes);
+		}
+		logger.info("the max compared date is "+maxComparedDate);
 		try {
 			SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
-			InstancesComparedData<ZDTTableRowEntity> result = dcc.compare(tenantIdParam, userTenant,compareType);
+			InstancesComparedData<ZDTTableRowEntity> result = dcc.compare(tenantIdParam, userTenant,compareType, maxComparedDate);
 			
 			if (result != null) {
 				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
@@ -245,11 +264,11 @@ public class ZDTAPI
 				
 				ZDTTableRowEntity data1 = result.getInstance1().getData();
 				String result1 = jsonUtil.toJson(data1);
-				ZDTComparatorStatusRowEntity statusRow1 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage, result1);
+				ZDTComparatorStatusRowEntity statusRow1 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage+"", result1);
 								
 				ZDTTableRowEntity data2 = result.getInstance2().getData();
 				String result2 = jsonUtil.toJson(data2);
-				ZDTComparatorStatusRowEntity statusRow2 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage, result2);
+				ZDTComparatorStatusRowEntity statusRow2 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage+"", result2);
 				
 				// save status information for client 1  -- switch data for sync
 				LookupClient client1 = result.getInstance1().getClient();

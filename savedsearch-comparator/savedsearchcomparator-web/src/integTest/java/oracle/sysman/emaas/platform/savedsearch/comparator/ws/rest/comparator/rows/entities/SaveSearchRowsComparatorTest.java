@@ -300,7 +300,7 @@ public class SaveSearchRowsComparatorTest
         };
         SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
 	
-		drc.compare(null, null, null);
+		drc.compare(null, null, null, "2017-05-25 16:03:02");
 	}
 	
 	@Test

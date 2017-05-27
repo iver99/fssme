@@ -12,7 +12,7 @@ public class ZDTComparatorStatusRowEntityTest {
 		ZDTComparatorStatusRowEntity entity = new ZDTComparatorStatusRowEntity( "comparisonDate", 
 				"comparisonType",
 				"nextComparisonDate", 
-				0.99, 
+				"0.99", 
 				"comparisonResult");
 		
 		Assert.assertEquals(entity.getComparisonDate(), "comparisonDate");
@@ -22,7 +22,7 @@ public class ZDTComparatorStatusRowEntityTest {
 		
 		entity.setComparisonDate("");
 		entity.setComparisonType("");
-		entity.setDivergencePercentage(0.0);
+		entity.setDivergencePercentage("0.0");
 		entity.setNextComparisonDate("");
 	}
 

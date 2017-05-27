@@ -40,20 +40,20 @@ public class DataManager
 	private static final Logger logger = LogManager.getLogger(DataManager.class);
 	private static DataManager instance = new DataManager();
 
-	private static final String SQL_ALL_CATEGORY_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_CATEGORY WHERE DELETED <> 1";
-	private static final String SQL_ALL_CATEGORY_PARAM_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_CATEGORY_PARAMS WHERE DELETED <> 1";
-	private static final String SQL_ALL_FOLDER_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_FOLDERS WHERE DELETED <> 1";
-	private static final String SQL_ALL_SEARCH_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH WHERE DELETED <> 1";
-	private static final String SQL_ALL_SEARCH__PARAM_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE DELETED <> 1";
+	private static final String SQL_ALL_CATEGORY_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_CATEGORY WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+	private static final String SQL_ALL_CATEGORY_PARAM_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_CATEGORY_PARAMS WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+	private static final String SQL_ALL_FOLDER_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_FOLDERS WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+	private static final String SQL_ALL_SEARCH_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+	private static final String SQL_ALL_SEARCH__PARAM_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 
 	private static final String SQL_ALL_CATEGORY_ROWS = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,DESCRIPTION,OWNER,CREATION_DATE,"
 			+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,EM_PLUGIN_ID,"
 			+ "TO_CHAR(DEFAULT_FOLDER_ID) AS DEFAULT_FOLDER_ID,DELETED,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_DISCOVERY,"
-			+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE FROM EMS_ANALYTICS_CATEGORY";
+			+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE FROM EMS_ANALYTICS_CATEGORY where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 	
 	private static final String SQL_ALL_FOLDER_ROWS = "SELECT TO_CHAR(FOLDER_ID) AS FOLDER_ID,NAME, TO_CHAR(PARENT_ID) AS PARENT_ID, DESCRIPTION,CREATION_DATE,OWNER,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
-			+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS";
+			+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 	
 	private static final String SQL_ALL_SEARCH_ROWS = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,TO_CHAR(FOLDER_ID) AS FOLDER_ID, TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,"
@@ -61,21 +61,21 @@ public class DataManager
 			+ "DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
 			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
 			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
-			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE FROM EMS_ANALYTICS_SEARCH";
+			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE FROM EMS_ANALYTICS_SEARCH where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 	
-	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED FROM EMS_ANALYTICS_CATEGORY_PARAMS";
+	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED FROM EMS_ANALYTICS_CATEGORY_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 	
 	private static final String SQL_ALL_SEARCH_PARAMS_ROWS = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
-			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS";
+			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 	
 	private static final String SQL_ALL_CATEGORY_ROWS_BY_DATE = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,DESCRIPTION,OWNER,CREATION_DATE,"
 			+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,EM_PLUGIN_ID,"
 			+ "TO_CHAR(DEFAULT_FOLDER_ID) AS DEFAULT_FOLDER_ID,DELETED,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_DISCOVERY,"
-			+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE FROM EMS_ANALYTICS_CATEGORY WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+			+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE FROM EMS_ANALYTICS_CATEGORY WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 
 	private static final String SQL_ALL_FOLDER_ROWS_BY_DATE = "SELECT TO_CHAR(FOLDER_ID) AS FOLDER_ID,NAME, TO_CHAR(PARENT_ID) AS PARENT_ID, DESCRIPTION,CREATION_DATE,OWNER,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
-			+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+			+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 	
 	private static final String SQL_ALL_SEARCH_ROWS_BY_DATE = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,TO_CHAR(FOLDER_ID) AS FOLDER_ID, TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,"
@@ -83,12 +83,13 @@ public class DataManager
 			+ "DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
 			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
 			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
-			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE FROM EMS_ANALYTICS_SEARCH WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE FROM EMS_ANALYTICS_SEARCH WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 	
-	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS_BY_DATE = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED FROM EMS_ANALYTICS_CATEGORY_PARAMS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS_BY_DATE = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED FROM EMS_ANALYTICS_CATEGORY_PARAMS "
+			+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 	
 	private static final String SQL_ALL_SEARCH_PARAMS_ROWS_BY_DATE = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
-			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 
 	
 	private static final String SQL_INSERT_CATEGORY_PARAM = "INSERT INTO EMS_ANALYTICS_CATEGORY_PARAMS (CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED) "
@@ -217,9 +218,9 @@ public class DataManager
 		List<Map<String, Object>> result = null;
 		try {
 			if (date != null) {
-				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE, date);				
+				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE, date,null);				
 			} else {
-				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC,null);
+				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC,null, null);
 			}
 			
 		}catch(Exception e) {
@@ -229,7 +230,7 @@ public class DataManager
 	} 
 	
 	public String getLastComparisonDateForSync(EntityManager em) {
-		List<Object> result = getSingleTableData(em,SQL_GET_LAST_COMPARISON_DATE_FOR_SYNC);
+		List<Object> result = getSingleTableData(em,SQL_GET_LAST_COMPARISON_DATE_FOR_SYNC, null);
 		if (result != null && result.size() == 1) {
 			return (String)result.get(0);
 		}
@@ -237,7 +238,7 @@ public class DataManager
 	}
 	
 	public String getLatestComparisonDateForCompare(EntityManager em) {
-		List<Object> result = getSingleTableData(em,SQL_GET_LATEST_COMPARISON_DATE);
+		List<Object> result = getSingleTableData(em,SQL_GET_LATEST_COMPARISON_DATE, null);
 		if (result != null && result.size() == 1) {
 			return (String)result.get(0);
 		}
@@ -246,7 +247,7 @@ public class DataManager
 	
 	public List<Map<String, Object>> getSyncStatus(EntityManager em) {
 		try {
-			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_SYNC_STATUS, null);
+			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_SYNC_STATUS, null, null);
 			return result;
 		} catch (Exception e) {
 			logger.error(e);
@@ -256,7 +257,7 @@ public class DataManager
  	
 	public List<Map<String, Object>> getComparatorStatus(EntityManager em) {
 		try {
-			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_COMPARISON_STATUS, null);
+			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_COMPARISON_STATUS, null, null);
 			return result;
 		} catch (Exception e) {
 			logger.error(e);
@@ -270,11 +271,11 @@ public class DataManager
 	 * @return
 	 */
 
-	public long getAllCategoryCount(EntityManager em)
+	public long getAllCategoryCount(EntityManager em, String maxComparedDate)
 	{
 		long count = 0L;
 		try {
-			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_COUNT);
+			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_COUNT).setParameter(1, maxComparedDate);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
 		catch (Exception e) {
@@ -291,11 +292,11 @@ public class DataManager
 	 * @return
 	 */
 
-	public long getAllFolderCount(EntityManager em)
+	public long getAllFolderCount(EntityManager em, String maxComparedDate)
 	{
 		long count = 0l;
 		try {
-			Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT);
+			Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT).setParameter(1, maxComparedDate);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
 		catch (Exception e) {
@@ -311,11 +312,11 @@ public class DataManager
 	 * @return
 	 */
 
-	public long getAllSearchCount(EntityManager em)
+	public long getAllSearchCount(EntityManager em, String maxComparedDate)
 	{
 		long count = 0l;
 		try {
-			Query query = em.createNativeQuery(SQL_ALL_SEARCH_COUNT);
+			Query query = em.createNativeQuery(SQL_ALL_SEARCH_COUNT).setParameter(1, maxComparedDate);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
 		catch (Exception e) {
@@ -325,10 +326,10 @@ public class DataManager
 
 	}
 	
-	public long getAllSearchParamsCount(EntityManager em){
+	public long getAllSearchParamsCount(EntityManager em, String maxComparedDate){
 		long count = 0l;
 		try {
-			Query query = em.createNativeQuery(SQL_ALL_SEARCH__PARAM_COUNT);
+			Query query = em.createNativeQuery(SQL_ALL_SEARCH__PARAM_COUNT).setParameter(1, maxComparedDate);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
 		catch (Exception e) {
@@ -337,10 +338,10 @@ public class DataManager
 		return count;
 	}
 	
-	public long getAllCategoryPramsCount(EntityManager em) {
+	public long getAllCategoryPramsCount(EntityManager em, String maxComparedDate) {
 		long count = 0l;
 		try {
-			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_PARAM_COUNT);
+			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_PARAM_COUNT).setParameter(1, maxComparedDate);
 			count = ((Number) query.getSingleResult()).longValue();
 		}
 		catch (Exception e) {
@@ -356,12 +357,12 @@ public class DataManager
 	 * @return
 	 */
 
-	public List<Map<String, Object>> getCategoryParamTableData(EntityManager em, String type, String date)
+	public List<Map<String, Object>> getCategoryParamTableData(EntityManager em, String type, String date, String maxComparedDate)
 	{		
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_CATEGORY_PARAMS_ROWS_BY_DATE,date);
+			return getDatabaseTableData(em,SQL_ALL_CATEGORY_PARAMS_ROWS_BY_DATE,date, maxComparedDate);
 		} else {
-			return getDatabaseTableData(em,SQL_ALL_CATEGORY_PARAMS_ROWS,null);
+			return getDatabaseTableData(em,SQL_ALL_CATEGORY_PARAMS_ROWS,null, maxComparedDate);
 		}
 		
 	}
@@ -372,13 +373,13 @@ public class DataManager
 	 * @return
 	 */
 
-	public List<Map<String, Object>> getCategoryTableData(EntityManager em, String type, String date)
+	public List<Map<String, Object>> getCategoryTableData(EntityManager em, String type, String date, String maxComparedDate)
 	{
 		
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_CATEGORY_ROWS_BY_DATE,date);
+			return getDatabaseTableData(em,SQL_ALL_CATEGORY_ROWS_BY_DATE,date, maxComparedDate);
 		} else {
-			return getDatabaseTableData(em,SQL_ALL_CATEGORY_ROWS,null);
+			return getDatabaseTableData(em,SQL_ALL_CATEGORY_ROWS,null, maxComparedDate);
 		}
 	}
 
@@ -387,12 +388,12 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getFolderTableData(EntityManager em, String type, String date)
+	public List<Map<String, Object>> getFolderTableData(EntityManager em, String type, String date, String maxComparedDate)
 	{
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS_BY_DATE,date);
+			return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS_BY_DATE,date, maxComparedDate);
 		} else {
-			return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS,null);
+			return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS,null, maxComparedDate);
 		}
 	}
 
@@ -402,12 +403,12 @@ public class DataManager
 	 * @return
 	 */
 
-	public List<Map<String, Object>> getSearchParamTableData(EntityManager em, String type, String date)
+	public List<Map<String, Object>> getSearchParamTableData(EntityManager em, String type, String date, String maxComparedDate)
 	{
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS_BY_DATE,date);
+			return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS_BY_DATE,date, maxComparedDate);
 		} else {
-			return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS,null);
+			return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS,null, maxComparedDate);
 		}
 	}
 
@@ -417,12 +418,12 @@ public class DataManager
 	 * @return
 	 */
 
-	public List<Map<String, Object>> getSearchTableData(EntityManager em, String type, String date)
+	public List<Map<String, Object>> getSearchTableData(EntityManager em, String type, String date, String maxComparedDate)
 	{
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS_BY_DATE,date);
+			return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS_BY_DATE,date, maxComparedDate);
 		} else {
-			return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS,null);
+			return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS,null, maxComparedDate);
 		}
 	}
 
@@ -869,7 +870,7 @@ public class DataManager
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private List<Map<String, Object>> getDatabaseTableData(EntityManager em,String nativeSql, String date)
+	private List<Map<String, Object>> getDatabaseTableData(EntityManager em,String nativeSql, String date, String maxComparedDate)
 	{
 		if (StringUtil.isEmpty(nativeSql)) {
 			logger.error("Can't query database table with null or empty SQL statement!");
@@ -879,9 +880,19 @@ public class DataManager
 		try {
 			Query query = null;
 			if (date != null) {
-				query = em.createNativeQuery(nativeSql).setParameter(1, date);
+				if (maxComparedDate != null) {
+					query = em.createNativeQuery(nativeSql).setParameter(1, date).setParameter(2, maxComparedDate);
+				} else {
+					query = em.createNativeQuery(nativeSql).setParameter(1, date);
+				}
+				
 			} else {
-				query = em.createNativeQuery(nativeSql);
+				if (maxComparedDate != null) {
+					query = em.createNativeQuery(nativeSql).setParameter(1, maxComparedDate);
+				} else {
+					query = em.createNativeQuery(nativeSql);
+				}
+				
 			}		
 			query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 			list = query.getResultList();
@@ -893,14 +904,20 @@ public class DataManager
 		return list;
 	}
 	
-	private List<Object> getSingleTableData(EntityManager em, String nativeSql) {
+	private List<Object> getSingleTableData(EntityManager em, String nativeSql, String maxComparedDate) {
 		if (StringUtil.isEmpty(nativeSql)) {
 			logger.error("can not query database with empty sql statement!");
 			return null;
 		}
 		List<Object>  result = null;
 		try {
-			Query query = em.createNativeQuery(nativeSql);
+			Query query = null;
+			if (maxComparedDate != null) {
+				query = em.createNativeQuery(nativeSql).setParameter(1, maxComparedDate);
+			} else {
+				query = em.createNativeQuery(nativeSql);
+			}
+			
 			result = query.getResultList();
 		}catch(Exception e) {
 			logger.error(e);

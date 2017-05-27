@@ -63,13 +63,13 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			}
 	}
 
-	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant, String comparisonType) throws ZDTException
+	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant, String comparisonType, String maxComparedDate) throws ZDTException
 	{
 		try {
 			logger.info("Starts to compare the two ssf OMC instances: table by table and row by row");
 			
- 			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType);
- 			CountsEntity entity1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1);
+ 			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType, maxComparedDate);
+ 			CountsEntity entity1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1, maxComparedDate);
 			if (entity1 == null) {
 				return null;
 			}
@@ -84,8 +84,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 				return null;
 			}
 
-			ZDTTableRowEntity tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType);
-			CountsEntity entity2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2);
+			ZDTTableRowEntity tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType, maxComparedDate);
+			CountsEntity entity2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2, maxComparedDate);
 			if (entity2 == null) {
 				return null;
 			}
@@ -249,7 +249,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		return cd;
 	}
 
-	private CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc) throws Exception, IOException
+	private CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc, String maxComparedTime) throws Exception, IOException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/counts", "http");
 		if (lk == null) {
@@ -257,7 +257,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			return null;
 		}
 		logger.info("*****lookup link is {}", lk.getHref());
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
+		String url = lk.getHref() + "?maxComparedDate="+URLEncoder.encode(maxComparedTime, "UTF-8");
+		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
 		logger.info("Checking savedsearch OMC instance counts. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
@@ -293,14 +294,14 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private ZDTTableRowEntity retrieveRowsForSingleInstance(String tenantId, String userTenant,LookupClient lc, String comparisonType) throws Exception, IOException, ZDTException
+	private ZDTTableRowEntity retrieveRowsForSingleInstance(String tenantId, String userTenant,LookupClient lc, String comparisonType, String maxComparedDate) throws Exception, IOException, ZDTException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
 		}
-		String url = lk.getHref() + "?comparisonType="+comparisonType;
+		String url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
 		logger.info("get table data url is "+url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
 		logger.info("Checking SSF OMC instance table rows. Response is " + response);

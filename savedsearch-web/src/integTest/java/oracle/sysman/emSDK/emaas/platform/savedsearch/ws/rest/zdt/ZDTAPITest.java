@@ -37,12 +37,12 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getSearchTableData(em, anyString, anyString);
+                dataManager.getSearchTableData(em, anyString, anyString, anyString);
                 result = list;
             }
         };
-        zdtapi.getAllTableData("incremental");
-        zdtapi.getAllTableData("full");
+        zdtapi.getAllTableData("incremental", null);
+        zdtapi.getAllTableData("full", "2017-05-25 16:03:02");
     }
 
     @Test
@@ -53,11 +53,11 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getSearchTableData(em, anyString, anyString);
+                dataManager.getSearchTableData(em, anyString, anyString, anyString);
                 result = new JSONException(throwable);
             }
         };
-        zdtapi.getAllTableData("incremental");
+        zdtapi.getAllTableData("incremental", "2017-05-25 16:03:02");
     }
 
     @Test
@@ -67,15 +67,19 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getAllCategoryCount(em);
+                dataManager.getAllCategoryCount(em,anyString);
                 result = 1;
-                dataManager.getAllFolderCount(em);
+                dataManager.getAllFolderCount(em, anyString);
                 result = 1;
-                dataManager.getAllSearchCount(em);
+                dataManager.getAllSearchCount(em, anyString);
+                result = 1;
+                dataManager.getAllSearchParamsCount(em, anyString);
+                result = 1;
+                dataManager.getAllCategoryPramsCount(em, anyString);
                 result = 1;
             }
         };
-        zdtapi.getEntitiesCount();
+        zdtapi.getEntitiesCount("2017-05-25 16:03:02");
     }
     
     @Test

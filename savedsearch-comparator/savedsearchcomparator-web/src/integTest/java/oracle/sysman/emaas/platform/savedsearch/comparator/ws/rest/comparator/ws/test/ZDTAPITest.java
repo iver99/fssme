@@ -156,7 +156,7 @@ public class ZDTAPITest {
     		}
     	};
     	SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
-    	zdtapi.compareRows(tenant, userTenant,"full");
+    	zdtapi.compareRows(tenant, userTenant,"full", 5);
     }
 
     
@@ -173,7 +173,7 @@ public class ZDTAPITest {
     @Test
     public void testCompareRows1() {
     	
-    	zdtapi.compareRows(tenant, userTenant,"full");
+    	zdtapi.compareRows(tenant, userTenant,"full", 5);
     }
     
     @Test
@@ -196,7 +196,7 @@ public class ZDTAPITest {
     		}
     	};
     	
-    	zdtapi.compareRows(tenant, userTenant,"full");
+    	zdtapi.compareRows(tenant, userTenant,"full", 5);
     }
     
     @Test

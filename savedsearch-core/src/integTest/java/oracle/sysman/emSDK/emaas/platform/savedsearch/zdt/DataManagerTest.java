@@ -228,7 +228,7 @@ public class DataManagerTest
 	                result = 1;
 	            }
 	        };
-	        dataManager.getAllCategoryCount(entityManager);
+	        dataManager.getAllCategoryCount(entityManager, "2017-05-23 16:19:02");
 	}
 
 	@Test
@@ -241,7 +241,7 @@ public class DataManagerTest
                 result = 1;
             }
         };
-        dataManager.getAllFolderCount(entityManager);
+        dataManager.getAllFolderCount(entityManager, "2017-05-23 16:19:02");
 		
 	}
 
@@ -255,7 +255,7 @@ public class DataManagerTest
                 result = 1;
             }
         };
-        dataManager.getAllSearchCount(entityManager);
+        dataManager.getAllSearchCount(entityManager, "2017-05-23 16:19:02");
 		
 	}
 	
@@ -270,8 +270,8 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getFolderTableData(entityManager,"full", "2017-05-09 14:35:21");
-		dataManager.getFolderTableData(entityManager,"incremental", "2017-05-09 14:35:21");
+		dataManager.getFolderTableData(entityManager,"full", "2017-05-09 14:35:21", "2017-05-09 14:35:21");
+		dataManager.getFolderTableData(entityManager,"incremental", "2017-05-09 14:35:21", "2017-05-09 14:35:21");
 	}
 
 	@Test
@@ -285,8 +285,8 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getSearchParamTableData(entityManager,"full", "2017-05-09 14:35:21");		
-		dataManager.getSearchParamTableData(entityManager,"incremental", "2017-05-09 14:35:21");		
+		dataManager.getSearchParamTableData(entityManager,"full", "2017-05-09 14:35:21", "2017-05-09 14:35:21");		
+		dataManager.getSearchParamTableData(entityManager,"incremental", "2017-05-09 14:35:21", "2017-05-09 14:35:21");		
 	}
 	
 	@Test
@@ -301,8 +301,8 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getSearchTableData(entityManager,"full", "2017-05-09 14:35:21");
-		dataManager.getSearchTableData(entityManager,"incremental", "2017-05-09 14:35:21");
+		dataManager.getSearchTableData(entityManager,"full", "2017-05-09 14:35:21", "2017-05-09 14:35:21");
+		dataManager.getSearchTableData(entityManager,"incremental", "2017-05-09 14:35:21", "2017-05-09 14:35:21");
 	}
 	
 	@Test
@@ -316,7 +316,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getCategoryTableData(entityManager,"full", "2017-05-09 14:35:21");
+		dataManager.getCategoryTableData(entityManager,"full", "2017-05-09 14:35:21", "2017-05-09 14:35:21");
 	}
 	
 	@Test
@@ -330,8 +330,8 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getCategoryParamTableData(entityManager,"full", "2017-05-09 14:35:21");
-		dataManager.getCategoryParamTableData(entityManager,"incremental", "2017-05-09 14:35:21");
+		dataManager.getCategoryParamTableData(entityManager,"full", "2017-05-09 14:35:21","2017-05-09 14:35:21");
+		dataManager.getCategoryParamTableData(entityManager,"incremental", "2017-05-09 14:35:21" ,"2017-05-09 14:35:21");
 	}
 	
 	@Test

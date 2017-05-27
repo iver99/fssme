@@ -72,29 +72,29 @@ public class ZDTAPI
 	@GET
 	@Path("tablerows")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllTableData(@QueryParam("comparisonType") String type)
+	public Response getAllTableData(@QueryParam("comparisonType") String type, @QueryParam("maxComparedDate") String maxComparedData)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/tablerows?comparisonType=");
 		JSONObject obj = new JSONObject();
 		EntityManager em = null;
 		if (type == null) {
-			type = "full";
+			type = "incremental";
 		}
 		logger.info("comparisonType in tableRows: "+type);
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
-			JSONArray tableData = getCategoryTableData(em,type, lastComparisonDate);
+			JSONArray tableData = getCategoryTableData(em,type, lastComparisonDate,maxComparedData);
 			obj.put(TABLE_CATEGORY, tableData);
-			tableData = getCategoryParamTableData(em,type, lastComparisonDate);
+			tableData = getCategoryParamTableData(em,type, lastComparisonDate, maxComparedData);
 			obj.put(TABLE_CATEGORY_PARAMS, tableData);
-			tableData = getFolderTableData(em,type, lastComparisonDate);
+			tableData = getFolderTableData(em,type, lastComparisonDate, maxComparedData);
 			obj.put(TABLE_FOLDERS, tableData);
-			tableData = getFolderTableData(em,type, lastComparisonDate);
+			tableData = getFolderTableData(em,type, lastComparisonDate, maxComparedData);
 			obj.put(TABLE_FOLDERS, tableData);
-			tableData = getSearchTableData(em,type, lastComparisonDate);
+			tableData = getSearchTableData(em,type, lastComparisonDate, maxComparedData);
 			obj.put(TABLE_SEARCH, tableData);
-			tableData = getSearchParamsTableData(em,type, lastComparisonDate);
+			tableData = getSearchParamsTableData(em,type, lastComparisonDate, maxComparedData);
 			obj.put(TABLE_SEARCH_PARAMS, tableData);
 		}
 		catch (JSONException e) {
@@ -111,7 +111,7 @@ public class ZDTAPI
 	@GET
 	@Path("counts")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getEntitiesCount()
+	public Response getEntitiesCount(@QueryParam("maxComparedDate") String maxComparedData)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/counts");
 		EntityManager em = null;
@@ -119,11 +119,11 @@ public class ZDTAPI
 		int statusCode = 200;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-			long categoryCount = DataManager.getInstance().getAllCategoryCount(em);
-			long folderCount = DataManager.getInstance().getAllFolderCount(em);
-			long searcheCount = DataManager.getInstance().getAllSearchCount(em);
-			long searchPramCount = DataManager.getInstance().getAllSearchParamsCount(em);
-			long categoryPramCount = DataManager.getInstance().getAllCategoryPramsCount(em);
+			long categoryCount = DataManager.getInstance().getAllCategoryCount(em, maxComparedData);
+			long folderCount = DataManager.getInstance().getAllFolderCount(em, maxComparedData);
+			long searcheCount = DataManager.getInstance().getAllSearchCount(em, maxComparedData);
+			long searchPramCount = DataManager.getInstance().getAllSearchParamsCount(em, maxComparedData);
+			long categoryPramCount = DataManager.getInstance().getAllCategoryPramsCount(em, maxComparedData);
 			logger.debug("ZDT counters: category count - {}, folder count - {}, search count - {}, searchParams count - {}, categoryParam count - {}"
 					, categoryCount, folderCount,searcheCount, searchPramCount,categoryPramCount);
 			ZDTCountEntity zdte = new ZDTCountEntity(categoryCount, folderCount, searcheCount,searchPramCount,categoryPramCount);
@@ -285,7 +285,7 @@ public class ZDTAPI
 		String comparison_type = "";
 		//String comparison_result = null;
 		String next_schedule_date = "";
-		double percentage = 0.0;
+		String percentage = null;
 		em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		List<Map<String, Object>> result = DataManager.getInstance().getComparatorStatus(em);
 		if (result != null && result.size() == 1) {
@@ -294,7 +294,7 @@ public class ZDTAPI
 				comparison_type = resultMap.get("COMPARISON_TYPE").toString();
 				next_schedule_date =  resultMap.get("NEXT_SCHEDULE_COMPARISON_DATE").toString();
 				//	comparison_result = resultMap.get("").toString();
-				percentage = Double.parseDouble(resultMap.get("DIVERGENCE_PERCENTAGE").toString());
+				percentage = resultMap.get("DIVERGENCE_PERCENTAGE").toString();
 		}
 		ZDTComparatorStatusRowEntity comparatorStatus = new ZDTComparatorStatusRowEntity(comparison_date,comparison_type, next_schedule_date, percentage);
 		try {
@@ -336,7 +336,7 @@ public class ZDTAPI
 						comparisonDate = jsonObj.getString("lastComparisonDateTime");
 						comparisonType = jsonObj.getString("comparisonType");
 						comparisonResult = jsonObj.getString("comparisonResult");
-						divergencePercentage = jsonObj.getDouble("divergencePercentage");
+						divergencePercentage = Double.valueOf(jsonObj.getString("divergencePercentage"));
 						nextScheduleDate = jsonObj.getString("nextScheduledComparisonDateTime");
 						em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 						int result = DataManager.getInstance().saveToComparatorTable(em, comparisonDate,nextScheduleDate,
@@ -367,21 +367,21 @@ public class ZDTAPI
 		return Response.status(statusCode).entity(message).build();
 	}
 
-	private JSONArray getCategoryParamTableData(EntityManager em, String type, String date)
+	private JSONArray getCategoryParamTableData(EntityManager em, String type, String date,String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryParamTableData(em,type, date);
+		List<Map<String, Object>> list = DataManager.getInstance().getCategoryParamTableData(em,type, date, maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_CATEGORY_PARAMS, list);
 	}
 
-	private JSONArray getCategoryTableData(EntityManager em, String type, String date)
+	private JSONArray getCategoryTableData(EntityManager em, String type, String date,String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryTableData(em,type, date);
+		List<Map<String, Object>> list = DataManager.getInstance().getCategoryTableData(em,type, date, maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_CATEGORY, list);
 	}
 
-	private JSONArray getFolderTableData(EntityManager em, String type, String date)
+	private JSONArray getFolderTableData(EntityManager em, String type, String date,String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getFolderTableData(em,type, date);
+		List<Map<String, Object>> list = DataManager.getInstance().getFolderTableData(em,type, date, maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_FOLDERS, list);
 	}
 
@@ -403,15 +403,15 @@ public class ZDTAPI
 		return array;
 	}
 
-	private JSONArray getSearchParamsTableData(EntityManager em, String type, String date)
+	private JSONArray getSearchParamsTableData(EntityManager em, String type, String date, String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getSearchParamTableData(em,type, date);
+		List<Map<String, Object>> list = DataManager.getInstance().getSearchParamTableData(em,type, date, maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_SEARCH_PARAMS, list);
 	}
 
-	private JSONArray getSearchTableData(EntityManager em, String type, String date)
+	private JSONArray getSearchTableData(EntityManager em, String type, String date, String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getSearchTableData(em,type, date);
+		List<Map<String, Object>> list = DataManager.getInstance().getSearchTableData(em,type, date, maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_SEARCH, list);
 	}
 
