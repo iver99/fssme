@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
@@ -37,6 +38,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 //@Multitenant
 //@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @AdditionalCriteria("this.tenantId = :tenant or this.tenantId = -11")
+@IdClass(EmAnalyticsSearchPK.class)
 @Table(name = "EMS_ANALYTICS_SEARCH")
 @NamedQueries({
 	@NamedQuery(name = "Search.getSearchListByIds", query = "SELECT e FROM EmAnalyticsSearch e where e.id in :ids AND e.deleted =0 "),
@@ -158,6 +160,7 @@ public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
 	@Column(name = "PROVIDER_ASSET_ROOT")
 	private String PROVIDER_ASSET_ROOT;
 
+	@Id
 	@Column(name = "TENANT_ID", nullable = false, length = 32, updatable = false)
 	private Long tenantId;
 

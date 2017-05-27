@@ -19,7 +19,6 @@ import javax.persistence.NonUniqueResultException;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
@@ -31,13 +30,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.Reque
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParamPK;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
+import oracle.sysman.emaas.platform.savedsearch.entity.*;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -501,7 +494,7 @@ class EmAnalyticsObjectUtil
 				else {
 					searchParamEntity.setParamValueStr(param.getValue());
 				}
-				
+
 				searchParamEntity.setCreationDate(utcDate);
 				searchParamEntity.setLastModificationDate(utcDate);
 				searchParamEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
@@ -580,10 +573,10 @@ class EmAnalyticsObjectUtil
 				else {
 					newSearchParam.setParamValueClob(param.getValue());
 				}
-				
+
 				newSearchParam.setCreationDate(utcNow);
 				newSearchParam.setLastModificationDate(utcNow);
-				
+
 				newParams.put(newPK, newSearchParam);
 			}
 		}
@@ -694,7 +687,7 @@ class EmAnalyticsObjectUtil
 		EmAnalyticsSearch searchObj = null;
 		try {
 
-			searchObj = em.find(EmAnalyticsSearch.class, id);
+			searchObj = em.find(EmAnalyticsSearch.class, new EmAnalyticsSearchPK(TenantContext.getContext().getTenantInternalId(), id));
 			if (searchObj != null) {
 				if (BigInteger.ZERO.equals(searchObj.getDeleted())
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
@@ -734,7 +727,7 @@ class EmAnalyticsObjectUtil
 		EmAnalyticsSearch searchObj = null;
 		try {
 
-			searchObj = em.find(EmAnalyticsSearch.class, id);
+			searchObj = em.find(EmAnalyticsSearch.class, new EmAnalyticsSearchPK(TenantContext.getContext().getTenantInternalId(), id));
 			if (searchObj != null
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
