@@ -83,8 +83,8 @@ class EmAnalyticsObjectUtil
 			if (cateObj != null) {
 				if (BigInteger.ZERO.equals(cateObj.getDeleted())
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
-								|| "ORACLE".equals(cateObj.getOwner()) || cateObj.getOwner().equals(
-										TenantContext.getContext().getUsername()))) {
+						|| "ORACLE".equals(cateObj.getOwner()) || cateObj.getOwner().equals(
+						TenantContext.getContext().getUsername()))) {
 					return cateObj;
 				}
 				else {
@@ -109,7 +109,7 @@ class EmAnalyticsObjectUtil
 			cateObj = em.find(EmAnalyticsCategory.class, id);
 			if (cateObj != null
 					&& (RequestContext.getContext().equals(RequestType.INTERNAL_TENANT) || "ORACLE".equals(cateObj.getOwner()) || cateObj
-							.getOwner().equals(TenantContext.getContext().getUsername()))) {
+					.getOwner().equals(TenantContext.getContext().getUsername()))) {
 
 				return cateObj;
 			}
@@ -618,8 +618,8 @@ class EmAnalyticsObjectUtil
 			if (folderObj != null
 					&& BigInteger.ZERO.equals(folderObj.getDeleted())
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
-							|| folderObj.getSystemFolder().intValue() == 1 ||folderObj.getOwner().toUpperCase().equals("ORACLE")|| folderObj.getOwner().equals(
-									TenantContext.getContext().getUsername()))) {
+					|| folderObj.getSystemFolder().intValue() == 1 ||folderObj.getOwner().toUpperCase().equals("ORACLE")|| folderObj.getOwner().equals(
+					TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -645,7 +645,7 @@ class EmAnalyticsObjectUtil
 			folderObj = em.find(EmAnalyticsFolder.class, id);
 			if (folderObj != null
 					&& (folderObj.getSystemFolder().intValue() == 1 || folderObj.getOwner().equals(
-							TenantContext.getContext().getUsername()))) {
+					TenantContext.getContext().getUsername()))) {
 
 				return folderObj;
 			}
@@ -691,8 +691,8 @@ class EmAnalyticsObjectUtil
 			if (searchObj != null) {
 				if (BigInteger.ZERO.equals(searchObj.getDeleted())
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
-								|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-										TenantContext.getContext().getUsername()))) {
+						|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
+						TenantContext.getContext().getUsername()))) {
 
 					return searchObj;
 				}
@@ -710,7 +710,7 @@ class EmAnalyticsObjectUtil
 	public static EmAnalyticsSearch findEmSearchByIdWithoutOwner(BigInteger searchId, EntityManager em) {
 		EmAnalyticsSearch searchObj = null;
 		try {
-			searchObj = em.find(EmAnalyticsSearch.class, searchId);
+			searchObj = em.find(EmAnalyticsSearch.class, new EmAnalyticsSearchPK(TenantContext.getContext().getTenantInternalId(),searchId));
 			// return null if the search has been deleted
 			if(searchObj != null && !BigInteger.ZERO.equals(searchObj.getDeleted())) {
 				searchObj = null;
@@ -730,8 +730,8 @@ class EmAnalyticsObjectUtil
 			searchObj = em.find(EmAnalyticsSearch.class, new EmAnalyticsSearchPK(TenantContext.getContext().getTenantInternalId(), id));
 			if (searchObj != null
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
-							|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-									TenantContext.getContext().getUsername()))) {
+					|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
+					TenantContext.getContext().getUsername()))) {
 				searchObj.setTenantId(TenantContext.getContext().getTenantInternalId());
 				return searchObj;
 			}

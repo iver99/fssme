@@ -267,6 +267,7 @@ public class FolderManagerImpl extends FolderManager
 			folderObj.setTenantId(TenantContext.getContext().getTenantInternalId());
 			em.persist(folderObj);
 			em.getTransaction().commit();
+			em.refresh(folderObj);
 			return createFolderObject(folderObj, folder);
 
 		}
