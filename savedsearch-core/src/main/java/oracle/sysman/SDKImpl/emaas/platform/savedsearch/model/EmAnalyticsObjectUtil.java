@@ -699,11 +699,8 @@ class EmAnalyticsObjectUtil
 	public static EmAnalyticsSearch findEmSearchByIdWithoutOwner(BigInteger searchId, EntityManager em) {
 		EmAnalyticsSearch searchObj = null;
 		try {
-			searchObj = em.find(EmAnalyticsSearch.class, new EmAnalyticsSearchPK(TenantContext.getContext().getTenantInternalId(),searchId));
-			// return null if the search has been deleted
-			if(searchObj != null && !BigInteger.ZERO.equals(searchObj.getDeleted())) {
-				searchObj = null;
-			}
+			searchObj = (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchById")
+					.setParameter("searchId", searchId).getSingleResult();
 		} catch (Exception ex) {
 			// do nothing
 		}
