@@ -118,6 +118,7 @@ public class SearchManagerImplTest
 	@Test
 	public void testGetSearchIdsByCategoryId() throws EMAnalyticsFwkException {
 		final List<BigInteger> searchIds = new ArrayList<>();
+		searchIds.add(BigInteger.ONE);
 		new Expectations(){
 			{
 				PersistenceManager.getInstance();

@@ -681,29 +681,18 @@ class EmAnalyticsObjectUtil
 		return folderObj;
 	}
 
-	public static EmAnalyticsSearch getSearchById(BigInteger id, EntityManager em)
-	{
+	public static EmAnalyticsSearch getSearchById(BigInteger id, EntityManager em){
 
 		EmAnalyticsSearch searchObj = null;
 		try {
 
-			searchObj = em.find(EmAnalyticsSearch.class, new EmAnalyticsSearchPK(TenantContext.getContext().getTenantInternalId(), id));
-			if (searchObj != null) {
-				if (BigInteger.ZERO.equals(searchObj.getDeleted())
-						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
-						|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-						TenantContext.getContext().getUsername()))) {
-
-					return searchObj;
-				}
-				else {
-					searchObj = null;
-				}
-			}
+			searchObj = (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchById")
+					.setParameter("searchId", id).getSingleResult(); 
+			
 		}
-		catch (Exception nre) {
-			//don nothing
-		}
+		catch (Exception nre) { 
+			//do nothing
+		} 
 		return searchObj;
 	}
 

@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by xidai on 6/28/2016.
  */
-public class FolderManagerNonGroupsTest {
+public class FolderManagerNonGroupsTest extends BaseTest{
     private static BigInteger folderId;
 
     private static BigInteger childFolderId;

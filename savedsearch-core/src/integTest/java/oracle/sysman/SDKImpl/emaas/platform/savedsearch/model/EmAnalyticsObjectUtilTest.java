@@ -619,12 +619,12 @@ public class EmAnalyticsObjectUtilTest
 		searchParameters.add(searchParameter);
 		new Expectations() {
 			{
-				entityManager.find(EmAnalyticsSearch.class, (BigInteger) any);
+ 				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, anyString);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
-				emAnalyticsSearch.getDeleted();
-				result = BigInteger.ZERO;
-				emAnalyticsSearch.getSystemSearch();
-				result = 1;
 				entityManager.find(EmAnalyticsFolder.class, (BigInteger) any);
 				result = emAnalyticsFolder;
 				emAnalyticsFolder.getDeleted();
@@ -654,12 +654,10 @@ public class EmAnalyticsObjectUtilTest
 			{
 				search.getId();
 				result = BigInteger.ONE;
-				entityManager.find(EmAnalyticsSearch.class, any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
-				emAnalyticsSearch.getDeleted();
-				result = BigInteger.ZERO;
-				emAnalyticsSearch.getSystemSearch();
-				result = new BigDecimal(1);
 				entityManager.refresh(emAnalyticsSearch);
 				search.getMetadata();
 				result = "metaData";
@@ -774,12 +772,10 @@ public class EmAnalyticsObjectUtilTest
 	{
 		new Expectations() {
 			{
-				entityManager.find(withAny(EmAnalyticsSearch.class), any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
-				emAnalyticsSearch.getDeleted();
-				result = BigInteger.ZERO;
-				emAnalyticsSearch.getSystemSearch();
-				result = new BigDecimal(1);
 			}
 		};
 		EmAnalyticsObjectUtil.getSearchById(BigInteger.TEN, entityManager);
@@ -791,10 +787,10 @@ public class EmAnalyticsObjectUtilTest
 	{
 		new Expectations() {
 			{
-				entityManager.find(withAny(EmAnalyticsSearch.class), (BigInteger) any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
-				emAnalyticsSearch.getDeleted();
-				result = new BigInteger("2");
 			}
 		};
 		EmAnalyticsObjectUtil.getSearchById(BigInteger.TEN, entityManager);
@@ -958,12 +954,10 @@ public class EmAnalyticsObjectUtilTest
 			{
 				search.getId();
 				result = BigInteger.ONE;
-				entityManager.find(EmAnalyticsSearch.class, any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
-				emAnalyticsSearch.getDeleted();
-				result = BigInteger.ZERO;
-				emAnalyticsSearch.getSystemSearch();
-				result = new BigDecimal(1);
 				entityManager.refresh(emAnalyticsSearch);
 				search.getMetadata();
 				result = "metaData";
