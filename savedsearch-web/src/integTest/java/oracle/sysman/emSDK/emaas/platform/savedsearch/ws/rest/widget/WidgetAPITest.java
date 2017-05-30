@@ -20,7 +20,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetManagerImpl;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -30,6 +29,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

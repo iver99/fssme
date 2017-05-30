@@ -3,7 +3,6 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.model;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportCategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.FolderDetails;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import org.testng.Assert;
 import org.testng.annotations.Test;

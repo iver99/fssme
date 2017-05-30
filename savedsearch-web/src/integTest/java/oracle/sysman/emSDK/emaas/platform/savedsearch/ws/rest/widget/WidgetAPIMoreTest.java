@@ -15,8 +15,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.TenantSubscriptionUtil;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.screenshot.ScreenshotData;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -24,6 +22,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.WidgetManager;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import org.testng.annotations.Test;
 
@@ -379,7 +378,7 @@ public class WidgetAPIMoreTest
 			{
 				dependencyStatus.isDatabaseUp();
 				result = true;
-				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
+//				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
@@ -397,7 +396,7 @@ public class WidgetAPIMoreTest
 			{
 				dependencyStatus.isDatabaseUp();
 				result = true;
-				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
+//				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
@@ -415,7 +414,7 @@ public class WidgetAPIMoreTest
 			{
 				dependencyStatus.isDatabaseUp();
 				result = true;
-				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
+//				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
@@ -434,7 +433,7 @@ public class WidgetAPIMoreTest
 			{
 				dependencyStatus.isDatabaseUp();
 				result = true;
-				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
+//				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
@@ -453,7 +452,6 @@ public class WidgetAPIMoreTest
 			{
 				dependencyStatus.isDatabaseUp();
 				result = true;
-				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);
@@ -472,7 +470,7 @@ public class WidgetAPIMoreTest
 			{
 				dependencyStatus.isDatabaseUp();
 				result = true;
-				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
+//				CacheManager.getInstance().getCache(CacheManager.CACHES_SCREENSHOT_CACHE).clearCache();
 				SearchManager.getInstance();
 				result = searchManagerImpl;
 				searchManagerImpl.getWidgetScreenshotById((BigInteger) any);

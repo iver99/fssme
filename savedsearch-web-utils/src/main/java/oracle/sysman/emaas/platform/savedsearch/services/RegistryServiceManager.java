@@ -210,6 +210,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String STATIC_WIDGETS = "static/savedsearch.widgets";
 	private static final String STATIC_WIDGETGROUPS = "static/savedsearch.widgetgroups";
 	private static final String REL_LOG_CONFIG = "log/configuration";
+	//serviceapi
+	private static final String SERVICEAPI_SEARCH = "serviceapi/savedsearch.search";
+	private static final String SERVICEAPI_SEARCHES = "serviceapi/savedsearch.searches";
+	private static final String SERVICEAPI_WIDGETS = "serviceapi/savedsearch.widgets";
+	private static final String SERVICEAPI_WIDGETGROUPS = "serviceapi/savedsearch.widgetgroups";
 
 	 private static final String NAV_ZDT_COUNTS = NAV_BASE + "/zdt/counts";
      private static final String NAV_ZDT_TABLEROWS = NAV_BASE + "/zdt/tablerows";
@@ -373,9 +378,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrl + NAV_ZDT_COUNTS));
 				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrl + NAV_ZDT_TABLEROWS));
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrl + NAV_ZDT_SYNC));
-				//JUST FOR TEST TO BE DELETED
-				links.add(new Link().withRel("oob/widgets").withHref(applicationUrl + "/savedsearch/v1/oob/widgets"));
-
 			}
 			if (applicationUrlSSL != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
@@ -392,6 +394,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_WIDGETS).withHref(applicationUrlSSL + NAV_WIDGETS));
 				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
 				links.add(new Link().withRel(REL_LOG_CONFIG).withHref(applicationUrlSSL + NAV_LOGCONFIGS));
+				//serviceapi
+				links.add(new Link().withRel(SERVICEAPI_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(SERVICEAPI_SEARCHES).withHref(applicationUrlSSL + NAV_SEARCHES));
+				links.add(new Link().withRel(SERVICEAPI_WIDGETS).withHref(applicationUrlSSL + NAV_WIDGETS));
+				links.add(new Link().withRel(SERVICEAPI_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
+
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrlSSL + NAV_ZDT_COUNTS));
 				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrlSSL + NAV_ZDT_TABLEROWS));
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrlSSL + NAV_ZDT_SYNC));
