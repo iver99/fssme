@@ -554,7 +554,7 @@ class EmAnalyticsObjectUtil
 		Set<EmAnalyticsSearchParam> existingParams = Collections.synchronizedSet(searchEntity.getEmAnalyticsSearchParams());
 		Map<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam> newParams = new HashMap<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam>();
 		Long tenantId = TenantContext.getContext().getTenantInternalId();
-		if(searchEntity.getSystemSearch().compareTo(new BigDecimal("1")) == 0){
+		if((new BigDecimal("1")).compareTo(searchEntity.getSystemSearch()) == 0){
 			tenantId = SearchManagerImpl.DEFAULT_TENANT_ID;
 		}
 		if (params != null) {

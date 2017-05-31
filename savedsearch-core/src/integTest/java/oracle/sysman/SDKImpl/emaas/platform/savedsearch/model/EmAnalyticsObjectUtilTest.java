@@ -691,6 +691,8 @@ public class EmAnalyticsObjectUtilTest
 				result = params;
 				emAnalyticsSearch.getEmAnalyticsSearchParams();
 				result = emAnalyticsSearchParams;
+				emAnalyticsSearch.getSystemSearch();
+				result = new BigDecimal("1");
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getTenantInternalId();
@@ -989,6 +991,8 @@ public class EmAnalyticsObjectUtilTest
 				result = false;
 				search.getParameters();
 				result = params;
+				emAnalyticsSearch.getSystemSearch();
+				result = new BigDecimal("1");
 				emAnalyticsSearch.getEmAnalyticsSearchParams();
 				result = emAnalyticsSearchParams;
 				TenantContext.getContext();
