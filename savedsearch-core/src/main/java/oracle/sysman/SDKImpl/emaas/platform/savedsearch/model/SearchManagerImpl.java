@@ -46,7 +46,7 @@ public class SearchManagerImpl extends SearchManager
 
 	//  LoggergetSearchListByCategoryId
 	private static final Logger LOGGER = LogManager.getLogger(SearchManagerImpl.class);
-	private static final Long DEFAULT_TENANT_ID = -11L;
+	public static final Long DEFAULT_TENANT_ID = -11L;
 	private static final String DEFAULT_CURRENT_USER = "ORACLE";
 	public static final SearchManagerImpl SEARCH_MANAGER = new SearchManagerImpl();
 	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 and e.owner in ('ORACLE',:userName) order by e.lastModificationDate DESC ";
@@ -1033,17 +1033,20 @@ public class SearchManagerImpl extends SearchManager
 
 							if (obj instanceof FolderImpl && search.getFolderId() == null) {
 								folder = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
+								folder.setTenantId(TenantContext.getContext().getTenantInternalId());
 								em.persist(folder);
 								search.setFolderId(folder.getFolderId());
 							}
 
 							if (cateObj instanceof CategoryImpl && search.getCategoryId() == null) {
 								EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
+								folder.setTenantId(TenantContext.getContext().getTenantInternalId());
 								em.persist(iCategory);
 								search.setCategoryId(iCategory.getCategoryId());
 							}
 
 							EmAnalyticsSearch newSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
+							newSearch.setTenantId(TenantContext.getContext().getTenantInternalId());
 							em.persist(newSearch);
 							tmpImportSrImpl.setId(newSearch.getId());
 							importedList.add(createSearchObject(newSearch, null));

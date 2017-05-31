@@ -554,6 +554,9 @@ class EmAnalyticsObjectUtil
 		Set<EmAnalyticsSearchParam> existingParams = Collections.synchronizedSet(searchEntity.getEmAnalyticsSearchParams());
 		Map<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam> newParams = new HashMap<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam>();
 		Long tenantId = TenantContext.getContext().getTenantInternalId();
+		if(searchEntity.getSystemSearch().compareTo(new BigDecimal("1")) == 0){
+			tenantId = SearchManagerImpl.DEFAULT_TENANT_ID;
+		}
 		if (params != null) {
 			for (SearchParameter param : params) {
 				EmAnalyticsSearchParam newSearchParam = new EmAnalyticsSearchParam();
@@ -566,7 +569,7 @@ class EmAnalyticsObjectUtil
 				newSearchParam.setEmAnalyticsSearch(searchEntity);
 				newSearchParam.setParamAttributes(param.getAttributes());
 				newSearchParam.setParamType(new BigDecimal(param.getType().getIntValue()));
-				newSearchParam.setTenantId(TenantContext.getContext().getTenantInternalId());
+				newSearchParam.setTenantId(tenantId);
 				if (param.getType() == ParameterType.STRING) {
 					newSearchParam.setParamValueStr(param.getValue());
 				}
