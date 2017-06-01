@@ -47,8 +47,6 @@ public class MetaDataRetriever {
     private static final String SERVICENAME_ORCHESTRATION = "CosFacadeService";
     private static final String SERVICENAME_UDE = "UDE";
 
-    //JUST FOR TEST TO BE DELETED
-    private static final String SERVICENAME_SAVEDSEARCH = "SavedSearch";
 
     static {
         CATEGORY_MAP.put(SERVICENAME_LA, CategoryName.LA.categoryId);
@@ -57,8 +55,6 @@ public class MetaDataRetriever {
         CATEGORY_MAP.put(SERVICENAME_APM, CategoryName.APM.categoryId);
         CATEGORY_MAP.put(SERVICENAME_SECURITY_ANALYTICS, CategoryName.SMA.categoryId);
         CATEGORY_MAP.put(SERVICENAME_ORCHESTRATION, CategoryName.OCS.categoryId);
-        //JUST FOR TEST TO BE DELETED
-        CATEGORY_MAP.put(SERVICENAME_SAVEDSEARCH, CategoryName.UDE.categoryId);
 
         FOLDER_MAP.put(SERVICENAME_LA, FolderName.LA.folderId);
         FOLDER_MAP.put(SERVICENAME_UDE, FolderName.UDE.folderId);
@@ -66,8 +62,6 @@ public class MetaDataRetriever {
         FOLDER_MAP.put(SERVICENAME_APM, FolderName.APM.folderId);
         FOLDER_MAP.put(SERVICENAME_SECURITY_ANALYTICS, FolderName.SMA.folderId);
         FOLDER_MAP.put(SERVICENAME_ORCHESTRATION, FolderName.OCS.folderId);
-        //JUST FOR TEST TO BE DELETED
-        FOLDER_MAP.put(SERVICENAME_SAVEDSEARCH, FolderName.UDE.folderId);
     }
 
     public List<SearchImpl> getOobWidgetListByServiceName(String serviceName) throws EMAnalyticsFwkException {

@@ -403,8 +403,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrlSSL + NAV_ZDT_COUNTS));
 				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrlSSL + NAV_ZDT_TABLEROWS));
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrlSSL + NAV_ZDT_SYNC));
-				//JUST FOR TEST TO BE DELETED
-				links.add(new Link().withRel("oob/widgets").withHref(applicationUrl + "/savedsearch/v1/oob/widgets"));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 
