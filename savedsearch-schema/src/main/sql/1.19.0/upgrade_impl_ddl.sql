@@ -6,6 +6,6 @@ Rem
 Rem
 
 @&EMSAAS_SQL_ROOT/1.19.0/emaas_savesearch_compress_search_table.sql
-@&EMSAAS_SQL_ROOT/1.19.0/emaas_alter_table_constraint.sql
+
 
 
