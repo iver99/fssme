@@ -36,10 +36,7 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 //	@GeneratedValue(generator = "EMS_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
 	private BigInteger folderId;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATION_DATE")
-	private Date creationDate;
-	
+
 	private String description;
 
 	@Column(name = "DESCRIPTION_NLSID")
@@ -74,6 +71,30 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 	@Column(name = "DELETED")
 	private BigInteger deleted;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATION_DATE")
+	private Date creationDate;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "LAST_MODIFICATION_DATE")
+	private Date lastModificationDate;
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Date getLastModificationDate() {
+		return lastModificationDate;
+	}
+
+	public void setLastModificationDate(Date lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
+	}
+
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@OneToMany(mappedBy = "emAnalyticsFolder")
 	private Set<EmAnalyticsCategory> emAnalyticsCategories;
@@ -94,16 +115,6 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 
 	public EmAnalyticsFolder()
 	{
-	}
-
-	@Override
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-	@Override
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
 	}
 
 	public BigInteger getDeleted()
