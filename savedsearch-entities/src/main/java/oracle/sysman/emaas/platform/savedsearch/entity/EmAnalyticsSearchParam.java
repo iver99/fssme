@@ -24,7 +24,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @NamedQueries({
 	@NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
 })
-public class EmAnalyticsSearchParam extends EmBaseEntity implements Serializable
+public class EmAnalyticsSearchParam implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
