@@ -28,7 +28,6 @@ DEFINE  TENANT_ID = '&1'
 DEFINE EMSAAS_SQL_ROOT = '&2'
 
 
-@&EMSAAS_SQL_ROOT/1.19.0/emaas_savedsearch_seed_data_sec.sql &TENANT_ID
 /**
 --PLEASE READ!!
 --NO DDL IS ALLOWED in this file!! See EMCPDF-3333/EMCPSSF-465
