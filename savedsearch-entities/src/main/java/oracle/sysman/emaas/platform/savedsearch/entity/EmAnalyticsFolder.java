@@ -3,19 +3,10 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
@@ -44,6 +35,10 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 	@Column(name = "FOLDER_ID")
 //	@GeneratedValue(generator = "EMS_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
 	private BigInteger folderId;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATION_DATE")
+	private Date creationDate;
 	
 	private String description;
 
@@ -99,6 +94,16 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 
 	public EmAnalyticsFolder()
 	{
+	}
+
+	@Override
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	@Override
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	public BigInteger getDeleted()
