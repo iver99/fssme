@@ -216,7 +216,6 @@ public class WidgetManagerImpl extends WidgetManager
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_3);
 		paramList.add(tenantId);
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4);
-		paramList.add(tenantId);
 		if (widgetGroupId != null) {
 			sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_5);
 			paramList.add(widgetGroupId);
