@@ -7,6 +7,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.tool.InternalToolAPI;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
@@ -23,6 +24,7 @@ import static org.testng.Assert.*;
 @Test(groups = {"s2"})
 public class MetadataRefreshAPITest {
     private MetadataRefreshAPI metadataRefreshAPI;
+    private InternalToolAPI internalToolAPI;
     @Mocked
     MetaDataRetriever metaDataRetriever;
     @Mocked
@@ -68,7 +70,7 @@ public class MetadataRefreshAPITest {
                 result = searches;
             }
         };
-        metadataRefreshAPI = new MetadataRefreshAPI();
-        metadataRefreshAPI.getWidgetByName(widgetName);
+        internalToolAPI = new InternalToolAPI();
+        internalToolAPI.getWidgetByName(widgetName);
     }
 }
