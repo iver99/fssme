@@ -3,19 +3,10 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
@@ -36,7 +27,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)"),
 		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)") })
 //@SequenceGenerator(name = "EMS_ANALYTICS_FOLDERS_SEQ", sequenceName = "EMS_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
-public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
+public class EmAnalyticsFolder implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +35,8 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 	@Column(name = "FOLDER_ID")
 //	@GeneratedValue(generator = "EMS_ANALYTICS_FOLDERS_SEQ", strategy = GenerationType.SEQUENCE)
 	private BigInteger folderId;
-	
+
+
 	private String description;
 
 	@Column(name = "DESCRIPTION_NLSID")
@@ -78,6 +70,30 @@ public class EmAnalyticsFolder extends EmBaseEntity implements Serializable
 
 	@Column(name = "DELETED")
 	private BigInteger deleted;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATION_DATE")
+	private Date creationDate;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "LAST_MODIFICATION_DATE")
+	private Date lastModificationDate;
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Date getLastModificationDate() {
+		return lastModificationDate;
+	}
+
+	public void setLastModificationDate(Date lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
+	}
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@OneToMany(mappedBy = "emAnalyticsFolder")
