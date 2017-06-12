@@ -6,7 +6,6 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,7 +66,7 @@ public class MetaDataRetriever {
     public List<SearchImpl> getOobWidgetListByServiceName(String serviceName) throws EMAnalyticsFwkException {
         LOGGER.debug("Calling MetaDataRetriever.getOobWidgetListByServiceName");
         List<SearchImpl> oobWidgetList = new ArrayList<>();
-        VersionedLink versionedLink = RegistryLookupUtil.getServiceInternalLink(serviceName, "1.0+", "oob/widgets", null);
+        VersionedLink versionedLink = RegistryLookupUtil.getServiceInternalHttpLink(serviceName, "1.0+", "oob/widgets", null);
         if(versionedLink == null){
             LOGGER.error("{} has not provide api {} for fetching oob widgets", serviceName, "oob/widgets");
             throw new EMAnalyticsFwkException("{} has not provide api {} for fetching oob widgets",
