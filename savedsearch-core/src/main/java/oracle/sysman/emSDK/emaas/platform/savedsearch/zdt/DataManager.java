@@ -282,7 +282,11 @@ public class DataManager
 		long count = 0L;
 		try {
 			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_COUNT).setParameter(1, maxComparedDate);
-			count = ((Number) query.getSingleResult()).longValue();
+			List<Object> result = query.getResultList();
+			if (result != null && result.size() == 1) {
+				count =  ((Number)result.get(0)).longValue();
+			}
+
 		}
 		catch (Exception e) {
 			logger.error("Error occured when get all category count!" , e.getLocalizedMessage());
@@ -303,7 +307,10 @@ public class DataManager
 		long count = 0l;
 		try {
 			Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT).setParameter(1, maxComparedDate);
-			count = ((Number) query.getSingleResult()).longValue();
+			List<Object> result = query.getResultList();
+			if (result != null && result.size() == 1) {
+				count =  ((Number)result.get(0)).longValue();
+			}
 		}
 		catch (Exception e) {
 			logger.error("Error occured when get all folder count!" , e.getLocalizedMessage());
@@ -323,7 +330,10 @@ public class DataManager
 		long count = 0l;
 		try {
 			Query query = em.createNativeQuery(SQL_ALL_SEARCH_COUNT).setParameter(1, maxComparedDate);
-			count = ((Number) query.getSingleResult()).longValue();
+			List<Object> result = query.getResultList();
+			if (result != null && result.size() == 1) {
+				count =  ((Number)result.get(0)).longValue();
+			}
 		}
 		catch (Exception e) {
 			logger.error("Error occured when get all search count!",e.getLocalizedMessage());
@@ -336,7 +346,10 @@ public class DataManager
 		long count = 0l;
 		try {
 			Query query = em.createNativeQuery(SQL_ALL_SEARCH__PARAM_COUNT).setParameter(1, maxComparedDate);
-			count = ((Number) query.getSingleResult()).longValue();
+			List<Object> result = query.getResultList();
+			if (result != null && result.size() == 1) {
+				count =  ((Number)result.get(0)).longValue();
+			}
 		}
 		catch (Exception e) {
 			logger.error("Error occured when get all search params count!",e.getLocalizedMessage());
@@ -348,7 +361,10 @@ public class DataManager
 		long count = 0l;
 		try {
 			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_PARAM_COUNT).setParameter(1, maxComparedDate);
-			count = ((Number) query.getSingleResult()).longValue();
+			List<Object> result = query.getResultList();
+			if (result != null && result.size() == 1) {
+				count =  ((Number)result.get(0)).longValue();
+			}
 		}
 		catch (Exception e) {
 			logger.error("Error occured when get all category params count!",e.getLocalizedMessage());

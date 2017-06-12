@@ -222,10 +222,12 @@ public class DataManagerTest
 	public void testGetAllCategoryCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
+		final List<Object> data = new ArrayList<Object>();
+		data.add("123");
 		new Expectations(){
 	            {
-	            	query.getSingleResult();
-	                result = 1;
+	            	query.getResultList();
+	                result = data;
 	            }
 	        };
 	        dataManager.getAllCategoryCount(entityManager, "2017-05-23 16:19:02");
@@ -235,10 +237,12 @@ public class DataManagerTest
 	public void testGetAllFolderCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
+		final List<Object> data = new ArrayList<Object>();
+		data.add("123");
 		new Expectations(){
             {
-            	query.getSingleResult();
-                result = 1;
+            	query.getResultList();
+                result = data;
             }
         };
         dataManager.getAllFolderCount(entityManager, "2017-05-23 16:19:02");
@@ -249,13 +253,47 @@ public class DataManagerTest
 	public void testGetAllSearchCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
+		final List<Object> data = new ArrayList<Object>();
+		data.add("123");
 		new Expectations(){
             {
-            	query.getSingleResult();
-                result = 1;
+            	query.getResultList();
+                result = data;
             }
         };
         dataManager.getAllSearchCount(entityManager, "2017-05-23 16:19:02");
+		
+	}
+	
+	@Test
+	public void testGetAllSearchParamCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query)
+	{
+		final List<Object> data = new ArrayList<Object>();
+		data.add("123");
+		new Expectations(){
+            {
+            	query.getResultList();
+                result = data;
+            }
+        };
+        dataManager.getAllSearchParamsCount(entityManager, "2017-05-23 16:19:02");
+		
+	}
+	
+	@Test
+	public void testGetAllCategoryParamCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query)
+	{
+		final List<Object> data = new ArrayList<Object>();
+		data.add("123");
+		new Expectations(){
+            {
+            	query.getResultList();
+                result = data;
+            }
+        };
+        dataManager.getAllCategoryPramsCount(entityManager, "2017-05-23 16:19:02");
 		
 	}
 	
