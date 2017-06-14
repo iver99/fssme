@@ -39,12 +39,15 @@ public class MetaDataRetriever {
     }
     private static final Map<String, Integer> CATEGORY_MAP = new HashMap<>();
     private static final Map<String, Integer> FOLDER_MAP = new HashMap<>();
-    private static final String SERVICENAME_APM = "ApmDataServer";
-    private static final String SERVICENAME_ITA = "TargetAnalytics";
-    private static final String SERVICENAME_LA = "LogAnalyticsProcessor";
-    private static final String SERVICENAME_SECURITY_ANALYTICS = "SecurityAnalytics";
-    private static final String SERVICENAME_ORCHESTRATION = "CosFacadeService";
-    private static final String SERVICENAME_UDE = "UDE";
+    // TODO fix the correct service name in SM
+    public static final String SERVICENAME_APM = "ApmUI";
+    public static final String SERVICENAME_ITA = "emcitas-ui-apps";
+    public static final String SERVICENAME_LA = "LogAnalyticsUI";
+//    public static final String SERVICENAME_MONITORING = "Monitoring";
+    public static final String SERVICENAME_SECURITY_ANALYTICS = "SecurityAnalyticsUI";
+    public static final String SERVICENAME_ORCHESTRATION = "CosUIService";
+//    public static final String SERVICENAME_COMPLIANCE = "Compliance";
+    public static final String SERVICENAME_UDE = "TargetAnalytics";
 
 
     static {
