@@ -35,6 +35,7 @@ dependencies
 	earlib getProjectArtifact('registry-client')
 	earlib getProjectArtifact('zookeeper')
 	earlib getProjectArtifact('emaas-platform-tenant-sdk')
+	earlib getProjectArtifact('multi-instances-sdk')
 	earlib getProjectArtifact('httpclient')
 	earlib getProjectArtifact('httpcore')
 	earlib getProjectArtifact('httpmime')
