@@ -61,6 +61,7 @@ public class SubsriptionApps2Util {
     public static final String V1_TENANT = "V1_MODEL";
     public static final String V2_TENANT = "V2_MODEL";
     public static final String V3_TENANT = "V3_MODEL";
+    public static final String V4_TENANT = "V4_MODEL";
 
 
     /**
@@ -81,6 +82,12 @@ public class SubsriptionApps2Util {
         List<String> appList = new ArrayList<>();
         for (SubscriptionApps subscriptionApps : subscriptionAppsList) {
             List editions = getEditions(subscriptionApps.getEditionComponentsList());
+            boolean isV4Tenant = false;
+            //support v4 tenant and not break v2 tenant.
+            if(editions!=null && !editions.isEmpty() && editions.size() == 5){
+                isV4Tenant = true;
+                LOGGER.info("V4 tenant is detected...");
+            }
             LOGGER.info("editions is {}",editions);
             //V2 handling
             if (OMC_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
@@ -164,7 +171,6 @@ public class SubsriptionApps2Util {
                 }
                 LOGGER.info("Service type is {} and subscribed apps is {}", OMC_SERVICE_TYPE, appSet);
                 appList.addAll(appSet);
-                continue;
             }
             if (OSMACC_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
                 LOGGER.info("Service type is {}",OSMACC_SERVICE_TYPE);
@@ -188,21 +194,18 @@ public class SubsriptionApps2Util {
                                 appSet.add(COMPLIANCE_SERVICE_TYPE);
                                 AppsInfo appsInfo1 = new AppsInfo(COMPLIANCE_SERVICE_TYPE, V2_TENANT,editions);
                                 appsInfoList.add(appsInfo1);
-                                continue;
                             }
                             if (e.getEdition().contains(SECURITY_MONITORING_ANALYTICS_EDITION)) {
                                 LOGGER.info("Service suite {} is {}",OSMACC_SERVICE_TYPE,CONFIGURATION_COMPLIANCE_EDITION);
                                 appSet.add(SECURITYSERVICE_SERVICE_TYPE);
                                 AppsInfo appsInfo1 = new AppsInfo(SECURITYSERVICE_SERVICE_TYPE, V2_TENANT,editions);
                                 appsInfoList.add(appsInfo1);
-                                continue;
                             }
                         }
                     }
                 }
                 LOGGER.info("Service type is {} and subscribed apps is {}", OSMACC_SERVICE_TYPE, appSet);
                 appList.addAll(appSet);
-                continue;
             }
             //V3 handling
 			if (OMCSE_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
@@ -283,7 +286,53 @@ public class SubsriptionApps2Util {
                 appsInfoList.add(appsInfo);
                 appList.add(subscriptionApps.getServiceType());
             }
+            //v4 handling
+            if(OMC_SERVICE_TYPE.equals(subscriptionApps.getServiceType()) && isV4Tenant){
+                LOGGER.info("V4 handling, Service Type is []", OMC_SERVICE_TYPE);
+                AppsInfo appsInfo = new AppsInfo(OMC_SERVICE_TYPE, V4_TENANT, editions);
+                appsInfoList.add(appsInfo);
+                appSet.add(OMC_SERVICE_TYPE);
+                //map into 7 applications
+                if (!checkExist(appsInfoList, APM_SERVICE_TYPE)) {
+                    appSet.add(APM_SERVICE_TYPE);
+                    AppsInfo appsInfo1 = new AppsInfo(APM_SERVICE_TYPE, V4_TENANT, editions);
+                    appsInfoList.add(appsInfo1);
+                }
+                if (!checkExist(appsInfoList, MONITORING_SERVICE_TYPE)) {
+                    appSet.add(MONITORING_SERVICE_TYPE);
+                    AppsInfo appsInfo2 = new AppsInfo(MONITORING_SERVICE_TYPE, V4_TENANT, editions);
+                    appsInfoList.add(appsInfo2);
+                }
+                if (!checkExist(appsInfoList, ITANALYTICS_SERVICE_TYPE)) {
+                    appSet.add(ITANALYTICS_SERVICE_TYPE);
+                    AppsInfo appsInfo3 = new AppsInfo(ITANALYTICS_SERVICE_TYPE, V4_TENANT, editions);
+                    appsInfoList.add(appsInfo3);
+                }
+                if (!checkExist(appsInfoList, ORCHESTRATION_SERVICE_TYPE)) {
+                    appSet.add(ORCHESTRATION_SERVICE_TYPE);
+                    AppsInfo appsInfo4 = new AppsInfo(ORCHESTRATION_SERVICE_TYPE, V4_TENANT, editions);
+                    appsInfoList.add(appsInfo4);
+                }
+                if (!checkExist(appsInfoList, LOGANALYTICS_SERVICE_TYPE)) {
+                    appSet.add(LOGANALYTICS_SERVICE_TYPE);
+                    AppsInfo appsInfo1 = new AppsInfo(LOGANALYTICS_SERVICE_TYPE, V4_TENANT, editions);
+                    appsInfoList.add(appsInfo1);
+                }
+                if (!checkExist(appsInfoList, COMPLIANCE_SERVICE_TYPE)) {
+                    appSet.add(COMPLIANCE_SERVICE_TYPE);
+                    AppsInfo appsInfo1 = new AppsInfo(COMPLIANCE_SERVICE_TYPE, V4_TENANT, editions);
+                    appsInfoList.add(appsInfo1);
+                }
+                if (!checkExist(appsInfoList, SECURITYSERVICE_SERVICE_TYPE)) {
+                    appSet.add(SECURITYSERVICE_SERVICE_TYPE);
+                    AppsInfo appsInfo1 = new AppsInfo(SECURITYSERVICE_SERVICE_TYPE, V4_TENANT, editions);
+                    appsInfoList.add(appsInfo1);
+                }
+                LOGGER.info("Service type is {} and subscribed apps is {}", OMC_SERVICE_TYPE, appSet);
+                appList.addAll(appSet);
+            }
         }
+
         LOGGER.info("After Mapping AppsInfo is {}",appsInfoList);
         LOGGER.info("After Mapping app list is {}",appList);
         tenantSubscriptionInfo.setAppsInfoList(appsInfoList);

@@ -105,10 +105,10 @@ public class TenantSubscriptionUtil
 						&& !TenantSubscriptionUtil.isCategoryHiddenInWidgetSelector(cat, includeDashboardIneligible)) {
 					resultList.add(cat);
 				}
-				//only current cat is UDE cat, and for v2/v3 tenant, and result list did not contains it yet, then we add.
+				//only current cat is UDE cat, and for v2/v3/v4 tenant, and result list did not contains it yet, then we add.
 				if("Data Explorer".equals(cat.getName()) && !isV1Tenant && !resultList.contains(cat)){
 					resultList.add(cat);
-					LOGGER.info("Adding UDE widget group info into result for v2/v3 tenant");
+					LOGGER.info("Adding UDE widget group info into result for v2/v3/v4 tenant");
 				}
 			}
 		}
@@ -125,8 +125,9 @@ public class TenantSubscriptionUtil
 		if(tenantSubscriptionInfo.getAppsInfoList()!=null && !tenantSubscriptionInfo.getAppsInfoList().isEmpty()){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
 				if(SubsriptionApps2Util.V2_TENANT.equals(appsInfo.getLicVersion()) ||
-                        SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion())){
-					LOGGER.info("Check tenant version is V1/V2 tenant.");
+                        SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion()) ||
+						SubsriptionApps2Util.V4_TENANT.equals(appsInfo.getLicVersion())){
+					LOGGER.info("Check tenant version is V2/V3/v4 tenant.");
 					return false;
 				}
 			}
@@ -152,7 +153,7 @@ public class TenantSubscriptionUtil
 				providers.addAll(providerList);
 			}
 		}
-		//handle v2/v3
+		//handle v2/v3/v4
 		if(!checkLicVersion(tenantSubscriptionInfo) && !subscribedApps.isEmpty() && !providers.contains(SERVICE_PROVIDER_NAME_TA)){
 			providers.add(SERVICE_PROVIDER_NAME_TA);
 		}
@@ -273,7 +274,7 @@ public class TenantSubscriptionUtil
 	/**
 	 * this method is for check subscrib apps license version
 	 * if version is V1 return true;
-	 * if version is V2/V3 return false;
+	 * if version is V2/V3/v4 return false;
 	 * @param tenantSubscriptionInfo
 	 * @return
 	 */
@@ -281,8 +282,9 @@ public class TenantSubscriptionUtil
 		if(tenantSubscriptionInfo!=null && tenantSubscriptionInfo.getAppsInfoList()!=null){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
 				if(SubsriptionApps2Util.V2_TENANT.equals(appsInfo.getLicVersion()) ||
-						SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion())){
-					//V2/V3
+						SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion()) ||
+						SubsriptionApps2Util.V4_TENANT.equals(appsInfo.getLicVersion())){
+					//V2/V2/v3
 					return false;
 				}
 			}
