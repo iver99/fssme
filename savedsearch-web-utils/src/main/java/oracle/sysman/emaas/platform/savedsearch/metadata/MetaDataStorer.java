@@ -2,8 +2,10 @@ package oracle.sysman.emaas.platform.savedsearch.metadata;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ResourceBundleManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmsResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +21,7 @@ public class MetaDataStorer {
     public static void storeOobWidget(List<SearchImpl> oobWidgetList) throws EMAnalyticsFwkException {
         LOGGER.debug("Calling MetaStorer.storeOobWidget");
         if(oobWidgetList == null || oobWidgetList.isEmpty()){
-            LOGGER.debug("The oobWidget is empty");
+            LOGGER.error("The oobWidget is empty");
             return;
         }
         SearchManager searchManager = SearchManager.getInstance();
@@ -44,5 +46,30 @@ public class MetaDataStorer {
         }
 
 
+    }
+
+    public static void storeResourceBundle(List<EmsResourceBundle> emsResourceBundles) {
+        LOGGER.error("Calling MetaDataStorer.storeResourceBundle");
+        if(emsResourceBundles == null || emsResourceBundles.isEmpty()) {
+            LOGGER.error("the resource bundle is empty");
+            return;
+        }
+
+        ResourceBundleManager resourceBundleManager = ResourceBundleManager.getInstance();
+        String serviceName = emsResourceBundles.get(0).getServiceName();
+
+        try {
+            resourceBundleManager.cleanResourceBundleByServiceName(serviceName);
+        } catch (EMAnalyticsFwkException e) {
+            LOGGER.error("Fall into error while cleaning resource bundle by service name {}",e.getLocalizedMessage());
+        }
+        LOGGER.error("start to persist the resource bundle");
+        try {
+            for (EmsResourceBundle emsResourceBundle : emsResourceBundles) {
+                resourceBundleManager.persistResourceBundle(emsResourceBundle);
+            }
+        }catch (EMAnalyticsFwkException e){
+            LOGGER.error("Fall into error while saving resource bundle by service name {}",e.getLocalizedMessage());
+        }
     }
 }

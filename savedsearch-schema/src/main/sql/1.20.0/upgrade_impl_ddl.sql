@@ -6,5 +6,6 @@ Rem
 Rem
 
 @&EMSAAS_SQL_ROOT/1.20.0/emaas_alter_table_constraint.sql
+@&EMSAAS_SQL_ROOT/1.20.0/create_table_resource_bundle.sql
 
 

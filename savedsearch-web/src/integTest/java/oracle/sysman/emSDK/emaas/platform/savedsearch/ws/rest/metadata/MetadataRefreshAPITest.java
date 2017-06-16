@@ -31,25 +31,6 @@ public class MetadataRefreshAPITest {
     MetaDataStorer metaDataStorer;
     @Mocked
     DependencyStatus dependencyStatus;
-    @Test
-    public void testRefreshOOB() throws Exception {
-        String serviceName = "serviceName";
-        final List<SearchImpl> oobWidgetList = new ArrayList<>();
-        new Expectations(){
-            {
-                DependencyStatus.getInstance();
-                result = dependencyStatus;
-                dependencyStatus.isDatabaseUp();
-                result = true;
-                metaDataRetriever.getOobWidgetListByServiceName(anyString);
-                result = oobWidgetList;
-                MetaDataStorer.storeOobWidget(oobWidgetList);
-            }
-        };
-        metadataRefreshAPI = new MetadataRefreshAPI();
-        metadataRefreshAPI.refreshOOB(serviceName);
-
-    }
 
     @Mocked
     SearchManager searchManager;

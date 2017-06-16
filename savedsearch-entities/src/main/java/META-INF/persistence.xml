@@ -15,6 +15,7 @@
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVer</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVerPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmsResourceBundle</class>
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />
 			<property name="eclipselink.jdbc.batch-writing" value="Oracle-JDBC" />
@@ -56,6 +57,7 @@
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVer</class>
 		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSchemaVerPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmsResourceBundle</class>
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />
 			<property name="eclipselink.jdbc.batch-writing" value="Oracle-JDBC" />

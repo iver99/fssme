@@ -47,7 +47,7 @@ public class SearchManagerImpl extends SearchManager
 	//  LoggergetSearchListByCategoryId
 	private static final Logger LOGGER = LogManager.getLogger(SearchManagerImpl.class);
 	public static final Long DEFAULT_TENANT_ID = -11L;
-	private static final String DEFAULT_CURRENT_USER = "ORACLE";
+	public static final String DEFAULT_CURRENT_USER = "ORACLE";
 	public static final SearchManagerImpl SEARCH_MANAGER = new SearchManagerImpl();
 	private static final String LASTACCESS_ORDERBY = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 and e.owner in ('ORACLE',:userName) order by e.lastModificationDate DESC ";
 	private static final String LASTACCESS_ORDERBY_FOR_INTERNAL_TENANT = "SELECT e FROM EmAnalyticsSearch e  where e.deleted=0 order by e.lastModificationDate DESC ";
@@ -1195,6 +1195,8 @@ public class SearchManagerImpl extends SearchManager
 			 LOGGER.error("Persistence error while saving the search: " + search.getName(), pe);
 			 throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
 					 EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, pe);
+		 }catch (Exception e){
+			 LOGGER.error(e.getMessage());
 		 }finally {
 			 if (entityManager != null) entityManager.close();
 		 }

@@ -7,6 +7,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatab
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.thread.MetadataRefreshRunnable;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.thread.NlsRefreshRunnable;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.thread.OobRefreshRunnable;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
@@ -34,23 +37,22 @@ public class MetadataRefreshAPI {
     @Path("oob/{serviceName}")
     public Response refreshOOB(@PathParam("serviceName") String serviceName) {
         LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/refresh/oob/{}", serviceName);
-        String returnMessage = "Refresh the OOB Widgets successfully.";
-        int statusCode = 200;
-        List<SearchImpl> oobWidgetList;
-        LOGGER.debug("Get Widget List From integrator.");
-        try {
-            if (!DependencyStatus.getInstance().isDatabaseUp()) {
-                throw new EMAnalyticsDatabaseUnavailException();
-            }
-             oobWidgetList = new MetaDataRetriever().getOobWidgetListByServiceName(serviceName);
-             LOGGER.debug("Store Widget List.");
-             MetaDataStorer.storeOobWidget(oobWidgetList);
-        } catch (EMAnalyticsFwkException e) {
-             statusCode = 500;
-             returnMessage = e.getLocalizedMessage();
-        }
+        MetadataRefreshRunnable oobRunnable = new OobRefreshRunnable();
+        oobRunnable.setServiceName(serviceName);
+        Thread thread = new Thread(oobRunnable, "Refresh " + serviceName + " OOB.");
+        thread.start();
+        return Response.ok().build();
+    }
 
-        return Response.status(statusCode).entity(returnMessage).build();
+    @PUT
+    @Path("nls/{serviceName}")
+    public Response refreshNLS(@PathParam("serviceName") String serviceName) {
+        LOGGER.error("Starting a new thread for fresh {} resource bundles.", serviceName);
+        MetadataRefreshRunnable nlsRunnable = new NlsRefreshRunnable();
+        nlsRunnable.setServiceName(serviceName);
+        Thread thread = new Thread(nlsRunnable, "Refresh " + serviceName + " resource bundles.");
+        thread.start();
+        return Response.ok().build();
     }
 
 
