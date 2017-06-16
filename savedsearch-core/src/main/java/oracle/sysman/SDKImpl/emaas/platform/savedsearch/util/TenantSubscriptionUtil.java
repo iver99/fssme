@@ -155,6 +155,7 @@ public class TenantSubscriptionUtil
 		}
 		//handle v2/v3/v4
 		if(!checkLicVersion(tenantSubscriptionInfo) && !subscribedApps.isEmpty() && !providers.contains(SERVICE_PROVIDER_NAME_TA)){
+			LOGGER.info("Adding TargetAnalytics into providers...");
 			providers.add(SERVICE_PROVIDER_NAME_TA);
 		}
 		LOGGER.debug("Get subscribed provider names: {} for tenant {}",
