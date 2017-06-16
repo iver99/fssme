@@ -90,7 +90,7 @@ public class SubsriptionApps2Util {
             }
             LOGGER.info("editions is {}",editions);
             //V2 handling
-            if (OMC_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
+            if (OMC_SERVICE_TYPE.equals(subscriptionApps.getServiceType()) && !isV4Tenant) {
                 LOGGER.info("Service Type is {}",OMC_SERVICE_TYPE);
                 AppsInfo appsInfo = new AppsInfo(OMC_SERVICE_TYPE, V2_TENANT,editions);
                 appsInfoList.add(appsInfo);
@@ -288,7 +288,7 @@ public class SubsriptionApps2Util {
             }
             //v4 handling
             if(OMC_SERVICE_TYPE.equals(subscriptionApps.getServiceType()) && isV4Tenant){
-                LOGGER.info("V4 handling, Service Type is []", OMC_SERVICE_TYPE);
+                LOGGER.info("V4 handling, Service Type is {}", OMC_SERVICE_TYPE);
                 AppsInfo appsInfo = new AppsInfo(OMC_SERVICE_TYPE, V4_TENANT, editions);
                 appsInfoList.add(appsInfo);
                 appSet.add(OMC_SERVICE_TYPE);
@@ -361,7 +361,7 @@ public class SubsriptionApps2Util {
         if (list !=null && !list.isEmpty()){
             for(AppsInfo appsInfo : list){
                 if(serviceName.equals(appsInfo.getId())){
-                    LOGGER.info("Duplicate app service entry found, will not put into list!");
+                    LOGGER.info("Duplicate app service entry found: {}, will not put into list!",appsInfo.getId());
                     return true;
                 }
             }
