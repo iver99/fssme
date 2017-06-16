@@ -3,7 +3,6 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 
 import java.io.IOException;
 import java.math.BigInteger;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +23,9 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.LeaseInfo
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -288,8 +290,13 @@ public class SaveSearchRowsComparatorTest
 	}
 	
 	@Test
-	 public void testCompare() throws ZDTException {
+	 public void testCompare() throws ZDTException, JSONException {
 		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+		final JSONObject obj = new JSONObject();
+		JSONArray array = new JSONArray();
+		array.put(123456);
+		obj.put("client1", array);
+		obj.put("client2", array);
     	new Expectations(){
             {
                 abstractComparator.getOMCInstances();
@@ -300,7 +307,8 @@ public class SaveSearchRowsComparatorTest
         };
         SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
 	
-		drc.compare(null, null, null, "2017-05-25 16:03:02");
+		drc.compare(null, null, null, "2017-05-25 16:03:02",true,obj);
+		drc.compare(null, null, null, "2017-05-25 16:03:02",false,obj);
 	}
 	
 	@Test

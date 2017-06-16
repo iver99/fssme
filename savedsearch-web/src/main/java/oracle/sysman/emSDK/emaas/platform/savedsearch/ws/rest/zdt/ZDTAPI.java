@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -68,11 +69,57 @@ public class ZDTAPI
 	{
 		super();
 	}
+	
+	@GET
+	@Path("tenants")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllTenants() {
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/tenants");
+		EntityManager em = null;
+		JSONObject obj = new JSONObject();
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
+			List<Object> tenants = DataManager.getInstance().getAllTenants(em);
+			JSONArray array = new JSONArray();
+			if (tenants != null) {
+				for (Object tenant:tenants) {
+					array.put(tenant.toString());
+				}
+			}
+			boolean flag = true;
+			if (lastComparisonDate == null) {
+				flag =  false;
+			}
+			obj.put("isCompared", flag);
+			obj.put("tenants", array);
+			return Response.status(Status.OK).entity(obj).build();
+		} catch (Exception e) {
+			logger.error("errors in getting all tenants:"+e.getLocalizedMessage());
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+	
+	public Date getCurrentUTCTime()
+	{
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		long localNow = System.currentTimeMillis();
+		long offset = cal.getTimeZone().getOffset(localNow);
+		Date utcDate = new Date(localNow - offset);
+		
+		return utcDate;
+	}
+	
 
 	@GET
 	@Path("tablerows")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllTableData(@QueryParam("comparisonType") String type, @QueryParam("maxComparedDate") String maxComparedData)
+	public Response getAllTableData(@QueryParam("comparisonType") String type, @QueryParam("maxComparedDate") String maxComparedDate,
+			@QueryParam("tenant") String tenant)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/tablerows?comparisonType=");
 		JSONObject obj = new JSONObject();
@@ -80,32 +127,37 @@ public class ZDTAPI
 		if (type == null) {
 			type = "incremental";
 		}
+		if (maxComparedDate == null) {
+			Date date = getCurrentUTCTime();
+			maxComparedDate = getTimeString(date);
+		}
 		logger.info("comparisonType in tableRows: "+type);
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
-			JSONArray tableData = getCategoryTableData(em,type, lastComparisonDate,maxComparedData);
+			JSONArray tableData = getCategoryTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
 			obj.put(TABLE_CATEGORY, tableData);
-			tableData = getCategoryParamTableData(em,type, lastComparisonDate, maxComparedData);
+			tableData = getCategoryParamTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
 			obj.put(TABLE_CATEGORY_PARAMS, tableData);
-			tableData = getFolderTableData(em,type, lastComparisonDate, maxComparedData);
+			tableData = getFolderTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
 			obj.put(TABLE_FOLDERS, tableData);
-			tableData = getFolderTableData(em,type, lastComparisonDate, maxComparedData);
-			obj.put(TABLE_FOLDERS, tableData);
-			tableData = getSearchTableData(em,type, lastComparisonDate, maxComparedData);
+			tableData = getSearchTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
 			obj.put(TABLE_SEARCH, tableData);
-			tableData = getSearchParamsTableData(em,type, lastComparisonDate, maxComparedData);
+			tableData = getSearchParamsTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
 			obj.put(TABLE_SEARCH_PARAMS, tableData);
+			return Response.status(Status.OK).entity(obj).build();
 		}
 		catch (JSONException e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
-		} finally {
+		} catch (Exception e1) {
+			logger.error(e1.getLocalizedMessage(), e1);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e1.getLocalizedMessage()).build();
+		}finally {
 			if (em != null) {
 				em.close();
 			}
 		}
-		return Response.status(Status.OK).entity(obj).build();
 	}
 
 	@GET
@@ -126,7 +178,7 @@ public class ZDTAPI
 			long categoryPramCount = DataManager.getInstance().getAllCategoryPramsCount(em, maxComparedData);
 			logger.debug("ZDT counters: category count - {}, folder count - {}, search count - {}, searchParams count - {}, categoryParam count - {}"
 					, categoryCount, folderCount,searcheCount, searchPramCount,categoryPramCount);
-			ZDTCountEntity zdte = new ZDTCountEntity(categoryCount, folderCount, searcheCount,searchPramCount,categoryPramCount);
+			ZDTCountEntity zdte = new ZDTCountEntity(categoryCount, folderCount, searcheCount,categoryPramCount,searchPramCount);
 			
 			try {
 				message = JSONUtil.objectToJSONString(zdte);
@@ -367,21 +419,21 @@ public class ZDTAPI
 		return Response.status(statusCode).entity(message).build();
 	}
 
-	private JSONArray getCategoryParamTableData(EntityManager em, String type, String date,String maxComparedData)
+	private JSONArray getCategoryParamTableData(EntityManager em, String type, String date,String maxComparedData,String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryParamTableData(em,type, date, maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getCategoryParamTableData(em,type, date, maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_CATEGORY_PARAMS, list);
 	}
 
-	private JSONArray getCategoryTableData(EntityManager em, String type, String date,String maxComparedData)
+	private JSONArray getCategoryTableData(EntityManager em, String type, String date,String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryTableData(em,type, date, maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getCategoryTableData(em,type, date, maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_CATEGORY, list);
 	}
 
-	private JSONArray getFolderTableData(EntityManager em, String type, String date,String maxComparedData)
+	private JSONArray getFolderTableData(EntityManager em, String type, String date,String maxComparedData,String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getFolderTableData(em,type, date, maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getFolderTableData(em,type, date, maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_FOLDERS, list);
 	}
 
@@ -393,7 +445,7 @@ public class ZDTAPI
 	{
 		if (list == null) {
 			logger.warn("Trying to get a JSON object for {} from a null object/list. Returning null JSON object", dataName);
-			return null;
+			return new JSONArray();
 		}
 		JSONArray array = new JSONArray();
 		for (Map<String, Object> row : list) {
@@ -403,15 +455,15 @@ public class ZDTAPI
 		return array;
 	}
 
-	private JSONArray getSearchParamsTableData(EntityManager em, String type, String date, String maxComparedData)
+	private JSONArray getSearchParamsTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getSearchParamTableData(em,type, date, maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getSearchParamTableData(em,type, date, maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_SEARCH_PARAMS, list);
 	}
 
-	private JSONArray getSearchTableData(EntityManager em, String type, String date, String maxComparedData)
+	private JSONArray getSearchTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getSearchTableData(em,type, date, maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getSearchTableData(em,type, date, maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_SEARCH, list);
 	}
 

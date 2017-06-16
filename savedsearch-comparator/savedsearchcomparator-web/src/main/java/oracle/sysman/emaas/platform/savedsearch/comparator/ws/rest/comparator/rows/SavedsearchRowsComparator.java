@@ -12,12 +12,15 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
@@ -62,13 +65,81 @@ public class SavedsearchRowsComparator extends AbstractComparator
 				}
 			}
 	}
+	
+	public ZDTTableRowEntity combineRowEntity(List<ZDTTableRowEntity> rowEntityList){
+		ZDTTableRowEntity finalEntity = new ZDTTableRowEntity();
+		List<SavedSearchCategoryRowEntity> category = new ArrayList<SavedSearchCategoryRowEntity>();
+		List<SavedSearchCategoryParamRowEntity> categoryParams = new ArrayList<SavedSearchCategoryParamRowEntity>();
+		List<SavedSearchFolderRowEntity> folder = new ArrayList<SavedSearchFolderRowEntity>();
+		List<SavedSearchSearchParamRowEntity> searchParams = new ArrayList<SavedSearchSearchParamRowEntity>();
+		List<SavedSearchSearchRowEntity> search = new ArrayList<SavedSearchSearchRowEntity>();
+		for (ZDTTableRowEntity entity : rowEntityList) {
+			if (entity.getSavedSearchCategory() != null && !entity.getSavedSearchCategory().isEmpty()) {
+				category.addAll(entity.getSavedSearchCategory());
+			}
+			if (entity.getSavedSearchCategoryParams()!= null && !entity.getSavedSearchCategoryParams().isEmpty()) {
+				categoryParams.addAll(entity.getSavedSearchCategoryParams());
+			}
+			if (entity.getSavedSearchFoldersy() != null && !entity.getSavedSearchFoldersy().isEmpty()) {
+				folder.addAll(entity.getSavedSearchFoldersy());
+			}
+			if (entity.getSavedSearchSearch() != null && !entity.getSavedSearchSearch().isEmpty()) {
+				search.addAll(entity.getSavedSearchSearch());
+			}
+			if (entity.getSavedSearchSearchParams() != null && !entity.getSavedSearchSearchParams().isEmpty()) {
+				searchParams.addAll(entity.getSavedSearchSearchParams());
+			}
+		}
+		finalEntity.setSavedSearchCategory(category);
+		finalEntity.setSavedSearchCategoryParams(categoryParams);
+		finalEntity.setSavedSearchFoldersy(folder);
+		finalEntity.setSavedSearchSearch(search);
+		finalEntity.setSavedSearchSearchParams(searchParams);
+		return finalEntity;
+	}
 
-	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant, String comparisonType, String maxComparedDate) throws ZDTException
+	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant, String comparisonType, 
+			String maxComparedDate, boolean iscompared, JSONObject tenantObj) throws ZDTException
 	{
 		try {
 			logger.info("Starts to compare the two ssf OMC instances: table by table and row by row");
+			ZDTTableRowEntity tre1 = null;
+			ZDTTableRowEntity tre2 = null;
+			if (!iscompared || comparisonType == "full") {
+				// for the first time comparing, fetch all table data tenant by tenant
+				// for client1
+				List<ZDTTableRowEntity> allRowEntitisForClient1 = new ArrayList<ZDTTableRowEntity>();
+				JSONArray array1 = tenantObj.getJSONArray("client1");
+				for (int i = 0; i < array1.length(); i++) {
+					String tenant = array1.get(i).toString();
+					ZDTTableRowEntity subTre = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType, maxComparedDate,tenant);
+					if (subTre == null) {
+						logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
+						logger.info("Completed to compare the two ssf OMC instances");
+						return null;
+					}
+					allRowEntitisForClient1.add(subTre);
+				}
+				tre1 = combineRowEntity(allRowEntitisForClient1);
+				
+				logger.info("tre1 search size = "+tre1.getSavedSearchSearch().size());
+				logger.info("tre1 search params size = "+tre1.getSavedSearchSearchParams().size());
+				// for client2
+				List<ZDTTableRowEntity> allRowEntitisForClient2 = new ArrayList<ZDTTableRowEntity>();
+				JSONArray array2 = tenantObj.getJSONArray("client2");
+				for (int i = 0; i < array2.length(); i++) {
+					String tenant = array2.get(i).toString();
+					ZDTTableRowEntity subTre = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType, maxComparedDate,tenant);
+					allRowEntitisForClient2.add(subTre);
+				}
+				tre2 = combineRowEntity(allRowEntitisForClient2);
+				logger.info("tre2 search size = "+tre2.getSavedSearchSearch().size());
+				logger.info("tre2 search params size = "+tre2.getSavedSearchSearchParams().size());
+			} else {
+				tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType, maxComparedDate, null);
+				tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType, maxComparedDate, null);
+			}
 			
- 			ZDTTableRowEntity tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType, maxComparedDate);
  			CountsEntity entity1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1, maxComparedDate);
 			if (entity1 == null) {
 				return null;
@@ -78,13 +149,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 					+ (entity1.getCountOfCategoryPrams() ==null?0L:entity1.getCountOfCategoryPrams())
 					+ (entity1.getCountOfCategoryPrams() ==null?0L:entity1.getCountOfCategoryPrams())
 					+ (entity1.getCountOfSearch()==null?0L:entity1.getCountOfSearch()));
- 			if (tre1 == null) {
-				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
-				logger.info("Completed to compare the two ssf OMC instances");
-				return null;
-			}
+ 			
 
-			ZDTTableRowEntity tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType, maxComparedDate);
 			CountsEntity entity2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2, maxComparedDate);
 			if (entity2 == null) {
 				return null;
@@ -94,11 +160,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 					+ (entity2.getCountOfCategoryPrams() ==null?0L:entity2.getCountOfCategoryPrams())
 					+ (entity2.getCountOfCategoryPrams() ==null?0L:entity2.getCountOfCategoryPrams())
 					+ (entity2.getCountOfSearch()==null?0L:entity2.getCountOfSearch()));
- 			if (tre2 == null) {
-				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
-				logger.info("Completed to compare the two SSF OMC instances");
-				return null;
-			}
+ 		
 			InstancesComparedData<ZDTTableRowEntity> cd = compareInstancesData(new InstanceData<ZDTTableRowEntity>(key1, client1, tre1, rowNum1),
 					new InstanceData<ZDTTableRowEntity>(key2, client2, tre2, rowNum2));
 			logger.info("Completed to compare the two SSF OMC instances");
@@ -294,14 +356,20 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private ZDTTableRowEntity retrieveRowsForSingleInstance(String tenantId, String userTenant,LookupClient lc, String comparisonType, String maxComparedDate) throws Exception, IOException, ZDTException
+	private ZDTTableRowEntity retrieveRowsForSingleInstance(String tenantId, String userTenant,LookupClient lc, String comparisonType,
+			String maxComparedDate, String tenant) throws Exception, IOException, ZDTException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
 		}
-		String url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
+		String url = null;
+		if (tenant != null) {
+			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8")+"&tenant="+tenant;
+		} else {
+			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
+		}	
 		logger.info("get table data url is "+url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
 		logger.info("Checking SSF OMC instance table rows. Response is " + response);
@@ -332,11 +400,22 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		return response;
 	}
 	
+	public String retrieveTenants(String tenantId, String userTenant, LookupClient client) throws Exception {
+		Link lk = getSingleInstanceUrl(client, "zdt/tenants", "http");
+		if (lk == null) {
+			logger.warn("get a null or empty link for omc instance!");
+			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
+		}
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
+		logger.info("checking tenants list " + response);
+		return response;
+	}
+	
 	public String saveComparatorStatus(String tenantId, String userTenant, LookupClient client, ZDTComparatorStatusRowEntity statusRowEntity) throws Exception{
 		Link lk = getSingleInstanceUrl(client, "zdt/compare/result", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
-			return "Errors:Get a null or empty link for one single instance!";
+			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
 		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
 		String entityStr = jsonUtil.toJson(statusRowEntity);

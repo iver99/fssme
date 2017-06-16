@@ -37,12 +37,12 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getSearchTableData(em, anyString, anyString, anyString);
+                dataManager.getSearchTableData(em, anyString, anyString, anyString, anyString);
                 result = list;
             }
         };
-        zdtapi.getAllTableData("incremental", null);
-        zdtapi.getAllTableData("full", "2017-05-25 16:03:02");
+        zdtapi.getAllTableData("incremental", null, null);
+        zdtapi.getAllTableData("full", "2017-05-25 16:03:02", "tenant");
     }
 
     @Test
@@ -53,11 +53,11 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getSearchTableData(em, anyString, anyString, anyString);
+                dataManager.getSearchTableData(em, anyString, anyString, anyString, anyString);
                 result = new JSONException(throwable);
             }
         };
-        zdtapi.getAllTableData("incremental", "2017-05-25 16:03:02");
+        zdtapi.getAllTableData("incremental", "2017-05-25 16:03:02", "tenant");
     }
 
     @Test

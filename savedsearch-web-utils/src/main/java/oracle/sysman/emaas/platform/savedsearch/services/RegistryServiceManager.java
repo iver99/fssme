@@ -217,6 +217,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
      private static final String NAV_ZDT_SYNC_STATUS = NAV_BASE + "/zdt/sync/status";
      private static final String NAV_ZDT_COMPARE_STATUS = NAV_BASE + "/zdt/compare/status";
      private static final String NAV_ZDT_COMPARE_RESULT = NAV_BASE + "/zdt/compare/result";
+     private static final String NAV_ZDT_GET_TENANTS = NAV_BASE + "/zdt/tenants";
 
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
@@ -379,6 +380,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/sync/status").withHref(applicationUrl + NAV_ZDT_SYNC_STATUS));
 				links.add(new Link().withRel("zdt/compare/status").withHref(applicationUrl + NAV_ZDT_COMPARE_STATUS));
 				links.add(new Link().withRel("zdt/compare/result").withHref(applicationUrl + NAV_ZDT_COMPARE_RESULT));
+				links.add(new Link().withRel("zdt/tenants").withHref(applicationUrl + NAV_ZDT_GET_TENANTS));
 			}
 			if (applicationUrlSSL != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
@@ -401,6 +403,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/sync/status").withHref(applicationUrlSSL + NAV_ZDT_SYNC_STATUS));
 				links.add(new Link().withRel("zdt/compare/status").withHref(applicationUrlSSL + NAV_ZDT_COMPARE_STATUS));
 				links.add(new Link().withRel("zdt/compare/result").withHref(applicationUrlSSL + NAV_ZDT_COMPARE_RESULT));
+				links.add(new Link().withRel("zdt/tenants").withHref(applicationUrlSSL + NAV_ZDT_GET_TENANTS));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 
