@@ -117,7 +117,7 @@ public class TenantSubscriptionUtil
 			}
 
 	/**
-	 * if v1 tenant, return true, v2/v3 return false;
+	 * if v1 tenant, return true, v2/v3/v4 return false;
 	 * @param tenantSubscriptionInfo
 	 * @return
 	 */
@@ -285,7 +285,7 @@ public class TenantSubscriptionUtil
 				if(SubsriptionApps2Util.V2_TENANT.equals(appsInfo.getLicVersion()) ||
 						SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion()) ||
 						SubsriptionApps2Util.V4_TENANT.equals(appsInfo.getLicVersion())){
-					//V2/V2/v3
+					//V2/V3/v4
 					return false;
 				}
 			}
