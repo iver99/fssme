@@ -268,8 +268,13 @@ public class ZDTAPI
 			tenantArrayForClient2 = obj2.getJSONArray("tenants");
 			logger.info("tenantArray size2 = " + tenantArrayForClient2.length());
 			
+			if (tenantArrayForClient1.length() == 0 && tenantArrayForClient2.length() == 0) {
+				return Response.status(status).entity("No user created saved searches, Nothing to compare").build();
+			}
+			
 			boolean iscompared = true;
 			JSONObject tenantObj = new JSONObject();
+			
 			if ((!iscomparedForClient1) || (!iscomparedForClient2)) {
 				// any one of the clouds has not yet been compared, then they should be compared in full mode
 				iscompared = false;				
@@ -282,6 +287,9 @@ public class ZDTAPI
 			if (result != null) {
 				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
 				logger.info("comparedNum={}",comparedDataNum);
+				if (comparedDataNum == 0) {
+					return Response.status(status).entity("No user created saved searches, Nothing to compare").build();					
+				}
 				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
 				logger.info("totalRow={}",totalRow);
 				double percen = (double)comparedDataNum/(double)totalRow;
