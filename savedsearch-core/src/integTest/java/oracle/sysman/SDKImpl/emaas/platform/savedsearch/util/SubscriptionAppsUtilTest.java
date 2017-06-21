@@ -4,6 +4,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.AppsIn
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.EditionComponent;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.SubscriptionApps;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.TenantSubscriptionInfo;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 public class SubscriptionAppsUtilTest {
 
     @Test
-    public void testSubscriptionAppsUtil1(){
+    public void testSubsriptionApps2UtilV1_V2(){
         TenantSubscriptionInfo t = new TenantSubscriptionInfo();
         List<SubscriptionApps> subscriptionAppsList = new ArrayList<>();
 
@@ -37,6 +38,16 @@ public class SubscriptionAppsUtilTest {
         editionComponentList1.add(editionComponent1);
         subscriptionApps1.setEditionComponentsList(editionComponentList1);
 
+        SubscriptionApps subscriptionApps1_1 = new SubscriptionApps();
+        subscriptionApps1_1.setVersion(SubsriptionApps2Util.V2_TENANT);
+        subscriptionApps1_1.setServiceType("OMC");
+        subscriptionApps1_1.setTrial(true);
+        List<EditionComponent> editionComponentList1_1 = new ArrayList<>();
+        EditionComponent editionComponent1_1 = new EditionComponent();
+        editionComponent1_1.setEdition("Standard Edition");
+        editionComponentList1_1.add(editionComponent1);
+        subscriptionApps1_1.setEditionComponentsList(editionComponentList1_1);
+
 
         SubscriptionApps subscriptionApps2 = new SubscriptionApps();
         subscriptionApps2.setVersion(SubsriptionApps2Util.V2_TENANT);
@@ -47,6 +58,23 @@ public class SubscriptionAppsUtilTest {
         editionComponentList2.add(editionComponent2);
         subscriptionApps2.setEditionComponentsList(editionComponentList2);
 
+        subscriptionAppsList.add(subscriptionApps);
+        subscriptionAppsList.add(subscriptionApps1);
+        subscriptionAppsList.add(subscriptionApps1_1);
+        subscriptionAppsList.add(subscriptionApps2);
+
+
+        List<AppsInfo> appsInfoList = new ArrayList<>();
+        t.setAppsInfoList(appsInfoList);
+        t.setSubscriptionAppsList(subscriptionAppsList);
+        SubsriptionApps2Util.getSubscribedAppsList(t);
+    }
+
+    @Test
+    public void testSubsriptionApps2UtilV3(){
+
+        TenantSubscriptionInfo t = new TenantSubscriptionInfo();
+        List<SubscriptionApps> subscriptionAppsList = new ArrayList<>();
         //V3 tenant
         SubscriptionApps subscriptionApps3 = new SubscriptionApps();
         subscriptionApps3.setServiceType("OMCSE");
@@ -55,16 +83,16 @@ public class SubscriptionAppsUtilTest {
         EditionComponent editionComponent3 = new EditionComponent();
         editionComponent3.setEdition("V3 editions");
         editionComponentList3.add(editionComponent3);
-        subscriptionApps3.setEditionComponentsList(null);
+        subscriptionApps3.setEditionComponentsList(editionComponentList3);
 
         SubscriptionApps subscriptionApps4 = new SubscriptionApps();
-        subscriptionApps3.setServiceType("OMCEE");
-        subscriptionApps3.setTenantName(SubsriptionApps2Util.V3_TENANT);
+        subscriptionApps4.setServiceType("OMCEE");
+        subscriptionApps4.setTenantName(SubsriptionApps2Util.V3_TENANT);
         List<EditionComponent> editionComponentList4 = new ArrayList<>();
         EditionComponent editionComponent4 = new EditionComponent();
         editionComponent4.setEdition("V3 editions");
         editionComponentList4.add(editionComponent4);
-        subscriptionApps3.setEditionComponentsList(null);
+        subscriptionApps4.setEditionComponentsList(editionComponentList4);
 
         SubscriptionApps subscriptionApps5 = new SubscriptionApps();
         subscriptionApps5.setServiceType("OMCLOG");
@@ -81,16 +109,47 @@ public class SubscriptionAppsUtilTest {
         subscriptionApps7.setTenantName(SubsriptionApps2Util.V3_TENANT);
         subscriptionApps7.setEditionComponentsList(null);
 
-
-        subscriptionAppsList.add(subscriptionApps);
-        subscriptionAppsList.add(subscriptionApps1);
-        subscriptionAppsList.add(subscriptionApps2);
         subscriptionAppsList.add(subscriptionApps3);
         subscriptionAppsList.add(subscriptionApps4);
         subscriptionAppsList.add(subscriptionApps5);
         subscriptionAppsList.add(subscriptionApps6);
         subscriptionAppsList.add(subscriptionApps7);
 
+        List<AppsInfo> appsInfoList = new ArrayList<>();
+        t.setAppsInfoList(appsInfoList);
+        t.setSubscriptionAppsList(subscriptionAppsList);
+        SubsriptionApps2Util.getSubscribedAppsList(t);
+    }
+
+    @Test
+    public void testSubsriptionApps2UtilV4(){
+        TenantSubscriptionInfo t = new TenantSubscriptionInfo();
+        List<SubscriptionApps> subscriptionAppsList = new ArrayList<>();
+        //v4
+        SubscriptionApps subscriptionApps8 = new SubscriptionApps();
+        subscriptionApps8.setServiceType("OMC");
+        subscriptionApps8.setTenantName(SubsriptionApps2Util.V3_TENANT);
+        List<EditionComponent> editionComponentList8 = new ArrayList<>();
+        EditionComponent editionComponent8 = new EditionComponent();
+        EditionComponent editionComponent8_2 = new EditionComponent();
+        EditionComponent editionComponent8_3 = new EditionComponent();
+        EditionComponent editionComponent8_4 = new EditionComponent();
+        EditionComponent editionComponent8_5 = new EditionComponent();
+        editionComponent8.setEdition("V4 editions");
+        editionComponent8_2.setEdition("V4 editions");
+        editionComponent8_3.setEdition("V4 editions");
+        editionComponent8_4.setEdition("V4 editions");
+        editionComponent8_5.setEdition("V4 editions");
+        //make sure size == 5
+        editionComponentList8.add(editionComponent8);
+        editionComponentList8.add(editionComponent8_2);
+        editionComponentList8.add(editionComponent8_3);
+        editionComponentList8.add(editionComponent8_4);
+        editionComponentList8.add(editionComponent8_5);
+        Assert.assertEquals(5,editionComponentList8.size());
+        subscriptionApps8.setEditionComponentsList(editionComponentList8);
+
+        subscriptionAppsList.add(subscriptionApps8);
         List<AppsInfo> appsInfoList = new ArrayList<>();
         t.setAppsInfoList(appsInfoList);
         t.setSubscriptionAppsList(subscriptionAppsList);
