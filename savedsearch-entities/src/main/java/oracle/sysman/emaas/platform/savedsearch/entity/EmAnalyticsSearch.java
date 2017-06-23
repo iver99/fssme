@@ -54,7 +54,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "Search.getSearchByNamePatternExcludeOOBAndNonDeletedFORTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.name like :searchName escape \'\\\' AND e.deleted = 0 AND e.systemSearch = 0")
 })
 //@SequenceGenerator(name = "EMS_ANALYTICS_SEARCH_SEQ", sequenceName = "EMS_ANALYTICS_SEARCH_SEQ", allocationSize = 1)
-public class EmAnalyticsSearch extends EmBaseEntity implements Serializable
+public class EmAnalyticsSearch implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
