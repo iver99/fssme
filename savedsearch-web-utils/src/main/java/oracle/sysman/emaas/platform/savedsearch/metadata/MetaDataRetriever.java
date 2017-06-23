@@ -114,8 +114,10 @@ public class MetaDataRetriever {
         LOGGER.debug("Calling MetaDataRetriever.setCategoryAndFolder");
         for(Search search : oobWidgetList){
             search.setIsWidget(Boolean.TRUE);
-            search.setCategoryId(new BigInteger(CATEGORY_MAP.get(serviceName).toString()));
-            search.setFolderId(new BigInteger(FOLDER_MAP.get(serviceName).toString()));
+            if(search.getCategoryId() == null)
+                search.setCategoryId(new BigInteger(CATEGORY_MAP.get(serviceName).toString()));
+            if(search.getFolderId()== null)
+                search.setFolderId(new BigInteger(FOLDER_MAP.get(serviceName).toString()));
         }
         return oobWidgetList;
     }

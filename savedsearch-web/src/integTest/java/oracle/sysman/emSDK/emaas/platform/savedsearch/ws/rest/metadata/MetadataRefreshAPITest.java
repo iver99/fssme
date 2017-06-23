@@ -7,6 +7,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.thread.OobRefreshRunnable;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.tool.InternalToolAPI;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
@@ -35,6 +36,11 @@ public class MetadataRefreshAPITest {
     @Mocked
     SearchManager searchManager;
     @Test
+    public void testRefreshOOB(){
+        MetadataRefreshAPI metadataRefreshAPI = new MetadataRefreshAPI();
+        metadataRefreshAPI.refreshOOB("ITA");
+    }
+    @Test
     public void testGetWidgetByName() throws EMAnalyticsFwkException {
         final String widgetName = "widgetName";
         final List<Search> searches = new ArrayList<>();
@@ -53,5 +59,22 @@ public class MetadataRefreshAPITest {
         };
         internalToolAPI = new InternalToolAPI();
         internalToolAPI.getWidgetByName(widgetName);
+    }
+
+    @Test
+    public void testOobRefreshRunnable(@Mocked MetaDataStorer metaDataStorer, @Mocked final MetaDataRetriever metaDataRetriever) throws EMAnalyticsFwkException {
+
+        OobRefreshRunnable oobRefreshRunnable = new OobRefreshRunnable();
+        oobRefreshRunnable.run();
+        new Expectations(){
+            {
+                DependencyStatus.getInstance();
+                result = dependencyStatus;
+                dependencyStatus.isDatabaseUp();
+                result = true;
+            }
+        };
+        oobRefreshRunnable.setServiceName("serviceName");
+        oobRefreshRunnable.run();
     }
 }

@@ -22,22 +22,19 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable{
     private static final Logger LOGGER = LogManager.getLogger(OobRefreshRunnable.class);
     @Override
     public void run(){
-        LOGGER.error("I'm running");
         if(serviceName == null || serviceName.isEmpty()) {
             LOGGER.error("OobRefreshRunnable: there is no service name!");
             return;
         }
         List<SearchImpl> oobWidgetList;
-        LOGGER.error("Get Widget List From integrator.");
         try {
             if (!DependencyStatus.getInstance().isDatabaseUp()) {
                 throw new EMAnalyticsDatabaseUnavailException();
             }
-            oobWidgetList = new MetaDataRetriever().getOobWidgetListByServiceName(serviceName);
-            LOGGER.error("Store Widget List.");
+            MetaDataRetriever metaDataRetriever = new MetaDataRetriever();
+            oobWidgetList = metaDataRetriever.getOobWidgetListByServiceName(serviceName);
             TenantContext.setContext(new TenantInfo(SearchManagerImpl.DEFAULT_CURRENT_USER, SearchManagerImpl.DEFAULT_TENANT_ID));
             MetaDataStorer.storeOobWidget(oobWidgetList);
-            LOGGER.error("Refresh the OOB Widgets successfully.");
         } catch (EMAnalyticsFwkException e) {
             LOGGER.error(e.getLocalizedMessage());
         }

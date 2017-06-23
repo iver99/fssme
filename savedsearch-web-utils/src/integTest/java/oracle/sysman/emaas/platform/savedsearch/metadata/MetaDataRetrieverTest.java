@@ -5,6 +5,7 @@ import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
@@ -22,10 +23,10 @@ public class MetaDataRetrieverTest {
     @Mocked
     RestClient restClient;
     @Test
-    public void testGetOobWidgetListByServiceName() throws Exception {
+    public void testGetOobWidgetListByServiceName() throws EMAnalyticsFwkException {
         new Expectations(){
             {
-                RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
+                RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, null);
                 result = versionedLink;
                 versionedLink.getHref();
                 result = "href";
@@ -40,4 +41,22 @@ public class MetaDataRetrieverTest {
 
     }
 
+    @Test
+    public void getResourceBundleByService() throws EMAnalyticsFwkException {
+        new Expectations(){
+            {
+                RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, null);
+                result = versionedLink;
+                versionedLink.getHref();
+                result = "href";
+                versionedLink.getAuthToken();
+                result = "auth";
+                restClient.get(anyString,anyString, anyString);
+                result = "response";
+            }
+        };
+        metaDataRetriever = new MetaDataRetriever();
+        metaDataRetriever.getResourceBundleByService("savedSearch");
+
+    }
 }

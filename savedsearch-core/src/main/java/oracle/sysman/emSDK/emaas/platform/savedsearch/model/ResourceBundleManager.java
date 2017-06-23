@@ -11,6 +11,5 @@ import java.util.List;
  */
 public abstract class ResourceBundleManager {
     public static ResourceBundleManager getInstance(){return ResourceBundleManagerImpl.getInstance();}
-    public abstract void cleanResourceBundleByServiceName(String serviceName) throws EMAnalyticsFwkException;
-    public abstract void persistResourceBundle( EmsResourceBundle resourceBundle) throws EMAnalyticsFwkException;
+    public abstract void storeResourceBundle(String serviceName, List<EmsResourceBundle> emsResourceBundles) throws EMAnalyticsFwkException;
 }

@@ -76,6 +76,7 @@ public class DatabaseResourceBundleControl extends ResourceBundle.Control {
 
     @SuppressWarnings("unchecked")
     private EmsResourceBundle findResourceBundle(String baseName, Locale locale) {
+        LOGGER.error("Calling DRB.findResourceBundle");
         EntityManager em = null;
         try {
             em = PersistenceManager.getInstance().getEntityManager(new TenantInfo(SearchManagerImpl.DEFAULT_CURRENT_USER, SearchManagerImpl.DEFAULT_TENANT_ID));
@@ -85,6 +86,7 @@ public class DatabaseResourceBundleControl extends ResourceBundle.Control {
                     .setParameter("serviceName", baseName)
                     .getResultList();
             if(rb != null && !rb.isEmpty()) {
+                LOGGER.error("RB is not null" + rb.get(0).getPropertiesFile());
                 return rb.get(0);
             }
         } catch(Exception e) {
@@ -99,6 +101,7 @@ public class DatabaseResourceBundleControl extends ResourceBundle.Control {
 
     @SuppressWarnings("unchecked")
     private Date findLastMofifyTime(String baseName, Locale locale) {
+        LOGGER.error("Calling DRB.findLastMofifyTime");
         EntityManager em = null;
         try {
             em = PersistenceManager.getInstance().getEntityManager(new TenantInfo(SearchManagerImpl.DEFAULT_CURRENT_USER, SearchManagerImpl.DEFAULT_TENANT_ID));
@@ -107,6 +110,7 @@ public class DatabaseResourceBundleControl extends ResourceBundle.Control {
                     .setParameter("countryCode", locale.getCountry())
                     .setParameter("serviceName", baseName).getResultList();
             if(lastModifyTime != null && !lastModifyTime.isEmpty()) {
+                LOGGER.error(lastModifyTime.get(0));
                 return lastModifyTime.get(0);
             }
         } catch(Exception e) {

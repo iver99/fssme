@@ -28,6 +28,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  */
 @Entity
 @Table(name = "EMS_ANALYTICS_CATEGORY")
+@AdditionalCriteria("this.tenantId = :tenant or this.tenantId = -11")
 @NamedQueries({
 		@NamedQuery(name = "Category.getCategoryById", query = "SELECT e FROM EmAnalyticsCategory e Where e.categoryId = :id  AND e.deleted =0  AND e.owner in ('ORACLE',:userName)"),
 		@NamedQuery(name = "Category.getCategoryByFolder", query = "SELECT e FROM EmAnalyticsCategory e Where e.emAnalyticsFolder = :id  AND e.deleted =0  AND e.owner in ('ORACLE',:userName)"),

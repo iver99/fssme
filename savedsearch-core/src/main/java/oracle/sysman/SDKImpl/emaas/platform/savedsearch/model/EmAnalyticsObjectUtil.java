@@ -691,8 +691,19 @@ class EmAnalyticsObjectUtil
 		try {
 
 			searchObj = (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchById")
-					.setParameter("searchId", id).getSingleResult(); 
-			
+					.setParameter("searchId", id).getSingleResult();
+			if (searchObj != null) {
+				if (BigInteger.ZERO.equals(searchObj.getDeleted())
+						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
+						|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
+						TenantContext.getContext().getUsername()))) {
+
+					return searchObj;
+				}
+				else {
+					searchObj = null;
+				}
+			}
 		}
 		catch (Exception nre) { 
 			//do nothing
@@ -705,6 +716,9 @@ class EmAnalyticsObjectUtil
 		try {
 			searchObj = (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchById")
 					.setParameter("searchId", searchId).getSingleResult();
+			if(searchObj != null && !BigInteger.ZERO.equals(searchObj.getDeleted())) {
+				searchObj = null;
+			}
 		} catch (Exception ex) {
 			// do nothing
 		}
@@ -717,7 +731,8 @@ class EmAnalyticsObjectUtil
 		EmAnalyticsSearch searchObj = null;
 		try {
 
-			searchObj = em.find(EmAnalyticsSearch.class, new EmAnalyticsSearchPK(TenantContext.getContext().getTenantInternalId(), id));
+			searchObj = (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchById")
+					.setParameter("searchId", id).getSingleResult();
 			if (searchObj != null
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(

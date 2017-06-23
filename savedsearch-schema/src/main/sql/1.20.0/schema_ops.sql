@@ -10,4 +10,5 @@ SET FEEDBACK OFF
 SET LINESIZE 2000
 
 @&EMSAAS_SQL_ROOT/1.20.0/upgrade_impl_dml.sql
+@&EMSAAS_SQL_ROOT/1.20.0/emaas_create_table_constraint.sql
 

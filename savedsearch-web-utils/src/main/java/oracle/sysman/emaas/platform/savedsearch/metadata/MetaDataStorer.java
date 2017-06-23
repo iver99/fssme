@@ -29,19 +29,9 @@ public class MetaDataStorer {
 
         try {
             List<BigInteger> searchIds = searchManager.getSearchIdsByCategory(categoryId);
-            searchManager.cleanSearchesPermanentlyById(searchIds);
+            searchManager.storeOobWidget(searchIds, oobWidgetList);
         } catch (EMAnalyticsFwkException e) {
             LOGGER.error("Fail into error while deleting the oob widget by categoryId: {}, {}", categoryId, e.getLocalizedMessage());
-            throw e;
-        }
-
-        try{
-            LOGGER.debug("Save oob widget for category {}", categoryId);
-            for(Search search : oobWidgetList){
-                searchManager.saveOobSearch(search);
-            }
-        } catch (EMAnalyticsFwkException e) {
-            LOGGER.error("Fail into error while saving the oob widget by categoryId: {}, {}", categoryId, e.getLocalizedMessage());
             throw e;
         }
 
@@ -59,17 +49,9 @@ public class MetaDataStorer {
         String serviceName = emsResourceBundles.get(0).getServiceName();
 
         try {
-            resourceBundleManager.cleanResourceBundleByServiceName(serviceName);
+            resourceBundleManager.storeResourceBundle(serviceName,emsResourceBundles);
         } catch (EMAnalyticsFwkException e) {
             LOGGER.error("Fall into error while cleaning resource bundle by service name {}",e.getLocalizedMessage());
-        }
-        LOGGER.error("start to persist the resource bundle");
-        try {
-            for (EmsResourceBundle emsResourceBundle : emsResourceBundles) {
-                resourceBundleManager.persistResourceBundle(emsResourceBundle);
-            }
-        }catch (EMAnalyticsFwkException e){
-            LOGGER.error("Fall into error while saving resource bundle by service name {}",e.getLocalizedMessage());
         }
     }
 }

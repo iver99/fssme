@@ -30,6 +30,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Entity
 @IdClass(EmAnalyticsSearchParamPK.class)
 @Table(name = "EMS_ANALYTICS_SEARCH_PARAMS")
+@AdditionalCriteria("this.tenantId = :tenant or this.tenantId = -11")
 @NamedQueries({
 	    @NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
         @NamedQuery(name = "SearchParam.deleteParamsBySearchIds", query = "DELETE FROM EmAnalyticsSearchParam e where e.searchId in :searchIds")

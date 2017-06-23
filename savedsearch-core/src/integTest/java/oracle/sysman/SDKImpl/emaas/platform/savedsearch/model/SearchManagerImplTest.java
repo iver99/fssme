@@ -34,6 +34,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.internal.annotations.ExpectedExceptionsAnnotation;
 
 /**
  * @author qianqi
@@ -115,47 +116,8 @@ public class SearchManagerImplTest
 		searchManager.getWidgetByName("widgetName");
 
 	}
-	@Test
-	public void testGetSearchIdsByCategoryId() throws EMAnalyticsFwkException {
-		final List<BigInteger> searchIds = new ArrayList<>();
-		searchIds.add(BigInteger.ONE);
-		new Expectations(){
-			{
-				PersistenceManager.getInstance();
-				result = persistenceManager;
-				persistenceManager.getEntityManager((TenantInfo)any);
-				result = entityManager;
-				entityManager.createNamedQuery(anyString);
-				result = query;
-				query.setParameter(anyString, searchIds);
-				result = query;
-				query.executeUpdate();
-			}
-		};
-		searchManager = SearchManagerImpl.getInstance();
-		searchManager.cleanSearchesPermanentlyById(searchIds);
-	}
 
-	@Test
-	public void testSaveOobSearch() throws EMAnalyticsFwkException {
-		Search search = new SearchImpl();
-		search.setDashboardIneligible("true");
-		new Expectations(){
-			{
-				PersistenceManager.getInstance();
-				result = persistenceManager;
-				persistenceManager.getEntityManager((TenantInfo)any);
-				result = entityManager;
-				entityManager.getTransaction().isActive();
-				result = Boolean.TRUE;
-				entityManager.persist((EmAnalyticsSearch)any);
-				entityManager.getTransaction().commit();
 
-			}
-		};
-        searchManager = SearchManagerImpl.getInstance();
-		searchManager.saveOobSearch(search);
-	}
 
 	@Test
 	public void testGetSearchIdCategory() throws EMAnalyticsFwkException {
@@ -1588,5 +1550,31 @@ public class SearchManagerImplTest
 			}
 		};
 		searchManager.deleteSearchByName("searchName", false);
+	}
+
+	@Test
+	public void testSaveOobSearch() throws EMAnalyticsFwkException {
+		List<SearchImpl> oobWidgetList = new ArrayList<>();
+		final SearchImpl search = new SearchImpl();
+		List<BigInteger> searchIds = new ArrayList<>();
+		searchIds.add(new BigInteger("1"));
+		oobWidgetList.add(search);
+		search.setDashboardIneligible("true");
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				entityManager.getTransaction().isActive();
+				result = true;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, (List)any);
+				result = query;
+				query.executeUpdate();
+				EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, (EntityManager)any);
+			}
+		};
+		searchManager.storeOobWidget(searchIds,oobWidgetList);
 	}
 }

@@ -4,7 +4,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -1143,26 +1142,25 @@ public class SearchManagerImpl extends SearchManager
 		}
 	}
 	@Override
-	public void cleanSearchesPermanentlyById(List<BigInteger> searchIds) throws EMAnalyticsFwkException {
-		LOGGER.debug("Calling SearchManager.cleanSearchesPermanentlyById");
-		if(searchIds.isEmpty() || searchIds == null ) return;
+	public void storeOobWidget(List<BigInteger> searchIds, List<SearchImpl> oobWidgetList) throws EMAnalyticsFwkException {
+		LOGGER.info("Calling SearchManager.storeOobWidget");
 		EntityManager entityManager = null;
 		try{
 			entityManager = PersistenceManager.getInstance().getEntityManager(new TenantInfo(DEFAULT_CURRENT_USER, DEFAULT_TENANT_ID));
 			if (!entityManager.getTransaction().isActive()) {
 				entityManager.getTransaction().begin();
 			}
-			LOGGER.debug("Cleaning oob search params");
-			entityManager.createNamedQuery("SearchParam.deleteParamsBySearchIds")
-					.setParameter("searchIds", searchIds).executeUpdate();
-			LOGGER.debug("Cleaning oob searches");
-			entityManager.createNamedQuery("Search.deleteSystemSearchByIds")
-					.setParameter("ids", searchIds).executeUpdate();
+			cleanSearchesPermanentlyById(searchIds, entityManager);
+			for (SearchImpl search: oobWidgetList){
+				saveOobSearch(search, entityManager);
+
+			}
+			LOGGER.info("commit the transction");
 			entityManager.getTransaction().commit();
+
 		}catch (Exception e){
-			EmAnalyticsProcessingException.processSearchPersistantException(e, null);
-			LOGGER.error("Fall into error while cleaning system searches by ids", e);
-			throw new EMAnalyticsFwkException("Fall into error while cleaning system searches by ids",
+			LOGGER.error("Fall into error while storing system searches", e);
+			throw new EMAnalyticsFwkException("Fall into error while storing system searches",
 					EMAnalyticsFwkException.ERR_GENERIC, null, e);
 		}finally {
 			if (entityManager != null)entityManager.close();
@@ -1170,25 +1168,37 @@ public class SearchManagerImpl extends SearchManager
 
 	}
 
-	@Override
-	public void saveOobSearch(Search search) throws EMAnalyticsFwkException {
+	private void cleanSearchesPermanentlyById(List<BigInteger> searchIds, EntityManager entityManager) throws EMAnalyticsFwkException {
+		LOGGER.debug("Calling SearchManager.cleanSearchesPermanentlyById");
+		if(searchIds.isEmpty() || searchIds == null ) return;
+		try{
+			LOGGER.debug("Cleaning oob search params");
+			entityManager.createNamedQuery("SearchParam.deleteParamsBySearchIds")
+					.setParameter("searchIds", searchIds).executeUpdate();
+			LOGGER.debug("Cleaning oob searches");
+			entityManager.createNamedQuery("Search.deleteSystemSearchByIds")
+					.setParameter("ids", searchIds).executeUpdate();
+		}catch (Exception e){
+			LOGGER.error("Fall into error while cleaning system searches by ids", e);
+			throw new EMAnalyticsFwkException("Fall into error while cleaning system searches by ids",
+					EMAnalyticsFwkException.ERR_GENERIC, null, e);
+		}
+	}
+
+	private void saveOobSearch(SearchImpl search, EntityManager entityManager) throws EMAnalyticsFwkException {
 		LOGGER.debug("Calling SearchManager.saveOobSearch");
-		EntityManager entityManager = null;
 		 try{
-			 entityManager = PersistenceManager.getInstance().getEntityManager(new TenantInfo(DEFAULT_CURRENT_USER, DEFAULT_TENANT_ID));
 			 EmAnalyticsSearch emAnalyticsSearch = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, entityManager);
 			 emAnalyticsSearch.setOwner(DEFAULT_CURRENT_USER);
 			 emAnalyticsSearch.setTenantId(DEFAULT_TENANT_ID);
 			 emAnalyticsSearch.setSystemSearch(new BigDecimal("1"));
 			 emAnalyticsSearch.setLastModifiedBy(DEFAULT_CURRENT_USER);
 			 emAnalyticsSearch.setDASHBOARDINELIGIBLE("TRUE".equals(search.getDashboardIneligible().toUpperCase())?"1":"0");
+			 emAnalyticsSearch.setCreationDate(search.getCreationDate());
+			 emAnalyticsSearch.setLastModificationDate(search.getLastModificationDate());
 			 for(EmAnalyticsSearchParam emAnalyticsSearchParam: emAnalyticsSearch.getEmAnalyticsSearchParams())
 				 emAnalyticsSearchParam.setTenantId(DEFAULT_TENANT_ID);
-			 if (!entityManager.getTransaction().isActive()) {
-				 entityManager.getTransaction().begin();
-			 }
 			 entityManager.persist(emAnalyticsSearch);
-			 entityManager.getTransaction().commit();
 		 }catch(PersistenceException pe){
 			 processUniqueConstraints(search, entityManager, pe);
 			 EmAnalyticsProcessingException.processSearchPersistantException(pe, search.getName());
@@ -1196,9 +1206,7 @@ public class SearchManagerImpl extends SearchManager
 			 throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
 					 EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, pe);
 		 }catch (Exception e){
-			 LOGGER.error(e.getMessage());
-		 }finally {
-			 if (entityManager != null) entityManager.close();
+			 LOGGER.error(e);
 		 }
 	}
 

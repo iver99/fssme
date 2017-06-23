@@ -619,12 +619,18 @@ public class EmAnalyticsObjectUtilTest
 		searchParameters.add(searchParameter);
 		new Expectations() {
 			{
+				search.getId();
+				result= new BigInteger("1");
  				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, anyString);
+				query.setParameter(anyString, (BigInteger)any);
 				result = query;
 				query.getSingleResult();
 				result = emAnalyticsSearch;
+				emAnalyticsSearch.getDeleted();
+				result = BigInteger.ZERO;
+				emAnalyticsSearch.getSystemSearch();
+				result = new BigDecimal("1");
 				entityManager.find(EmAnalyticsFolder.class, (BigInteger) any);
 				result = emAnalyticsFolder;
 				emAnalyticsFolder.getDeleted();
@@ -656,8 +662,14 @@ public class EmAnalyticsObjectUtilTest
 				result = BigInteger.ONE;
 				entityManager.createNamedQuery(anyString);
 				result = query;
+				query.setParameter(anyString,(BigInteger)any);
+				result = query;
 				query.getSingleResult();
 				result = emAnalyticsSearch;
+				emAnalyticsSearch.getDeleted();
+				result = BigInteger.ZERO;
+				emAnalyticsSearch.getSystemSearch();
+				result = new BigDecimal("1");
 				entityManager.refresh(emAnalyticsSearch);
 				search.getMetadata();
 				result = "metaData";
@@ -804,10 +816,14 @@ public class EmAnalyticsObjectUtilTest
 	{
 		new Expectations() {
 			{
-				entityManager.find(withAny(EmAnalyticsSearch.class), (BigInteger) any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString,(BigInteger)any);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getSystemSearch();
-				result = new BigDecimal(1);
+				result = new BigDecimal("1");
 			}
 		};
 		EmAnalyticsObjectUtil.getSearchByIdForDelete(BigInteger.TEN, entityManager);
@@ -817,12 +833,7 @@ public class EmAnalyticsObjectUtilTest
 	@Test
 	public void testGetSearchByIdForDelete2nd()
 	{
-		new Expectations() {
-			{
-				entityManager.find(withAny(EmAnalyticsSearch.class), (BigInteger) any);
-				result = null;
-			}
-		};
+
 		EmAnalyticsObjectUtil.getSearchByIdForDelete(BigInteger.TEN, entityManager);
 
 	}
@@ -954,6 +965,16 @@ public class EmAnalyticsObjectUtilTest
 		emAnalyticsSearchParam = new EmAnalyticsSearchParam();
 		new Expectations() {
 			{
+				entityManager.createNamedQuery(anyString);
+				result=query;
+				query.setParameter(anyString, (BigInteger)any);
+				result = query;
+				query.getSingleResult();
+				result = emAnalyticsSearch;
+				emAnalyticsSearch.getSystemSearch();
+				result = new BigDecimal("1");
+				emAnalyticsSearch.getDeleted();
+				result = new BigInteger("0");
 				search.getId();
 				result = BigInteger.ONE;
 				entityManager.createNamedQuery(anyString);

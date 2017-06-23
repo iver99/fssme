@@ -228,10 +228,10 @@ public class SavedSearchCORSFilter implements Filter
 				}
 				TenantInfo info = HeadersUtil.getTenantInfo((HttpServletRequest) request);
 				TenantContext.setContext(info);
-				TenantContext.clearLocale();
-				String langAttr = LocaleUtil.getLangAttr(hReq);
-				Locale locale = DatabaseResourceBundleUtil.generateLocale(langAttr);
-				TenantContext.setLocale(locale);
+//				TenantContext.clearLocale();
+//				String langAttr = LocaleUtil.getLangAttr(hReq);
+//				Locale locale = DatabaseResourceBundleUtil.generateLocale(langAttr);
+//				TenantContext.setLocale(locale);
 				LogUtil.setInteractionLogThreadContext(info.gettenantName(), ((HttpServletRequest) request).getHeader("referer"),
 						InteractionLogDirection.IN);
 				if (isParameterPresent(hReq)) {

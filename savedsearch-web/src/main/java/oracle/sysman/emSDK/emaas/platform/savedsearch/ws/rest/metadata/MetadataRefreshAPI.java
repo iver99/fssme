@@ -44,16 +44,16 @@ public class MetadataRefreshAPI {
         return Response.ok().build();
     }
 
-    @PUT
-    @Path("nls/{serviceName}")
-    public Response refreshNLS(@PathParam("serviceName") String serviceName) {
-        LOGGER.error("Starting a new thread for fresh {} resource bundles.", serviceName);
-        MetadataRefreshRunnable nlsRunnable = new NlsRefreshRunnable();
-        nlsRunnable.setServiceName(serviceName);
-        Thread thread = new Thread(nlsRunnable, "Refresh " + serviceName + " resource bundles.");
-        thread.start();
-        return Response.ok().build();
-    }
+//    @PUT
+//    @Path("nls/{serviceName}")
+//    public Response refreshNLS(@PathParam("serviceName") String serviceName) {
+//        LOGGER.error("Starting a new thread for fresh {} resource bundles.", serviceName);
+//        MetadataRefreshRunnable nlsRunnable = new NlsRefreshRunnable();
+//        nlsRunnable.setServiceName(serviceName);
+//        Thread thread = new Thread(nlsRunnable, "Refresh " + serviceName + " resource bundles.");
+//        thread.start();
+//        return Response.ok().build();
+//    }
 
 
 }

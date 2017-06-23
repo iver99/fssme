@@ -54,7 +54,7 @@ public class DatabaseResourceBundleUtil {
 
         DatabaseResourceBundle rb = null;
         try {
-            rb = (DatabaseResourceBundle) ResourceBundle.getBundle(appType, new Locale(""),
+            rb = (DatabaseResourceBundle) ResourceBundle.getBundle(appType, TenantContext.getLocale(),
                     DatabaseResourceBundleUtil.class.getClassLoader(), new DatabaseResourceBundleControl());
         } catch (Exception ex) {
             LOGGER.warn("Fail to translating '{}' for service {} because: {}", key, appType,
