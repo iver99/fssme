@@ -3,7 +3,6 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -565,6 +564,27 @@ public class SearchManagerImpl extends SearchManager
 	public Search getSearchWithoutOwner(BigInteger searchId) throws EMAnalyticsFwkException
 	{
 		return getSearchWithoutOwner(searchId, false);
+	}
+
+	@Override
+	public Search getSearchListWithoutOwnerByName(String searchName) throws EMAnalyticsFwkException {
+	       LOGGER.info("getSearchWithoutOwnerByName with name: " + searchName);
+	        EntityManager em = null;
+	        EmAnalyticsSearch emSearch = null;
+	        try {
+	            em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+	            emSearch = EmAnalyticsObjectUtil.findEmSearchByNameWithoutOwner(searchName, em);
+	        } catch (Exception e) {
+	            EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+	            String errMsg = "Error while getting the search object by name: " + searchName;
+	            LOGGER.error(errMsg, e);
+	            throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME, new Object[] { searchName }, e);
+	        } finally {
+	            if (em != null) {
+	                em.close();
+	            }
+	        }
+	        return getSearch(emSearch, false);
 	}
 
 	@Override

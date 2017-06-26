@@ -109,6 +109,14 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Search getSearchWithoutOwner(BigInteger searchId) throws EMAnalyticsFwkException;
+	
+	/**
+	 * 
+	 * @param searchName
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Search getSearchListWithoutOwnerByName(String searchName) throws EMAnalyticsFwkException;
 
 	/**
 	 * @param name

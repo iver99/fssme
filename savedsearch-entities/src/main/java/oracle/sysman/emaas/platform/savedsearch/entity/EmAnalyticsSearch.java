@@ -24,10 +24,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.PrivateOwned;
-import org.eclipse.persistence.annotations.QueryRedirectors;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 /**
@@ -38,6 +36,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_SEARCH")
 @NamedQueries({
+    @NamedQuery(name = "Search.getSearchByNameOnly", query = "SELECT e FROM EmAnalyticsSearch e where e.name = :searchName AND e.deleted = 0 order by e.creationDate desc"),
 	@NamedQuery(name = "Search.getSearchListByIds", query = "SELECT e FROM EmAnalyticsSearch e where e.id in :ids AND e.deleted =0 "),
 	@NamedQuery(name = "Search.getSearchListByFolder", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0  AND (e.owner in (:userName) OR e.systemSearch =1) "),
 	@NamedQuery(name = "Search.getSearchListByFolderForTenant", query = "SELECT e FROM EmAnalyticsSearch e where e.emAnalyticsFolder.folderId = :folderId  AND e.deleted =0 "),

@@ -1088,4 +1088,32 @@ public class EmAnalyticsObjectUtilTest
 		};
 		EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete("", entityManager);
 	}
+	
+    @Test
+    public void testFindEmSearchByIdWithoutOwner() {
+        new Expectations() {
+            {
+                entityManager.find(EmAnalyticsSearch.class, (BigInteger) any);
+                result = emAnalyticsSearch;
+            }
+        };
+        EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(BigInteger.ONE, entityManager);
+    }
+    
+    @Test
+    public void testFindEmSearchByNameWithoutOwner() {
+        final List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<EmAnalyticsSearch>();
+        emAnalyticsSearchList.add(new EmAnalyticsSearch());
+        new Expectations() {
+            {
+                entityManager.createNamedQuery(anyString);
+                result = query;
+                query.setParameter(anyString, anyString);
+                result = query;
+                query.getResultList();
+                result = emAnalyticsSearchList;
+            }
+        };
+        EmAnalyticsObjectUtil.findEmSearchByNameWithoutOwner("searchname", entityManager);
+    }
 }

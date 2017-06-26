@@ -1504,4 +1504,20 @@ public class SearchManagerImplTest
 		};
 		searchManager.deleteSearchByName("searchName", false);
 	}
+	
+    @Test
+    public void testGetSearchListWithoutOwnerByName() throws EMAnalyticsFwkException {
+        final EmAnalyticsSearch emSearch = new EmAnalyticsSearch();
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                EmAnalyticsObjectUtil.findEmSearchByNameWithoutOwner(anyString, entityManager);
+                result = emSearch;
+            }
+        };
+        searchManager.getSearchListWithoutOwnerByName("searchName");
+    }
 }
