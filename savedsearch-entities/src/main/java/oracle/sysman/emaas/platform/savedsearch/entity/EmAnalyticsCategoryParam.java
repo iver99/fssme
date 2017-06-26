@@ -2,15 +2,9 @@ package oracle.sysman.emaas.platform.savedsearch.entity;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Multitenant;
@@ -23,7 +17,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Entity
 @IdClass(EmAnalyticsCategoryParamPK.class)
 @Table(name = "EMS_ANALYTICS_CATEGORY_PARAMS")
-public class EmAnalyticsCategoryParam extends EmBaseEntity implements Serializable
+public class EmAnalyticsCategoryParam implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,6 +37,30 @@ public class EmAnalyticsCategoryParam extends EmBaseEntity implements Serializab
 	
 	@Column(name = "DELETED", nullable = false, length = 1)
 	private Boolean deleted;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATION_DATE")
+	private Date creationDate;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "LAST_MODIFICATION_DATE")
+	private Date lastModificationDate;
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Date getLastModificationDate() {
+		return lastModificationDate;
+	}
+
+	public void setLastModificationDate(Date lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
+	}
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne(optional = false)

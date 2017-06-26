@@ -81,7 +81,7 @@ EXCEPTION
   WHEN OTHERS THEN
     ROLLBACK;
     DBMS_OUTPUT.PUT_LINE('>>>SSF DML ERROR<<<');
-    DBMS_OUTPUT.PUT_LINE('Failed to add folder data due to error '||SQLERRM);
+    DBMS_OUTPUT.PUT_LINE('Failed to remove constraint due to error '||SQLERRM);
     RAISE;
 END;
 /

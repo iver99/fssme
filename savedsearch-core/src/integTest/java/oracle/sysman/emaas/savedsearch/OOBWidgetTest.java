@@ -163,6 +163,7 @@ public class OOBWidgetTest extends BaseTest{
             search = searchManager.getSearch(new BigInteger("3328"));
             isExist = "Top 10 Oracle DBs by Anomalies".equals(search.getName());
             Assert.assertTrue(isExist, "Top 10 Oracle DBs by Anomalies does not exist");
+            Assert.assertEquals(search.getQueryStr(),"'SEF Record Type' = correlation and 'SEF Destination Type' in ('Oracle Database*', 'omc_oracle_db*') and 'SEF Category' = anomaly | stats count as Anomalies by 'SEF Destination Endpoint Name' | fields Anomalies, 'SEF Destination Endpoint Name' as Database | top Anomalies","incorrect query string for Top 10 Oracle DBs by Anomalies");
         }finally{
             TenantContext.clearContext();
         }
