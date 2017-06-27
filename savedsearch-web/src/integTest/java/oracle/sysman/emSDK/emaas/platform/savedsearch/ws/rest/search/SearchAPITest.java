@@ -1224,4 +1224,20 @@ public class SearchAPITest {
         inputJson.add(1234L);
         Assert.assertNotNull(api.getSearchList(inputJson.toString()));
     }
+    
+    @Test
+    public void testGetSearchByName() throws EMAnalyticsFwkException {
+        final Search searchObj = new SearchImpl();
+        new Expectations(){
+            {
+                SearchManager.getInstance();
+                result = searchManager;
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                searchManager.getSearchListWithoutOwnerByName(anyString);
+                result = searchObj;
+            }
+        };
+        Assert.assertNotNull(api.getSearchByName("searchName"));
+    }
 }
