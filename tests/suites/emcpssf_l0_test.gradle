@@ -162,7 +162,7 @@ include "oracle/sysman/emaas/platform/savedsearch/comparator/test/wls/management
 include "oracle/sysman/emaas/platform/savedsearch/comparator/targetmodel/services/*.class"
 include "oracle/sysman/emaas/platform/savedsearch/comparator/webutils/**/*.class"
 
-
+include "oracle/sysman/emSDK/emaas/platform/savedsearch/ws/rest/metadata/MetadataRefreshAPITest.class"
         useRestAssured=true
 ext.set("testType", "integration")
 }
@@ -219,6 +219,9 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/importsearch/Obj
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/SearchManagerImplForTargetCardTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/zdt/DataManagerTest.class"
 include "oracle/sysman/emaas/savedsearch/UtilTest.class"
+	   include "oracle/sysman/emaas/platform/savedsearch/metadata/MetaDataRetrieverTest.class"
+	   include "oracle/sysman/emaas/platform/savedsearch/metadata/MetaDataStorerTest.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/model/ImportSearchImplTest.class"
 useRestAssured =true
 ext.set("testType", "unit")
 

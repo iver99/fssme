@@ -379,7 +379,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrl + NAV_ZDT_TABLEROWS));
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrl + NAV_ZDT_SYNC));
 				links.add(new Link().withRel("refresh/oob").withHref(applicationUrl + "/savedsearch/v1/refresh/oob"));
-				links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrl + "/savedsearch/v1/refresh/nls"));
+//				links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrl + "/savedsearch/v1/refresh/nls"));
 			}
 			if (applicationUrlSSL != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
@@ -402,7 +402,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(SERVICEAPI_WIDGETS).withHref(applicationUrlSSL + NAV_WIDGETS));
 				links.add(new Link().withRel(SERVICEAPI_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
 				links.add(new Link().withRel("refresh/oob").withHref(applicationUrlSSL + "/savedsearch/v1/refresh/oob"));
-				links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrlSSL + "/savedsearch/v1/refresh/nls"));
+//				links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrlSSL + "/savedsearch/v1/refresh/nls"));
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrlSSL + NAV_ZDT_COUNTS));
 				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrlSSL + NAV_ZDT_TABLEROWS));
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrlSSL + NAV_ZDT_SYNC));

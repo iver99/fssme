@@ -16,6 +16,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  */
 @Entity
 @IdClass(EmAnalyticsCategoryParamPK.class)
+@AdditionalCriteria("this.tenantId = :tenant or this.tenantId = -11")
 @Table(name = "EMS_ANALYTICS_CATEGORY_PARAMS")
 public class EmAnalyticsCategoryParam implements Serializable
 {

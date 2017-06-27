@@ -3,7 +3,6 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -24,10 +23,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.HeadersUtil;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.LocaleUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -34,6 +34,7 @@ public class ResourceBundleManagerImpl extends ResourceBundleManager{
             for (EmsResourceBundle emsResourceBundle : emsResourceBundles) {
                  persistResourceBundle(emsResourceBundle, entityManager);
             }
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
             LOGGER.error("Fall into error while cleaning resource bundle by service name ", e);
             throw new EMAnalyticsFwkException("Fall into error while cleaning resource bundle by service name",
