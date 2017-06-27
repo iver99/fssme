@@ -1234,7 +1234,7 @@ public class SearchAPITest {
                 result = searchManager;
                 dependencyStatus.isDatabaseUp();
                 result = true;
-                searchManager.getSearchListWithoutOwnerByName(anyString);
+                searchManager.getSearchWithoutOwnerByName(anyString);
                 result = searchObj;
             }
         };

@@ -116,7 +116,7 @@ public abstract class SearchManager
 	 * @return
 	 * @throws EMAnalyticsFwkException
 	 */
-	public abstract Search getSearchListWithoutOwnerByName(String searchName) throws EMAnalyticsFwkException;
+	public abstract Search getSearchWithoutOwnerByName(String searchName) throws EMAnalyticsFwkException;
 
 	/**
 	 * @param name

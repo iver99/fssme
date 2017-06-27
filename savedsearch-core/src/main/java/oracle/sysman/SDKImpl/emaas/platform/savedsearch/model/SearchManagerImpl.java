@@ -567,7 +567,7 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public Search getSearchListWithoutOwnerByName(String searchName) throws EMAnalyticsFwkException {
+	public Search getSearchWithoutOwnerByName(String searchName) throws EMAnalyticsFwkException {
 	       LOGGER.info("getSearchWithoutOwnerByName with name: " + searchName);
 	        EntityManager em = null;
 	        EmAnalyticsSearch emSearch = null;
@@ -584,6 +584,13 @@ public class SearchManagerImpl extends SearchManager
 	                em.close();
 	            }
 	        }
+	        
+	        if (emSearch == null) {
+	            String errMsg = "Search identified by name: " + searchName + " does not exist";
+	            LOGGER.error(errMsg);
+	            throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME, new Object[] { searchName });
+	        }
+	        
 	        return getSearch(emSearch, false);
 	}
 

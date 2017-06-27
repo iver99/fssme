@@ -938,7 +938,7 @@ public class SearchAPI
             if (!DependencyStatus.getInstance().isDatabaseUp()) {
                 throw new EMAnalyticsDatabaseUnavailException();
             }
-            Search searchObj = sman.getSearchListWithoutOwnerByName(searchName);
+            Search searchObj = sman.getSearchWithoutOwnerByName(searchName);
             message = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj).toString();
         } catch (EMAnalyticsFwkException e) {
             LOGGER.error(e.getLocalizedMessage());

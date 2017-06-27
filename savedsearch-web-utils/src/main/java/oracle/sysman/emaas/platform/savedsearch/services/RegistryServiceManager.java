@@ -191,6 +191,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 	private static final String NAV_BASE = "/savedsearch/v1";
 	private static final String NAV_SEARCH = "/savedsearch/v1/search";
+	private static final String NAV_SEARCH_NAME = "/savedsearch/v1/search/name";
 	private static final String NAV_FOLDER = "/savedsearch/v1/folder";
 	private static final String NAV_CATEGORY = "/savedsearch/v1/category";
 	private static final String NAV_SEARCHES = "/savedsearch/v1/searches";
@@ -202,6 +203,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 	private static final String STATIC_NAV = "static/savedsearch.navigation";
 	private static final String STATIC_SEARCH = "static/savedsearch.search";
+	private static final String STATIC_SEARCH_NAME = "static/savedsearch.search.name";
 	private static final String STATIC_CATEGORY = "static/savedsearch.category";
 	private static final String STATIC_FOLDER = "static/savedsearch.folder";
 	private static final String STATIC_SEARCHES = "static/savedsearch.searches";
@@ -369,6 +371,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrl + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrl + NAV_CATEGORY));
 				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrl + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(STATIC_SEARCH_NAME).withHref(applicationUrl + NAV_SEARCH_NAME));
 				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrl + NAV_SEARCHES));
 				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrl + NAV_ENTITIES));
 				links.add(new Link().withRel(STATIC_CATEGORIES).withHref(applicationUrl + NAV_CATEGORIES));
@@ -388,6 +391,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrlSSL + NAV_CATEGORY));
 				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(STATIC_SEARCH_NAME).withHref(applicationUrlSSL + NAV_SEARCH_NAME));
 				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrlSSL + NAV_SEARCHES));
 				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrlSSL + NAV_ENTITIES));
 				links.add(new Link().withRel(STATIC_CATEGORIES).withHref(applicationUrlSSL + NAV_CATEGORIES));

@@ -1506,7 +1506,7 @@ public class SearchManagerImplTest
 	}
 	
     @Test
-    public void testGetSearchListWithoutOwnerByName() throws EMAnalyticsFwkException {
+    public void testGetSearchWithoutOwnerByName() throws EMAnalyticsFwkException {
         final EmAnalyticsSearch emSearch = new EmAnalyticsSearch();
         new Expectations() {
             {
@@ -1518,6 +1518,6 @@ public class SearchManagerImplTest
                 result = emSearch;
             }
         };
-        searchManager.getSearchListWithoutOwnerByName("searchName");
+        searchManager.getSearchWithoutOwnerByName("searchName");
     }
 }
