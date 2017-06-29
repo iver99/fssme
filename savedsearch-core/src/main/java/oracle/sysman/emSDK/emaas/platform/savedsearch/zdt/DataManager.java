@@ -245,6 +245,7 @@ public class DataManager
 			}
 			
 		}catch(Exception e) {
+			logger.info("execption happens in getComparedDataToSync "+e.getLocalizedMessage());
 			logger.error("error occurs while executing sql:" + SQL_GET_COMPARED_DATA_TO_SYNC);
 		}
 		return result;
@@ -829,89 +830,9 @@ public class DataManager
 			
 		}
 		catch (Exception e) {
-			logger.error("Error occured when sync search table data!");
+			logger.error("Error occured when sync search table data! "+e.getLocalizedMessage());
 		}
 	}
-/*
-	private String checkFormat(String dateStr)
-	{
-		if (null == dateStr) {
-			logger.error("dateStr can not be null");
-			throw new NullPointerException("dateStr can not be null");
-		}
-		String temp = dateStr.split("\\.")[1];
-		if (temp.length() == 1) {
-			logger.debug("add 2 digits");
-			return dateStr + "00";
-		}
-		else if (temp.length() == 2) {
-			logger.debug("add 1 digit");
-			return dateStr + "0";
-		}
-		else if (temp.length() == 3) {
-			logger.debug("exactly 3 digits!");
-			return dateStr;
-		}
-		else if (temp.length() == 4) {
-			logger.debug("remove 1 digit!");
-			return dateStr.substring(0, dateStr.length() - 1);
-		}
-		else if (temp.length() == 5) {
-			logger.debug("remove 2 digit!");
-			return dateStr.substring(0, dateStr.length() - 2);
-		}
-		else if (temp.length() == 6) {
-			logger.debug("remove 3 digit!");
-			return dateStr.substring(0, dateStr.length() - 3);
-		}
-		logger.debug("checkFormat is about to return  null!");
-		return null;
-	}
-*/
-	/**
-	 * Returns: the value 0 if the syncLastModificationDate is equal to dbLastModificationDate; a value less than 0 if this
-	 * dbLastModificationDate is before the syncLastModificationDate; and a value greater than 0 if dbLastModificationDate is
-	 * after the syncLastModificationDate
-	 *
-	 * @param dbLastModificationDate
-	 * @param syncLastModificationDate
-	 * @return
-	 * @throws ParseException
-	 * @throws Exception
-	 
-	private int compareLastModificationDate(String dbLastModificationDate, String syncLastModificationDate)
-			throws ParseException, Exception
-	{
-
-		if (StringUtil.isEmpty(dbLastModificationDate) || StringUtil.isEmpty(syncLastModificationDate)) {
-			logger.error("LastModification is empty,no comparison will be executed!");
-			try {
-				throw new Exception("LastModificationDate in DB or Sync data should not be empty!");
-			}
-			catch (Exception e) {
-			}
-		}
-		logger.debug("Before formation,syncLastmodificationDate is " + syncLastModificationDate);
-		syncLastModificationDate = checkFormat(syncLastModificationDate);
-		logger.debug("After formation,syncLastModificationDate is " + syncLastModificationDate);
-		if (syncLastModificationDate == null) {
-			logger.error("Exception occured when format syncLastModificationDate!");
-			throw new Exception("Exception occured when format syncLastModificationDate!");
-		}
-		/**
-		 * dbLastModificationDate is 3 digits(eg:"2016-07-17 10:09:49.123") after second,however the digits number of
-		 * syncLastModificationDate is not stable,so we keep 3 digits of syncLastModificationDate too(if shorter than 3 digits,we
-		 * add 0 in the tail,if longer than 3 digits,remove the extra digits). In other word,ZDT's sync work is on milli-second
-		 * level!
-		
-		logger.debug("DBLastmodificationDate is " + dbLastModificationDate);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss.S");
-		Date dbDate = sdf.parse(dbLastModificationDate);
-		Date syncDate = sdf.parse(syncLastModificationDate);
-		return dbDate.compareTo(syncDate);
-
-	}
-*/
 
 	 private boolean isAfter(String thisDate, String comparedDate){
          SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -962,6 +883,7 @@ public class DataManager
 			list = query.getResultList();
 		}
 		catch (Exception e) {
+			logger.error("exception happens in getDatabaseTableData :"+e.getLocalizedMessage());
 			logger.error("Error occured when execute SQL:[" + nativeSql + "]");
 		}
 		if (list == null) {
@@ -986,7 +908,7 @@ public class DataManager
 			
 			result = query.getResultList();
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("exception happens in getSingleTableData :"+e.getLocalizedMessage());
 			logger.error("error occurs while executing sql:" + nativeSql);
 		}
 		return result;

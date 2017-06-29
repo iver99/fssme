@@ -287,10 +287,11 @@ public class ZDTAPI
 			if (result != null) {
 				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
 				logger.info("comparedNum={}",comparedDataNum);
-				if (comparedDataNum == 0) {
+				
+				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
+				if (totalRow == 0) {
 					return Response.status(status).entity("No user created saved searches, Nothing to compare").build();					
 				}
-				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
 				logger.info("totalRow={}",totalRow);
 				double percen = (double)comparedDataNum/(double)totalRow;
 				DecimalFormat df = new DecimalFormat("#.##########");
@@ -307,10 +308,12 @@ public class ZDTAPI
 				
 				ZDTTableRowEntity data1 = result.getInstance1().getData();
 				String result1 = jsonUtil.toJson(data1);
+				logger.info("client1-result="+result1);
 				ZDTComparatorStatusRowEntity statusRow1 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage+"", result1);
 								
 				ZDTTableRowEntity data2 = result.getInstance2().getData();
 				String result2 = jsonUtil.toJson(data2);
+				logger.info("client2-result="+result2);
 				ZDTComparatorStatusRowEntity statusRow2 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage+"", result2);
 				
 				// save status information for client 1  -- switch data for sync

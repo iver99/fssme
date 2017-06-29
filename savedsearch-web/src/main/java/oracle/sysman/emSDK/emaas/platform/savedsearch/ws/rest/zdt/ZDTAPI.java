@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +38,10 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.countEntity.ZDTCountEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchParamRowEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTComparatorStatusRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTSyncStatusRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTTableRowEntity;
@@ -202,6 +206,54 @@ public class ZDTAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
+	
+	private  List<List<?>> splitList(List<?> list, int len) {
+		if (list == null || list.size() == 0 || len < 1) {
+			return null;
+		}		 
+		List<List<?>> result = new ArrayList<List<?>>();		 		 
+		int size = list.size();
+		int count = (size + len - 1) / len;		 	 
+		for (int i = 0; i < count; i++) {			
+			List<?> subList = list.subList(i * len, ((i + 1) * len > size ? size : len * (i + 1)));
+			result.add(subList);
+		}
+			return result;
+		}
+	
+	public List<ZDTTableRowEntity> splitTableRowEntity(ZDTTableRowEntity originalEntity){
+		List<ZDTTableRowEntity> entities = new ArrayList<ZDTTableRowEntity>();
+		if (originalEntity != null) {
+			List<List<?>> splitSearch = null;
+			List<List<?>> splitParams = null;
+			// for each connection, we just sync 1000 rows
+			int length = 1000;
+			if (originalEntity.getSavedSearchSearch() != null) {
+				splitSearch = splitList(originalEntity.getSavedSearchSearch(), length);
+			}
+			
+			if (originalEntity.getSavedSearchSearchParams() != null) {
+				splitParams = splitList(originalEntity.getSavedSearchSearchParams(),length);
+			}
+			
+			// sync search table first and then sync parameter table to avoid key constraints
+			if (splitSearch != null) {
+				for (List<?> searchList : splitSearch) {
+					ZDTTableRowEntity rowEntity = new ZDTTableRowEntity();
+					rowEntity.setSavedSearchSearch((List<SavedSearchSearchRowEntity>) searchList);
+					entities.add(rowEntity);
+				}
+			}
+			if (splitParams != null) {
+				for (List<?> paramList : splitParams) {
+					ZDTTableRowEntity rowEntity = new ZDTTableRowEntity();
+					rowEntity.setSavedSearchSearchParams((List<SavedSearchSearchParamRowEntity>) paramList);
+					entities.add(rowEntity);
+				}
+			}			
+		}
+		return entities;
+	}
 
 	@GET
 	@Path("sync")
@@ -219,9 +271,14 @@ public class ZDTAPI
 		try {			
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
+			logger.info("lastComparisonDateForSync is "+lastComparisonDateForSync);
 			comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
+			if (comparedDataToSync != null) {
+				logger.info("comparedDataToSync size ="+comparedDataToSync.size());
+			}
+			
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
+			logger.error("error infor="+e.getLocalizedMessage());
 			return Response.status(400).entity(e.getLocalizedMessage()).build();				
 		} finally {
 			if (em != null) {
@@ -233,8 +290,18 @@ public class ZDTAPI
 				for (Map<String, Object> dataMap : comparedDataToSync) {
 					Object compareResult = dataMap.get("COMPARISON_RESULT");
 					Object compareDate = dataMap.get("COMPARISON_DATE");
-					data = JSONUtil.fromJson(new ObjectMapper(), compareResult.toString(), ZDTTableRowEntity.class);
-					String response = new ZDTSynchronizer().sync(data);
+					JsonUtil ju = JsonUtil.buildNormalMapper();
+					data = ju.fromJson(compareResult.toString(), ZDTTableRowEntity.class);
+					//data = JSONUtil.fromJson(new ObjectMapper(), compareResult.toString(), ZDTTableRowEntity.class);					
+					//logger.info("data = "+data.toString());
+					List<ZDTTableRowEntity> entities = splitTableRowEntity(data);
+					String response = null;
+					if (entities != null) {
+						for (ZDTTableRowEntity entity : entities) {
+							response = new ZDTSynchronizer().sync(entity);
+						}
+					}					
+					logger.info("synchronizer().sync response is :"+response);
 					lastCompareDate = (String) compareDate;
 					if (response.contains("Errors:")) {
 						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
@@ -251,7 +318,7 @@ public class ZDTAPI
 						
 			return Response.ok("Sync is successful!").build();
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return Response.status(400).entity("Errors: " + e.getLocalizedMessage()).build();
 		} 

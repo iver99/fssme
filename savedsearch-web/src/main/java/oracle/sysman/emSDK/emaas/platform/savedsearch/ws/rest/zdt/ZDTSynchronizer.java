@@ -44,9 +44,11 @@ public class ZDTSynchronizer
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
+			logger.info("start to sync each tables");
 			syncCategoryTableRows(em, data.getSavedSearchCategory());
 			syncCategoryParamsTableRows(em, data.getSavedSearchCategoryParams());
 			syncFoldersTableRows(em, data.getSavedSearchFoldersy());
+			logger.info("start to sync search; search table size ="+data.getSavedSearchSearch().size());
 			syncSearchTableRows(em, data.getSavedSearchSearch());
 			syncSearchParamsTableRows(em, data.getSavedSearchSearchParams());
 			em.getTransaction().commit();
@@ -142,8 +144,9 @@ public class ZDTSynchronizer
 			return;
 		}
 	try {	logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
+	int i =0;
 		for (SavedSearchSearchRowEntity e : rows) {
-			
+			logger.info("sync the item = "+ (i+1));
 			DataManager.getInstance().syncSearchTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
 					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId() == null? null:new BigInteger(e.getFolderId()),
 					e.getCategoryId() == null? null:new BigInteger(e.getCategoryId()), e.getSystemSearch(), e.getIsLocked(), e.getMetadataClob(),

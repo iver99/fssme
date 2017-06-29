@@ -110,14 +110,17 @@ public class SavedsearchRowsComparator extends AbstractComparator
 				// for client1
 				List<ZDTTableRowEntity> allRowEntitisForClient1 = new ArrayList<ZDTTableRowEntity>();
 				JSONArray array1 = tenantObj.getJSONArray("client1");
+				logger.info("****client1="+client1.getServiceUrls().get(0));				
 				for (int i = 0; i < array1.length(); i++) {
 					String tenant = array1.get(i).toString();
 					ZDTTableRowEntity subTre = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType, maxComparedDate,tenant);
 					if (subTre == null) {
 						logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
-						logger.info("Completed to compare the two ssf OMC instances");
 						return null;
 					}
+					logger.info("client1-{}-search={}",i,subTre.getSavedSearchSearch().size());
+					logger.info("client1-{}-search params={}",i,subTre.getSavedSearchSearchParams().size());
+					
 					allRowEntitisForClient1.add(subTre);
 				}
 				tre1 = combineRowEntity(allRowEntitisForClient1);
@@ -126,10 +129,14 @@ public class SavedsearchRowsComparator extends AbstractComparator
 				logger.info("tre1 search params size = "+tre1.getSavedSearchSearchParams().size());
 				// for client2
 				List<ZDTTableRowEntity> allRowEntitisForClient2 = new ArrayList<ZDTTableRowEntity>();
+				logger.info("****client2="+client2.getServiceUrls().get(0));
 				JSONArray array2 = tenantObj.getJSONArray("client2");
+				logger.info("array2="+array2.toString());
 				for (int i = 0; i < array2.length(); i++) {
 					String tenant = array2.get(i).toString();
 					ZDTTableRowEntity subTre = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType, maxComparedDate,tenant);
+					logger.info("client2-search="+subTre.getSavedSearchSearch().size());
+					logger.info("client2-search params="+subTre.getSavedSearchSearch().size());
 					allRowEntitisForClient2.add(subTre);
 				}
 				tre2 = combineRowEntity(allRowEntitisForClient2);
@@ -147,7 +154,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			int rowNum1 = (int)((entity1.getCountOfCategory() == null? 0L:entity1.getCountOfCategory())
 					+ (entity1.getCountOfFolders() ==null?0L:entity1.getCountOfFolders())
 					+ (entity1.getCountOfCategoryPrams() ==null?0L:entity1.getCountOfCategoryPrams())
-					+ (entity1.getCountOfCategoryPrams() ==null?0L:entity1.getCountOfCategoryPrams())
+					+ (entity1.getCountOfSearchParams() ==null?0L:entity1.getCountOfSearchParams())
 					+ (entity1.getCountOfSearch()==null?0L:entity1.getCountOfSearch()));
  			
 
@@ -158,7 +165,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			int rowNum2 = (int)((entity2.getCountOfCategory() == null? 0L:entity2.getCountOfCategory())
 					+ (entity2.getCountOfFolders() ==null?0L:entity2.getCountOfFolders())
 					+ (entity2.getCountOfCategoryPrams() ==null?0L:entity2.getCountOfCategoryPrams())
-					+ (entity2.getCountOfCategoryPrams() ==null?0L:entity2.getCountOfCategoryPrams())
+					+ (entity2.getCountOfSearchParams() ==null?0L:entity2.getCountOfSearchParams())
 					+ (entity2.getCountOfSearch()==null?0L:entity2.getCountOfSearch()));
  		
 			InstancesComparedData<ZDTTableRowEntity> cd = compareInstancesData(new InstanceData<ZDTTableRowEntity>(key1, client1, tre1, rowNum1),
@@ -219,6 +226,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		if (cd == null) {
 			return;
 		}
+		logger.info("rows1="+rows1.size());
+		logger.info("rows2="+rows2.size());
 		RowEntityComparator<SavedSearchSearchRowEntity> rec = new RowEntityComparator<SavedSearchSearchRowEntity>();
 		CompareListPair<SavedSearchSearchRowEntity> result = rec.compare(rows1, rows2);
 		cd.getInstance1().getData().setSavedSearchSearch(result.getList1());
@@ -421,7 +430,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		String entityStr = jsonUtil.toJson(statusRowEntity);
  		logger.info("print the put data {} !",entityStr);
  		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
- 		logger.info("Checking sync reponse. Response is " + response);
+ 		logger.info("Checking saving comparator status. Response is " + response);
 		return response;
 	}
 
