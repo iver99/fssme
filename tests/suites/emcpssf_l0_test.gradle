@@ -138,6 +138,7 @@ task DEVTest(type: EMTest, dependsOn: QATest) {
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/zdt/DataManagerTest.class"
 
     /*****************savedsearch-webutils project*****************/
+    include "oracle/sysman/emaas/platform/savedsearch/metadata/*.class"
     include "oracle/sysman/emaas/platform/savedsearch/property/*.class"
     include "oracle/sysman/emaas/platform/savedsearch/services/*.class"
     include "oracle/sysman/emaas/platform/savedsearch/targetmodel/services/*.class"

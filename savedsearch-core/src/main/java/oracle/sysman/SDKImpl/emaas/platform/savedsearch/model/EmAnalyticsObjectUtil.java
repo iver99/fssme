@@ -30,13 +30,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.Reque
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParamPK;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
-import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK;
+import oracle.sysman.emaas.platform.savedsearch.entity.*;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -207,6 +201,7 @@ class EmAnalyticsObjectUtil
 		categoryObj.setProviderVersion(category.getProviderVersion());
 		categoryObj.setProviderDiscovery(category.getProviderDiscovery());
 		categoryObj.setProviderAssetRoot(category.getProviderAssetRoot());
+		categoryObj.setTenantId(TenantContext.getContext().getTenantInternalId());
 		if (category.getDefaultFolderId() != null) {
 			EmAnalyticsFolder defaultFolderObj = EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em);
 			if (defaultFolderObj == null) {
@@ -234,6 +229,7 @@ class EmAnalyticsObjectUtil
 				categoryParamEntity.setValue(param.getValue());
 				categoryParamEntity.setCreationDate(utcNow);
 				categoryParamEntity.setLastModificationDate(utcNow);
+				categoryParamEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 				categoryObj.getEmAnalyticsCategoryParams().add(categoryParamEntity);
 			}
 		}
@@ -256,6 +252,7 @@ class EmAnalyticsObjectUtil
 		categoryEntity.setProviderAssetRoot(category.getProviderAssetRoot());
 		Date utcNow = DateUtil.getGatewayTime();
 		categoryEntity.setLastModificationDate(utcNow);
+		categoryEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 		if (category.getDefaultFolderId() != null) {
 			categoryEntity.setEmAnalyticsFolder(EmAnalyticsObjectUtil.getFolderById(category.getDefaultFolderId(), em));
 		}
@@ -277,6 +274,7 @@ class EmAnalyticsObjectUtil
 			newCatParam.setEmAnalyticsCategory(categoryEntity);
 			newCatParam.setCreationDate(utcNow);
 			newCatParam.setLastModificationDate(utcNow);
+			newCatParam.setTenantId(tenantId);
 			newParams.put(newPK, newCatParam);
 		}
 
@@ -477,6 +475,7 @@ class EmAnalyticsObjectUtil
 		searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden() ? 1 : 0));
 		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
 		searchEntity.setDeleted(BigInteger.ZERO);
+		searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 		List<SearchParameter> params = search.getParameters();
 		//move values from search_params table to search table
 		EmAnalyticsObjectUtil.moveParamsToSearchAdd(searchEntity, params);
@@ -487,6 +486,7 @@ class EmAnalyticsObjectUtil
 				searchParamEntity.setSearchId(searchEntity.getId());
 				searchParamEntity.setName(param.getName());
 				searchParamEntity.setParamAttributes(param.getAttributes());
+				searchParamEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 				searchParamEntity.setParamType(new BigDecimal(param.getType().getIntValue()));
 				if (param.getType().equals(ParameterType.CLOB)) {
 					searchParamEntity.setParamValueClob(param.getValue());
@@ -494,10 +494,10 @@ class EmAnalyticsObjectUtil
 				else {
 					searchParamEntity.setParamValueStr(param.getValue());
 				}
-				
+
 				searchParamEntity.setCreationDate(utcDate);
 				searchParamEntity.setLastModificationDate(utcDate);
-				
+				searchParamEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 				searchEntity.getEmAnalyticsSearchParams().add(searchParamEntity);
 			}
 		}
@@ -554,6 +554,9 @@ class EmAnalyticsObjectUtil
 		Set<EmAnalyticsSearchParam> existingParams = Collections.synchronizedSet(searchEntity.getEmAnalyticsSearchParams());
 		Map<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam> newParams = new HashMap<EmAnalyticsSearchParamPK, EmAnalyticsSearchParam>();
 		Long tenantId = TenantContext.getContext().getTenantInternalId();
+		if((new BigDecimal("1")).compareTo(searchEntity.getSystemSearch()) == 0){
+			tenantId = SearchManagerImpl.DEFAULT_TENANT_ID;
+		}
 		if (params != null) {
 			for (SearchParameter param : params) {
 				EmAnalyticsSearchParam newSearchParam = new EmAnalyticsSearchParam();
@@ -566,16 +569,17 @@ class EmAnalyticsObjectUtil
 				newSearchParam.setEmAnalyticsSearch(searchEntity);
 				newSearchParam.setParamAttributes(param.getAttributes());
 				newSearchParam.setParamType(new BigDecimal(param.getType().getIntValue()));
+				newSearchParam.setTenantId(tenantId);
 				if (param.getType() == ParameterType.STRING) {
 					newSearchParam.setParamValueStr(param.getValue());
 				}
 				else {
 					newSearchParam.setParamValueClob(param.getValue());
 				}
-				
+
 				newSearchParam.setCreationDate(utcNow);
 				newSearchParam.setLastModificationDate(utcNow);
-				
+
 				newParams.put(newPK, newSearchParam);
 			}
 		}
@@ -686,12 +690,13 @@ class EmAnalyticsObjectUtil
 		EmAnalyticsSearch searchObj = null;
 		try {
 
-			searchObj = em.find(EmAnalyticsSearch.class, id);
+			searchObj = (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchById")
+					.setParameter("searchId", id).getSingleResult();
 			if (searchObj != null) {
 				if (BigInteger.ZERO.equals(searchObj.getDeleted())
 						&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
-								|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
-										TenantContext.getContext().getUsername()))) {
+						|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(
+						TenantContext.getContext().getUsername()))) {
 
 					return searchObj;
 				}
@@ -700,17 +705,17 @@ class EmAnalyticsObjectUtil
 				}
 			}
 		}
-		catch (Exception nre) {
-			//don nothing
-		}
+		catch (Exception nre) { 
+			//do nothing
+		} 
 		return searchObj;
 	}
 
 	public static EmAnalyticsSearch findEmSearchByIdWithoutOwner(BigInteger searchId, EntityManager em) {
 		EmAnalyticsSearch searchObj = null;
 		try {
-			searchObj = em.find(EmAnalyticsSearch.class, searchId);
-			// return null if the search has been deleted
+			searchObj = (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchById")
+					.setParameter("searchId", searchId).getSingleResult();
 			if(searchObj != null && !BigInteger.ZERO.equals(searchObj.getDeleted())) {
 				searchObj = null;
 			}
@@ -740,7 +745,8 @@ class EmAnalyticsObjectUtil
 		EmAnalyticsSearch searchObj = null;
 		try {
 
-			searchObj = em.find(EmAnalyticsSearch.class, id);
+			searchObj = (EmAnalyticsSearch)em.createNamedQuery("Search.getSearchById")
+					.setParameter("searchId", id).getSingleResult();
 			if (searchObj != null
 					&& (RequestType.INTERNAL_TENANT.equals(RequestContext.getContext())
 							|| searchObj.getSystemSearch().intValue() == 1 || searchObj.getOwner().equals(

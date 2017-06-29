@@ -100,7 +100,7 @@ ext.set("testType", "integration")
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/json/*.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/*.class"
 	   //TODO fix below path later
-//    include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/*.class"
+	   //include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/*.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/**/*.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/exception/*.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/**/*.class"
@@ -108,6 +108,7 @@ ext.set("testType", "integration")
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/zdt/DataManagerTest.class"
 
 	   /*****************savedsearch-webutils project*****************/
+	   include "oracle/sysman/emaas/platform/savedsearch/metadata/*.class"
 	   include "oracle/sysman/emaas/platform/savedsearch/property/*.class"
 	   include "oracle/sysman/emaas/platform/savedsearch/services/*.class"
 	   include "oracle/sysman/emaas/platform/savedsearch/targetmodel/services/*.class"

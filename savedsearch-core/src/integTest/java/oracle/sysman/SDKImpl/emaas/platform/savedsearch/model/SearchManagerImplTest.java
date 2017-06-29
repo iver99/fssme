@@ -34,6 +34,7 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.internal.annotations.ExpectedExceptionsAnnotation;
 
 /**
  * @author qianqi
@@ -92,6 +93,52 @@ public class SearchManagerImplTest
 		searchManager.createNewSearch();
 	}
 
+	@Test
+	public void testGetWidgetByName() throws EMAnalyticsFwkException {
+		final List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<>();
+		EmAnalyticsSearch emAnalyticsSearch = new EmAnalyticsSearch();
+		emAnalyticsSearchList.add(emAnalyticsSearch);
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, anyString);
+				result = query;
+				query.getResultList();
+				result = emAnalyticsSearchList;
+			}
+		};
+		searchManager = SearchManagerImpl.getInstance();
+		searchManager.getWidgetByName("widgetName");
+
+	}
+
+
+
+	@Test
+	public void testGetSearchIdCategory() throws EMAnalyticsFwkException {
+		final BigInteger categoryId = new BigInteger("8");
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				result = entityManager;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, categoryId);
+				result = query;
+				query.getResultList();
+			}
+		};
+
+		searchManager = SearchManagerImpl.getInstance();
+		searchManager.getSearchIdsByCategory(categoryId);
+	}
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
 	public void testDeleteSearchException() throws EMAnalyticsFwkException
 	{
@@ -1504,7 +1551,7 @@ public class SearchManagerImplTest
 		};
 		searchManager.deleteSearchByName("searchName", false);
 	}
-	
+
     @Test
     public void testGetSearchWithoutOwnerByName() throws EMAnalyticsFwkException {
         final EmAnalyticsSearch emSearch = new EmAnalyticsSearch();
@@ -1520,4 +1567,30 @@ public class SearchManagerImplTest
         };
         searchManager.getSearchWithoutOwnerByName("searchName");
     }
+
+	@Test
+	public void testSaveOobSearch() throws EMAnalyticsFwkException {
+		List<SearchImpl> oobWidgetList = new ArrayList<>();
+		final SearchImpl search = new SearchImpl();
+		List<BigInteger> searchIds = new ArrayList<>();
+		searchIds.add(new BigInteger("1"));
+		oobWidgetList.add(search);
+		search.setDashboardIneligible("true");
+		new Expectations(){
+			{
+				PersistenceManager.getInstance();
+				result = persistenceManager;
+				persistenceManager.getEntityManager((TenantInfo)any);
+				entityManager.getTransaction().isActive();
+				result = true;
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, (List)any);
+				result = query;
+				query.executeUpdate();
+				EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, (EntityManager)any);
+			}
+		};
+		searchManager.storeOobWidget(searchIds,oobWidgetList);
+	}
 }

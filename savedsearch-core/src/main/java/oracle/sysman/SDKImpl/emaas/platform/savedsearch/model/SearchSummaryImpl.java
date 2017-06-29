@@ -24,6 +24,17 @@ public class SearchSummaryImpl extends EmBase implements SearchSummary, Serializ
 	protected Date lastAccessDate;
 	protected boolean systemSearch;
 	protected String[] tags;
+	protected String dashboardIneligible;
+
+	@Override
+	public String getDashboardIneligible() {
+		return dashboardIneligible;
+	}
+
+	@Override
+	public void setDashboardIneligible(String dashboardIneligible) {
+		this.dashboardIneligible = dashboardIneligible;
+	}
 
 	@Override
 	public BigInteger getCategoryId()
