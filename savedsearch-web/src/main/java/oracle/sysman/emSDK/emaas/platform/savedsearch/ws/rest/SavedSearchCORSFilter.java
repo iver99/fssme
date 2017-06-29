@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class SavedSearchCORSFilter implements Filter
 {
+
 	private static class OAMHttpRequestWrapper extends HttpServletRequestWrapper
 	{
 		private String oam_remote_user = null;
@@ -224,6 +225,10 @@ public class SavedSearchCORSFilter implements Filter
 				}
 				TenantInfo info = HeadersUtil.getTenantInfo((HttpServletRequest) request);
 				TenantContext.setContext(info);
+//				TenantContext.clearLocale();
+//				String langAttr = LocaleUtil.getLangAttr(hReq);
+//				Locale locale = DatabaseResourceBundleUtil.generateLocale(langAttr);
+//				TenantContext.setLocale(locale);
 				LogUtil.setInteractionLogThreadContext(info.gettenantName(), ((HttpServletRequest) request).getHeader("referer"),
 						InteractionLogDirection.IN);
 				if (isParameterPresent(hReq)) {

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
@@ -60,10 +61,24 @@ public abstract class SearchManager
 	 *
 	 * @param searchName
 	 * @param isExactly
-	 * @param permanently
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract void deleteSearchByName(String searchName, boolean isExactly)throws EMAnalyticsFwkException;
+
+
+    /**
+     *
+     * @param categoryId
+     */
+    public abstract List<BigInteger> getSearchIdsByCategory(BigInteger categoryId) throws EMAnalyticsFwkException;
+
+	/**
+	 *
+	 * @param searchIds
+	 * @param oobWidgetList
+	 * @throws EMAnalyticsFwkException
+     */
+	public abstract void storeOobWidget(List<BigInteger> searchIds, List<SearchImpl> oobWidgetList)throws EMAnalyticsFwkException;
 	/**
 	 * Resturns the search by its name dxy
 	 * @param searchName
@@ -125,6 +140,9 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Search getSearchByName(String name, BigInteger folderId) throws EMAnalyticsFwkException;
+
+
+	public abstract List<Search> getWidgetByName(String name) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the count of (accessible) search entities in a folder.

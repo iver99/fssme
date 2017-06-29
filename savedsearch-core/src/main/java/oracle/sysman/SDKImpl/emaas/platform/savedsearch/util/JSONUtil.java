@@ -122,6 +122,16 @@ public class JSONUtil
 	}
 
 	@SuppressWarnings("unchecked")
+	public static <T> T fromJsonUnencoded(ObjectMapper mapper, String jsonString, JavaType javaType) throws IOException
+	{
+		if (JSONUtil.isEmpty(jsonString)) {
+			return null;
+		}
+
+		return (T) mapper.readValue(jsonString, javaType);
+	}
+
+	@SuppressWarnings("unchecked")
 	public static <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta) throws IOException
 	{
 		ObjectMapper mapper = new ObjectMapper();
@@ -132,6 +142,19 @@ public class JSONUtil
         //forbid the deserialize int for Enum order()
         mapper.configure(DeserializationConfig.Feature.FAIL_ON_NUMBERS_FOR_ENUMS, true);
 		return (List<T>) JSONUtil.fromJson(mapper, jsonString, JSONUtil.constructParametricType(mapper, List.class, classMeta));
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> fromJsonToListUnencoded(String jsonString, Class<T> classMeta) throws IOException
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		//set inclusion attribute
+		mapper.setSerializationInclusion(Inclusion.ALWAYS);
+		//ignore those exist in json but not in java
+		mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		//forbid the deserialize int for Enum order()
+		mapper.configure(DeserializationConfig.Feature.FAIL_ON_NUMBERS_FOR_ENUMS, true);
+		return (List<T>) JSONUtil.fromJsonUnencoded(mapper, jsonString, JSONUtil.constructParametricType(mapper, List.class, classMeta));
 	}
 
 	@SuppressWarnings("unchecked")

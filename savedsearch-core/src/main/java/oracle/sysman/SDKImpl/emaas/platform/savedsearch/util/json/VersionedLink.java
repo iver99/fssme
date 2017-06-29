@@ -10,6 +10,7 @@ public class VersionedLink extends Link {
 	}
 
 	public VersionedLink(Link link, String authToken) {
+		if(link == null) return;
 		withHref(link.getHref());
 		withOverrideTypes(link.getOverrideTypes());
 		withRel(link.getRel());
