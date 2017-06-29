@@ -1110,12 +1110,6 @@ public class EmAnalyticsObjectUtilTest
 	
     @Test
     public void testFindEmSearchByIdWithoutOwner() {
-        new Expectations() {
-            {
-                entityManager.find(EmAnalyticsSearch.class, (BigInteger) any);
-                result = emAnalyticsSearch;
-            }
-        };
         EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(BigInteger.ONE, entityManager);
     }
     
