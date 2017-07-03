@@ -58,6 +58,18 @@ public class DataManagerTest
 		dataManager.saveToSyncTable("2017-05-12 11:21:23", "2017-05-12 11:21:23", "full", "", 0.11,"2017-05-12 11:21:23");
 	}
 	
+	@Test
+	public void testGetAllTenants(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Map<String, Object>> list = new ArrayList<>();
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getAllTenants(entityManager);
+	}
 	
 	@Test
 	public void testGetComparedDataToSync(@Mocked final PersistenceManager persistenceManager, 
@@ -261,6 +273,8 @@ public class DataManagerTest
 		data.add("123");
 		new Expectations(){
             {
+            	entityManager.createNativeQuery(anyString).setParameter(1,anyString);
+            	result = query;
             	query.getResultList();
                 result = data;
             }

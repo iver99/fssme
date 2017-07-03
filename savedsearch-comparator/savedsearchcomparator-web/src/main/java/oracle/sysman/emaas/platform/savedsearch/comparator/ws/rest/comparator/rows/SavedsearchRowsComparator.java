@@ -110,7 +110,6 @@ public class SavedsearchRowsComparator extends AbstractComparator
 				// for client1
 				List<ZDTTableRowEntity> allRowEntitisForClient1 = new ArrayList<ZDTTableRowEntity>();
 				JSONArray array1 = tenantObj.getJSONArray("client1");
-				logger.info("****client1="+client1.getServiceUrls().get(0));				
 				for (int i = 0; i < array1.length(); i++) {
 					String tenant = array1.get(i).toString();
 					ZDTTableRowEntity subTre = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType, maxComparedDate,tenant);
@@ -118,8 +117,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 						logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 						return null;
 					}
-					logger.info("client1-{}-search={}",i,subTre.getSavedSearchSearch().size());
-					logger.info("client1-{}-search params={}",i,subTre.getSavedSearchSearchParams().size());
+				
 					
 					allRowEntitisForClient1.add(subTre);
 				}

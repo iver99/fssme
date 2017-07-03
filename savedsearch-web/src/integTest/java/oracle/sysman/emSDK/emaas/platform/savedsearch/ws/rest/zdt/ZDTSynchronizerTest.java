@@ -23,7 +23,7 @@ public class ZDTSynchronizerTest {
 	@Mocked DataManager dm;
 	@Test (groups = {"s1"})
 	public void testSyncNull(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager em) {
+			@Mocked final EntityManager em){
 		ZDTSynchronizer syn = new ZDTSynchronizer();
 		syn.sync(null);
 		ZDTTableRowEntity row = new ZDTTableRowEntity(null, null, null, null, null);
@@ -32,7 +32,7 @@ public class ZDTSynchronizerTest {
 
 	@Test (groups = {"s1"})
 	public void testSync(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager em) {
+			@Mocked final EntityManager em) throws Exception {
 		List<SavedSearchCategoryRowEntity> savedSearchCategory = new ArrayList<SavedSearchCategoryRowEntity>();
 		savedSearchCategory.add(new SavedSearchCategoryRowEntity(null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null));

@@ -59,6 +59,24 @@ public class ZDTAPITest {
         };
         zdtapi.getAllTableData("incremental", "2017-05-25 16:03:02", "tenant");
     }
+    
+    @Test
+    public void testGetAllTenants(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager em) {
+    	final List<Object> tenants = new ArrayList<Object>();
+    	tenants.add("tenant");
+    	new Expectations() {
+    		{
+    			DataManager.getInstance();
+    			result = dataManager;
+    			dataManager.getLatestComparisonDateForCompare(em);
+    			result = "date";
+    			dataManager.getAllTenants(em);
+    			result = tenants;
+    		}
+    	};
+    	zdtapi.getAllTenants();
+    }
 
     @Test
     public void testGetEntitiesCoung(@Mocked final PersistenceManager persistenceManager, 
@@ -94,7 +112,8 @@ public class ZDTAPITest {
         final List<Map<String, Object>> comparedDataToSync = new ArrayList<Map<String, Object>>();
         Map<String, Object> comparedData = new HashMap<String, Object>();
         
-        comparedData.put("COMPARISON_RESULT", "{\"EMS_ANALYTICS_CATEGORY_PARAMS\": [{\"CATEGORY_ID\": \"10909\",\"NAME\": \"categoryParms\",\"PARAM_VALUE\": \"paramValue\",\"CREATION_DATE\": \"2017-03-11 16:44:24.505583\",\"TENANT_ID\": 1565220054,\"LAST_MODIFICATION_DATE\": \"2017-03-11 16:44:24.517104\",\"DELETED\": 0}]}");
+        comparedData.put("COMPARISON_RESULT", "{\"EMS_ANALYTICS_SEARCH_PARAMS\": [{\"SEARCH_ID\": \"10909\",\"NAME\": \"searchParms\",\"DELETED\": 0}],"
+        		+ "\"EMS_ANALYTICS_SEARCH\": [{\"SEARCH_ID\": \"10909\",\"NAME\": \"search\",\"DELETED\": 0}]}");
         comparedData.put("COMPARISON_DATE", "2017-05-12 15:20:21");
         comparedDataToSync.add(comparedData);
     	new Expectations() {

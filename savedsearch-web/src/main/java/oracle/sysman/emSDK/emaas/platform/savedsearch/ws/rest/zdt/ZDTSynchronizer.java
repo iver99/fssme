@@ -44,20 +44,19 @@ public class ZDTSynchronizer
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
-			logger.info("start to sync each tables");
 			syncCategoryTableRows(em, data.getSavedSearchCategory());
 			syncCategoryParamsTableRows(em, data.getSavedSearchCategoryParams());
 			syncFoldersTableRows(em, data.getSavedSearchFoldersy());
-			logger.info("start to sync search; search table size ="+data.getSavedSearchSearch().size());
 			syncSearchTableRows(em, data.getSavedSearchSearch());
 			syncSearchParamsTableRows(em, data.getSavedSearchSearchParams());
 			em.getTransaction().commit();
 			return "sync is successful";
 		}
 		catch (Exception e) {
-			logger.error("errors while syc for tables -",e.getLocalizedMessage());
+			logger.error("errors while syc for tables -" + e);
 			return "Errors:Failed to sync - "+ e.getLocalizedMessage();
-		} finally {
+		} 
+		finally {
 			if (em != null) {
 				em.close();
 			}
@@ -159,6 +158,7 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH table");
 	} catch (Exception e) {
+		logger.info("erros while sync for search table "+e.getLocalizedMessage());
 		logger.error(e);
 	}
 	}

@@ -289,6 +289,21 @@ public class SaveSearchRowsComparatorTest
 		drc.retrieveComparatorStatusForOmcInstance(null, null);
 	}
 	
+	@Test 
+	public void testretrieveTenants(@Mocked LookupClient client) throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
+		drc.retrieveTenants(null, null,client);
+	}
+	
 	@Test
 	 public void testCompare() throws ZDTException, JSONException {
 		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
@@ -309,6 +324,40 @@ public class SaveSearchRowsComparatorTest
 	
 		drc.compare(null, null, null, "2017-05-25 16:03:02",true,obj);
 		drc.compare(null, null, null, "2017-05-25 16:03:02",false,obj);
+	}
+	
+	@Test
+	public void testCombineRowEntity() throws ZDTException {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+		List<ZDTTableRowEntity> originalEntity = new ArrayList<ZDTTableRowEntity>();
+		ZDTTableRowEntity entity = null;
+		List<SavedSearchCategoryRowEntity> category = new ArrayList<SavedSearchCategoryRowEntity>();
+		List<SavedSearchCategoryParamRowEntity> categoryParams = new ArrayList<SavedSearchCategoryParamRowEntity>();
+		List<SavedSearchFolderRowEntity> folder = new ArrayList<SavedSearchFolderRowEntity>();
+		List<SavedSearchSearchParamRowEntity> searchParams = new ArrayList<SavedSearchSearchParamRowEntity>();
+		List<SavedSearchSearchRowEntity> search = new ArrayList<SavedSearchSearchRowEntity>();
+		category.add(new SavedSearchCategoryRowEntity());
+		categoryParams.add(new SavedSearchCategoryParamRowEntity());
+		folder.add(new SavedSearchFolderRowEntity());
+		searchParams.add(new SavedSearchSearchParamRowEntity());
+		search.add(new SavedSearchSearchRowEntity());
+		entity = new ZDTTableRowEntity();
+		entity.setSavedSearchCategory(category);
+		entity.setSavedSearchCategoryParams(categoryParams);
+		entity.setSavedSearchFoldersy(folder);
+		entity.setSavedSearchSearch(search);
+		entity.setSavedSearchSearchParams(searchParams);
+		originalEntity.add(entity);
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
+        drc.combineRowEntity(originalEntity);
 	}
 	
 	@Test

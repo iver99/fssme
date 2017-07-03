@@ -296,8 +296,10 @@ public class ZDTAPI
 					//logger.info("data = "+data.toString());
 					List<ZDTTableRowEntity> entities = splitTableRowEntity(data);
 					String response = null;
+					int flag = 0;
 					if (entities != null) {
 						for (ZDTTableRowEntity entity : entities) {
+							flag = flag + 1;
 							response = new ZDTSynchronizer().sync(entity);
 						}
 					}					

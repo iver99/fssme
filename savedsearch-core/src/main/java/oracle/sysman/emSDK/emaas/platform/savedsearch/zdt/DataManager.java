@@ -729,7 +729,7 @@ public class DataManager
 				else {
 					//execute update action
 					logger.info("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
-					em.createNativeQuery(SQL_UPDATE_SEARCH_PARAM).setParameter(1, paramAttributes).setParameter(2, paramType)
+				    em.createNativeQuery(SQL_UPDATE_SEARCH_PARAM).setParameter(1, paramAttributes).setParameter(2, paramType)
 							.setParameter(3, paramValueStr).setParameter(4, paramValueClob).setParameter(5, creationDate)
 							.setParameter(6, lastModificationDate).setParameter(7, deleted).setParameter(8, searchId).setParameter(9, name)
 							.setParameter(10, tenantId).executeUpdate();
@@ -739,6 +739,9 @@ public class DataManager
 			
 		}
 		catch (Exception e) {
+			logger.info("start to print");
+			e.printStackTrace();
+			logger.info("end to print");
 			logger.error("Error occured when sync search param table data! {}", e.getLocalizedMessage());
 		}
 	}
@@ -822,8 +825,7 @@ public class DataManager
 							.setParameter(23, widgetSupportTimeControl).setParameter(24, widgetLinkedDashboard)
 							.setParameter(25, widgetDefaultWidth).setParameter(26, widgetDefaultHeight)
 							.setParameter(27, providerName).setParameter(28, providerVersion).setParameter(29, providerAssetRoot)
-							.setParameter(30, dashboardIneligible).setParameter(31, searchId).setParameter(32, tenantId)
-							.executeUpdate();
+							.setParameter(30, dashboardIneligible).setParameter(31, searchId).setParameter(32, tenantId).executeUpdate();
 				}
 
 			}
