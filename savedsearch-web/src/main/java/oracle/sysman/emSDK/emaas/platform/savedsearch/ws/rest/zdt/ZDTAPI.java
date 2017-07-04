@@ -296,14 +296,11 @@ public class ZDTAPI
 					//logger.info("data = "+data.toString());
 					List<ZDTTableRowEntity> entities = splitTableRowEntity(data);
 					String response = null;
-					int flag = 0;
 					if (entities != null) {
 						for (ZDTTableRowEntity entity : entities) {
-							flag = flag + 1;
 							response = new ZDTSynchronizer().sync(entity);
 						}
 					}					
-					logger.info("synchronizer().sync response is :"+response);
 					lastCompareDate = (String) compareDate;
 					if (response.contains("Errors:")) {
 						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
