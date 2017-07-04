@@ -30,9 +30,10 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* ************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
- 
- 
+
+
 ext.emaasAPIGWVersion = getDependentSdkVersion('com.oracle.emaas.emcpgw.sdk', 'gateway-client', '1.+')
+def emcpdfDashboardSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
 def regLookupClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 def regClientVer= getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 def emcpsrvsSDKVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
@@ -49,7 +50,8 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-webutils', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-webutils-integ-tests', version: "${REPO_BID}") {transitive = false}
 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearchcomparator-web-integ-tests', version: "${REPO_BID}") {transitive = false}
-	
+	testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version:emcpdfDashboardSdkVer) {transitive=false}
+
 	testConfig(group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: "${emaasAPIGWVersion}"){ transitive = false }
 	testConfig(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
 	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
@@ -205,13 +207,6 @@ include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/LogUtilTest.class
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RegistryLookupUtilTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/RestClientTest.class"
 include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/TenantSubscriptionUtilTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/*.class"
-//include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheLinkedHashMapTest.class"
-//include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/lru/CacheManagerTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/CachedLinkTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/BinaryTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotCacheManagerTest.class"
-include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/screenshot/ScreenshotElementTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/common/ExecutionContextTest.class"
 include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/CategorySetTest.class"
 include "oracle/sysman/emaas/savedsearch/FolderSetTest.class"

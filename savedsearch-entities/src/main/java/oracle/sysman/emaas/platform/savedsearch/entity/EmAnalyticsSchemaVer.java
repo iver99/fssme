@@ -16,7 +16,7 @@ import org.eclipse.persistence.annotations.ReadOnly;
 @Entity
 @Table(name = "EMS_ANALYTICS_SCHEMA_VER_SSF")
 @NamedQuery(name = "EmAnalyticsSchemaVer.findAll", query = "SELECT e FROM EmAnalyticsSchemaVer e")
-public class EmAnalyticsSchemaVer extends EmBaseEntity implements Serializable
+public class EmAnalyticsSchemaVer implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 

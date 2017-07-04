@@ -11,15 +11,18 @@
 package oracle.sysman.SDKImpl.emaas.platform.savedsearch.util;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CacheManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Keys;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.Tenant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.cache.CacheInconsistencyException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.*;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -102,10 +105,10 @@ public class TenantSubscriptionUtil
 						&& !TenantSubscriptionUtil.isCategoryHiddenInWidgetSelector(cat, includeDashboardIneligible)) {
 					resultList.add(cat);
 				}
-				//only current cat is UDE cat, and for v2/v3 tenant, and result list did not contains it yet, then we add.
+				//only current cat is UDE cat, and for v2/v3/v4 tenant, and result list did not contains it yet, then we add.
 				if("Data Explorer".equals(cat.getName()) && !isV1Tenant && !resultList.contains(cat)){
 					resultList.add(cat);
-					LOGGER.info("Adding UDE widget group info into result for v2/v3 tenant");
+					LOGGER.info("Adding UDE widget group info into result for v2/v3/v4 tenant");
 				}
 			}
 		}
@@ -114,7 +117,7 @@ public class TenantSubscriptionUtil
 			}
 
 	/**
-	 * if v1 tenant, return true, v2/v3 return false;
+	 * if v1 tenant, return true, v2/v3/v4 return false;
 	 * @param tenantSubscriptionInfo
 	 * @return
 	 */
@@ -122,8 +125,9 @@ public class TenantSubscriptionUtil
 		if(tenantSubscriptionInfo.getAppsInfoList()!=null && !tenantSubscriptionInfo.getAppsInfoList().isEmpty()){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
 				if(SubsriptionApps2Util.V2_TENANT.equals(appsInfo.getLicVersion()) ||
-                        SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion())){
-					LOGGER.info("Check tenant version is V1/V2 tenant.");
+                        SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion()) ||
+						SubsriptionApps2Util.V4_TENANT.equals(appsInfo.getLicVersion())){
+					LOGGER.info("Check tenant version is V2/V3/v4 tenant.");
 					return false;
 				}
 			}
@@ -149,8 +153,9 @@ public class TenantSubscriptionUtil
 				providers.addAll(providerList);
 			}
 		}
-		//handle v2/v3
+		//handle v2/v3/v4
 		if(!checkLicVersion(tenantSubscriptionInfo) && !subscribedApps.isEmpty() && !providers.contains(SERVICE_PROVIDER_NAME_TA)){
+			LOGGER.info("Adding TargetAnalytics into providers...");
 			providers.add(SERVICE_PROVIDER_NAME_TA);
 		}
 		LOGGER.debug("Get subscribed provider names: {} for tenant {}",
@@ -162,28 +167,31 @@ public class TenantSubscriptionUtil
 	public static List<String> getTenantSubscribedServices(String tenant,TenantSubscriptionInfo tenantSubscriptionInfo)
 	{
 		// try to load from subscribeCache
-		CacheManager cm = CacheManager.getInstance();
+		final ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(tenant);
-        Keys tenantSubscriptionInfoKey = new Keys(CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,"tenantSubscriptionInfoKey");
-		List<String> cachedApps = null;
+		final Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS));
+		CachedTenantSubcriptionInfo cachedTenantSubcriptionInfo = null;
+		List<String> cachedApps;
 		try {
-			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
-            // getCacheable(Tenant tenant, String cacheName, Keys keys) throws Excepti
-            TenantSubscriptionInfo tenantSubscriptionInfo1 =  (TenantSubscriptionInfo)cm.getCacheable(cacheTenant,CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE, tenantSubscriptionInfoKey);
-		    if(tenantSubscriptionInfo1 == null || cachedApps == null || (cachedApps!=null && cachedApps.isEmpty())){
-				throw new CacheInconsistencyException();
+			LOGGER.info("Trying to retrieve tenant subscription info from cache....");
+			cachedTenantSubcriptionInfo = (CachedTenantSubcriptionInfo) cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).get(cacheKey);
+
+			if (cachedTenantSubcriptionInfo != null) {
+				cachedApps = cachedTenantSubcriptionInfo.getSubscribedAppsList();
+				TenantSubscriptionInfo tenantSubscriptionInfo1 = cachedTenantSubcriptionInfo.getTenantSubscriptionInfo();
+				LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}", tenant, tenantSubscriptionInfo1);
+				LOGGER.info("retrieved subscribed apps for tenant {} from cache,data is {}", tenant, cachedApps);
+				if (cachedApps != null && tenantSubscriptionInfo1 != null) {
+					copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
+					return cachedApps;
+				}
 			}
-			//Copy value into tenantSubscriptionInfo
-			copyTenantSubscriptionInfo(tenantSubscriptionInfo1,tenantSubscriptionInfo);
-			LOGGER.info(
-					"retrieved subscribed apps for tenant {} from subscribe cache: {} and tenantSubscriptinoInfo is {}", tenant, cachedApps,tenantSubscriptionInfo1);
-			return cachedApps;
-		}catch(CacheInconsistencyException e){
-			LOGGER.warn("Retrieving null TenantSubscriptionInfo or null subscribedapps data from cache.., will not use cache!");
+		}catch (ExecutionException e) {
+			//if exception occurred, log an error info then retrieve data from API
+			LOGGER.error("ExecutionException occurred when using cache...", e);
 		}catch (Exception e) {
-			LOGGER.error(e);
-			return Collections.emptyList();
+			//if exception occurred, log an error info then retrieve data from API
+			LOGGER.error("Exception occurred when using cache...", e);
 		}
 
 		VersionedLink domainLink = RegistryLookupUtil.getServiceInternalLinkHttp("TenantService", "1.0+", "collection/tenants", tenant);
@@ -235,12 +243,8 @@ public class TenantSubscriptionUtil
 				LOGGER.error("After Mapping action,Empty subscription list found!");
 				return Collections.emptyList();
 			}
-            LOGGER.info("Putting {} into cache",subscribeAppsList);
-			cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
-                    subscribeAppsList);
-            LOGGER.info("Putting {} into cache",tenantSubscriptionInfo);
-            cm.putCacheable(cacheTenant, CacheManager.CACHES_SUBSCRIBED_SERVICE_CACHE, tenantSubscriptionInfoKey,
-                    tenantSubscriptionInfo);
+			LOGGER.info("Put subscribe apps into cache,{},{}", subscribeAppsList, tenantSubscriptionInfo);
+			cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey,new CachedTenantSubcriptionInfo(subscribeAppsList, tenantSubscriptionInfo));
 			return subscribeAppsList;
 
 		}
@@ -271,7 +275,7 @@ public class TenantSubscriptionUtil
 	/**
 	 * this method is for check subscrib apps license version
 	 * if version is V1 return true;
-	 * if version is V2/V3 return false;
+	 * if version is V2/V3/v4 return false;
 	 * @param tenantSubscriptionInfo
 	 * @return
 	 */
@@ -279,8 +283,9 @@ public class TenantSubscriptionUtil
 		if(tenantSubscriptionInfo!=null && tenantSubscriptionInfo.getAppsInfoList()!=null){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
 				if(SubsriptionApps2Util.V2_TENANT.equals(appsInfo.getLicVersion()) ||
-						SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion())){
-					//V2/V3
+						SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion()) ||
+						SubsriptionApps2Util.V4_TENANT.equals(appsInfo.getLicVersion())){
+					//V2/V3/v4
 					return false;
 				}
 			}
