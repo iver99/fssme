@@ -21,7 +21,7 @@ public class MetaDataStorer {
     public static void storeOobWidget(List<SearchImpl> oobWidgetList) throws EMAnalyticsFwkException {
         LOGGER.debug("Calling MetaStorer.storeOobWidget");
         if(oobWidgetList == null || oobWidgetList.isEmpty()){
-            LOGGER.error("The oobWidget is empty");
+            LOGGER.warn("The oobWidget is empty");
             return;
         }
         SearchManager searchManager = SearchManager.getInstance();
@@ -39,9 +39,9 @@ public class MetaDataStorer {
     }
 
     public static void storeResourceBundle(List<EmsResourceBundle> emsResourceBundles) {
-        LOGGER.error("Calling MetaDataStorer.storeResourceBundle");
+        LOGGER.debug("Calling MetaDataStorer.storeResourceBundle");
         if(emsResourceBundles == null || emsResourceBundles.isEmpty()) {
-            LOGGER.error("the resource bundle is empty");
+            LOGGER.warn("the resource bundle is empty");
             return;
         }
 

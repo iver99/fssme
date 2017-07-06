@@ -20,7 +20,7 @@ import java.util.*;
  * Created by xiadai on 2017/5/4.
  */
 public class MetaDataRetriever {
-    private static final Logger LOGGER = LogManager.getLogger(RegistryLookupUtil.class);
+    private static final Logger LOGGER = LogManager.getLogger(MetaDataRetriever.class);
 
     private enum CategoryName{
         LA(1), UDE(2), ITA(3), APM(4), SMA(6), OCS(7);
@@ -88,20 +88,17 @@ public class MetaDataRetriever {
         List<SearchImpl> oobWidgetList = new ArrayList<>();
         VersionedLink versionedLink = RegistryLookupUtil.getServiceInternalHttpLink(serviceName, "1.0+", "oob/widgets", null);
         if(versionedLink == null || versionedLink.getHref() == null){
-            LOGGER.error("{} has not provide api {} for fetching oob widgets", serviceName, "oob/widgets");
-            throw new EMAnalyticsFwkException("{} has not provide api {} for fetching oob widgets",
-                    EMAnalyticsFwkException.ERR_GENERIC,null);
+            LOGGER.warn("{} has not provide api {} for fetching oob widgets", serviceName, "oob/widgets");
         }
         RestClient restClient = new RestClient();
         String response = restClient.get(versionedLink.getHref(),"CloudServices",versionedLink.getAuthToken());
         try {
             oobWidgetList = JSONUtil.fromJsonToListUnencoded(response, SearchImpl.class);
         } catch (NullPointerException npe){
-            LOGGER.error("Fail into errors when convert the OOB Widgets, may be some params were missing");
             throw new EMAnalyticsFwkException("Fail into errors when convert the OOB Widgets, may be some params were missing",
                     EMAnalyticsFwkException.ERR_GENERIC,null);
         }catch (IOException e) {
-            LOGGER.error("Fail into errors when convert the OOB Widgets");
+            LOGGER.warn("Fail into errors when convert the OOB Widgets");
         }
         if(oobWidgetList == null || oobWidgetList.isEmpty()){
             LOGGER.warn("No OOB Widgets data was fetched.");
@@ -126,21 +123,18 @@ public class MetaDataRetriever {
         List<EmsResourceBundle> emsResourceBundles = new ArrayList<>();
         VersionedLink versionedLink = RegistryLookupUtil.getServiceInternalHttpLink(serviceName, "1.0+", "oob/resource_bundle", null);
         if(versionedLink == null || versionedLink.getHref() == null){
-            LOGGER.error("{} has not provide api {} for fetching oob resource_bundle", serviceName, "oob/resource_bundle");
-            throw new EMAnalyticsFwkException("{} has not provide api {} for fetching oob resource_bundle",
-                    EMAnalyticsFwkException.ERR_GENERIC,null);
+            LOGGER.warn("{} has not provide api {} for fetching oob resource_bundle", serviceName, "oob/resource_bundle");
         }
         RestClient restClient = new RestClient();
         String response = restClient.get(versionedLink.getHref(),"CloudServices",versionedLink.getAuthToken());
-        LOGGER.error("Got the response, {}");
         try {
             emsResourceBundles = JSONUtil.fromJsonToListUnencoded(response, EmsResourceBundle.class);
         } catch (NullPointerException npe){
-            LOGGER.error("Fail into errors when convert the OOB Widgets, may be some params were missing");
+            LOGGER.warn("Fail into errors when convert the OOB Widgets, may be some params were missing");
             throw new EMAnalyticsFwkException("Fail into errors when convert the OOB Widgets, may be some params were missing",
                     EMAnalyticsFwkException.ERR_GENERIC,null);
         }catch (IOException e) {
-            LOGGER.error("Fail into errors when convert the OOB Widgets");
+            LOGGER.warn("Fail into errors when convert the OOB Widgets");
         }
         return setDefaultResourceBundleValue(emsResourceBundles, serviceName);
     }

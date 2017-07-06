@@ -28,18 +28,18 @@ public class MetaDataManager implements ApplicationServiceManager {
 
     @Override
     public void postStart(ApplicationLifecycleEvent evt) throws Exception {
-        LOGGER.error("[Calling] MetaDataManager.post start");
+        LOGGER.debug("[Calling] MetaDataManager.post start");
         MetaDataRetriever metaDataRetriever = new MetaDataRetriever();
         List<SearchImpl> oobWidgetList;
 //        List<EmsResourceBundle> emsResourceBundles;
         for(String serviceName : oobProvider){
-            LOGGER.error("Start to load oob widget metadata.");
+            LOGGER.debug("Start to load oob widget metadata.");
             try {
                 oobWidgetList =  metaDataRetriever.getOobWidgetListByServiceName(serviceName);
-                LOGGER.error("Store Widget List.");
+                LOGGER.debug("Store Widget List.");
                 TenantContext.setContext(new TenantInfo(SearchManagerImpl.DEFAULT_CURRENT_USER, SearchManagerImpl.DEFAULT_TENANT_ID));
                 MetaDataStorer.storeOobWidget(oobWidgetList);
-                LOGGER.error("Refresh the OOB Widgets successfully.");
+                LOGGER.debug("Refresh the OOB Widgets successfully.");
             } catch (EMAnalyticsFwkException e) {
                 LOGGER.error(e.getLocalizedMessage());
             }
