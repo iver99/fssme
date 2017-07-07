@@ -8,10 +8,6 @@ import java.util.Date;
 import javax.persistence.*;
 
 import org.eclipse.persistence.annotations.AdditionalCriteria;
-import org.eclipse.persistence.annotations.Multitenant;
-import org.eclipse.persistence.annotations.QueryRedirectors;
-import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
-
 /**
  * The persistent class for the EMS_ANALYTICS_SEARCH_PARAMS database table.
  */
@@ -21,8 +17,9 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Table(name = "EMS_ANALYTICS_SEARCH_PARAMS")
 @AdditionalCriteria("this.tenantId = :tenant or this.tenantId = -11")
 @NamedQueries({
-	    @NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
-        @NamedQuery(name = "SearchParam.deleteParamsBySearchIds", query = "DELETE FROM EmAnalyticsSearchParam e where e.searchId in :searchIds")
+    @NamedQuery(name = "SearchParam.getSearchListByParam", query = "SELECT e.emAnalyticsSearch FROM EmAnalyticsSearchParam e where e.name = :name AND e.paramValueStr = :value"),
+    @NamedQuery(name = "SearchParam.getParamByName", query = "SELECT e FROM EmAnalyticsSearchParam e where e.searchId = :searchId AND e.name = :name "),
+    @NamedQuery(name = "SearchParam.deleteParamsBySearchIds", query = "DELETE FROM EmAnalyticsSearchParam e where e.searchId in :searchIds")
 })
 public class EmAnalyticsSearchParam implements Serializable
 {

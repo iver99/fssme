@@ -34,7 +34,6 @@ import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.internal.annotations.ExpectedExceptionsAnnotation;
 
 /**
  * @author qianqi
@@ -1567,6 +1566,25 @@ public class SearchManagerImplTest
         };
         searchManager.getSearchWithoutOwnerByName("searchName");
     }
+    
+    @Test(expectedExceptions = { EMAnalyticsFwkException.class })
+    public void testGetSearchListWithoutOwnerByParam() throws EMAnalyticsFwkException {
+        final List<EmAnalyticsSearch> emSearchList = new ArrayList<EmAnalyticsSearch>();
+        emSearchList.add(new EmAnalyticsSearch());
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = entityManager;
+                EmAnalyticsObjectUtil.findEmSearchListByParamWithoutOwner(anyString, anyString, entityManager);
+                //result = emSearchList;
+                returns(emSearchList, new Exception());
+            }
+        };
+        searchManager.getSearchListWithoutOwnerByParam("name", "value");
+        searchManager.getSearchListWithoutOwnerByParam("name", "value");
+    }
 
 	@Test
 	public void testSaveOobSearch() throws EMAnalyticsFwkException {
@@ -1585,7 +1603,7 @@ public class SearchManagerImplTest
 				result = true;
 				entityManager.createNamedQuery(anyString);
 				result = query;
-				query.setParameter(anyString, (List)any);
+				query.setParameter(anyString, (List<?>)any);
 				result = query;
 				query.executeUpdate();
 				EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, (EntityManager)any);
