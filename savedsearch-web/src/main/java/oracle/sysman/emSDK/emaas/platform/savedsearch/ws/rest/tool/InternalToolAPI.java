@@ -53,6 +53,10 @@ public class InternalToolAPI {
             statusCode = 505;
             message = e.getMessage().toUpperCase();
             LOGGER.error("Fall into error while getting widget by name,  {}", widgetName);
+        }catch(Exception e){
+            statusCode = 505;
+            message = "Fall into error while getting widget by name, " + widgetName;
+            LOGGER.error(e);
         }
         return Response.status(statusCode).entity(message).build();
 

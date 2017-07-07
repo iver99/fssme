@@ -705,8 +705,8 @@ class EmAnalyticsObjectUtil
 				}
 			}
 		}
-		catch (Exception nre) { 
-			//do nothing
+		catch (Exception nre) {
+			LOGGER.error("Faill into error when get search by Id " + id);
 		} 
 		return searchObj;
 	}
@@ -720,7 +720,7 @@ class EmAnalyticsObjectUtil
 				searchObj = null;
 			}
 		} catch (Exception ex) {
-			// do nothing
+			LOGGER.error("Faill into error when get search by Id " + searchId);
 		}
 		return searchObj;
 	}
@@ -734,7 +734,7 @@ class EmAnalyticsObjectUtil
                 return searchList.get(0);
             }
         } catch (Exception ex) {
-            // do nothing
+			LOGGER.error("Faill into error when get search by Name " + searchName);
         }
         return null;
     }

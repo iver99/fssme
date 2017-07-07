@@ -33,7 +33,7 @@ public class MetaDataManager implements ApplicationServiceManager {
         List<SearchImpl> oobWidgetList;
 //        List<EmsResourceBundle> emsResourceBundles;
         for(String serviceName : oobProvider){
-            LOGGER.debug("Start to load oob widget metadata.");
+            LOGGER.info("Start to load oob widget metadata.");
             try {
                 oobWidgetList =  metaDataRetriever.getOobWidgetListByServiceName(serviceName);
                 LOGGER.debug("Store Widget List.");

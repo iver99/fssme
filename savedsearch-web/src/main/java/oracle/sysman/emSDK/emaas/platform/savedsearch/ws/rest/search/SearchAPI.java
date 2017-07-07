@@ -931,7 +931,7 @@ public class SearchAPI
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSearchByName(@PathParam("name") String searchName) {
         LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}", searchName);
-        String message = null;
+        String message;
         int statusCode = 200;
         SearchManager sman = SearchManager.getInstance();
         try {
@@ -941,12 +941,15 @@ public class SearchAPI
             Search searchObj = sman.getSearchWithoutOwnerByName(searchName);
             message = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj).toString();
         } catch (EMAnalyticsFwkException e) {
-            LOGGER.error(e.getLocalizedMessage());
             statusCode = e.getStatusCode();
             message = e.getMessage();
             LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
                     e.getStatusCode());
-        }
+        } catch(Exception e){
+			statusCode = 505;
+			message = "Fail to get search by name, "+searchName;
+			LOGGER.error(e);
+		}
         return Response.status(statusCode).entity(message).build();
     }
 	

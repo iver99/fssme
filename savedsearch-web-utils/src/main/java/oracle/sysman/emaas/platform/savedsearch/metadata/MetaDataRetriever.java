@@ -89,6 +89,7 @@ public class MetaDataRetriever {
         VersionedLink versionedLink = RegistryLookupUtil.getServiceInternalHttpLink(serviceName, "1.0+", "oob/widgets", null);
         if(versionedLink == null || versionedLink.getHref() == null){
             LOGGER.warn("{} has not provide api {} for fetching oob widgets", serviceName, "oob/widgets");
+            return Collections.emptyList();
         }
         RestClient restClient = new RestClient();
         String response = restClient.get(versionedLink.getHref(),"CloudServices",versionedLink.getAuthToken());
