@@ -18,6 +18,7 @@ import javax.persistence.NonUniqueResultException;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -358,11 +359,30 @@ class EmAnalyticsObjectUtil
 		return folderObj;
 	}
 
+    /**
+     * @param folderId
+     * @param em
+     * @return
+     */
+    private static BigInteger generateUniqueFolderId(BigInteger folderId, EntityManager em) {
+        if (folderId == null) {
+            // randome an UUID
+            folderId = IdGenerator.getIntUUID(null);
+        }
+        EmAnalyticsFolder existingFolder = EmAnalyticsObjectUtil.getFolderById(folderId, em);
+        if (existingFolder == null) {
+            return folderId;
+        } else {
+            return generateUniqueFolderId(IdGenerator.getIntUUID(null), em);
+        }
+    }
+    
 	public static EmAnalyticsFolder getEmAnalyticsFolderForAdd(Folder folder, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsFolder folderObj = new EmAnalyticsFolder();
 		Date utcNow = DateUtil.getGatewayTime();
-		folderObj.setFolderId(folder.getId());
+		BigInteger uniqueFolderId = generateUniqueFolderId(folder.getId(), em);
+		folderObj.setFolderId(uniqueFolderId);
 		folderObj.setDescription(folder.getDescription());
 		folderObj.setName(folder.getName());
 		String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
@@ -435,12 +455,32 @@ class EmAnalyticsObjectUtil
 
 		return folderObj;
 	}
+	
+	/**
+	 * 
+	 * @param searchId
+	 * @param em
+	 * @return
+	 */
+	private static BigInteger generateUniqueSearchId(BigInteger searchId, EntityManager em) {
+	    if(searchId == null) {
+	        // randome an UUID
+	        searchId = IdGenerator.getIntUUID(null);
+	    }
+	    EmAnalyticsSearch existingSearch = EmAnalyticsObjectUtil.getSearchById(searchId, em);
+	    if(existingSearch == null) {
+	        return searchId;
+	    } else {
+	        return generateUniqueSearchId(IdGenerator.getIntUUID(null), em);
+	    }
+	}
 
 	public static EmAnalyticsSearch getEmAnalyticsSearchForAdd(Search search, EntityManager em) throws EMAnalyticsFwkException
 	{
 		EmAnalyticsSearch searchEntity = new EmAnalyticsSearch();
 		// Copy all the data to entity !!
-		searchEntity.setId(search.getId());
+		BigInteger uniqueSearchid = generateUniqueSearchId(search.getId(), em);
+		searchEntity.setId(uniqueSearchid);
 		searchEntity.setName(search.getName());
 		searchEntity.setDescription(search.getDescription());
 		EmAnalyticsFolder folderObj = EmAnalyticsObjectUtil.getFolderById(search.getFolderId(), em);
