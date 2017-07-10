@@ -59,6 +59,11 @@ public class MetadataRefreshAPITest {
     }
 
     @Test
+    public void testRefreshNLS(){
+        MetadataRefreshAPI metadataRefreshAPI = new MetadataRefreshAPI();
+        metadataRefreshAPI.refreshNLS("ServiceName");
+    }
+    @Test
     public void testOobRefreshRunnable(@Mocked MetaDataStorer metaDataStorer, @Mocked final MetaDataRetriever metaDataRetriever) throws EMAnalyticsFwkException {
 
         OobRefreshRunnable oobRefreshRunnable = new OobRefreshRunnable();
