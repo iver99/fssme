@@ -1,7 +1,9 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.metadata;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mockit.Expectations;
-import mockit.Mock;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
@@ -12,19 +14,14 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.tool.InternalToolA
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
+
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.testng.Assert.*;
 
 /**
  * Created by xiadai on 2017/5/5.
  */
 @Test(groups = {"s2"})
 public class MetadataRefreshAPITest {
-    private MetadataRefreshAPI metadataRefreshAPI;
     private InternalToolAPI internalToolAPI;
     @Mocked
     MetaDataRetriever metaDataRetriever;

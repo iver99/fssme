@@ -1,19 +1,22 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
+import java.util.Arrays;
+import java.util.List;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emaas.platform.savedsearch.entity.EmsResourceBundle;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
 import oracle.sysman.emaas.platform.savedsearch.wls.lifecycle.ApplicationServiceManager;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import weblogic.application.ApplicationLifecycleEvent;
 
-import java.util.Arrays;
-import java.util.List;
+import weblogic.application.ApplicationLifecycleEvent;
 
 
 public class MetaDataManager implements ApplicationServiceManager {
@@ -31,7 +34,7 @@ public class MetaDataManager implements ApplicationServiceManager {
         LOGGER.debug("[Calling] MetaDataManager.post start");
         MetaDataRetriever metaDataRetriever = new MetaDataRetriever();
         List<SearchImpl> oobWidgetList;
-//        List<EmsResourceBundle> emsResourceBundles;
+        List<EmsResourceBundle> emsResourceBundles;
         for(String serviceName : oobProvider){
             LOGGER.info("Start to load oob widget metadata.");
             try {
@@ -44,15 +47,15 @@ public class MetaDataManager implements ApplicationServiceManager {
                 LOGGER.error(e.getLocalizedMessage());
             }
 
-//            LOGGER.error("Start to load nls metadata");
-//            try {
-//                emsResourceBundles = metaDataRetriever.getResourceBundleByService(serviceName);
-//                LOGGER.error("Store the nls meta data list");
-//                MetaDataStorer.storeResourceBundle(emsResourceBundles);
-//                LOGGER.error("Refresh the nls metadata successfully.");
-//            } catch (EMAnalyticsFwkException e) {
-//                LOGGER.error(e.getLocalizedMessage());
-//            }
+            LOGGER.info("Start to load nls metadata");
+            try {
+                emsResourceBundles = metaDataRetriever.getResourceBundleByService(serviceName);
+                LOGGER.debug("Store the nls meta data list");
+                MetaDataStorer.storeResourceBundle(emsResourceBundles);
+                LOGGER.debug("Refresh the nls metadata successfully.");
+            } catch (EMAnalyticsFwkException e) {
+                LOGGER.error(e.getLocalizedMessage());
+            }
         }
     }
 

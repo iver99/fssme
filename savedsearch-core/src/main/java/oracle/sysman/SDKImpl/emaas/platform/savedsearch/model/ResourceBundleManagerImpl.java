@@ -50,10 +50,9 @@ public class ResourceBundleManagerImpl extends ResourceBundleManager{
             return;
         }
         try {
-            LOGGER.error("Cleaning resource bundle by servicename {}", serviceName);
+            LOGGER.debug("Cleaning resource bundle by servicename {}", serviceName);
             entityManager.createNamedQuery("EmsResourceBundle.deleteByServiceName").setParameter("serviceName", serviceName).executeUpdate();
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
+         } catch (Exception e) {
             LOGGER.error("Fall into error while cleaning resource bundle by service name ", e);
             throw new EMAnalyticsFwkException("Fall into error while cleaning resource bundle by service name",
                     EMAnalyticsFwkException.ERR_GENERIC, null, e);
@@ -66,7 +65,7 @@ public class ResourceBundleManagerImpl extends ResourceBundleManager{
             return;
         }
         try {
-            LOGGER.error("Inserting resource bundle " );
+            LOGGER.debug("Inserting resource bundle " );
             entityManager.persist(resourceBundle);
         } catch (PersistenceException pe) {
             LOGGER.error("Persistence error while saving the resource bundle for service name {}" + resourceBundle.getServiceName(), pe);
