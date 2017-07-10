@@ -351,7 +351,7 @@ public class EmAnalyticsObjectUtilTest
 				folder.getParentId();
 				result = BigInteger.ONE;
 				entityManager.find(EmAnalyticsFolder.class, any);
-				returns(null, emAnalyticsFolder);
+				result = emAnalyticsFolder;
 				emAnalyticsFolder.getDeleted();
 				result = BigInteger.ZERO;
 				emAnalyticsFolder.getSystemFolder();
