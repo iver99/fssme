@@ -467,7 +467,7 @@ class EmAnalyticsObjectUtil
 	        // randome an UUID
 	        searchId = IdGenerator.getIntUUID(null);
 	    }
-	    EmAnalyticsSearch existingSearch = EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(searchId, em);
+	    EmAnalyticsSearch existingSearch = EmAnalyticsObjectUtil.getSearchById(searchId, em);
 	    if(existingSearch == null) {
 	        return searchId;
 	    } else {
@@ -760,7 +760,7 @@ class EmAnalyticsObjectUtil
 				searchObj = null;
 			}
 		} catch (Exception ex) {
-			LOGGER.error("Faill into error {} when get search by Id {}", ex.getMessage(), searchId);
+			LOGGER.error("Faill into error when get search by Id " + searchId);
 		}
 		return searchObj;
 	}
