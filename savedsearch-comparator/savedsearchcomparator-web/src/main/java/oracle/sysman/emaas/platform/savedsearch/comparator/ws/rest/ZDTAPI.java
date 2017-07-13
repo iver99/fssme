@@ -334,7 +334,7 @@ public class ZDTAPI
 				subObj.put(result.getInstance2().getKey(), result1);
 				obj.put("divergenceSummary", subObj);
 				
-				message = obj.toString();
+				message = obj.toString(); 
 
 			} else {
 				Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();

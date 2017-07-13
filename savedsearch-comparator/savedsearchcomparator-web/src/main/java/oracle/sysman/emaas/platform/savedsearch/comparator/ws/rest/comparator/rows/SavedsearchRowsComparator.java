@@ -379,7 +379,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		}	
 		logger.info("get table data url is "+url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
-		logger.info("Checking SSF OMC instance table rows. Response is " + response);
+		//logger.info("Checking SSF OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
 	
