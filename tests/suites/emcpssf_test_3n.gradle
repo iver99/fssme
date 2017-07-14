@@ -35,10 +35,6 @@ dependencies {
 apply from: getAbsoluteFilePath(project.configurations.omctfPluginConfig,"OMCTFPlugin")
 /************** End of OMCTFPlugin *******************/
 
-project.ext.omctf_omcCloudTenantOnboard_serviceNames = "APM,LogAnalytics,ITAnalytics,Monitoring,SecurityAnalytics,Orchestration,Compliance"
-
-
-
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
