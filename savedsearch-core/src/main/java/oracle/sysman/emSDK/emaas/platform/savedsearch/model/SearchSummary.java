@@ -95,4 +95,6 @@ public interface SearchSummary
 	 * @return whether this is a system search or not
 	 */
 	public boolean isSystemSearch();
+	public String getDashboardIneligible();
+	public void setDashboardIneligible(String dashboardIneligible);
 }

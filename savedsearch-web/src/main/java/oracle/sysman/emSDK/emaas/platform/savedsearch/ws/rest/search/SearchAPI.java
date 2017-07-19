@@ -25,13 +25,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
@@ -922,6 +920,38 @@ public class SearchAPI
 
 		return Response.status(statusCode).entity(message).build();
 	}
+	
+	/**
+	 * 
+	 * @param searchName
+	 * @return
+	 */
+    @GET
+    @Path("/name/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSearchByName(@PathParam("name") String searchName) {
+        LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}", searchName);
+        String message;
+        int statusCode = 200;
+        SearchManager sman = SearchManager.getInstance();
+        try {
+            if (!DependencyStatus.getInstance().isDatabaseUp()) {
+                throw new EMAnalyticsDatabaseUnavailException();
+            }
+            Search searchObj = sman.getSearchWithoutOwnerByName(searchName);
+            message = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj).toString();
+        } catch (EMAnalyticsFwkException e) {
+            statusCode = e.getStatusCode();
+            message = e.getMessage();
+            LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+                    e.getStatusCode());
+        } catch(Exception e){
+			statusCode = 505;
+			message = "Fail to get search by name, "+searchName;
+			LOGGER.error(e);
+		}
+        return Response.status(statusCode).entity(message).build();
+    }
 	
 	@PUT
 	@Path("/list")

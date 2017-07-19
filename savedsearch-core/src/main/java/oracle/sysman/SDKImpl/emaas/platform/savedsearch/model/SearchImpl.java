@@ -13,7 +13,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 @XmlRootElement
 @XmlType(propOrder = { "id", "name", "description", "guid", "folderId", "categoryId", "owner", "createdOn", "lastModifiedOn",
 		"lastAccessDate", "lastModifiedBy", "metadata", "queryStr", "systemSearch", "locked", "isWidget", "uiHidden",
-		"parameters" })
+		"parameters", "dashboardIneligible" })
 public class SearchImpl extends SearchSummaryImpl implements Search
 {
 	private static final long serialVersionUID = -4486286542760671627L;
@@ -25,6 +25,17 @@ public class SearchImpl extends SearchSummaryImpl implements Search
 	protected boolean uiHidden;
 	protected boolean isWidget;
 	protected boolean isEditable;
+	protected String dashboardIneligible;
+
+	@Override
+	public String getDashboardIneligible() {
+		return dashboardIneligible;
+	}
+
+	@Override
+	public void setDashboardIneligible(String dashboardIneligible) {
+		this.dashboardIneligible = dashboardIneligible;
+	}
 
 	@Override
 	public boolean isEditable() {

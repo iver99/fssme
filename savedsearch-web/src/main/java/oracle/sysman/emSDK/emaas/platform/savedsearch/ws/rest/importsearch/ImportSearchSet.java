@@ -19,6 +19,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.ImportSearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.importsearch.ObjectFactory;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSet;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
@@ -219,6 +220,7 @@ public class ImportSearchSet
 	public Response importSearches(String xml, @HeaderParam("SSF_OOB") String oobSearch)
 	{
 
+		LogUtil.getInteractionLogger().info("Service calling to (POST) /savvedsearch/importsearches");
 		Response res = null;
 		InputStream stream = null;
 		if (xml != null && xml.length() == 0) {

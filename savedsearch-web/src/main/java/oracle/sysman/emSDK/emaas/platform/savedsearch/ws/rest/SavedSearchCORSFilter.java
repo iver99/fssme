@@ -3,6 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -23,7 +24,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.HeadersUtil;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.LocaleUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,6 +39,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class SavedSearchCORSFilter implements Filter
 {
+
 	private static class OAMHttpRequestWrapper extends HttpServletRequestWrapper
 	{
 		private String oam_remote_user = null;
@@ -224,6 +228,10 @@ public class SavedSearchCORSFilter implements Filter
 				}
 				TenantInfo info = HeadersUtil.getTenantInfo((HttpServletRequest) request);
 				TenantContext.setContext(info);
+				TenantContext.clearLocale();
+				String langAttr = LocaleUtil.getLangAttr(hReq);
+				Locale locale = DatabaseResourceBundleUtil.generateLocale(langAttr);
+				TenantContext.setLocale(locale);
 				LogUtil.setInteractionLogThreadContext(info.gettenantName(), ((HttpServletRequest) request).getHeader("referer"),
 						InteractionLogDirection.IN);
 				if (isParameterPresent(hReq)) {

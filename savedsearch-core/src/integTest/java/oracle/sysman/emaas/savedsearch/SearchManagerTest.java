@@ -485,7 +485,7 @@ public class SearchManagerTest extends BaseTest
 		savedWidget2 = null;
 		savedWidget3 = null;
 		try {
-			queried = sm.getWidgetListByProviderNames(false, providers, String.valueOf(cat1.getId()));
+			queried = sm.getWidgetListByProviderNames(true, providers, String.valueOf(cat1.getId()));
 			for (Widget widget : queried) {
 				if (widget1.getId().equals(widget.getId())) {
 					savedWidget1 = widget;

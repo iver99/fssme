@@ -262,6 +262,9 @@ public class EMAnalyticsFwkException extends Exception
 			case EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID:
 				statusCode = 404;
 				break;
+            case EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME:
+                statusCode = 404;
+                break;
 			//Status Codes related to category exceptions
 			case EMAnalyticsFwkException.ERR_DELETE_CATEGORY:
 				statusCode = 500;

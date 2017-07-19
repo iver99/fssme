@@ -371,11 +371,15 @@ public class FolderManagerImplTest {
 
     @Test
     public void testSaveFolderNoneException(@Mocked final EmAnalyticsFolder emAnalyticsFolder, @Mocked EmAnalyticsObjectUtil emAnalyticsObjectUtil,
-                                            @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager) throws EMAnalyticsFwkException {
+                                            @Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager entityManager, @Mocked final TenantContext tenantContext, @Mocked final TenantInfo tenantInfo) throws EMAnalyticsFwkException {
         new Expectations() {
             {
                 PersistenceManager.getInstance();
                 result = persistenceManager;
+                TenantContext.getContext();
+                result = tenantInfo;
+                tenantInfo.getTenantInternalId();
+                result = 1L;
                 persistenceManager.getEntityManager((TenantInfo) any);
                 result = entityManager;
                 EmAnalyticsObjectUtil.getEmAnalyticsFolderForAdd((Folder) any, entityManager);

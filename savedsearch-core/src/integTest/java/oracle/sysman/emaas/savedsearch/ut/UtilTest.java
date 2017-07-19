@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.savedsearch;
+package oracle.sysman.emaas.savedsearch.ut;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -6,6 +6,7 @@ import java.util.TimeZone;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 
+import oracle.sysman.emaas.savedsearch.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
