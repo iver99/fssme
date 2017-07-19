@@ -12,10 +12,10 @@
 		<wls:listener-class>oracle.sysman.emaas.platform.savedsearch.comparator.webutils.services.SavedsearchComparatorLifecycleService
 		</wls:listener-class>
 	</wls:listener> 
-	<wls:listener>
+<!--	<wls:listener>
 		<wls:listener-class>oracle.sysman.emaas.platform.savedsearch.comparator.ws.timer.SavedsearchComparatorTriggerService
 		</wls:listener-class>
-	</wls:listener>
+	</wls:listener>  -->
 	<wls:security>
 		<wls:security-role-assignment>
 			<wls:role-name>valid-users</wls:role-name>
