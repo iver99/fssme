@@ -18,6 +18,7 @@ public class SavedsearchComparatorHandlerNotification implements NotificationLis
 	private final static Logger LOGGER = LogManager.getLogger(SavedsearchComparatorHandlerNotification.class);
 	@Override
 	public void handleNotification(Notification arg0, Object arg1) {
+		api = new ZDTAPI();
 		LOGGER.info("******start to handle comparator*******");
 	    api.compareRows(TENANT, USER, TYPE, SKIPMINS);
 	    api.syncOnSSF(TENANT, USER, TYPE);
