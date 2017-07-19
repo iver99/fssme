@@ -143,7 +143,7 @@ public class ZDTSynchronizer
 			return;
 		}
 	try {	logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
-	int i =0;
+		int i =0;
 		for (SavedSearchSearchRowEntity e : rows) {
 			logger.info("sync the item = "+ (i+1));
 			DataManager.getInstance().syncSearchTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),

@@ -295,14 +295,23 @@ public class ZDTAPI
 					//data = JSONUtil.fromJson(new ObjectMapper(), compareResult.toString(), ZDTTableRowEntity.class);					
 					//logger.info("data = "+data.toString());
 					List<ZDTTableRowEntity> entities = splitTableRowEntity(data);
+					//logger.info("entities size = "+entities.size());
 					String response = null;
 					if (entities != null) {
 						for (ZDTTableRowEntity entity : entities) {
+							logger.info("start to sync");
 							response = new ZDTSynchronizer().sync(entity);
 						}
-					}					
-					lastCompareDate = (String) compareDate;
-					if (response.contains("Errors:")) {
+					}
+					if (lastCompareDate != null) {
+						if (lastCompareDate.compareTo( (String) compareDate) < 0) {
+							lastCompareDate = (String) compareDate;
+						}
+					} else {
+						lastCompareDate = (String) compareDate;
+					}
+					
+					if (response != null && response.contains("Errors:")) {
 						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
 						return Response.status(500).entity(response).build();
 					}
@@ -326,7 +335,7 @@ public class ZDTAPI
 	private int saveToSyncTable(String syncDateStr, String type, String syncResult, String lastComparisonDate) {
 		Date syncDate = null;
 		try {  
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
 		    syncDate = sdf.parse(syncDateStr);  
 		} catch (ParseException e) {  
 		    logger.error(e);
@@ -336,9 +345,6 @@ public class ZDTAPI
 		cal.add(Calendar.HOUR_OF_DAY, 6);
 		Date nextScheduleDate = cal.getTime();
 		String nextScheduleDateStr = getTimeString(nextScheduleDate);
-		// TO DO... currently each sync operation will sync all of the existing compared result, 
-		// so for the existing compared result the divergence percentage will always be 0.0
-		// In the future, it is better to add logic to check the divergence percentage for the rows which are not compared;
 		double divergencePercentage = 0.0; 
 		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
 		
@@ -346,7 +352,7 @@ public class ZDTAPI
 	
 	private String getTimeString(Date date)
 	{
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
 		String dateStr = sdf.format(date);
 		return dateStr;
 	}

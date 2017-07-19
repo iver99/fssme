@@ -135,8 +135,8 @@ public class ZDTAPITest {
     	tableRow1.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
     	ZDTTableRowEntity tableRow2 = new ZDTTableRowEntity();
     	tableRow2.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
-    	InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>("", null,tableRow1,  100);
-    	InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>("", null,tableRow2,  100);
+    	InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>("", null,tableRow1);
+    	InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>("", null,tableRow2);
     	
     	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
     	

@@ -18,12 +18,11 @@ public class SavedsearchComparatorServiceManager implements ApplicationServiceMa
 
 	private Timer timer;
 	private Integer notificationId;
-	// comparison and sync will be triggered every 6 hours 
-	private static final long PERIOD = Timer.ONE_HOUR * 6;
+	// comparison and sync will be triggered every 12 hours 
+	private static final long PERIOD = Timer.ONE_HOUR * 12;
 
 	@Override
-	public String getName() {
-		
+	public String getName() {	
 		return "Savedsearch comparator timer";
 	}
 
@@ -33,7 +32,8 @@ public class SavedsearchComparatorServiceManager implements ApplicationServiceMa
 		timer = new Timer();
 		NotificationListener notification = new SavedsearchComparatorHandlerNotification();
 		timer.addNotificationListener(notification, null, null);
-		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
+		//start to compare and sync in about 2.7 hours after deployment
+		Date timerTriggerAt = new Date(new Date().getTime() + 10000000L);
 		notificationId = timer.addNotification("SavedsearchComparisonServiceTimer", null, notification, timerTriggerAt, PERIOD, 0);
 		timer.start();
 		LOGGER.info("Timer for savedsearch comparison started. notificationId={}", notificationId);

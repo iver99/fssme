@@ -178,7 +178,7 @@ public class DataManager
 
 	private static final String SQL_GET_LAST_COMPARISON_DATE_FOR_SYNC = "SELECT * FROM (SELECT to_char(LAST_COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_COMPARISON_DATE FROM EMS_ANALYTICS_ZDT_SYNC WHERE SYNC_RESULT = 'SUCCESSFUL' ORDER BY SYNC_DATE DESC) WHERE ROWNUM = 1";
 	
-	private static final String SQL_GET_LATEST_COMPARISON_DATE = "SELECT * FROM (SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE FROM EMS_ANALYTICS_ZDT_COMPARATOR WHERE COMPARISON_RESULT IS NOT NULL ORDER BY COMPARISON_DATE DESC) WHERE ROWNUM = 1";
+	private static final String SQL_GET_LATEST_COMPARISON_DATE = "SELECT * FROM (SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE FROM EMS_ANALYTICS_ZDT_COMPARATOR WHERE COMPARISON_RESULT IS NOT NULL AND COMPARISON_DATE IS NOT NULL ORDER BY COMPARISON_DATE DESC) WHERE ROWNUM = 1";
 	
 	private static final String SQL_GET_SYNC_STATUS = "select * from (SELECT to_char(SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as SYNC_DATE, to_char(NEXT_SCHEDULE_SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_SYNC_DATE,SYNC_TYPE, divergence_percentage from ems_analytics_zdt_sync order by sync_date desc) where rownum = 1";
 	
@@ -454,16 +454,14 @@ public class DataManager
 
 	public List<Map<String, Object>> getSearchParamTableData(EntityManager em, String type, String date, String maxComparedDate, String tenant)
 	{
-		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS_BY_DATE,date, maxComparedDate, null);
+		if (tenant != null) {
+			return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS_BY_TENANT,null, maxComparedDate, tenant);
 		} else {
-			// if date is null, it means it is the first time comparing; Then we need to compare tenant by tenant
-			if (tenant != null) {
-				return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS_BY_TENANT,null, maxComparedDate, tenant);
-			} else {
+			if (type.equals("incremental") && date != null) {
+				return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS_BY_DATE,date, maxComparedDate, null);
+			}else {
 				return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS,null, maxComparedDate, null);
 			}
-			
 		}
 	}
 
@@ -475,16 +473,17 @@ public class DataManager
 
 	public List<Map<String, Object>> getSearchTableData(EntityManager em, String type, String date, String maxComparedDate, String tenant)
 	{
-		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS_BY_DATE,date, maxComparedDate, null);
+		// it means it is the first time comparison
+		if (tenant != null) {
+			return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS_BY_TENANT,null, maxComparedDate, tenant);
 		} else {
-			if (tenant != null) {
-				return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS_BY_TENANT,null, maxComparedDate, tenant);
+			if (type.equals("incremental") && date != null) {
+				return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS_BY_DATE,date, maxComparedDate, null);
 			} else {
+				// avoid to fetch all rows one time
 				return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS,null, maxComparedDate, null);
 			}
-			
-		}
+ 		}
 	}
 
 	public void syncCategoryParamTable(EntityManager em,BigInteger categoryId, String name, String paramValue, Long tenantId, String creationDate,
