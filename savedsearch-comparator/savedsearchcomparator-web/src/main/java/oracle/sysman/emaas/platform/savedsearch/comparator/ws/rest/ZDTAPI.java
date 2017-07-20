@@ -291,7 +291,7 @@ public class ZDTAPI
 			}
 			InstancesComparedData<ZDTTableRowEntity> result = null;
 			int totalRowForClient1 = dcc.getTotalRowForOmcInstance(tenantIdParam, userTenant,dcc.getClient1(), maxComparedDate);
-			int totalRowForClient2 = 0;dcc.getTotalRowForOmcInstance(tenantIdParam, userTenant,dcc.getClient2(), maxComparedDate);
+			int totalRowForClient2 = dcc.getTotalRowForOmcInstance(tenantIdParam, userTenant,dcc.getClient2(), maxComparedDate);
 			int totalRow = totalRowForClient1 + totalRowForClient2;
 			if (totalRow == 0) {
 				return Response.status(status).entity("No user created saved searches, Nothing to compare").build();					
