@@ -295,7 +295,7 @@ public class ZDTAPI
 			int totalRow = totalRowForClient1 + totalRowForClient2;
 			if (totalRow == 0) {
 				return Response.status(status).entity("No user created saved searches, Nothing to compare").build();					
-			}
+			} 
 			logger.info("totalRow={}",totalRow);
 			int totalDifferentRows = 0;
 			
@@ -305,7 +305,7 @@ public class ZDTAPI
 				JSONObject obj = null;
 				//handle tenant one by one and save comparison result for each tenant
 				for (String tenantStr : tenants) {					
-					//count = count + 1;
+					count = count + 1;
 					//logger.info("tenant count = "+count);
 					result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate, iscompared, tenantStr);
 					if (result != null) {
