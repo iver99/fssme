@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.savedsearch;
+package oracle.sysman.emaas.savedsearch.ut;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -17,6 +17,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
+import oracle.sysman.emaas.savedsearch.BaseTest;
+import oracle.sysman.emaas.savedsearch.QAToolUtil;
+import oracle.sysman.emaas.savedsearch.TestUtils;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;

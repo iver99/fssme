@@ -14,7 +14,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
-public class OOBSearchTest {
+public class OOBSearchTest extends BaseTest {
     @Test
     public void test4NewWidgetsAdded() throws EMAnalyticsFwkException {
         //long topologyWidgetId = 3219;

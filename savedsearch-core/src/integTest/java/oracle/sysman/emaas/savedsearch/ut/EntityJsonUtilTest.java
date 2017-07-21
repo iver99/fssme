@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.savedsearch;
+package oracle.sysman.emaas.savedsearch.ut;
 
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -31,13 +31,14 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
 import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 
+import oracle.sysman.emaas.savedsearch.BaseTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
+@Test(groups = { "s1" })
 public class EntityJsonUtilTest extends BaseTest
 {
 	private static SearchImpl search = new SearchImpl();

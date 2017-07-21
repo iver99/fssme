@@ -15,9 +15,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  * The persistent class for the EMS_ANALYTICS_CATEGORY_PARAMS database table.
  */
 @Entity
-@Multitenant(includeCriteria = false)
 @IdClass(EmAnalyticsCategoryParamPK.class)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
+@AdditionalCriteria("this.tenantId = :tenant or this.tenantId = -11")
 @Table(name = "EMS_ANALYTICS_CATEGORY_PARAMS")
 public class EmAnalyticsCategoryParam implements Serializable
 {
@@ -34,7 +33,7 @@ public class EmAnalyticsCategoryParam implements Serializable
 	private String value;
 
 	@Id
-	@Column(name = "TENANT_ID", insertable = false, updatable = false)
+	@Column(name = "TENANT_ID", updatable = false)
 	private Long tenantId;
 	
 	@Column(name = "DELETED", nullable = false, length = 1)
@@ -66,8 +65,7 @@ public class EmAnalyticsCategoryParam implements Serializable
 
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@ManyToOne(optional = false)
-	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID"),
-			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
+	@JoinColumns({ @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "CATEGORY_ID")})
 	private EmAnalyticsCategory emAnalyticsCategory;
 
 	public EmAnalyticsCategoryParam()

@@ -619,12 +619,18 @@ public class EmAnalyticsObjectUtilTest
 		searchParameters.add(searchParameter);
 		new Expectations() {
 			{
-				entityManager.find(EmAnalyticsSearch.class, (BigInteger) any);
+				search.getId();
+				result= new BigInteger("1");
+ 				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString, (BigInteger)any);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getDeleted();
 				result = BigInteger.ZERO;
 				emAnalyticsSearch.getSystemSearch();
-				result = 1;
+				result = new BigDecimal("1");
 				entityManager.find(EmAnalyticsFolder.class, (BigInteger) any);
 				result = emAnalyticsFolder;
 				emAnalyticsFolder.getDeleted();
@@ -654,12 +660,16 @@ public class EmAnalyticsObjectUtilTest
 			{
 				search.getId();
 				result = BigInteger.ONE;
-				entityManager.find(EmAnalyticsSearch.class, any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString,(BigInteger)any);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getDeleted();
 				result = BigInteger.ZERO;
 				emAnalyticsSearch.getSystemSearch();
-				result = new BigDecimal(1);
+				result = new BigDecimal("1");
 				entityManager.refresh(emAnalyticsSearch);
 				search.getMetadata();
 				result = "metaData";
@@ -693,6 +703,8 @@ public class EmAnalyticsObjectUtilTest
 				result = params;
 				emAnalyticsSearch.getEmAnalyticsSearchParams();
 				result = emAnalyticsSearchParams;
+				emAnalyticsSearch.getSystemSearch();
+				result = new BigDecimal("1");
 				TenantContext.getContext();
 				result = tenantInfo;
 				tenantInfo.getTenantInternalId();
@@ -774,12 +786,10 @@ public class EmAnalyticsObjectUtilTest
 	{
 		new Expectations() {
 			{
-				entityManager.find(withAny(EmAnalyticsSearch.class), any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
-				emAnalyticsSearch.getDeleted();
-				result = BigInteger.ZERO;
-				emAnalyticsSearch.getSystemSearch();
-				result = new BigDecimal(1);
 			}
 		};
 		EmAnalyticsObjectUtil.getSearchById(BigInteger.TEN, entityManager);
@@ -791,10 +801,10 @@ public class EmAnalyticsObjectUtilTest
 	{
 		new Expectations() {
 			{
-				entityManager.find(withAny(EmAnalyticsSearch.class), (BigInteger) any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
-				emAnalyticsSearch.getDeleted();
-				result = new BigInteger("2");
 			}
 		};
 		EmAnalyticsObjectUtil.getSearchById(BigInteger.TEN, entityManager);
@@ -806,10 +816,14 @@ public class EmAnalyticsObjectUtilTest
 	{
 		new Expectations() {
 			{
-				entityManager.find(withAny(EmAnalyticsSearch.class), (BigInteger) any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.setParameter(anyString,(BigInteger)any);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
 				emAnalyticsSearch.getSystemSearch();
-				result = new BigDecimal(1);
+				result = new BigDecimal("1");
 			}
 		};
 		EmAnalyticsObjectUtil.getSearchByIdForDelete(BigInteger.TEN, entityManager);
@@ -819,12 +833,7 @@ public class EmAnalyticsObjectUtilTest
 	@Test
 	public void testGetSearchByIdForDelete2nd()
 	{
-		new Expectations() {
-			{
-				entityManager.find(withAny(EmAnalyticsSearch.class), (BigInteger) any);
-				result = null;
-			}
-		};
+
 		EmAnalyticsObjectUtil.getSearchByIdForDelete(BigInteger.TEN, entityManager);
 
 	}
@@ -956,14 +965,22 @@ public class EmAnalyticsObjectUtilTest
 		emAnalyticsSearchParam = new EmAnalyticsSearchParam();
 		new Expectations() {
 			{
+				entityManager.createNamedQuery(anyString);
+				result=query;
+				query.setParameter(anyString, (BigInteger)any);
+				result = query;
+				query.getSingleResult();
+				result = emAnalyticsSearch;
+				emAnalyticsSearch.getSystemSearch();
+				result = new BigDecimal("1");
+				emAnalyticsSearch.getDeleted();
+				result = new BigInteger("0");
 				search.getId();
 				result = BigInteger.ONE;
-				entityManager.find(EmAnalyticsSearch.class, any);
+				entityManager.createNamedQuery(anyString);
+				result = query;
+				query.getSingleResult();
 				result = emAnalyticsSearch;
-				emAnalyticsSearch.getDeleted();
-				result = BigInteger.ZERO;
-				emAnalyticsSearch.getSystemSearch();
-				result = new BigDecimal(1);
 				entityManager.refresh(emAnalyticsSearch);
 				search.getMetadata();
 				result = "metaData";
@@ -995,6 +1012,8 @@ public class EmAnalyticsObjectUtilTest
 				result = false;
 				search.getParameters();
 				result = params;
+				emAnalyticsSearch.getSystemSearch();
+				result = new BigDecimal("1");
 				emAnalyticsSearch.getEmAnalyticsSearchParams();
 				result = emAnalyticsSearchParams;
 				TenantContext.getContext();
@@ -1088,4 +1107,26 @@ public class EmAnalyticsObjectUtilTest
 		};
 		EmAnalyticsObjectUtil.getSearchListByNamePatternForDelete("", entityManager);
 	}
+	
+    @Test
+    public void testFindEmSearchByIdWithoutOwner() {
+        EmAnalyticsObjectUtil.findEmSearchByIdWithoutOwner(BigInteger.ONE, entityManager);
+    }
+    
+    @Test
+    public void testFindEmSearchByNameWithoutOwner() {
+        final List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<EmAnalyticsSearch>();
+        emAnalyticsSearchList.add(new EmAnalyticsSearch());
+        new Expectations() {
+            {
+                entityManager.createNamedQuery(anyString);
+                result = query;
+                query.setParameter(anyString, anyString);
+                result = query;
+                query.getResultList();
+                result = emAnalyticsSearchList;
+            }
+        };
+        EmAnalyticsObjectUtil.findEmSearchByNameWithoutOwner("searchname", entityManager);
+    }
 }

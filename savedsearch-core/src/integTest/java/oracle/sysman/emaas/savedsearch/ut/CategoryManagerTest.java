@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.savedsearch;
+package oracle.sysman.emaas.savedsearch.ut;
 
 import java.math.BigInteger;
 import java.util.Properties;
@@ -24,6 +24,9 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
 
+import oracle.sysman.emaas.savedsearch.BaseTest;
+import oracle.sysman.emaas.savedsearch.QAToolUtil;
+import oracle.sysman.emaas.savedsearch.TestUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
@@ -33,7 +36,7 @@ public class CategoryManagerTest extends BaseTest
 {
 
     @Mocked
-    QAToolUtil qaToolUtil;
+	QAToolUtil qaToolUtil;
 
     @Mocked
     PersistenceManager persistenceManager;

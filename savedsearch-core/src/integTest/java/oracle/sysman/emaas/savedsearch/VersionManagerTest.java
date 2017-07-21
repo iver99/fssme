@@ -3,6 +3,7 @@ package oracle.sysman.emaas.savedsearch;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SchemaVersion;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.VersionManager;
 
+import oracle.sysman.emaas.savedsearch.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

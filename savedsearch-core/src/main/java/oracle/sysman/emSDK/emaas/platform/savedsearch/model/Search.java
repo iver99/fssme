@@ -163,4 +163,6 @@ public interface Search extends SearchSummary
 	public void setId(BigInteger id);
 	public boolean isEditable();
 	public void setEditable(boolean isEditable);
+	public String getDashboardIneligible();
+	public void setDashboardIneligible(String dashboardIneligible);
 }
