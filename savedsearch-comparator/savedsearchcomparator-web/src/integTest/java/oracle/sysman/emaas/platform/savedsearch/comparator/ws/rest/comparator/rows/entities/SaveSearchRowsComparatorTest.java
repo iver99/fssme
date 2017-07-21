@@ -322,8 +322,8 @@ public class SaveSearchRowsComparatorTest
         };
         SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
 	
-		drc.compare(null, null, null, "2017-05-25 16:03:02",false,"tenant");
-		drc.compare(null, null, null, "2017-05-25 16:03:02",true,null);
+		drc.compare("id", "name", "type", "2017-05-25 16:03:02",false,"tenant");
+		drc.compare("id", "name", "type", "2017-05-25 16:03:02",false,null);
 	}
 	
 	@Test
