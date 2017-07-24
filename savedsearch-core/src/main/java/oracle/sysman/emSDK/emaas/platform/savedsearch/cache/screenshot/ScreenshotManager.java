@@ -42,7 +42,7 @@ public class ScreenshotManager
 
 	public ScreenshotElement getScreenshotFromCache(Tenant tenant, BigInteger widgetId, String fileName) throws Exception
 	{
-		ICacheManager scm= CacheManagers.getInstance().build(CacheConstants.LRU_SCREENSHOT_MANAGER);
+		ICacheManager scm= CacheManagers.getInstance().build();
 		Object cacheKey = DefaultKeyGenerator.getInstance().generate(tenant,new Keys(widgetId));
 		if (widgetId == null || BigInteger.ZERO.compareTo(widgetId) >= 0) {
 			LOGGER.error("Unexpected widget id to get screenshot from cache for tenant={}, widget id={}, fileName={}", tenant,
@@ -67,7 +67,7 @@ public class ScreenshotManager
 	public ScreenshotElement storeBase64ScreenshotToCache(Tenant tenant, BigInteger widgetId, Date creation, Date modification,
 			String screenshot)
 	{
-		ICacheManager scm= CacheManagers.getInstance().build(CacheConstants.LRU_SCREENSHOT_MANAGER);
+		ICacheManager scm= CacheManagers.getInstance().build();
 		Object cacheKey = DefaultKeyGenerator.getInstance().generate(tenant,new Keys(widgetId));
 		if (screenshot == null) {
 			return null;
