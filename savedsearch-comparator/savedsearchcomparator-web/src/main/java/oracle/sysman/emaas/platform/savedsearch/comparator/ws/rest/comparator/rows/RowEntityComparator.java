@@ -16,6 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.RowEntity;
 
 /**
@@ -23,6 +26,7 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.ro
  */
 public class RowEntityComparator<T extends RowEntity>
 {
+	private static final Logger logger = LogManager.getLogger(RowEntityComparator.class);
 	public static class CompareListPair<T extends RowEntity>
 	{
 		private List<T> list1;
@@ -92,6 +96,7 @@ public class RowEntityComparator<T extends RowEntity>
 			tList1 = new ArrayList<T>();
 			tList1.addAll(set1);
 		}
+		
 		return new CompareListPair<T>(tList1, tList2);
 	}
 }

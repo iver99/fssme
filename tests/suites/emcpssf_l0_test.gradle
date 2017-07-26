@@ -110,6 +110,7 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: regLookupClientVer)
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: regClientVer)
 }
+
 task QATest(type: EMTest) {
 
     /*****************savedsearch-entities project*****************/
@@ -122,6 +123,7 @@ task QATest(type: EMTest) {
     include "oracle/sysman/emaas/platform/savedsearch/comparator/targetmodel/services/*.class"
     useRestAssured = true
     ext.set("testType", "integration")
+
 }
 
 task DEVTest(type: EMTest, dependsOn: QATest) {
@@ -149,6 +151,7 @@ task DEVTest(type: EMTest, dependsOn: QATest) {
     ext.set("testType", "unit")
 
 }
+
 task WebUtilTest(type: EMTest, dependsOn: DEVTest) {
 
 /*****************savedsearch-web project*****************/

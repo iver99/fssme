@@ -11,4 +11,3 @@ SET LINESIZE 2000
 
 @&EMSAAS_SQL_ROOT/1.21.0/upgrade_impl_dml.sql
 
-

@@ -91,12 +91,11 @@ public class TenantSubscriptionUtil
 		 */
 		public String put(String url, Object requestEntity, String tenant, String userTenant)
 		{
-			logger.info("start to call sync web service!");
 			if (StringUtils.isEmpty(url)) {
 				logger.error("Unable to put to an empty URL");
 				return null;
 			}
-			if (requestEntity == null || "".equals(requestEntity)) {
+			if (requestEntity == null) {
 				logger.error("Unable to put an empty request entity");
 				return null;
 			}

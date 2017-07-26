@@ -44,6 +44,108 @@ public class DataManagerTest
 {
 	private DataManager dataManager = DataManager.getInstance();
 	
+	@Test
+	public void testSaveToComparatorTable(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		
+		dataManager.saveToComparatorTable(entityManager, "2017-05-12 11:21:23", "2017-05-12 11:21:23", "full", "", 0.11);
+	}
+	
+	@Test
+	public void testSaveToSyncTable(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		
+		dataManager.saveToSyncTable("2017-05-12 11:21:23", "2017-05-12 11:21:23", "full", "", 0.11,"2017-05-12 11:21:23");
+	}
+	
+	@Test
+	public void testGetAllTenants(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Map<String, Object>> list = new ArrayList<>();
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getAllTenants(entityManager);
+	}
+	
+	@Test
+	public void testGetComparedDataToSync(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Map<String, Object>> list = new ArrayList<>();
+		String date = "2017-05-12 11:21:23";
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getComparedDataToSync(entityManager, date);
+		dataManager.getComparedDataToSync(entityManager, null);
+		
+	}
+	
+	@Test
+	public void testGetSyncStatus(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Map<String, Object>> list = new ArrayList<>();
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getComparatorStatus(entityManager);
+		
+	}
+	
+	@Test
+	public void testGetCompareStatus(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Map<String, Object>> list = new ArrayList<>();
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getSyncStatus(entityManager);
+		
+	}
+	
+	@Test
+	public void testGetLastComparisonDateForSync(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Object> list = new ArrayList<>();
+		list.add("2017-05-12 11:21:23");
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getLastComparisonDateForSync(entityManager);
+		
+	}
+	
+	@Test
+	public void testGetLatestComparisonDateForCompare(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+		final List<Object> list = new ArrayList<>();
+		list.add("2017-05-12 11:21:23");
+		new Expectations(){
+			{
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getLatestComparisonDateForCompare(entityManager);
+		
+	}
+
+	
 	
 	@Test
 	public void testCheckFormat()
@@ -120,26 +222,30 @@ public class DataManagerTest
 	public void testGetAllCategoryCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
+	/*	final List<Object> data = new ArrayList<Object>();
+		data.add("123");
 		new Expectations(){
 	            {
-	            	query.getSingleResult();
-	                result = 1;
+	            	query.getResultList();
+	                result = data;
 	            }
-	        };
-	        dataManager.getAllCategoryCount(entityManager);
+	        }; */
+	        dataManager.getAllCategoryCount(entityManager, "2017-05-23 16:19:02");
 	}
 
 	@Test
 	public void testGetAllFolderCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
+	/*	final List<Object> data = new ArrayList<Object>();
+		data.add("123");
 		new Expectations(){
             {
-            	query.getSingleResult();
-                result = 1;
+            	query.getResultList();
+                result = data;
             }
-        };
-        dataManager.getAllFolderCount(entityManager);
+        };*/
+        dataManager.getAllFolderCount(entityManager, "2017-05-23 16:19:02");
 		
 	}
 
@@ -147,13 +253,49 @@ public class DataManagerTest
 	public void testGetAllSearchCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
+	/*	final List<Object> data = new ArrayList<Object>();
+		data.add("123");
 		new Expectations(){
             {
-            	query.getSingleResult();
-                result = 1;
+            	query.getResultList();
+                result = data;
+            }
+        };*/
+        dataManager.getAllSearchCount(entityManager, "2017-05-23 16:19:02");
+		
+	}
+	
+	@Test
+	public void testGetAllSearchParamCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query)
+	{
+		final List<Object> data = new ArrayList<Object>();
+		data.add("123");
+		new Expectations(){
+            {
+            	entityManager.createNativeQuery(anyString).setParameter(1,anyString);
+            	result = query;
+            	query.getResultList();
+                result = data;
             }
         };
-        dataManager.getAllSearchCount(entityManager);
+        dataManager.getAllSearchParamsCount(entityManager, "2017-05-23 16:19:02");
+		
+	}
+	
+	@Test
+	public void testGetAllCategoryParamCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query)
+	{
+	/*	final List<Object> data = new ArrayList<Object>();
+		data.add("123");
+		new Expectations(){
+            {
+            	query.getResultList();
+                result = data;
+            }
+        };*/
+        dataManager.getAllCategoryPramsCount(entityManager, "2017-05-23 16:19:02");
 		
 	}
 	
@@ -161,15 +303,15 @@ public class DataManagerTest
 	public void testGetFolderTableData(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
-		final List<Map<String, Object>> list = new ArrayList<>();
+	/*	final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
 				query.getResultList();
 				result = list;
 			}
-		};
-		dataManager.getFolderTableData(entityManager);
-
+		};*/
+		dataManager.getFolderTableData(entityManager,"full", "2017-05-09 14:35:21", "2017-05-09 14:35:21", "tenant");
+		dataManager.getFolderTableData(entityManager,"incremental", "2017-05-09 14:35:21", "2017-05-09 14:35:21", null);
 	}
 
 	@Test
@@ -183,7 +325,8 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getSearchParamTableData(entityManager);		
+		dataManager.getSearchParamTableData(entityManager,"full", "2017-05-09 14:35:21", "2017-05-09 14:35:21", "tenant");		
+		dataManager.getSearchParamTableData(entityManager,"incremental", "2017-05-09 14:35:21", "2017-05-09 14:35:21", null);		
 	}
 	
 	@Test
@@ -198,36 +341,37 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getSearchTableData(entityManager);
-		
+		dataManager.getSearchTableData(entityManager,"full", "2017-05-09 14:35:21", "2017-05-09 14:35:21", null);
+		dataManager.getSearchTableData(entityManager,"incremental", "2017-05-09 14:35:21", "2017-05-09 14:35:21", "tenant");
 	}
 	
 	@Test
 	public void testGetCategoryTableData(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
-		final List<Map<String, Object>> list = new ArrayList<>();
+		/*final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
 				query.getResultList();
 				result = list;
 			}
-		};
-		dataManager.getCategoryTableData(entityManager);
+		};*/
+		dataManager.getCategoryTableData(entityManager,"full", "2017-05-09 14:35:21", "2017-05-09 14:35:21", "tenant");
 	}
 	
 	@Test
 	public void testGetCategoryParamTableData(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query q1)
 	{
-		final List<Map<String, Object>> list = new ArrayList<>();
+		/*final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
 				q1.getResultList();
 				result = list;
 			}
-		};
-		dataManager.getCategoryParamTableData(entityManager);
+		};*/
+		dataManager.getCategoryParamTableData(entityManager,"full", "2017-05-09 14:35:21","2017-05-09 14:35:21", null);
+		dataManager.getCategoryParamTableData(entityManager,"incremental", "2017-05-09 14:35:21" ,"2017-05-09 14:35:21", "tenant");
 	}
 	
 	@Test
@@ -271,7 +415,6 @@ public class DataManagerTest
 			{
 				query.getResultList();
 				result = objs;
-				
 			}
 		};
 		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
@@ -311,7 +454,6 @@ public class DataManagerTest
 			{
 				query.getResultList();
 				result = objs;
-				
 			}
 		};
 		
@@ -369,7 +511,9 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<Map<String, Object>>();
+
+				result =  new ArrayList<Map<String, Object>>();
+
 				
 			}
 		};
@@ -400,7 +544,6 @@ public class DataManagerTest
 			{
 				query.getResultList();
 				result = objs;
-				
 			}
 		};
 		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, paramValueStr, 
@@ -442,7 +585,9 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				query.getResultList();
-				result = new ArrayList<Map<String, Object>>();
+
+				result =  new ArrayList<Map<String, Object>>();
+
 			}
 		};
 		dataManager.syncSearchParamsTable(entityManager,searchId, name, paramAttributes, paramType, paramValueStr, 
@@ -498,7 +643,7 @@ public class DataManagerTest
 			{
 				query.getResultList();
 				result = objs;
-				
+
 			}
 		};
 		
@@ -596,7 +741,9 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				q1.getResultList();
-				result = new ArrayList<Map<String, Object>>();
+
+				result = new ArrayList<Map<String, Object>>();	
+
 			}
 		};
 		
@@ -631,7 +778,7 @@ public class DataManagerTest
 		Long tenantId = 1L; 
 		String dashboardIneligible = "dashboardIneligible";
 		String lastModificationDate = "lastModificationDate";
-		
+
 		final Map<String, Object> objs = new HashMap<String,Object>();		
 		Date date = new Date();
 		objs.put("LAST_MODIFICATION_DATE", null);
@@ -640,7 +787,7 @@ public class DataManagerTest
 			{
 				q1.getResultList();
 				result = objs;
-				
+
 			}
 		};
 		
@@ -717,7 +864,9 @@ public class DataManagerTest
 		new Expectations(){
 			{
 				query.getResultList();
-				result =new ArrayList<Map<String, Object>>();
+
+				result =  new ArrayList<Map<String, Object>>();
+
 			}
 		};
 		

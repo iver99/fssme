@@ -41,6 +41,9 @@ public class ZDTSynchronizer
 		EntityManager em = null;
 		try{
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
 			syncCategoryTableRows(em, data.getSavedSearchCategory());
 			syncCategoryParamsTableRows(em, data.getSavedSearchCategoryParams());
 			syncFoldersTableRows(em, data.getSavedSearchFoldersy());
@@ -50,9 +53,10 @@ public class ZDTSynchronizer
 			return "sync is successful";
 		}
 		catch (Exception e) {
-			logger.error("errors while syc for tables -",e.getLocalizedMessage());
+			logger.error("errors while syc for tables -" + e);
 			return "Errors:Failed to sync - "+ e.getLocalizedMessage();
-		} finally {
+		} 
+		finally {
 			if (em != null) {
 				em.close();
 			}
@@ -139,8 +143,9 @@ public class ZDTSynchronizer
 			return;
 		}
 	try {	logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
+		int i =0;
 		for (SavedSearchSearchRowEntity e : rows) {
-			
+			logger.info("sync the item = "+ (i+1));
 			DataManager.getInstance().syncSearchTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
 					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId() == null? null:new BigInteger(e.getFolderId()),
 					e.getCategoryId() == null? null:new BigInteger(e.getCategoryId()), e.getSystemSearch(), e.getIsLocked(), e.getMetadataClob(),
@@ -153,6 +158,7 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH table");
 	} catch (Exception e) {
+		logger.info("erros while sync for search table "+e.getLocalizedMessage());
 		logger.error(e);
 	}
 	}

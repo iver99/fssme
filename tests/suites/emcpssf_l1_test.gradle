@@ -85,12 +85,12 @@ dependencies {
 /*****************savedsearch-entities project*****************/
 		 include "oracle/sysman/emaas/platform/savedsearch/entity/*.class"
 
+
 /*****************savedsearch-comparator project*****************/
 		 include "oracle/sysman/emaas/platform/savedsearch/comparator/webutils/**/*.class"
 		 include "oracle/sysman/emaas/platform/savedsearch/comparator/exception/*.class"
 		 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/**/*.class"
 		 include "oracle/sysman/emaas/platform/savedsearch/comparator/targetmodel/services/*.class"
-
         useRestAssured=true
 ext.set("testType", "integration")
 }
