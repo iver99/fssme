@@ -1,16 +1,16 @@
 package oracle.sysman.emaas.platform.savedsearch.metadata;
 
+import java.math.BigInteger;
+import java.util.List;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ResourceBundleManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmsResourceBundle;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.math.BigInteger;
-import java.util.List;
 
 /**
  * Created by xiadai on 2017/5/4.

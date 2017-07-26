@@ -109,6 +109,7 @@ public class RegistryLookupUtil
 	{
 		Link link = RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
 		String authToken = RegistryLookupUtil.getAuthorizationToken(serviceName, version);
+		if(link == null) return null;
 		return new VersionedLink(link, authToken);
 	}
 

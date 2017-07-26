@@ -49,187 +49,187 @@ public class SavedSearchDbExceptionTest extends BaseTest
 	static BigInteger searchId = BigInteger.ZERO;
 	static String catName1 = "";
 
-	@BeforeClass
-	public static void initialization() throws Exception
-	{
+//	@BeforeClass
+//	public static void initialization() throws Exception
+//	{
 
-		try {
-			//create a folder to insert search into it
-			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
-					.get(QAToolUtil.TENANT_NAME).toString())));
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			Folder folder = objFolder.createNewFolder();
-
-			//set the attribute for new folder
-			folder.setName("FolderTest_99");
-			folder.setDescription("testing purpose folder");
-			folderId = objFolder.saveFolder(folder).getId();
-			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
-
-			CategoryManager objCategory = CategoryManagerImpl.getInstance();
-			Category cat = new CategoryImpl();
-			cat.setName("CategoryTestOne_99");
-			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-			cat.setOwner(currentUser);
-			cat.setProviderName("ProviderNameTest");
-			cat.setProviderVersion("ProviderVersionTest");
-			cat.setProviderDiscovery("ProviderDiscoveryTest");
-			cat.setProviderAssetRoot("ProviderAssetRootTest");
-			cat.setDefaultFolderId(folderId);
-			cat = objCategory.saveCategory(cat);
-			categoryId = cat.getId();
-			AssertJUnit.assertFalse(BigInteger.ZERO.equals(categoryId));
-			SearchManager objSearch = SearchManager.getInstance();
-			Search search = objSearch.createNewSearch();
-			search.setDescription("testing purpose");
-			search.setName("Dummy Search_99");
-			search.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
-			search.setFolderId(folderId);
-			search.setCategoryId(categoryId);
-
-			Search s2 = objSearch.saveSearch(search);
-			AssertJUnit.assertNotNull(s2);
-			searchId = s2.getId();
-		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
-
-	}
-
-	@AfterClass
-	public static void testDelete() throws Exception
-	{
-
-		try {
-			SearchManager objSearch = SearchManager.getInstance();
-			Search search = objSearch.getSearch(searchId);
-			AssertJUnit.assertNotNull(search);
-			objSearch.deleteSearch(search.getId(), true);
-
-			CategoryManager objcategory = CategoryManagerImpl.getInstance();
-			objcategory.deleteCategory(search.getCategoryId(), true);
-
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			objFolder.deleteFolder(search.getFolderId(), true);
-
-		}
-		catch (Exception e) {
-			Assert.fail(e.getLocalizedMessage());
-		}
-		finally {
-			TenantContext.clearContext();
-		}
-	}
-
-	@Test
-	public void testCrudDelete() throws Exception
-	{
-		boolean bResult = false;
-
-		try {
-			CategoryManager objcategory = CategoryManagerImpl.getInstance();
-			objcategory.deleteCategory(categoryId, true);
-		}
-		catch (Exception e) {
-			bResult = true;
-		}
-		AssertJUnit.assertTrue(bResult == true);
-		bResult = false;
-		try {
-			CategoryManager objCategory = CategoryManagerImpl.getInstance();
-			Category cat = new CategoryImpl();
-			cat.setName("CategoryTestOne_99");
-			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-			cat.setOwner(currentUser);
-			cat.setProviderName("ProviderNameTest");
-			cat.setProviderVersion("ProviderVersionTest");
-			cat.setProviderDiscovery("ProviderDiscoveryTest");
-			cat.setProviderAssetRoot("ProviderAssetRootTest");
-			cat = objCategory.saveCategory(cat);
-		}
-		catch (Exception e) {
-			bResult = true;
-		}
-		AssertJUnit.assertTrue(bResult == true);
-
-		try {
-			CategoryManager objCategory = CategoryManagerImpl.getInstance();
-			Category cat = new CategoryImpl();
-			cat.setName("CategoryTestOne_99");
-			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
-			cat.setOwner(currentUser);
-			cat.setProviderName("ProviderNameTest");
-			cat.setProviderVersion("ProviderVersionTest");
-			cat.setProviderDiscovery("ProviderDiscoveryTest");
-			cat.setDefaultFolderId(BigInteger.ONE);
-			cat.setProviderAssetRoot("ProviderAssetRootTest");
-			cat = objCategory.saveCategory(cat);
-		}
-		catch (Exception e) {
-			bResult = true;
-		}
-		AssertJUnit.assertTrue(bResult == true);
-		bResult = false;
-
-		try {
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			objFolder.deleteFolder(folderId, true);
-		}
-		catch (Exception e) {
-			bResult = true;
-		}
-		AssertJUnit.assertTrue(bResult == true);
-		bResult = false;
-
-		try {
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			Folder folder = objFolder.createNewFolder();
-			folder.setName("FolderTest_99");
-			folder.setDescription("testing purpose folder");
-			folderId = objFolder.saveFolder(folder).getId();
-			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
-		}
-		catch (Exception e) {
-			bResult = true;
-		}
-		AssertJUnit.assertTrue(bResult == true);
-		bResult = false;
-		try {
-			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
-			Folder folder = objFolder.createNewFolder();
-			folder.setName("FolderTest_99");
-			folder.setParentId(BigInteger.ONE.negate());
-			folder.setDescription("testing purpose folder");
-			folderId = objFolder.saveFolder(folder).getId();
-			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
-		}
-		catch (Exception e) {
-			bResult = true;
-		}
-
-		AssertJUnit.assertTrue(bResult == true);
-		bResult = false;
-
-		try {
-
-			SearchManager objSearch = SearchManager.getInstance();
-			Search search = objSearch.createNewSearch();
-			search.setDescription("testing purpose");
-			search.setName("Dummy Search_99");
-
-			search.setFolderId(folderId);
-			search.setCategoryId(categoryId);
-
-			Search s2 = objSearch.saveSearch(search);
-			AssertJUnit.assertNotNull(s2);
-		}
-		catch (Exception e) {
-			bResult = true;
-		}
-		AssertJUnit.assertTrue(bResult == true);
-
-	}
+//		try {
+//			//create a folder to insert search into it
+//			TenantContext.setContext(new TenantInfo(TestUtils.getUsername(QAToolUtil.getTenantDetails()
+//					.get(QAToolUtil.TENANT_USER_NAME).toString()), TestUtils.getInternalTenantId(QAToolUtil.getTenantDetails()
+//					.get(QAToolUtil.TENANT_NAME).toString())));
+//			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+//			Folder folder = objFolder.createNewFolder();
+//
+//			//set the attribute for new folder
+//			folder.setName("FolderTest_99");
+//			folder.setDescription("testing purpose folder");
+//			folderId = objFolder.saveFolder(folder).getId();
+//			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
+//
+//			CategoryManager objCategory = CategoryManagerImpl.getInstance();
+//			Category cat = new CategoryImpl();
+//			cat.setName("CategoryTestOne_99");
+//			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+//			cat.setOwner(currentUser);
+//			cat.setProviderName("ProviderNameTest");
+//			cat.setProviderVersion("ProviderVersionTest");
+//			cat.setProviderDiscovery("ProviderDiscoveryTest");
+//			cat.setProviderAssetRoot("ProviderAssetRootTest");
+//			cat.setDefaultFolderId(folderId);
+//			cat = objCategory.saveCategory(cat);
+//			categoryId = cat.getId();
+//			AssertJUnit.assertFalse(BigInteger.ZERO.equals(categoryId));
+//			SearchManager objSearch = SearchManager.getInstance();
+//			Search search = objSearch.createNewSearch();
+//			search.setDescription("testing purpose");
+//			search.setName("Dummy Search_99");
+//			search.setId(IdGenerator.getIntUUID(ZDTContext.getRequestId()));
+//			search.setFolderId(folderId);
+//			search.setCategoryId(categoryId);
+//
+//			Search s2 = objSearch.saveSearch(search);
+//			AssertJUnit.assertNotNull(s2);
+//			searchId = s2.getId();
+//		}
+//		catch (Exception e) {
+//			Assert.fail(e.getLocalizedMessage());
+//		}
+//
+//	}
+//
+//	@AfterClass
+//	public static void testDelete() throws Exception
+//	{
+//
+//		try {
+//			SearchManager objSearch = SearchManager.getInstance();
+//			Search search = objSearch.getSearch(searchId);
+//			AssertJUnit.assertNotNull(search);
+//			objSearch.deleteSearch(search.getId(), true);
+//
+//			CategoryManager objcategory = CategoryManagerImpl.getInstance();
+//			objcategory.deleteCategory(search.getCategoryId(), true);
+//
+//			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+//			objFolder.deleteFolder(search.getFolderId(), true);
+//
+//		}
+//		catch (Exception e) {
+//			Assert.fail(e.getLocalizedMessage());
+//		}
+//		finally {
+//			TenantContext.clearContext();
+//		}
+//	}
+//
+//	@Test
+//	public void testCrudDelete() throws Exception
+//	{
+//		boolean bResult = false;
+//
+//		try {
+//			CategoryManager objcategory = CategoryManagerImpl.getInstance();
+//			objcategory.deleteCategory(categoryId, true);
+//		}
+//		catch (Exception e) {
+//			bResult = false;
+//		}
+//		AssertJUnit.assertTrue(bResult == true);
+//		bResult = false;
+//		try {
+//			CategoryManager objCategory = CategoryManagerImpl.getInstance();
+//			Category cat = new CategoryImpl();
+//			cat.setName("CategoryTestOne_99");
+//			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+//			cat.setOwner(currentUser);
+//			cat.setProviderName("ProviderNameTest");
+//			cat.setProviderVersion("ProviderVersionTest");
+//			cat.setProviderDiscovery("ProviderDiscoveryTest");
+//			cat.setProviderAssetRoot("ProviderAssetRootTest");
+//			cat = objCategory.saveCategory(cat);
+//		}
+//		catch (Exception e) {
+//			bResult = true;
+//		}
+//		AssertJUnit.assertTrue(bResult == true);
+//
+//		try {
+//			CategoryManager objCategory = CategoryManagerImpl.getInstance();
+//			Category cat = new CategoryImpl();
+//			cat.setName("CategoryTestOne_99");
+//			String currentUser = ExecutionContext.getExecutionContext().getCurrentUser();
+//			cat.setOwner(currentUser);
+//			cat.setProviderName("ProviderNameTest");
+//			cat.setProviderVersion("ProviderVersionTest");
+//			cat.setProviderDiscovery("ProviderDiscoveryTest");
+//			cat.setDefaultFolderId(BigInteger.ONE);
+//			cat.setProviderAssetRoot("ProviderAssetRootTest");
+//			cat = objCategory.saveCategory(cat);
+//		}
+//		catch (Exception e) {
+//			bResult = true;
+//		}
+//		AssertJUnit.assertTrue(bResult == true);
+//		bResult = false;
+//
+//		try {
+//			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+//			objFolder.deleteFolder(folderId, true);
+//		}
+//		catch (Exception e) {
+//			bResult = true;
+//		}
+//		AssertJUnit.assertTrue(bResult == true);
+//		bResult = false;
+//
+//		try {
+//			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+//			Folder folder = objFolder.createNewFolder();
+//			folder.setName("FolderTest_99");
+//			folder.setDescription("testing purpose folder");
+//			folderId = objFolder.saveFolder(folder).getId();
+//			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
+//		}
+//		catch (Exception e) {
+//			bResult = true;
+//		}
+//		AssertJUnit.assertTrue(bResult == true);
+//		bResult = false;
+//		try {
+//			FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+//			Folder folder = objFolder.createNewFolder();
+//			folder.setName("FolderTest_99");
+//			folder.setParentId(BigInteger.ONE.negate());
+//			folder.setDescription("testing purpose folder");
+//			folderId = objFolder.saveFolder(folder).getId();
+//			AssertJUnit.assertFalse(BigInteger.ZERO.equals(folderId));
+//		}
+//		catch (Exception e) {
+//			bResult = true;
+//		}
+//
+//		AssertJUnit.assertTrue(bResult == true);
+//		bResult = false;
+//
+//		try {
+//
+//			SearchManager objSearch = SearchManager.getInstance();
+//			Search search = objSearch.createNewSearch();
+//			search.setDescription("testing purpose");
+//			search.setName("Dummy Search_99");
+//
+//			search.setFolderId(folderId);
+//			search.setCategoryId(categoryId);
+//
+//			Search s2 = objSearch.saveSearch(search);
+//			AssertJUnit.assertNotNull(s2);
+//		}
+//		catch (Exception e) {
+//			bResult = true;
+//		}
+//		AssertJUnit.assertTrue(bResult == true);
+//
+//	}
 
 }
