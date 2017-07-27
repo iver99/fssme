@@ -15,7 +15,7 @@ public class ZDTComparatorStatusRowEntityTest {
 		Assert.assertEquals(entity.getComparisonDate(), "comparisonDate");
 		Assert.assertEquals(entity.getComparisonType(), "comparisonType");
 		Assert.assertEquals(entity.getNextComparisonDate(), "nextComparisonDate");
-		Assert.assertEquals(entity.getDivergencePercentage(), 0.99);
+		Assert.assertEquals(entity.getDivergencePercentage(), "0.99");
 		
 		entity.setComparisonDate("");
 		entity.setComparisonType("");
