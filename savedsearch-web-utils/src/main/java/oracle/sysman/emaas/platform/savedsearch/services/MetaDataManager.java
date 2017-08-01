@@ -24,7 +24,7 @@ public class MetaDataManager implements ApplicationServiceManager {
     private static final Logger LOGGER = LogManager.getLogger(MetaDataManager.class);
     private static final List<String> oobProvider = Arrays.asList(MetaDataRetriever.SERVICENAME_APM,
             MetaDataRetriever.SERVICENAME_ITA, MetaDataRetriever.SERVICENAME_LA, MetaDataRetriever.SERVICENAME_ORCHESTRATION,
-            MetaDataRetriever.SERVICENAME_SECURITY_ANALYTICS, MetaDataRetriever.SERVICENAME_UDE);
+            MetaDataRetriever.SERVICENAME_SECURITY_ANALYTICS, MetaDataRetriever.SERVICENAME_UDE, MetaDataRetriever.SERVICENAME_EVENT);
     @Override
     public String getName() {
         return "MetaData Services";

@@ -23,7 +23,7 @@ public class MetaDataRetriever {
     private static final Logger LOGGER = LogManager.getLogger(MetaDataRetriever.class);
 
     private enum CategoryName{
-        LA(1), UDE(2), ITA(3), APM(4), SMA(6), OCS(7);
+        LA(1), UDE(2), ITA(3), APM(4), SMA(6), OCS(7), EVT(8);
 
         private final int categoryId;
         CategoryName(int categoryId){
@@ -32,7 +32,7 @@ public class MetaDataRetriever {
     }
 
     private enum FolderName{
-        LA(2), UDE(4), ITA(3), APM(5), SMA(7), OCS(8);
+        LA(2), UDE(4), ITA(3), APM(5), SMA(7), OCS(8), EVT(9);
 
         private final int folderId;
         FolderName(int folderId){
@@ -51,6 +51,7 @@ public class MetaDataRetriever {
     public static final String SERVICENAME_ORCHESTRATION = "CosUIService";
     //    public static final String SERVICENAME_COMPLIANCE = "Compliance";
     public static final String SERVICENAME_UDE = "TargetAnalytics";
+    public static final String SERVICENAME_EVENT = "EventUI";
 
     public static final String APM_STRING = "APM";
     public static final String ITA_SRING = "ITAnalytics";
@@ -58,6 +59,7 @@ public class MetaDataRetriever {
     public static final String SECURITY_ANALYTICS_STRING = "SecurityAnalytics";
     public static final String ORCHESTRATION_STRING = "Orchestration";
     public static final String UDE_STRING = "UDE";
+    public static final String EVENT_STRING = "Event";
 
 
     static {
@@ -67,6 +69,7 @@ public class MetaDataRetriever {
         CATEGORY_MAP.put(SERVICENAME_APM, CategoryName.APM.categoryId);
         CATEGORY_MAP.put(SERVICENAME_SECURITY_ANALYTICS, CategoryName.SMA.categoryId);
         CATEGORY_MAP.put(SERVICENAME_ORCHESTRATION, CategoryName.OCS.categoryId);
+        CATEGORY_MAP.put(SERVICENAME_EVENT, CategoryName.EVT.categoryId);
 
         FOLDER_MAP.put(SERVICENAME_LA, FolderName.LA.folderId);
         FOLDER_MAP.put(SERVICENAME_UDE, FolderName.UDE.folderId);
@@ -74,6 +77,7 @@ public class MetaDataRetriever {
         FOLDER_MAP.put(SERVICENAME_APM, FolderName.APM.folderId);
         FOLDER_MAP.put(SERVICENAME_SECURITY_ANALYTICS, FolderName.SMA.folderId);
         FOLDER_MAP.put(SERVICENAME_ORCHESTRATION, FolderName.OCS.folderId);
+        FOLDER_MAP.put(SERVICENAME_EVENT, FolderName.EVT.folderId);
 
         APPLICATION_MAP.put(SERVICENAME_LA, LA_STRING);
         APPLICATION_MAP.put(SERVICENAME_UDE, UDE_STRING);
@@ -81,6 +85,7 @@ public class MetaDataRetriever {
         APPLICATION_MAP.put(SERVICENAME_APM, APM_STRING);
         APPLICATION_MAP.put(SERVICENAME_SECURITY_ANALYTICS, SECURITY_ANALYTICS_STRING);
         APPLICATION_MAP.put(SERVICENAME_ORCHESTRATION, ORCHESTRATION_STRING);
+        APPLICATION_MAP.put(SERVICENAME_EVENT, EVENT_STRING);
     }
 
     public List<SearchImpl> getOobWidgetListByServiceName(String serviceName) throws EMAnalyticsFwkException {
