@@ -54,8 +54,8 @@ public class OOBCategoryCRUD
 	
 	private void testCategory(BigInteger category, BigInteger defaultFolder, String categoryName)
 	{
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + category);
+			Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category/" + category);
 
 			Assert.assertEquals(res.getStatusCode(), 200);
 

@@ -14,6 +14,7 @@ import com.jayway.restassured.response.Response;
 public class OOBFolderCRUD {
 	static String authToken;
 	static String TENANT_ID1;
+	static String TENANT_ID_OPC1;
 
 	@BeforeClass
 	public static void setUp()
@@ -21,6 +22,7 @@ public class OOBFolderCRUD {
 		CommonTest ct = new CommonTest();
 		authToken = ct.getAuthToken();
 		TENANT_ID1 = ct.getTenant() + "." + ct.getRemoteUser();
+		TENANT_ID_OPC1 = ct.getTenant();
 	}
 	
 	@Test
@@ -31,8 +33,8 @@ public class OOBFolderCRUD {
 	
 	private void testOOBFolder(String folderId, String folderName)
 	{
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/folder/{folderId}", folderId);
+			Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/folder/{folderId}", folderId);
 			Assert.assertEquals(res.getStatusCode(), 200);
 
 			JsonPath jp = res.jsonPath();
