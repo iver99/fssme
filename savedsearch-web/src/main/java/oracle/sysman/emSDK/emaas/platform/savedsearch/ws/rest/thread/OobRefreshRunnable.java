@@ -8,8 +8,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatab
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle.SSFLifeCycleNotification;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle.SSFLifeCycleNotifyEntity.SSFNotificationType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.OOBWidgetExpiredNotification;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
@@ -40,7 +39,7 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable{
             MetaDataStorer.storeOobWidget(oobWidgetList);
             
             // notify DashboardAPI to clear the cache of OOB Widgets
-            new SSFLifeCycleNotification().notify(SSFNotificationType.UP);
+            new OOBWidgetExpiredNotification().notify(serviceName);
         } catch (EMAnalyticsFwkException e) {
             LOGGER.error("Failed to refresh OOB Widgets of {} - {}", serviceName, e.getLocalizedMessage());
         }
