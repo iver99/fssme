@@ -11,6 +11,11 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.thread.OobRefreshRunnable;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.tool.InternalToolAPI;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
@@ -64,18 +69,35 @@ public class MetadataRefreshAPITest {
         metadataRefreshAPI.refreshNLS("ServiceName");
     }
     @Test
-    public void testOobRefreshRunnable(@Mocked MetaDataStorer metaDataStorer, @Mocked final MetaDataRetriever metaDataRetriever) throws EMAnalyticsFwkException {
-
-        OobRefreshRunnable oobRefreshRunnable = new OobRefreshRunnable();
-        oobRefreshRunnable.run();
+    public void testOobRefreshRunnable(@Mocked MetaDataStorer metaDataStorer, @Mocked final MetaDataRetriever metaDataRetriever, @Mocked final SanitizedInstanceInfo sanitizedInstance,
+            @Mocked final LookupManager lookupManager, @Mocked final LookupClient lookupClient, @Mocked final InstanceInfo instanceInfo) throws Exception {
+        final List<Link> linkList = new ArrayList<Link>();
+        Link link = new Link();
+        link.withHref("href");
+        link.withRel("rel");
+        linkList.add(link);
+        
         new Expectations(){
             {
                 DependencyStatus.getInstance();
                 result = dependencyStatus;
                 dependencyStatus.isDatabaseUp();
                 result = true;
+                LookupManager.getInstance();
+                result = lookupManager;
+                lookupManager.getLookupClient();
+                result = lookupClient;
+                lookupClient.getInstance((InstanceInfo) any);
+                result = instanceInfo;
+                lookupClient.getSanitizedInstanceInfo((InstanceInfo) any);
+                result = sanitizedInstance;
+                sanitizedInstance.getLinks(anyString);
+                result = linkList;
             }
         };
+        
+        OobRefreshRunnable oobRefreshRunnable = new OobRefreshRunnable();
+        oobRefreshRunnable.run();
         oobRefreshRunnable.setServiceName("serviceName");
         oobRefreshRunnable.run();
     }
