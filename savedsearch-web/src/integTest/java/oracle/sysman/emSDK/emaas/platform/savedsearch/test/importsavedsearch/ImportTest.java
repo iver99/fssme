@@ -236,8 +236,8 @@ public class ImportTest
 		InputStream stream = ImportTest.getResourceAsStream(CATEGORY_XML, ImportTest.class);
 
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
-		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importcategories");
+		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+				.header(TestConstant.X_HEADER, TENANT_ID1).body(jsonString1).when().post("/importcategories");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -254,8 +254,8 @@ public class ImportTest
 	public void importCategories_invalidformat()
 	{
 		try {
-			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body("").when().post("/importcategories");
+			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).body("").when().post("/importcategories");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
 		}
@@ -272,8 +272,8 @@ public class ImportTest
 	public void importFolder_invalidformat()
 	{
 		try {
-			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body("").when().post("/importfolders");
+			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).body("").when().post("/importfolders");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
 		}
@@ -290,8 +290,8 @@ public class ImportTest
 	{
 		InputStream stream = ImportTest.getResourceAsStream(FOLDER_XML, ImportTest.class);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
-		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importfolders");
+		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+				.header(TestConstant.X_HEADER, TENANT_ID1).body(jsonString1).when().post("/importfolders");
 		Assert.assertEquals(res1.getStatusCode(), 200);
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
@@ -309,16 +309,16 @@ public class ImportTest
 	{
 		InputStream stream = ImportTest.getResourceAsStream(SEARCH_XML, ImportTest.class);
 		String jsonString1 = ImportTest.getStringFromInputStream(stream);
-		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importsearches");
+		Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+				.header(TestConstant.X_HEADER, TENANT_ID1).body(jsonString1).when().post("/importsearches");
 
 		Set<String> folderList1 = new HashSet<String>();
 		Set<String> searchList1 = new HashSet<String>();
 		JSONArray arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
+			Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getInt("id"));
 			JsonPath jp = res.jsonPath();
 
 			if (res.getStatusCode() == 200) {
@@ -337,27 +337,27 @@ public class ImportTest
 
 		Set<String> folderList = new HashSet<String>();
 		Set<String> slist = new HashSet<String>();
-		res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef("-1", 1)).when().post("/importsearches");
+		res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+				.header(TestConstant.X_HEADER, TENANT_ID1).body(getSearchDef("-1", 1)).when().post("/importsearches");
 		arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 
-			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
+			res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
 			JsonPath jp = res1.jsonPath();
 			BigInteger tempId = new BigInteger(jp.getMap("folder").get("id").toString());
 			if (BigInteger.ONE.compareTo(tempId) == -1) {
 				folderList.add(tempId.toString());
 			}
 			slist.add(jsonObj.getString("id"));
-			res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getString("id"), 1)).when()
+			res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getString("id"), 1)).when()
 					.post("/importsearches");
 			arrfld = new JSONArray(res1.getBody().asString());
 			jsonObj = arrfld.getJSONObject(index);
-			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
+			res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
 			jp = res1.jsonPath();
 			tempId = new BigInteger(jp.getMap("folder").get("id").toString());
 			if (BigInteger.ONE.compareTo(tempId) == -1) {
@@ -365,27 +365,27 @@ public class ImportTest
 			}
 		}
 
-		res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef("-1", 2)).when().post("/importsearches");
+		res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+				.header(TestConstant.X_HEADER, TENANT_ID1).body(getSearchDef("-1", 2)).when().post("/importsearches");
 		arrfld = new JSONArray(res1.getBody().asString());
 		for (int index = 0; index < arrfld.length(); index++) {
 			JSONObject jsonObj = arrfld.getJSONObject(index);
 
-			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
+			res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
 			JsonPath jp = res1.jsonPath();
 			BigInteger tempId = new BigInteger(jp.getMap("folder").get("id").toString());
 			if (BigInteger.ONE.compareTo(tempId) == -1) {
 				folderList.add(tempId.toString());
 			}
 
-			res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getString("id"), 2)).when()
+			res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).body(getSearchDef(jsonObj.getString("id"), 2)).when()
 					.post("/importsearches");
 			arrfld = new JSONArray(res1.getBody().asString());
 			jsonObj = arrfld.getJSONObject(index);
-			res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
+			res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/search/" + jsonObj.getString("id"));
 			jp = res1.jsonPath();
 			tempId = new BigInteger(jp.getMap("folder").get("id").toString());
 			if (BigInteger.ONE.compareTo(tempId) == -1) {
@@ -412,8 +412,8 @@ public class ImportTest
 	public void importSearches_invalidformat()
 	{
 		try {
-			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).body("").when().post("/importsearches");
+			Response res = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).body("").when().post("/importsearches");
 			Assert.assertEquals(res.getStatusCode(), 400);
 			Assert.assertEquals(res.asString(), "Please specify input with valid format");
 		}
@@ -430,16 +430,16 @@ public class ImportTest
 
 	private boolean deleteFolder(String myfolderID)
 	{
-		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + myfolderID);
+		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+				.header(TestConstant.X_HEADER, TENANT_ID1).when().delete("/folder/" + myfolderID);
 		return res1.getStatusCode() == 204;
 
 	}
 
 	private boolean deleteSearch(String mySearchId)
 	{
-		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/search/" + mySearchId);
+		Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+				.header(TestConstant.X_HEADER, TENANT_ID1).when().delete("/search/" + mySearchId);
 		return res1.getStatusCode() == 204;
 
 	}
@@ -514,8 +514,8 @@ public class ImportTest
 
 	private Boolean verifyCategory(String mycatID, String mycatName)
 	{
-		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + mycatID);
+		Response res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+				.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category/" + mycatID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {
 			return false;
@@ -535,8 +535,8 @@ public class ImportTest
 
 	private boolean verifyFolder(String myfolderID, String myfolderName)
 	{
-		Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-				.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/folder/" + myfolderID);
+		Response res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+				.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/folder/" + myfolderID);
 		JsonPath jp = res1.jsonPath();
 		if (res1.getStatusCode() != 200) {
 			return false;

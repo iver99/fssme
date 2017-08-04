@@ -38,8 +38,8 @@ public class CategoryCRUD {
 
     @AfterClass
     public static void afterTest() {
-        Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when().delete("/folder/" + folderid);
+        Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                .header(TestConstant.X_HEADER, TENANT_ID1).when().delete("/folder/" + folderid);
         Assert.assertTrue(res2.getStatusCode() == 204);
 
     }
@@ -47,14 +47,14 @@ public class CategoryCRUD {
     public static void createinitObject() throws JSONException {
 
         String jsonString = "{ \"name\":\"CustomCat\",\"description\":\"Folder for  searches\"}";
-        Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
+        Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                .header(TestConstant.X_HEADER, TENANT_ID1).body(jsonString).when().post("/folder");
         folderid = new BigInteger(res.jsonPath().getString("id"));
         String jsonString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><CategorySet><Category><Name>MyCategoryTesting</Name><Description>Testing</Description>"
                 + "<ProviderName>Name</ProviderName><ProviderVersion>1</ProviderVersion><ProviderAssetRoot>Root</ProviderAssetRoot>"
                 + "</Category></CategorySet>";
-        Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().post("/importcategories");
+        Response res1 = RestAssured.given().contentType(ContentType.XML).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                .header(TestConstant.X_HEADER, TENANT_ID1).body(jsonString1).when().post("/importcategories");
         Assert.assertEquals(res1.getStatusCode(), 200);
         JSONArray arrfld = new JSONArray(res1.getBody().asString());
         for (int index = 0; index < arrfld.length(); index++) {
@@ -81,8 +81,8 @@ public class CategoryCRUD {
      */
     @Test
     public void categoryBadURLs() {
-        Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/0");
+        Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category/0");
             Assert.assertTrue(res.getStatusCode() == 404);
             Assert.assertEquals(res.asString(), "Category object by ID: 0 does not exist");
     }
@@ -92,8 +92,8 @@ public class CategoryCRUD {
      */
     @Test
     public void getCategoryDetailsbyId() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + catid);
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category/" + catid);
             JsonPath jp = res.jsonPath();
             Assert.assertEquals(jp.get("description"), "Testing");
             Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
@@ -114,8 +114,8 @@ public class CategoryCRUD {
      */
     @Test
     public void getCategoryDetailsbyName() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category?name=" + catName);
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category?name=" + catName);
             JsonPath jp = res.jsonPath();
             Assert.assertEquals(jp.get("description"), "Testing");
             Assert.assertEquals(jp.get("name"), "MyCategoryTesting");
@@ -137,14 +137,14 @@ public class CategoryCRUD {
      */
     @Test
     public void getCategoryNoName() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category?name=");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category?name=");
 
             Assert.assertTrue(res.getStatusCode() == 400);
             Assert.assertEquals(res.asString(), "please give category name");
 
-            Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category?name");
+            Response res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category?name");
 
             Assert.assertTrue(res1.getStatusCode() == 400);
             Assert.assertEquals(res1.asString(), "please give category name");
@@ -155,8 +155,8 @@ public class CategoryCRUD {
      * Verify give wrong category name while read category details
      */
     public void getCategoryWrongName() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category?name=abc");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category?name=abc");
             Assert.assertTrue(res.getStatusCode() == 404);
             Assert.assertEquals(res.asString(), "Category object by Name: abc does not exist");
     }
@@ -168,37 +168,37 @@ public class CategoryCRUD {
                     + "\"},\"folder\":{\"id\":\""
                     + folderid
                     + "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
-            Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-                .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
+            Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1)
+                .header("Authorization", authToken).header(TestConstant.X_HEADER, TENANT_ID1).body(jsonString1).when()
                 .post("/search");
             JsonPath jp1 = res1.jsonPath();
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/" + catid + "/searches");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category/" + catid + "/searches");
             Assert.assertTrue(res.getStatusCode() == 200);
             String output = res.getBody().asString();
             JSONArray newJArray = new JSONArray(output);
             Assert.assertTrue(newJArray.length() > 0);
             RestAssured.given().contentType(ContentType.JSON).log().everything()
-                .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+                .header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header(TestConstant.X_HEADER, TENANT_ID1).when()
                 .delete("/search/" + jp1.get("id"));
             Assert.assertTrue(res.getStatusCode() == 200);
     }
 
     @Test
     public void getSearchDetailsByIdErrorId() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/abc/searches");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category/abc/searches");
             Assert.assertEquals(res.getStatusCode(), 404);
 
-            Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/-1/searches");
+            Response res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category/-1/searches");
             Assert.assertTrue(res1.getStatusCode() == 400);
             String output1 = res1.getBody().asString();
             Assert.assertEquals(output1, "Id/count should be a positive number and not an alphanumeric");
 
 
-            Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/category/4567890/searches");
+            Response res2 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/category/4567890/searches");
             Assert.assertTrue(res2.getStatusCode() == 404);
             String output2 = res2.getBody().asString();
             Assert.assertEquals(output2, "Category object by ID: 4567890 does not exist");
@@ -209,8 +209,8 @@ public class CategoryCRUD {
      * Check status and response for get all categories
      */
     public void listAllCategories() {
-            Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/categories/");
+            Response res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/categories/");
             JsonPath jp1 = res1.jsonPath();
             Assert.assertTrue(res1.getStatusCode() == 200);
             Assert.assertTrue(!jp1.getList("name").isEmpty());
@@ -224,8 +224,8 @@ public class CategoryCRUD {
     @Test
     public void searchesbyCategory3QueryParams() {
 
-            Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+            Response res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when()
                     .get("/searches?categoryId=" + catid + "&categoryname=" + catName + "&folderId=" + folderid);
             Assert.assertTrue(res1.getStatusCode() == 200);
     }
@@ -235,16 +235,16 @@ public class CategoryCRUD {
      */
     @Test
     public void searchesbyCategoryBadRequest() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryId");
             Assert.assertTrue(res.getStatusCode() == 400);
             Assert.assertEquals(res.asString(), "Please give the value for categoryId");
-            Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=");
+            Response res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryId=");
             Assert.assertTrue(res1.getStatusCode() == 400);
             Assert.assertEquals(res1.asString(), "Please give the value for categoryId");
-            Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryName=");
+            Response res2 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryName=");
             Assert.assertTrue(res2.getStatusCode() == 400);
             Assert.assertEquals(res2.asString(), "Please give the value for categoryName");
     }
@@ -253,8 +253,8 @@ public class CategoryCRUD {
      * searches by category with category Id which is negative number
      */
     public void searchesbyCategoryIdNegativeNumber() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=-1");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryId=-1");
             Assert.assertTrue(res.getStatusCode() == 400);
             Assert.assertEquals(res.asString(), "Id/count should be a positive number and not an alphanumeric");
     }
@@ -264,8 +264,8 @@ public class CategoryCRUD {
      */
     @Test
     public void searchesbyCategoryIdNotExist() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=4567890");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryId=4567890");
             Assert.assertTrue(res.getStatusCode() == 404);
             Assert.assertEquals(res.asString(), "Category object by ID: 4567890 does not exist");
     }
@@ -275,8 +275,8 @@ public class CategoryCRUD {
      */
     @Test
     public void searchesbyCategoryInvalidName() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryName=MyAnalytics");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryName=MyAnalytics");
             Assert.assertTrue(res.getStatusCode() == 404);
             Assert.assertEquals(res.asString(), "Category object by Name: MyAnalytics does not exist");
     }
@@ -286,8 +286,8 @@ public class CategoryCRUD {
      */
     @Test
     public void searchesbyCategoryInvalidNameANDid() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when()
                     .get("/searches?categoryName=invalidCategory&categoryId=200000");
             Assert.assertTrue(res.getStatusCode() == 404);
             Assert.assertEquals(res.asString(), "Category object by Name: invalidCategory does not exist");
@@ -298,8 +298,8 @@ public class CategoryCRUD {
      */
     @Test
     public void searchesbyCategoryParamcaseCheck() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryname=Log Analytics");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryname=Log Analytics");
             Assert.assertTrue(res.getStatusCode() == 400);
             Assert.assertEquals(res.asString(),
                     "Please give one and only one query parameter by one of categoryId,categoryName,folderId or lastAccessCount");
@@ -310,8 +310,8 @@ public class CategoryCRUD {
      */
     @Test
     public void searchesbyCategoryQuerycaseCheck() {
-            Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryName=it analytics");
+            Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryName=it analytics");
             Assert.assertTrue(res.getStatusCode() == 404);
             Assert.assertEquals(res.asString(), "Category object by Name: it analytics does not exist");
     }
@@ -327,13 +327,13 @@ public class CategoryCRUD {
                     + "\"},\"folder\":{\"id\":\""
                     + folderid
                     + "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
-            Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-                    .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
+            Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1)
+                    .header("Authorization", authToken).header(TestConstant.X_HEADER, TENANT_ID1).body(jsonString1).when()
                     .post("/search");
             JsonPath jp1 = res1.jsonPath();
             Assert.assertTrue(res1.getStatusCode() == 201);
-            Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryId=" + catid);
+            Response res2 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryId=" + catid);
             JsonPath jp2 = res2.jsonPath();
             List<String> a = jp2.get("name");
 
@@ -346,7 +346,7 @@ public class CategoryCRUD {
 
             Assert.assertTrue(res2.getStatusCode() == 200);
             Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-                    .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+                    .header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header(TestConstant.X_HEADER, TENANT_ID1).when()
                     .delete("/search/" + jp1.get("id"));
             Assert.assertTrue(res3.getStatusCode() == 204);
     }
@@ -363,12 +363,12 @@ public class CategoryCRUD {
                     + folderid
                     + "\"},\"description\":\"mydb.mydomain error logs (ORA*)!!!\",\"queryStr\": \"target.name=mydb.mydomain message like ERR*\",\"parameters\":[{\"name\":\"sample1\",\"type\":STRING	,\"value\":\"my_value\"}]}";
             Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-                    .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when()
+                    .header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header(TestConstant.X_HEADER, TENANT_ID1).body(jsonString1).when()
                     .post("/search");
             JsonPath jp1 = res1.jsonPath();
             Assert.assertTrue(res1.getStatusCode() == 201);
-            Response res2 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/searches?categoryName=" + catName);
+            Response res2 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when().get("/searches?categoryName=" + catName);
             JsonPath jp2 = res2.jsonPath();
             List<String> a = jp2.get("name");
         for (int i = 0; i < a.size(); i++) {
@@ -379,7 +379,7 @@ public class CategoryCRUD {
             }
             Assert.assertTrue(res2.getStatusCode() == 200);
             Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-                    .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+                    .header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header(TestConstant.X_HEADER, TENANT_ID1).when()
                     .delete("/search/" + jp1.get("id"));
             Assert.assertTrue(res3.getStatusCode() == 204);
     }
@@ -389,8 +389,8 @@ public class CategoryCRUD {
      */
     @Test
     public void searchesbyCategoryParams() {
-            Response res1 = RestAssured.given().log().everything().header("Authorization", authToken)
-                    .header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+            Response res1 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                    .header(TestConstant.X_HEADER, TENANT_ID1).when()
                     .get("/searches?categoryId&categoryname=Log Analytics&folderId=2");
             Assert.assertTrue(res1.getStatusCode() == 400);
             Assert.assertEquals(res1.asString(), "Please give the value for categoryId");
