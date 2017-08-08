@@ -1,4 +1,4 @@
-package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle;
+package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,44 +9,38 @@ import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * Created by guochen on 3/24/17.
- */
 @Test(groups = { "s2" })
-public class SSFLifeCycleNotificationTest {
+public class OOBWidgetExpiredNotificationTest {
     private VersionedLink link;
     private List<VersionedLink> links;
+
     @BeforeMethod
-    public void beforeMethod()
-    {
+    public void beforeMethod() {
         link = new VersionedLink();
         link.withHref("http://test.link.com");
-        link.withRel("ssf.lifecycle.ntf");
+        link.withRel("expire/widgetcache");
         link.setAuthToken("authToken");
         links = new ArrayList<VersionedLink>();
         links.add(link);
     }
-    
+
     @Test
-    public void testNotifyChange(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final RestClient anyRestClient,
-                                 @Mocked final TenantContext anyTenantContext) throws IOException
-    {
-        final SSFLifeCycleNotification lcn = new SSFLifeCycleNotification();
-        // null input
-        lcn.notify(null);
-        new Expectations(lcn) {
+    public void testInform(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final RestClient anyRestClient)
+            throws IOException {
+        final OOBWidgetExpiredNotification notification = new OOBWidgetExpiredNotification();
+        new Expectations() {
             {
                 RegistryLookupUtil.getAllServicesInternalLinksByRel(anyString);
                 result = links;
                 anyRestClient.post(anyString, any, anyString, anyString);
-                result = SSFLifeCycleNotifyEntity.SSFNotificationType.UP;
+                result = "Something";
             }
         };
-        lcn.notify(SSFLifeCycleNotifyEntity.SSFNotificationType.UP);
+        notification.notify("SSF");
     }
+
 }

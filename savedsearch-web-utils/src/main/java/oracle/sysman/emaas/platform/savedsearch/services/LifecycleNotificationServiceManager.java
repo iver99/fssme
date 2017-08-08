@@ -27,6 +27,7 @@ public class LifecycleNotificationServiceManager implements ApplicationServiceMa
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception {
 		try {
+		    // send a notification that SSF is UP
 			new SSFLifeCycleNotification().notify(SSFNotificationType.UP);
 			LOGGER.info("SSF lifecycle UP notification has been sent to concerned services");
 		} catch (Exception e) { // for any issue occurres of lifecycle notification, we just record an exception and prevents the exception to break the startup procedure
