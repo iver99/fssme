@@ -59,7 +59,7 @@ public class MetaDataRetriever {
     public static final String SECURITY_ANALYTICS_STRING = "SecurityAnalytics";
     public static final String ORCHESTRATION_STRING = "Orchestration";
     public static final String UDE_STRING = "UDE";
-    public static final String EVENT_STRING = "Event";
+    public static final String EVENT_STRING = "Alerts";
 
 
     static {

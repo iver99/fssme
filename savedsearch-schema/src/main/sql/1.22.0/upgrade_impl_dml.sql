@@ -5,5 +5,6 @@ Rem
 
 
 @&EMSAAS_SQL_ROOT/1.22.0/emaas_savesearch_seed_data_sec.sql
+@&EMSAAS_SQL_ROOT/1.22.0/emaas_savedsearch_seed_data_eventui.sql
 COMMIT;
 
