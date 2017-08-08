@@ -8,6 +8,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatab
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.OOBWidgetExpiredNotification;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
@@ -23,6 +24,7 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable{
     
     @Override
     public void run(){
+        LOGGER.info("Starting a new thread to fresh OOB Widgets of {}.", serviceName);
         if(serviceName == null || serviceName.isEmpty()) {
             LOGGER.error("OobRefreshRunnable: there is no service name!");
             return;
@@ -45,8 +47,11 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable{
             oobWidgetList = metaDataRetriever.getOobWidgetListByServiceName(serviceName);
             TenantContext.setContext(new TenantInfo(SearchManagerImpl.DEFAULT_CURRENT_USER, SearchManagerImpl.DEFAULT_TENANT_ID));
             MetaDataStorer.storeOobWidget(oobWidgetList);
+            
+            // notify DashboardAPI to clear the cache of OOB Widgets
+            new OOBWidgetExpiredNotification().notify(serviceName);
         } catch (EMAnalyticsFwkException e) {
-            LOGGER.error(e.getLocalizedMessage());
+            LOGGER.error("Failed to refresh OOB Widgets of {} - {}", serviceName, e.getLocalizedMessage());
         }
     }
     
