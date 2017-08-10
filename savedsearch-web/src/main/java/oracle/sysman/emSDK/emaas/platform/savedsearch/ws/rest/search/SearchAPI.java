@@ -1188,7 +1188,11 @@ public class SearchAPI
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
 		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
-
+		
+		boolean isWidget = searchObj.getIsWidget();
+		boolean hasWidgetTemplate = false;
+		boolean hasWidgetViewModel = false;
+		boolean hasWidgetKocName = false;
 		// Parameters
 		if (json.has("parameters")) {
 			JSONArray jsonArr = json.optJSONArray("parameters");
@@ -1208,6 +1212,13 @@ public class SearchAPI
 						throw new EMAnalyticsWSException(
 								"The name key for search param can not be empty in the input JSON Object",
 								EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
+					}
+					if (name.equals("WIDGET_TEMPLATE")) {
+						hasWidgetTemplate = true;
+					} else if (name.equals("WIDGET_VIEWMODEL")) {
+						hasWidgetViewModel = true;
+					} else if (name.equals("WIDGET_KOC_NAME")) {
+						hasWidgetKocName = true;
 					}
 
 					searchParam.setName(name);
@@ -1236,10 +1247,23 @@ public class SearchAPI
 
 			}
 			searchObj.setParameters(searchParamList);
-
 		}
 		else {
 			searchObj.setParameters(null);
+		}
+		if (isWidget) {
+			if (!hasWidgetTemplate) {
+				throw new EMAnalyticsWSException("Widget template is a required field for a widget, please add it",
+						EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
+			}
+			if (!hasWidgetViewModel) {
+				throw new EMAnalyticsWSException("Widget view model is a required field for a widget, please add it",
+						EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
+			}
+			if (!hasWidgetKocName) {
+				throw new EMAnalyticsWSException("Widget koc name is a required field for a widget, please add it",
+						EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
+			}
 		}
 
 		return searchObj;

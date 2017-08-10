@@ -4,12 +4,14 @@ import java.math.BigInteger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,8 +27,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
-
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.node.ObjectNode;
@@ -430,6 +432,35 @@ public class FolderAPI
 					+ "Fail to read folder object", e);
 		}
 
+		return Response.status(statusCode).entity(msg).build();
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFolderByName(@QueryParam("name") String name, @QueryParam("parentId") BigInteger parentId) {
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/folder?name={}&parentId={}", name, parentId);
+		String msg = "";
+		int statusCode = 200;
+		ObjectNode jsonObj = null;
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			FolderManager foldermanager = FolderManager.getInstance();
+			Folder folder = foldermanager.getFoldersByName(name, parentId);
+			if (folder != null) {
+				jsonObj = EntityJsonUtil.getFullFolderJsonObj(uri.getBaseUri(), folder);
+				msg = jsonObj.toString();
+			} else {
+				msg = "The folder with the name " + name + " does not exist";
+			}
+			
+		} catch(EMAnalyticsFwkException e) {
+			msg = e.getMessage();
+			statusCode = e.getStatusCode();
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "Fail to read folder object", e);
+		}
 		return Response.status(statusCode).entity(msg).build();
 	}
 

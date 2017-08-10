@@ -619,4 +619,47 @@ public class FolderManagerImpl extends FolderManager
 
 	}
 
+	@Override
+	public Folder getFoldersByName(String name, BigInteger parentId) throws EMAnalyticsFwkException {
+		// TODO Auto-generated method stub
+		if (name == null) {
+			return null;
+		}
+		EmAnalyticsFolder folderObj = null;
+		EntityManager em = null;
+		try {
+
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			EmAnalyticsFolder existParentFolder = null;
+			if (parentId != null) {
+				 existParentFolder = EmAnalyticsObjectUtil.getFolderById(parentId, em);
+				 folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getSubFolderByName").setParameter("parentFolder", existParentFolder)
+						 	.setParameter("foldername", name)
+							.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+							.getSingleResult();
+			} else {
+				folderObj = (EmAnalyticsFolder) em.createNamedQuery("Folder.getFolderByName").setParameter("foldername", name)
+						.setParameter(QueryParameterConstant.USER_NAME, TenantContext.getContext().getUsername())
+						.getSingleResult();
+			}
+			
+			
+		} catch (NoResultException nre) {
+			LOGGER.error(nre.getLocalizedMessage());
+			return null;
+		}  catch(Exception e) {
+			LOGGER.error("Error while reading the folder with parent: " + parentId + " and name: " + name, e);
+			throw new EMAnalyticsFwkException("Error occurred while  reading the folder", EMAnalyticsFwkException.ERR_GENERIC,
+					null, e);
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		if (folderObj != null) {
+			return createFolderObject(folderObj, null);
+		}
+		return null;
+	}
+
 }
