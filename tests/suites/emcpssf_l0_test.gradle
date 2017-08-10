@@ -121,6 +121,7 @@ task QATest(type: EMTest) {
     include "oracle/sysman/emaas/platform/savedsearch/comparator/exception/*.class"
     include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/**/*.class"
     include "oracle/sysman/emaas/platform/savedsearch/comparator/targetmodel/services/*.class"
+    include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/timer/*.class"
     useRestAssured = true
     ext.set("testType", "integration")
 
