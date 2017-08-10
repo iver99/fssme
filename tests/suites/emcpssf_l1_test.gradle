@@ -102,9 +102,11 @@ ext.set("testType", "integration")
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/*.class"
 	   //TODO fix below path later
 	   //include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/*.class"
+	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtilTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/**/*.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/exception/*.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/**/*.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/*.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/common/ExecutionContextTest.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/zdt/DataManagerTest.class"
 
