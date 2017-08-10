@@ -118,6 +118,27 @@ public class FolderManagerTest extends BaseTest
 	}
 	
 	@Test(groups={"s2"})
+	public void testGetFolderByName2(@Mocked final TenantContext tenantContext, @Mocked final PersistenceManager persistenceManager,
+			@Mocked final EntityManager entityManager, @Mocked final EmAnalyticsFolder emAnalyticsFolder) throws EMAnalyticsFwkException {
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = new TenantInfo("emcsadmin1", 1L);
+				PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+				result = entityManager;
+				entityManager.createNamedQuery(anyString)
+			 	.setParameter(anyString, anyString)
+				.setParameter(anyString, anyString)
+				.getSingleResult();
+				result = null;
+			}
+		};
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		objFolder.getFoldersByName("name", null);
+		
+	}
+	
+	@Test(groups={"s2"})
 	public void testGetFolderByName(@Mocked final TenantContext tenantContext, @Mocked final PersistenceManager persistenceManager,
 			@Mocked final EntityManager entityManager, @Mocked final EmAnalyticsFolder emAnalyticsFolder) throws EMAnalyticsFwkException {
 		new Expectations() {
