@@ -54,10 +54,16 @@ public class SavedsearchComparatorServiceManager implements ApplicationServiceMa
 
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception {
+		if (timer == null) {
+			timer = new Timer();
+		}
 		LOGGER.info("Pre-stopping comparison service");
 		try {
 			timer.stop();
-			timer.removeNotification(notificationId);
+			if (notificationId != null) {
+				timer.removeNotification(notificationId);
+			}
+			
 			LOGGER.info("Timer for savedsearch comparison stopped. notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {
