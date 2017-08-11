@@ -240,11 +240,12 @@ public class SearchAPI
 	 *         3.The folder key for search is missing in the input JSON Object</td>
 	 *         </tr>
 	 *         </table>
+	 * @throws JSONException 
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createSearch(JSONObject inputJsonObj)
+	public Response createSearch(JSONObject inputJsonObj) throws JSONException
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/search");
 
@@ -1103,7 +1104,7 @@ public class SearchAPI
 		return null;
 	}
 	
-	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException
+	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException, JSONException
 	{
 		Search searchObj = new SearchImpl();
 		
@@ -1116,7 +1117,10 @@ public class SearchAPI
 		try {
 			String name = json.getString("name");
 			if (name != null && "".equals(name.trim())) {
-				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
+				obj.put("message", "The name key for search can not be empty in the input JSON Object");	
+				throw new EMAnalyticsWSException(obj.toString(),
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			}
 
@@ -1253,15 +1257,24 @@ public class SearchAPI
 		}
 		if (isWidget) {
 			if (!hasWidgetTemplate) {
-				throw new EMAnalyticsWSException("Widget template is a required field for a widget, please add it",
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
+				obj.put("message", "Widget template is a required field for a widget, please add it");	
+				throw new EMAnalyticsWSException(obj.toString(),
 						EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
 			}
 			if (!hasWidgetViewModel) {
-				throw new EMAnalyticsWSException("Widget view model is a required field for a widget, please add it",
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
+				obj.put("message", "Widget view model is a required field for a widget, please add it");	
+				throw new EMAnalyticsWSException(obj.toString(),
 						EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
 			}
 			if (!hasWidgetKocName) {
-				throw new EMAnalyticsWSException("Widget koc name is a required field for a widget, please add it",
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
+				obj.put("message", "Widget koc name is a required field for a widget, please add it");	
+				throw new EMAnalyticsWSException(obj.toString(),
 						EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
 			}
 		}
