@@ -8,6 +8,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.OOBWidgetExpiredNotification;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmsResourceBundle;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
@@ -57,6 +58,9 @@ public class MetaDataManager implements ApplicationServiceManager {
                 LOGGER.error(e.getLocalizedMessage());
             }
         }
+        
+        // notify DashboardAPI to clear the cache of OOB Widgets
+        new OOBWidgetExpiredNotification().notify("SavedSearch");
     }
 
     @Override

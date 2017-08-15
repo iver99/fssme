@@ -19,8 +19,7 @@ import oracle.sysman.emaas.platform.savedsearch.threadpool.ParallelThreadPool;
  */
 @Path("refresh")
 public class MetadataRefreshAPI {
-//    private static final Logger LOGGER = LogManager.getLogger(MetadataRefreshAPI.class);
-
+    
     @PUT
     @Path("oob/{serviceName}")
     public Response refreshOOB(@PathParam("serviceName") String serviceName) {
@@ -29,8 +28,6 @@ public class MetadataRefreshAPI {
         oobRunnable.setServiceName(serviceName);
         ExecutorService pool = ParallelThreadPool.getThreadPool();
         pool.submit(oobRunnable);
-//        Thread thread = new Thread(oobRunnable, "Refresh " + serviceName + " OOB.");
-//        thread.start();
         return Response.ok().build();
     }
 
@@ -42,11 +39,7 @@ public class MetadataRefreshAPI {
         nlsRunnable.setServiceName(serviceName);
         ExecutorService pool = ParallelThreadPool.getThreadPool();
         pool.submit(nlsRunnable);
-//        Thread thread = new Thread(nlsRunnable, "Refresh " + serviceName + " resource bundles.");
-//        thread.start();
         return Response.ok().build();
     }
-
-
 }
 
