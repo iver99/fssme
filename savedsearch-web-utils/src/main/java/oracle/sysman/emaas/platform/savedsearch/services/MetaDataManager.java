@@ -60,7 +60,11 @@ public class MetaDataManager implements ApplicationServiceManager {
         }
         
         // notify DashboardAPI to clear the cache of OOB Widgets
-        new OOBWidgetExpiredNotification().notify("SavedSearch");
+        try {
+            new OOBWidgetExpiredNotification().notify("SavedSearch");
+        } catch (Exception e) {
+            LOGGER.error(e.getLocalizedMessage(), e);
+        }
     }
 
     @Override
