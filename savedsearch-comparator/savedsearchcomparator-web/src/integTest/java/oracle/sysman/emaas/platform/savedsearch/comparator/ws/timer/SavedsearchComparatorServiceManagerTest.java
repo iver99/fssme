@@ -17,10 +17,6 @@ public class SavedsearchComparatorServiceManagerTest {
 		manager.postStart(null);
 	}
 	
-	@Test
-	public void testPreStop() throws Exception {
-		SavedsearchComparatorServiceManager manager = new SavedsearchComparatorServiceManager();
-		manager.preStop(null);
-	}
+	
 
 }
