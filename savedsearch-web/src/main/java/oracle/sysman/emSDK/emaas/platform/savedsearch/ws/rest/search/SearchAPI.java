@@ -1117,10 +1117,7 @@ public class SearchAPI
 		try {
 			String name = json.getString("name");
 			if (name != null && "".equals(name.trim())) {
-				JSONObject obj = new JSONObject();
-				obj.put("errorCode", EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
-				obj.put("message", "The name key for search can not be empty in the input JSON Object");	
-				throw new EMAnalyticsWSException(obj.toString(),
+				throw new EMAnalyticsWSException("The name key for search can not be empty in the input JSON Object",
 						EMAnalyticsWSException.JSON_SEARCH_NAME_MISSING);
 			}
 
