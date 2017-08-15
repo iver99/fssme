@@ -7,8 +7,6 @@ Rem
 
 @&EMSAAS_SQL_ROOT/1.21.0/emaas_remove_table_constraint.sql
 @&EMSAAS_SQL_ROOT/1.21.0/create_table_resource_bundle.sql
-@&EMSAAS_SQL_ROOT/1.21.0/emaas_savedsearch_create_zdt_compare_table.sql
-@&EMSAAS_SQL_ROOT/1.21.0/emaas_savedsearch_create_zdt_sync_table.sql
 
 
 
