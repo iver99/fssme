@@ -1,15 +1,17 @@
 package oracle.sysman.emaas.platform.savedsearch.services;
 
+import java.util.Collections;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.OOBWidgetExpiredNotification;
 import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
+
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
 import weblogic.application.ApplicationLifecycleEvent;
-
-import java.util.Collections;
-
-import static org.testng.Assert.*;
 
 
 @Test(groups = {"s2"})
@@ -20,6 +22,14 @@ public class MetaDataManagerTest {
     MetaDataRetriever metaDataRetriever;
     @Mocked
     EMAnalyticsFwkException emAnalyticsFwkException;
+    @Mocked
+    OOBWidgetExpiredNotification oobNotification;
+    
+    @Test
+    public void testGetName() throws Exception {
+        MetaDataManager metaDataManager = new MetaDataManager();
+        Assert.assertEquals(metaDataManager.getName(), "MetaData Services");
+    }
     @Test
     public void testPostStart() throws Exception {
         MetaDataManager metaDataManager = new MetaDataManager();
@@ -32,7 +42,7 @@ public class MetaDataManagerTest {
         metaDataManager.postStart(applicationLifecycleEvent);
     }
     @Test
-    public void testPostStart_EMAnalyticsFwkException() throws Exception {
+    public void testPostStartEMAnalyticsFwkException() throws Exception {
         MetaDataManager metaDataManager = new MetaDataManager();
         new Expectations(){
             {
@@ -43,12 +53,23 @@ public class MetaDataManagerTest {
         metaDataManager.postStart(applicationLifecycleEvent);
     }
     @Test
-    public void testPostStart_EMAnalyticsFwkException_second() throws Exception {
+    public void testPostStartEMAnalyticsFwkException2() throws Exception {
         MetaDataManager metaDataManager = new MetaDataManager();
         new Expectations(){
             {
                 metaDataRetriever.getResourceBundleByService(anyString);
                 result = emAnalyticsFwkException;
+            }
+        };
+        metaDataManager.postStart(applicationLifecycleEvent);
+    }
+    @Test
+    public void testPostStartException() throws Exception {
+        MetaDataManager metaDataManager = new MetaDataManager();
+        new Expectations(){
+            {
+                oobNotification.notify(anyString);
+                result = new Exception("Test Exception thrown by OOBWidgetExpiredNotification.notify(string) ");
             }
         };
         metaDataManager.postStart(applicationLifecycleEvent);
