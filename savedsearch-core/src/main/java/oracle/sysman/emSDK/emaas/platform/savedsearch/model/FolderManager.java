@@ -93,5 +93,14 @@ public abstract class FolderManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Folder updateFolder(Folder folder) throws EMAnalyticsFwkException;
+	
+	/**
+	 * get folder by name; This folder can be sub folder under a specific parent folder ID or the root folder
+	 * 
+	 * @param name
+	 * @param parentId
+	 * @return null or folder object
+	 */
+	public abstract Folder getFoldersByName(String name, BigInteger parentId) throws EMAnalyticsFwkException;
 
 }

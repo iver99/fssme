@@ -216,6 +216,34 @@ public class FolderAPITest {
         };
         Assert.assertNotNull(folderAPI.getFolder(new BigInteger("1111")));
     }
+    
+    @Test
+    public void testGetFolderByName1() throws EMAnalyticsFwkException {
+        new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                folderManager.getFoldersByName(anyString, (BigInteger)any);
+                result = folder;
+            }
+        };
+        Assert.assertNotNull(folderAPI.getFolderByName("name",new BigInteger("1111")));
+    }
+    
+    @Test
+    public void testGetFolderByName2() throws EMAnalyticsFwkException {
+        new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                folderManager.getFoldersByName(anyString, (BigInteger)any);
+                result = null;
+            }
+        };
+        folderAPI.getFolderByName("name",new BigInteger("1111"));
+    }
+    
+    
     @Test
     public void testGetFolder2nd() throws EMAnalyticsFwkException {
         new Expectations(){
