@@ -396,6 +396,7 @@ public class ZDTAPI
 				if (result != null) {
 					int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
 					logger.info("comparedNum={}",comparedDataNum);
+					totalDifferentRows = totalDifferentRows + comparedDataNum;
 					double percen = (double)comparedDataNum/(double)totalRow;
 					DecimalFormat df = new DecimalFormat("#.##########");
 					double percentage = Double.parseDouble(df.format(percen));
