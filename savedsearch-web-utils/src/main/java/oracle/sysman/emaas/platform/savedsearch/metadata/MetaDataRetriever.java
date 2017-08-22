@@ -1,5 +1,14 @@
 package oracle.sysman.emaas.platform.savedsearch.metadata;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
@@ -9,12 +18,12 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmsResourceBundle;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.*;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 
 /**
  * Created by xiadai on 2017/5/4.
@@ -92,14 +101,15 @@ public class MetaDataRetriever {
             return Collections.emptyList();
         }
         RestClient restClient = new RestClient();
-        String response = restClient.get(versionedLink.getHref(),"CloudServices",versionedLink.getAuthToken());
         try {
+            String response = restClient.get(versionedLink.getHref(), "CloudServices", versionedLink.getAuthToken());
             oobWidgetList = JSONUtil.fromJsonToListUnencoded(response, SearchImpl.class);
-        } catch (NullPointerException npe){
-            throw new EMAnalyticsFwkException("Fail into errors when convert the OOB Widgets, may be some params were missing",
-                    EMAnalyticsFwkException.ERR_GENERIC,null);
-        }catch (IOException e) {
-            LOGGER.warn("Fail into errors when convert the OOB Widgets");
+        } catch (UniformInterfaceException | ClientHandlerException responseException) {
+            throw new EMAnalyticsFwkException("Fail to fecth OOB Widgets from " + serviceName,
+                    EMAnalyticsFwkException.ERR_GENERIC, null, responseException);
+        } catch (NullPointerException | IOException convertException) {
+            throw new EMAnalyticsFwkException("Fail into errors when convert the OOB Widgets from " + serviceName,
+                    EMAnalyticsFwkException.JSON_JSON_TO_OBJECT, null, convertException);
         }
         if(oobWidgetList == null || oobWidgetList.isEmpty()){
             LOGGER.warn("No OOB Widgets data was fetched.");
@@ -119,6 +129,7 @@ public class MetaDataRetriever {
         }
         return oobWidgetList;
     }
+    
     public List<EmsResourceBundle> getResourceBundleByService(String serviceName) throws EMAnalyticsFwkException {
         LOGGER.debug("Calling MetaDataRetriever.getResourceBundleByServiceName");
         List<EmsResourceBundle> emsResourceBundles = new ArrayList<>();
@@ -128,21 +139,21 @@ public class MetaDataRetriever {
             return Collections.emptyList();
         }
         RestClient restClient = new RestClient();
-        String response = restClient.get(versionedLink.getHref(),"CloudServices",versionedLink.getAuthToken());
         try {
+            String response = restClient.get(versionedLink.getHref(), "CloudServices", versionedLink.getAuthToken());
             emsResourceBundles = JSONUtil.fromJsonToListUnencoded(response, EmsResourceBundle.class);
-        } catch (NullPointerException npe){
-            LOGGER.warn("Fail into errors when convert the OOB Widgets, may be some params were missing");
-            throw new EMAnalyticsFwkException("Fail into errors when convert the OOB Widgets, may be some params were missing",
-                    EMAnalyticsFwkException.ERR_GENERIC,null);
-        }catch (IOException e) {
-            LOGGER.warn("Fail into errors when convert the OOB Widgets");
+        } catch (UniformInterfaceException | ClientHandlerException responseException) {
+            throw new EMAnalyticsFwkException("Fail to fecth resource bundle from " + serviceName,
+                    EMAnalyticsFwkException.ERR_GENERIC, null, responseException);
+        } catch (NullPointerException | IOException convertException) {
+            throw new EMAnalyticsFwkException("Fail into errors when convert resource bundle from " + serviceName,
+                    EMAnalyticsFwkException.JSON_JSON_TO_OBJECT, null, convertException);
         }
         return setDefaultResourceBundleValue(emsResourceBundles, serviceName);
     }
 
     private List<EmsResourceBundle> setDefaultResourceBundleValue(List<EmsResourceBundle> emsResourceBundles, String serviceName) {
-        if(emsResourceBundles != null || serviceName != null) {
+        if(emsResourceBundles != null && serviceName != null) {
             for(EmsResourceBundle rb : emsResourceBundles) {
                 rb.setServiceName(APPLICATION_MAP.get(serviceName));
                 if(rb.getCountryCode() == null || rb.getCountryCode().isEmpty()) {

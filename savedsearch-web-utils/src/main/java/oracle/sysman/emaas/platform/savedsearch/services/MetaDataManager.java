@@ -45,7 +45,10 @@ public class MetaDataManager implements ApplicationServiceManager {
                 MetaDataStorer.storeOobWidget(oobWidgetList);
                 LOGGER.debug("Refresh the OOB Widgets successfully.");
             } catch (EMAnalyticsFwkException e) {
-                LOGGER.error(e.getLocalizedMessage());
+                LOGGER.error(e.getLocalizedMessage(), e);
+            } catch (Exception ex) {
+                // in case some unknow exception
+                LOGGER.error(ex.getLocalizedMessage(), ex);
             }
 
             LOGGER.info("Start to load nls metadata");
@@ -55,7 +58,10 @@ public class MetaDataManager implements ApplicationServiceManager {
                 MetaDataStorer.storeResourceBundle(emsResourceBundles);
                 LOGGER.debug("Refresh the nls metadata successfully.");
             } catch (EMAnalyticsFwkException e) {
-                LOGGER.error(e.getLocalizedMessage());
+                LOGGER.error(e.getLocalizedMessage(), e);
+            } catch (Exception ex) {
+                // in case some unknow exception
+                LOGGER.error(ex.getLocalizedMessage(), ex);
             }
         }
         

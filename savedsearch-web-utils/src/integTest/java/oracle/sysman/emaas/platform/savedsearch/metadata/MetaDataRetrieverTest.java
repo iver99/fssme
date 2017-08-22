@@ -6,9 +6,8 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import org.testng.annotations.Test;
 
 /**
  * Created by xiadai on 2017/5/8.
@@ -33,7 +32,7 @@ public class MetaDataRetrieverTest {
                 versionedLink.getAuthToken();
                 result = "auth";
                 restClient.get(anyString,anyString, anyString);
-                result = "response";
+                result = "";
             }
         };
         metaDataRetriever = new MetaDataRetriever();
@@ -52,7 +51,7 @@ public class MetaDataRetrieverTest {
                 versionedLink.getAuthToken();
                 result = "auth";
                 restClient.get(anyString,anyString, anyString);
-                result = "response";
+                result = "";
             }
         };
         metaDataRetriever = new MetaDataRetriever();
