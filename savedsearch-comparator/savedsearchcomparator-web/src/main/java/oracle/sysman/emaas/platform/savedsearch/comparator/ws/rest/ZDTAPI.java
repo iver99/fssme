@@ -332,7 +332,7 @@ public class ZDTAPI
 						String comparisonDate = getTimeString(currentUtcDate);
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(currentUtcDate);
-						cal.add(Calendar.HOUR_OF_DAY, 6);
+						cal.add(Calendar.HOUR_OF_DAY, 12);
 						Date nextScheduleDate = cal.getTime();
 						String nextScheduleDateStr = getTimeString(nextScheduleDate);
 						
@@ -406,7 +406,7 @@ public class ZDTAPI
 					String comparisonDate = getTimeString(currentUtcDate);
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(currentUtcDate);
-					cal.add(Calendar.HOUR_OF_DAY, 6);
+					cal.add(Calendar.HOUR_OF_DAY, 12);
 					Date nextScheduleDate = cal.getTime();
 					String nextScheduleDateStr = getTimeString(nextScheduleDate);
 					
