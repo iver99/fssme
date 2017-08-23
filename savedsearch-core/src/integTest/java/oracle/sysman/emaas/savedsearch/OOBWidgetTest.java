@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Test
-public class OOBWidgetTest {
+public class OOBWidgetTest extends BaseTest{
     @Test
     public void testOOBWidgetParamNotNull() throws EMAnalyticsFwkException {
         TenantContext.setContext(new TenantInfo(

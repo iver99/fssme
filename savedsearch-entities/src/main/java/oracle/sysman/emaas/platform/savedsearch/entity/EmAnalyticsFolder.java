@@ -17,15 +17,15 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  * The persistent class for the EMS_ANALYTICS_FOLDERS database table.
  */
 @Entity
-@Multitenant
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant", length = 32, primaryKey = true)
 @Table(name = "EMS_ANALYTICS_FOLDERS")
+@AdditionalCriteria("this.tenantId = :tenant or this.tenantId = -11")
 @NamedQueries({
 		@NamedQuery(name = "Folder.getSubFolder", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= "
 				+ ":parentFolder" + " AND o.deleted=0 AND (o.owner in (:userName) OR o.systemFolder =1)"),
 		@NamedQuery(name = "Folder.getRootFolders", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.deleted=0 AND (o.owner in (:userName) OR o.systemFolder =1)"),
 		@NamedQuery(name = "Folder.getSubFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder= :parentFolder AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)"),
 		@NamedQuery(name = "Folder.getRootFolderByName", query = "Select o from EmAnalyticsFolder o where o.emAnalyticsFolder is null AND o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)") })
+		@NamedQuery(name = "Folder.getFolderByName", query = "Select o from EmAnalyticsFolder o where o.name=:foldername AND O.deleted =0 AND (o.owner in (:userName) OR o.systemFolder =1)")
 //@SequenceGenerator(name = "EMS_ANALYTICS_FOLDERS_SEQ", sequenceName = "EMS_ANALYTICS_FOLDERS_SEQ", allocationSize = 1)
 public class EmAnalyticsFolder implements Serializable
 {
@@ -71,6 +71,9 @@ public class EmAnalyticsFolder implements Serializable
 	@Column(name = "DELETED")
 	private BigInteger deleted;
 
+	@Column(name = "TENANT_ID")
+	private Long tenantId;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE")
 	private Date creationDate;
@@ -94,7 +97,6 @@ public class EmAnalyticsFolder implements Serializable
 	public void setLastModificationDate(Date lastModificationDate) {
 		this.lastModificationDate = lastModificationDate;
 	}
-
 	//bi-directional many-to-one association to EmAnalyticsCategory
 	@OneToMany(mappedBy = "emAnalyticsFolder")
 	private Set<EmAnalyticsCategory> emAnalyticsCategories;
@@ -115,6 +117,22 @@ public class EmAnalyticsFolder implements Serializable
 
 	public EmAnalyticsFolder()
 	{
+	}
+
+	/**
+	 * @return the tenantId
+	 */
+	public Long getTenantId()
+	{
+		return tenantId;
+	}
+
+	/**
+	 * @param tenantId the tenantId to set
+	 */
+	public void setTenantId(Long tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 
 	public BigInteger getDeleted()

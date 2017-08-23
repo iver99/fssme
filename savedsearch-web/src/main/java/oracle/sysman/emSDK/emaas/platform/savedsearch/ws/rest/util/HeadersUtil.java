@@ -38,6 +38,7 @@ public class HeadersUtil
 	public static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
 	public static final String X_REMOTE_USER_HEADER = "X-REMOTE-USER";
 	public static final String X_USER_IDENTITY_DOMAIN_NAME_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
+	private static final String TENANT_CLOUD_SERVICES = "CloudServices";
 
 	private static final Logger LOGGER = LogManager.getLogger(HeadersUtil.class);
 
@@ -99,7 +100,7 @@ public class HeadersUtil
 						EMAnalyticsFwkException.ERR_VALID_TENANT_ID, null);
 			}
 
-			if (internalId == null) {
+			if (internalId == null && !TENANT_CLOUD_SERVICES.equalsIgnoreCase(tName)) {
 				LOGGER.error("Internal Tenant Id is null.");
 				throw new EMAnalyticsFwkException("Internal Tenant Id is null.", EMAnalyticsFwkException.ERR_VALID_TENANT_ID,
 						null);

@@ -25,13 +25,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
@@ -242,11 +240,12 @@ public class SearchAPI
 	 *         3.The folder key for search is missing in the input JSON Object</td>
 	 *         </tr>
 	 *         </table>
+	 * @throws JSONException 
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createSearch(JSONObject inputJsonObj)
+	public Response createSearch(JSONObject inputJsonObj) throws JSONException
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (POST) /savedsearch/v1/search");
 
@@ -923,6 +922,38 @@ public class SearchAPI
 		return Response.status(statusCode).entity(message).build();
 	}
 	
+	/**
+	 * 
+	 * @param searchName
+	 * @return
+	 */
+    @GET
+    @Path("/name/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSearchByName(@PathParam("name") String searchName) {
+        LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/{}", searchName);
+        String message;
+        int statusCode = 200;
+        SearchManager sman = SearchManager.getInstance();
+        try {
+            if (!DependencyStatus.getInstance().isDatabaseUp()) {
+                throw new EMAnalyticsDatabaseUnavailException();
+            }
+            Search searchObj = sman.getSearchWithoutOwnerByName(searchName);
+            message = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj).toString();
+        } catch (EMAnalyticsFwkException e) {
+            statusCode = e.getStatusCode();
+            message = e.getMessage();
+            LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+                    e.getStatusCode());
+        } catch(Exception e){
+			statusCode = 505;
+			message = "Fail to get search by name, "+searchName;
+			LOGGER.error(e);
+		}
+        return Response.status(statusCode).entity(message).build();
+    }
+	
 	@PUT
 	@Path("/list")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -1073,7 +1104,7 @@ public class SearchAPI
 		return null;
 	}
 	
-	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException
+	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException, JSONException
 	{
 		Search searchObj = new SearchImpl();
 		
@@ -1158,7 +1189,11 @@ public class SearchAPI
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
 		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
-
+		
+		boolean isWidget = searchObj.getIsWidget();
+		boolean hasWidgetTemplate = false;
+		boolean hasWidgetViewModel = false;
+		boolean hasWidgetKocName = false;
 		// Parameters
 		if (json.has("parameters")) {
 			JSONArray jsonArr = json.optJSONArray("parameters");
@@ -1178,6 +1213,13 @@ public class SearchAPI
 						throw new EMAnalyticsWSException(
 								"The name key for search param can not be empty in the input JSON Object",
 								EMAnalyticsWSException.JSON_SEARCH_PARAM_NAME_MISSING);
+					}
+					if (name.equals("WIDGET_TEMPLATE")) {
+						hasWidgetTemplate = true;
+					} else if (name.equals("WIDGET_VIEWMODEL")) {
+						hasWidgetViewModel = true;
+					} else if (name.equals("WIDGET_KOC_NAME")) {
+						hasWidgetKocName = true;
 					}
 
 					searchParam.setName(name);
@@ -1206,10 +1248,32 @@ public class SearchAPI
 
 			}
 			searchObj.setParameters(searchParamList);
-
 		}
 		else {
 			searchObj.setParameters(null);
+		}
+		if (isWidget) {
+			if (!hasWidgetTemplate) {
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
+				obj.put("message", "Widget template is a required field for a widget, please add it");	
+				throw new EMAnalyticsWSException(obj.toString(),
+						EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
+			}
+			if (!hasWidgetViewModel) {
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
+				obj.put("message", "Widget view model is a required field for a widget, please add it");	
+				throw new EMAnalyticsWSException(obj.toString(),
+						EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
+			}
+			if (!hasWidgetKocName) {
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
+				obj.put("message", "Widget koc name is a required field for a widget, please add it");	
+				throw new EMAnalyticsWSException(obj.toString(),
+						EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
+			}
 		}
 
 		return searchObj;

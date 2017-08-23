@@ -753,6 +753,23 @@ public class EntityJsonUtil
 		return searchObj;
 	}
 
+	public static ObjectNode getWidgetJsonObject(Search search) throws EMAnalyticsFwkException {
+		String[] excludedFields ={"metadata", "isEditable", "editable", "guid", "owner", "lastModifiedBy", "systemSearch", "tags", "folderId", "categoryId"};
+		ObjectNode searchObj;
+		try {
+			searchObj = JSONUtil.objectToJSONObject(search, excludedFields);
+			if(searchObj.has(NAME_ID)){
+				BigInteger searchId = searchObj.get(NAME_ID).getBigIntegerValue();
+				searchObj.put(NAME_ID, String.valueOf(searchId));
+			}
+			searchObj.put("dashboardIneligible", "1".equals(search.getDashboardIneligible())?"true":"false");
+		} catch (JSONException e) {
+			LOGGER.error("Fall into error while convert search to json object");
+			throw new EMAnalyticsFwkException("Fall into error while convert search to json object"
+					,EMAnalyticsFwkException.JSON_OBJECT_TO_JSON_EXCEPTION, null, e );
+		}
+		return  searchObj;
+	}
 	private static void getWidgetJsonObjForDefaultHeight(Search search, JSONObject widgetObj, SearchParameter param)
 			throws JSONException
 	{

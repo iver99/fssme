@@ -1,0 +1,50 @@
+package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.thread;
+
+import java.util.List;
+
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.OOBWidgetExpiredNotification;
+import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataRetriever;
+import oracle.sysman.emaas.platform.savedsearch.metadata.MetaDataStorer;
+import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * Created by xiadai on 2017/6/14.
+ */
+public class OobRefreshRunnable extends MetadataRefreshRunnable{
+    private static final Logger LOGGER = LogManager.getLogger(OobRefreshRunnable.class);
+    @Override
+    public void run(){
+        LOGGER.info("Starting a new thread to fresh OOB Widgets of {}.", serviceName);
+        if(serviceName == null || serviceName.isEmpty()) {
+            LOGGER.error("OobRefreshRunnable: there is no service name!");
+            return;
+        }
+        List<SearchImpl> oobWidgetList;
+        try {
+            if (!DependencyStatus.getInstance().isDatabaseUp()) {
+                throw new EMAnalyticsDatabaseUnavailException();
+            }
+            MetaDataRetriever metaDataRetriever = new MetaDataRetriever();
+            oobWidgetList = metaDataRetriever.getOobWidgetListByServiceName(serviceName);
+            TenantContext.setContext(new TenantInfo(SearchManagerImpl.DEFAULT_CURRENT_USER, SearchManagerImpl.DEFAULT_TENANT_ID));
+            MetaDataStorer.storeOobWidget(oobWidgetList);
+            
+            // notify DashboardAPI to clear the cache of OOB Widgets
+            new OOBWidgetExpiredNotification().notify(serviceName);
+        } catch (EMAnalyticsFwkException e) {
+            LOGGER.error("Failed to refresh OOB Widgets of {} - {}", serviceName, e.getLocalizedMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to refresh OOB Widgets of {} since an unexpected exception- {}", serviceName,
+                    e.getLocalizedMessage());
+        }
+    }
+}

@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.savedsearch;
+package oracle.sysman.emaas.savedsearch.ut;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -11,11 +11,15 @@ import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FolderManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.QueryParameterConstant;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder;
+import oracle.sysman.emaas.savedsearch.BaseTest;
+import oracle.sysman.emaas.savedsearch.QAToolUtil;
+import oracle.sysman.emaas.savedsearch.TestUtils;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
@@ -111,6 +115,48 @@ public class FolderManagerTest extends BaseTest
 		};
 		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
 		objFolder.getRootFolder();
+	}
+	
+	@Test(groups={"s2"})
+	public void testGetFolderByName2(@Mocked final TenantContext tenantContext, @Mocked final PersistenceManager persistenceManager,
+			@Mocked final EntityManager entityManager, @Mocked final EmAnalyticsFolder emAnalyticsFolder) throws EMAnalyticsFwkException {
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = new TenantInfo("emcsadmin1", 1L);
+				PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+				result = entityManager;
+				entityManager.createNamedQuery(anyString)
+			 	.setParameter(anyString, anyString)
+				.setParameter(anyString, anyString)
+				.getSingleResult();
+				result = null;
+			}
+		};
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		objFolder.getFoldersByName("name", null);
+		
+	}
+	
+	@Test(groups={"s2"})
+	public void testGetFolderByName(@Mocked final TenantContext tenantContext, @Mocked final PersistenceManager persistenceManager,
+			@Mocked final EntityManager entityManager, @Mocked final EmAnalyticsFolder emAnalyticsFolder) throws EMAnalyticsFwkException {
+		new Expectations() {
+			{
+				TenantContext.getContext();
+				result = new TenantInfo("emcsadmin1", 1L);
+				PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+				result = entityManager;
+				entityManager.createNamedQuery(anyString).setParameter(anyString, anyString)
+			 	.setParameter(anyString, anyString)
+				.setParameter(anyString, anyString)
+				.getSingleResult();
+				result = null;
+			}
+		};
+		FolderManagerImpl objFolder = FolderManagerImpl.getInstance();
+		objFolder.getFoldersByName("name", new BigInteger("1"));
+		
 	}
 
 	@Test(groups = { "s1" }, expectedExceptions = NullPointerException.class)
