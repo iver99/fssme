@@ -62,8 +62,5 @@ public class SavedsearchComparatorLifecycleServiceTest {
         registryServiceManager.preStart(applicationLifecycleEvent);
     }
 
-    /*@Test
-    public void testDashboardComparatorLifecycleService(){
-        DashboardComparatorLifecycleService dcs=new DashboardComparatorLifecycleService();
-    }*/
+  
 }

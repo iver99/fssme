@@ -28,7 +28,7 @@ dependencies
 {
 	deploy (project(path:':savedsearch-comparator:savedsearchcomparator-web', configuration:'archives')) {transitive = false}
 	earlib (project(':savedsearch-comparator:savedsearchcomparator-webutils')){transitive = false} 
-	
+	earlib (project(':savedsearch-comparator:savedsearchcomparator-web')){transitive = false} 
 	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.+') {transitive=false }
 	earlib(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.+') {transitive=false }
 	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2') {transitive=false }

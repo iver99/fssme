@@ -92,7 +92,7 @@ public class SavedsearchCountsComparator extends AbstractComparator
 	 * @param ins2
 	 * @param ze2
 	 */
-	private InstancesComparedData<CountsEntity> compareInstancesCounts(String key1, LookupClient client1, CountsEntity ze1,
+	public InstancesComparedData<CountsEntity> compareInstancesCounts(String key1, LookupClient client1, CountsEntity ze1,
  			String key2, LookupClient client2, CountsEntity ze2)
 	{
 		CountsEntity differentCountsForInstance1 = new CountsEntity();
@@ -101,30 +101,30 @@ public class SavedsearchCountsComparator extends AbstractComparator
 		if (ze1.getCountOfCategory() != ze2.getCountOfCategory()) {
 			logger.error("Category count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
 					key1, ze1.getCountOfCategory(), key2, ze2.getCountOfCategory());
-			differentCountsForInstance1.setcountOfCategory(ze1.getCountOfCategory());
-			differentCountsForInstance2.setcountOfCategory(ze2.getCountOfCategory());
+			differentCountsForInstance1.setCountOfCategory(ze1.getCountOfCategory());
+			differentCountsForInstance2.setCountOfCategory(ze2.getCountOfCategory());
 			allMatch = false;
 		}
-		if (ze1.getCountOfFolder() != ze2.getCountOfFolder()) {
+		if (ze1.getCountOfFolders() != ze2.getCountOfFolders()) {
 			logger.error("Folders count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
-					key1, ze1.getCountOfFolder(), key2, ze2.getCountOfFolder());
-			differentCountsForInstance1.setcountOfFolder(ze1.getCountOfFolder());
-			differentCountsForInstance2.setcountOfFolder(ze2.getCountOfFolder());
+					key1, ze1.getCountOfFolders(), key2, ze2.getCountOfFolders());
+			differentCountsForInstance1.setCountOfFolders(ze1.getCountOfFolders());
+			differentCountsForInstance2.setCountOfFolders(ze2.getCountOfFolders());
 			allMatch = false;
 		}
 		if (ze1.getCountOfSearch() != ze2.getCountOfSearch()) {
 			logger.error("Searchs count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
 					key1, ze1.getCountOfSearch(), key2, ze2.getCountOfSearch());
-			differentCountsForInstance1.setcountOfSearch(ze1.getCountOfSearch());
-			differentCountsForInstance2.setcountOfSearch(ze2.getCountOfSearch());
+			differentCountsForInstance1.setCountOfSearch(ze1.getCountOfSearch());
+			differentCountsForInstance2.setCountOfSearch(ze2.getCountOfSearch());
 			allMatch = false;
 		}
 		if (allMatch) {
 			logger.info("All counts from both instances (instance \"{}\" and instance \"{}\") match!", key1,
 					key2);
 		}
-		InstanceData<CountsEntity> instance1 = new InstanceData<CountsEntity>(key1, client1, differentCountsForInstance1, 0);
-		InstanceData<CountsEntity> instance2 = new InstanceData<CountsEntity>(key2, client2, differentCountsForInstance2, 0);
+		InstanceData<CountsEntity> instance1 = new InstanceData<CountsEntity>(key1, client1, differentCountsForInstance1);
+		InstanceData<CountsEntity> instance2 = new InstanceData<CountsEntity>(key2, client2, differentCountsForInstance2);
 		InstancesComparedData<CountsEntity> cd = new InstancesComparedData<CountsEntity>(instance1, instance2);
 		return cd;
 	}
@@ -152,7 +152,7 @@ public class SavedsearchCountsComparator extends AbstractComparator
 		// TODO: for the 1st step implementation, let's log in log files then
 		logger.info(
 				"Retrieved counts for Category OMC instance: savedsearch count - {}, Folders count - {}, Search count - {}",
-				ze.getCountOfCategory(), ze.getCountOfFolder(), ze.getCountOfSearch());
+				ze.getCountOfCategory(), ze.getCountOfFolders(), ze.getCountOfSearch());
 		return ze;
 	}
 }

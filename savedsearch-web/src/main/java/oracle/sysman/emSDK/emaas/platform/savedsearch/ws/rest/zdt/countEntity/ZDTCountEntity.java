@@ -18,6 +18,8 @@ public class ZDTCountEntity
 	private Long countOfCategory;
 	private Long countOfFolders;
 	private Long countOfSearch;
+	private Long countOfCategoryPrams;
+	private Long countOfSearchParams;
 
 	public ZDTCountEntity()
 	{
@@ -29,63 +31,54 @@ public class ZDTCountEntity
 	 * @param countOfFolders
 	 * @param countOfSearch
 	 */
-	public ZDTCountEntity(Long countOfCategory, Long countOfFolders, Long countOfSearch)
+	public ZDTCountEntity(Long countOfCategory, Long countOfFolders, Long countOfSearch, Long countOfCategoryPrams, Long countOfSearchParams)
 	{
 		super();
 		this.countOfCategory = countOfCategory;
 		this.countOfFolders = countOfFolders;
 		this.countOfSearch = countOfSearch;
+		this.countOfCategoryPrams = countOfCategoryPrams;
+		this.countOfSearchParams = countOfSearchParams;
 	}
 
-	/**
-	 * @return the countOfCategory
-	 */
-	public Long getCountOfCategory()
-	{
+	public Long getCountOfCategory() {
 		return countOfCategory;
 	}
 
-	/**
-	 * @return the countOfFolders
-	 */
-	public Long getCountOfFolders()
-	{
-		return countOfFolders;
-	}
-
-	/**
-	 * @return the countOfSearch
-	 */
-	public Long getCountOfSearch()
-	{
-		return countOfSearch;
-	}
-
-	/**
-	 * @param countOfCategory
-	 *            the countOfCategory to set
-	 */
-	public void setCountOfCategory(Long countOfCategory)
-	{
+	public void setCountOfCategory(Long countOfCategory) {
 		this.countOfCategory = countOfCategory;
 	}
 
-	/**
-	 * @param countOfFolders
-	 *            the countOfFolders to set
-	 */
-	public void setCountOfFolders(Long countOfFolders)
-	{
+	public Long getCountOfFolders() {
+		return countOfFolders;
+	}
+
+	public void setCountOfFolders(Long countOfFolders) {
 		this.countOfFolders = countOfFolders;
 	}
 
-	/**
-	 * @param countOfSearch
-	 *            the countOfSearch to set
-	 */
-	public void setCountOfSearch(Long countOfSearch)
-	{
+	public Long getCountOfSearch() {
+		return countOfSearch;
+	}
+
+	public void setCountOfSearch(Long countOfSearch) {
 		this.countOfSearch = countOfSearch;
 	}
+
+	public Long getCountOfCategoryPrams() {
+		return countOfCategoryPrams;
+	}
+
+	public void setCountOfCategoryPrams(Long countOfCategoryPrams) {
+		this.countOfCategoryPrams = countOfCategoryPrams;
+	}
+
+	public Long getCountOfSearchParams() {
+		return countOfSearchParams;
+	}
+
+	public void setCountOfSearchParams(Long countOfSearchParams) {
+		this.countOfSearchParams = countOfSearchParams;
+	}	
 
 }
