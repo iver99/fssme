@@ -17,4 +17,5 @@ public class CachedLinkTest {
         Assert.assertEquals(cl.getLink().getHref(), "href");
     }
 
+
 }

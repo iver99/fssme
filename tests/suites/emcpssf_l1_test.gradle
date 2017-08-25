@@ -91,7 +91,7 @@ dependencies {
 		 include "oracle/sysman/emaas/platform/savedsearch/comparator/exception/*.class"
 		 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/**/*.class"
 		 include "oracle/sysman/emaas/platform/savedsearch/comparator/targetmodel/services/*.class"
-		 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/timer/*.class"
+       	 include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/timer/*.class"
         useRestAssured=true
 ext.set("testType", "integration")
 }
@@ -103,6 +103,7 @@ ext.set("testType", "integration")
 	   //TODO fix below path later
 	   //include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/*.class"
 	   include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtilTest.class"
+	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/**/*.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/**/*.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/exception/*.class"
 	   include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/**/*.class"
