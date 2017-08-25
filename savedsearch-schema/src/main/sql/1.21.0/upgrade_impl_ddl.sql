@@ -10,4 +10,3 @@ Rem
 
 
 
-@&EMSAAS_SQL_ROOT/1.21.0/create_ems_search_params_idx.sql

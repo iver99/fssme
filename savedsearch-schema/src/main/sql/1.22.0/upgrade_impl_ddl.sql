@@ -9,4 +9,5 @@ Rem
 @&EMSAAS_SQL_ROOT/1.22.0/emaas_savedsearch_create_zdt_sync_table.sql
 
 
+@&EMSAAS_SQL_ROOT/1.22.0/create_ems_search_params_idx.sql
 
