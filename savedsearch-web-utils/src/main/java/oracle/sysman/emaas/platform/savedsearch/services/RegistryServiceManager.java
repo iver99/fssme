@@ -370,11 +370,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrl + NAV_BASE));
 				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrl + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(OBSOLETE_CATEGORY).withHref(applicationUrl + NAV_CATEGORY));
-				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrl + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrl + NAV_SEARCH));
 				links.add(new Link().withRel(STATIC_NAV).withHref(applicationUrl + NAV_BASE));
 				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrl + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrl + NAV_CATEGORY));
-				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrl + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrl + NAV_SEARCH));
 				links.add(new Link().withRel(STATIC_SEARCH_NAME).withHref(applicationUrl + NAV_SEARCH_NAME));
 				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrl + NAV_SEARCHES));
 				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrl + NAV_ENTITIES));
@@ -396,11 +396,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
 				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(OBSOLETE_CATEGORY).withHref(applicationUrlSSL + NAV_CATEGORY));
-				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
 				links.add(new Link().withRel(STATIC_NAV).withHref(applicationUrlSSL + NAV_BASE));
 				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrlSSL + NAV_CATEGORY));
-				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
 				links.add(new Link().withRel(STATIC_SEARCH_NAME).withHref(applicationUrlSSL + NAV_SEARCH_NAME));
 				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrlSSL + NAV_SEARCHES));
 				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrlSSL + NAV_ENTITIES));
@@ -409,7 +409,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
 				links.add(new Link().withRel(REL_LOG_CONFIG).withHref(applicationUrlSSL + NAV_LOGCONFIGS));
 				//serviceapi
-				links.add(new Link().withRel(SERVICEAPI_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(SERVICEAPI_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
 				links.add(new Link().withRel(SERVICEAPI_SEARCHES).withHref(applicationUrlSSL + NAV_SEARCHES));
 				links.add(new Link().withRel(SERVICEAPI_WIDGETS).withHref(applicationUrlSSL + NAV_WIDGETS));
 				links.add(new Link().withRel(SERVICEAPI_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
