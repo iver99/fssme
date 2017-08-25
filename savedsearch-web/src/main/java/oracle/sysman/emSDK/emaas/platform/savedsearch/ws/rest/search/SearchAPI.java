@@ -953,6 +953,46 @@ public class SearchAPI
 		}
         return Response.status(statusCode).entity(message).build();
     }
+    
+	/**
+	 * 
+	 * @param name
+	 * @param value
+	 * @return
+	 */
+    @GET
+    @Path("/param")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSearchByParam(@QueryParam("name") String name, @QueryParam("value") String value) {
+        LogUtil.getInteractionLogger().info("Service calling to (GET) /savedsearch/v1/search/parameter?name={}&value={}", 
+                name, value);
+        String message = null;
+        int statusCode = 200;
+        if (name == null || name.isEmpty() || value == null || value.isEmpty()) {
+            statusCode = 400;
+            message = "Neither search parameter name nor search parameter value can be null or empty!";
+        } else {
+            ArrayNode outputJsonArray = new ObjectMapper().createArrayNode();
+            SearchManager sman = SearchManager.getInstance();
+            try {
+                if (!DependencyStatus.getInstance().isDatabaseUp()) {
+                    throw new EMAnalyticsDatabaseUnavailException();
+                }
+                List<Search> searchList = sman.getSearchListWithoutOwnerByParam(name, value);
+                for (Search searchObj : searchList) {
+                    outputJsonArray.add(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj));
+                }
+                message = outputJsonArray.toString();
+            } catch (EMAnalyticsFwkException e) {
+                LOGGER.error(e.getLocalizedMessage());
+                statusCode = e.getStatusCode();
+                message = e.getMessage();
+                LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+                        e.getStatusCode());
+            }
+        }
+        return Response.status(statusCode).entity(message).build();
+    }
 	
 	@PUT
 	@Path("/list")

@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class OobRefreshRunnable extends MetadataRefreshRunnable{
     private static final Logger LOGGER = LogManager.getLogger(OobRefreshRunnable.class);
+    
     @Override
     public void run(){
         LOGGER.info("Starting a new thread to fresh OOB Widgets of {}.", serviceName);
@@ -32,6 +33,15 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable{
         try {
             if (!DependencyStatus.getInstance().isDatabaseUp()) {
                 throw new EMAnalyticsDatabaseUnavailException();
+            }
+            int loopNum = 0;  // how many times SSF has already tried to fetch the OOB
+            while(!isServiceAvailable(serviceName, "1.0+") && (loopNum < MAX_LOOP_NUM)) {
+                try {
+                    LOGGER.warn("{} time failed to fecth OOB widgets from {}", loopNum++, serviceName);
+                    Thread.sleep(INTERVAL_TIME); // 60s
+                } catch (InterruptedException e) {
+                    LOGGER.error(e.getLocalizedMessage(), e);
+                }
             }
             MetaDataRetriever metaDataRetriever = new MetaDataRetriever();
             oobWidgetList = metaDataRetriever.getOobWidgetListByServiceName(serviceName);
@@ -47,4 +57,5 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable{
                     e.getLocalizedMessage());
         }
     }
+    
 }

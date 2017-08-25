@@ -567,7 +567,6 @@ public class EmAnalyticsObjectUtilTest
 		params.get(12).setName("PROVIDER_NAME");
 		params.get(13).setName("PROVIDER_VERSION");
 		params.get(14).setName("PROVIDER_ASSET_ROOT");
-		final Set<EmAnalyticsSearchParam> emAnalyticsSearchParams = new HashSet<>();
 		new Expectations() {
 			{
 				search.getName();
@@ -1128,5 +1127,22 @@ public class EmAnalyticsObjectUtilTest
             }
         };
         EmAnalyticsObjectUtil.findEmSearchByNameWithoutOwner("searchname", entityManager);
+    }
+    
+    @Test
+    public void testfindEmSearchListByParamWithoutOwner() {
+        final List<EmAnalyticsSearch> emAnalyticsSearchList = new ArrayList<EmAnalyticsSearch>();
+        emAnalyticsSearchList.add(new EmAnalyticsSearch());
+        new Expectations() {
+            {
+                entityManager.createNamedQuery(anyString);
+                result = query;
+                query.setParameter(anyString, anyString);
+                result = query;
+                query.getResultList();
+                result = emAnalyticsSearchList;
+            }
+        };
+        EmAnalyticsObjectUtil.findEmSearchListByParamWithoutOwner("name", "values", entityManager);
     }
 }

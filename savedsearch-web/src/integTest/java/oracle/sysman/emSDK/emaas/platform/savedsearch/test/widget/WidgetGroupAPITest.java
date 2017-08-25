@@ -44,8 +44,8 @@ public class WidgetGroupAPITest
 	public void getAllWidgetsGroup()
 	{
 
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/widgetgroups");
+			Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/widgetgroups");
 
 			Assert.assertTrue(res.getStatusCode() == 200);
 

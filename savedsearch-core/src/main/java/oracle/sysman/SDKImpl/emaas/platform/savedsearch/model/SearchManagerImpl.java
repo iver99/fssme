@@ -618,6 +618,34 @@ public class SearchManagerImpl extends SearchManager
 	        
 	        return getSearch(emSearch, false);
 	}
+	
+    public List<Search> getSearchListWithoutOwnerByParam(String name, String value) throws EMAnalyticsFwkException {
+        LOGGER.debug("getSearchListWithoutOwnerByParam with name={}, value={} ", name, value);
+        EntityManager em = null;
+        List<EmAnalyticsSearch> emSearchList = null;
+        List<Search> searchList = new ArrayList<Search>();
+        try {
+            em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+            emSearchList = EmAnalyticsObjectUtil.findEmSearchListByParamWithoutOwner(name, value, em);
+        } catch (Exception e) {
+            EmAnalyticsProcessingException.processSearchPersistantException(e, null);
+            String errMsg = "Error while getting the search object by parameter with name=: " + name + ", value=" + value;
+            LOGGER.error(errMsg, e);
+            throw new EMAnalyticsFwkException(errMsg, EMAnalyticsFwkException.ERR_GET_SEARCH_BY_NAME, new Object[] { name, value }, e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        
+        if (emSearchList != null && !emSearchList.isEmpty()) {
+            for (EmAnalyticsSearch emSearch : emSearchList) {
+                searchList.add(getSearch(emSearch, false));
+            }
+        }
+        
+        return searchList;
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")

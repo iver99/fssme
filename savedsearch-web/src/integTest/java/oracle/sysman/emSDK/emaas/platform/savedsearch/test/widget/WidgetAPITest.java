@@ -46,8 +46,8 @@ public class WidgetAPITest
 	{
 		try {
 
-			Response res = RestAssured.given().log().everything().header("Authorization", authToken)
-					.header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/widgets");
+			Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+					.header(TestConstant.X_HEADER, TENANT_ID1).when().get("/widgets");
 
 			Assert.assertTrue(res.getStatusCode() == 200);
 		}

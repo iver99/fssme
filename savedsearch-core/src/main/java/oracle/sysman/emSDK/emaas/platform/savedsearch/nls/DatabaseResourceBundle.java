@@ -1,7 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.nls;
 
 import org.apache.logging.log4j.core.util.Charsets;
-import sun.util.ResourceBundleEnumeration;
 
 import java.io.IOException;
 import java.io.InputStream;
