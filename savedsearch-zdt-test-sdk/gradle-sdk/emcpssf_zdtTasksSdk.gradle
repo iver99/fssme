@@ -50,7 +50,7 @@ task emcpssf_zdtPlay(type: EMTest) {
                }
            }
        }
-  
+  useRestAssured = true
    }
   
   task emcpssf_zdtReplay(type: EMTest) {
@@ -63,7 +63,20 @@ task emcpssf_zdtPlay(type: EMTest) {
                }
            }
        }
+  useRestAssured = true
+   }
+   
+   task emcpssf_zdtCompare(type: EMTest) {
   
+      options.suiteXmlBuilder().suite('name': 'testSdk-test') {
+           test('name': 'testSdk-test') {
+               classes([:]) {
+                 'class'('name': 'oracle.sysman.emaas.platform.savedsearch.testsdk.SavedsearchSyncCompareTest')
+                 
+               }
+           }
+       }
+  useRestAssured = true
    }
    
 
