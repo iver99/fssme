@@ -42,6 +42,8 @@ public class OOBWidgetExpiredNotification {
                 } else { // for other scenarios, we just log an error and continue the next notification
                     LOGGER.error("Fail to notify {} - ", link.getHref(), e);
                 }
+            } catch (Exception e) {
+                LOGGER.error("Fail to notify {} since an unexpected exception- ", link.getHref(), e);
             }
         }
     }

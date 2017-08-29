@@ -52,6 +52,9 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable{
             new OOBWidgetExpiredNotification().notify(serviceName);
         } catch (EMAnalyticsFwkException e) {
             LOGGER.error("Failed to refresh OOB Widgets of {} - {}", serviceName, e.getLocalizedMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to refresh OOB Widgets of {} since an unexpected exception- {}", serviceName,
+                    e.getLocalizedMessage());
         }
     }
     

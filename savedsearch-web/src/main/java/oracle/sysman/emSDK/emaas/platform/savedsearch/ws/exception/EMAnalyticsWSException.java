@@ -33,6 +33,11 @@ public class EMAnalyticsWSException extends Exception
 
 	public static final int JSON_INVALID_CHAR = 70042;
 	public static final int JSON_INVALID_LENGTH = 70045;
+	
+	// the minimal required fields for a widget
+	public static final int JSON_MISSING_WIDGET_TEMPLATE = 70050;
+	public static final int JSON_MISSING_WIDGET_VIEWMODEL = 70051;
+	public static final int JSON_MISSING_WIDGET_KOC_NAME = 70052;
 
 	private int errorCode;
 	private int statusCode;

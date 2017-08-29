@@ -33,7 +33,7 @@ public class SavedsearchComparatorServiceManager implements ApplicationServiceMa
 		NotificationListener notification = new SavedsearchComparatorHandlerNotification();
 		timer.addNotificationListener(notification, null, null);
 		//start to compare and sync in about 2.7 hours after deployment
-		Date timerTriggerAt = new Date(new Date().getTime() + 10000000L);
+		Date timerTriggerAt = new Date(new Date().getTime()); //+ 10000000L);
 		notificationId = timer.addNotification("SavedsearchComparisonServiceTimer", null, notification, timerTriggerAt, PERIOD, 0);
 		timer.start();
 		LOGGER.info("Timer for savedsearch comparison started. notificationId={}", notificationId);
@@ -54,10 +54,16 @@ public class SavedsearchComparatorServiceManager implements ApplicationServiceMa
 
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception {
+		if (timer == null) {
+			timer = new Timer();
+		}
 		LOGGER.info("Pre-stopping comparison service");
 		try {
 			timer.stop();
-			timer.removeNotification(notificationId);
+			if (notificationId != null) {
+				timer.removeNotification(notificationId);
+			}
+			
 			LOGGER.info("Timer for savedsearch comparison stopped. notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {

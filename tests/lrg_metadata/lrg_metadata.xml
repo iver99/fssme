@@ -29,6 +29,26 @@
 	     <pipeline name="PRODUCT"/> 
 	     </pipelines> 
 </lrg>  -->
+        <lrg name="emctas_uisrg_3n" repos="emctas" description="Run emctas lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
+        <pipelines>                                                                                                                                    
+                <pipeline name="PRODUCT"/>                                                                                                             
+        </pipelines>                                                                                                                                   
+        </lrg> 
+        <lrg name="emctas_sharedcomp_3n" repos="emctas" description="Run emctas lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
+        <pipelines>                                                                                                                                    
+                <pipeline name="PRODUCT"/>                                                                                                             
+        </pipelines>                                                                                                                                   
+        </lrg> 
+        <lrg name="emcpdf_test_3n" repos="emcpdf" description="Run emcpdf lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
+        <pipelines>                                                                                                                                    
+                <pipeline name="PRODUCT"/>                                                                                                             
+        </pipelines>                                                                                                                                   
+        </lrg> 
+        <lrg name="emcapms_ui_webdriver_3n" repos="emcapms" description="Run emcapms lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
+        <pipelines>                                                                                                                                    
+                <pipeline name="PRODUCT"/>                                                                                                             
+        </pipelines>                                                                                                                                   
+        </lrg> 
 
  </lrg-metadata>
  

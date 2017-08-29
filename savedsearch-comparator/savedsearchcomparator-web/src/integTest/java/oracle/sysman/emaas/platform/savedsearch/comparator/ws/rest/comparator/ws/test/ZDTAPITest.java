@@ -56,7 +56,7 @@ public class ZDTAPITest {
     			
             }
         };
-        zdtapi.compareOnSSF(tenant, userTenant);
+        zdtapi.compareOnSSF(tenant);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ZDTAPITest {
     			result = tableRow1; */
     		}
     	};
-        zdtapi.syncOnSSF("tenant", "userTenant", "type");
+        zdtapi.syncOnSSF("tenant",  "type");
     }
 
    @Test
@@ -156,7 +156,7 @@ public class ZDTAPITest {
     		}
     	};
     	SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
-    	zdtapi.compareRows(tenant, userTenant,"full", 5);
+    	zdtapi.compareRows(tenant,"full", 5);
     }
 
     
@@ -173,7 +173,7 @@ public class ZDTAPITest {
     @Test
     public void testCompareRows1() {
     	
-    	zdtapi.compareRows(tenant, userTenant,"full", 5);
+    	zdtapi.compareRows(tenant, "full", 5);
     }
     
     @Test
@@ -196,20 +196,20 @@ public class ZDTAPITest {
     		}
     	};
     	
-    	zdtapi.compareRows(tenant, userTenant,"full", 5);
+    	zdtapi.compareRows(tenant, "full", 5);
     }
     
     @Test
     public void testgetSyncStatus() {
-    	zdtapi.getCompareStatus("id", "userName");
-    	zdtapi.getCompareStatus(null,null);
+    	zdtapi.getCompareStatus("id");
+    	zdtapi.getCompareStatus(null);
     }
     
     @Test
     public void testgetCompareStatus() {
-    	zdtapi.getSyncStatus("id", "userName");
+    	zdtapi.getSyncStatus("id");
 
-    	zdtapi.getCompareStatus(null,null);
+    	zdtapi.getCompareStatus(null);
     }
     
     @Test
@@ -230,7 +230,7 @@ public class ZDTAPITest {
     			result = tableRow1;*/
     		}
     	};
-        zdtapi.syncOnSSF("tenant", "userTenant", "full");
+        zdtapi.syncOnSSF("tenant", "full");
     }
     
    
