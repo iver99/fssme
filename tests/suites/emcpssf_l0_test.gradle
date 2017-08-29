@@ -110,6 +110,7 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: regLookupClientVer)
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: regClientVer)
 }
+
 task QATest(type: EMTest) {
 
     /*****************savedsearch-entities project*****************/
@@ -120,8 +121,10 @@ task QATest(type: EMTest) {
     include "oracle/sysman/emaas/platform/savedsearch/comparator/exception/*.class"
     include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/rest/comparator/**/*.class"
     include "oracle/sysman/emaas/platform/savedsearch/comparator/targetmodel/services/*.class"
+    include "oracle/sysman/emaas/platform/savedsearch/comparator/ws/timer/*.class"
     useRestAssured = true
     ext.set("testType", "integration")
+
 }
 
 task DEVTest(type: EMTest, dependsOn: QATest) {
@@ -131,9 +134,12 @@ task DEVTest(type: EMTest, dependsOn: QATest) {
     include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/util/*.class"
     //TODO fix below path later
     //include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/*.class"
+    include "oracle/sysman/SDKImpl/emaas/platform/savedsearch/persistence/SchemaUtilTest.class"
+    include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/*/**.class"
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/model/**/*.class"
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/exception/*.class"
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/restnotify/**/*.class"
+    include "oracle/sysman/emSDK/emaas/platform/savedsearch/cache/*.class"
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/common/ExecutionContextTest.class"
     include "oracle/sysman/emSDK/emaas/platform/savedsearch/zdt/DataManagerTest.class"
 
@@ -149,6 +155,7 @@ task DEVTest(type: EMTest, dependsOn: QATest) {
     ext.set("testType", "unit")
 
 }
+
 task WebUtilTest(type: EMTest, dependsOn: DEVTest) {
 
 /*****************savedsearch-web project*****************/

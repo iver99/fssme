@@ -40,7 +40,7 @@ public class OdsCURD {
     public static void destroy(){
         for(String searchId : odsIdToBeDelete){
             Response deleteResponseForCreate =  RestAssured.given().contentType(ContentType.JSON).log().everything()
-                    .header("Authorization", authToken).header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+                    .header("Authorization", authToken).header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header(TestConstant.X_HEADER, TENANT_ID1).when()
                     .delete("/search/" + searchId);
             Assert.assertTrue(deleteResponseForCreate.getStatusCode()== 204);
         }
@@ -107,15 +107,15 @@ public class OdsCURD {
 
     private Response getResponseForCreateOdsForExistingSearch(String searchId) {
         return RestAssured.given().contentType(ContentType.JSON).log().everything()
-                .header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1).when()
+                .header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                .header(TestConstant.X_HEADER, TENANT_ID1).when()
                 .put("/search/"+searchId+"/odsentity");
     }
 
     private Response getResponseForCreateNewSearch(String jsonForCreateSavedSearch) {
         return RestAssured.given().contentType(ContentType.JSON).log().everything()
-                .header("Authorization", authToken)
-                .header(TestConstant.OAM_HEADER, TENANT_ID1)
+                .header("X-USER-IDENTITY-DOMAIN-NAME", TENANT_ID_OPC1).header("Authorization", authToken)
+                .header(TestConstant.X_HEADER, TENANT_ID1)
                 .body(jsonForCreateSavedSearch).when()
                 .post("/search");
     }

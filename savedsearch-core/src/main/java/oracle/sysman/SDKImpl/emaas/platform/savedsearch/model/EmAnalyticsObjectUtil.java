@@ -738,6 +738,18 @@ class EmAnalyticsObjectUtil
         }
         return null;
     }
+    
+    @SuppressWarnings("unchecked")
+    public static List<EmAnalyticsSearch> findEmSearchListByParamWithoutOwner(String name, String value, EntityManager em) {
+        List<EmAnalyticsSearch> searchList = new ArrayList<EmAnalyticsSearch>();
+        try {
+            searchList = (List<EmAnalyticsSearch>) em.createNamedQuery("SearchParam.getSearchListByParam")
+                    .setParameter("name", name).setParameter("value", value).getResultList();
+        } catch (Exception ex) {
+            // do nothing
+        }
+        return searchList;
+    }
 
 	public static EmAnalyticsSearch getSearchByIdForDelete(BigInteger id, EntityManager em)
 	{

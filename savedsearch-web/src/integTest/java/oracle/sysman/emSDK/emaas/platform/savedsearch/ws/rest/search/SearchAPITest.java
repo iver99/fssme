@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import mockit.Expectations;
@@ -1239,5 +1240,26 @@ public class SearchAPITest {
             }
         };
         Assert.assertNotNull(api.getSearchByName("searchName"));
+    }
+    
+    @Test
+    public void testGetSearchByParam() throws EMAnalyticsFwkException {
+        final List<Search> searchList = new ArrayList<Search>();
+        searchList.add(new SearchImpl());
+        
+        new Expectations(){
+            {
+                SearchManager.getInstance();
+                result = searchManager;
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                searchManager.getSearchListWithoutOwnerByParam(anyString, anyString);
+                result = searchList;
+            }
+        };
+        
+        Response res = api.getSearchByParam("name", null);
+        Assert.assertEquals(res.getStatus(), 400);
+        Assert.assertNotNull(api.getSearchByParam("name", "value"));
     }
 }

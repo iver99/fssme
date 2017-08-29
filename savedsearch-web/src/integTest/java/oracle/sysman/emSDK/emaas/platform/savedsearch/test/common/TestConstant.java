@@ -28,5 +28,6 @@ public class TestConstant
 	public static final String TENANT_ID0 = "emaastesttenant1.emga";
 	public static final String SSF_HEADER_VALUE = "ssfheadertestvalue";
 	public static final String OAM_HEADER = "OAM_REMOTE_USER";
+	public static final String X_HEADER = "X-REMOTE-USER";
 
 }

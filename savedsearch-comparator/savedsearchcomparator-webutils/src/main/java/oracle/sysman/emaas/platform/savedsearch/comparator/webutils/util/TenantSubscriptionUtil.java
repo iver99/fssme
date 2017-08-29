@@ -67,10 +67,10 @@ public class TenantSubscriptionUtil
 						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = null;
-			if (userTenant != null && tenant != null) {
+			if (tenant != null) {
 				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 						.header("X-USER-IDENTITY-DOMAIN-NAME", tenant)
-						.header("X-REMOTE-USER", userTenant)
+						//.header("X-REMOTE-USER", userTenant)
 						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			} else {
 				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
@@ -91,12 +91,11 @@ public class TenantSubscriptionUtil
 		 */
 		public String put(String url, Object requestEntity, String tenant, String userTenant)
 		{
-			logger.info("start to call sync web service!");
 			if (StringUtils.isEmpty(url)) {
 				logger.error("Unable to put to an empty URL");
 				return null;
 			}
-			if (requestEntity == null || "".equals(requestEntity)) {
+			if (requestEntity == null) {
 				logger.error("Unable to put an empty request entity");
 				return null;
 			}
@@ -114,10 +113,10 @@ public class TenantSubscriptionUtil
 						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = null;
-			if (tenant != null && userTenant != null) {
+			if (tenant != null) {
 				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 						.header("X-USER-IDENTITY-DOMAIN-NAME", tenant)
-						.header("X-REMOTE-USER", userTenant)
+						//.header("X-REMOTE-USER", userTenant)
 						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			} else {
 				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)

@@ -22,28 +22,19 @@ public class InstanceData<T>
 	private String key;
 	private LookupClient client;
 	private T data;
-	private int totalRowNum;
 	/**
 	 * @param instance
 	 * @param data
 	 */
-	public InstanceData(String key, LookupClient client, T data,  int totalRowNum)
+	public InstanceData(String key, LookupClient client, T data)
 	{
 		super();
 		this.key = key;
 		this.client = client;
 		this.data = data;
-		this.totalRowNum = totalRowNum;
 	}
 	
 	
-
-	public int getTotalRowNum() {
-		return totalRowNum;
-	}
-
-
-
 	/**
 	 * @return the data
 	 */

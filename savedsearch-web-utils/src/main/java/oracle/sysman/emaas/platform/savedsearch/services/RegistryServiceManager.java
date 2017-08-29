@@ -221,6 +221,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	 private static final String NAV_ZDT_COUNTS = NAV_BASE + "/zdt/counts";
      private static final String NAV_ZDT_TABLEROWS = NAV_BASE + "/zdt/tablerows";
      private static final String NAV_ZDT_SYNC = NAV_BASE + "/zdt/sync";
+     private static final String NAV_ZDT_SYNC_STATUS = NAV_BASE + "/zdt/sync/status";
+     private static final String NAV_ZDT_COMPARE_STATUS = NAV_BASE + "/zdt/compare/status";
+     private static final String NAV_ZDT_COMPARE_RESULT = NAV_BASE + "/zdt/compare/result";
+     private static final String NAV_ZDT_GET_TENANTS = NAV_BASE + "/zdt/tenants";
 
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
@@ -366,11 +370,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrl + NAV_BASE));
 				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrl + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(OBSOLETE_CATEGORY).withHref(applicationUrl + NAV_CATEGORY));
-				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrl + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrl + NAV_SEARCH));
 				links.add(new Link().withRel(STATIC_NAV).withHref(applicationUrl + NAV_BASE));
 				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrl + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrl + NAV_CATEGORY));
-				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrl + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrl + NAV_SEARCH));
 				links.add(new Link().withRel(STATIC_SEARCH_NAME).withHref(applicationUrl + NAV_SEARCH_NAME));
 				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrl + NAV_SEARCHES));
 				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrl + NAV_ENTITIES));
@@ -381,6 +385,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrl + NAV_ZDT_COUNTS));
 				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrl + NAV_ZDT_TABLEROWS));
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrl + NAV_ZDT_SYNC));
+				links.add(new Link().withRel("zdt/sync/status").withHref(applicationUrl + NAV_ZDT_SYNC_STATUS));
+				links.add(new Link().withRel("zdt/compare/status").withHref(applicationUrl + NAV_ZDT_COMPARE_STATUS));
+				links.add(new Link().withRel("zdt/compare/result").withHref(applicationUrl + NAV_ZDT_COMPARE_RESULT));
+				links.add(new Link().withRel("zdt/tenants").withHref(applicationUrl + NAV_ZDT_GET_TENANTS));
 				links.add(new Link().withRel("refresh/oob").withHref(applicationUrl + "/savedsearch/v1/refresh/oob"));
 				links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrl + "/savedsearch/v1/refresh/nls"));
 			}
@@ -388,11 +396,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
 				links.add(new Link().withRel(OBSOLETE_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(OBSOLETE_CATEGORY).withHref(applicationUrlSSL + NAV_CATEGORY));
-				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(OBSOLETE_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
 				links.add(new Link().withRel(STATIC_NAV).withHref(applicationUrlSSL + NAV_BASE));
 				links.add(new Link().withRel(STATIC_FOLDER).withHref(applicationUrlSSL + NAV_FOLDER).withOverrideTypes(overriedTypes));
 				links.add(new Link().withRel(STATIC_CATEGORY).withHref(applicationUrlSSL + NAV_CATEGORY));
-				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(STATIC_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
 				links.add(new Link().withRel(STATIC_SEARCH_NAME).withHref(applicationUrlSSL + NAV_SEARCH_NAME));
 				links.add(new Link().withRel(STATIC_SEARCHES).withHref(applicationUrlSSL + NAV_SEARCHES));
 				links.add(new Link().withRel(STATIC_ENTITIES).withHref(applicationUrlSSL + NAV_ENTITIES));
@@ -401,7 +409,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel(STATIC_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
 				links.add(new Link().withRel(REL_LOG_CONFIG).withHref(applicationUrlSSL + NAV_LOGCONFIGS));
 				//serviceapi
-				links.add(new Link().withRel(SERVICEAPI_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH).withOverrideTypes(overriedTypes));
+				links.add(new Link().withRel(SERVICEAPI_SEARCH).withHref(applicationUrlSSL + NAV_SEARCH));
 				links.add(new Link().withRel(SERVICEAPI_SEARCHES).withHref(applicationUrlSSL + NAV_SEARCHES));
 				links.add(new Link().withRel(SERVICEAPI_WIDGETS).withHref(applicationUrlSSL + NAV_WIDGETS));
 				links.add(new Link().withRel(SERVICEAPI_WIDGETGROUPS).withHref(applicationUrlSSL + NAV_WIDGETGROUPS));
@@ -410,6 +418,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrlSSL + NAV_ZDT_COUNTS));
 				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrlSSL + NAV_ZDT_TABLEROWS));
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrlSSL + NAV_ZDT_SYNC));
+				links.add(new Link().withRel("zdt/sync/status").withHref(applicationUrlSSL + NAV_ZDT_SYNC_STATUS));
+				links.add(new Link().withRel("zdt/compare/status").withHref(applicationUrlSSL + NAV_ZDT_COMPARE_STATUS));
+				links.add(new Link().withRel("zdt/compare/result").withHref(applicationUrlSSL + NAV_ZDT_COMPARE_RESULT));
+				links.add(new Link().withRel("zdt/tenants").withHref(applicationUrlSSL + NAV_ZDT_GET_TENANTS));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 

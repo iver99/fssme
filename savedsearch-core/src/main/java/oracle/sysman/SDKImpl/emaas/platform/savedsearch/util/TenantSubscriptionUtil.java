@@ -158,6 +158,7 @@ public class TenantSubscriptionUtil
 			LOGGER.info("Adding TargetAnalytics into providers...");
 			providers.add(SERVICE_PROVIDER_NAME_TA);
 		}
+		providers.add("EventUI");
 		LOGGER.debug("Get subscribed provider names: {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), tenant);
 		return providers;
