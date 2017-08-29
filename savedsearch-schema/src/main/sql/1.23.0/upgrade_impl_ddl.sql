@@ -7,4 +7,5 @@ Rem
 
 
 @&EMSAAS_SQL_ROOT/1.23.0/emaas_savedsearch_drop_fk.sql
+@&EMSAAS_SQL_ROOT/1.23.0/emaas_savedsearch_compress_index.sql
 
