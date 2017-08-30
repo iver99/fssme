@@ -12,6 +12,7 @@ import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookups;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.config.ClientConfig;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
+import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
@@ -170,10 +171,9 @@ public class SaveSearchRowsComparatorTest
             }
         };
 		SavedsearchRowsComparator src1 = new SavedsearchRowsComparator();
-		ZDTTableRowEntity tre1 = Deencapsulation.invoke(src1, "retrieveRowsEntityFromJsonForSingleInstance",
-				JSON_RESPONSE_DATA_TABLE);
-		ZDTTableRowEntity tre2 = Deencapsulation.invoke(src1, "retrieveRowsEntityFromJsonForSingleInstance",
-				JSON_RESPONSE_DATA_TABLE);
+		JsonUtil ju = JsonUtil.buildNormalMapper();
+		ZDTTableRowEntity tre1 = ju.fromJson(JSON_RESPONSE_DATA_TABLE, ZDTTableRowEntity.class);
+		ZDTTableRowEntity tre2 = ju.fromJson(JSON_RESPONSE_DATA_TABLE, ZDTTableRowEntity.class);
 		InstancesComparedData<ZDTTableRowEntity> cd = Deencapsulation.invoke(src1, "compareInstancesData",
 				new InstanceData<ZDTTableRowEntity>(null,null, tre1), new InstanceData<ZDTTableRowEntity>(null,null, tre2));
 		// the 2 instances have the same data, so there is no difference from the compared result
@@ -191,8 +191,8 @@ public class SaveSearchRowsComparatorTest
 
 		// test "not equals"
 		SavedsearchRowsComparator src2 = new SavedsearchRowsComparator();
-		tre1 = Deencapsulation.invoke(src2, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
-		tre2 = Deencapsulation.invoke(src2, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
+		tre1 = ju.fromJson(JSON_RESPONSE_DATA_TABLE, ZDTTableRowEntity.class);
+		tre2 = ju.fromJson(JSON_RESPONSE_DATA_TABLE, ZDTTableRowEntity.class);
 		SavedSearchCategoryRowEntity sscr1 = new SavedSearchCategoryRowEntity();
 		sscr1.setCategoryId("12");
 		sscr1.setDeleted("2");
@@ -211,7 +211,7 @@ public class SaveSearchRowsComparatorTest
 		Assert.assertEquals(result2.getSavedSearchCategory().get(0), sscr2);
 	}
 
-	@Test
+	/*@Test
 	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException, ZDTException
 	{
 		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
@@ -232,9 +232,9 @@ public class SaveSearchRowsComparatorTest
 		Assert.assertEquals(tre.getSavedSearchFoldersy().get(0).getName(), "All Searches");
 		Assert.assertEquals(tre.getSavedSearchSearch().get(0).getSearchId(), "2024");
 		Assert.assertEquals(tre.getSavedSearchSearchParams().get(0).getName(), "meId");
-	}
+	}*/
 
-	
+
 	@Test
 	public void testsaveComparatorStatus() throws Exception {
 		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();

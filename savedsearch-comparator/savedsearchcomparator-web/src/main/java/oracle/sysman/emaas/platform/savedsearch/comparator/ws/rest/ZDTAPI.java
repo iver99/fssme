@@ -61,8 +61,9 @@ public class ZDTAPI
 	 */
 	@GET
 	@Path("compare/status")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCompareStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam) {
-		logger.info("incoming call from zdt comparator to get comparitor status");
+		logger.info("incoming call from zdt comparator to get comparator status");
 		if (tenantIdParam == null){
 			tenantIdParam = "CloudServices";
 		}
@@ -72,8 +73,10 @@ public class ZDTAPI
 			dcc = new SavedsearchRowsComparator();
 			response = dcc.retrieveComparatorStatusForOmcInstance(tenantIdParam, null);
 		} catch (ZDTException e1) {
+			logger.error(e1);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e1))).build();
 		} catch (Exception e2) {
+			logger.error(e2);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e2))).build();
 		}
 		
@@ -88,9 +91,8 @@ public class ZDTAPI
 	 */
 	@GET
 	@Path("sync/status")
-	public Response getSyncStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam
-         //   @HeaderParam(value = "X-REMOTE-USER") String userTenant
-			) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSyncStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam) {
 		logger.info("incoming call from zdt comparator to get sync status");
 		if (tenantIdParam == null){
 			tenantIdParam = "CloudServices";
@@ -101,8 +103,10 @@ public class ZDTAPI
 			dcc = new SavedsearchRowsComparator();
 			response = dcc.retrieveSyncStatusForOmcInstance(tenantIdParam, null);
 		} catch (ZDTException e1) {
+			logger.error(e1);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e1))).build();
 		} catch (Exception e2) {
+			logger.error(e2);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e2))).build();
 		}
 		
@@ -144,8 +148,6 @@ public class ZDTAPI
 			SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
 			String tenants1 = dcc.retrieveTenants(tenantIdParam, null,dcc.getClient1());			
 			String tenants2 = dcc.retrieveTenants(tenantIdParam, null,dcc.getClient2());
-			//logger.info("tenants1=" + tenants1);
-			//logger.info("tenants2=" + tenants2);
 			if (tenants1 == null || tenants2 == null) {
 				return Response.status(400).entity(new ErrorEntity(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE)).build();
 			}
@@ -179,10 +181,10 @@ public class ZDTAPI
 				tenants.add(tenant);
 			}
 			
-			boolean iscompared = true;
+			boolean isCompared = true;
 			
 			if ((!iscomparedForClient1) || (!iscomparedForClient2)) {
-				iscompared = false;								
+				isCompared = false;
 			}
 			InstancesComparedData<ZDTTableRowEntity> result = null;
 			int totalRowForClient1 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient1(), maxComparedDate);
@@ -195,7 +197,7 @@ public class ZDTAPI
 			int totalDifferentRows = 0;
 			
 			// if it is the first time comparison
-			if (!iscompared || compareType == "full") {
+			if (!isCompared || compareType == "full") {
 				int count = 0;
 				JSONObject obj = null;
 				JSONObject subObj = new JSONObject();
@@ -205,7 +207,7 @@ public class ZDTAPI
 				for (String tenantStr : tenants) {					
 					count = count + 1;
 					//logger.info("tenant count = "+count);
-					result = dcc.compare(tenantIdParam, null,compareType,maxComparedDate, iscompared, tenantStr);
+					result = dcc.compare(tenantIdParam, null,compareType,maxComparedDate, isCompared, tenantStr);
 					if (result != null) {
 						int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
 						logger.info("comparedNum={}",comparedDataNum);
@@ -278,7 +280,7 @@ public class ZDTAPI
 				message = obj.toString(); 
 			} else {
 				// not the first time comparison
-				result = dcc.compare(tenantIdParam, null,compareType,maxComparedDate, iscompared, null);
+				result = dcc.compare(tenantIdParam, null,compareType,maxComparedDate, isCompared, null);
 				if (result != null) {
 					int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
 					logger.info("comparedNum={}",comparedDataNum);
@@ -395,8 +397,10 @@ public class ZDTAPI
 			return Response.ok(object).build();
 			
 	    } catch(ZDTException zdtE) {
+			logger.error(zdtE);
  			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
  		} catch (Exception e) {
+			logger.error(e);
  			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
  		}
 		
