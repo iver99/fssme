@@ -32,7 +32,7 @@ public class MetaDataRetriever {
     private static final Logger LOGGER = LogManager.getLogger(MetaDataRetriever.class);
 
     private enum CategoryName{
-        LA(1), UDE(2), ITA(3), APM(4), SMA(6), OCS(7), EVT(8);
+        LA(1), UDE(2), ITA(3), APM(4), SMA(6), OCS(7), EVT(8), MON(9);
 
         private final int categoryId;
         CategoryName(int categoryId){
@@ -41,7 +41,7 @@ public class MetaDataRetriever {
     }
 
     private enum FolderName{
-        LA(2), UDE(4), ITA(3), APM(5), SMA(7), OCS(8), EVT(9);
+        LA(2), UDE(4), ITA(3), APM(5), SMA(7), OCS(8), EVT(9), MON(10);
 
         private final int folderId;
         FolderName(int folderId){
@@ -55,7 +55,7 @@ public class MetaDataRetriever {
     public static final String SERVICENAME_APM = "ApmUI";
     public static final String SERVICENAME_ITA = "emcitas-ui-apps";
     public static final String SERVICENAME_LA = "LogAnalyticsUI";
-    //    public static final String SERVICENAME_MONITORING = "Monitoring";
+    public static final String SERVICENAME_MONITORING = "MonitoringServiceUI";
     public static final String SERVICENAME_SECURITY_ANALYTICS = "SecurityAnalyticsUI";
     public static final String SERVICENAME_ORCHESTRATION = "CosUIService";
     //    public static final String SERVICENAME_COMPLIANCE = "Compliance";
@@ -65,6 +65,7 @@ public class MetaDataRetriever {
     public static final String APM_STRING = "APM";
     public static final String ITA_SRING = "ITAnalytics";
     public static final String LA_STRING = "LogAnalytics";
+    public static final String MONITORING_STRING = "MonitoringService";
     public static final String SECURITY_ANALYTICS_STRING = "SecurityAnalytics";
     public static final String ORCHESTRATION_STRING = "Orchestration";
     public static final String UDE_STRING = "UDE";
@@ -76,6 +77,7 @@ public class MetaDataRetriever {
         CATEGORY_MAP.put(SERVICENAME_UDE, CategoryName.UDE.categoryId);
         CATEGORY_MAP.put(SERVICENAME_ITA, CategoryName.ITA.categoryId);
         CATEGORY_MAP.put(SERVICENAME_APM, CategoryName.APM.categoryId);
+        CATEGORY_MAP.put(SERVICENAME_MONITORING, CategoryName.MON.categoryId);
         CATEGORY_MAP.put(SERVICENAME_SECURITY_ANALYTICS, CategoryName.SMA.categoryId);
         CATEGORY_MAP.put(SERVICENAME_ORCHESTRATION, CategoryName.OCS.categoryId);
         CATEGORY_MAP.put(SERVICENAME_EVENT, CategoryName.EVT.categoryId);
@@ -84,6 +86,7 @@ public class MetaDataRetriever {
         FOLDER_MAP.put(SERVICENAME_UDE, FolderName.UDE.folderId);
         FOLDER_MAP.put(SERVICENAME_ITA, FolderName.ITA.folderId);
         FOLDER_MAP.put(SERVICENAME_APM, FolderName.APM.folderId);
+        FOLDER_MAP.put(SERVICENAME_MONITORING, FolderName.MON.folderId);
         FOLDER_MAP.put(SERVICENAME_SECURITY_ANALYTICS, FolderName.SMA.folderId);
         FOLDER_MAP.put(SERVICENAME_ORCHESTRATION, FolderName.OCS.folderId);
         FOLDER_MAP.put(SERVICENAME_EVENT, FolderName.EVT.folderId);
@@ -92,6 +95,7 @@ public class MetaDataRetriever {
         APPLICATION_MAP.put(SERVICENAME_UDE, UDE_STRING);
         APPLICATION_MAP.put(SERVICENAME_ITA, ITA_SRING);
         APPLICATION_MAP.put(SERVICENAME_APM, APM_STRING);
+        APPLICATION_MAP.put(SERVICENAME_MONITORING, MONITORING_STRING);
         APPLICATION_MAP.put(SERVICENAME_SECURITY_ANALYTICS, SECURITY_ANALYTICS_STRING);
         APPLICATION_MAP.put(SERVICENAME_ORCHESTRATION, ORCHESTRATION_STRING);
         APPLICATION_MAP.put(SERVICENAME_EVENT, EVENT_STRING);
