@@ -44,6 +44,7 @@ public class ZDTSynchronizer
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
+			//FIXME: need to confirm this is the design, sync for cat/folder/cat param data
 			syncCategoryTableRows(em, data.getSavedSearchCategory());
 			syncCategoryParamsTableRows(em, data.getSavedSearchCategoryParams());
 			syncFoldersTableRows(em, data.getSavedSearchFoldersy());
@@ -51,18 +52,16 @@ public class ZDTSynchronizer
 			syncSearchParamsTableRows(em, data.getSavedSearchSearchParams());
 			em.getTransaction().commit();
 			return "sync is successful";
-		}
-		catch (Exception e) {
-			logger.error("errors while syc for tables -" + e);
-			return "Errors:Failed to sync - "+ e.getLocalizedMessage();
-		} 
-		finally {
+		}catch (Exception e) {
+			logger.error("Errors occurred while sync for tables -" + e);
+			return "Errors:Failed to finish sync work";
+		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
 	}
-
+	//FIXME: need to confirm this is the design, sync for cat/folder/cat param data
 	private void syncCategoryParamsTableRows(EntityManager em, List<SavedSearchCategoryParamRowEntity> rows)
 	{
 		// TODO: call DataManager implementation to insert or update data to database
@@ -78,7 +77,7 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS_CATEGORY_PARAMS table");
 	}
-
+	//FIXME: need to confirm this is the design, sync for cat/folder/cat param data
 	private void syncCategoryTableRows(EntityManager em, List<SavedSearchCategoryRowEntity> rows)
 	{
 		// TODO: call DataManager implementation to insert or update data to database
@@ -99,7 +98,7 @@ public class ZDTSynchronizer
 		logger.debug("Finished to sync table EMS_ANALYTICS_CATEGORY table");
 
 	}
-
+	//FIXME: need to confirm this is the design, sync for cat/folder/cat param data
 	private void syncFoldersTableRows(EntityManager em, List<SavedSearchFolderRowEntity> rows)
 	{
 		// TODO: call DataManager implementation to insert or update data to database
@@ -137,23 +136,22 @@ public class ZDTSynchronizer
 
 	private void syncSearchTableRows(EntityManager em, List<SavedSearchSearchRowEntity> rows)
 	{
-		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
-			logger.debug("List<SavedSearchSearchRowEntity> is null,no sync action is needed");
+			logger.info("List<SavedSearchSearchRowEntity> is null,no sync action is needed");
 			return;
 		}
-	try {	logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
-		int i =0;
-		for (SavedSearchSearchRowEntity e : rows) {
-			logger.info("sync the item = "+ (i+1));
-			DataManager.getInstance().syncSearchTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
-					e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId() == null? null:new BigInteger(e.getFolderId()),
-					e.getCategoryId() == null? null:new BigInteger(e.getCategoryId()), e.getSystemSearch(), e.getIsLocked(), e.getMetadataClob(),
-					e.getSearchDisplayStr(), e.getUiHidden(), e.getDeleted() == null? null:new BigInteger(e.getDeleted()), e.getIsWidget(), e.getTenantId(),
-					e.getNameWidgetSource(), e.getWidgetGroupName(), e.getWidgetScreenshotHref(), e.getWidgetIcon(),
-					e.getWidgetKocName(), e.getWidgetViewModel(), e.getWidgetTemplate(), e.getWidgetSupportTimeControl(),
-					e.getWidgetLinkedDashboard(), e.getWidgetDefaulWidth(), e.getWidgetDefaultHeight(),
-					e.getDashboardIneligible(), e.getProviderName(), e.getProviderVersion(), e.getProviderAssetRoot());
+	try {
+			logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH table");
+			int i =0;
+			for (SavedSearchSearchRowEntity e : rows) {
+				DataManager.getInstance().syncSearchTable(em,e.getSearchId() == null? null:new BigInteger(e.getSearchId())/*, e.getSearchGuid()*/, e.getName(), e.getOwner(),
+						e.getCreationDate(), e.getLastModificationDate(), e.getLastModifiedBy(), e.getDescription(), e.getFolderId() == null? null:new BigInteger(e.getFolderId()),
+						e.getCategoryId() == null? null:new BigInteger(e.getCategoryId()), e.getSystemSearch(), e.getIsLocked(), e.getMetadataClob(),
+						e.getSearchDisplayStr(), e.getUiHidden(), e.getDeleted() == null? null:new BigInteger(e.getDeleted()), e.getIsWidget(), e.getTenantId(),
+						e.getNameWidgetSource(), e.getWidgetGroupName(), e.getWidgetScreenshotHref(), e.getWidgetIcon(),
+						e.getWidgetKocName(), e.getWidgetViewModel(), e.getWidgetTemplate(), e.getWidgetSupportTimeControl(),
+						e.getWidgetLinkedDashboard(), e.getWidgetDefaulWidth(), e.getWidgetDefaultHeight(),
+						e.getDashboardIneligible(), e.getProviderName(), e.getProviderVersion(), e.getProviderAssetRoot());
 
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH table");

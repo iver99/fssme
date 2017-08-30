@@ -69,11 +69,13 @@ public class ZDTAPI
 	private static final String TABLE_SEARCH = "EMS_ANALYTICS_SEARCH";
 	private static final String TABLE_SEARCH_PARAMS = "EMS_ANALYTICS_SEARCH_PARAMS";
 
-	public ZDTAPI()
-	{
-		super();
-	}
-	
+	/**
+	 *  This method is return all the tenants that have widgets in EMS_ANALYTICS_SEARCH table
+	 *  NOTE:
+	 *  #1. check compare table to see if comparison is done before,
+	 *  #2. return all tenant(id) from table, no matter record is marked as deleted or not.
+	 * @return
+	 */
 	@GET
 	@Path("tenants")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -91,34 +93,31 @@ public class ZDTAPI
 					array.put(tenant.toString());
 				}
 			}
-			boolean flag = true;
+			boolean isCompared = true;
 			if (lastComparisonDate == null) {
-				flag =  false;
+				isCompared =  false;
 			}
-			obj.put("isCompared", flag);
+			obj.put("isCompared", isCompared);
 			obj.put("tenants", array);
 			return Response.status(Status.OK).entity(obj).build();
 		} catch (Exception e) {
 			logger.error("errors in getting all tenants:"+e.getLocalizedMessage());
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Error occurred when retrieve all tenants\"}").build();
 		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
 	}
-	
-	public Date getCurrentUTCTime()
-	{
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		long localNow = System.currentTimeMillis();
-		long offset = cal.getTimeZone().getOffset(localNow);
-		Date utcDate = new Date(localNow - offset);
-		
-		return utcDate;
-	}
-	
 
+	/**
+	 *  this method return all records in each table for each tenant
+	 * @param type
+	 * @param maxComparedDate
+	 * @param tenant tenant id, first compare will retrieve data for specific tenant, if tenant id is null means this is not the first
+	 *               time comparision, comparision work has finished before.(Incremental)
+	 * @return
+	 */
 	@GET
 	@Path("tablerows")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -135,11 +134,12 @@ public class ZDTAPI
 			Date date = getCurrentUTCTime();
 			maxComparedDate = getTimeString(date);
 		}
-		logger.info("comparisonType in tableRows: "+type);
+		logger.info("ComparisonType for get tableRows is {} ",type);
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
 			JSONArray tableData = getCategoryTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
+			//FIXME need to know this is by design, category, category param folder will not fetched any data
 			obj.put(TABLE_CATEGORY, tableData);
 			tableData = getCategoryParamTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
 			obj.put(TABLE_CATEGORY_PARAMS, tableData);
@@ -149,21 +149,25 @@ public class ZDTAPI
 			obj.put(TABLE_SEARCH, tableData);
 			tableData = getSearchParamsTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
 			obj.put(TABLE_SEARCH_PARAMS, tableData);
-			return Response.status(Status.OK).entity(obj).build();
-		}
-		catch (JSONException e) {
+		}catch (JSONException e) {
 			logger.error(e.getLocalizedMessage(), e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
-		} catch (Exception e1) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#1.Error occurred when retrieve all tablerows\"}").build();
+		}catch (Exception e1) {
 			logger.error(e1.getLocalizedMessage(), e1);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e1.getLocalizedMessage()).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#2.Error occurred when retrieve all tablerows\"}").build();
 		}finally {
 			if (em != null) {
 				em.close();
 			}
 		}
+		return Response.status(Status.OK).entity(obj).build();
 	}
 
+	/**
+	 * return the table counts of each table in this cloud
+	 * @param maxComparedData
+	 * @return
+	 */
 	@GET
 	@Path("counts")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -172,94 +176,40 @@ public class ZDTAPI
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/counts");
 		EntityManager em = null;
 		String message = null;
-		int statusCode = 200;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			//FIXME need to know this is by design, category, category param folder will not fetched any data
 			long categoryCount = DataManager.getInstance().getAllCategoryCount(em, maxComparedData);
 			long folderCount = DataManager.getInstance().getAllFolderCount(em, maxComparedData);
 			long searcheCount = DataManager.getInstance().getAllSearchCount(em, maxComparedData);
 			long searchPramCount = DataManager.getInstance().getAllSearchParamsCount(em, maxComparedData);
 			long categoryPramCount = DataManager.getInstance().getAllCategoryPramsCount(em, maxComparedData);
-			logger.debug("ZDT counters: category count - {}, folder count - {}, search count - {}, searchParams count - {}, categoryParam count - {}"
+			logger.info("ZDT counters: category count - {}, folder count - {}, search count - {}, searchParams count - {}, categoryParam count - {}"
 					, categoryCount, folderCount,searcheCount, searchPramCount,categoryPramCount);
 			ZDTCountEntity zdte = new ZDTCountEntity(categoryCount, folderCount, searcheCount,categoryPramCount,searchPramCount);
-			
-			try {
-				message = JSONUtil.objectToJSONString(zdte);
-			}
-			catch (EMAnalyticsFwkException e) {
-				message = e.getLocalizedMessage();
-				statusCode = e.getErrorCode();
-				logger.error(
-					(TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
-							+ "An error occurredh while retrieving all table counts, statusCode:" + e.getStatusCode()
-							+ " ,error:" + e.getMessage(), e);
-			}
-		} 
-		catch (Exception e) {
-			logger.error("errors while getting counts for tables -",e.getLocalizedMessage());
-		}
-		finally {
+			message = JSONUtil.objectToJSONString(zdte);
+		}catch (EMAnalyticsFwkException e) {
+			message = e.getLocalizedMessage();
+			logger.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "")
+					+ "An error occurred while retrieving all table counts, statusCode:" + e.getStatusCode()
+					+ " ,error:" + e.getMessage(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#1.Error occurred when retrieve table counts in this cloud\"}").build();
+		}catch (Exception e) {
+			logger.error("errors while getting counts for tables -",e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#2.Error occurred when retrieve table counts in this cloud\"}").build();
+		}finally {
 			if (em != null) {
 				em.close();
 			}
 		}
-		return Response.status(statusCode).entity(message).build();
+		return Response.status(Status.OK).entity(message).build();
 	}
 	
-	private  List<List<?>> splitList(List<?> list, int len) {
-		if (list == null || list.size() == 0 || len < 1) {
-			return null;
-		}		 
-		List<List<?>> result = new ArrayList<List<?>>();		 		 
-		int size = list.size();
-		int count = (size + len - 1) / len;		 	 
-		for (int i = 0; i < count; i++) {			
-			List<?> subList = list.subList(i * len, ((i + 1) * len > size ? size : len * (i + 1)));
-			result.add(subList);
-		}
-			return result;
-		}
-	
-	public List<ZDTTableRowEntity> splitTableRowEntity(ZDTTableRowEntity originalEntity){
-		List<ZDTTableRowEntity> entities = new ArrayList<ZDTTableRowEntity>();
-		if (originalEntity != null) {
-			List<List<?>> splitSearch = null;
-			List<List<?>> splitParams = null;
-			// for each connection, we just sync 1000 rows
-			int length = 1000;
-			if (originalEntity.getSavedSearchSearch() != null) {
-				splitSearch = splitList(originalEntity.getSavedSearchSearch(), length);
-			}
-			
-			if (originalEntity.getSavedSearchSearchParams() != null) {
-				splitParams = splitList(originalEntity.getSavedSearchSearchParams(),length);
-			}
-			
-			// sync search table first and then sync parameter table to avoid key constraints
-			if (splitSearch != null) {
-				for (List<?> searchList : splitSearch) {
-					ZDTTableRowEntity rowEntity = new ZDTTableRowEntity();
-					rowEntity.setSavedSearchSearch((List<SavedSearchSearchRowEntity>) searchList);
-					entities.add(rowEntity);
-				}
-			}
-			if (splitParams != null) {
-				for (List<?> paramList : splitParams) {
-					ZDTTableRowEntity rowEntity = new ZDTTableRowEntity();
-					rowEntity.setSavedSearchSearchParams((List<SavedSearchSearchParamRowEntity>) paramList);
-					entities.add(rowEntity);
-				}
-			}			
-		}
-		return entities;
-	}
-
 	@GET
 	@Path("sync")
 	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync?syncType=xx&syncDate=xx");
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync?syncType={}&syncDate={}",type,syncDate);
 		ZDTTableRowEntity data = null;
 		String lastCompareDate = null;
 		if (type == null) {
@@ -271,38 +221,37 @@ public class ZDTAPI
 		try {			
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
-			logger.info("lastComparisonDateForSync is "+lastComparisonDateForSync);
+			logger.info("LastComparisonDateForSync is {}", lastComparisonDateForSync);
+			//this object contains the divergence data that will be synced, can be more than 1 records. pls NOTE how to retrieve divergence data from compare table
 			comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
-			if (comparedDataToSync != null) {
-				logger.info("comparedDataToSync size ="+comparedDataToSync.size());
-			}
-			
+			logger.info("comparedDataToSync size ={}", comparedDataToSync.size());
+
 		} catch (Exception e) {
-			logger.error("error infor="+e.getLocalizedMessage());
-			return Response.status(400).entity(e.getLocalizedMessage()).build();				
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#2.Error occurred when fetch the data to be synced from compare table\"}").build();
 		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
-		try {	
+		try {
+			//I think this comparedDataToSync can never be null, even there is no divergence, it will not be null
 			if (comparedDataToSync != null && !comparedDataToSync.isEmpty()) {
 				for (Map<String, Object> dataMap : comparedDataToSync) {
 					Object compareResult = dataMap.get("COMPARISON_RESULT");
 					Object compareDate = dataMap.get("COMPARISON_DATE");
 					JsonUtil ju = JsonUtil.buildNormalMapper();
 					data = ju.fromJson(compareResult.toString(), ZDTTableRowEntity.class);
-					//data = JSONUtil.fromJson(new ObjectMapper(), compareResult.toString(), ZDTTableRowEntity.class);					
-					//logger.info("data = "+data.toString());
+					//FIXME look into splitTableRowEntity
 					List<ZDTTableRowEntity> entities = splitTableRowEntity(data);
-					//logger.info("entities size = "+entities.size());
 					String response = null;
 					if (entities != null) {
 						for (ZDTTableRowEntity entity : entities) {
-							logger.info("start to sync");
+							logger.info("Start to sync for SSF");
 							response = new ZDTSynchronizer().sync(entity);
 						}
 					}
+					//sync work is done, record the sync status into sync table now...
 					if (lastCompareDate != null) {
 						if (lastCompareDate.compareTo( (String) compareDate) < 0) {
 							lastCompareDate = (String) compareDate;
@@ -332,33 +281,10 @@ public class ZDTAPI
 		} 
 	}
 	
-	private int saveToSyncTable(String syncDateStr, String type, String syncResult, String lastComparisonDate) {
-		Date syncDate = null;
-		try {  
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
-		    syncDate = sdf.parse(syncDateStr);  
-		} catch (ParseException e) {  
-		    logger.error(e);
-		}
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(syncDate);
-		cal.add(Calendar.HOUR_OF_DAY, 6);
-		Date nextScheduleDate = cal.getTime();
-		String nextScheduleDateStr = getTimeString(nextScheduleDate);
-		double divergencePercentage = 0.0; 
-		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
-		
-	}
-	
-	private String getTimeString(Date date)
-	{
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
-		String dateStr = sdf.format(date);
-		return dateStr;
-	}
-	
-	
-	
+	/**
+	 * sync status of last time, empty for the first time.
+	 * @return
+	 */
 	@GET
 	@Path("sync/status")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -396,7 +322,11 @@ public class ZDTAPI
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-	
+
+	/**
+	 * latest compare status,retrieve from compare table, get the latest comparison record(comparison_date)
+	 * @return
+	 */
 	@GET
 	@Path("compare/status")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -436,6 +366,11 @@ public class ZDTAPI
 		return Response.status(statusCode).entity(message).build();
 	}
 
+	/**
+	 *  Save comparison result into compare table
+	 * @param jsonObj
+	 * @return
+	 */
 	@PUT
 	@Path("compare/result")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -539,4 +474,88 @@ public class ZDTAPI
 		return getJSONArrayForListOfObjects(TABLE_SEARCH, list);
 	}
 
+	public Date getCurrentUTCTime()
+	{
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		long localNow = System.currentTimeMillis();
+		long offset = cal.getTimeZone().getOffset(localNow);
+		Date utcDate = new Date(localNow - offset);
+
+		return utcDate;
+	}
+
+	private  List<List<?>> splitList(List<?> list, int len) {
+		if (list == null || list.size() == 0 || len < 1) {
+			return null;
+		}
+		List<List<?>> result = new ArrayList<List<?>>();
+		int size = list.size();
+		int count = (size + len - 1) / len;
+		for (int i = 0; i < count; i++) {
+			List<?> subList = list.subList(i * len, ((i + 1) * len > size ? size : len * (i + 1)));
+			result.add(subList);
+		}
+		return result;
+	}
+
+	public List<ZDTTableRowEntity> splitTableRowEntity(ZDTTableRowEntity originalEntity){
+		List<ZDTTableRowEntity> entities = new ArrayList<ZDTTableRowEntity>();
+		if (originalEntity != null) {
+			List<List<?>> splitSearch = null;
+			List<List<?>> splitParams = null;
+			// for each connection, we just sync 1000 rows
+			//FIXME need to confirm if this is by design, here not sync for category, category param, folder table
+			int length = 1000;
+			if (originalEntity.getSavedSearchSearch() != null) {
+				splitSearch = splitList(originalEntity.getSavedSearchSearch(), length);
+			}
+
+			if (originalEntity.getSavedSearchSearchParams() != null) {
+				splitParams = splitList(originalEntity.getSavedSearchSearchParams(),length);
+			}
+
+			// sync search table first and then sync parameter table to avoid key constraints
+			if (splitSearch != null) {
+				for (List<?> searchList : splitSearch) {
+					ZDTTableRowEntity rowEntity = new ZDTTableRowEntity();
+					rowEntity.setSavedSearchSearch((List<SavedSearchSearchRowEntity>) searchList);
+					entities.add(rowEntity);
+				}
+			}
+			if (splitParams != null) {
+				for (List<?> paramList : splitParams) {
+					ZDTTableRowEntity rowEntity = new ZDTTableRowEntity();
+					rowEntity.setSavedSearchSearchParams((List<SavedSearchSearchParamRowEntity>) paramList);
+					entities.add(rowEntity);
+				}
+			}
+		}
+		return entities;
+	}
+
+
+	private String getTimeString(Date date)
+	{
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		String dateStr = sdf.format(date);
+		return dateStr;
+	}
+
+	private int saveToSyncTable(String syncDateStr, String type, String syncResult, String lastComparisonDate) {
+		Date syncDate = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			syncDate = sdf.parse(syncDateStr);
+		} catch (ParseException e) {
+			logger.error(e);
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(syncDate);
+		cal.add(Calendar.HOUR_OF_DAY, 6);
+		Date nextScheduleDate = cal.getTime();
+		String nextScheduleDateStr = getTimeString(nextScheduleDate);
+		double divergencePercentage = 0.0;
+		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
+
+	}
 }

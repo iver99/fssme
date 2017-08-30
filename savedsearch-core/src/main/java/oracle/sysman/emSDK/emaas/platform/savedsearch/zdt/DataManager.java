@@ -182,9 +182,9 @@ public class DataManager
 	
 	private static final String SQL_GET_SYNC_STATUS = "select * from (SELECT to_char(SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as SYNC_DATE, to_char(NEXT_SCHEDULE_SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_SYNC_DATE,SYNC_TYPE, divergence_percentage from ems_analytics_zdt_sync order by sync_date desc) where rownum = 1";
 	
-	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_analytics_zdt_comparator where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and comparison_result is not null";
+	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from EMS_ANALYTICS_ZDT_COMPARATOR where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and comparison_result is not null";
 	
-	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_analytics_zdt_comparator where comparison_result is not null";
+	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from EMS_ANALYTICS_ZDT_COMPARATOR where comparison_result is not null";
 	
 	private static final String SQL_GET_ALL_TENANTS = "select distinct tenant_id from ems_analytics_search where system_search <>1";
 	/**
@@ -235,17 +235,17 @@ public class DataManager
 		}
 	}
 	
-	public List<Map<String, Object>> getComparedDataToSync(EntityManager em, String date) {		
+	public List<Map<String, Object>> getComparedDataToSync(EntityManager em, String lastComparisonDateForSync) {
 		List<Map<String, Object>> result = null;
 		try {
-			if (date != null) {
-				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE, date,null, null);				
+			if (lastComparisonDateForSync != null) {
+				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE, lastComparisonDateForSync,null, null);
 			} else {
 				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC,null, null, null);
 			}
 			
 		}catch(Exception e) {
-			logger.info("execption happens in getComparedDataToSync "+e.getLocalizedMessage());
+			logger.error("execption happens in getComparedDataToSync " + e);
 			logger.error("error occurs while executing sql:" + SQL_GET_COMPARED_DATA_TO_SYNC);
 		}
 		return result;
@@ -256,6 +256,7 @@ public class DataManager
 		if (result != null && result.size() == 1) {
 			return (String)result.get(0);
 		}
+		logger.info("No successful sync record found in sync table!");
 		return null;
 	}
 	
@@ -381,6 +382,7 @@ public class DataManager
 	
 	public long getAllCategoryPramsCount(EntityManager em, String maxComparedDate) {
 		long count = 0l;
+		//FIXME need to know if this is by design.
 	/*	try {
 			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_PARAM_COUNT).setParameter(1, maxComparedDate);
 			List<Object> result = query.getResultList();
@@ -402,7 +404,8 @@ public class DataManager
 	 */
 
 	public List<Map<String, Object>> getCategoryParamTableData(EntityManager em, String type, String date, String maxComparedDate, String tenant)
-	{		
+	{
+		//FIXME need to know if this is by design.
 	/*	if (type.equals("incremental") && date != null) {
 			return getDatabaseTableData(em,SQL_ALL_CATEGORY_PARAMS_ROWS_BY_DATE,date, maxComparedDate);
 		} else {
@@ -420,6 +423,7 @@ public class DataManager
 
 	public List<Map<String, Object>> getCategoryTableData(EntityManager em, String type, String date, String maxComparedDate, String tenant)
 	{
+		//FIXME need to know if this is by design.
 		/*
 		if (type.equals("incremental") && date != null) {
 			return getDatabaseTableData(em,SQL_ALL_CATEGORY_ROWS_BY_DATE,date, maxComparedDate);
