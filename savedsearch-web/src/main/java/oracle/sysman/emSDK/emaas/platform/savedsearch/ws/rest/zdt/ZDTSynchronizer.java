@@ -119,9 +119,8 @@ public class ZDTSynchronizer
 
 	private void syncSearchParamsTableRows(EntityManager em, List<SavedSearchSearchParamRowEntity> rows)
 	{
-		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
-			logger.debug("List<SavedSearchSearchParamRowEntity> is null,no sync action is needed");
+			logger.info("List<SavedSearchSearchParamRowEntity> is null,no sync action is needed");
 			return;
 		}
 		logger.debug("Begin to sync table EMS_ANALYTICS_SEARCH_PARAMS table");
@@ -154,7 +153,7 @@ public class ZDTSynchronizer
 						e.getDashboardIneligible(), e.getProviderName(), e.getProviderVersion(), e.getProviderAssetRoot());
 
 		}
-		logger.debug("Finished to sync table EMS_ANALYTICS__SEARCH table");
+		logger.info("Finished to sync table EMS_ANALYTICS__SEARCH table");
 	} catch (Exception e) {
 		logger.info("erros while sync for search table "+e.getLocalizedMessage());
 		logger.error(e);

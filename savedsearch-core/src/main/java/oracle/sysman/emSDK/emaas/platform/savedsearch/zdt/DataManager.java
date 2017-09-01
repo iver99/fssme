@@ -742,10 +742,7 @@ public class DataManager
 			
 		}
 		catch (Exception e) {
-			logger.info("start to print");
-			e.printStackTrace();
-			logger.info("end to print");
-			logger.error("Error occured when sync search param table data! {}", e.getLocalizedMessage());
+			logger.error("Error occurred when sync search param table data! {}", e);
 		}
 	}
 

@@ -262,7 +262,7 @@ public class ZDTAPI
 					
 					if (response != null && response.contains("Errors:")) {
 						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
-						return Response.status(500).entity(response).build();
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity(response).build();
 					}
 				}
 				int flag = saveToSyncTable(syncDate, type, "SUCCESSFUL",lastCompareDate);
@@ -551,7 +551,7 @@ public class ZDTAPI
 		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(syncDate);
-		cal.add(Calendar.HOUR_OF_DAY, 6);
+		cal.add(Calendar.HOUR_OF_DAY, 6);//FIXME: what is this mean>?
 		Date nextScheduleDate = cal.getTime();
 		String nextScheduleDateStr = getTimeString(nextScheduleDate);
 		double divergencePercentage = 0.0;
