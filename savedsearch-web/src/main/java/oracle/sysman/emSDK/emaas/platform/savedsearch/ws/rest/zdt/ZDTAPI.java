@@ -99,6 +99,7 @@ public class ZDTAPI
 			}
 			obj.put("isCompared", isCompared);
 			obj.put("tenants", array);
+			obj.put("lastComparedDate", lastComparisonDate);
 			return Response.status(Status.OK).entity(obj).build();
 		} catch (Exception e) {
 			logger.error("errors in getting all tenants:"+e.getLocalizedMessage());

@@ -44,7 +44,8 @@ public class ZDTSynchronizer
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
-			//FIXME: need to confirm this is the design, sync for cat/folder/cat param data
+			//now category and category params table will not be compared/synced
+			//make sure sync in order that will not break DB constraints
 			syncCategoryTableRows(em, data.getSavedSearchCategory());
 			syncCategoryParamsTableRows(em, data.getSavedSearchCategoryParams());
 			syncFoldersTableRows(em, data.getSavedSearchFoldersy());

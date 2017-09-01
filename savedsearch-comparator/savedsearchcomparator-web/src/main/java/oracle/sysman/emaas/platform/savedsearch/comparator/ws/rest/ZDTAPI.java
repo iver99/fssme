@@ -154,21 +154,20 @@ public class ZDTAPI
 			JSONArray tenantArrayForClient1 = null;
 			
 			JSONObject obj1 = new JSONObject(tenants1);
-			boolean iscomparedForClient1 = obj1.getBoolean("isCompared");
-			//logger.info("iscompared1=" + iscomparedForClient1);
+			boolean isComparedForClient1 = obj1.getBoolean("isCompared");
 			tenantArrayForClient1 = obj1.getJSONArray("tenants");
-			//logger.info("tenantArray size1 = " + tenantArrayForClient1.length());
-			
+			String lastComparedDateC1 = obj1.getString("lastComparedDate");
+			logger.info("C1: isCompared={}, tenant list size = {}, last compared date = {}", isComparedForClient1, tenantArrayForClient1.length(),lastComparedDateC1);
+
 			JSONArray tenantArrayForClient2 = null;
-			
 			JSONObject obj2 = new JSONObject(tenants2);
-			boolean iscomparedForClient2 = obj2.getBoolean("isCompared");
-			//logger.info("iscompared2=" + iscomparedForClient2);
+			boolean isComparedForClient2 = obj2.getBoolean("isCompared");
 			tenantArrayForClient2 = obj2.getJSONArray("tenants");
-			//logger.info("tenantArray size2 = " + tenantArrayForClient2.length());
-			
+			String lastComparedDateC2 = obj2.getString("lastComparedDate");
+			logger.info("C2: isCompared={}, tenant list size = {}, last compared date = {}", isComparedForClient2, tenantArrayForClient2.length(),lastComparedDateC2);
+
 			if (tenantArrayForClient1.length() == 0 && tenantArrayForClient2.length() == 0) {
-				return Response.status(status).entity("No user created saved searches, Nothing to compare").build();
+				return Response.status(status).entity("{\"msg\":\"#1.No user created dashboards, No need to compare\"}").build();
 			}
 			
 			Set<String> tenants = new HashSet<String>();
@@ -183,7 +182,7 @@ public class ZDTAPI
 			
 			boolean isCompared = true;
 			
-			if ((!iscomparedForClient1) || (!iscomparedForClient2)) {
+			if ((!isComparedForClient1) || (!isComparedForClient2)) {
 				isCompared = false;
 			}
 			InstancesComparedData<ZDTTableRowEntity> result = null;
@@ -191,7 +190,7 @@ public class ZDTAPI
 			int totalRowForClient2 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient2(), maxComparedDate);
 			int totalRow = totalRowForClient1 + totalRowForClient2;
 			if (totalRow == 0) {
-				return Response.status(status).entity("No user created saved searches, Nothing to compare").build();					
+				return Response.status(status).entity("{\"msg\":\"#2.No user created dashboards, No need to compare\"}").build();
 			} 
 			logger.info("totalRow={}",totalRow);
 			int totalDifferentRows = 0;
@@ -262,8 +261,12 @@ public class ZDTAPI
 							obj.put("differentRowNum", totalDifferentRows);
 							obj.put("totalRowNum", totalRow);
 							obj.put("divergencePercentage", percentage);
-							
-							if (totalDifferentRows > 1000) {
+							if(isCompared){
+								obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
+							}else{
+								obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences'");// here we take cloud1's last compared date.
+							}
+							if (totalDifferentRows > 100) {
 								obj.put("divergenceSummary", "The number for different rows is more than 1000; There is too much content to display;");
 							} else {
 								
@@ -322,7 +325,12 @@ public class ZDTAPI
 					obj.put("differentRowNum", totalDifferentRows);
 					obj.put("totalRowNum", totalRow);
 					obj.put("divergencePercentage", percentage);
-					
+					if(isCompared){
+						obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
+					}else{
+						obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences'");// here we take cloud1's last compared date.
+					}
+
 					JSONObject subObj = new JSONObject();
 					subObj.put(result.getInstance1().getKey(), result2);
 					subObj.put(result.getInstance2().getKey(), result1);
