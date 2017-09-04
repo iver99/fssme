@@ -63,8 +63,8 @@ public class ZDTAPI
 
 	private static final Logger logger = LogManager.getLogger(ZDTAPI.class);
 
-	private static final String TABLE_CATEGORY = "EMS_ANALYTICS_CATEGORY";
-	private static final String TABLE_CATEGORY_PARAMS = "EMS_ANALYTICS_CATEGORY_PARAMS";
+//	private static final String TABLE_CATEGORY = "EMS_ANALYTICS_CATEGORY";
+//	private static final String TABLE_CATEGORY_PARAMS = "EMS_ANALYTICS_CATEGORY_PARAMS";
 	private static final String TABLE_FOLDERS = "EMS_ANALYTICS_FOLDERS";
 	private static final String TABLE_SEARCH = "EMS_ANALYTICS_SEARCH";
 	private static final String TABLE_SEARCH_PARAMS = "EMS_ANALYTICS_SEARCH_PARAMS";
@@ -139,12 +139,7 @@ public class ZDTAPI
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
-			JSONArray tableData = getCategoryTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
-			//FIXME need to know this is by design, category, category param folder will not fetched any data
-			obj.put(TABLE_CATEGORY, tableData);
-			tableData = getCategoryParamTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
-			obj.put(TABLE_CATEGORY_PARAMS, tableData);
-			tableData = getFolderTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
+			JSONArray tableData = getFolderTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
 			obj.put(TABLE_FOLDERS, tableData);
 			tableData = getSearchTableData(em,type, lastComparisonDate, maxComparedDate, tenant);
 			obj.put(TABLE_SEARCH, tableData);
@@ -180,14 +175,13 @@ public class ZDTAPI
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			//FIXME need to know this is by design, category, category param folder will not fetched any data
-			long categoryCount = DataManager.getInstance().getAllCategoryCount(em, maxComparedData);
+//			long categoryCount = DataManager.getInstance().getAllCategoryCount(em, maxComparedData);
 			long folderCount = DataManager.getInstance().getAllFolderCount(em, maxComparedData);
 			long searcheCount = DataManager.getInstance().getAllSearchCount(em, maxComparedData);
 			long searchPramCount = DataManager.getInstance().getAllSearchParamsCount(em, maxComparedData);
-			long categoryPramCount = DataManager.getInstance().getAllCategoryPramsCount(em, maxComparedData);
-			logger.info("ZDT counters: category count - {}, folder count - {}, search count - {}, searchParams count - {}, categoryParam count - {}"
-					, categoryCount, folderCount,searcheCount, searchPramCount,categoryPramCount);
-			ZDTCountEntity zdte = new ZDTCountEntity(categoryCount, folderCount, searcheCount,categoryPramCount,searchPramCount);
+//			long categoryPramCount = DataManager.getInstance().getAllCategoryPramsCount(em, maxComparedData);
+			logger.info("ZDT counters: folder count - {}, search count - {}, searchParams count - {},", folderCount,searcheCount, searchPramCount);
+			ZDTCountEntity zdte = new ZDTCountEntity(folderCount, searcheCount,searchPramCount);
 			message = JSONUtil.objectToJSONString(zdte);
 		}catch (EMAnalyticsFwkException e) {
 			message = e.getLocalizedMessage();
@@ -427,18 +421,6 @@ public class ZDTAPI
 		return Response.status(statusCode).entity(message).build();
 	}
 
-	private JSONArray getCategoryParamTableData(EntityManager em, String type, String date,String maxComparedData,String tenant)
-	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryParamTableData(em,type, date, maxComparedData, tenant);
-		return getJSONArrayForListOfObjects(TABLE_CATEGORY_PARAMS, list);
-	}
-
-	private JSONArray getCategoryTableData(EntityManager em, String type, String date,String maxComparedData, String tenant)
-	{
-		List<Map<String, Object>> list = DataManager.getInstance().getCategoryTableData(em,type, date, maxComparedData, tenant);
-		return getJSONArrayForListOfObjects(TABLE_CATEGORY, list);
-	}
-
 	private JSONArray getFolderTableData(EntityManager em, String type, String date,String maxComparedData,String tenant)
 	{
 		List<Map<String, Object>> list = DataManager.getInstance().getFolderTableData(em,type, date, maxComparedData, tenant);
@@ -505,7 +487,6 @@ public class ZDTAPI
 			List<List<?>> splitSearch = null;
 			List<List<?>> splitParams = null;
 			// for each connection, we just sync 1000 rows
-			//FIXME need to confirm if this is by design, here not sync for category, category param, folder table
 			int length = 1000;
 			if (originalEntity.getSavedSearchSearch() != null) {
 				splitSearch = splitList(originalEntity.getSavedSearchSearch(), length);

@@ -292,33 +292,6 @@ public class DataManager
 		} 
 		return null;
 	}
-
-	/**
-	 * Get the number of category rows
-	 *
-	 * @return
-	 */
-
-	public long getAllCategoryCount(EntityManager em, String maxComparedDate)
-	{
-		// all category are OOB so no need to calculate the number
-		long count = 0L;
-	/*	try {
-			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_COUNT).setParameter(1, maxComparedDate);
-			List<Object> result = query.getResultList();
-			if (result != null && result.size() == 1) {
-				count =  ((Number)result.get(0)).longValue();
-			}
-
-		}
-		catch (Exception e) {
-			logger.error("Error occured when get all category count!" , e.getLocalizedMessage());
-		}
-*/
-		return count;
-
-	}
-
 	/**
 	 * Get the number of folder rows
 	 *
@@ -380,60 +353,6 @@ public class DataManager
 		return count;
 	}
 	
-	public long getAllCategoryPramsCount(EntityManager em, String maxComparedDate) {
-		long count = 0l;
-		//FIXME need to know if this is by design.
-	/*	try {
-			Query query = em.createNativeQuery(SQL_ALL_CATEGORY_PARAM_COUNT).setParameter(1, maxComparedDate);
-			List<Object> result = query.getResultList();
-			if (result != null && result.size() == 1) {
-				count =  ((Number)result.get(0)).longValue();
-			}
-		}
-		catch (Exception e) {
-			logger.error("Error occured when get all category params count!",e.getLocalizedMessage());
-		} */
-		return count;
-	}
-	
-
-	/**
-	 * Get all rows in category param table
-	 *
-	 * @return
-	 */
-
-	public List<Map<String, Object>> getCategoryParamTableData(EntityManager em, String type, String date, String maxComparedDate, String tenant)
-	{
-		//FIXME need to know if this is by design.
-	/*	if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_CATEGORY_PARAMS_ROWS_BY_DATE,date, maxComparedDate);
-		} else {
-			return getDatabaseTableData(em,SQL_ALL_CATEGORY_PARAMS_ROWS,null, maxComparedDate);
-		} */
-		return new ArrayList<Map<String, Object>>();
-		
-	}
-
-	/**
-	 * Get all rows in category table
-	 *
-	 * @return
-	 */
-
-	public List<Map<String, Object>> getCategoryTableData(EntityManager em, String type, String date, String maxComparedDate, String tenant)
-	{
-		//FIXME need to know if this is by design.
-		/*
-		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_CATEGORY_ROWS_BY_DATE,date, maxComparedDate);
-		} else {
-			return getDatabaseTableData(em,SQL_ALL_CATEGORY_ROWS,null, maxComparedDate);
-		}
-		*/
-		return new ArrayList<Map<String, Object>>();
-	}
-
 	/**
 	 * Get all rows in folder table
 	 *

@@ -9,8 +9,6 @@ import javax.persistence.EntityManager;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryParamRowEntity;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchFolderRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchRowEntity;
@@ -26,18 +24,13 @@ public class ZDTSynchronizerTest {
 			@Mocked final EntityManager em){
 		ZDTSynchronizer syn = new ZDTSynchronizer();
 		syn.sync(null);
-		ZDTTableRowEntity row = new ZDTTableRowEntity(null, null, null, null, null);
+		ZDTTableRowEntity row = new ZDTTableRowEntity(null, null, null);
 		syn.sync(row);
 	}
 
 	@Test (groups = {"s1"})
 	public void testSync(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws Exception {
-		List<SavedSearchCategoryRowEntity> savedSearchCategory = new ArrayList<SavedSearchCategoryRowEntity>();
-		savedSearchCategory.add(new SavedSearchCategoryRowEntity(null, null, null, null, null, null, null, null, null, null, null, null,
-				null, null, null, null, null, null, null));
-		List<SavedSearchCategoryParamRowEntity> savedSearchCategoryParams = new ArrayList<SavedSearchCategoryParamRowEntity>();
-		savedSearchCategoryParams.add(new SavedSearchCategoryParamRowEntity(null, null, null, null, null, null));
 		List<SavedSearchFolderRowEntity> savedSearchFoldersy = new ArrayList<SavedSearchFolderRowEntity>();
 		savedSearchFoldersy.add(new SavedSearchFolderRowEntity(null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null));
@@ -47,15 +40,12 @@ public class ZDTSynchronizerTest {
 		savedSearchSearch.add(new SavedSearchSearchRowEntity(null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null));
-		ZDTTableRowEntity row = new ZDTTableRowEntity(savedSearchCategory, savedSearchCategoryParams, savedSearchFoldersy, savedSearchSearchParams, savedSearchSearch);
+		ZDTTableRowEntity row = new ZDTTableRowEntity(savedSearchFoldersy, savedSearchSearchParams, savedSearchSearch);
 		
 		new Expectations() {
 			{
 				DataManager.getInstance();
 				result = dm;
-				dm.syncCategoryTable(em,(BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString, anyString,
-						anyString, anyString, (BigInteger) any, (BigInteger) any, anyString, anyString, anyString, anyString, anyLong, anyString, anyString);
-				dm.syncCategoryParamTable(em,(BigInteger) any, anyString, anyString, anyLong, anyString, anyString, (Integer)any);
 				dm.syncFolderTable(em,(BigInteger) any, anyString, (BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString,
 						anyString, anyString, anyString, anyInt, anyString, anyInt, (BigInteger) any, anyLong);
 				dm.syncSearchTable(em,(BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString, (BigInteger) any, 

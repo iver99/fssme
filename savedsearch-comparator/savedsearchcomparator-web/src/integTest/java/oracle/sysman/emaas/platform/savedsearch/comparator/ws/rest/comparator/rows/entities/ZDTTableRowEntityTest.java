@@ -15,22 +15,7 @@ public class ZDTTableRowEntityTest {
 		Assert.assertFalse(row.equals(new String()));
 		
 		ZDTTableRowEntity other = new ZDTTableRowEntity();
-		other.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
-		row.setSavedSearchCategory(null);
-		Assert.assertFalse(row.equals(other));
-		row.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
-		row.getSavedSearchCategory().add(new SavedSearchCategoryRowEntity());
-		Assert.assertFalse(row.equals(other));
-		row.setSavedSearchCategory(other.getSavedSearchCategory());
-		
-		other.setSavedSearchCategoryParams(new ArrayList<SavedSearchCategoryParamRowEntity>());
-		row.setSavedSearchCategoryParams(null);
-		Assert.assertFalse(row.equals(other));
-		row.setSavedSearchCategoryParams(new ArrayList<SavedSearchCategoryParamRowEntity>());
-		row.getSavedSearchCategoryParams().add(new SavedSearchCategoryParamRowEntity());
-		Assert.assertFalse(row.equals(other));
-		row.setSavedSearchCategoryParams(other.getSavedSearchCategoryParams());
-		
+		Assert.assertTrue(row.equals(other));
 		other.setSavedSearchFoldersy(new ArrayList<SavedSearchFolderRowEntity>());
 		row.setSavedSearchFoldersy(null);
 		Assert.assertFalse(row.equals(other));

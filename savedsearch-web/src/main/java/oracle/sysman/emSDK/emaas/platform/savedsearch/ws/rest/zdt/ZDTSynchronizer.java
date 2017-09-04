@@ -17,8 +17,6 @@ import javax.persistence.EntityManager;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryParamRowEntity;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchFolderRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchRowEntity;
@@ -46,8 +44,8 @@ public class ZDTSynchronizer
 			}
 			//now category and category params table will not be compared/synced
 			//make sure sync in order that will not break DB constraints
-			syncCategoryTableRows(em, data.getSavedSearchCategory());
-			syncCategoryParamsTableRows(em, data.getSavedSearchCategoryParams());
+//			syncCategoryTableRows(em, data.getSavedSearchCategory());
+//			syncCategoryParamsTableRows(em, data.getSavedSearchCategoryParams());
 			syncFoldersTableRows(em, data.getSavedSearchFoldersy());
 			syncSearchTableRows(em, data.getSavedSearchSearch());
 			syncSearchParamsTableRows(em, data.getSavedSearchSearchParams());
@@ -62,10 +60,8 @@ public class ZDTSynchronizer
 			}
 		}
 	}
-	//FIXME: need to confirm this is the design, sync for cat/folder/cat param data
-	private void syncCategoryParamsTableRows(EntityManager em, List<SavedSearchCategoryParamRowEntity> rows)
+	/*private void syncCategoryParamsTableRows(EntityManager em, List<SavedSearchCategoryParamRowEntity> rows)
 	{
-		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
 			logger.debug("List<SavedSearchCategoryParamRowEntity> is null,no sync action is needed");
 			return;
@@ -77,11 +73,10 @@ public class ZDTSynchronizer
 					e.getCreationDate(), e.getLastModificationDate(),e.getDeleted());
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS_CATEGORY_PARAMS table");
-	}
-	//FIXME: need to confirm this is the design, sync for cat/folder/cat param data
+	}*/
+	/*
 	private void syncCategoryTableRows(EntityManager em, List<SavedSearchCategoryRowEntity> rows)
 	{
-		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
 			logger.debug("List<SavedSearchCategoryRowEntity> is null,no sync action is needed");
 			return;
@@ -98,11 +93,9 @@ public class ZDTSynchronizer
 		}
 		logger.debug("Finished to sync table EMS_ANALYTICS_CATEGORY table");
 
-	}
-	//FIXME: need to confirm this is the design, sync for cat/folder/cat param data
+	}*/
 	private void syncFoldersTableRows(EntityManager em, List<SavedSearchFolderRowEntity> rows)
 	{
-		// TODO: call DataManager implementation to insert or update data to database
 		if (rows == null) {
 			logger.debug("List<SavedSearchFolderRowEntity> is null,no sync action is needed");
 			return;

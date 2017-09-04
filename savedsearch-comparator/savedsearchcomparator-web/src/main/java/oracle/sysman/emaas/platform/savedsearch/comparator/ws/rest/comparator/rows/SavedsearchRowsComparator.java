@@ -10,18 +10,6 @@
 
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTErrorConstants;
@@ -32,6 +20,14 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.Ab
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.RowEntityComparator.CompareListPair;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class SavedsearchRowsComparator extends AbstractComparator
@@ -63,7 +59,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			}
 	}
 	
-	public ZDTTableRowEntity combineRowEntity(List<ZDTTableRowEntity> rowEntityList){
+	/*public ZDTTableRowEntity combineRowEntity(List<ZDTTableRowEntity> rowEntityList){
 		ZDTTableRowEntity finalEntity = new ZDTTableRowEntity();
 		List<SavedSearchCategoryRowEntity> category = new ArrayList<SavedSearchCategoryRowEntity>();
 		List<SavedSearchCategoryParamRowEntity> categoryParams = new ArrayList<SavedSearchCategoryParamRowEntity>();
@@ -93,7 +89,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		finalEntity.setSavedSearchSearch(search);
 		finalEntity.setSavedSearchSearchParams(searchParams);
 		return finalEntity;
-	}
+	}*/
 
 	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant, String comparisonType, 
 			String maxComparedDate, boolean iscompared, String tenant) throws ZDTException
@@ -134,19 +130,17 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		if (entity == null) {
 			return 0;
 		}
-		int rowNum = (int)((entity.getCountOfCategory() == null? 0L:entity.getCountOfCategory())
-				+ (entity.getCountOfFolders() ==null?0L:entity.getCountOfFolders())
-				+ (entity.getCountOfCategoryPrams() ==null?0L:entity.getCountOfCategoryPrams())
-				+ (entity.getCountOfSearchParams() ==null?0L:entity.getCountOfSearchParams())
-				+ (entity.getCountOfSearch()==null?0L:entity.getCountOfSearch()));
+		int rowNum = (int) ((entity.getCountOfFolders() == null ? 0L : entity.getCountOfFolders())
+				+ (entity.getCountOfSearchParams() == null ? 0L : entity.getCountOfSearchParams())
+				+ (entity.getCountOfSearch() == null ? 0L : entity.getCountOfSearch()));
 		return rowNum;
 	}
 	
 	public int countForComparedRows(ZDTTableRowEntity tableRow) {
  		int count = 0;		
  		if (tableRow != null) {
- 			count = count + (tableRow.getSavedSearchCategory()==null?0:tableRow.getSavedSearchCategory().size());
- 	 		count = count + (tableRow.getSavedSearchCategoryParams()==null?0:tableRow.getSavedSearchCategoryParams().size());
+// 			count = count + (tableRow.getSavedSearchCategory()==null?0:tableRow.getSavedSearchCategory().size());
+// 	 		count = count + (tableRow.getSavedSearchCategoryParams()==null?0:tableRow.getSavedSearchCategoryParams().size());
  	 		count = count + (tableRow.getSavedSearchFoldersy()==null?0:tableRow.getSavedSearchFoldersy().size());
  	 		count = count + (tableRow.getSavedSearchSearchParams()==null?0:tableRow.getSavedSearchSearchParams().size());
  	 		count = count + (tableRow.getSavedSearchSearch()==null?0:tableRow.getSavedSearchSearch().size());
@@ -163,7 +157,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	 * @param rows2
 	 * @param cd
 	 */
-	private void compareSSFCategoryRows(List<SavedSearchCategoryRowEntity> rows1, List<SavedSearchCategoryRowEntity> rows2,
+	/*private void compareSSFCategoryRows(List<SavedSearchCategoryRowEntity> rows1, List<SavedSearchCategoryRowEntity> rows2,
 			InstancesComparedData<ZDTTableRowEntity> cd)
 	{
 		if (cd == null) {
@@ -173,7 +167,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		CompareListPair<SavedSearchCategoryRowEntity> result = rec.compare(rows1, rows2);
 		cd.getInstance1().getData().setSavedSearchCategory(result.getList1());
 		cd.getInstance2().getData().setSavedSearchCategory(result.getList2());
-	}
+	}*/
 
 	
 	/**
@@ -203,7 +197,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	 * @param rows2
 	 * @param cd
 	 */
-	private void compareSSFCategoryParamRows(List<SavedSearchCategoryParamRowEntity> rows1, List<SavedSearchCategoryParamRowEntity> rows2,
+	/*private void compareSSFCategoryParamRows(List<SavedSearchCategoryParamRowEntity> rows1, List<SavedSearchCategoryParamRowEntity> rows2,
 			InstancesComparedData<ZDTTableRowEntity> cd)
 	{
 		if (cd == null) {
@@ -214,7 +208,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		CompareListPair<SavedSearchCategoryParamRowEntity> result = rec.compare(rows1, rows2);
 		cd.getInstance1().getData().setSavedSearchCategoryParams(result.getList1());
 		cd.getInstance2().getData().setSavedSearchCategoryParams(result.getList2());
-	}
+	}*/
 
 	/**
 	 * Compares the saved search search param rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
@@ -270,9 +264,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		InstanceData<ZDTTableRowEntity> outData1 = new InstanceData<ZDTTableRowEntity>(insData1.getKey(),insData1.getClient(), new ZDTTableRowEntity());
 		InstanceData<ZDTTableRowEntity> outData2 = new InstanceData<ZDTTableRowEntity>(insData2.getKey(),insData2.getClient(), new ZDTTableRowEntity());
 		InstancesComparedData<ZDTTableRowEntity> cd = new InstancesComparedData<ZDTTableRowEntity>(outData1, outData2);
-		compareSSFCategoryRows(insData1.getData().getSavedSearchCategory(), insData2.getData().getSavedSearchCategory(), cd);
-		compareSSFCategoryParamRows(insData1.getData().getSavedSearchCategoryParams(), insData2.getData().getSavedSearchCategoryParams(),
-				cd);
+//		compareSSFCategoryRows(insData1.getData().getSavedSearchCategory(), insData2.getData().getSavedSearchCategory(), cd);
+//		compareSSFCategoryParamRows(insData1.getData().getSavedSearchCategoryParams(), insData2.getData().getSavedSearchCategoryParams(),cd);
 		compareSSFFolderRows(insData1.getData().getSavedSearchFoldersy(),
 				insData2.getData().getSavedSearchFoldersy(), cd);
 		compareSSFSearchParamsRows(insData1.getData().getSavedSearchSearchParams(),

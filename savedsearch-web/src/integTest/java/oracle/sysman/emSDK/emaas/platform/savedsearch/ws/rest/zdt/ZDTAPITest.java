@@ -85,15 +85,11 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getAllCategoryCount(em,anyString);
-                result = 1;
                 dataManager.getAllFolderCount(em, anyString);
                 result = 1;
                 dataManager.getAllSearchCount(em, anyString);
                 result = 1;
                 dataManager.getAllSearchParamsCount(em, anyString);
-                result = 1;
-                dataManager.getAllCategoryPramsCount(em, anyString);
                 result = 1;
             }
         };
