@@ -202,6 +202,7 @@ public class ZDTAPI
 	
 	@GET
 	@Path("sync")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync?syncType={}&syncDate={}",type,syncDate);
@@ -262,17 +263,17 @@ public class ZDTAPI
 				}
 				int flag = saveToSyncTable(syncDate, type, "SUCCESSFUL",lastCompareDate);
 				if (flag < 0) {
-					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Fail to save sync status data").build();
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Fail to save sync status data\"}").build();
 				}
 			} else {
-				return Response.ok("Nothing to sync as no compared data").build();
+				return Response.ok("{\"msg\": \"Nothing to sync as no compared data\"}").build();
 			}
 						
-			return Response.ok("Sync is successful!").build();
+			return Response.ok("{\"msg\": \"Sync is successful!\"}").build();
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return Response.status(400).entity("Errors: " + e.getLocalizedMessage()).build();
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Error occurred when sync\"}").build();
 		} 
 	}
 	
@@ -288,7 +289,6 @@ public class ZDTAPI
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync/status");
 		EntityManager em = null;
 		String message = null;
-		int statusCode = 200;
 		String sync_date = "";
 		String sync_type = "";
 		String next_schedule_date = "";
@@ -305,17 +305,15 @@ public class ZDTAPI
 		ZDTSyncStatusRowEntity syncStatus = new ZDTSyncStatusRowEntity(sync_date,sync_type, next_schedule_date, percentage);
 		try {
 			message = JSONUtil.objectToJSONString(syncStatus);
-			return Response.status(statusCode).entity(message).build();
+			return Response.status(Status.OK).entity(message).build();
 		} catch (EMAnalyticsFwkException e) {
-			message = "Errors:" + e.getLocalizedMessage();
-			statusCode = 500;
 			logger.error("Errors while transfer sync status object to json string {}",e.getLocalizedMessage());
 		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
-		return Response.status(statusCode).entity(message).build();
+		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Error occurred when request sync/status\"}").build();
 	}
 
 	/**
@@ -329,7 +327,6 @@ public class ZDTAPI
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/compare/status");
 		EntityManager em = null;
 		String message = null;
-		int statusCode = 200;
 		String comparison_date = "";
 		String comparison_type = "";
 		//String comparison_result = null;
@@ -348,17 +345,15 @@ public class ZDTAPI
 		ZDTComparatorStatusRowEntity comparatorStatus = new ZDTComparatorStatusRowEntity(comparison_date,comparison_type, next_schedule_date, percentage);
 		try {
 			message = JSONUtil.objectToJSONString(comparatorStatus);
-			return Response.status(statusCode).entity(message).build();
+			return Response.status(Status.OK).entity(message).build();
 		} catch (EMAnalyticsFwkException e) {
-			message = "Errors:" + e.getLocalizedMessage();
-			statusCode = 500;
 			logger.error("Errors while transfer comparator status object to json string {}",e.getLocalizedMessage());
 		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
-		return Response.status(statusCode).entity(message).build();
+		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Error occurred when request compare/status\"}").build();
 	}
 
 	/**
@@ -374,7 +369,6 @@ public class ZDTAPI
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/compare/result");
 		EntityManager em = null;
 		String message = null;
-		int statusCode = 200;
 		String comparisonDate = null;
 		String nextScheduleDate = null;
 		String comparisonType = null;
@@ -383,8 +377,7 @@ public class ZDTAPI
 		if (jsonObj != null) {
 			try {
 				if (jsonObj.getString("lastComparisonDateTime") == null) {
-					message = "comparison date time can not be null";
-					statusCode = 500;
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"comparison date time can not be null\"}").build();
 				} else {
 					try {
 						comparisonDate = jsonObj.getString("lastComparisonDateTime");
@@ -396,15 +389,11 @@ public class ZDTAPI
 						int result = DataManager.getInstance().saveToComparatorTable(em, comparisonDate,nextScheduleDate,
 								comparisonType, comparisonResult, divergencePercentage);
 						if (result < 0) {
-							message = "Error: error occurs while saving data to zdt comparator table";
-							statusCode = 500;
-						} else {
-							message = "succeed to save data to zdt comparator table";
-						}		
+							return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Error: error occurs while saving data to zdt comparator table\"}").build();
+						}
 					} catch (Exception e) {
-						statusCode = 500;
 						logger.error("could not save data to comparator table, "+e.getLocalizedMessage());
-						return Response.status(statusCode).entity("could not save data to comparator table").build();						
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#1. Could not save data to comparator table\"}").build();
 					} finally {
 						if (em != null) {
 							em.close();
@@ -412,13 +401,12 @@ public class ZDTAPI
 					}
 				}
 			} catch (JSONException e) {
-				statusCode = 500;
 				logger.error("could not save data to comparator table, "+e.getLocalizedMessage());
-				return Response.status(statusCode).entity("could not save data to comparator table").build();	
+				return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#2.Could not save data to comparator table\"}").build();
 			}
 		}
 	
-		return Response.status(statusCode).entity(message).build();
+		return Response.status(Status.OK).entity("{\"msg\": \"Succeed to save data to zdt comparator table\"}").build();
 	}
 
 	private JSONArray getFolderTableData(EntityManager em, String type, String date,String maxComparedData,String tenant)
