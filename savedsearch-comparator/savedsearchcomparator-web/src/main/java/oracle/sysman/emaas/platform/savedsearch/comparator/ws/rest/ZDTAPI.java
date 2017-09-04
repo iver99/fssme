@@ -10,19 +10,15 @@
 
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -42,7 +38,6 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTErrorCon
 import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.CountsEntity;
-import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.SavedsearchCountsComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
@@ -348,25 +343,6 @@ public class ZDTAPI
  		}
 		
 		return Response.status(status).entity(message).build();
-	}
-
-	@GET
-	@Deprecated
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response compareOnSSF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
-           // @HeaderParam(value = "X-REMOTE-USER") String userTenant)
-	{
-		logger.info("There is an incoming call from ZDT comparator API to compare");
-		if (tenantIdParam == null){
-			tenantIdParam = "CloudServices";
-		}
-		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects, and return the counts for each instance
-		SavedsearchCountsComparator dcc = new SavedsearchCountsComparator();
-		InstancesComparedData<CountsEntity> result = dcc.compare(tenantIdParam, null);
-		
-		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
-				new InstanceCounts(result.getInstance2()));
-		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();
 	}
 
 	/**
