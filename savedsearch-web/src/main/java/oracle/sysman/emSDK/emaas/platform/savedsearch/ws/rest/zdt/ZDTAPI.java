@@ -96,6 +96,8 @@ public class ZDTAPI
 			boolean isCompared = true;
 			if (lastComparisonDate == null) {
 				isCompared =  false;
+				//reset lastComparisonDate to empty str because if it is a null, it will not be put into json response
+				lastComparisonDate = "";
 			}
 			obj.put("isCompared", isCompared);
 			obj.put("tenants", array);
