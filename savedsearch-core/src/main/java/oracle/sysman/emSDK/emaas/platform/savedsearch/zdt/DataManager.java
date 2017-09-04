@@ -45,6 +45,7 @@ public class DataManager
 			+ " and system_search <> 1";
 	private static final String SQL_ALL_SEARCH__PARAM_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and search_Id in (select search_id  from ems_analytics_search  where system_search <> 1)";
+    private static final String SQL_ALL_FOLDER_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_FOLDERS WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 
 	private static final String SQL_ALL_SEARCH_ROWS = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,TO_CHAR(FOLDER_ID) AS FOLDER_ID, TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,"
@@ -64,8 +65,18 @@ public class DataManager
 			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE FROM EMS_ANALYTICS_SEARCH where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and system_search <> 1 and tenant_id = ?";
 	
-//	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED FROM EMS_ANALYTICS_CATEGORY_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
-	
+    private static final String SQL_ALL_FOLDER_ROWS_BY_DATE = "SELECT TO_CHAR(FOLDER_ID) AS FOLDER_ID,NAME, TO_CHAR(PARENT_ID) AS PARENT_ID, DESCRIPTION,CREATION_DATE,OWNER,"
+        + "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
+        + "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+
+    private static final String SQL_ALL_FOLDER_ROWS = "SELECT TO_CHAR(FOLDER_ID) AS FOLDER_ID,NAME, TO_CHAR(PARENT_ID) AS PARENT_ID, DESCRIPTION,CREATION_DATE,OWNER,"
+            + "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
+            + "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+
+    private static final String SQL_ALL_FOLDER_ROWS_BY_TENANT = "SELECT TO_CHAR(FOLDER_ID) AS FOLDER_ID,NAME, TO_CHAR(PARENT_ID) AS PARENT_ID, DESCRIPTION,CREATION_DATE,OWNER,"
+            + "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
+            + "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and tenant_id = ?";
+
 	private static final String SQL_ALL_SEARCH_PARAMS_ROWS = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
 			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and search_Id in (select search_Id  from ems_analytics_search  where system_search <> 1)";
@@ -89,24 +100,6 @@ public class DataManager
 	private static final String SQL_ALL_SEARCH_PARAMS_ROWS_BY_DATE = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
 			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and search_Id in (select search_id  from ems_analytics_search  where system_search <> 1)";
-
-	
-	private static final String SQL_INSERT_CATEGORY_PARAM = "INSERT INTO EMS_ANALYTICS_CATEGORY_PARAMS (CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED) "
-			+ "VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?)";
-	
-	private static final String SQL_UPDATE_CATEGORY_PARAM = "UPDATE EMS_ANALYTICS_CATEGORY_PARAMS T SET T.PARAM_VALUE=?,T.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
-			+ "T.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),T.DELETED=? where T.CATEGORY_ID=? and T.NAME=? and T.TENANT_ID=?";
-
-	private static final String SQL_INSERT_CATEGORY = "INSERT INTO EMS_ANALYTICS_CATEGORY (CATEGORY_ID,NAME,DESCRIPTION,OWNER,CREATION_DATE,"
-			+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,EM_PLUGIN_ID,"
-			+ "DEFAULT_FOLDER_ID,DELETED,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_DISCOVERY,"
-			+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
-			+ "?,?,?,?,?," + "?,?,?,?,?," + "?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
-	
-	private static final String SQL_UPDATE_CATEGORY = "UPDATE EMS_ANALYTICS_CATEGORY t set t.NAME=?,t.DESCRIPTION=?,t.OWNER=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
-			+ "t.NAME_NLSID=?,t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,t.DESCRIPTION_SUBSYSTEM=?,t.EM_PLUGIN_ID=?,"
-			+ "t.DEFAULT_FOLDER_ID=?,t.DELETED=?,t.PROVIDER_NAME=?,t.PROVIDER_VERSION=?,t.PROVIDER_DISCOVERY=?,"
-			+ "t.PROVIDER_ASSET_ROOT=?,t.DASHBOARD_INELIGIBLE=?,t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') where t.CATEGORY_ID=? and t.TENANT_ID=?";
 
 	private static final String SQL_INSERT_FOLDER = "INSERT INTO EMS_ANALYTICS_FOLDERS (FOLDER_ID,NAME,PARENT_ID,DESCRIPTION,CREATION_DATE,OWNER,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
@@ -279,19 +272,18 @@ public class DataManager
 
 	public long getAllFolderCount(EntityManager em, String maxComparedDate)
 	{
-		long count = 0l;
-	/*	try {
-			Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT).setParameter(1, maxComparedDate);
-			List<Object> result = query.getResultList();
-			if (result != null && result.size() == 1) {
-				count =  ((Number)result.get(0)).longValue();
-			}
-		}
-		catch (Exception e) {
-			logger.error("Error occured when get all folder count!" , e.getLocalizedMessage());
-		}
-*/
-		return count;
+        long count = 0l;
+        try {
+            Query query = em.createNativeQuery(SQL_ALL_FOLDER_COUNT).setParameter(1, maxComparedDate);
+            List<Object> result = query.getResultList();
+            if (result != null && result.size() == 1) {
+                count =  ((Number)result.get(0)).longValue();
+            }
+        }
+        catch (Exception e) {
+            logger.error("Error occured when get all folder count!",e.getLocalizedMessage());
+        }
+        return count;
 	}
 
 	/**
@@ -339,13 +331,15 @@ public class DataManager
 	 */
 	public List<Map<String, Object>> getFolderTableData(EntityManager em, String type, String date, String maxComparedDate, String tenant)
 	{
-		/*if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS_BY_DATE,date, maxComparedDate);
-		} else {
-			return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS,null, maxComparedDate);
-		}
-		*/
-		return new ArrayList<Map<String, Object>>();
+        if (tenant != null) {
+            return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS_BY_TENANT,null, maxComparedDate, tenant);
+        } else {
+            if ("incremental".equals(type) && date != null) {
+                return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS_BY_DATE,date, maxComparedDate, null);
+            }else {
+                return getDatabaseTableData(em,SQL_ALL_FOLDER_ROWS,null, maxComparedDate, null);
+            }
+        }
 	}
 
 	/**
@@ -359,7 +353,7 @@ public class DataManager
 		if (tenant != null) {
 			return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS_BY_TENANT,null, maxComparedDate, tenant);
 		} else {
-			if (type.equals("incremental") && date != null) {
+			if ("incremental".equals(type) && date != null) {
 				return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS_BY_DATE,date, maxComparedDate, null);
 			}else {
 				return getDatabaseTableData(em,SQL_ALL_SEARCH_PARAMS_ROWS,null, maxComparedDate, null);
@@ -379,7 +373,7 @@ public class DataManager
 		if (tenant != null) {
 			return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS_BY_TENANT,null, maxComparedDate, tenant);
 		} else {
-			if (type.equals("incremental") && date != null) {
+			if ("incremental".equals(type) && date != null) {
 				return getDatabaseTableData(em,SQL_ALL_SEARCH_ROWS_BY_DATE,date, maxComparedDate, null);
 			} else {
 				// avoid to fetch all rows one time
@@ -424,8 +418,7 @@ public class DataManager
 						.setParameter(10, nameSubsystem).setParameter(11, descriptionNlsid)
 						.setParameter(12, descriptionSubsystem).setParameter(13, systemFolder).setParameter(14, emPluginId)
 						.setParameter(15, uiHidden).setParameter(16, deleted).setParameter(17, tenantId).executeUpdate();
-			}
-			else {
+			}else {
 				Map<String, Object> dateMap = result.get(0);
 		    	String creationD  = dateMap.get("CREATION_DATE").toString();
 		    	if (creationD == null) {
@@ -440,7 +433,7 @@ public class DataManager
 		    	}
 				
 				if (check) {
-					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
+					logger.info("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_FOLDERS.");
 					//do nothing
 				}
 				else {
@@ -539,7 +532,7 @@ public class DataManager
 		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
 		    	if (check) {
-					logger.info("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
+					logger.info("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_SEARCH_PARAMS.");
 					//do nothing
 				}
 				else {
@@ -649,7 +642,7 @@ public class DataManager
 		    	}
 				
 				if (check) {
-					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
+					logger.info("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_SEARCH.");
 					//do nothing
 				}
 				else {

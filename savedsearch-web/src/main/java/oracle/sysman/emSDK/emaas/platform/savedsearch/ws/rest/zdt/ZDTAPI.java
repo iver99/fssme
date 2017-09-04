@@ -368,7 +368,6 @@ public class ZDTAPI
 	public Response saveComparatorData(JSONObject jsonObj) {
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /v1/zdt/compare/result");
 		EntityManager em = null;
-		String message = null;
 		String comparisonDate = null;
 		String nextScheduleDate = null;
 		String comparisonType = null;

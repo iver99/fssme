@@ -100,7 +100,7 @@ public class ZDTSynchronizer
 			logger.debug("List<SavedSearchFolderRowEntity> is null,no sync action is needed");
 			return;
 		}
-		logger.debug("Begin to sync table EMS_ANALYTICS_CATEGORY table");
+		logger.debug("Begin to sync table EMS_ANALYTICS_FOLDER table");
 		for (SavedSearchFolderRowEntity e : rows) {
 			
 			DataManager.getInstance().syncFolderTable(em, e.getFolderId() != null? new BigInteger(e.getFolderId()) : null, e.getName(), e.getParentId()!=null?new BigInteger(e.getParentId()):null, e.getDescription(),
