@@ -41,23 +41,11 @@ public class DataManager
 	private static final Logger logger = LogManager.getLogger(DataManager.class);
 	private static DataManager instance = new DataManager();
 
-	//private static final String SQL_ALL_CATEGORY_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_CATEGORY WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
-//	private static final String SQL_ALL_CATEGORY_PARAM_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_CATEGORY_PARAMS WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
-//	private static final String SQL_ALL_FOLDER_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_FOLDERS WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 	private static final String SQL_ALL_SEARCH_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and system_search <> 1";
 	private static final String SQL_ALL_SEARCH__PARAM_COUNT = "SELECT COUNT(*) FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and search_Id in (select search_id  from ems_analytics_search  where system_search <> 1)";
 
-/*	private static final String SQL_ALL_CATEGORY_ROWS = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,DESCRIPTION,OWNER,CREATION_DATE,"
-			+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,EM_PLUGIN_ID,"
-			+ "TO_CHAR(DEFAULT_FOLDER_ID) AS DEFAULT_FOLDER_ID,DELETED,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_DISCOVERY,"
-			+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE FROM EMS_ANALYTICS_CATEGORY where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
-	
-	private static final String SQL_ALL_FOLDER_ROWS = "SELECT TO_CHAR(FOLDER_ID) AS FOLDER_ID,NAME, TO_CHAR(PARENT_ID) AS PARENT_ID, DESCRIPTION,CREATION_DATE,OWNER,"
-			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
-			+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
-	*/
 	private static final String SQL_ALL_SEARCH_ROWS = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,TO_CHAR(FOLDER_ID) AS FOLDER_ID, TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,"
 			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
@@ -86,15 +74,6 @@ public class DataManager
 			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and search_Id in (select search_Id  from ems_analytics_search  where system_search <> 1) and tenant_id = ?";
 	
-/*	private static final String SQL_ALL_CATEGORY_ROWS_BY_DATE = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,DESCRIPTION,OWNER,CREATION_DATE,"
-			+ "NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,DESCRIPTION_SUBSYSTEM,EM_PLUGIN_ID,"
-			+ "TO_CHAR(DEFAULT_FOLDER_ID) AS DEFAULT_FOLDER_ID,DELETED,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_DISCOVERY,"
-			+ "PROVIDER_ASSET_ROOT,TENANT_ID,DASHBOARD_INELIGIBLE,LAST_MODIFICATION_DATE FROM EMS_ANALYTICS_CATEGORY WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
-
-	private static final String SQL_ALL_FOLDER_ROWS_BY_DATE = "SELECT TO_CHAR(FOLDER_ID) AS FOLDER_ID,NAME, TO_CHAR(PARENT_ID) AS PARENT_ID, DESCRIPTION,CREATION_DATE,OWNER,"
-			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
-			+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
-*/	
 	private static final String SQL_ALL_SEARCH_ROWS_BY_DATE = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,TO_CHAR(FOLDER_ID) AS FOLDER_ID, TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,"
 			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
@@ -409,137 +388,16 @@ public class DataManager
  		}
 	}
 
-	public void syncCategoryParamTable(EntityManager em,BigInteger categoryId, String name, String paramValue, Long tenantId, String creationDate,
-			String lastModificationDate, Integer deleted)
-	{
-		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE from EMS_ANALYTICS_CATEGORY_PARAMS t "
-				+ "where t.CATEGORY_ID=? and t.TENANT_ID=? and t.NAME=?";//check if the data is existing.
-		if (!em.getTransaction().isActive()) {
-			em.getTransaction().begin();
-		}		
-		Query query = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId).setParameter(3, name);
-		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> result = query.getResultList();
-		boolean flag = true;//true=>insert,false=>update
-		if (result != null && result.size() > 0) {
-			flag = false;
-		}
-		try {
-			if (flag) {
-				//execute insert action
-				logger.debug("Data not exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute insert action.");
-				em.createNativeQuery(SQL_INSERT_CATEGORY_PARAM).setParameter(1, categoryId).setParameter(2, name)
-				.setParameter(3, paramValue).setParameter(4, tenantId).setParameter(5, creationDate)
-				.setParameter(6, lastModificationDate).setParameter(7, deleted).executeUpdate();
-			}
-			else {
-				Map<String, Object> dateMap = result.get(0);
-		    	String creationD  = dateMap.get("CREATION_DATE").toString();
-		    	if (creationD == null) {
-		    		return;
-		    	}
-		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	boolean check = false;
-		    	if (lastModifiedObj == null || lastModificationDate == null) {
-		    		check = isAfter(creationD,creationDate);
-		    	} else {
-		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
-		    	}
-				
-				if (check) {
-					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
-					//do nothing
-				}
-				else {
-					//execute update action
-					logger.debug("Data exist in table EMS_ANALYTICS_CATEGORY_PARAMS,execute update action.");
-					em.createNativeQuery(SQL_UPDATE_CATEGORY_PARAM).setParameter(1, paramValue).setParameter(2, creationDate)
-							.setParameter(3, lastModificationDate).setParameter(4, deleted).setParameter(5, categoryId)
-							.setParameter(6, name).setParameter(7, tenantId).executeUpdate();
-				}
-
-			}
-		}
-		catch (Exception e) {
-			logger.error("Error occured when sync Category param table data! {}",e.getLocalizedMessage());
-		}
-	}
-
-	public void syncCategoryTable(EntityManager em,BigInteger categoryId, String name, String description, String owner, String creationDate,
-			String nameNlsid, String nameSubSystem, String descriptionNlsid, String descriptionSubSystem, String emPluginId,
-			BigInteger defaultFolderId, BigInteger deleted, String providerName, String providerVersion, String providerDiscovery,
-			String providerAssetroot, Long tenantId, String dashboardIneligible, String lastModificationDate)
-	{
-		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE from EMS_ANALYTICS_CATEGORY t "
-				+ "where (t.CATEGORY_ID=? and t.TENANT_ID=?) OR (t.name = ? and t.deleted=? and t.owner=? and t.tenant_id = ?)";//check if the data is existing.
-		if (!em.getTransaction().isActive()) {
-			em.getTransaction().begin();
-		}
-		Query q1 = em.createNativeQuery(sql).setParameter(1, categoryId).setParameter(2, tenantId)
-				.setParameter(3, name).setParameter(4, deleted).setParameter(5, owner)
-				.setParameter(6, tenantId);
-		q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> result = q1.getResultList();
-		
-		boolean flag = true;//true=>insert,false=>update
-		if (result != null && result.size() > 0) {
-			flag = false;
-		}
-		try {
-			if (flag) {
-				//execute insert action
-				logger.debug("Data not exist in table EMS_ANALYTICS_CATEGORY,execute insert action.");
-				em.createNativeQuery(SQL_INSERT_CATEGORY).setParameter(1, categoryId).setParameter(2, name)
-						.setParameter(3, description).setParameter(4, owner).setParameter(5, creationDate)
-						.setParameter(6, nameNlsid).setParameter(7, nameSubSystem).setParameter(8, descriptionNlsid)
-						.setParameter(9, descriptionSubSystem).setParameter(10, emPluginId).setParameter(11, defaultFolderId)
-						.setParameter(12, deleted).setParameter(13, providerName).setParameter(14, providerVersion)
-						.setParameter(15, providerDiscovery).setParameter(16, providerAssetroot).setParameter(17, tenantId)
-						.setParameter(18, dashboardIneligible).setParameter(19, lastModificationDate).executeUpdate();
-			}
-			else {
-				Map<String, Object> dateMap = result.get(0);
-		    	String creationD  = dateMap.get("CREATION_DATE").toString();
-		    	if (creationD == null) {
-		    		return;
-		    	}
-		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	boolean check = false;
-		    	if (lastModifiedObj == null || lastModificationDate == null) {
-		    		check = isAfter(creationD,creationDate);
-		    	} else {
-		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
-		    	}
-				
-				if (check) {
-					logger.debug("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_CATEGORY.");
-					//do nothing
-				}
-				else {
-					//execute update action
-					logger.debug("Data's Last modification date is newer, execute update action in table EMS_ANALYTICS_CATEGORY.");
-					em.createNativeQuery(SQL_UPDATE_CATEGORY).setParameter(1, name).setParameter(2, description)
-							.setParameter(3, owner).setParameter(4, creationDate).setParameter(5, nameNlsid)
-							.setParameter(6, nameSubSystem).setParameter(7, descriptionNlsid)
-							.setParameter(8, descriptionSubSystem).setParameter(9, emPluginId).setParameter(10, defaultFolderId)
-							.setParameter(11, deleted).setParameter(12, providerName).setParameter(13, providerVersion)
-							.setParameter(14, providerDiscovery).setParameter(15, providerAssetroot)
-							.setParameter(16, dashboardIneligible).setParameter(17, lastModificationDate)
-							.setParameter(18, categoryId).setParameter(19, tenantId).executeUpdate();
-				}
-			}
-		}
-		catch (Exception e) {
-			logger.error("Error occured when sync Category table data! {}",e.getLocalizedMessage());
-		}
-	}
 
 	public void syncFolderTable(EntityManager em, BigInteger folderId, String name, BigInteger parentId, String description, String creationDate, String owner,
 			String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem, String descriptionNlsid,
 			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId)
 	{
+		//check db constraint
+		if (checkDbFolderConstraint(folderId, name, creationDate, systemFolder, uiHidden, deleted, tenantId)){
+			return;
+		}
+
 		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE from EMS_ANALYTICS_FOLDERS t "
 				+ "where (t.FOLDER_ID=? and t.TENANT_ID=?) or (t.name=? and t.parent_id=? and t.deleted=? and t.tenant_id =? and t.owner=?)";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
@@ -604,9 +462,45 @@ public class DataManager
 		}
 	}
 
+	private boolean checkDbFolderConstraint(BigInteger folderId, String name, String creationDate, Integer systemFolder, Integer uiHidden, BigInteger deleted, Long tenantId) {
+		if(folderId == null){
+			logger.warn("folder Id can not be null");
+			return true;
+		}
+		if(name == null){
+			logger.warn("name can not be null");
+			return true;
+		}
+		if(creationDate == null){
+			logger.warn("creationDate can not be null");
+			return true;
+		}
+		if(systemFolder == null){
+			logger.warn("systemFolder can not be null");
+			return true;
+		}
+		if(uiHidden == null){
+			logger.warn("uiHidden can not be null");
+			return true;
+		}
+		if(deleted == null){
+			logger.warn("deleted can not be null");
+			return true;
+		}
+		if(tenantId == null){
+			logger.warn("tenantId can not be null");
+			return true;
+		}
+		return false;
+	}
+
 	public void syncSearchParamsTable(EntityManager em, BigInteger searchId, String name, String paramAttributes, Long paramType,
 			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate, Integer deleted)
 	{
+		//check db constraint
+		if (checkDbSearchParamsConstraint(searchId, name, paramType, tenantId, deleted)){
+			return;
+		}
 		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE from EMS_ANALYTICS_SEARCH_PARAMS t "
 				+ "where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";//check if the data is existing.
 		if (!em.getTransaction().isActive()) {
@@ -665,6 +559,30 @@ public class DataManager
 		}
 	}
 
+	private boolean checkDbSearchParamsConstraint(BigInteger searchId, String name, Long paramType, Long tenantId, Integer deleted) {
+		if(searchId == null){
+			logger.warn("searchId can not be null");
+			return true;
+		}
+		if(name == null){
+			logger.warn("name can not be null");
+			return true;
+		}
+		if(paramType == null){
+			logger.warn("paramType can not be null");
+			return true;
+		}
+		if(tenantId == null){
+			logger.warn("tenantId can not be null");
+			return true;
+		}
+		if(deleted == null){
+			logger.warn("deleted can not be null");
+			return true;
+		}
+		return false;
+	}
+
 	public void syncSearchTable(EntityManager em,BigInteger searchId, String name, String owner, String creationDate,
 			String lastModificationDate, String lastModifiedBy, String description, BigInteger folderId, BigInteger categoryId,
 			Integer systemSearch,Integer isLocked, String metaDataClob, String searchDisplayStr, Integer uiHidden, BigInteger deleted,
@@ -673,6 +591,10 @@ public class DataManager
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot)
 	{
+		//check db constraint
+		if (checkDbSearchConstraint(searchId, name, owner, creationDate, folderId, categoryId, systemSearch, isLocked, uiHidden, deleted, isWidget, tenantId)){
+			return;
+		}
 		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as  LAST_MODIFICATION_DATE "
 				+ "from EMS_ANALYTICS_SEARCH t where (t.SEARCH_ID=? and t.TENANT_ID=?) or "
 				+ "(t.name = ? and t.folder_id = ? and t.category_id=? and t.deleted = ? "
@@ -755,7 +677,59 @@ public class DataManager
 		}
 	}
 
-	 private boolean isAfter(String thisDate, String comparedDate){
+	private boolean checkDbSearchConstraint(BigInteger searchId, String name, String owner, String creationDate, BigInteger folderId, BigInteger categoryId, Integer systemSearch, Integer isLocked, Integer uiHidden, BigInteger deleted, Integer isWidget, Long tenantId) {
+		if(searchId == null){
+			logger.warn("searchId can not be null!");
+			return true;
+		}
+		if(name == null){
+			logger.warn("name can not be null!");
+			return true;
+		}
+		if(owner == null){
+			logger.warn("owner can not be null!");
+			return true;
+		}
+		if(creationDate == null){
+			logger.warn("creationDate can not be null!");
+			return true;
+		}
+		if(folderId == null){
+			logger.warn("folderId can not be null!");
+			return true;
+		}
+		if(categoryId == null){
+			logger.warn("categoryId can not be null!");
+			return true;
+		}
+		if(systemSearch == null){
+			logger.warn("systemSearch can not be null!");
+			return true;
+		}
+		if(isLocked == null){
+			logger.warn("isLocked can not be null!");
+			return true;
+		}
+		if(uiHidden == null){
+			logger.warn("uiHidden can not be null!");
+			return true;
+		}
+		if(deleted == null){
+			logger.warn("deleted can not be null!");
+			return true;
+		}
+		if(isWidget == null){
+			logger.warn("isWidget can not be null!");
+			return true;
+		}
+		if(tenantId == null){
+			logger.warn("tenantId can not be null!");
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isAfter(String thisDate, String comparedDate){
          SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
          try{
                  return simpleDateFormat.parse(thisDate).after(simpleDateFormat.parse(comparedDate));

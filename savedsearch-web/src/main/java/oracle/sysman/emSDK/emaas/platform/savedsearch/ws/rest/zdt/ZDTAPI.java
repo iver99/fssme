@@ -262,7 +262,7 @@ public class ZDTAPI
 				}
 				int flag = saveToSyncTable(syncDate, type, "SUCCESSFUL",lastCompareDate);
 				if (flag < 0) {
-					return Response.status(500).entity("Fail to save sync status data").build();
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Fail to save sync status data").build();
 				}
 			} else {
 				return Response.ok("Nothing to sync as no compared data").build();
