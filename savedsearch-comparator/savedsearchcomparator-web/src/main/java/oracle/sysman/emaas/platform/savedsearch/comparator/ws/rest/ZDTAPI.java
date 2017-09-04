@@ -112,7 +112,6 @@ public class ZDTAPI
 	/**
 	 *  will invoke compare action, #1.fetch data, #2.compare data, #3.store the different data into zdt table
 	 * @param tenantIdParam
-	 * @param compareType
 	 * @param skipMinutes
 	 * @return
 	 */
@@ -120,17 +119,12 @@ public class ZDTAPI
 	@Path("compare")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response compareRows(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-             @QueryParam("type") @DefaultValue("incremental")  String compareType,
             @QueryParam("before") int skipMinutes) {
 		logger.info("incoming call from zdt comparator to do row comparing");
 		if (tenantIdParam == null){
 			tenantIdParam = "CloudServices";
 		}
 		String message = "";
-		int status = 200;
-		if (compareType == null) {
-			compareType = "incremental";
-		}
 		if (skipMinutes <= 0) {
 			skipMinutes = 30;    // to check: what is the accurate default skipping time for comparator?
 		}
@@ -162,7 +156,7 @@ public class ZDTAPI
 			logger.info("C2: isCompared={}, tenant list size = {}, last compared date = {}", isComparedForClient2, tenantArrayForClient2.length(),lastComparedDateC2);
 
 			if (tenantArrayForClient1.length() == 0 && tenantArrayForClient2.length() == 0) {
-				return Response.status(status).entity("{\"msg\":\"#1.No user created dashboards, No need to compare\"}").build();
+				return Response.status(Status.OK).entity("{\"msg\":\"#1.No user created dashboards, No need to compare\"}").build();
 			}
 			
 			Set<String> tenants = new HashSet<String>();
@@ -176,22 +170,25 @@ public class ZDTAPI
 			}
 			
 			boolean isCompared = true;
-			
+			String compareType = "incremental";
+			//check compare table, if compared before, it is a incremental, otherwise is a full compare.
 			if ((!isComparedForClient1) || (!isComparedForClient2)) {
 				isCompared = false;
+				compareType = "full";
 			}
+			logger.info("Is Compared? = {}, compare type = {}", isCompared, compareType);
 			InstancesComparedData<ZDTTableRowEntity> result = null;
 			int totalRowForClient1 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient1(), maxComparedDate);
 			int totalRowForClient2 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient2(), maxComparedDate);
 			int totalRow = totalRowForClient1 + totalRowForClient2;
 			if (totalRow == 0) {
-				return Response.status(status).entity("{\"msg\":\"#2.No user created dashboards, No need to compare\"}").build();
+				return Response.status(Status.OK).entity("{\"msg\":\"#2.No user created dashboards, No need to compare\"}").build();
 			} 
 			logger.info("totalRow={}",totalRow);
 			int totalDifferentRows = 0;
 			
 			// if it is the first time comparison
-			if (!isCompared || compareType == "full") {
+			if ("full".equals(compareType)) {
 				int count = 0;
 				JSONObject obj = null;
 				JSONObject subObj = new JSONObject();
@@ -342,7 +339,7 @@ public class ZDTAPI
  			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
  		}
 		
-		return Response.status(status).entity(message).build();
+		return Response.status(Status.OK).entity(message).build();
 	}
 
 	/**
