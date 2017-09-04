@@ -58,38 +58,6 @@ public class SavedsearchRowsComparator extends AbstractComparator
 				}
 			}
 	}
-	
-	/*public ZDTTableRowEntity combineRowEntity(List<ZDTTableRowEntity> rowEntityList){
-		ZDTTableRowEntity finalEntity = new ZDTTableRowEntity();
-		List<SavedSearchCategoryRowEntity> category = new ArrayList<SavedSearchCategoryRowEntity>();
-		List<SavedSearchCategoryParamRowEntity> categoryParams = new ArrayList<SavedSearchCategoryParamRowEntity>();
-		List<SavedSearchFolderRowEntity> folder = new ArrayList<SavedSearchFolderRowEntity>();
-		List<SavedSearchSearchParamRowEntity> searchParams = new ArrayList<SavedSearchSearchParamRowEntity>();
-		List<SavedSearchSearchRowEntity> search = new ArrayList<SavedSearchSearchRowEntity>();
-		for (ZDTTableRowEntity entity : rowEntityList) {
-			if (entity.getSavedSearchCategory() != null && !entity.getSavedSearchCategory().isEmpty()) {
-				category.addAll(entity.getSavedSearchCategory());
-			}
-			if (entity.getSavedSearchCategoryParams()!= null && !entity.getSavedSearchCategoryParams().isEmpty()) {
-				categoryParams.addAll(entity.getSavedSearchCategoryParams());
-			}
-			if (entity.getSavedSearchFoldersy() != null && !entity.getSavedSearchFoldersy().isEmpty()) {
-				folder.addAll(entity.getSavedSearchFoldersy());
-			}
-			if (entity.getSavedSearchSearch() != null && !entity.getSavedSearchSearch().isEmpty()) {
-				search.addAll(entity.getSavedSearchSearch());
-			}
-			if (entity.getSavedSearchSearchParams() != null && !entity.getSavedSearchSearchParams().isEmpty()) {
-				searchParams.addAll(entity.getSavedSearchSearchParams());
-			}
-		}
-		finalEntity.setSavedSearchCategory(category);
-		finalEntity.setSavedSearchCategoryParams(categoryParams);
-		finalEntity.setSavedSearchFoldersy(folder);
-		finalEntity.setSavedSearchSearch(search);
-		finalEntity.setSavedSearchSearchParams(searchParams);
-		return finalEntity;
-	}*/
 
 	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant, String comparisonType, 
 			String maxComparedDate, boolean iscompared, String tenant) throws ZDTException
@@ -149,27 +117,6 @@ public class SavedsearchRowsComparator extends AbstractComparator
  		return count;
  	}
 
-	/**
-	 * Compares the SSF category rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
-	 * object
-	 *
-	 * @param rows1
-	 * @param rows2
-	 * @param cd
-	 */
-	/*private void compareSSFCategoryRows(List<SavedSearchCategoryRowEntity> rows1, List<SavedSearchCategoryRowEntity> rows2,
-			InstancesComparedData<ZDTTableRowEntity> cd)
-	{
-		if (cd == null) {
-			return;
-		}
-		RowEntityComparator<SavedSearchCategoryRowEntity> rec = new RowEntityComparator<SavedSearchCategoryRowEntity>();
-		CompareListPair<SavedSearchCategoryRowEntity> result = rec.compare(rows1, rows2);
-		cd.getInstance1().getData().setSavedSearchCategory(result.getList1());
-		cd.getInstance2().getData().setSavedSearchCategory(result.getList2());
-	}*/
-
-	
 	/**
 	 * Compares the saved search rows data for the 2 instances, and put the compare result into <code>ComparedData</code> object
 	 *

@@ -137,6 +137,7 @@ public class ZDTAPI
 			SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
 			String tenants1 = dcc.retrieveTenants(tenantIdParam, null,dcc.getClient1());			
 			String tenants2 = dcc.retrieveTenants(tenantIdParam, null,dcc.getClient2());
+			//FIXME fix this return laster
 			if (tenants1 == null || tenants2 == null) {
 				return Response.status(400).entity(new ErrorEntity(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE)).build();
 			}
