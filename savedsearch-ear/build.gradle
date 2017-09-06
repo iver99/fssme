@@ -42,6 +42,7 @@ dependencies
 	earlib getProjectArtifact('log4j-api')
 	earlib getProjectArtifact('log4j-core')
 	earlib getProjectArtifact('log4j-web')
+	earlib getProjectArtifact('commons-lang3')
 	earlib getProjectArtifact('dashboards-sdk')
 }
 
