@@ -255,9 +255,9 @@ public class ZDTAPI
 							obj.put("totalRowNum", totalRow);
 							obj.put("divergencePercentage", percentage);
 							if(isCompared){
-								obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
+								obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences' API");// here we take cloud1's last compared date.
 							}else{
-								obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences'");// here we take cloud1's last compared date.
+								obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
 							}
 							if (totalDifferentRows > 100) {
 								obj.put("divergenceSummary", "The number for different rows is more than 1000; There is too much content to display;");
