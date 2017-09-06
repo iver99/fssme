@@ -279,8 +279,8 @@ public class WidgetAPI
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			if (!fileName.equals(se.getFileName())) {
-				LOGGER.error("The requested screenshot file name {}, widget id={} does not exist", fileName, widgetId,
-						se.getFileName());
+                LOGGER.error("The requested screenshot file name {}, widget id={} does not exist. Stored file name is {}",
+                        fileName, widgetId, se.getFileName());
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			LOGGER.debug("Retrieved screenshot data from persistence layer, stored to cache, and build response now.");
