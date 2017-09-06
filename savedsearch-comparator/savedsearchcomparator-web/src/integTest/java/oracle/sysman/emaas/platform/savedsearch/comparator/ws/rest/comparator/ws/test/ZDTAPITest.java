@@ -58,7 +58,7 @@ public class ZDTAPITest {
     			result = tableRow1; */
     		}
     	};
-        zdtapi.syncOnSSF("tenant",  "type");
+        zdtapi.syncOnSSF("tenant");
     }
 
    @Test
@@ -101,7 +101,7 @@ public class ZDTAPITest {
     	    	lookupEntry.put("omc2",client2);
     		}
     	};
-        zdtapi.syncOnSSF("tenant", "full");
+        zdtapi.syncOnSSF("tenant");
     }
     
    

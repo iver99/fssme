@@ -321,15 +321,14 @@ public class SavedsearchRowsComparator extends AbstractComparator
 	}
 
 	
-	public String syncForInstance(String tenantId, String userTenant, LookupClient client, String type, String syncDate) throws Exception {
+	public String syncForInstance(String tenantId, String userTenant, LookupClient client) throws Exception {
 		Link lk = getSingleInstanceUrl(client, "zdt/sync", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			return "Errors:Get a null or empty link for one single instance!";
 		}
-		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + URLEncoder.encode(syncDate, "UTF-8");
-		logger.info("sync url is {}", url);
-		String response = new TenantSubscriptionUtil.RestClient().get(url,  tenantId, userTenant);
+		logger.info("sync url is {}", lk.getHref());
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(),  tenantId, userTenant);
 		return response;
 	} 
 

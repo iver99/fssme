@@ -206,14 +206,13 @@ public class ZDTAPI
 	@GET
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
+	public Response sync()
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync?syncType={}&syncDate={}",type,syncDate);
+		Date currentUtcDate = getCurrentUTCTime();
+		String syncDate = getTimeString(currentUtcDate);
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync");
 		ZDTTableRowEntity data = null;
 		String lastCompareDate = null;
-		if (type == null) {
-			type = "full";
-		}
 		EntityManager em = null;
 		String lastComparisonDateForSync = null;
 		List<Map<String, Object>> comparedDataToSync = null;
@@ -260,11 +259,11 @@ public class ZDTAPI
 					}
 					
 					if (response != null && response.contains("Errors:")) {
-						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
+						saveToSyncTable(syncDate, "full", "FAILED",lastCompareDate);
 						return Response.status(Status.INTERNAL_SERVER_ERROR).entity(response).build();
 					}
 				}
-				int flag = saveToSyncTable(syncDate, type, "SUCCESSFUL",lastCompareDate);
+				int flag = saveToSyncTable(syncDate, "full", "SUCCESSFUL",lastCompareDate);
 				if (flag < 0) {
 					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Fail to save sync status data\"}").build();
 				}

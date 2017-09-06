@@ -346,30 +346,23 @@ public class ZDTAPI
 	/**
 	 * will sync sync action, #1.retrieve data from zdt table, #2. sync action. #3. store sync status into sync table
 	 * @param tenantIdParam
-	 * @param syncType
 	 * @return
 	 */
 	@GET
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response syncOnSSF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @QueryParam("type") @DefaultValue("full")  String syncType)
+	public Response syncOnSSF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
 	{
 		logger.info("There is an incoming call from ZDT comparator API to sync");
 		if (tenantIdParam == null){
 			tenantIdParam = "CloudServices";
 		}
 		SavedsearchRowsComparator dcc;
-		if (syncType == null) {
-			syncType = "full";
-		}
 		try {
 			dcc = new SavedsearchRowsComparator();		
-			Date currentUtcDate = TimeUtil.getCurrentUTCTime();
-			String syncDate = TimeUtil.getTimeString(currentUtcDate);
-			
-			String message1 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient1(),  syncType,  syncDate);
-			String message2 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient2(),  syncType,  syncDate);
+
+			String message1 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient1());
+			String message2 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient2());
 			if (message1.contains("Errors") || message2.contains("Errors")) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.FAIL_TO_SYNC_ERROR_CODE, ZDTErrorConstants.FAIL_TO_SYNC_ERROR_MESSAGE))).build();
 			}
