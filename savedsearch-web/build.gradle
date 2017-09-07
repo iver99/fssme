@@ -184,6 +184,7 @@ dependencies {
 	
 	providedCompile getProjectArtifact('emaas-platform-tenant-sdk')
 	providedCompile getProjectArtifact('enunciate-core')
+	testConfig getProjectArtifact('omctfSetupTestSDK')
 	
 	
 	restDoc(
@@ -206,6 +207,13 @@ dependencies {
 	testCompile getProjectArtifact('jersey-server')
 	testCompile getProjectArtifact('jmockit')
  }
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG
+        plusConfigurations += configurations.webdriver
+        plusConfigurations += configurations.testConfig
+    }
+}
 
 build.dependsOn integTestJar
 build.dependsOn jarMe

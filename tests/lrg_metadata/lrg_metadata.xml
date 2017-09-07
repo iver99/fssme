@@ -6,6 +6,12 @@
 	     <pipeline name="STAGE"/>
          </pipelines>
      </lrg>
+
+   <lrg name="emcpssf_shared_4n" launcher="tests/suites/emcpssf_shared_4n.gradle" description=" lrg for upgrade/test 3n">
+         <pipelines>
+            <pipeline name="PRODUCT"/>
+         </pipelines>
+     </lrg>
      <lrg name="emcpssf_l0_test" launcher="tests/suites/emcpssf_l0_test.gradle" description="lrg for QAUnitTest"></lrg>
 
      <lrg name="emcpssf_l1_test" launcher="tests/suites/emcpssf_l1_test.gradle" description="lrg for DEVTest">
