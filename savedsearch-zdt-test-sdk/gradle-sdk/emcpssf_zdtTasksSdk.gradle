@@ -71,7 +71,7 @@ task emcpssf_zdtPlay(type: EMTest) {
       options.suiteXmlBuilder().suite('name': 'testSdk-test') {
            test('name': 'testSdk-test') {
                classes([:]) {
-                 'class'('name': 'oracle.sysman.emaas.platform.savedsearch.testsdk.SavedsearchSyncCompareTest')
+                 'class'('name': 'oracle.sysman.emaas.platform.savedsearch.testsdk.SavedSearchSyncCompareTest')
                  
                }
            }
