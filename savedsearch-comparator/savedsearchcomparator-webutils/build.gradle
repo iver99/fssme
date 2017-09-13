@@ -10,7 +10,7 @@ jar {
 }
 
 test {
-        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
+        classpath = sourceSets.integTest.compileClasspath + sourceSets.integTest.output
         useTestNG()
         {
                 //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
@@ -42,7 +42,7 @@ artifactoryPublish {
 
  
 dependencies { 
-	 compile configurations.testNG
+
         compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
         compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
@@ -69,6 +69,7 @@ dependencies {
 
 sourceSets {
         test{
+		compileClasspath = configurations.testNG+configurations.restAssured+configurations.testConfig
                 java {
                         srcDirs = ['src/integTest/java']
                 }
