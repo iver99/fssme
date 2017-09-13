@@ -94,6 +94,7 @@ task ftpRestDoc << {
 
 
 test {
+	classpath = sourceSets.integTest.compileClasspath + sourceSets.integTest.output
 	useTestNG()		
 	{
 		//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
@@ -104,7 +105,7 @@ test {
 
 
 dependencies {
-	compile configurations.restAssured 
+
 	providedCompile (project(':savedsearch-comparator:savedsearchcomparator-webutils')) // { transitive = false }
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5') { transitive = false }
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17') { transitive = false }
@@ -161,6 +162,7 @@ build.dependsOn integTestJar
 build.dependsOn jarMe
 sourceSets {
         test{
+		compileClasspath = configurations.testNG+configurations.restAssured+configurations.testConfig
                 java {
                         srcDirs = ['src/integTest/java']
                 }
