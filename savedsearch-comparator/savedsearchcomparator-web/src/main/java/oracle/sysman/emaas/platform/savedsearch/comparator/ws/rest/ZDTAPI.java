@@ -319,11 +319,10 @@ public class ZDTAPI
 					obj.put("totalRowNum", totalRow);
 					obj.put("divergencePercentage", percentage);
 					if(isCompared){
-						obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
+						obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences' API");// here we take cloud1's last compared date.
 					}else{
-						obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences'");// here we take cloud1's last compared date.
+						obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
 					}
-
 					JSONObject subObj = new JSONObject();
 					subObj.put(result.getInstance1().getKey(), result2);
 					subObj.put(result.getInstance2().getKey(), result1);
