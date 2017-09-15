@@ -32,6 +32,7 @@ public class ZDTSynchronizer
 
 	public String sync(ZDTTableRowEntity data)
 	{
+		logger.info("begin to sync for table row entity");
 		if (data == null) {
 			logger.error("Failed to sync as input data is null");
 			return "Errors:Failed to sync as input data is null";
@@ -49,6 +50,7 @@ public class ZDTSynchronizer
 			syncFoldersTableRows(em, data.getSavedSearchFoldersy());
 			syncSearchTableRows(em, data.getSavedSearchSearch());
 			syncSearchParamsTableRows(em, data.getSavedSearchSearchParams());
+			//FIXME we should catch exception and roll back, although now it will roll back automaticly
 			em.getTransaction().commit();
 			return "sync is successful";
 		}catch (Exception e) {
@@ -62,6 +64,7 @@ public class ZDTSynchronizer
 	}
 	private void syncFoldersTableRows(EntityManager em, List<SavedSearchFolderRowEntity> rows)
 	{
+		logger.info("Prepare to sync folder table");
 		if (rows == null) {
 			logger.info("List<SavedSearchFolderRowEntity> is null,no sync action is needed");
 			return;
@@ -79,6 +82,7 @@ public class ZDTSynchronizer
 
 	private void syncSearchParamsTableRows(EntityManager em, List<SavedSearchSearchParamRowEntity> rows)
 	{
+		logger.info("Prepare to sync search param table");
 		if (rows == null) {
 			logger.info("List<SavedSearchSearchParamRowEntity> is null,no sync action is needed");
 			return;
@@ -95,6 +99,7 @@ public class ZDTSynchronizer
 
 	private void syncSearchTableRows(EntityManager em, List<SavedSearchSearchRowEntity> rows)
 	{
+		logger.info("Prepare to sync search table");
 		if (rows == null) {
 			logger.info("List<SavedSearchSearchRowEntity> is null,no sync action is needed");
 			return;

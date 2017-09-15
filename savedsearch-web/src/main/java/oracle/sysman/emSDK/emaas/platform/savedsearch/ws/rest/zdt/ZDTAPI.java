@@ -40,6 +40,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.countEntity.ZDTCountEntity;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchFolderRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTComparatorStatusRowEntity;
@@ -240,12 +241,13 @@ public class ZDTAPI
 					Object compareDate = dataMap.get("COMPARISON_DATE");
 					JsonUtil ju = JsonUtil.buildNormalMapper();
 					data = ju.fromJson(compareResult.toString(), ZDTTableRowEntity.class);
+					logger.info("Prepare to split table row for sync...");
 					//FIXME look into splitTableRowEntity
 					List<ZDTTableRowEntity> entities = splitTableRowEntity(data);
 					String response = null;
 					if (entities != null) {
+						logger.info("Start to sync for SSF");
 						for (ZDTTableRowEntity entity : entities) {
-							logger.info("Start to sync for SSF");
 							response = new ZDTSynchronizer().sync(entity);
 						}
 					}
@@ -259,12 +261,16 @@ public class ZDTAPI
 					}
 					
 					if (response != null && response.contains("Errors:")) {
+						logger.error("sync failed... save FAILED status into sync table...");
 						saveToSyncTable(syncDate, "full", "FAILED",lastCompareDate);
 						return Response.status(Status.INTERNAL_SERVER_ERROR).entity(response).build();
 					}
 				}
+				logger.info("sync successful... save SUCCESSFUL status into sync table...");
 				int flag = saveToSyncTable(syncDate, "full", "SUCCESSFUL",lastCompareDate);
 				if (flag < 0) {
+					logger.error("Sync is successful but save SUCCESSFUL status into sync table fail...");
+					//FIXME sync work success, but save to sync table fail
 					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Fail to save sync status data\"}").build();
 				}
 			} else {
@@ -473,10 +479,14 @@ public class ZDTAPI
 	public List<ZDTTableRowEntity> splitTableRowEntity(ZDTTableRowEntity originalEntity){
 		List<ZDTTableRowEntity> entities = new ArrayList<ZDTTableRowEntity>();
 		if (originalEntity != null) {
+			List<List<?>> splitFolders = null;
 			List<List<?>> splitSearch = null;
 			List<List<?>> splitParams = null;
 			// for each connection, we just sync 1000 rows
 			int length = 1000;
+			if (originalEntity.getSavedSearchFoldersy() != null) {
+				splitFolders = splitList(originalEntity.getSavedSearchFoldersy(), length);
+			}
 			if (originalEntity.getSavedSearchSearch() != null) {
 				splitSearch = splitList(originalEntity.getSavedSearchSearch(), length);
 			}
@@ -486,6 +496,13 @@ public class ZDTAPI
 			}
 
 			// sync search table first and then sync parameter table to avoid key constraints
+			if (splitFolders != null) {
+				for (List<?> folderList : splitFolders) {
+					ZDTTableRowEntity rowEntity = new ZDTTableRowEntity();
+					rowEntity.setSavedSearchFoldersy((List<SavedSearchFolderRowEntity>) folderList);
+					entities.add(rowEntity);
+				}
+			}
 			if (splitSearch != null) {
 				for (List<?> searchList : splitSearch) {
 					ZDTTableRowEntity rowEntity = new ZDTTableRowEntity();
