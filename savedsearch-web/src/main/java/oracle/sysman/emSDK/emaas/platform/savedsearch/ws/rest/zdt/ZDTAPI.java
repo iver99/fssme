@@ -128,7 +128,7 @@ public class ZDTAPI
 	public Response getAllTableData(@QueryParam("comparisonType") String type, @QueryParam("maxComparedDate") String maxComparedDate,
 			@QueryParam("tenant") String tenant)
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/tablerows?comparisonType=");
+		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/tablerows?comparisonType={}",type);
 		JSONObject obj = new JSONObject();
 		EntityManager em = null;
 		if (type == null) {
@@ -164,7 +164,7 @@ public class ZDTAPI
 
 	/**
 	 * return the table counts of each table in this cloud
-	 * @param maxComparedData
+	 * @param maxComparedData Current time - 30mins, This parameter is a MUST or will return 0 of all table
 	 * @return
 	 */
 	@GET

@@ -137,25 +137,6 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		cd.getInstance2().getData().setSavedSearchSearch(result.getList2());
 	}
 
-	/**
-	 * Compares the saved search category param rows data for the 2 instances, and put the compare result into <code>ComparedData</code> object
-	 *
-	 * @param rows1
-	 * @param rows2
-	 * @param cd
-	 */
-	/*private void compareSSFCategoryParamRows(List<SavedSearchCategoryParamRowEntity> rows1, List<SavedSearchCategoryParamRowEntity> rows2,
-			InstancesComparedData<ZDTTableRowEntity> cd)
-	{
-		if (cd == null) {
-			logger.warn("InstancesComparedData instance is null...");
-			return;
-		}
-		RowEntityComparator<SavedSearchCategoryParamRowEntity> rec = new RowEntityComparator<SavedSearchCategoryParamRowEntity>();
-		CompareListPair<SavedSearchCategoryParamRowEntity> result = rec.compare(rows1, rows2);
-		cd.getInstance1().getData().setSavedSearchCategoryParams(result.getList1());
-		cd.getInstance2().getData().setSavedSearchCategoryParams(result.getList2());
-	}*/
 
 	/**
 	 * Compares the saved search search param rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
@@ -232,6 +213,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		}
 		logger.info("Lookup link is {}", lk.getHref());
 		String url = lk.getHref() + "?maxComparedDate="+URLEncoder.encode(maxComparedTime, "UTF-8");
+		logger.info("[RestClient] request {}",url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
@@ -264,8 +246,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8")+"&tenant="+tenant;
 		} else {
 			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
-		}	
-		logger.info("get table data url is "+url);
+		}
+		logger.info("[RestClient] request {}",url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
 		//logger.info("Checking SSF OMC instance table rows. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
@@ -283,6 +265,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
+		logger.info("[RestClient] request {}",lk.getHref());
 		String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		return response;
 	}
@@ -293,6 +276,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
+		logger.info("[RestClient] request {}",lk.getHref());
 		String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		return response;
 	}
@@ -303,6 +287,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.warn("get a null or empty link for omc instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
+		logger.info("[RestClient] request {}",lk.getHref());
 		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
 		return response;
 	}
@@ -315,6 +300,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		}
 		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
 		String entityStr = jsonUtil.toJson(statusRowEntity);
+		logger.info("[RestClient] request {}",lk.getHref());
  		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
 		return response;
 		
@@ -327,7 +313,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return "Errors:Get a null or empty link for one single instance!";
 		}
-		logger.info("sync url is {}", lk.getHref());
+		logger.info("[RestClient] request {}",lk.getHref());
 		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(),  tenantId, userTenant);
 		return response;
 	} 
