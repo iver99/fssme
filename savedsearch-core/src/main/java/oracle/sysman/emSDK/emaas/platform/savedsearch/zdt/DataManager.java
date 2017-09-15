@@ -411,13 +411,14 @@ public class DataManager
 		try {
 			if (flag) {
 				//execute insert action
-				logger.debug("Data not exist in table EMS_ANALYTICS_FOLDERS,execute insert action.");
-				em.createNativeQuery(SQL_INSERT_FOLDER).setParameter(1, folderId).setParameter(2, name).setParameter(3, parentId)
+				logger.info("Data not exist in table EMS_ANALYTICS_FOLDERS,execute insert action.Folder id is {}", folderId);
+				int insertResult = em.createNativeQuery(SQL_INSERT_FOLDER).setParameter(1, folderId).setParameter(2, name).setParameter(3, parentId)
 						.setParameter(4, description).setParameter(5, creationDate).setParameter(6, owner)
 						.setParameter(7, lastModificationDate).setParameter(8, lastModifiedBy).setParameter(9, nameNlsid)
 						.setParameter(10, nameSubsystem).setParameter(11, descriptionNlsid)
 						.setParameter(12, descriptionSubsystem).setParameter(13, systemFolder).setParameter(14, emPluginId)
 						.setParameter(15, uiHidden).setParameter(16, deleted).setParameter(17, tenantId).executeUpdate();
+				logger.info("InsertResult is {}",insertResult);
 			}else {
 				Map<String, Object> dateMap = result.get(0);
 		    	String creationD  = dateMap.get("CREATION_DATE").toString();
@@ -429,29 +430,30 @@ public class DataManager
 		    	if (lastModifiedObj == null || lastModificationDate == null) {
 		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);
 		    	}
-				
+
 				if (check) {
 					logger.info("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_FOLDERS.");
 					//do nothing
 				}
 				else {
 					//execute update action
-					logger.debug("Data exist in table EMS_ANALYTICS_FOLDERS,execute update action.");
-					em.createNativeQuery(SQL_UPDATE_FOLDER).setParameter(1, name).setParameter(2, parentId)
+					logger.info("Data exist in table EMS_ANALYTICS_FOLDERS,execute update action. Folder id is {}",folderId);
+					int updateResult = em.createNativeQuery(SQL_UPDATE_FOLDER).setParameter(1, name).setParameter(2, parentId)
 							.setParameter(3, description).setParameter(4, creationDate).setParameter(5, owner)
 							.setParameter(6, lastModificationDate).setParameter(7, lastModifiedBy).setParameter(8, nameNlsid)
 							.setParameter(9, nameSubsystem).setParameter(10, descriptionNlsid)
 							.setParameter(11, descriptionSubsystem).setParameter(12, systemFolder).setParameter(13, emPluginId)
 							.setParameter(14, uiHidden).setParameter(15, deleted).setParameter(16, folderId)
 							.setParameter(17, tenantId).executeUpdate();
+					logger.info("UpdateResult is {}",updateResult);
 				}
 
 			}
-		}
-		catch (Exception e) {
-			logger.error("Error occured when sync folders table data! {}",e.getLocalizedMessage());
+		}catch (Exception e) {
+			logger.error("Error occured when sync folders table data! {}",e);
+			//FIXME should rethrow a exception
 		}
 	}
 
@@ -511,11 +513,12 @@ public class DataManager
 		try {
 			if (flag) {
 				//execute insert action
-				logger.info("Data not exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute insert action.");
-				em.createNativeQuery(SQL_INSERT_SEARCH_PARAM).setParameter(1, searchId).setParameter(2, name)
+				logger.info("Data not exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute insert action. search id is {}",searchId);
+				int insertResult = em.createNativeQuery(SQL_INSERT_SEARCH_PARAM).setParameter(1, searchId).setParameter(2, name)
 						.setParameter(3, paramAttributes).setParameter(4, paramType).setParameter(5, paramValueStr)
 						.setParameter(6, paramValueClob).setParameter(7, tenantId).setParameter(8, creationDate)
 						.setParameter(9, lastModificationDate).setParameter(10, deleted).executeUpdate();
+				logger.info("InsertResult is {}",insertResult);
 			}
 			else {
 				Map<String, Object> dateMap = result.get(0);
@@ -537,11 +540,12 @@ public class DataManager
 				}
 				else {
 					//execute update action
-					logger.info("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.");
-				    em.createNativeQuery(SQL_UPDATE_SEARCH_PARAM).setParameter(1, paramAttributes).setParameter(2, paramType)
+					logger.info("Data exist in table EMS_ANALYTICS_SEARCH_PARAMS,execute update action.Search id is {}", searchId);
+				    int updateResult = em.createNativeQuery(SQL_UPDATE_SEARCH_PARAM).setParameter(1, paramAttributes).setParameter(2, paramType)
 							.setParameter(3, paramValueStr).setParameter(4, paramValueClob).setParameter(5, creationDate)
 							.setParameter(6, lastModificationDate).setParameter(7, deleted).setParameter(8, searchId).setParameter(9, name)
 							.setParameter(10, tenantId).executeUpdate();
+					logger.info("UpdateResult is {}",updateResult);
 				}
 
 			}
@@ -549,6 +553,7 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occurred when sync search param table data! {}", e);
+			//FIXME should rethrow a exception
 		}
 	}
 
@@ -613,8 +618,8 @@ public class DataManager
 		try {
 			if (flag) {
 				//execute insert action
-				logger.debug("Data not exist in table EMS_ANALYTICS_SEARCH,execute insert action.");
-				em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, null).setParameter(3, name)
+				logger.info("Data not exist in table EMS_ANALYTICS_SEARCH,execute insert action. Search id is {}", searchId);
+				int insertResult = em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, null).setParameter(3, name)
 				.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
 				.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
 				.setParameter(10, categoryId).setParameter(11, systemSearch).setParameter(12, isLocked).setParameter(13, metaDataClob)
@@ -626,6 +631,7 @@ public class DataManager
 				.setParameter(28, widgetDefaultWidth).setParameter(29, widgetDefaultHeight)
 				.setParameter(30, providerName).setParameter(31, providerVersion).setParameter(32, providerAssetRoot)
 				.setParameter(33, dashboardIneligible).executeUpdate();
+				logger.info("InsertResult is {}",insertResult);
 			}
 			else {
 				Map<String, Object> dateMap = result.get(0);
@@ -647,8 +653,8 @@ public class DataManager
 				}
 				else {
 					//execute update action
-					logger.debug("Data exist in table EMS_ANALYTICS_SEARCH,execute update action.");
-					em.createNativeQuery(SQL_UPDATE_SEARCH).setParameter(1, name).setParameter(2, owner)
+					logger.info("Data exist in table EMS_ANALYTICS_SEARCH,execute update action. Search id is {}", searchId);
+					int updateResult = em.createNativeQuery(SQL_UPDATE_SEARCH).setParameter(1, name).setParameter(2, owner)
 							.setParameter(3, creationDate).setParameter(4, lastModificationDate).setParameter(5, lastModifiedBy)
 							.setParameter(6, description).setParameter(7, folderId).setParameter(8, categoryId)
 							.setParameter(9, systemSearch).setParameter(10, isLocked).setParameter(11, metaDataClob).setParameter(12, searchDisplayStr)
@@ -660,6 +666,7 @@ public class DataManager
 							.setParameter(25, widgetDefaultWidth).setParameter(26, widgetDefaultHeight)
 							.setParameter(27, providerName).setParameter(28, providerVersion).setParameter(29, providerAssetRoot)
 							.setParameter(30, dashboardIneligible).setParameter(31, searchId).setParameter(32, tenantId).executeUpdate();
+					logger.info("UpdateResult is {}",updateResult);
 				}
 
 			}
@@ -667,6 +674,7 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync search table data! "+e.getLocalizedMessage());
+			//FIXME should rethrow a exception
 		}
 	}
 
@@ -727,7 +735,7 @@ public class DataManager
          try{
                  return simpleDateFormat.parse(thisDate).after(simpleDateFormat.parse(comparedDate));
          }catch (Exception e){
-                 logger.debug(e.getLocalizedMessage());
+                 logger.error(e);
                  return false;
          }
  }
