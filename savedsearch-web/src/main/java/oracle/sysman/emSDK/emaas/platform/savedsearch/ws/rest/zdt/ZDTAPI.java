@@ -335,7 +335,7 @@ public class ZDTAPI
 				if (flag < 0) {
 					logger.error("#1.Sync is successful but save SUCCESSFUL status into sync table fail...");
 					//FIXME sync work success, but save to sync table fail
-					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Fail to save sync status data\"}").build();
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors Fail to save sync status data\"}").build();
 				}
 			} else {
 				return Response.ok("{\"msg\": \"Nothing to sync as no compared data\"}").build();

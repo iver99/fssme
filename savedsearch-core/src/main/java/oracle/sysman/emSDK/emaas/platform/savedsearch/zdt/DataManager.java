@@ -256,7 +256,7 @@ public class DataManager
 
 	public Map<String, Object> checkHalfSyncRecord(EntityManager em) throws  HalfSyncException{
 		List<Object> result = getSingleTableData(em,SQL_GET_HALF_SYNC_RECORD, null);
-		if(result == null){
+		if(result == null || result.size() == 0){
 			logger.info("No half sync record found in sync table!");
 			return null;
 		}
