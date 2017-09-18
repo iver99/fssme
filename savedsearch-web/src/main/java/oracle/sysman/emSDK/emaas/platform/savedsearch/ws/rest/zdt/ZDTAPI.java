@@ -282,6 +282,7 @@ public class ZDTAPI
 				int flag = DataManager.getInstance().updateHalfSyncStatus(Integer.toString(halfSyncCursor),null);
 				if(flag < 0){
 					logger.error("updateHalfSyncStatus into sync table fail... ");
+                    return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors Fail to save sync status data\"}").build();
 				}
 			}
 			logger.error(e);
@@ -297,6 +298,7 @@ public class ZDTAPI
 			logger.info("comparedDataToSync size ={}", comparedDataToSync.size());
 
 		}catch (Exception e) {
+			//FIXME no exception in this try indeed.
 			logger.error(e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#2.Error occurred when fetch the data to be synced from compare table\"}").build();
 		} finally {
