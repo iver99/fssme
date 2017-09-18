@@ -116,7 +116,7 @@ public class DatabaseUtil
 		Connection conn = DatabaseUtil.ConnectCloud1();//this c is null
 
 		PreparedStatement pstmt = null;
-		String sql = "insert into  EMS_ANALYTICS_SEARCH  (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,DESCRIPTION,SYSTEM_SEARCH,DELETED,TENANT_ID,FOLDER_ID,CATEGORY_ID) values ('?',CONCAT('Test savedsearch',?),'emcsadmin',TO_TIMESTAMP('2017-03-17 06:37:32.702000000', 'YYYY-MM-DD HH24:MI:SS.FF'), TO_TIMESTAMP('2017-03-17 06:37:32.702000000', 'YYYY-MM-DD HH24:MI:SS.FF'),'Oracle','0','0','?',1,1)";
+		String sql = "insert into  EMS_ANALYTICS_SEARCH  (SEARCH_ID,NAME,OWNER,CREATION_DATE,LAST_MODIFICATION_DATE,DESCRIPTION,SYSTEM_SEARCH,DELETED,TENANT_ID,FOLDER_ID,CATEGORY_ID) values (?,CONCAT('Test savedsearch',?),'emcsadmin',TO_TIMESTAMP('2017-03-17 06:37:32.702000000', 'YYYY-MM-DD HH24:MI:SS.FF'), TO_TIMESTAMP('2017-03-17 06:37:32.702000000', 'YYYY-MM-DD HH24:MI:SS.FF'),'Oracle','0','0',?,1,1)";
 
 		System.out.println(sql);
 		try {
