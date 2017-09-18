@@ -22,9 +22,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -48,9 +48,11 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDT
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTTableRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.DataManager;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.HalfSyncException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.NoComparedResultException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.SyncException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -214,18 +216,87 @@ public class ZDTAPI
 		LogUtil.getInteractionLogger().info("Service calling to (GET) /v1/zdt/sync");
 		ZDTTableRowEntity data = null;
 		String lastCompareDate = null;
-		EntityManager em = null;
+		EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		String lastComparisonDateForSync = null;
 		List<Map<String, Object>> comparedDataToSync = null;
-		try {			
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		int position = 0;
+		int halfSyncCursor = 0;
+		String halfSyncLastCompareDate = null;
+		//We need to handle half-sync case first, means last sync work is half finished(commited into db successfully) and half not.
+		//if we finish handling half-sync case successful, we only update the type and sync_result in sync table, no need to create a new record in sync table
+		try {
+			Map<String, Object> halfSyncRecord = DataManager.getInstance().checkHalfSyncRecord(em);
+			//handle half sync of last sync work
+			if(halfSyncRecord !=null){
+				//last time sync work failed position
+				position  = (int)halfSyncRecord.get("SYNC_RESULT");
+				halfSyncLastCompareDate  = (String)halfSyncRecord.get("LAST_COMPARISON_DATE");
+				logger.info("Last time sync work failed at position {} and last comparision date is {}", position, halfSyncLastCompareDate);
+				//get half-synced compared data
+				Map<String, Object> halfSyncComparedDataToSync = DataManager.getInstance().getHalfSyncedComparedData(em, halfSyncLastCompareDate);
+				Object compareResult = halfSyncComparedDataToSync.get("COMPARISON_RESULT");
+//				Object compareDate = halfSyncComparedDataToSync.get("COMPARISON_DATE");
+				JsonUtil ju = JsonUtil.buildNormalMapper();
+				data = ju.fromJson(compareResult.toString(), ZDTTableRowEntity.class);
+				logger.info("#1.Prepare to split table row for sync...");
+				List<ZDTTableRowEntity> entities = splitTableRowEntity(data);
+				if (entities != null) {
+					logger.info("#1. Start to sync for SSF");
+					for(halfSyncCursor =0 ;halfSyncCursor<entities.size() ; halfSyncCursor++){
+						//find the position that last sync failed at
+						if(halfSyncCursor < position){
+							continue;
+						}
+						new ZDTSynchronizer().sync(entities.get(halfSyncCursor));
+					}
+				}
+				logger.info("Handle half-sync case successful, update sync status in sync table");
+				//finish handling half-sync case, update sync result to successful and type into full
+				int flag = DataManager.getInstance().updateHalfSyncStatus("SUCCESSFUL","full");
+				if(flag < 0){
+					logger.error("updateHalfSyncStatus into sync table fail... ");
+				}
+			}
+		}catch(IOException e){
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors IOException occurred when sync\"}").build();
+		}catch (NoComparedResultException e){
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors occurred when sync, NoComparedResultException threw out, no last compared data was found!\"}").build();
+		}catch (HalfSyncException e) {
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors occurred when sync, HalfSyncException threw out!\"}").build();
+		}catch(SyncException e){
+			/**
+			 *  If handling half-sync case failed at the beginning(no commit generated), then don't need to update the sync table.
+			 *  If there were commits after the position, need to update the sync table with the new the failed sync position.
+			 */
+			if(halfSyncCursor == position){
+				//sync failed again, but nothing is needed to do.
+				logger.error("Handling half-sync fails, but nothing is needed since there was no commit.");
+				return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors SyncException occurred when sync\"}").build();
+			}
+			//sync failed again, and need to update the failed position.
+			if(halfSyncCursor > position){
+				logger.error("Handling half-sync fails at position {} will save this position in to sync table.", halfSyncCursor);
+				int flag = DataManager.getInstance().updateHalfSyncStatus(Integer.toString(halfSyncCursor),null);
+				if(flag < 0){
+					logger.error("updateHalfSyncStatus into sync table fail... ");
+				}
+			}
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors SyncException occurred when sync\"}").build();
+		}
+		//handle half sync case end...
+
+		try {
 			lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
-			logger.info("LastComparisonDateForSync is {}", lastComparisonDateForSync);
+			logger.info("#2.LastComparisonDateForSync is {}", lastComparisonDateForSync);
 			//this object contains the divergence data that will be synced, can be more than 1 records. pls NOTE how to retrieve divergence data from compare table
-			comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
+			comparedDataToSync = DataManager.getInstance().getComparedDataForSync(em, lastComparisonDateForSync);
 			logger.info("comparedDataToSync size ={}", comparedDataToSync.size());
 
-		} catch (Exception e) {
+		}catch (Exception e) {
 			logger.error(e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#2.Error occurred when fetch the data to be synced from compare table\"}").build();
 		} finally {
@@ -233,43 +304,36 @@ public class ZDTAPI
 				em.close();
 			}
 		}
+		//in case sync fail, we need to know what position sync work failed at, in order next time we re-sync.
+		int cursor = 0;
+		Object compareResult = null;
+		Object compareDate = null;
+		List<ZDTTableRowEntity> entities = null;
 		try {
 			//I think this comparedDataToSync can never be null, even there is no divergence, it will not be null
 			if (comparedDataToSync != null && !comparedDataToSync.isEmpty()) {
 				for (Map<String, Object> dataMap : comparedDataToSync) {
-					Object compareResult = dataMap.get("COMPARISON_RESULT");
-					Object compareDate = dataMap.get("COMPARISON_DATE");
+					compareResult = dataMap.get("COMPARISON_RESULT");
+					compareDate = dataMap.get("COMPARISON_DATE");
 					JsonUtil ju = JsonUtil.buildNormalMapper();
 					data = ju.fromJson(compareResult.toString(), ZDTTableRowEntity.class);
 					logger.info("Prepare to split table row for sync...");
 					//FIXME look into splitTableRowEntity
-					List<ZDTTableRowEntity> entities = splitTableRowEntity(data);
-					String response = null;
+					entities = splitTableRowEntity(data);
 					if (entities != null) {
-						logger.info("Start to sync for SSF");
-						for (ZDTTableRowEntity entity : entities) {
-							response = new ZDTSynchronizer().sync(entity);
+						logger.info("#2.Start to sync for SSF");
+						for( cursor =0 ;cursor<entities.size() ; cursor++){
+							new ZDTSynchronizer().sync(entities.get(cursor));
 						}
 					}
 					//sync work is done, record the sync status into sync table now...
-					if (lastCompareDate != null) {
-						if (lastCompareDate.compareTo( (String) compareDate) < 0) {
-							lastCompareDate = (String) compareDate;
-						}
-					} else {
-						lastCompareDate = (String) compareDate;
-					}
-					
-					if (response != null && response.contains("Errors:")) {
-						logger.error("sync failed... save FAILED status into sync table...");
-						saveToSyncTable(syncDate, "full", "FAILED",lastCompareDate);
-						return Response.status(Status.INTERNAL_SERVER_ERROR).entity(response).build();
-					}
+					//FIXME below may have some problem
+					lastCompareDate = getComparedDateforSync(lastCompareDate, (String) compareDate);
 				}
 				logger.info("sync successful... save SUCCESSFUL status into sync table...");
 				int flag = saveToSyncTable(syncDate, "full", "SUCCESSFUL",lastCompareDate);
 				if (flag < 0) {
-					logger.error("Sync is successful but save SUCCESSFUL status into sync table fail...");
+					logger.error("#1.Sync is successful but save SUCCESSFUL status into sync table fail...");
 					//FIXME sync work success, but save to sync table fail
 					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Fail to save sync status data\"}").build();
 				}
@@ -278,13 +342,54 @@ public class ZDTAPI
 			}
 						
 			return Response.ok("{\"msg\": \"Sync is successful!\"}").build();
-		}
-		catch (Exception e) {
+		}catch (IOException e){//ZDTAPI sync api will check 'Errors' in response
 			logger.error(e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Error occurred when sync\"}").build();
-		} 
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors IOException occurred when sync\"}").build();
+		}catch (SyncException e){
+			/**
+			 * There is 2 kinds of case SyncException threw out:
+			 *
+			 * #1. If entities size is more than 2(means divergence data is more than 1000), and cursor is more than 1, means sync work is failed into a half-sync situation,
+			 * in this case, will store SYNC_TYPE=half and cursor=xx value into sync table.
+			 *
+			 * #2. Divergence data is less than 1000, or sync work failed WITHIN the first commit. Will create a new sync status 'SYNC_RESULT=FAILED' into sync table
+			 */
+			lastCompareDate = getComparedDateforSync(lastCompareDate, (String) compareDate);
+			if(entities.size() >1 && cursor>0){
+				logger.error("Sync work failed at position {} will save this position in to sync table with type = half.", cursor);
+				int flag = saveToSyncTable(syncDate, "half", Integer.toString(cursor),lastCompareDate);
+				if (flag < 0) {
+					//FIXME this case is not handled yet
+					logger.error("#2.Save half sync status into sync table fail...");
+				}
+			}else{
+				logger.error("sync failed... save FAILED status into sync table...");
+				int flag = saveToSyncTable(syncDate, "full", "FAILED",lastCompareDate);
+				if (flag < 0) {
+					//FIXME this case is not handled yet
+					logger.error("#3.Save half sync status into sync table fail...");
+				}
+			}
+
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors SyncException occurred when sync\"}").build();
+		}catch (Exception e){
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors occurred when sync\"}").build();
+		}
 	}
-	
+
+	private String getComparedDateforSync(String lastCompareDate, String compareDate) {
+		if (lastCompareDate != null) {
+            if (lastCompareDate.compareTo(compareDate) < 0) {
+                lastCompareDate = compareDate;
+            }
+        } else {
+            lastCompareDate = compareDate;
+        }
+		return lastCompareDate;
+	}
+
 	/**
 	 * sync status of last time, empty for the first time.
 	 * @return
@@ -544,6 +649,6 @@ public class ZDTAPI
 		String nextScheduleDateStr = getTimeString(nextScheduleDate);
 		double divergencePercentage = 0.0;
 		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
-
 	}
+
 }

@@ -16,8 +16,6 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
-import static org.testng.Assert.*;
-
 /**
  * Created by pingwu 
  */
@@ -116,7 +114,7 @@ public class ZDTAPITest {
     		{
     			DataManager.getInstance();
                 result = dataManager;
-                dataManager.getComparedDataToSync(em, anyString);
+                dataManager.getComparedDataForSync(em, anyString);
                 result = comparedDataToSync;
     		}
     	};

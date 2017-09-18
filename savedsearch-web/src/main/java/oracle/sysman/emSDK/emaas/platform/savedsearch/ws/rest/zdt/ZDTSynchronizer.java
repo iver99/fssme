@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchFolderRowEntity;
@@ -23,6 +24,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.Sav
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTTableRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.DataManager;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.SyncException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,12 +32,12 @@ public class ZDTSynchronizer
 {
 	private static final Logger logger = LogManager.getLogger(ZDTSynchronizer.class);
 
-	public String sync(ZDTTableRowEntity data)
+	public String sync(ZDTTableRowEntity data) throws  SyncException
 	{
 		logger.info("begin to sync for table row entity");
 		if (data == null) {
 			logger.error("Failed to sync as input data is null");
-			return "Errors:Failed to sync as input data is null";
+			throw new SyncException("Errors occurred while sync for tables, input data is null...");
 		}
 		EntityManager em = null;
 		try{
@@ -54,15 +56,17 @@ public class ZDTSynchronizer
 			em.getTransaction().commit();
 			return "sync is successful";
 		}catch (Exception e) {
-			logger.error("Errors occurred while sync for tables -" + e);
-			return "Errors:Failed to finish sync work";
+			logger.error("Errors occurred while sync for tables...");
+			logger.error(e);
+			logger.error(e.getCause());
+			throw new SyncException("Errors occurred while sync for tables...");
 		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
 	}
-	private void syncFoldersTableRows(EntityManager em, List<SavedSearchFolderRowEntity> rows)
+	private void syncFoldersTableRows(EntityManager em, List<SavedSearchFolderRowEntity> rows) throws SyncException
 	{
 		logger.info("Prepare to sync folder table");
 		if (rows == null) {

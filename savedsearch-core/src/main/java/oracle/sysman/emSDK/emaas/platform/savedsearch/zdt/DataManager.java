@@ -27,6 +27,9 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceM
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.HalfSyncException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.NoComparedResultException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.SyncException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.config.QueryHints;
@@ -55,7 +58,7 @@ public class DataManager
 			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
 			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE FROM EMS_ANALYTICS_SEARCH where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and system_search <> 1";
-	
+
 	private static final String SQL_ALL_SEARCH_ROWS_BY_TENANT = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,TO_CHAR(FOLDER_ID) AS FOLDER_ID, TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,"
 			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
@@ -64,7 +67,7 @@ public class DataManager
 			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
 			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE FROM EMS_ANALYTICS_SEARCH where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and system_search <> 1 and tenant_id = ?";
-	
+
     private static final String SQL_ALL_FOLDER_ROWS_BY_DATE = "SELECT TO_CHAR(FOLDER_ID) AS FOLDER_ID,NAME, TO_CHAR(PARENT_ID) AS PARENT_ID, DESCRIPTION,CREATION_DATE,OWNER,"
         + "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
         + "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID FROM EMS_ANALYTICS_FOLDERS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
@@ -80,11 +83,11 @@ public class DataManager
 	private static final String SQL_ALL_SEARCH_PARAMS_ROWS = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
 			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and search_Id in (select search_Id  from ems_analytics_search  where system_search <> 1)";
-	
+
 	private static final String SQL_ALL_SEARCH_PARAMS_ROWS_BY_TENANT = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
 			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and search_Id in (select search_Id  from ems_analytics_search  where system_search <> 1) and tenant_id = ?";
-	
+
 	private static final String SQL_ALL_SEARCH_ROWS_BY_DATE = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,OWNER,CREATION_DATE,"
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,DESCRIPTION,TO_CHAR(FOLDER_ID) AS FOLDER_ID, TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,"
 			+ "SYSTEM_SEARCH,IS_LOCKED,METADATA_CLOB,SEARCH_DISPLAY_STR,UI_HIDDEN,"
@@ -93,10 +96,10 @@ public class DataManager
 			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
 			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE FROM EMS_ANALYTICS_SEARCH WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and system_search <> 1";
-/*	
+/*
 	private static final String SQL_ALL_CATEGORY_PARAMS_ROWS_BY_DATE = "SELECT TO_CHAR(CATEGORY_ID) AS CATEGORY_ID,NAME,PARAM_VALUE,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE, DELETED FROM EMS_ANALYTICS_CATEGORY_PARAMS "
 			+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
-*/	
+*/
 	private static final String SQL_ALL_SEARCH_PARAMS_ROWS_BY_DATE = "SELECT TO_CHAR(SEARCH_ID) AS SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
 			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED FROM EMS_ANALYTICS_SEARCH_PARAMS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 			+ " and search_Id in (select search_id  from ems_analytics_search  where system_search <> 1)";
@@ -105,7 +108,7 @@ public class DataManager
 			+ "LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,NAME_NLSID,NAME_SUBSYSTEM,DESCRIPTION_NLSID,"
 			+ "DESCRIPTION_SUBSYSTEM,SYSTEM_FOLDER,EM_PLUGIN_ID,UI_HIDDEN,DELETED,TENANT_ID) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,?,?," + "?,?,?,?,?," + "?,?)";
-	
+
 	private static final String SQL_UPDATE_FOLDER = "UPDATE EMS_ANALYTICS_FOLDERS t SET t.NAME=?,t.PARENT_ID=?,t.DESCRIPTION=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "t.OWNER=?,t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),t.LAST_MODIFIED_BY=?,t.NAME_NLSID=?,"
 			+ "t.NAME_SUBSYSTEM=?,t.DESCRIPTION_NLSID=?,t.DESCRIPTION_SUBSYSTEM=?,t.SYSTEM_FOLDER=?,t.EM_PLUGIN_ID=?,"
@@ -123,7 +126,7 @@ public class DataManager
 			+ "?,?,?,?,?,"
 			+ "?,?,?,?,?,"
 			+ "?,?,?,?,?," + "?,?,?)";
-	
+
 	private static final String SQL_UPDATE_SEARCH = "UPDATE EMS_ANALYTICS_SEARCH t set t.NAME=?,t.OWNER=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "t.LAST_MODIFIED_BY=?,t.DESCRIPTION=?,t.FOLDER_ID=?,t.CATEGORY_ID=?,"
@@ -135,29 +138,33 @@ public class DataManager
 
 	private static final String SQL_INSERT_SEARCH_PARAM = "INSERT INTO EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
 			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED) VALUES(?,?,?,?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?)";
-	
+
 	private static final String SQL_UPDATE_SEARCH_PARAM = "UPDATE EMS_ANALYTICS_SEARCH_PARAMS t set t.PARAM_ATTRIBUTES=?,t.PARAM_TYPE=?,t.PARAM_VALUE_STR=?,"
 			+ "t.PARAM_VALUE_CLOB=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), t.deleted=? where t.SEARCH_ID=? and t.NAME=? and t.TENANT_ID=?";
 
 	private static final String SQL_INSERT_TO_ZDT_COMPARISON_TABLE = "insert into ems_analytics_zdt_comparator (comparison_date,next_schedule_comparison_date, comparison_type, comparison_result, divergence_percentage) "
 			+ "values (to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, ?, ?)";
-	
+
 	private static final String SQL_GET_COMPARISON_STATUS = "select * from (SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, to_char(NEXT_SCHEDULE_COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_COMPARISON_DATE,COMPARISON_TYPE, divergence_percentage "
 			+ "from ems_analytics_zdt_comparator order by comparison_date desc) where rownum = 1";
-	
+
 	private static final String SQL_INSERT_TO_ZDT_SYNC_TABLE = "insert into ems_analytics_zdt_sync (sync_date,next_schedule_sync_date, sync_type, sync_result, divergence_percentage, LAST_COMPARISON_DATE) "
 			+ "values (to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, ?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
 
 	private static final String SQL_GET_LAST_COMPARISON_DATE_FOR_SYNC = "SELECT * FROM (SELECT to_char(LAST_COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_COMPARISON_DATE FROM EMS_ANALYTICS_ZDT_SYNC WHERE SYNC_RESULT = 'SUCCESSFUL' ORDER BY SYNC_DATE DESC) WHERE ROWNUM = 1";
-	
+
+	private static final String SQL_GET_HALF_SYNC_RECORD = "SELECT * FROM EMS_ANALYTICS_ZDT_SYNC WHERE SYNC_TYPE = 'half'";
+
 	private static final String SQL_GET_LATEST_COMPARISON_DATE = "SELECT * FROM (SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE FROM EMS_ANALYTICS_ZDT_COMPARATOR WHERE COMPARISON_RESULT IS NOT NULL AND COMPARISON_DATE IS NOT NULL ORDER BY COMPARISON_DATE DESC) WHERE ROWNUM = 1";
-	
+
 	private static final String SQL_GET_SYNC_STATUS = "select * from (SELECT to_char(SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as SYNC_DATE, to_char(NEXT_SCHEDULE_SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_SYNC_DATE,SYNC_TYPE, divergence_percentage from ems_analytics_zdt_sync order by sync_date desc) where rownum = 1";
-	
+
 	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from EMS_ANALYTICS_ZDT_COMPARATOR where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and comparison_result is not null";
-	
+
 	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from EMS_ANALYTICS_ZDT_COMPARATOR where comparison_result is not null";
-	
+
+	private static final String SQL_GET_HALF_SYNC_COMPARED_DATA_TO_SYNC = "SELECT comparison_result from EMS_ANALYTICS_ZDT_COMPARATOR where comparison_date = to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+
 	private static final String SQL_GET_ALL_TENANTS = "select distinct tenant_id from ems_analytics_search where system_search <>1";
 	/**
 	 * Return the singleton for data manager
@@ -169,7 +176,7 @@ public class DataManager
 		return instance;
 
 	}
-	
+
 	public int saveToComparatorTable(EntityManager em, String comparisonDate, String nextCompareDate, String comparisonType,
 			String comparisonResult, double divergencePercentage) {
 		if (!em.getTransaction().isActive()) {
@@ -185,8 +192,8 @@ public class DataManager
 			return -1;
 		}
 	}
-	
-	public int saveToSyncTable(String syncDate, String nextSyncDate, String SyncType, 
+
+	public int saveToSyncTable(String syncDate, String nextSyncDate, String SyncType,
 			String syncResult, double divergencePercentage, String lastComparisonDate) {
 		EntityManager em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 		if (!em.getTransaction().isActive()) {
@@ -206,8 +213,8 @@ public class DataManager
 			}
 		}
 	}
-	
-	public List<Map<String, Object>> getComparedDataToSync(EntityManager em, String lastComparisonDateForSync) {
+
+	public List<Map<String, Object>> getComparedDataForSync(EntityManager em, String lastComparisonDateForSync) {
 		List<Map<String, Object>> result = null;
 		try {
 			if (lastComparisonDateForSync != null) {
@@ -215,14 +222,29 @@ public class DataManager
 			} else {
 				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC,null, null, null);
 			}
-			
+
 		}catch(Exception e) {
-			logger.error("execption happens in getComparedDataToSync " + e);
-			logger.error("error occurs while executing sql:" + SQL_GET_COMPARED_DATA_TO_SYNC);
+			logger.error("exception happens in getComparedDataForSync " + e);
 		}
 		return result;
-	} 
-	
+	}
+
+	public Map<String, Object> getHalfSyncedComparedData(EntityManager em, String lastComparisonDateForSync)throws HalfSyncException, NoComparedResultException {
+		logger.info("Get half synced compared data for last compared date is {}", lastComparisonDateForSync);
+		if(lastComparisonDateForSync == null){
+			logger.error("lastComparisonDateForSync can not be null for getting half synced compared data");
+			throw new HalfSyncException("lastComparisonDateForSync can not be null for getting half synced compared data");
+		}
+
+		List<Map<String, Object>> result = getDatabaseTableData(em,SQL_GET_HALF_SYNC_COMPARED_DATA_TO_SYNC, lastComparisonDateForSync,null, null);
+
+		if(result == null){
+			logger.error("No compared result found for last compared date {}", lastComparisonDateForSync);
+			throw new NoComparedResultException("No compared result found");
+		}
+		return result.get(0);
+	}
+
 	public String getLastComparisonDateForSync(EntityManager em) {
 		List<Object> result = getSingleTableData(em,SQL_GET_LAST_COMPARISON_DATE_FOR_SYNC, null);
 		if (result != null && result.size() == 1) {
@@ -231,12 +253,26 @@ public class DataManager
 		logger.info("No successful sync record found in sync table!");
 		return null;
 	}
-	
+
+	public Map<String, Object> checkHalfSyncRecord(EntityManager em) throws  HalfSyncException{
+		List<Object> result = getSingleTableData(em,SQL_GET_HALF_SYNC_RECORD, null);
+		if(result == null){
+			logger.info("No half sync record found in sync table!");
+			return null;
+		}
+		if(result.size() > 1){
+			logger.error("'SYNC_TYPE = half' record is more than 1, which is unexpected. ");
+			throw new HalfSyncException("'SYNC_TYPE = half' record is more than 1, which is unexpected. ");
+		}
+		//return the only 1 half record
+		return (Map<String, Object>)(result.get(0));
+	}
+
 	public List<Object> getAllTenants(EntityManager em) {
 		List<Object> result =  getSingleTableData(em, SQL_GET_ALL_TENANTS, null);
 		return result;
 	}
-	
+
 	public String getLatestComparisonDateForCompare(EntityManager em) {
 		List<Object> result = getSingleTableData(em,SQL_GET_LATEST_COMPARISON_DATE, null);
 		if (result != null && result.size() == 1) {
@@ -244,24 +280,24 @@ public class DataManager
 		}
 		return null;
 	}
-	
+
 	public List<Map<String, Object>> getSyncStatus(EntityManager em) {
 		try {
 			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_SYNC_STATUS, null, null, null);
 			return result;
 		} catch (Exception e) {
 			logger.error(e);
-		} 
+		}
 		return null;
 	}
- 	
+
 	public List<Map<String, Object>> getComparatorStatus(EntityManager em) {
 		try {
 			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_COMPARISON_STATUS, null, null, null);
 			return result;
 		} catch (Exception e) {
 			logger.error(e);
-		} 
+		}
 		return null;
 	}
 	/**
@@ -308,7 +344,7 @@ public class DataManager
 		return count;
 
 	}
-	
+
 	public long getAllSearchParamsCount(EntityManager em, String maxComparedDate){
 		long count = 0l;
 		try {
@@ -323,7 +359,7 @@ public class DataManager
 		}
 		return count;
 	}
-	
+
 	/**
 	 * Get all rows in folder table
 	 *
@@ -385,7 +421,7 @@ public class DataManager
 
 	public void syncFolderTable(EntityManager em, BigInteger folderId, String name, BigInteger parentId, String description, String creationDate, String owner,
 			String lastModificationDate, String lastModifiedBy, String nameNlsid, String nameSubsystem, String descriptionNlsid,
-			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId)
+			String descriptionSubsystem, Integer systemFolder, String emPluginId, Integer uiHidden, BigInteger deleted, Long tenantId) throws SyncException
 	{
 		//check db constraint
 		if (checkDbFolderConstraint(folderId, name, creationDate, systemFolder, uiHidden, deleted, tenantId)){
@@ -453,7 +489,7 @@ public class DataManager
 			}
 		}catch (Exception e) {
 			logger.error("Error occured when sync folders table data! {}",e);
-			//FIXME should rethrow a exception
+			throw new SyncException("Error occured when sync folders table data!");
 		}
 	}
 
@@ -522,7 +558,7 @@ public class DataManager
 			}
 			else {
 				Map<String, Object> dateMap = result.get(0);
-				
+
 		    	String creationD  = dateMap.get("CREATION_DATE").toString();
 		    	if (creationD == null) {
 		    		return;
@@ -532,7 +568,7 @@ public class DataManager
 		    	if (lastModifiedObj == null || lastModificationDate == null) {
 		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);
 		    	}
 		    	if (check) {
 					logger.info("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_SEARCH_PARAMS.");
@@ -549,7 +585,7 @@ public class DataManager
 				}
 
 			}
-			
+
 		}
 		catch (Exception e) {
 			logger.error("Error occurred when sync search param table data! {}", e);
@@ -644,9 +680,9 @@ public class DataManager
 		    	if (lastModifiedObj == null || lastModificationDate == null) {
 		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);
 		    	}
-				
+
 				if (check) {
 					logger.info("Data's Last modification date is earlier, no update action is needed in table EMS_ANALYTICS_SEARCH.");
 					//do nothing
@@ -670,7 +706,7 @@ public class DataManager
 				}
 
 			}
-			
+
 		}
 		catch (Exception e) {
 			logger.error("Error occured when sync search table data! "+e.getLocalizedMessage());
@@ -739,7 +775,7 @@ public class DataManager
                  return false;
          }
  }
-	
+
 	/**
 	 * Retrieves database data rows for specific native SQL for all tenant
 	 *
@@ -761,20 +797,20 @@ public class DataManager
 				} else {
 					query = em.createNativeQuery(nativeSql).setParameter(1, date);
 				}
-				
+
 			} else {
 				if (maxComparedDate != null) {
 					if (tenant != null) {
 						query = em.createNativeQuery(nativeSql).setParameter(1, maxComparedDate).setParameter(2, tenant);
 					} else {
 						query = em.createNativeQuery(nativeSql).setParameter(1, maxComparedDate);
-					}			
+					}
 				} else {
 					// impossible case
 					query = em.createNativeQuery(nativeSql);
 				}
-				
-			}		
+
+			}
 			query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 			list = query.getResultList();
 		}
@@ -787,7 +823,7 @@ public class DataManager
 		}
 		return list;
 	}
-	
+
 	private List<Object> getSingleTableData(EntityManager em, String nativeSql, String maxComparedDate) {
 		if (StringUtil.isEmpty(nativeSql)) {
 			logger.error("can not query database with empty sql statement!");
@@ -801,7 +837,7 @@ public class DataManager
 			} else {
 				query = em.createNativeQuery(nativeSql);
 			}
-			
+
 			result = query.getResultList();
 		}catch(Exception e) {
 			logger.error("exception happens in getSingleTableData :"+e.getLocalizedMessage());
@@ -809,5 +845,38 @@ public class DataManager
 		}
 		return result;
 	}
+
+	public int updateHalfSyncStatus(String syncResult, String type){
+
+		logger.info("Prepare to update half sync status.");
+		EntityManager em = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			//check half-sync record number first
+			checkHalfSyncRecord(em);
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
+			String sql = "update EMS_ANALYTICS_ZDT_SYNC set SYNC_RESULT= ? where SYNC_TYPE = 'half'";
+			String sql2 = "update EMS_ANALYTICS_ZDT_SYNC set SYNC_RESULT= ?, SYNC_TYPE=? where SYNC_TYPE = 'half'";
+			if(type !=null){
+				em.createNativeQuery(sql).setParameter(1, syncResult).setParameter(2, type).executeUpdate();
+			}else{
+				em.createNativeQuery(sql).setParameter(1, syncResult).executeUpdate();
+			}
+			em.createNativeQuery(sql).setParameter(1, syncResult).executeUpdate();
+			em.getTransaction().commit();
+		}catch (Exception e) {
+			logger.error("errors occurs in updateHalfSyncStatus,{}", e);
+			return -1;
+//			throw new HalfSyncException("Errors occurs in updateHalfSyncStatus");
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		return 0;
+	}
+
 
 }

@@ -15,13 +15,14 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.Sav
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.ZDTTableRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.DataManager;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.SyncException;
 import org.testng.annotations.Test;
 
 public class ZDTSynchronizerTest {
 	@Mocked DataManager dm;
 	@Test (groups = {"s1"})
 	public void testSyncNull(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager em){
+			@Mocked final EntityManager em) throws SyncException {
 		ZDTSynchronizer syn = new ZDTSynchronizer();
 		syn.sync(null);
 		ZDTTableRowEntity row = new ZDTTableRowEntity(null, null, null);

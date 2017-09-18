@@ -20,19 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
 import mockit.Mocked;
-import mockit.Verifications;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.SyncException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -82,8 +76,8 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getComparedDataToSync(entityManager, date);
-		dataManager.getComparedDataToSync(entityManager, null);
+		dataManager.getComparedDataForSync(entityManager, date);
+		dataManager.getComparedDataForSync(entityManager, null);
 		
 	}
 	
@@ -318,7 +312,7 @@ public class DataManagerTest
 
 	@Test
 	public void testSyncFolderTable(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+			@Mocked final EntityManager entityManager, @Mocked final Query query) throws SyncException {
 		BigInteger folderId = new BigInteger("1");
 		String name= "name";
 		BigInteger parentId= new BigInteger("2");
@@ -379,7 +373,7 @@ public class DataManagerTest
 	
 	@Test
 	public void testSyncFolderTableInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+			@Mocked final EntityManager entityManager, @Mocked final Query query) throws SyncException {
 		BigInteger folderId = new BigInteger("1");
 		String name= "name";
 		BigInteger parentId= new BigInteger("2");
