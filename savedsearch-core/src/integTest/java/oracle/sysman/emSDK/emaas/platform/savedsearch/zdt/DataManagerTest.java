@@ -20,19 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
 import mockit.Mocked;
-import mockit.Verifications;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.SyncException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -82,8 +76,8 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getComparedDataToSync(entityManager, date);
-		dataManager.getComparedDataToSync(entityManager, null);
+		dataManager.getComparedDataForSync(entityManager, date);
+		dataManager.getComparedDataForSync(entityManager, null);
 		
 	}
 	
@@ -219,21 +213,6 @@ public class DataManagerTest
 	}
 
 	@Test
-	public void testGetAllCategoryCount(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query)
-	{
-	/*	final List<Object> data = new ArrayList<Object>();
-		data.add("123");
-		new Expectations(){
-	            {
-	            	query.getResultList();
-	                result = data;
-	            }
-	        }; */
-	        dataManager.getAllCategoryCount(entityManager, "2017-05-23 16:19:02");
-	}
-
-	@Test
 	public void testGetAllFolderCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
 	{
@@ -283,22 +262,7 @@ public class DataManagerTest
 		
 	}
 	
-	@Test
-	public void testGetAllCategoryParamCount(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query)
-	{
-	/*	final List<Object> data = new ArrayList<Object>();
-		data.add("123");
-		new Expectations(){
-            {
-            	query.getResultList();
-                result = data;
-            }
-        };*/
-        dataManager.getAllCategoryPramsCount(entityManager, "2017-05-23 16:19:02");
-		
-	}
-	
+
 	@Test
 	public void testGetFolderTableData(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query)
@@ -345,90 +309,10 @@ public class DataManagerTest
 		dataManager.getSearchTableData(entityManager,"incremental", "2017-05-09 14:35:21", "2017-05-09 14:35:21", "tenant");
 	}
 	
-	@Test
-	public void testGetCategoryTableData(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query)
-	{
-		/*final List<Map<String, Object>> list = new ArrayList<>();
-		new Expectations(){
-			{
-				query.getResultList();
-				result = list;
-			}
-		};*/
-		dataManager.getCategoryTableData(entityManager,"full", "2017-05-09 14:35:21", "2017-05-09 14:35:21", "tenant");
-	}
-	
-	@Test
-	public void testGetCategoryParamTableData(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query q1)
-	{
-		/*final List<Map<String, Object>> list = new ArrayList<>();
-		new Expectations(){
-			{
-				q1.getResultList();
-				result = list;
-			}
-		};*/
-		dataManager.getCategoryParamTableData(entityManager,"full", "2017-05-09 14:35:21","2017-05-09 14:35:21", null);
-		dataManager.getCategoryParamTableData(entityManager,"incremental", "2017-05-09 14:35:21" ,"2017-05-09 14:35:21", "tenant");
-	}
-	
-	@Test
-	public void testSyncCategoryParamTableInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query) {
-		BigInteger categoryId =  new BigInteger("1");
-		String name = "Name";
-		String paramValue = "paramValue"; 
-		Long tenantId = 1L;
-		String creationDate = "creationDate";
-		String lastModificationDate = "lastModificationDate";
-		Integer deleted = new Integer("0");
-		new Expectations(){
-			{
-				entityManager.createNativeQuery(anyString);
-                result = query;               
-                query.getResultList();
-                result =  new ArrayList<Map<String, Object>>();
-				
-			}
-		};
-		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
-	}
-	
-	
-	@Test
-	public void testSyncCategoryParamTable(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query) {
-		BigInteger categoryId =  new BigInteger("1");
-		String name = "Name";
-		String paramValue = "paramValue"; 
-		Long tenantId = 1L;
-		String creationDate = "creationDate";
-		String lastModificationDate = "lastModificationDate";
-		Integer deleted = new Integer("0");
-		final Map<String, Object> objs = new HashMap<String,Object>();		
-		Date date = new Date();
-		objs.put("LAST_MODIFICATION_DATE", null);
-		objs.put("CREATION_DATE", date);
-		new Expectations(){
-			{
-				query.getResultList();
-				result = objs;
-			}
-		};
-		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
-		dataManager.syncCategoryParamTable(entityManager,null, name, paramValue, tenantId, creationDate, lastModificationDate,deleted);
-		dataManager.syncCategoryParamTable(entityManager,categoryId, null, paramValue, tenantId, creationDate, lastModificationDate,deleted);
-		dataManager.syncCategoryParamTable(entityManager,categoryId, name, null, tenantId, creationDate, lastModificationDate,deleted);
-		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, null, creationDate, lastModificationDate,deleted);
-		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, null, lastModificationDate,deleted);
-		dataManager.syncCategoryParamTable(entityManager,categoryId, name, paramValue, tenantId, creationDate, null,deleted);
-	}
-	
+
 	@Test
 	public void testSyncFolderTable(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+			@Mocked final EntityManager entityManager, @Mocked final Query query) throws SyncException {
 		BigInteger folderId = new BigInteger("1");
 		String name= "name";
 		BigInteger parentId= new BigInteger("2");
@@ -489,7 +373,7 @@ public class DataManagerTest
 	
 	@Test
 	public void testSyncFolderTableInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query) {
+			@Mocked final EntityManager entityManager, @Mocked final Query query) throws SyncException {
 		BigInteger folderId = new BigInteger("1");
 		String name= "name";
 		BigInteger parentId= new BigInteger("2");
@@ -756,124 +640,5 @@ public class DataManagerTest
 		
 	}
 
- 	@Test
-	public void testSyncCategoryTable(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query q1) {
-		BigInteger categoryId = new BigInteger("1");
-		String name = "name"; 
-		String description = "description";
-		String owner = "owner";
-		String creationDate = "creationDate";
-		String nameNlsid = "nameNlsid";
-		String nameSubSystem = "nameSubSystem";
-		String descriptionNlsid = "descriptionNlsid";
-		String descriptionSubSystem = "descriptionSubSystem";
-		String emPluginId = "emPluginId";
-		BigInteger defaultFolderId =new BigInteger("1");
-		BigInteger deleted = new BigInteger("0");
-		String providerName = "providerName";
-		String providerVersion = "providerVersion";
-		String providerDiscovery = "providerDiscovery";
-		String providerAssetroot = "providerAssetroot";
-		Long tenantId = 1L; 
-		String dashboardIneligible = "dashboardIneligible";
-		String lastModificationDate = "lastModificationDate";
 
-		final Map<String, Object> objs = new HashMap<String,Object>();		
-		Date date = new Date();
-		objs.put("LAST_MODIFICATION_DATE", null);
-		objs.put("CREATION_DATE", date);
-		new Expectations(){
-			{
-				q1.getResultList();
-				result = objs;
-
-			}
-		};
-		
-		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
-				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-		
-		dataManager.syncCategoryTable(entityManager,null, name, description, owner, 
-				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-		
-		dataManager.syncCategoryTable(entityManager,categoryId, null, description, owner, 
-				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-		
-		dataManager.syncCategoryTable(entityManager,categoryId, name, null, owner, 
-				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-		
-		dataManager.syncCategoryTable(entityManager,categoryId, name, description, null, 
-				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-		
-		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
-				null, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-		
-		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
-				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, null, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-		
-		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
-				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, null, dashboardIneligible, lastModificationDate);
-		
-		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
-				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, null);
-		
-	} 
- 	
- 	@Test
-	public void testSyncCategoryTableInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query) {
-		BigInteger categoryId = new BigInteger("1");
-		String name = "name"; 
-		String description = "description";
-		String owner = "owner";
-		String creationDate = "creationDate";
-		String nameNlsid = "nameNlsid";
-		String nameSubSystem = "nameSubSystem";
-		String descriptionNlsid = "descriptionNlsid";
-		String descriptionSubSystem = "descriptionSubSystem";
-		String emPluginId = "emPluginId";
-		BigInteger defaultFolderId =new BigInteger("1");
-		BigInteger deleted = new BigInteger("0");
-		String providerName = "providerName";
-		String providerVersion = "providerVersion";
-		String providerDiscovery = "providerDiscovery";
-		String providerAssetroot = "providerAssetroot";
-		Long tenantId = 1L; 
-		String dashboardIneligible = "dashboardIneligible";
-		String lastModificationDate = "lastModificationDate";
-		
-		new Expectations(){
-			{
-				query.getResultList();
-
-				result =  new ArrayList<Map<String, Object>>();
-
-			}
-		};
-		
-		dataManager.syncCategoryTable(entityManager,categoryId, name, description, owner, 
-				creationDate, nameNlsid, nameSubSystem, descriptionNlsid, descriptionSubSystem, 
-				emPluginId, defaultFolderId, deleted, providerName, providerVersion, 
-				providerDiscovery, providerAssetroot, tenantId, dashboardIneligible, lastModificationDate);
-	
-	} 
 }

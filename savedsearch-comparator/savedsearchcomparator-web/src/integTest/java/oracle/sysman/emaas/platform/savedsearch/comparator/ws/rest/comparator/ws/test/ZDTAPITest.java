@@ -1,7 +1,6 @@
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.ws.test;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import mockit.Expectations;
@@ -15,7 +14,8 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.co
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
-import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.SavedSearchCategoryRowEntity;
+import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.SavedSearchSearchParamRowEntity;
+import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.SavedSearchSearchRowEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.ZDTTableRowEntity;
 
 import org.testng.annotations.Test;
@@ -39,30 +39,9 @@ public class ZDTAPITest {
     String userTenant;
     
     @Test
-    public void testCompareOnSSF(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2) throws IOException{
-    	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
-    	//final CountsEntity countsEntity = new CountsEntity(10L, 10L, 10L);
-    	new Expectations(){
-            {
-                abstractComparator.getOMCInstances();
-                result = lookupEntry;
-    			lookupEntry.put("omc1",client1);
-    	    	lookupEntry.put("omc2",client2);
-    	    	
-    	   	JsonUtil.buildNormalMapper();
-    			result = jsonUtil;
-    			jsonUtil.fromJson(anyString,CountsEntity.class);
-    			result = count;
-    			
-            }
-        };
-        zdtapi.compareOnSSF(tenant);
-    }
-
-    @Test
     public void testSyncOnDF(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2) throws IOException{
     	final ZDTTableRowEntity tableRow1 = new ZDTTableRowEntity();
-    	tableRow1.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
+    	tableRow1.setSavedSearchSearch(new ArrayList<SavedSearchSearchRowEntity>());
     	 
         final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
     	
@@ -79,7 +58,7 @@ public class ZDTAPITest {
     			result = tableRow1; */
     		}
     	};
-        zdtapi.syncOnSSF("tenant",  "type");
+        zdtapi.syncOnSSF("tenant");
     }
 
    @Test
@@ -96,109 +75,6 @@ public class ZDTAPITest {
         instancesComapredCounts.setInstance2(counts);
     }
 
-    
-  /*  @Test 
-    public void testgetCompareStatusRows(@Mocked final LookupClient client1, @Mocked final LookupClient client2) {
-    	
-    	
-    	ZDTTableRowEntity tableRow1 = new ZDTTableRowEntity();
-    	tableRow1.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
-    	
-    	ZDTTableRowEntity tableRow2 = new ZDTTableRowEntity();
-    	tableRow2.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
-    	
-    	InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>("", null,tableRow1,  100);
-    	InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>("", null,tableRow2,  100);
-    	
-    	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
-    	
-    	
-    	final InstancesComparedData<ZDTTableRowEntity> comparedData = new InstancesComparedData<ZDTTableRowEntity>(instance1, instance2);  
-    	new Expectations() {
-    		{ 	
-    			abstractComparator.getOMCInstances();
-    			result = lookupEntry;
-    			lookupEntry.put("omc1",client1);
-    	    	lookupEntry.put("omc2",client2);
-    			
-    		}
-    	};
-    	SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
-    	zdtapi.getCompareStatusRows(dcc, comparedData, "full");
-    	
-    }
-  */
-
-    @Test
-    public void testCompareRows2(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2) throws Exception{
-    	final ZDTTableRowEntity tableRow1 = new ZDTTableRowEntity();
-    	tableRow1.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
-    	ZDTTableRowEntity tableRow2 = new ZDTTableRowEntity();
-    	tableRow2.setSavedSearchCategory(new ArrayList<SavedSearchCategoryRowEntity>());
-    	InstanceData<ZDTTableRowEntity> instance1 = new InstanceData<ZDTTableRowEntity>("", null,tableRow1);
-    	InstanceData<ZDTTableRowEntity> instance2 = new InstanceData<ZDTTableRowEntity>("", null,tableRow2);
-    	
-    	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
-    	
-    	
-    	final InstancesComparedData<ZDTTableRowEntity> comparedData = new InstancesComparedData<ZDTTableRowEntity>(instance1, instance2);  
-    	new Expectations() {
-    		{ 	
-    			abstractComparator.getOMCInstances();
-    			result = lookupEntry;
-    			lookupEntry.put("omc1",client1);
-    	    	lookupEntry.put("omc2",client2);
-    		/*	
-    			JsonUtil.buildNormalMapper();
-    			result = jsonUtil;
-    			jsonUtil.fromJson(anyString,ZDTTableRowEntity.class);
-    			result = tableRow1;  */
-    		}
-    	};
-    	SavedsearchRowsComparator dcc = new SavedsearchRowsComparator();
-    	zdtapi.compareRows(tenant,"full", 5);
-    }
-
-    
-    @Test
-    public void testGetCurrentTime() {
-    	zdtapi.getCurrentUTCTime();
-    }
-    
-    @Test
-    public void testGetTimeString() {
-    	zdtapi.getTimeString(new Date());
-    }
-    
-    @Test
-    public void testCompareRows1() {
-    	
-    	zdtapi.compareRows(tenant, "full", 5);
-    }
-    
-    @Test
-    public void testCompareRows2(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2,
-    		@Mocked final Link link) throws Exception{
-    
-    	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
-    	   	
-    	new Expectations() {
-    		{ 	
-    			abstractComparator.getOMCInstances();
-    			result = lookupEntry;
-    			lookupEntry.put("omc1",client1);
-    	    	lookupEntry.put("omc2",client2);
-    			
-    		/*	JsonUtil.buildNormalMapper();
-    			result = jsonUtil;
-    			jsonUtil.fromJson(anyString,TableRowsEntity.class);
-    			result = tableRow1;  */
-    		}
-    	};
-    	
-    	zdtapi.compareRows(tenant, "full", 5);
-    }
-    
     @Test
     public void testgetSyncStatus() {
     	zdtapi.getCompareStatus("id");
@@ -223,14 +99,9 @@ public class ZDTAPITest {
     			result = lookupEntry;
     			lookupEntry.put("omc1",client1);
     	    	lookupEntry.put("omc2",client2);
-    		/*	
-    			JsonUtil.buildNormalMapper();
-    			result = jsonUtil;
-    			jsonUtil.fromJson(anyString,TableRowsEntity.class);
-    			result = tableRow1;*/
     		}
     	};
-        zdtapi.syncOnSSF("tenant", "full");
+        zdtapi.syncOnSSF("tenant");
     }
     
    

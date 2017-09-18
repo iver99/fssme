@@ -10,18 +10,6 @@
 
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTErrorConstants;
@@ -32,6 +20,14 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.Ab
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.RowEntityComparator.CompareListPair;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class SavedsearchRowsComparator extends AbstractComparator
@@ -62,38 +58,6 @@ public class SavedsearchRowsComparator extends AbstractComparator
 				}
 			}
 	}
-	
-	public ZDTTableRowEntity combineRowEntity(List<ZDTTableRowEntity> rowEntityList){
-		ZDTTableRowEntity finalEntity = new ZDTTableRowEntity();
-		List<SavedSearchCategoryRowEntity> category = new ArrayList<SavedSearchCategoryRowEntity>();
-		List<SavedSearchCategoryParamRowEntity> categoryParams = new ArrayList<SavedSearchCategoryParamRowEntity>();
-		List<SavedSearchFolderRowEntity> folder = new ArrayList<SavedSearchFolderRowEntity>();
-		List<SavedSearchSearchParamRowEntity> searchParams = new ArrayList<SavedSearchSearchParamRowEntity>();
-		List<SavedSearchSearchRowEntity> search = new ArrayList<SavedSearchSearchRowEntity>();
-		for (ZDTTableRowEntity entity : rowEntityList) {
-			if (entity.getSavedSearchCategory() != null && !entity.getSavedSearchCategory().isEmpty()) {
-				category.addAll(entity.getSavedSearchCategory());
-			}
-			if (entity.getSavedSearchCategoryParams()!= null && !entity.getSavedSearchCategoryParams().isEmpty()) {
-				categoryParams.addAll(entity.getSavedSearchCategoryParams());
-			}
-			if (entity.getSavedSearchFoldersy() != null && !entity.getSavedSearchFoldersy().isEmpty()) {
-				folder.addAll(entity.getSavedSearchFoldersy());
-			}
-			if (entity.getSavedSearchSearch() != null && !entity.getSavedSearchSearch().isEmpty()) {
-				search.addAll(entity.getSavedSearchSearch());
-			}
-			if (entity.getSavedSearchSearchParams() != null && !entity.getSavedSearchSearchParams().isEmpty()) {
-				searchParams.addAll(entity.getSavedSearchSearchParams());
-			}
-		}
-		finalEntity.setSavedSearchCategory(category);
-		finalEntity.setSavedSearchCategoryParams(categoryParams);
-		finalEntity.setSavedSearchFoldersy(folder);
-		finalEntity.setSavedSearchSearch(search);
-		finalEntity.setSavedSearchSearchParams(searchParams);
-		return finalEntity;
-	}
 
 	public InstancesComparedData<ZDTTableRowEntity> compare(String tenantId, String userTenant, String comparisonType, 
 			String maxComparedDate, boolean iscompared, String tenant) throws ZDTException
@@ -104,19 +68,18 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			ZDTTableRowEntity tre2 = null;
 			if (!iscompared || comparisonType == "full") {
 				tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType, maxComparedDate,tenant);
-				if (tre1 == null) {
-					logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
-					return null;
-				}
-				//logger.info("tre1 search size = "+tre1.getSavedSearchSearch().size());
-				//logger.info("tre1 search params size = "+tre1.getSavedSearchSearchParams().size());
-				
 				tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType, maxComparedDate,tenant);
-				//logger.info("tre2 search size = "+tre2.getSavedSearchSearch().size());
-				//logger.info("tre2 search params size = "+tre2.getSavedSearchSearchParams().size());
 			} else {
 				tre1 = retrieveRowsForSingleInstance(tenantId, userTenant,client1, comparisonType, maxComparedDate, null);
 				tre2 = retrieveRowsForSingleInstance(tenantId, userTenant,client2, comparisonType, maxComparedDate, null);
+			}
+			if (tre1 == null) {
+				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
+				return null;
+			}
+			if (tre2 == null) {
+				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
+				return null;
 			}
  		
 			InstancesComparedData<ZDTTableRowEntity> cd = compareInstancesData(new InstanceData<ZDTTableRowEntity>(key1, client1, tre1),
@@ -135,19 +98,17 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		if (entity == null) {
 			return 0;
 		}
-		int rowNum = (int)((entity.getCountOfCategory() == null? 0L:entity.getCountOfCategory())
-				+ (entity.getCountOfFolders() ==null?0L:entity.getCountOfFolders())
-				+ (entity.getCountOfCategoryPrams() ==null?0L:entity.getCountOfCategoryPrams())
-				+ (entity.getCountOfSearchParams() ==null?0L:entity.getCountOfSearchParams())
-				+ (entity.getCountOfSearch()==null?0L:entity.getCountOfSearch()));
+		int rowNum = (int) ((entity.getCountOfFolders() == null ? 0L : entity.getCountOfFolders())
+				+ (entity.getCountOfSearchParams() == null ? 0L : entity.getCountOfSearchParams())
+				+ (entity.getCountOfSearch() == null ? 0L : entity.getCountOfSearch()));
 		return rowNum;
 	}
 	
 	public int countForComparedRows(ZDTTableRowEntity tableRow) {
  		int count = 0;		
  		if (tableRow != null) {
- 			count = count + (tableRow.getSavedSearchCategory()==null?0:tableRow.getSavedSearchCategory().size());
- 	 		count = count + (tableRow.getSavedSearchCategoryParams()==null?0:tableRow.getSavedSearchCategoryParams().size());
+// 			count = count + (tableRow.getSavedSearchCategory()==null?0:tableRow.getSavedSearchCategory().size());
+// 	 		count = count + (tableRow.getSavedSearchCategoryParams()==null?0:tableRow.getSavedSearchCategoryParams().size());
  	 		count = count + (tableRow.getSavedSearchFoldersy()==null?0:tableRow.getSavedSearchFoldersy().size());
  	 		count = count + (tableRow.getSavedSearchSearchParams()==null?0:tableRow.getSavedSearchSearchParams().size());
  	 		count = count + (tableRow.getSavedSearchSearch()==null?0:tableRow.getSavedSearchSearch().size());
@@ -156,27 +117,6 @@ public class SavedsearchRowsComparator extends AbstractComparator
  		return count;
  	}
 
-	/**
-	 * Compares the SSF category rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
-	 * object
-	 *
-	 * @param rows1
-	 * @param rows2
-	 * @param cd
-	 */
-	private void compareSSFCategoryRows(List<SavedSearchCategoryRowEntity> rows1, List<SavedSearchCategoryRowEntity> rows2,
-			InstancesComparedData<ZDTTableRowEntity> cd)
-	{
-		if (cd == null) {
-			return;
-		}
-		RowEntityComparator<SavedSearchCategoryRowEntity> rec = new RowEntityComparator<SavedSearchCategoryRowEntity>();
-		CompareListPair<SavedSearchCategoryRowEntity> result = rec.compare(rows1, rows2);
-		cd.getInstance1().getData().setSavedSearchCategory(result.getList1());
-		cd.getInstance2().getData().setSavedSearchCategory(result.getList2());
-	}
-
-	
 	/**
 	 * Compares the saved search rows data for the 2 instances, and put the compare result into <code>ComparedData</code> object
 	 *
@@ -188,34 +128,15 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			InstancesComparedData<ZDTTableRowEntity> cd)
 	{
 		if (cd == null) {
+			logger.warn("InstancesComparedData instance is null...");
 			return;
 		}
-		//logger.info("rows1="+rows1.size());
-		//logger.info("rows2="+rows2.size());
 		RowEntityComparator<SavedSearchSearchRowEntity> rec = new RowEntityComparator<SavedSearchSearchRowEntity>();
 		CompareListPair<SavedSearchSearchRowEntity> result = rec.compare(rows1, rows2);
 		cd.getInstance1().getData().setSavedSearchSearch(result.getList1());
 		cd.getInstance2().getData().setSavedSearchSearch(result.getList2());
 	}
 
-	/**
-	 * Compares the saved search category param rows data for the 2 instances, and put the compare result into <code>ComparedData</code> object
-	 *
-	 * @param rows1
-	 * @param rows2
-	 * @param cd
-	 */
-	private void compareSSFCategoryParamRows(List<SavedSearchCategoryParamRowEntity> rows1, List<SavedSearchCategoryParamRowEntity> rows2,
-			InstancesComparedData<ZDTTableRowEntity> cd)
-	{
-		if (cd == null) {
-			return;
-		}
-		RowEntityComparator<SavedSearchCategoryParamRowEntity> rec = new RowEntityComparator<SavedSearchCategoryParamRowEntity>();
-		CompareListPair<SavedSearchCategoryParamRowEntity> result = rec.compare(rows1, rows2);
-		cd.getInstance1().getData().setSavedSearchCategoryParams(result.getList1());
-		cd.getInstance2().getData().setSavedSearchCategoryParams(result.getList2());
-	}
 
 	/**
 	 * Compares the saved search search param rows data for the 2 instances, and put the compare result into <code>ComparedData</code>
@@ -229,6 +150,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			List<SavedSearchSearchParamRowEntity> rows2, InstancesComparedData<ZDTTableRowEntity> cd)
 	{
 		if (cd == null) {
+			logger.warn("InstancesComparedData instance is null...");
 			return;
 		}
 		RowEntityComparator<SavedSearchSearchParamRowEntity> rec = new RowEntityComparator<SavedSearchSearchParamRowEntity>();
@@ -248,6 +170,7 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			InstancesComparedData<ZDTTableRowEntity> cd)
 	{
 		if (cd == null) {
+			logger.warn("InstancesComparedData instance is null...");
 			return;
 		}
 		RowEntityComparator<SavedSearchFolderRowEntity> rec = new RowEntityComparator<SavedSearchFolderRowEntity>();
@@ -269,9 +192,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		InstanceData<ZDTTableRowEntity> outData1 = new InstanceData<ZDTTableRowEntity>(insData1.getKey(),insData1.getClient(), new ZDTTableRowEntity());
 		InstanceData<ZDTTableRowEntity> outData2 = new InstanceData<ZDTTableRowEntity>(insData2.getKey(),insData2.getClient(), new ZDTTableRowEntity());
 		InstancesComparedData<ZDTTableRowEntity> cd = new InstancesComparedData<ZDTTableRowEntity>(outData1, outData2);
-		compareSSFCategoryRows(insData1.getData().getSavedSearchCategory(), insData2.getData().getSavedSearchCategory(), cd);
-		compareSSFCategoryParamRows(insData1.getData().getSavedSearchCategoryParams(), insData2.getData().getSavedSearchCategoryParams(),
-				cd);
+//		compareSSFCategoryRows(insData1.getData().getSavedSearchCategory(), insData2.getData().getSavedSearchCategory(), cd);
+//		compareSSFCategoryParamRows(insData1.getData().getSavedSearchCategoryParams(), insData2.getData().getSavedSearchCategoryParams(),cd);
 		compareSSFFolderRows(insData1.getData().getSavedSearchFoldersy(),
 				insData2.getData().getSavedSearchFoldersy(), cd);
 		compareSSFSearchParamsRows(insData1.getData().getSavedSearchSearchParams(),
@@ -289,10 +211,10 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		logger.info("*****lookup link is {}", lk.getHref());
+		logger.info("Lookup link is {}", lk.getHref());
 		String url = lk.getHref() + "?maxComparedDate="+URLEncoder.encode(maxComparedTime, "UTF-8");
+		logger.info("[RestClient] request {}",url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
-		//logger.info("Checking savedsearch OMC instance counts. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
 		if (ze == null) {
@@ -301,27 +223,11 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		}
 		// TODO: for the 1st step implementation, let's log in log files then
 		logger.info(
-				"Retrieved counts for Category OMC instance: savedsearch count - {}, Folders count - {}, Search count - {}",
-				ze.getCountOfCategory(), ze.getCountOfFolders(), ze.getCountOfSearch());
+				"Retrieved counts for Category OMC instance: category count - {}, Folders count - {}, Search count - {}, Category params count - {}, Search params count - {}",
+				ze.getCountOfCategory(), ze.getCountOfFolders(), ze.getCountOfSearch(),ze.getCountOfCategoryPrams(),ze.getCountOfSearchParams());
 		return ze;
 	}
 
-	/**
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 * @throws ZDTException 
-	 */
-	private ZDTTableRowEntity retrieveRowsEntityFromJsonForSingleInstance(String response) throws IOException, ZDTException
-	{
-		JsonUtil ju = JsonUtil.buildNormalMapper();
-		ZDTTableRowEntity tre = ju.fromJson(response, ZDTTableRowEntity.class);
-		if (tre == null) {
-			logger.warn("Checking SSF OMC instance table rows: null/empty entity retrieved.");
-			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
-		}
-		return tre;
-	}
 
 	/**
 	 * @throws Exception
@@ -340,11 +246,17 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8")+"&tenant="+tenant;
 		} else {
 			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
-		}	
-		logger.info("get table data url is "+url);
+		}
+		logger.info("[RestClient] request {}",url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
 		//logger.info("Checking SSF OMC instance table rows. Response is " + response);
-		return retrieveRowsEntityFromJsonForSingleInstance(response);
+		JsonUtil ju = JsonUtil.buildNormalMapper();
+		ZDTTableRowEntity tre = ju.fromJson(response, ZDTTableRowEntity.class);
+		if (tre == null) {
+			logger.warn("Checking SSF OMC instance table rows: null/empty entity retrieved.");
+			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
+		}
+		return tre;
 	}
 	
 	public String retrieveComparatorStatusForOmcInstance(String tenantId, String userTenant) throws Exception {
@@ -353,9 +265,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
+		logger.info("[RestClient] request {}",lk.getHref());
 		String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
-		//logger.info("checking comparator status is " + response);
-		
 		return response;
 	}
 	
@@ -365,9 +276,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
+		logger.info("[RestClient] request {}",lk.getHref());
 		String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
-		//logger.info("checking sync status is " + response);
-		
 		return response;
 	}
 	
@@ -377,8 +287,8 @@ public class SavedsearchRowsComparator extends AbstractComparator
 			logger.warn("get a null or empty link for omc instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
+		logger.info("[RestClient] request {}",lk.getHref());
 		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
-		//logger.info("checking tenants list " + response);
 		return response;
 	}
 	
@@ -390,24 +300,21 @@ public class SavedsearchRowsComparator extends AbstractComparator
 		}
 		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
 		String entityStr = jsonUtil.toJson(statusRowEntity);
- 		//logger.info("print the put data {} !",entityStr);
+		logger.info("[RestClient] request {}",lk.getHref());
  		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
- 		//logger.info("Checking saving comparator status. Response is " + response);
 		return response;
 		
 	}
 
 	
-	public String syncForInstance(String tenantId, String userTenant, LookupClient client, String type, String syncDate) throws Exception {
+	public String syncForInstance(String tenantId, String userTenant, LookupClient client) throws Exception {
 		Link lk = getSingleInstanceUrl(client, "zdt/sync", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			return "Errors:Get a null or empty link for one single instance!";
 		}
-		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + URLEncoder.encode(syncDate, "UTF-8");
-		logger.info("sync url is "+ url);
-		String response = new TenantSubscriptionUtil.RestClient().get(url,  tenantId, userTenant);
- 		//logger.info("Checking sync reponse. Response is " + response);
+		logger.info("[RestClient] request {}",lk.getHref());
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(),  tenantId, userTenant);
 		return response;
 	} 
 
