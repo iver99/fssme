@@ -1293,8 +1293,7 @@ public class SearchAPI
 			searchObj.setParameters(null);
 		}
 		
-		// comment out temporary since emctas_uisrg_3n will get failed
-/*		if (isWidget) {
+		if (isWidget) {
 			if (!hasWidgetTemplate) {
 				JSONObject obj = new JSONObject();
 				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
@@ -1316,7 +1315,7 @@ public class SearchAPI
 				throw new EMAnalyticsWSException(obj.toString(),
 						EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
 			}
-		}*/
+		}
 
 		return searchObj;
 	}
