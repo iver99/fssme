@@ -526,8 +526,7 @@ public class DataManager
 	}
 
 	public void syncSearchParamsTable(EntityManager em, BigInteger searchId, String name, String paramAttributes, Long paramType,
-			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate, Integer deleted)
-	{
+			String paramValueStr, String paramValueClob, Long tenantId, String creationDate, String lastModificationDate, Integer deleted) throws SyncException {
 		//check db constraint
 		if (checkDbSearchParamsConstraint(searchId, name, paramType, tenantId, deleted)){
 			return;
@@ -589,7 +588,7 @@ public class DataManager
 		}
 		catch (Exception e) {
 			logger.error("Error occurred when sync search param table data! {}", e);
-			//FIXME should rethrow a exception
+			throw  new SyncException("Error occurred when sync search param table data!");
 		}
 	}
 
@@ -623,8 +622,7 @@ public class DataManager
 			Integer isWidget, Long tenantId, String nameWidgetSource, String widgetGroupName, String widgetScreenshotHref,
 			String widgetIcon, String widgetKocName, String viewModel, String widgetTemplate, String widgetSupportTimeControl,
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
-			String providerName, String providerVersion, String providerAssetRoot)
-	{
+			String providerName, String providerVersion, String providerAssetRoot) throws SyncException {
 		//check db constraint
 		if (checkDbSearchConstraint(searchId, name, owner, creationDate, folderId, categoryId, systemSearch, isLocked, uiHidden, deleted, isWidget, tenantId)){
 			return;
@@ -709,8 +707,8 @@ public class DataManager
 
 		}
 		catch (Exception e) {
-			logger.error("Error occured when sync search table data! "+e.getLocalizedMessage());
-			//FIXME should rethrow a exception
+			logger.error("Error occured when sync search table data!{} "+e);
+			throw new SyncException("Error occured when sync search table data! ");
 		}
 	}
 
