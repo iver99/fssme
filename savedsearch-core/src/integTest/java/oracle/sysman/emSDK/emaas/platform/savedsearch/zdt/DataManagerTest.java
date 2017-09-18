@@ -409,7 +409,7 @@ public class DataManagerTest
 	
 	@Test
 	public void testSyncSearchParamsTable(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query){
+			@Mocked final EntityManager entityManager, @Mocked final Query query) throws SyncException {
 		BigInteger searchId=new BigInteger("1"); 
 		String name="name";
 		String paramAttributes="paramAttributes";
@@ -455,7 +455,7 @@ public class DataManagerTest
 	
 	@Test
 	public void testSyncSearchParamsTableInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query){
+			@Mocked final EntityManager entityManager, @Mocked final Query query) throws SyncException {
 		BigInteger searchId=new BigInteger("1"); 
 		String name="name";
 		String paramAttributes="paramAttributes";
@@ -481,7 +481,7 @@ public class DataManagerTest
 	
 	@Test
 	public void testSyncSearchTable(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query query){
+			@Mocked final EntityManager entityManager, @Mocked final Query query) throws SyncException {
 		BigInteger searchId=new BigInteger("1");
 		String name="name"; 
 		String owner ="owner"; 
@@ -583,7 +583,7 @@ public class DataManagerTest
 	
 	@Test
 	public void testSyncSearchTableInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager, @Mocked final Query q1){
+			@Mocked final EntityManager entityManager, @Mocked final Query q1) throws SyncException {
 		BigInteger searchId=new BigInteger("1");
 		String name="name"; 
 		String owner ="owner"; 
