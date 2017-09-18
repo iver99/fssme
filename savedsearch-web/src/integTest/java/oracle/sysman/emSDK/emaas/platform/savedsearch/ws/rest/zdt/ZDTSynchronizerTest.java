@@ -20,7 +20,7 @@ import org.testng.annotations.Test;
 
 public class ZDTSynchronizerTest {
 	@Mocked DataManager dm;
-	@Test (groups = {"s1"})
+	@Test (groups = {"s1"}, expectedExceptions =SyncException.class )
 	public void testSyncNull(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws SyncException {
 		ZDTSynchronizer syn = new ZDTSynchronizer();

@@ -94,13 +94,13 @@ public class ZDTAPITest {
         zdtapi.getEntitiesCount("2017-05-25 16:03:02");
     }
     
-    @Test
+   /* @Test
     public void testSync(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws Exception {
         zdtapi.sync();
-    }
+    }*/
     
-    @Test
+    /*@Test
     public void testSync2(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws Exception {
         final List<Map<String, Object>> comparedDataToSync = new ArrayList<Map<String, Object>>();
@@ -119,7 +119,7 @@ public class ZDTAPITest {
     		}
     	};
     	zdtapi.sync();
-    }
+    }*/
     
     @Test
     public void testGetSyncStatus(@Mocked final PersistenceManager persistenceManager, 
