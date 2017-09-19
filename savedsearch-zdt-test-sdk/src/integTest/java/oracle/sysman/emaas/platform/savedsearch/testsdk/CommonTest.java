@@ -58,7 +58,7 @@ public class CommonTest
 		String url = "";
 		try {
 			url = getSavedSearchDeploymentDet();
-			HOSTNAME = CommonTest.getDomainName(url);
+			HOSTNAME = Utils.getProperty("EMCS_NODE3_HOSTNAME");
 			portno = CommonTest.getPort(url) + "";
 			authToken = Utils.getProperty("SAAS_AUTH_TOKEN");
 			tenantid = Utils.getProperty("TENANT_ID");

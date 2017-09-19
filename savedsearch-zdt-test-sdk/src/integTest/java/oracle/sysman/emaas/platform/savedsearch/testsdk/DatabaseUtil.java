@@ -126,7 +126,7 @@ public class DatabaseUtil
 				pstmt.setLong(2, 5000000 + i);
 				pstmt.setLong(3, 673850132);
 				int j = pstmt.executeUpdate();
-
+                System.out.println("i value is " + j);
 				Assert.assertNotEquals(j, 0);
 				pstmt.close();
 			}
