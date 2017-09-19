@@ -1367,6 +1367,8 @@ public class SearchManagerImpl extends SearchManager
 					searchObj.getSystemSearch() != null && searchObj.getSystemSearch().intValue() == 1 ? true : false);
 			rtnObj.setLastAccessDate(DateUtil.getCurrentUTCTime());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
+			rtnObj.setFederationSupported(searchObj.getFederationSupported() == 1 ? true : false);
+			rtnObj.setGreenfieldSupported(searchObj.getGreenfieldSupported() == 1 ? true : false);
 
 			if (TenantContext.getContext() != null && TenantContext.getContext().getUsername() != null) {
 				rtnObj.setEditable(TenantContext.getContext().getUsername().equals(searchObj.getOwner()));
@@ -1430,6 +1432,8 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setFolderId(searchObj.getEmAnalyticsFolder().getFolderId());
 			rtnObj.setLastAccessDate(DateUtil.getCurrentUTCTime());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
+			rtnObj.setFederationSupported(searchObj.getFederationSupported() == 1 ? true : false);
+			rtnObj.setGreenfieldSupported(searchObj.getGreenfieldSupported() == 1 ? true : false);
 
 			List<SearchParameter> searchParams = new ArrayList<SearchParameter>();
 			// get parameters

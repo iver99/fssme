@@ -165,4 +165,18 @@ public interface Search extends SearchSummary
 	public void setEditable(boolean isEditable);
 	public String getDashboardIneligible();
 	public void setDashboardIneligible(String dashboardIneligible);
+
+	/**
+	 * Sets if the search supports federation mode or not
+	 *
+	 * @param federationSupported
+	 */
+	public void setFederationSupported(boolean federationSupported);
+
+	/**
+	 * Sets if the search supports greenfield mode or not
+	 *
+	 * @param greenfieldSupported
+	 */
+	public void setGreenfieldSupported(boolean greenfieldSupported);
 }

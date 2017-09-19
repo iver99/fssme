@@ -161,6 +161,12 @@ public class EmAnalyticsSearch implements Serializable
 	@Column(name = "PROVIDER_ASSET_ROOT")
 	private String PROVIDER_ASSET_ROOT;
 
+	@Column(name = "FEDERATION_SUPPORTED")
+	private Integer federationSupported;
+
+	@Column(name = "GREENFIELD_SUPPORTED")
+	private Integer greenfieldSupported;
+
 	@Id
 	@Column(name = "TENANT_ID", nullable = false, length = 32, updatable = false)
 	private Long tenantId;
@@ -432,6 +438,14 @@ public class EmAnalyticsSearch implements Serializable
 		return WIDGET_VIEWMODEL;
 	}
 
+	public Integer getFederationSupported() {
+		return federationSupported;
+	}
+
+	public Integer getGreenfieldSupported() {
+		return greenfieldSupported;
+	}
+
 	public void setCreationDate(Date creationDate)
 	{
 		this.creationDate = creationDate;
@@ -659,6 +673,14 @@ public class EmAnalyticsSearch implements Serializable
 	public void setWIDGETVIEWMODEL(String widgetViewmodel)
 	{
 		WIDGET_VIEWMODEL = widgetViewmodel;
+	}
+
+	public void setFederationSupported(Integer federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
+	public void setGreenfieldSupported(Integer greenfieldSupported) {
+		this.greenfieldSupported = greenfieldSupported;
 	}
 
 }

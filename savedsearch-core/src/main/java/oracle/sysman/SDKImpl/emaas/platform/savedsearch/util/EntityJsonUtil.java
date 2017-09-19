@@ -305,6 +305,8 @@ public class EntityJsonUtil
 		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
 			emSearch.setWidgetEditable(m.get("WIDGET_EDITABLE").toString());
 		}
+		emSearch.setFederationSupported(m.get("FEDERATION_SUPPORTED").toString());
+		emSearch.setFederationSupported(m.get("GREENFIELD_SUPPORTED").toString());
 		emSearch.setId(m.get("SEARCH_ID").toString());
 
 		return emSearch;

@@ -122,7 +122,8 @@ public class WidgetAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllWidgets(@Context UriInfo uri, @HeaderParam(value = "X-REMOTE-USER") String userTenant,
 			@QueryParam("widgetGroupId") String widgetGroupId,
-			@QueryParam("includeDashboardIneligible") boolean includeDashboardIneligible)
+			@QueryParam("includeDashboardIneligible") boolean includeDashboardIneligible,
+			@QueryParam("federationEnabled") String federationEnabled)
 	{
 		LogUtil.getInteractionLogger().info(
 				"Service calling to (GET) /savedsearch/v1/widgets?widgetGroupId={}&includeDashboardIneligible={}", widgetGroupId,
@@ -161,9 +162,10 @@ public class WidgetAPI
 				}
 			}
 
-			message = getAllWidgetsJson(widgetGroupId, includeDashboardIneligible);
-		}
+			boolean isFederationEnabled = Boolean.parseBoolean(federationEnabled);
 
+			message = getAllWidgetsJson(widgetGroupId, includeDashboardIneligible, isFederationEnabled);
+		}
 		catch (NumberFormatException e) {
 			return Response.status(400).entity("Id should be a positive number and not an alphanumeric").build();
 		}
@@ -352,14 +354,14 @@ public class WidgetAPI
 		return null;
 	}
 
-	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible) throws EMAnalyticsFwkException,
+	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible, boolean isFederationEnabled) throws EMAnalyticsFwkException,
 	IOException
 	{
 		List<String> providers = TenantSubscriptionUtil.getTenantSubscribedServiceProviders(TenantContext.getContext()
 				.gettenantName());
 		LOGGER.debug("Retrieved subscribed providers {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
-		List<Map<String, Object>> widgetList = WidgetManager.getInstance().getWidgetListByProviderNames(providers, widgetGroupId);
+		List<Map<String, Object>> widgetList = WidgetManager.getInstance().getWidgetListByProviderNames(providers, widgetGroupId, isFederationEnabled);
 		String message = WidgetManager.getInstance().getSpelledJsonFromQueryResult(widgetList);
 
 		return message;

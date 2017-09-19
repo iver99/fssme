@@ -475,6 +475,8 @@ class EmAnalyticsObjectUtil
 		searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden() ? 1 : 0));
 		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
 		searchEntity.setDeleted(BigInteger.ZERO);
+		searchEntity.setFederationSupported(search.getFederationSupported() ? 1 : 0);
+		searchEntity.setGreenfieldSupported(search.getGreenfieldSupported() ? 1 : 0);
 		searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 		List<SearchParameter> params = search.getParameters();
 		//move values from search_params table to search table
@@ -548,6 +550,8 @@ class EmAnalyticsObjectUtil
 		searchEntity.setUiHidden(new java.math.BigDecimal(search != null && search.isUiHidden() ? 1 : 0));
 		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
 		searchEntity.setDeleted(BigInteger.ZERO);
+		searchEntity.setFederationSupported(search.getFederationSupported() ? 1 : 0);
+		searchEntity.setGreenfieldSupported(search.getGreenfieldSupported() ? 1 : 0);
 		searchEntity.setName(search.getName());
 		List<SearchParameter> params = search.getParameters();
 		// Params handling !!

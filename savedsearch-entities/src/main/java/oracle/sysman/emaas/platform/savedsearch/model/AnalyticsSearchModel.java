@@ -58,6 +58,10 @@ public class AnalyticsSearchModel
 	private Long widgetDefaultWidth;
 	@JsonProperty("WIDGET_EDITABLE")
 	private String widgetEditable;
+	@JsonProperty("FEDERATION_SUPPORTED")
+	private String federationSupported;
+	@JsonProperty("GREENFIELD_SUPPORTED")
+	private String greenfieldSupported;
 
 	/**
 	 * @return the id
@@ -397,6 +401,23 @@ public class AnalyticsSearchModel
 	public void setWidgetEditable(String widgetEditable)
 	{
 		this.widgetEditable = widgetEditable;
+	}
+
+
+	public String getFederationSupported() {
+		return federationSupported;
+	}
+
+	public void setFederationSupported(String federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
+	public String getGreenfieldSupported() {
+		return greenfieldSupported;
+	}
+
+	public void setGreenfieldSupported(String greenfieldSupported) {
+		this.greenfieldSupported = greenfieldSupported;
 	}
 
 

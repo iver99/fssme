@@ -1229,8 +1229,20 @@ public class SearchAPI
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
 		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
+		searchObj.setFederationSupported(Boolean.parseBoolean(json.optString("federationSupported", Boolean.toString(searchObj.getFederationSupported()))));
+		searchObj.setGreenfieldSupported(Boolean.parseBoolean(json.optString("greenfieldSupported", Boolean.toString(searchObj.getGreenfieldSupported()))));
+
+		if (!searchObj.getFederationSupported() && !searchObj.getGreenfieldSupported()) {
+			throw new EMAnalyticsWSException("The search object has invalid mode support: does not support federation mode, nor greenfield mode",
+					EMAnalyticsWSException.JSON_SEARCH_FEDERATION_MODE_INVALID);
+		}
 		
 		boolean isWidget = searchObj.getIsWidget();
+		if (searchObj.getFederationSupported() && !isWidget) {
+			throw new EMAnalyticsWSException("The search object contains invalid input: does support federation mode, but isn't a widget",
+					EMAnalyticsWSException.JSON_SEARCH_FEDERATION_MODE_INVALID);
+		}
+
 		boolean hasWidgetTemplate = false;
 		boolean hasWidgetViewModel = false;
 		boolean hasWidgetKocName = false;

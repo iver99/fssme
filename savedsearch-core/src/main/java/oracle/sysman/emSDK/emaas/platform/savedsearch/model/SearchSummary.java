@@ -90,6 +90,20 @@ public interface SearchSummary
 	public String[] getTags();
 
 	/**
+	 * Returns if the search supports federation mode or not
+	 *
+	 * @return federationSupported
+	 */
+	public boolean getFederationSupported();
+
+	/**
+	 * Returns if the search supports greenfield mode or not
+	 *
+	 * @return greenfieldSupported
+	 */
+	public boolean getGreenfieldSupported();
+
+	/**
 	 * Returns whether this is a system search or not
 	 *
 	 * @return whether this is a system search or not
