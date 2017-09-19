@@ -255,6 +255,7 @@ public class ZDTAPI
 				int flag = DataManager.getInstance().updateHalfSyncStatus("SUCCESSFUL","full");
 				if(flag < 0){
 					logger.error("updateHalfSyncStatus into sync table fail... ");
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors Fail to save sync status data\"}").build();
 				}
 			}
 		}catch(IOException e){
@@ -363,6 +364,7 @@ public class ZDTAPI
 				if (flag < 0) {
 					//FIXME this case is not handled yet
 					logger.error("#2.Save half sync status into sync table fail...");
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors Fail to save sync status data\"}").build();
 				}
 			}else{
 				logger.error("sync failed... save FAILED status into sync table...");
@@ -370,6 +372,7 @@ public class ZDTAPI
 				if (flag < 0) {
 					//FIXME this case is not handled yet
 					logger.error("#3.Save half sync status into sync table fail...");
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors Fail to save sync status data\"}").build();
 				}
 			}
 

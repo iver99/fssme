@@ -865,6 +865,7 @@ public class DataManager
 			em.createNativeQuery(sql).setParameter(1, syncResult).executeUpdate();
 			em.getTransaction().commit();
 		}catch (Exception e) {
+			em.getTransaction().rollback();
 			logger.error("errors occurs in updateHalfSyncStatus,{}", e);
 			return -1;
 //			throw new HalfSyncException("Errors occurs in updateHalfSyncStatus");
