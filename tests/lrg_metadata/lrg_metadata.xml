@@ -6,6 +6,12 @@
 	     <pipeline name="STAGE"/>
          </pipelines>
      </lrg>
+
+   <lrg name="emcpssf_shared_4n" launcher="tests/suites/emcpssf_shared_4n.gradle" description=" lrg for upgrade/test 3n">
+         <pipelines>
+            <pipeline name="PRODUCT"/>
+         </pipelines>
+     </lrg>
      <lrg name="emcpssf_l0_test" launcher="tests/suites/emcpssf_l0_test.gradle" description="lrg for QAUnitTest"></lrg>
 
      <lrg name="emcpssf_l1_test" launcher="tests/suites/emcpssf_l1_test.gradle" description="lrg for DEVTest">
@@ -34,21 +40,21 @@
                 <pipeline name="PRODUCT"/>                                                                                                             
         </pipelines>                                                                                                                                   
         </lrg> 
-        <lrg name="emctas_sharedcomp_3n" repos="emctas" description="Run emctas lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
+        <!--lrg name="emctas_sharedcomp_3n" repos="emctas" description="Run emctas lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
         <pipelines>                                                                                                                                    
                 <pipeline name="PRODUCT"/>                                                                                                             
         </pipelines>                                                                                                                                   
-        </lrg> 
+        </lrg--> 
         <lrg name="emcpdf_test_3n" repos="emcpdf" description="Run emcpdf lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
         <pipelines>                                                                                                                                    
                 <pipeline name="PRODUCT"/>                                                                                                             
         </pipelines>                                                                                                                                   
         </lrg> 
-        <lrg name="emcapms_ui_webdriver_3n" repos="emcapms" description="Run emcapms lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
+        <!--lrg name="emcapms_ui_webdriver_3n" repos="emcapms" description="Run emcapms lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
         <pipelines>                                                                                                                                    
                 <pipeline name="PRODUCT"/>                                                                                                             
         </pipelines>                                                                                                                                   
-        </lrg> 
+        </lrg--> 
 
  </lrg-metadata>
  
