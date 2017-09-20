@@ -42,6 +42,7 @@ public class CommonTest
 	}
 
 	private String HOSTNAME;
+	private String HOSTNAME1;
 	private String portno;
 	private String serveruri;
 	private String authToken;
@@ -58,7 +59,8 @@ public class CommonTest
 		String url = "";
 		try {
 			url = getSavedSearchDeploymentDet();
-			HOSTNAME = Utils.getProperty("EMCS_NODE3_HOSTNAME");
+			HOSTNAME = CommonTest.getDomainName(url);
+			HOSTNAME1 = Utils.getProperty("EMCS_NODE3_HOSTNAME");
 			portno = CommonTest.getPort(url) + "";
 			authToken = Utils.getProperty("SAAS_AUTH_TOKEN");
 			tenantid = Utils.getProperty("TENANT_ID");
@@ -132,6 +134,11 @@ public class CommonTest
 	public String getHOSTNAME()
 	{
 		return HOSTNAME;
+	}
+	
+	public String getHOSTNAME1()
+	{
+		return HOSTNAME1;
 	}
 
 	public String getPortno()

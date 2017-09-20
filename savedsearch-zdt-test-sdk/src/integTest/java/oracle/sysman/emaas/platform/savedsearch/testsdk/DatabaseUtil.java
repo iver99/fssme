@@ -56,7 +56,7 @@ public class DatabaseUtil
 		Connection conn = DatabaseUtil.ConnectCloud1();//this c is null
 
 		PreparedStatement pstmt = null;
-		String sql = "delete from EMS_ANALYTICS_SEARCH where SEARCH_ID>4000000;delete from EMS_ANALYTICS_ZDT_COMPARATOR;delete from EMS_ANALYTICS_ZDT_SYNC";
+		String sql = "delete from ems_analytics_search_params where search_id>=40000;delete from EMS_ANALYTICS_SEARCH where SEARCH_ID>4000000;delete from EMS_ANALYTICS_ZDT_COMPARATOR;delete from EMS_ANALYTICS_ZDT_SYNC;";
 		System.out.println(sql);
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -143,7 +143,7 @@ public class DatabaseUtil
 		Connection conn = DatabaseUtil.ConnectCloud2();//this c is null
 
 		PreparedStatement pstmt = null;
-		String sql = "delete from EMS_ANALYTICS_SEARCH where SEARCH_ID>4000000;delete from EMS_ANALYTICS_ZDT_COMPARATOR;delete from EMS_ANALYTICS_ZDT_SYNC";
+		String sql = "delete from ems_analytics_search_params where search_id>=40000;delete from EMS_ANALYTICS_SEARCH where SEARCH_ID>4000000;delete from EMS_ANALYTICS_ZDT_COMPARATOR;delete from EMS_ANALYTICS_ZDT_SYNC;";
 		System.out.println(sql);
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -288,7 +288,7 @@ public class DatabaseUtil
 
 	public static String propsReader(String PROPERTY)
 	{
-		String T_WORK = System.getenv("T_WORK") + "/cloud2Logs/work";
+		String T_WORK = System.getenv("T_WORK");
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {
