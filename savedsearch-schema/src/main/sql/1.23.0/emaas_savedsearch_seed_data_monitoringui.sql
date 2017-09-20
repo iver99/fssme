@@ -1,0 +1,166 @@
+Rem
+Rem
+Rem Copyright (c) 2013, 2014, 2015, 2016, 2017 Oracle and/or its affiliates.
+Rem All rights reserved.
+Rem
+Rem    NAME
+Rem      emaas_savedsearch_seed_data_monitoringui.sql
+Rem
+Rem    DESCRIPTION
+Rem
+Rem    NOTES
+Rem      None
+Rem
+Rem    MODIFIED   (MM/DD/YY)
+Rem    MIAYU       08/30/17 -  add new category and folder to support new service MonitoringServiceUI
+Rem
+SET FEEDBACK ON
+SET SERVEROUTPUT ON
+DECLARE
+V_FOLDER_ID					 NUMBER(38,0)          ;
+V_NAME						 VARCHAR2(64 BYTE)     ;
+V_PARENT_ID					 NUMBER(38,0)          ;
+V_DESCRIPTION				 VARCHAR2(256 BYTE)    ;
+V_CREATION_DATE				 TIMESTAMP(6)          ;
+V_OWNER						 VARCHAR2(64 BYTE)     ;
+V_LAST_MODIFICATION_DATE	 TIMESTAMP(6)          ;
+V_LAST_MODIFIED_BY			 VARCHAR2(64 BYTE)     ;
+V_NAME_NLSID				 VARCHAR2(256 BYTE)    ;
+V_NAME_SUBSYSTEM			 VARCHAR2(64 BYTE)     ;
+V_DESCRIPTION_NLSID			 VARCHAR2(256 BYTE)    ;
+V_DESCRIPTION_SUBSYSTEM		 VARCHAR2(64 BYTE)     ;
+V_SYSTEM_FOLDER				 NUMBER(1,0)           ;
+V_EM_PLUGIN_ID				 VARCHAR2(64 BYTE)     ;
+V_UI_HIDDEN					 NUMBER(1,0)           ;
+V_TENANT_ID					 NUMBER(38,0)          ;
+
+V_CATEGORY_ID                NUMBER(38,0);
+V_DEFAULT_FOLDER_ID          NUMBER(38,0);
+V_PROVIDER_NAME              VARCHAR2(64 BYTE);
+V_PROVIDER_VERSION           VARCHAR2(64 BYTE);
+V_PROVIDER_ASSET_ROOT        VARCHAR2(64 BYTE);
+
+V_COUNT NUMBER;
+BEGIN
+ V_TENANT_ID := -11;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_FOLDERS WHERE FOLDER_ID = 10;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('The folder for Monitoring has been added before, no need to add again!');
+ ELSE
+ V_FOLDER_ID				:=   10;
+ V_NAME						:=   'Monitoring Searches';
+ V_PARENT_ID				:=   1;
+ V_DESCRIPTION				:=   'Monitoring Root Folder';
+ V_CREATION_DATE			:=   SYS_EXTRACT_UTC(SYSTIMESTAMP);
+ V_OWNER					:=   'ORACLE';
+ V_LAST_MODIFICATION_DATE	:=   SYS_EXTRACT_UTC(SYSTIMESTAMP);
+ V_LAST_MODIFIED_BY			:=   'ORACLE';
+ V_NAME_NLSID				:=   null;
+ V_NAME_SUBSYSTEM			:=   null;
+ V_DESCRIPTION_NLSID		:=   null;
+ V_DESCRIPTION_SUBSYSTEM	:=   null;
+ V_SYSTEM_FOLDER			:=   1;
+ V_EM_PLUGIN_ID				:=   'oracle.sysman.core';
+ V_UI_HIDDEN				:=   0;
+
+  Insert into
+  EMS_ANALYTICS_FOLDERS
+  (FOLDER_ID,
+  NAME,
+  PARENT_ID,
+  DESCRIPTION,
+  CREATION_DATE,
+  OWNER,
+  LAST_MODIFICATION_DATE,
+  LAST_MODIFIED_BY,
+  NAME_NLSID,
+  NAME_SUBSYSTEM,
+  DESCRIPTION_NLSID,
+  DESCRIPTION_SUBSYSTEM,
+  SYSTEM_FOLDER,
+  EM_PLUGIN_ID,
+  UI_HIDDEN,
+  TENANT_ID)
+  values
+  (V_FOLDER_ID,
+  V_NAME,
+  V_PARENT_ID,
+  V_DESCRIPTION,
+  V_CREATION_DATE,
+  V_OWNER,
+  V_LAST_MODIFICATION_DATE,
+  V_LAST_MODIFIED_BY,
+  V_NAME_NLSID,
+  V_NAME_SUBSYSTEM,
+  V_DESCRIPTION_NLSID,
+  V_DESCRIPTION_SUBSYSTEM,
+  V_SYSTEM_FOLDER,
+  V_EM_PLUGIN_ID,
+  V_UI_HIDDEN,
+  V_TENANT_ID);
+  DBMS_OUTPUT.PUT_LINE('The folder for Monitoring has been added successfully!');
+ END IF;
+ 
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_CATEGORY WHERE CATEGORY_ID = 9;
+ IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('The category data for Monitoring has been added before, no need to add again!');
+ ELSE
+ V_CATEGORY_ID              := 9;
+ V_NAME                     := 'Monitoring';
+ V_DESCRIPTION              := 'Search Category for Monitoring';
+ V_OWNER					:= 'ORACLE';
+ V_CREATION_DATE            := SYS_EXTRACT_UTC(SYSTIMESTAMP);
+ V_NAME_NLSID               := null;
+ V_NAME_SUBSYSTEM           := null;
+ V_DESCRIPTION_NLSID        := null;
+ V_DESCRIPTION_SUBSYSTEM    := null;
+ V_EM_PLUGIN_ID             := 'oracle.sysman.core';
+ V_DEFAULT_FOLDER_ID        := 10;
+ V_PROVIDER_NAME            := 'MonitoringServiceUI';
+ V_PROVIDER_VERSION         := '1.0';
+ V_PROVIDER_ASSET_ROOT      := 'assetRoot';
+ V_TENANT_ID                := -11;
+
+Insert into EMS_ANALYTICS_CATEGORY (
+CATEGORY_ID,
+NAME,
+DESCRIPTION,
+OWNER,
+CREATION_DATE,
+NAME_NLSID,
+NAME_SUBSYSTEM,
+DESCRIPTION_NLSID,
+DESCRIPTION_SUBSYSTEM,
+EM_PLUGIN_ID,
+DEFAULT_FOLDER_ID,
+PROVIDER_NAME,
+PROVIDER_VERSION,
+PROVIDER_ASSET_ROOT,
+TENANT_ID
+)values (
+V_CATEGORY_ID,
+V_NAME,
+V_DESCRIPTION,
+V_OWNER,
+V_CREATION_DATE,
+V_NAME_NLSID,
+V_NAME_SUBSYSTEM,
+V_DESCRIPTION_NLSID,
+V_DESCRIPTION_SUBSYSTEM,
+V_EM_PLUGIN_ID,
+V_DEFAULT_FOLDER_ID,
+V_PROVIDER_NAME ,
+V_PROVIDER_VERSION,
+V_PROVIDER_ASSET_ROOT,
+V_TENANT_ID);
+DBMS_OUTPUT.PUT_LINE('The category for Monitoring has been added successfully!');
+END IF;
+
+COMMIT;
+EXCEPTION
+WHEN OTHERS THEN
+  ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('FAILED to add new category for Monitoring : '||SQLERRM);
+  RAISE;
+END;
+/

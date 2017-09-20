@@ -60,9 +60,7 @@ dependencies {
 	compile(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1'){transitive = false}
 	compile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3'){transitive = false}
 	compile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1'){transitive = false}
-	compile configurations.testNG
-	compile configurations.webdriver
-	compile configurations.restAssured
+
 
 	compile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){transitive = false}
 	
