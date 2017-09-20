@@ -253,7 +253,7 @@ public class ZDTAPI
 							obj.put("comparisonType", compareType);
 							obj.put("differentRowNum", totalDifferentRows);
 							obj.put("totalRowNum", totalRow);
-							obj.put("divergencePercentage", percentage);
+							obj.put("divergencePercentage", percentage * 100 + "%");
 							if(isCompared){
 								obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared.");// here we take cloud1's last compared date.
 							}else{
@@ -317,7 +317,7 @@ public class ZDTAPI
 					obj.put("comparisonType", compareType);
 					obj.put("differentRowNum", totalDifferentRows);
 					obj.put("totalRowNum", totalRow);
-					obj.put("divergencePercentage", percentage);
+					obj.put("divergencePercentage", percentage * 100 + "%");
 					if(isCompared){
 						obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared.");// here we take cloud1's last compared date.
 					}else{
