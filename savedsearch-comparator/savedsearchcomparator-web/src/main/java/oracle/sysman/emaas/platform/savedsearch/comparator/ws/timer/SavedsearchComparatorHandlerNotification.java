@@ -12,14 +12,13 @@ public class SavedsearchComparatorHandlerNotification implements NotificationLis
 
 	private ZDTAPI api;
 	private static String DOMAINNAME = "CloudServices";
-	private static String TYPE = "incremental";
-	private static int SKIPMINS = 2;
+	private static int SKIPMINS = 2; //FIXME why set to 2 mins
 	private final static Logger LOGGER = LogManager.getLogger(SavedsearchComparatorHandlerNotification.class);
 	@Override
 	public void handleNotification(Notification arg0, Object arg1) {
 		LOGGER.info("******start to handle comparator*******");
 		api = new ZDTAPI();	
-	    api.compareRows(DOMAINNAME, TYPE, SKIPMINS);
+	    api.compareRows(DOMAINNAME, SKIPMINS);
 	    LOGGER.info("*****end to compare*********");
 	}
 
