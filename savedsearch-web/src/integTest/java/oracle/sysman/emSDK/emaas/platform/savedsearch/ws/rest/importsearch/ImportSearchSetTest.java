@@ -21,6 +21,8 @@ import org.eclipse.persistence.jaxb.JAXBContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.xml.bind.JAXBElement;
+
 /**
  * Created by xidai on 2/29/2016.
  */
@@ -93,29 +95,17 @@ public class ImportSearchSetTest {
     }
 
     @Test
-    public void testImportSearches3th(@Mocked final JAXBUtil anyJaxbutil) throws Exception {
-        final List<ImportSearchImpl> importSearchList = new ArrayList<ImportSearchImpl>();
+    public void testValidateData(@Mocked final JAXBElement jaxbElement) throws Exception {
+        List<ImportSearchImpl> list = new ArrayList<>();
         ImportSearchImpl importSearch = new ImportSearchImpl();
         importSearch.setName("name");
-        importSearch.setId(TEST_ID_10);
-        importSearchList.add(importSearch);
-        final List<Search> list = new ArrayList<Search>();
-        SearchImpl search = new SearchImpl();
-        search.setName("name");
-        search.setId(TEST_ID_10);
-        list.add(search);
-        new Expectations(){
-            {
-                anyJaxbutil.getJAXBContext(ObjectFactory.class);
-                result = jaxbContext;
-                Deencapsulation.invoke(anyJaxbutil,"unmarshal",withAny(new StringReader(xml)),withAny(inputStream),withAny(jaxbContext));
-                result = searchSet;
-                searchSet.getSearchSet();
-                result = importSearchList;
-            }
-        };
-
-        Assert.assertNotNull(importSearchSet.importSearches(xml,"SSF_OOB"));
-
+        list.add(importSearch);
+        Deencapsulation.invoke(importSearchSet,"validateData",list);
+//        importSearch.setName(null);
+//        importSearch.setCategoryDet(jaxbElement);
+//        Deencapsulation.invoke(importSearchSet,"validateData",list);
+//        importSearch.setCategoryDet(null);
+//        importSearch.setFolderDet(jaxbElement);
+//        Deencapsulation.invoke(importSearchSet,"validateData",list);
     }
 }

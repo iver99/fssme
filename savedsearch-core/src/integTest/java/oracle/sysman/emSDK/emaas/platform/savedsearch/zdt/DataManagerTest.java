@@ -26,6 +26,8 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.HalfSyncException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.NoComparedResultException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.zdt.exception.SyncException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -640,5 +642,66 @@ public class DataManagerTest
 		
 	}
 
+	@Test
+	public void testCheckHalfSyncRecord(@Mocked final EntityManager entityManager,@Mocked final Query query) throws HalfSyncException {
+		final List list = new ArrayList();
+		new Expectations(){
+			{
+				entityManager.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.checkHalfSyncRecord(entityManager);
+		Map<String, Object> map = new HashMap<>();
+		list.add(map);
+		new Expectations(){
+			{
+				entityManager.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.checkHalfSyncRecord(entityManager);
+	}
+	@Test(expectedExceptions = HalfSyncException.class)
+	public void testCheckHalfSyncRecord2(@Mocked final EntityManager entityManager,@Mocked final Query query) throws HalfSyncException {
+		final List list = new ArrayList();
+		Map<String, Object> map = new HashMap<>();
+		list.add(new Object());
+		list.add(map);
+		new Expectations(){
+			{
+				entityManager.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.checkHalfSyncRecord(entityManager);
+	}
+
+	@Test(expectedExceptions = HalfSyncException.class)
+	public void testGetHalfSyncedComparedData(@Mocked final EntityManager em,@Mocked final Query query) throws HalfSyncException, NoComparedResultException, NoComparedResultException {
+		dataManager.getHalfSyncedComparedData(em, null);
+	}
+	@Test
+	public void testGetHalfSyncedComparedData2(@Mocked final EntityManager em, @Mocked final Query query) throws HalfSyncException, NoComparedResultException {
+
+		final  List<Map<String, Object>> list = new ArrayList<>();
+		Map<String,Object> map = new HashMap<>();
+		list.add(map);
+		new Expectations(){
+			{
+				em.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getHalfSyncedComparedData(em, "2017-09-15 09:09:10,205");
+	}
 
 }
