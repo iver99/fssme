@@ -101,6 +101,37 @@ public class RegistryLookupUtilTest {
         };
         Link lk = RegistryLookupUtil.getServiceExternalLink("ApmUI", "0.1", "home", "emaastesttenant1");
         Assert.assertEquals(lk.getHref(), testHref);
+
+        //HTTPS
+//        String testHref = "https://test1.link.com";
+        final List<Link> links1 = new ArrayList<Link>();
+//        final Link lk1 = new Link();
+//        lk1.withHref(testHref);
+//        links.add(lk1);
+        new Expectations() {
+            {
+                InstanceInfo.Builder.newBuilder().withServiceName(anyString);
+                result = anyBuilder;
+                anyBuilder.withVersion(anyString);
+                result = anyBuilder;
+                anyBuilder.build();
+                result = anyInstanceInfo;
+                LookupManager.getInstance().getLookupClient().getInstanceForTenant(anyInstanceInfo, anyString);
+                result = anyInstanceInfo;
+                LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo((InstanceInfo) any, anyString);
+                result = anySanitizedInfo;
+                anySanitizedInfo.getLinks(anyString);
+                result = new Delegate<List<Link>>() {
+                    @SuppressWarnings("unused")
+                    List<Link> getLinks(String rel)
+                    {
+                        return links1;
+                    }
+                };
+            }
+        };
+        RegistryLookupUtil.getServiceExternalLink("ApmUI", "0.1", "home", "emaastesttenant1");
+//        Assert.assertEquals(lk.getHref(), testHref);
     }
 
 
