@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.ws.test;
+package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -8,15 +8,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import static oracle.sysman.emSDK.emaas.authz.listener.AuthorizationListener.OAM_REMOTE_USER_HEADER;
 
+import mockit.Deencapsulation;
 import org.testng.annotations.Test;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.SavedsearchComparatorCORSFilter;
 
 @Test(groups={"s2"})
 public class SavedSearchComparatorCORSFilterTest {
-	private SavedsearchComparatorCORSFilter dashboardsComparatorCORSFilter = new SavedsearchComparatorCORSFilter();
+	private SavedsearchComparatorCORSFilter savedsearchComparatorCORSFilter = new SavedsearchComparatorCORSFilter();
     @Mocked
     HttpServletResponse httpServletResponse;
     @Mocked
@@ -27,7 +27,7 @@ public class SavedSearchComparatorCORSFilterTest {
     FilterConfig filterConfig;
     @Test
     public void testDestroy() {
-        dashboardsComparatorCORSFilter.destroy();
+        savedsearchComparatorCORSFilter.destroy();
     }
     
     @Test
@@ -40,10 +40,10 @@ public class SavedSearchComparatorCORSFilterTest {
                 result = "remote_user.user";
             }
         };
-        dashboardsComparatorCORSFilter.doFilter(httpServletRequest, httpServletResponse, chain);
+        savedsearchComparatorCORSFilter.doFilter(httpServletRequest, httpServletResponse, chain);
     }
     @Test
     public void testInit() throws ServletException {
-        dashboardsComparatorCORSFilter.init(filterConfig);
+        savedsearchComparatorCORSFilter.init(filterConfig);
     }
 }

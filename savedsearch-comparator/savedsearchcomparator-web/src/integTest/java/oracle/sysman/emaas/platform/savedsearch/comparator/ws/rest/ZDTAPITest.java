@@ -149,7 +149,7 @@ public class ZDTAPITest {
 
     //incremental compare
     @Test
-    public void testCompareRows(final @Mocked JsonUtil jsonUtil, final @Mocked LookupClient lookupClient, final @Mocked SavedsearchRowsComparator savedsearchRowsComparator) throws Exception {
+    public void testCompareRows(final @Mocked InstanceData instanceData,final @Mocked JsonUtil jsonUtil, final @Mocked LookupClient lookupClient, final @Mocked SavedsearchRowsComparator savedsearchRowsComparator) throws Exception {
         zdtapi.compareRows("tenant",30);
 
         final ZDTTableRowEntity data = new ZDTTableRowEntity();
@@ -159,23 +159,24 @@ public class ZDTAPITest {
         savedSearchSearch.add(savedSearchSearchRowEntity);
        data.setSavedSearchSearch(savedSearchSearch);
         final String tenant = "{\"isCompared\":true,\"tenants\":[\"406626006\"],\"lastComparedDate\":\"2017-09-22 15:15:54.126\"}";
-        InstanceData<ZDTTableRowEntity> instanceData1 = new InstanceData("omc1",lookupClient,data);
-//        instanceData1.
-        InstanceData<ZDTTableRowEntity> instanceData2 = new InstanceData("omc2",lookupClient,data);
-        final InstancesComparedData<ZDTTableRowEntity> compareResult = new InstancesComparedData(instanceData1,instanceData2);
+//        InstanceData<ZDTTableRowEntity> instanceData1 = new InstanceData("omc1",lookupClient,data);
+////        instanceData1.
+//        InstanceData<ZDTTableRowEntity> instanceData2 = new InstanceData("omc2",lookupClient,data);
+        final InstancesComparedData<ZDTTableRowEntity> compareResult = new InstancesComparedData(instanceData,instanceData);
         //incremental compare
         new Expectations(){
             {
                 savedsearchRowsComparator.retrieveTenants(anyString,anyString, lookupClient);
                 result  = tenant;
-                /*
+                savedsearchRowsComparator.getTotalRowForOmcInstance(anyString, anyString, lookupClient, anyString);
+                result = 10;
                 savedsearchRowsComparator.compare(anyString,anyString,anyString,anyString,anyBoolean,anyString);
                 result  =compareResult;
                 //FIXME
-                savedsearchRowsComparator.getTotalRowForOmcInstance(anyString, anyString, lookupClient, anyString);
-                result = 10;
-                savedsearchRowsComparator.countForComparedRows(data);
-                result = 5;*/
+                instanceData.getData();
+                result=data;
+                savedsearchRowsComparator.countForComparedRows((ZDTTableRowEntity)any);
+                result = 5;
             }
         };
         zdtapi.compareRows("tenant",30);
@@ -183,7 +184,7 @@ public class ZDTAPITest {
 
     //full compare
     @Test
-    public void testCompareRows2(final @Mocked ZDTTableRowEntity data,final @Mocked JsonUtil jsonUtil, final @Mocked LookupClient lookupClient, final @Mocked SavedsearchRowsComparator savedsearchRowsComparator) throws Exception {
+    public void testCompareRows2(final @Mocked InstanceData instanceData, final @Mocked ZDTTableRowEntity data,final @Mocked JsonUtil jsonUtil, final @Mocked LookupClient lookupClient, final @Mocked SavedsearchRowsComparator savedsearchRowsComparator) throws Exception {
         zdtapi.compareRows("tenant", 30);
 //        final ZDTTableRowEntity data = new ZDTTableRowEntity();
         List<SavedSearchSearchRowEntity> savedSearchSearch = new ArrayList<SavedSearchSearchRowEntity>();
@@ -192,10 +193,10 @@ public class ZDTAPITest {
         savedSearchSearch.add(savedSearchSearchRowEntity);
         data.setSavedSearchSearch(savedSearchSearch);
         final String tenant = "{\"isCompared\":false,\"tenants\":[\"406626006\"],\"lastComparedDate\":\"2017-09-22 15:15:54.126\"}";
-        InstanceData<ZDTTableRowEntity> instanceData1 = new InstanceData("omc1",lookupClient,data);
-//        instanceData1.
-        InstanceData<ZDTTableRowEntity> instanceData2 = new InstanceData("omc2",lookupClient,data);
-        final InstancesComparedData<ZDTTableRowEntity> compareResult = new InstancesComparedData(instanceData1,instanceData2);
+//        InstanceData<ZDTTableRowEntity> instanceData1 = new InstanceData("omc1",lookupClient,data);
+////        instanceData1.
+//        InstanceData<ZDTTableRowEntity> instanceData2 = new InstanceData("omc2",lookupClient,data);
+        final InstancesComparedData<ZDTTableRowEntity> compareResult = new InstancesComparedData(instanceData,instanceData);
         new Expectations(){
             {
                 savedsearchRowsComparator.retrieveTenants(anyString,anyString, lookupClient);
@@ -206,8 +207,10 @@ public class ZDTAPITest {
                 savedsearchRowsComparator.compare(anyString,anyString,anyString,anyString,anyBoolean,anyString);
                 result  =compareResult;
                 //FIXME
-//                savedsearchRowsComparator.countForComparedRows(data);
-//                result = 5;
+                instanceData.getData();
+                result=data;
+                savedsearchRowsComparator.countForComparedRows((ZDTTableRowEntity)any);
+                result = 5;
             }
         };
         zdtapi.compareRows("tenant",30);
