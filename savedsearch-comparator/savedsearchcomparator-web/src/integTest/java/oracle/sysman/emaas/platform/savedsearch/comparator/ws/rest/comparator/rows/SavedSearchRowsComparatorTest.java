@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities;
+package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows;
 
 
 import java.io.IOException;
@@ -15,6 +15,7 @@ import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTExceptio
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
+import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
@@ -24,6 +25,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.LeaseInfo
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 
+import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.ZDTTableRowEntity;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -35,7 +37,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 
 @Test(groups = { "s1" })
-public class SaveSearchRowsComparatorTest
+public class SavedSearchRowsComparatorTest
 {
 	@Mocked
 	AbstractComparator abstractComparator;
@@ -278,4 +280,33 @@ public class SaveSearchRowsComparatorTest
 		drc.countForComparedRows(entity);
 	
 	}
+	@Test
+	public void testSyncForInstance(final @Mocked LookupClient lookupClient) throws Exception {
+		SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
+		drc.syncForInstance("tenant","usertenant",lookupClient);
+	}
+    @Test
+    public void testRetrieveCountsForSingleInstance(final @Mocked JsonUtil jsonUtil, final @Mocked TenantSubscriptionUtil.RestClient client, final @Mocked TenantSubscriptionUtil tenantSubscriptionUtil, final @Mocked LookupClient lookupClient) throws ZDTException, IOException {
+        SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
+        final String response = "";
+        final CountsEntity countsEntity = new CountsEntity();
+//		countsEntity.
+        new Expectations(){
+            {
+                new TenantSubscriptionUtil.RestClient();
+                result = client;
+                client.get(anyString,anyString,anyString);
+                result  = response;
+                jsonUtil.buildNormalMapper();
+                result =jsonUtil;
+                jsonUtil.fromJson(anyString,CountsEntity.class);
+                result = countsEntity;
+
+            }
+        };
+        Deencapsulation.invoke(drc,"retrieveCountsForSingleInstance","tenant","userTenant",lookupClient,"maxComparedTime");
+//		drc.retrieveCountsForSingleInstance("tenant","userTenant",lookupClient,"maxComparedTime");
+    }
+
+
 }
