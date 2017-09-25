@@ -15,7 +15,6 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Parameter;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.*;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
@@ -23,6 +22,8 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.tenant.SubscriptionAppsUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -129,9 +130,9 @@ public class TenantSubscriptionUtil
 	private static boolean checkTenantVersion(TenantSubscriptionInfo tenantSubscriptionInfo){
 		if(tenantSubscriptionInfo.getAppsInfoList()!=null && !tenantSubscriptionInfo.getAppsInfoList().isEmpty()){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
-				if(SubsriptionApps2Util.V2_TENANT.equals(appsInfo.getLicVersion()) ||
-                        SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion()) ||
-						SubsriptionApps2Util.V4_TENANT.equals(appsInfo.getLicVersion())){
+				if("V2_MODEL".equals(appsInfo.getLicVersion()) ||
+						"V3_MODEL".equals(appsInfo.getLicVersion()) ||
+						"V4_MODEL".equals(appsInfo.getLicVersion())){
 					LOGGER.info("Check tenant version is V2/V3/v4 tenant.");
 					return false;
 				}
@@ -145,7 +146,7 @@ public class TenantSubscriptionUtil
 	public static List<String> getTenantSubscribedServiceProviders(String tenant) throws IOException
 	{
 		TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
-		List<String> subscribedApps = TenantSubscriptionUtil.getTenantSubscribedServices(tenant,tenantSubscriptionInfo);
+		List<String> subscribedApps = oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil.getTenantSubscribedServices(tenant,tenantSubscriptionInfo);
 		LOGGER.info("Retrieved subscribedApps is {}",subscribedApps);
 		if (subscribedApps == null) {
 			LOGGER.debug("Get empty(null) subscribed APPs");
@@ -243,7 +244,7 @@ public class TenantSubscriptionUtil
 				}
 			}
 			tenantSubscriptionInfo.setSubscriptionAppsList(subAppsList);
-			List<String> subscribeAppsList= SubsriptionApps2Util.getSubscribedAppsList(tenantSubscriptionInfo);
+			List<String> subscribeAppsList= SubscriptionAppsUtil.getSubscribedAppsList(tenantSubscriptionInfo);
 			LOGGER.info("After mapping Subscribed App list is {}",subscribeAppsList);
 			if(subscribeAppsList == null ){
 				LOGGER.error("After Mapping action,Empty subscription list found!");
@@ -288,9 +289,9 @@ public class TenantSubscriptionUtil
 	private static boolean checkLicVersion(TenantSubscriptionInfo tenantSubscriptionInfo){
 		if(tenantSubscriptionInfo!=null && tenantSubscriptionInfo.getAppsInfoList()!=null){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
-				if(SubsriptionApps2Util.V2_TENANT.equals(appsInfo.getLicVersion()) ||
-						SubsriptionApps2Util.V3_TENANT.equals(appsInfo.getLicVersion()) ||
-						SubsriptionApps2Util.V4_TENANT.equals(appsInfo.getLicVersion())){
+				if("V2_MODEL".equals(appsInfo.getLicVersion()) ||
+						"V3_MODEL".equals(appsInfo.getLicVersion()) ||
+						"V4_MODEL".equals(appsInfo.getLicVersion())){
 					//V2/V3/v4
 					return false;
 				}
