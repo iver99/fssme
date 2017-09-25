@@ -94,14 +94,7 @@ public interface SearchSummary
 	 *
 	 * @return federationSupported
 	 */
-	public boolean getFederationSupported();
-
-	/**
-	 * Returns if the search supports greenfield mode or not
-	 *
-	 * @return greenfieldSupported
-	 */
-	public boolean getGreenfieldSupported();
+	public String getFederationSupported();
 
 	/**
 	 * Returns whether this is a system search or not

@@ -53,7 +53,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true, "false");
 	}
 
 	@Test(groups = { "s2" })
@@ -70,7 +70,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true, "false");
 	}
 
 	@Test(groups = { "s2" })
@@ -87,7 +87,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true, "false");
 	}
 
 	@Test(groups = { "s2" })
@@ -104,7 +104,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true, "false");
 	}
 
 	@Test(groups = { "s2" })
@@ -121,7 +121,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true, "false");
 	}
 
 	@Test
@@ -147,7 +147,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true, "false");
 	}
 	@Mocked WidgetManager widgetManager;
 	@Mocked WidgetManagerImpl widgetManagerImpl;
@@ -185,7 +185,7 @@ public class WidgetAPIMoreTest
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
-				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString);
+				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString, anyBoolean);
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
@@ -193,7 +193,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false, "false");
 	}
 
 	@Test(groups = { "s2" })
@@ -210,7 +210,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true, "false");
 	}
 
 	@Test(groups = { "s2" })
@@ -227,7 +227,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", true, "false");
 	}
 
 	@Test(groups = { "s2" })
@@ -244,7 +244,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "-123", true);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "-123", true, "false");
 	}
 
 	@Test(groups = { "s2" })
@@ -278,14 +278,14 @@ public class WidgetAPIMoreTest
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
-				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString);
+				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString, anyBoolean);
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", false);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", "123", false, "false");
 	}
 
 	@Test(groups = { "s2" })
@@ -308,7 +308,7 @@ public class WidgetAPIMoreTest
 			}
 		};
 		widgetAPI = new WidgetAPI();
-		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false);
+		widgetAPI.getAllWidgets(uriInfo, "userTenant", null, false, "false");
 	}
 
 	// comment out duplicated case

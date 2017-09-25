@@ -26,14 +26,6 @@ public class SearchImpl extends SearchSummaryImpl implements Search
 	protected boolean isWidget;
 	protected boolean isEditable;
 	protected String dashboardIneligible;
-	protected boolean federationSupported;
-	protected boolean greenfieldSupported;
-
-	public SearchImpl() {
-		// default values
-		greenfieldSupported = true;
-		federationSupported = false;
-	}
 
 	@Override
 	public String getDashboardIneligible() {
@@ -94,16 +86,6 @@ public class SearchImpl extends SearchSummaryImpl implements Search
 	}
 
 	@Override
-	public boolean getFederationSupported() {
-		return federationSupported;
-	}
-
-	@Override
-	public boolean getGreenfieldSupported() {
-		return greenfieldSupported;
-	}
-
-	@Override
 	public void setIsWidget(boolean isWidget)
 	{
 		this.isWidget = isWidget;
@@ -137,15 +119,5 @@ public class SearchImpl extends SearchSummaryImpl implements Search
 	public void setUiHidden(boolean uiHidden)
 	{
 		this.uiHidden = uiHidden;
-	}
-
-	@Override
-	public void setFederationSupported(boolean federationSupported) {
-		this.federationSupported = federationSupported;
-	}
-
-	@Override
-	public void setGreenfieldSupported(boolean greenfieldSupported) {
-		this.greenfieldSupported = greenfieldSupported;
 	}
 }

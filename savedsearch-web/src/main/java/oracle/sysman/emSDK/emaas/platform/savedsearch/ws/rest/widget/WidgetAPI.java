@@ -126,8 +126,8 @@ public class WidgetAPI
 			@QueryParam("federationEnabled") String federationEnabled)
 	{
 		LogUtil.getInteractionLogger().info(
-				"Service calling to (GET) /savedsearch/v1/widgets?widgetGroupId={}&includeDashboardIneligible={}", widgetGroupId,
-				includeDashboardIneligible);
+				"Service calling to (GET) /savedsearch/v1/widgets?widgetGroupId={}&includeDashboardIneligible={}&federationEnabled={}",
+				widgetGroupId, includeDashboardIneligible, federationEnabled);
 		String message = null;
 		int statusCode = 200;
 
@@ -327,11 +327,13 @@ public class WidgetAPI
 	{
 		final String widgetGroupId = "widgetGroupId";
 		final String includeDashboardIneligible = "includeDashboardIneligible";
+		final String federationEnabled = "federationEnabled";
 		final String errorMsgInvalidParam = "Please give query parameter by one of " + widgetGroupId + ", "
-				+ includeDashboardIneligible;
+				+ includeDashboardIneligible + ", " + federationEnabled;
 		String[] input = param.split("=");
 		String key = input[0];
-		if (!key.equals(widgetGroupId) && !key.equals(includeDashboardIneligible)) {
+		if (!key.equals(widgetGroupId) && !key.equals(includeDashboardIneligible) && !key.equals(federationEnabled)) {
+			LOGGER.error(errorMsgInvalidParam);
 			return Response.status(400).entity(errorMsgInvalidParam).build();
 		}
 		else {
@@ -344,10 +346,12 @@ public class WidgetAPI
 					}
 				}
 				else if (value != null && includeDashboardIneligible.equals(key) && !"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
+					LOGGER.error("Please specify " + key + " true or false");
 					return Response.status(400).entity("Please specify " + key + " true or false").build();
 				}
 			}
 			else {
+				LOGGER.error("Please give the value for " + key);
 				return Response.status(400).entity("Please give the value for " + key).build();
 			}
 		}

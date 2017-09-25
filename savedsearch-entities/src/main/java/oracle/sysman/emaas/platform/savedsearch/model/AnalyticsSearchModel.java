@@ -58,10 +58,8 @@ public class AnalyticsSearchModel
 	private Long widgetDefaultWidth;
 	@JsonProperty("WIDGET_EDITABLE")
 	private String widgetEditable;
-	@JsonProperty("FEDERATION_SUPPORTED")
+	//@JsonProperty("FEDERATION_SUPPORTED") /* use federationSupported instead of FEDERATION_SUPPORTED to keep the same with dashboard side */
 	private String federationSupported;
-	@JsonProperty("GREENFIELD_SUPPORTED")
-	private String greenfieldSupported;
 
 	/**
 	 * @return the id
@@ -410,14 +408,6 @@ public class AnalyticsSearchModel
 
 	public void setFederationSupported(String federationSupported) {
 		this.federationSupported = federationSupported;
-	}
-
-	public String getGreenfieldSupported() {
-		return greenfieldSupported;
-	}
-
-	public void setGreenfieldSupported(String greenfieldSupported) {
-		this.greenfieldSupported = greenfieldSupported;
 	}
 
 

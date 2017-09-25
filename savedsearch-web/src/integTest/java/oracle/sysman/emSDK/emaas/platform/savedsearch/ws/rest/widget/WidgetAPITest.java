@@ -109,7 +109,7 @@ public class WidgetAPITest
 				result = "widgetGroupId=11&includeDashboardIneligible=true";
 			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false");
 	}
 
 	@Test
@@ -183,7 +183,7 @@ public class WidgetAPITest
 				return "Widget Json Message";
 			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false");
 	}
 
 	@Test
@@ -256,7 +256,7 @@ public class WidgetAPITest
 				return WidgetAPITest.mockedWidgetObjects();
 					}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false");
 	}
 
 	@Test
@@ -329,7 +329,7 @@ public class WidgetAPITest
 				return WidgetAPITest.mockedWidgetObjects();
 					}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false");
 	}
 
 	@Test

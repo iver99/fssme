@@ -171,12 +171,5 @@ public interface Search extends SearchSummary
 	 *
 	 * @param federationSupported
 	 */
-	public void setFederationSupported(boolean federationSupported);
-
-	/**
-	 * Sets if the search supports greenfield mode or not
-	 *
-	 * @param greenfieldSupported
-	 */
-	public void setGreenfieldSupported(boolean greenfieldSupported);
+	public void setFederationSupported(String federationSupported);
 }
