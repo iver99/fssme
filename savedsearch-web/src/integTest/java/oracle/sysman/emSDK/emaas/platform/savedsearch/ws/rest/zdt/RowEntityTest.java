@@ -1,11 +1,8 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryParamRowEntity;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchCategoryRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchFolderRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchParamRowEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.rowsEntity.SavedSearchSearchRowEntity;
@@ -16,28 +13,6 @@ import org.testng.annotations.Test;
 
 @Test(groups = { "s1" })
 public class RowEntityTest {
-	SavedSearchCategoryParamRowEntity categoryParamEntity = new SavedSearchCategoryParamRowEntity("1",
-			"name","value", 1L, "creationDate",
-			"lastModificationDate");
-	SavedSearchCategoryParamRowEntity categoryParamEntity2 = new SavedSearchCategoryParamRowEntity("1",
-			"name1","value1", 2L, "creationDate1",
-			"lastModificationDate1");
-	SavedSearchCategoryRowEntity categoryEntity = new SavedSearchCategoryRowEntity("1",
-			"description", "descriptionNlsid",
-			"descriptionSubsystem", "emPluginId", "name",
-			"nameNlsid", "nameSubsystem", "owner",
-			"1", "providerName", "providerVersion",
-			"providerDiscovery", "providerAssetRoot",
-			"lastModificationDate", 1L, "creationDate",
-			"2", "dashboardIneligible");
-	SavedSearchCategoryRowEntity categoryEntity2 = new SavedSearchCategoryRowEntity("2",
-			"description1", "descriptionNlsid1",
-			"descriptionSubsystem1", "emPluginId1", "name1",
-			"nameNlsid1", "nameSubsystem1", "owner1",
-			"2", "providerName1", "providerVersion1",
-			"providerDiscovery1", "providerAssetRoot1",
-			"lastModificationDate1", 2L, "creationDate1",
-			"2", "dashboardIneligible");
 	SavedSearchFolderRowEntity folderEntity = new SavedSearchFolderRowEntity("1", "description",
 			"descriptionNlsid", "descriptionSubsystem",
 			"emPluginId", "lastModifiedBy",
@@ -95,10 +70,6 @@ public class RowEntityTest {
 	
 	@Test
 	public void testEquals() {
-		List<SavedSearchCategoryParamRowEntity> categoryParamList1 = new ArrayList<SavedSearchCategoryParamRowEntity>();
-		categoryParamList1.add(categoryParamEntity);
-		List<SavedSearchCategoryRowEntity> categoryList1 = new ArrayList<SavedSearchCategoryRowEntity>();
-		categoryList1.add(categoryEntity);
 		List<SavedSearchFolderRowEntity> folderList1 = new ArrayList<SavedSearchFolderRowEntity>();
 		folderList1.add(folderEntity);
 		List<SavedSearchSearchParamRowEntity> searchParamList1 = new ArrayList<SavedSearchSearchParamRowEntity>();
@@ -106,16 +77,11 @@ public class RowEntityTest {
 		List<SavedSearchSearchRowEntity> searchList1 = new ArrayList<SavedSearchSearchRowEntity>();
 		searchList1.add(searchEntity);
 		
-		ZDTTableRowEntity zdtTaleRow1 = new ZDTTableRowEntity(categoryList1,
-				categoryParamList1,
+		ZDTTableRowEntity zdtTaleRow1 = new ZDTTableRowEntity(
 				folderList1,
 				searchParamList1,
 				searchList1);
 		
-		List<SavedSearchCategoryParamRowEntity> categoryParamList2 = new ArrayList<SavedSearchCategoryParamRowEntity>();
-		categoryParamList2.add(categoryParamEntity2);
-		List<SavedSearchCategoryRowEntity> categoryList2 = new ArrayList<SavedSearchCategoryRowEntity>();
-		categoryList2.add(categoryEntity2);
 		List<SavedSearchFolderRowEntity> folderList2 = new ArrayList<SavedSearchFolderRowEntity>();
 		folderList2.add(folderEntity2);
 		List<SavedSearchSearchParamRowEntity> searchParamList2 = new ArrayList<SavedSearchSearchParamRowEntity>();
@@ -123,13 +89,15 @@ public class RowEntityTest {
 		List<SavedSearchSearchRowEntity> searchList2= new ArrayList<SavedSearchSearchRowEntity>();
 		searchList2.add(searchEntity2);
 		
-		ZDTTableRowEntity zdtTaleRow2 = new ZDTTableRowEntity(categoryList2,
-				categoryParamList2,
+		ZDTTableRowEntity zdtTaleRow2 = new ZDTTableRowEntity(
 				folderList2,
 				searchParamList2,
 				searchList2);
 		
+		Assert.assertEquals(zdtTaleRow1,zdtTaleRow2);
+		searchParam.setSearchId("2");
 		Assert.assertNotEquals(zdtTaleRow1,zdtTaleRow2);
+
 	}
 	
 	

@@ -26,14 +26,14 @@ ext.emcpssf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, 'emcpssf
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  
 dependencies {
- 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-zdt-test-sdk-integ-tests', version: "${emcpssf_REPO_BID}")
-  	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${emcpssf_REPO_BID}"){ exclude('module':'groovy') }
-    testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${emcpssf_REPO_BID}") {transitive = true}
-   	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${emcpssf_REPO_BID}") {transitive = true}
-   	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${emcpssf_REPO_BID}") {transitive = true}
-    testConfig group: 'com.oracle.emaas.emcpssf.test', name:'savedsearch-web-integ-tests', version: "${emcpssf_REPO_BID}"
-   	testConfig group: 'com.oracle.emaas.emcpssf.test', name:'savedsearch-core-integ-tests', version: "${emcpssf_REPO_BID}"
-   	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${emcpssf_REPO_BID}") {transitive = true}
+ 	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-zdt-test-sdk-integ-tests', version: "${REPO_BID}")
+  	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web-integ-tests', version: "${REPO_BID}"){ exclude('module':'groovy') }
+    	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-web', version: "${REPO_BID}") {transitive = true}
+   	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-core', version: "${REPO_BID}") {transitive = true}
+   	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version:  "${REPO_BID}") {transitive = true}
+    	testConfig (group: 'com.oracle.emaas.emcpssf.test', name:'savedsearch-web-integ-tests', version:  "${REPO_BID}") {transitive = true}
+   	testConfig (group: 'com.oracle.emaas.emcpssf.test', name:'savedsearch-core-integ-tests', version: "${REPO_BID}") {transitive = true}
+   	testConfig (group: 'com.oracle.emaas.emcpssf.test', name: 'savedsearch-entities', version: "${REPO_BID}") {transitive = true}
 
     
 }
@@ -50,7 +50,7 @@ task emcpssf_zdtPlay(type: EMTest) {
                }
            }
        }
-  
+  useRestAssured = true
    }
   
   task emcpssf_zdtReplay(type: EMTest) {
@@ -63,7 +63,20 @@ task emcpssf_zdtPlay(type: EMTest) {
                }
            }
        }
+  useRestAssured = true
+   }
+   
+   task emcpssf_zdtCompare(type: EMTest) {
   
+      options.suiteXmlBuilder().suite('name': 'testSdk-test') {
+           test('name': 'testSdk-test') {
+               classes([:]) {
+                 'class'('name': 'oracle.sysman.emaas.platform.savedsearch.testsdk.SavedSearchSyncCompareTest')
+                 
+               }
+           }
+       }
+  useRestAssured = true
    }
    
 
