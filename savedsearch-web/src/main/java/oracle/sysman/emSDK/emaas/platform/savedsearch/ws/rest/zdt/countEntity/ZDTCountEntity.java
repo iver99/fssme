@@ -15,10 +15,10 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.zdt.countEntity;
  */
 public class ZDTCountEntity
 {
-	private Long countOfCategory;
+//	private Long countOfCategory;
 	private Long countOfFolders;
 	private Long countOfSearch;
-	private Long countOfCategoryPrams;
+//	private Long countOfCategoryPrams;
 	private Long countOfSearchParams;
 
 	public ZDTCountEntity()
@@ -27,26 +27,15 @@ public class ZDTCountEntity
 	}
 
 	/**
-	 * @param countOfCategory
 	 * @param countOfFolders
 	 * @param countOfSearch
 	 */
-	public ZDTCountEntity(Long countOfCategory, Long countOfFolders, Long countOfSearch, Long countOfCategoryPrams, Long countOfSearchParams)
+	public ZDTCountEntity(Long countOfFolders, Long countOfSearch, Long countOfSearchParams)
 	{
 		super();
-		this.countOfCategory = countOfCategory;
 		this.countOfFolders = countOfFolders;
 		this.countOfSearch = countOfSearch;
-		this.countOfCategoryPrams = countOfCategoryPrams;
 		this.countOfSearchParams = countOfSearchParams;
-	}
-
-	public Long getCountOfCategory() {
-		return countOfCategory;
-	}
-
-	public void setCountOfCategory(Long countOfCategory) {
-		this.countOfCategory = countOfCategory;
 	}
 
 	public Long getCountOfFolders() {
@@ -63,14 +52,6 @@ public class ZDTCountEntity
 
 	public void setCountOfSearch(Long countOfSearch) {
 		this.countOfSearch = countOfSearch;
-	}
-
-	public Long getCountOfCategoryPrams() {
-		return countOfCategoryPrams;
-	}
-
-	public void setCountOfCategoryPrams(Long countOfCategoryPrams) {
-		this.countOfCategoryPrams = countOfCategoryPrams;
 	}
 
 	public Long getCountOfSearchParams() {
