@@ -1408,6 +1408,7 @@ public class SearchAPI
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
 		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
+		searchObj.setFederationSupported(json.optString("federationSupported", searchObj.getFederationSupported()));
 
 		// Nullable properties !
 		searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));

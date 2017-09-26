@@ -105,6 +105,7 @@ public class WidgetManagerImplTest
 		final String providerName = "PROVIDER_NAME";
 		final String providerVersion = "PROVIDER_VERSION";
 		final String providerAssetRoot = "PROVIDER_ASSET_ROOT";
+		final String federationSupported = "federationSupported";
 
 		List<Map<String, Object>> widgets = new ArrayList<Map<String, Object>>();
 		Map<String, Object> widget1 = new HashMap<String, Object>();
@@ -123,12 +124,13 @@ public class WidgetManagerImplTest
 		widget1.put(providerName, "TargetAnalytics");
 		widget1.put(providerVersion, "1.0");
 		widget1.put(providerAssetRoot, "assetRoot");
+		widget1.put(federationSupported, "NON_FEDERATION_ONLY");
 		widgets.add(widget1);
 
 		String json = WidgetManagerImpl.getInstance().getSpelledJsonFromQueryResult(widgets);
 		Assert.assertEquals(
 				json,
-				"[{\"WIDGET_UNIQUE_ID\":\"2000\",\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
+				"[{\"federationSupported\":\"NON_FEDERATION_ONLY\",\"WIDGET_UNIQUE_ID\":\"2000\",\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
 	}
 
 	@Test

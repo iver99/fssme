@@ -308,13 +308,16 @@ public class EntityJsonUtil
 			emSearch.setWidgetEditable(m.get("WIDGET_EDITABLE").toString());
 		}
 		FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
-		try {
-			int intFedSupported = Integer.parseInt(m.get("FEDERATION_SUPPORTED").toString());
-			fst = FederationSupportedType.fromValue(intFedSupported);
-		} catch (NumberFormatException e) {
-			LOGGER.error("Invalid FEDERATION_SUPPOTED value. Using default value instead", e);
-		} catch (IllegalArgumentException e) {
-			LOGGER.error("Invalid FEDERATION_SUPPOTED value. Using default value instead", e);
+		Object objFedSupported = m.get("FEDERATION_SUPPORTED");
+		if (objFedSupported != null) {
+			try {
+				int intFedSupported = Integer.parseInt(objFedSupported.toString());
+				fst = FederationSupportedType.fromValue(intFedSupported);
+			} catch (NumberFormatException e) {
+				LOGGER.error("Invalid FEDERATION_SUPPOTED value. Using default value instead", e);
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Invalid FEDERATION_SUPPOTED value. Using default value instead", e);
+			}
 		}
 		emSearch.setFederationSupported(fst.getJsonValue()); // federation supported defaults to 0
 		emSearch.setId(m.get("SEARCH_ID").toString());
