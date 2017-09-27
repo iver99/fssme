@@ -1,23 +1,32 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.tool;
 
+import java.util.List;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.LogUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsDatabaseUnavailException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.metadata.MetadataRefreshAPI;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.List;
 
 /**
  * Created by xiadai on 2017/6/6.
@@ -60,5 +69,46 @@ public class InternalToolAPI {
         }
         return Response.status(statusCode).entity(message).build();
 
+    }
+    
+    @DELETE
+    @Path("offboard/{tenantName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteTenant(@PathParam("tenantName") String tenantName){
+        LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/offboard/{}", tenantName);
+        if (tenantName == null || tenantName.isEmpty()) {
+            return Response.status(400).entity("BAD REQUEST. PLEASE PROVIDE THE TENANT NAME.").build();
+        }
+        
+        StringBuilder message = new StringBuilder();
+        int statusCode = 200;
+        try {
+            if (!DependencyStatus.getInstance().isDatabaseUp()) {
+                throw new EMAnalyticsDatabaseUnavailException();
+            }
+            
+            Long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantName);
+            LOGGER.info("Get internal tenant id {} for opc tenant id {}", internalTenantId, tenantName);
+            
+            TenantManager tenantManager  = TenantManager.getInstance();
+            tenantManager.cleanTenant(internalTenantId);
+            message.append(tenantName).append(" has been deleted!");
+        } catch (BasicServiceMalfunctionException basicEx) {
+            statusCode = 500;
+            message.append("Tenant Id [").append(tenantName).append("] does not exist: ")
+                    .append(basicEx.getMessage().toUpperCase());
+            LOGGER.error("Tenant Id {} does not exist: {}", tenantName, basicEx.getMessage());
+        } catch (EMAnalyticsFwkException e) {
+            statusCode = 500;
+            message.append("Fall into error while deleting tenant [").append(tenantName).append("] because: ")
+                    .append(e.getMessage().toUpperCase());
+            LOGGER.error("Fall into error while deleting tenant [{}] because: {}", tenantName, e.getMessage());
+        } catch(Exception ex) {
+            statusCode = 500;
+            message.append("Fall into error while deleting tenant [").append(tenantName).append("] because: ")
+            .append(ex.getMessage().toUpperCase());
+            LOGGER.error("Fall into error while deleting tenant [{}] because: {}", tenantName, ex.getMessage());
+        }
+        return Response.status(statusCode).entity(message.toString()).build();
     }
 }
