@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
 import javax.ws.rs.core.UriInfo;
 
 import mockit.Expectations;
@@ -20,6 +21,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.CategoryImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchManagerImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.WidgetManagerImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -88,7 +90,7 @@ public class WidgetAPITest
 	}
 
 	@Test
-	public void testGetAllWidgets()
+	public void testGetAllWidgets(@Mocked final TenantInfo tenantInfo, final @Mocked EntityManager entityManager, @Mocked final PersistenceManager persistenceManager)
 	{
 		String userTenant = "OAM_REMOTE_USER.userName";
 		String widgetGroupId = "10";
@@ -107,6 +109,8 @@ public class WidgetAPITest
 				result = uri;
 				uri.getQuery();
 				result = "widgetGroupId=11&includeDashboardIneligible=true";
+				persistenceManager.getInstance();
+				result = persistenceManager;
 			}
 		};
 		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
