@@ -76,12 +76,13 @@ public class InternalToolAPI {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteTenant(@PathParam("tenantName") String tenantName){
         LogUtil.getInteractionLogger().info("Service calling to (DELETE) /savedsearch/v1/offboard/{}", tenantName);
+        int statusCode = 200;
+        StringBuilder message = new StringBuilder();
         if (tenantName == null || tenantName.isEmpty()) {
-            return Response.status(400).entity("BAD REQUEST. PLEASE PROVIDE THE TENANT NAME.").build();
+            message.append("{\"errorMsg\":\"BAD REQUEST. PLEASE PROVIDE THE TENANT NAME.\"}");
+            return Response.status(400).entity(message.toString()).build();
         }
         
-        StringBuilder message = new StringBuilder();
-        int statusCode = 200;
         try {
             if (!DependencyStatus.getInstance().isDatabaseUp()) {
                 throw new EMAnalyticsDatabaseUnavailException();
@@ -89,24 +90,26 @@ public class InternalToolAPI {
             
             Long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantName);
             LOGGER.info("Get internal tenant id {} for opc tenant id {}", internalTenantId, tenantName);
+            if(internalTenantId == null) {
+                throw new BasicServiceMalfunctionException("Tenant id does not exist.", "SavedSearch");
+            }
             
             TenantManager tenantManager  = TenantManager.getInstance();
             tenantManager.cleanTenant(internalTenantId);
             message.append(tenantName).append(" has been deleted!");
         } catch (BasicServiceMalfunctionException basicEx) {
-            statusCode = 500;
-            message.append("Tenant Id [").append(tenantName).append("] does not exist: ")
-                    .append(basicEx.getMessage().toUpperCase());
+            statusCode = 404;
+            message.append("{\"errorMsg\":\"Tenant Id [").append(tenantName).append("] does not exist.\"}");
             LOGGER.error("Tenant Id {} does not exist: {}", tenantName, basicEx.getMessage());
         } catch (EMAnalyticsFwkException e) {
             statusCode = 500;
-            message.append("Fall into error while deleting tenant [").append(tenantName).append("] because: ")
-                    .append(e.getMessage().toUpperCase());
+            message.append("{\"errorMsg\":\"Fall into error while deleting tenant [").append(tenantName).append("] because: ")
+                    .append(e.getMessage().toUpperCase()).append("\"}");
             LOGGER.error("Fall into error while deleting tenant [{}] because: {}", tenantName, e.getMessage());
         } catch(Exception ex) {
             statusCode = 500;
-            message.append("Fall into error while deleting tenant [").append(tenantName).append("] because: ")
-            .append(ex.getMessage().toUpperCase());
+            message.append("{\"errorMsg\":\"Fall into error while deleting tenant [").append(tenantName).append("] because: ")
+                    .append(ex.getMessage().toUpperCase()).append("\"}");
             LOGGER.error("Fall into error while deleting tenant [{}] because: {}", tenantName, ex.getMessage());
         }
         return Response.status(statusCode).entity(message.toString()).build();
