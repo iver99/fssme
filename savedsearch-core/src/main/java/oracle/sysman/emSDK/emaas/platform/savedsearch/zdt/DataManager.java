@@ -120,12 +120,12 @@ public class DataManager
 			+ "DELETED,IS_WIDGET,TENANT_ID,WIDGET_SOURCE,WIDGET_GROUP_NAME,"
 			+ "WIDGET_SCREENSHOT_HREF,WIDGET_ICON,WIDGET_KOC_NAME,WIDGET_VIEWMODEL,WIDGET_TEMPLATE,"
 			+ "WIDGET_SUPPORT_TIME_CONTROL,WIDGET_LINKED_DASHBOARD,WIDGET_DEFAULT_WIDTH,WIDGET_DEFAULT_HEIGHT,PROVIDER_NAME,"
-			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
+			+ "PROVIDER_VERSION,PROVIDER_ASSET_ROOT,DASHBOARD_INELIGIBLE,FEDERATION_SUPPORTED) VALUES(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?,?,?,?,"
 			+ "?,?,?,?,?,"
 			+ "?,?,?,?,?,"
 			+ "?,?,?,?,?,"
-			+ "?,?,?,?,?," + "?,?,?)";
+			+ "?,?,?,?,?," + "?,?,?,?)";
 
 	private static final String SQL_UPDATE_SEARCH = "UPDATE EMS_ANALYTICS_SEARCH t set t.NAME=?,t.OWNER=?,t.CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 			+ "t.LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
@@ -134,7 +134,7 @@ public class DataManager
 			+ "t.DELETED=?,t.IS_WIDGET=?,t.WIDGET_SOURCE=?,t.WIDGET_GROUP_NAME=?,t.WIDGET_SCREENSHOT_HREF=?,t.WIDGET_ICON=?,"
 			+ "t.WIDGET_KOC_NAME=?,t.WIDGET_VIEWMODEL=?,t.WIDGET_TEMPLATE=?,t.WIDGET_SUPPORT_TIME_CONTROL=?,t.WIDGET_LINKED_DASHBOARD=?,"
 			+ "t.WIDGET_DEFAULT_WIDTH=?,t.WIDGET_DEFAULT_HEIGHT=?,t.PROVIDER_NAME=?,t.PROVIDER_VERSION=?,t.PROVIDER_ASSET_ROOT=?,"
-			+ "t.DASHBOARD_INELIGIBLE=? where t.SEARCH_ID=? and t.TENANT_ID=?";
+			+ "t.DASHBOARD_INELIGIBLE=?,t.FEDERATION_SUPPORTED=? where t.SEARCH_ID=? and t.TENANT_ID=?";
 
 	private static final String SQL_INSERT_SEARCH_PARAM = "INSERT INTO EMS_ANALYTICS_SEARCH_PARAMS (SEARCH_ID,NAME,PARAM_ATTRIBUTES,PARAM_TYPE,PARAM_VALUE_STR,"
 			+ "PARAM_VALUE_CLOB,TENANT_ID,CREATION_DATE,LAST_MODIFICATION_DATE,DELETED) VALUES(?,?,?,?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),?)";
@@ -624,7 +624,7 @@ public class DataManager
 			Long widgetLinkedDashboard, Long widgetDefaultWidth, Long widgetDefaultHeight, String dashboardIneligible,
 			String providerName, String providerVersion, String providerAssetRoot, Integer federationSupported) throws SyncException {
 		//check db constraint
-		if (checkDbSearchConstraint(searchId, name, owner, creationDate, folderId, categoryId, systemSearch, isLocked, uiHidden, deleted, isWidget, tenantId)){
+		if (checkDbSearchConstraint(searchId, name, owner, creationDate, folderId, categoryId, systemSearch, isLocked, uiHidden, deleted, isWidget, tenantId, federationSupported)){
 			return;
 		}
 		String sql = "select to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(t.LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as  LAST_MODIFICATION_DATE "
@@ -654,17 +654,17 @@ public class DataManager
 				//execute insert action
 				logger.info("Data not exist in table EMS_ANALYTICS_SEARCH,execute insert action. Search id is {}", searchId);
 				int insertResult = em.createNativeQuery(SQL_INSERT_SEARCH).setParameter(1, searchId).setParameter(2, null).setParameter(3, name)
-				.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
-				.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
-				.setParameter(10, categoryId).setParameter(11, systemSearch).setParameter(12, isLocked).setParameter(13, metaDataClob)
-				.setParameter(14, searchDisplayStr).setParameter(15, uiHidden).setParameter(16, deleted)
-				.setParameter(17, isWidget).setParameter(18, tenantId).setParameter(19, nameWidgetSource)
-				.setParameter(20, widgetGroupName).setParameter(21, widgetScreenshotHref).setParameter(22, widgetIcon)
-				.setParameter(23, widgetKocName).setParameter(24, viewModel).setParameter(25, widgetTemplate)
-				.setParameter(26, widgetSupportTimeControl).setParameter(27, widgetLinkedDashboard)
-				.setParameter(28, widgetDefaultWidth).setParameter(29, widgetDefaultHeight)
-				.setParameter(30, providerName).setParameter(31, providerVersion).setParameter(32, providerAssetRoot)
-				.setParameter(33, dashboardIneligible).executeUpdate();
+						.setParameter(4, owner).setParameter(5, creationDate).setParameter(6, lastModificationDate)
+						.setParameter(7, lastModifiedBy).setParameter(8, description).setParameter(9, folderId)
+						.setParameter(10, categoryId).setParameter(11, systemSearch).setParameter(12, isLocked).setParameter(13, metaDataClob)
+						.setParameter(14, searchDisplayStr).setParameter(15, uiHidden).setParameter(16, deleted)
+						.setParameter(17, isWidget).setParameter(18, tenantId).setParameter(19, nameWidgetSource)
+						.setParameter(20, widgetGroupName).setParameter(21, widgetScreenshotHref).setParameter(22, widgetIcon)
+						.setParameter(23, widgetKocName).setParameter(24, viewModel).setParameter(25, widgetTemplate)
+						.setParameter(26, widgetSupportTimeControl).setParameter(27, widgetLinkedDashboard)
+						.setParameter(28, widgetDefaultWidth).setParameter(29, widgetDefaultHeight)
+						.setParameter(30, providerName).setParameter(31, providerVersion).setParameter(32, providerAssetRoot)
+						.setParameter(33, dashboardIneligible).setParameter(34, federationSupported).executeUpdate();
 				logger.info("InsertResult is {}",insertResult);
 			}
 			else {
@@ -699,7 +699,8 @@ public class DataManager
 							.setParameter(23, widgetSupportTimeControl).setParameter(24, widgetLinkedDashboard)
 							.setParameter(25, widgetDefaultWidth).setParameter(26, widgetDefaultHeight)
 							.setParameter(27, providerName).setParameter(28, providerVersion).setParameter(29, providerAssetRoot)
-							.setParameter(30, dashboardIneligible).setParameter(31, searchId).setParameter(32, tenantId).executeUpdate();
+							.setParameter(30, dashboardIneligible).setParameter(31, searchId).setParameter(32, tenantId)
+							.setParameter(33, federationSupported).executeUpdate();
 					logger.info("UpdateResult is {}",updateResult);
 				}
 
@@ -712,7 +713,7 @@ public class DataManager
 		}
 	}
 
-	private boolean checkDbSearchConstraint(BigInteger searchId, String name, String owner, String creationDate, BigInteger folderId, BigInteger categoryId, Integer systemSearch, Integer isLocked, Integer uiHidden, BigInteger deleted, Integer isWidget, Long tenantId) {
+	private boolean checkDbSearchConstraint(BigInteger searchId, String name, String owner, String creationDate, BigInteger folderId, BigInteger categoryId, Integer systemSearch, Integer isLocked, Integer uiHidden, BigInteger deleted, Integer isWidget, Long tenantId, Integer federationSupported) {
 		if(searchId == null){
 			logger.warn("searchId can not be null!");
 			return true;
@@ -759,6 +760,10 @@ public class DataManager
 		}
 		if(tenantId == null){
 			logger.warn("tenantId can not be null!");
+			return true;
+		}
+		if(federationSupported == null){
+			logger.warn("federationSupported can not be null!");
 			return true;
 		}
 		return false;
