@@ -339,6 +339,17 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertEquals(model.getWidgetScreenshotHref(), "testScreenshotUrl");
 		model = EntityJsonUtil.getJsonModel(m, null);
 		Assert.assertEquals(model.getWidgetScreenshotHref(), null);
+
+		// various federation support values
+		m.put("FEDERATION_SUPPORTED", "1");
+		model = EntityJsonUtil.getJsonModel(m, "testScreenshotUrl");
+		Assert.assertEquals(model.getFederationSupported(), "FEDERATION_AND_NON_FEDERATION");
+		m.put("FEDERATION_SUPPORTED", "2");
+		model = EntityJsonUtil.getJsonModel(m, "testScreenshotUrl");
+		Assert.assertEquals(model.getFederationSupported(), "FEDERATION_ONLY");
+		m.put("FEDERATION_SUPPORTED", "200");
+		model = EntityJsonUtil.getJsonModel(m, "testScreenshotUrl");
+		Assert.assertEquals(model.getFederationSupported(), "NON_FEDERATION_ONLY"); // use default value for invalid input
 		
 	}
 	

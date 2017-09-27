@@ -91,6 +91,7 @@ public class SearchAPITest {
         inputJson.put("name","Demo Search");
         inputJson.put("category",category);
         inputJson.put("description","Search for demo");
+		inputJson.put("federationSupported", "FEDERATION_ONLY");
         inputJson.put("folder",folder);
         inputJson.put("parameters",parameter);
         new Expectations(){
@@ -124,6 +125,7 @@ public class SearchAPITest {
         inputJson.put("name","Demo Search");
         inputJson.put("category",category);
         inputJson.put("description","Search for demo");
+		inputJson.put("federationSupported", "NON_FEDERATION_ONLY");
         inputJson.put("folder",folder);
         inputJson.put("parameters",parameter);
         new Expectations(){
@@ -157,6 +159,7 @@ public class SearchAPITest {
         inputJson.put("name","Demo Search");
         inputJson.put("category",category);
         inputJson.put("description","Search for demo");
+		inputJson.put("federationSupported", "FEDERATION_AND_NON_FEDERATION");
         inputJson.put("folder",folder);
         inputJson.put("parameters",parameter);
         new Expectations(){

@@ -70,6 +70,7 @@ public class WidgetAPITest
 			m.put("PROVIDER_NAME", "Test");
 			m.put("PROVIDER_VERSION", "100");
 			m.put("PROVIDER_ASSET_ROOT", "Test");
+			m.put("FEDERATION_SUPPORTED", "FEDERATION_ONLY");
 			map.add(m);
 		}
 		return map;

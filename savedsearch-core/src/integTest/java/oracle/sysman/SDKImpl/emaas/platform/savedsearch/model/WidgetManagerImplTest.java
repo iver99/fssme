@@ -297,6 +297,7 @@ public class WidgetManagerImplTest
 	public void testGetWidgetListByProviderNamesNULL() throws EMAnalyticsFwkException {
 		WidgetManagerImpl widgetManager = WidgetManagerImpl.getInstance();
 		widgetManager.getWidgetListByProviderNames(null, "1", false);
+		widgetManager.getWidgetListByProviderNames(null, "1", true);
 	}
 	@Test
 	public void testGetWidgetJsonStringFromWidgetListNull() throws EMAnalyticsFwkException {
