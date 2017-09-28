@@ -225,6 +225,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
      private static final String NAV_ZDT_COMPARE_STATUS = NAV_BASE + "/zdt/compare/status";
      private static final String NAV_ZDT_COMPARE_RESULT = NAV_BASE + "/zdt/compare/result";
      private static final String NAV_ZDT_GET_TENANTS = NAV_BASE + "/zdt/tenants";
+     
+     // rel : tenant.offboard
+     private static final String INTERNALAPI_TENANT_OFFBOARD = "tenant.offboard";
+     private static final String NAV_TOOL_TENANT_OFFBOARD = NAV_BASE + "/tool/offboard";
 
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
@@ -391,6 +395,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("zdt/tenants").withHref(applicationUrl + NAV_ZDT_GET_TENANTS));
 				links.add(new Link().withRel("refresh/oob").withHref(applicationUrl + "/savedsearch/v1/refresh/oob"));
 				links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrl + "/savedsearch/v1/refresh/nls"));
+				links.add(new Link().withRel(INTERNALAPI_TENANT_OFFBOARD).withHref(applicationUrl + NAV_TOOL_TENANT_OFFBOARD));
 			}
 			if (applicationUrlSSL != null) {
 				links.add(new Link().withRel(OBSOLETE_NAV).withHref(applicationUrlSSL + NAV_BASE));
