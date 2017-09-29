@@ -50,7 +50,7 @@ public class offboardTenant
 			Assert.assertTrue(res2.getStatusCode() == 404);
 			
 			Response res3 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", "CloudServices").header("Authorization", authToken)
-					.when().delete("/tool/offboard/TENANT_ID1");
+					.when().delete("/tool/offboard/" + TENANT_ID1);
 			
 			Assert.assertTrue(res3.getStatusCode() == 200);
 
