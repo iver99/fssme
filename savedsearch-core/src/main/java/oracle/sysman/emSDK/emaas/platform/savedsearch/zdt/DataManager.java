@@ -699,8 +699,8 @@ public class DataManager
 							.setParameter(23, widgetSupportTimeControl).setParameter(24, widgetLinkedDashboard)
 							.setParameter(25, widgetDefaultWidth).setParameter(26, widgetDefaultHeight)
 							.setParameter(27, providerName).setParameter(28, providerVersion).setParameter(29, providerAssetRoot)
-							.setParameter(30, dashboardIneligible).setParameter(31, searchId).setParameter(32, tenantId)
-							.setParameter(33, federationSupported).executeUpdate();
+							.setParameter(30, dashboardIneligible).setParameter(31, federationSupported).setParameter(32, searchId).setParameter(33, tenantId)
+							.executeUpdate();
 					logger.info("UpdateResult is {}",updateResult);
 				}
 
