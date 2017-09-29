@@ -23,6 +23,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
@@ -1342,8 +1343,8 @@ public class SearchManagerImpl extends SearchManager
 				rtnObj.setGuid(searchObj.getSearchGuid().toString());
 			}
 
-			rtnObj.setName(searchObj.getName());
-			rtnObj.setDescription(searchObj.getDescription());
+			rtnObj.setName(DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(),searchObj.getName()));
+			rtnObj.setDescription(DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(),searchObj.getDescription()));
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreationDate(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
@@ -1420,8 +1421,8 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			rtnObj = new WidgetImpl();
 			rtnObj.setId(searchObj.getId());
-			rtnObj.setName(searchObj.getName());
-			rtnObj.setDescription(searchObj.getDescription());
+			rtnObj.setName(DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(), searchObj.getName()));
+			rtnObj.setDescription(DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(), searchObj.getDescription()));
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreationDate(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
