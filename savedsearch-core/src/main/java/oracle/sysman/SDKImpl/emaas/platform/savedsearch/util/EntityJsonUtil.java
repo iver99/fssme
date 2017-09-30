@@ -241,11 +241,16 @@ public class EntityJsonUtil
 	public static AnalyticsSearchModel getJsonModel(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
 	{
 		AnalyticsSearchModel emSearch = new AnalyticsSearchModel();
+		Boolean isSystemSearch = "ORACLE".equalsIgnoreCase(m.get("OWNER").toString());
 		if(m.get("NAME")!=null){
-			emSearch.setName(DatabaseResourceBundleUtil.getTranslatedString(m.get("PROVIDER_NAME").toString(),m.get("NAME").toString()));
+			String searchName = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(m.get("PROVIDER_NAME").toString(),m.get("NAME").toString()) : m.get("NAME").toString();
+			emSearch.setName(searchName);
 		}
 		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
-			emSearch.setDescription(DatabaseResourceBundleUtil.getTranslatedString(m.get("PROVIDER_NAME").toString(), m.get("DESCRIPTION").toString()));
+			String searchDescription = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(m.get("PROVIDER_NAME").toString(), m.get("DESCRIPTION").toString()) : m.get("DESCRIPTION").toString();
+			emSearch.setDescription(searchDescription);
 		}else{
 			emSearch.setDescription(DatabaseResourceBundleUtil.getTranslatedString(m.get("PROVIDER_NAME").toString(),"No description."));
 		}

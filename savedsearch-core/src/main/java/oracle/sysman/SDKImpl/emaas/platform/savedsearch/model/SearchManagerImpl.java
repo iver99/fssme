@@ -1342,9 +1342,13 @@ public class SearchManagerImpl extends SearchManager
 			if (searchObj.getSearchGuid() != null) {
 				rtnObj.setGuid(searchObj.getSearchGuid().toString());
 			}
-
-			rtnObj.setName(DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(),searchObj.getName()));
-			rtnObj.setDescription(DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(),searchObj.getDescription()));
+			Boolean isSystemSearch = (searchObj.getSystemSearch()!= null) && (searchObj.getSystemSearch().intValue() == 1);
+			String searchName = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(),searchObj.getName()) : searchObj.getName();
+			rtnObj.setName(searchName);
+			String searchDescription = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(),searchObj.getDescription()) : searchObj.getDescription();
+			rtnObj.setDescription(searchDescription);
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreationDate(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
@@ -1421,8 +1425,13 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			rtnObj = new WidgetImpl();
 			rtnObj.setId(searchObj.getId());
-			rtnObj.setName(DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(), searchObj.getName()));
-			rtnObj.setDescription(DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(), searchObj.getDescription()));
+			Boolean isSystemSearch = (searchObj.getSystemSearch() != null ) && (searchObj.getSystemSearch().intValue() == 1);
+			String searchName =  isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(), searchObj.getName()) : searchObj.getName();
+			rtnObj.setName(searchName);
+			String searchDescription = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(), searchObj.getDescription()) : searchObj.getDescription();
+			rtnObj.setDescription(searchDescription);
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreationDate(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
