@@ -246,7 +246,7 @@ public class WidgetManagerImplTest
 				ejbQuery.getResultList();
 			}
 		};
-		widgetManager.getWidgetListByProviderNames(providerNames, "1", false);
+		widgetManager.getWidgetListByProviderNames(providerNames, "1", false, false);
 	}
 
 	@Mocked
@@ -291,13 +291,13 @@ public class WidgetManagerImplTest
 				jpaEntityManager.getActiveSession();
 				result = new Exception(throwable);			}
 		};
-		widgetManager.getWidgetListByProviderNames(providerNames, "1", false);
+		widgetManager.getWidgetListByProviderNames(providerNames, "1", false, false);
 	}
 	@Test
 	public void testGetWidgetListByProviderNamesNULL() throws EMAnalyticsFwkException {
 		WidgetManagerImpl widgetManager = WidgetManagerImpl.getInstance();
-		widgetManager.getWidgetListByProviderNames(null, "1", false);
-		widgetManager.getWidgetListByProviderNames(null, "1", true);
+		widgetManager.getWidgetListByProviderNames(null, "1", false, false);
+		widgetManager.getWidgetListByProviderNames(null, "1", true, false);
 	}
 	@Test
 	public void testGetWidgetJsonStringFromWidgetListNull() throws EMAnalyticsFwkException {

@@ -110,7 +110,7 @@ public class WidgetAPITest
 				result = "widgetGroupId=11&includeDashboardIneligible=true";
 			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false");
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false", "false");
 	}
 
 	@Test

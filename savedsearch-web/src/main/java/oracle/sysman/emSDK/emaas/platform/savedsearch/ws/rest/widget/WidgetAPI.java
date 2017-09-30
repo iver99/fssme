@@ -123,11 +123,12 @@ public class WidgetAPI
 	public Response getAllWidgets(@Context UriInfo uri, @HeaderParam(value = "X-REMOTE-USER") String userTenant,
 			@QueryParam("widgetGroupId") String widgetGroupId,
 			@QueryParam("includeDashboardIneligible") boolean includeDashboardIneligible,
-			@QueryParam("federationEnabled") String federationEnabled)
+			@QueryParam("federationEnabled") String federationEnabled,
+			@QueryParam("federationFeatureShowInUi") String federationFeatureShowInUi)
 	{
 		LogUtil.getInteractionLogger().info(
-				"Service calling to (GET) /savedsearch/v1/widgets?widgetGroupId={}&includeDashboardIneligible={}&federationEnabled={}",
-				widgetGroupId, includeDashboardIneligible, federationEnabled);
+				"Service calling to (GET) /savedsearch/v1/widgets?widgetGroupId={}&includeDashboardIneligible={}&federationEnabled={}&federationFeatureShowInUi={}",
+				widgetGroupId, includeDashboardIneligible, federationEnabled, federationFeatureShowInUi);
 		String message = null;
 		int statusCode = 200;
 
@@ -162,9 +163,10 @@ public class WidgetAPI
 				}
 			}
 
-			boolean isFederationEnabled = Boolean.parseBoolean(federationEnabled);
+			boolean isFederationEnabled = Boolean.parseBoolean(federationEnabled);	// default to not running in federation mode (greenfield then)
+			boolean isFederationFeatureShowInUi = Boolean.parseBoolean(federationFeatureShowInUi); // default to not show in UI
 
-			message = getAllWidgetsJson(widgetGroupId, includeDashboardIneligible, isFederationEnabled);
+			message = getAllWidgetsJson(widgetGroupId, includeDashboardIneligible, isFederationEnabled, isFederationFeatureShowInUi);
 		}
 		catch (NumberFormatException e) {
 			return Response.status(400).entity("Id should be a positive number and not an alphanumeric").build();
@@ -358,14 +360,15 @@ public class WidgetAPI
 		return null;
 	}
 
-	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible, boolean isFederationEnabled) throws EMAnalyticsFwkException,
+	private String getAllWidgetsJson(String widgetGroupId, boolean includeDashboardIneligible,
+				boolean isFederationEnabled, boolean isFederationFeatureShowInUi) throws EMAnalyticsFwkException,
 	IOException
 	{
 		List<String> providers = TenantSubscriptionUtil.getTenantSubscribedServiceProviders(TenantContext.getContext()
 				.gettenantName());
 		LOGGER.debug("Retrieved subscribed providers {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), TenantContext.getContext().gettenantName());
-		List<Map<String, Object>> widgetList = WidgetManager.getInstance().getWidgetListByProviderNames(providers, widgetGroupId, isFederationEnabled);
+		List<Map<String, Object>> widgetList = WidgetManager.getInstance().getWidgetListByProviderNames(providers, widgetGroupId, isFederationEnabled, isFederationFeatureShowInUi);
 		String message = WidgetManager.getInstance().getSpelledJsonFromQueryResult(widgetList);
 
 		return message;

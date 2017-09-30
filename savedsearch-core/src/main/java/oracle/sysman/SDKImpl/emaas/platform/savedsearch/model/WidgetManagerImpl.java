@@ -65,6 +65,7 @@ public class WidgetManagerImpl extends WidgetManager
 			+ "FROM EMS_ANALYTICS_SEARCH s, EMS_ANALYTICS_CATEGORY c ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_2 = "WHERE c.provider_name in (";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_3 = ") " + "AND s.deleted=0 AND s.IS_WIDGET=1 AND (s.TENANT_ID=? OR s.TENANT_ID= -11) ";
+	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4_GF_ONLY = "AND (s.FEDERATION_SUPPORTED=0) ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4_GF = "AND (s.FEDERATION_SUPPORTED=0 or s.FEDERATION_SUPPORTED=1) ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4_FED = "AND (s.FEDERATION_SUPPORTED=1 or s.FEDERATION_SUPPORTED=2) ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_5 = "AND s.category_id=c.category_id ";
@@ -145,7 +146,8 @@ public class WidgetManagerImpl extends WidgetManager
 	 */
 	@Override
 	@SuppressWarnings("all")
-	public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled)
+	public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId,
+																  boolean federationEnabled, boolean federationFeatureShowInUi)
 			throws EMAnalyticsFwkException
 			{
 		if (providerNames == null || providerNames.isEmpty()) {
@@ -154,7 +156,7 @@ public class WidgetManagerImpl extends WidgetManager
 
 		StringBuilder sb = new StringBuilder();
 		//concat get widgets SQL
-		List<Object> paramList = concatWidgetsSQL(providerNames, widgetGroupId, federationEnabled, sb);
+		List<Object> paramList = concatWidgetsSQL(providerNames, widgetGroupId, federationEnabled, federationFeatureShowInUi, sb);
 		EntityManager em = null;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
@@ -200,7 +202,8 @@ public class WidgetManagerImpl extends WidgetManager
 		}
 			}
 
-	private List<Object> concatWidgetsSQL(List<String> providerNames, String widgetGroupId, boolean federationEnabled, StringBuilder sb)
+	private List<Object> concatWidgetsSQL(List<String> providerNames, String widgetGroupId, boolean federationEnabled,
+										  boolean federationFeatureShowInUi, StringBuilder sb)
 	{
 		List<Object> paramList = new ArrayList<Object>();
 		Long tenantId = TenantContext.getContext().getTenantInternalId();
@@ -218,10 +221,14 @@ public class WidgetManagerImpl extends WidgetManager
 		}
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_3);
 		paramList.add(tenantId);
-		if (!federationEnabled) { // running in greenfield mode
-			sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4_GF);
-		} else { // running in federation mode
-			sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4_FED);
+		if (!federationFeatureShowInUi) {
+			sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4_GF_ONLY);
+		} else {
+			if (!federationEnabled) { // running in greenfield mode
+				sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4_GF);
+			} else { // running in federation mode
+				sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4_FED);
+			}
 		}
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_5);
 		if (widgetGroupId != null) {
