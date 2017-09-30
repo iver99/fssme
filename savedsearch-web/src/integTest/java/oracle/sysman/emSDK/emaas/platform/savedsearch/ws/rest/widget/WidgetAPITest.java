@@ -184,7 +184,7 @@ public class WidgetAPITest
 				return "Widget Json Message";
 			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false");
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false", "false");
 	}
 
 	@Test
@@ -257,7 +257,7 @@ public class WidgetAPITest
 				return WidgetAPITest.mockedWidgetObjects();
 			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false");
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false", "false");
 	}
 
 	@Test
@@ -330,7 +330,7 @@ public class WidgetAPITest
 				return WidgetAPITest.mockedWidgetObjects();
 			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false");
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false", "false");
 	}
 
 	@Test

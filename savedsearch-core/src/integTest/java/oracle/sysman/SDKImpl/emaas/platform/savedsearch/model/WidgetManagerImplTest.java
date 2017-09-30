@@ -266,7 +266,7 @@ public class WidgetManagerImplTest
 				result = new Exception(throwable);
 			}
 		};
-		widgetManager.getWidgetListByProviderNames(providerNames, "1", false);
+		widgetManager.getWidgetListByProviderNames(providerNames, "1", false, false);
 	}
 	@Test
 	public void testGetWidgetListByProviderNameSessionException() throws EMAnalyticsFwkException {
