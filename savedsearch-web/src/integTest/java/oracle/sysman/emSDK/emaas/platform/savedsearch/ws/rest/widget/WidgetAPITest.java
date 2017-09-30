@@ -171,7 +171,7 @@ public class WidgetAPITest
 		//		};
 		new MockUp<WidgetManagerImpl>() {
 			@Mock
-			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled)
+			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled, boolean federationFeatureShowInUI)
 					throws EMAnalyticsFwkException
 			{
 				return WidgetAPITest.mockedWidgetObjects();
@@ -251,7 +251,7 @@ public class WidgetAPITest
 			}
 
 			@Mock
-			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled)
+			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled, boolean federationFeatureShowInUI)
 					throws EMAnalyticsFwkException
 			{
 				return WidgetAPITest.mockedWidgetObjects();
@@ -324,7 +324,7 @@ public class WidgetAPITest
 			}
 
 			@Mock
-			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled)
+			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled, boolean federationFeatureShowInUI)
 					throws EMAnalyticsFwkException
 			{
 				return WidgetAPITest.mockedWidgetObjects();

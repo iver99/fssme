@@ -185,7 +185,7 @@ public class WidgetAPIMoreTest
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
-				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString, anyBoolean);
+				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString, anyBoolean, anyBoolean);
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
@@ -278,7 +278,7 @@ public class WidgetAPIMoreTest
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
-				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString, anyBoolean);
+				widgetManagerImpl.getWidgetListByProviderNames(providers, anyString, anyBoolean, anyBoolean);
 
 				WidgetManager.getInstance();
 				result = widgetManagerImpl;
