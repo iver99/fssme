@@ -43,7 +43,9 @@ public class InternalToolAPI {
         String message;
         int statusCode = 200;
         ArrayNode result = new ObjectMapper().createArrayNode();
-        if(widgetName.length() < 1 || widgetName == null) return Response.status(400).entity("BAD REQUEST PROVIDE THE WIDGET NAME PLEASE").build();
+        if(widgetName == null || widgetName.isEmpty()) {
+            return Response.status(400).entity("BAD REQUEST PROVIDE THE WIDGET NAME PLEASE").build();
+        }
         SearchManager searchManager  = SearchManager.getInstance();
         try{
             if (!DependencyStatus.getInstance().isDatabaseUp()) {
