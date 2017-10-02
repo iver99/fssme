@@ -330,11 +330,12 @@ public class WidgetAPI
 		final String widgetGroupId = "widgetGroupId";
 		final String includeDashboardIneligible = "includeDashboardIneligible";
 		final String federationEnabled = "federationEnabled";
+		final String federationFeatureShowInUi = "federationFeatureShowInUi";
 		final String errorMsgInvalidParam = "Please give query parameter by one of " + widgetGroupId + ", "
-				+ includeDashboardIneligible + ", " + federationEnabled;
+				+ includeDashboardIneligible + ", " + federationEnabled + ", " + federationFeatureShowInUi;
 		String[] input = param.split("=");
 		String key = input[0];
-		if (!key.equals(widgetGroupId) && !key.equals(includeDashboardIneligible) && !key.equals(federationEnabled)) {
+		if (!key.equals(widgetGroupId) && !key.equals(includeDashboardIneligible) && !key.equals(federationEnabled) && !key.equals(federationFeatureShowInUi)) {
 			LOGGER.error(errorMsgInvalidParam);
 			return Response.status(400).entity(errorMsgInvalidParam).build();
 		}
