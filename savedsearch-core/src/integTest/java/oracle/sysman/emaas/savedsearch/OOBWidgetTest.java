@@ -116,7 +116,7 @@ public class OOBWidgetTest extends BaseTest{
     }
 
 
-    @Test
+    //@Test
     public void testSecurityDNSWidget() throws EMAnalyticsFwkException {
         TenantContext.setContext(new TenantInfo(
                 TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),
