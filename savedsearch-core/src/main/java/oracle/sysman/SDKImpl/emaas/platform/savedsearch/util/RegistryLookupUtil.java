@@ -216,26 +216,7 @@ public class RegistryLookupUtil
 		LOGGER.debug(
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
-		Tenant cacheTenant = new Tenant(tenantName);
-		ICacheManager cm = CacheManagers.getInstance().build();
-		Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys("externalLink", serviceName, version, rel, prefixMatch));
-		//externalLinkCache
 
-		try {
-			LOGGER.debug("Try to retrieve from cache");
-			CachedLink cl = (CachedLink) cm.getCache("externalLinkCache").get(cacheKey);
-			if (cl != null) {
-				LOGGER.debug(
-						"Retrieved exteral link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
-						cl.getHref(), serviceName, version, rel, prefixMatch, tenantName);
-				return cl.getLink();
-			}
-			LOGGER.debug("Fail not retrieve from cache,try to load data from persistence layer");
-		}
-		catch (Exception e) {
-			LOGGER.error("Error to retrieve external link from cache. Try to lookup the link", e);
-		}
-		
 		InstanceInfo info = RegistryLookupUtil.getInstanceInfo(serviceName, version);
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		Link lk = null;
@@ -305,7 +286,6 @@ public class RegistryLookupUtil
 					}
 					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
-						cm.getCache("externalLinkCache").put(cacheKey,new CachedLink(lk));
 						break;
 					}
 				}
@@ -357,7 +337,6 @@ public class RegistryLookupUtil
 					}
 					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
-						cm.getCache("externalLinkCache").put(cacheKey,new CachedLink(lk));
 						LOGGER.debug(
 								"[branch 2] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 								lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);
@@ -381,21 +360,7 @@ public class RegistryLookupUtil
 		LOGGER.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, prefixMatch, tenantName);
-		ICacheManager cm = CacheManagers.getInstance().build();
-		Tenant cacheTenant = new Tenant(tenantName);
-		Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys("internalLink", serviceName, version, rel, prefixMatch));
-		try {
-			CachedLink cl = (CachedLink) cm.getCache("internalLinkCache").get(cacheKey);
-			if (cl != null) {
-				LOGGER.debug(
-						"Retrieved internal link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
-						cl.getHref(), serviceName, version, rel, prefixMatch, tenantName);
-				return cl.getLink();
-			}
-		}
-		catch (Exception e) {
-			LOGGER.error("Error to retrieve internal link from cache. Try to lookup the link", e);
-		}
+
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		InstanceInfo info = RegistryLookupUtil.getInstanceInfo(serviceName, version);
 		Link lk = null;
@@ -416,7 +381,6 @@ public class RegistryLookupUtil
 
 						if (links != null && !links.isEmpty()) {
 							lk = links.get(0);
-							cm.getCache("internalLinkCache").put(cacheKey, new CachedLink(lk));
 							break;
 						}
 					}
@@ -436,7 +400,6 @@ public class RegistryLookupUtil
 					}
 					if (links != null && !links.isEmpty()) {
 						lk = links.get(0);
-						cm.getCache("internalLinkCache").put(cacheKey, new CachedLink(lk));
 						return lk;
 					}
 				}
