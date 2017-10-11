@@ -345,33 +345,6 @@ public class RegistryLookupUtil
 		return lk;
 	}
 
-	private static String insertTenantIntoVanityBaseUrl(String tenantName, String vanityBaseUrl)
-	{
-		LOGGER.debug("/insertTenantIntoVanityBaseUrl/ Trying to insert tenant \"{}\" to base vanity url \"{}\"", tenantName,
-				vanityBaseUrl);
-		if (StringUtil.isEmpty(tenantName) || StringUtil.isEmpty(vanityBaseUrl)) {
-			return vanityBaseUrl;
-		}
-
-		if (vanityBaseUrl.indexOf("://") != -1) {
-			String[] splittedProtocol = vanityBaseUrl.split("://");
-			StringBuilder sb = new StringBuilder();
-			sb.append(splittedProtocol[0]);
-			sb.append("://");
-			sb.append(tenantName);
-			sb.append(".");
-			for (int i = 1; i < splittedProtocol.length; i++) {
-				sb.append(splittedProtocol[i]);
-				if (i != splittedProtocol.length - 1) {
-					sb.append("://");
-				}
-			}
-			LOGGER.debug("/insertTenantIntoVanityBaseUrl/ URL \"{}\" is updated to \"{}\"", vanityBaseUrl, sb.toString());
-			return sb.toString();
-		}
-		return vanityBaseUrl;
-	}
-
 	private RegistryLookupUtil()
 	{
 	}
