@@ -1159,7 +1159,7 @@ public class SearchAPITest {
                 result = "emasstesttenant1";
                 RegistryLookupUtil.getServiceExternalLink(anyString,anyString,anyString,anyString);
                 result = linkInfo;
-                RegistryLookupUtil.replaceWithVanityUrl(linkInfo,anyString,anyString);
+                oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.replaceWithVanityUrl(linkInfo,anyString,anyString);
                 result = link;
             }
         };

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.cache.CachedLink;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -75,26 +74,6 @@ public class RegistryLookupUtil
 		return new VersionedLink(link, authToken);
 	}
 
-    public static VersionedLink getServiceInternalLinkHttp(String serviceName, String version, String rel, String tenantName)
-    {
-		Link link = RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
-		String authToken = RegistryLookupUtil.getAuthorizationToken(serviceName, version);
-		return new VersionedLink(link, authToken);
-    }
-
-	public static Link replaceWithVanityUrl(Link lk, String tenantName, String serviceName)
-	{
-		if (lk == null || StringUtil.isEmpty(serviceName)) {
-			return lk;
-		}
-		Map<String, String> vanityBaseUrls = RegistryLookupUtil.getVanityBaseURLs(tenantName);
-		if (vanityBaseUrls != null && vanityBaseUrls.containsKey(serviceName)) {
-			lk = RegistryLookupUtil.replaceVanityUrlDomainForLink(vanityBaseUrls.get(serviceName), lk, tenantName);
-			LOGGER.debug("Completed to (try to) replace URL with vanity URL. Updated url is {}", lk.getHref());
-		}
-		return lk;
-	}
-	
 	private static String getAuthorizationToken(InstanceInfo instanceInfo) {
 		char[] authToken = LookupManager.getInstance().getAuthorizationAccessToken(instanceInfo);
 		return new String(authToken);
@@ -366,145 +345,6 @@ public class RegistryLookupUtil
 		return lk;
 	}
 
-	@SuppressWarnings("unchecked")
-	private static Map<String, String> getVanityBaseURLs(String tenantName)
-	{
-		LOGGER.debug("/getVanityBaseURLs/ Trying to retrieve service internal link for tenant: \"{}\"", tenantName);
-		Map<String, String> map = null;
-		ICacheManager cm = CacheManagers.getInstance().build();
-		Tenant cacheTenant = new Tenant(tenantName);
-		Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_VANITY_BASE_URL));
-		try {
-			map = (Map<String,String>) cm.getCache(CacheConstants.CACHES_VANITY_BASE_URL_CACHE).get(cacheKey);
-			if (map != null) {
-				return map;
-			}
-		}
-		catch (Exception e) {
-			LOGGER.error(e);
-		}
-		InstanceInfo info = RegistryLookupUtil.getInstanceInfo("OHS", null);
-		Link lk = null;
-		map = new HashMap<String, String>();
-		try {
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-			if (result != null && !result.isEmpty()) {
-				for (InstanceInfo internalInstance : result) {
-					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)
-							&& map.containsKey(MONITORING_SERVICE) && map.containsKey(SECURITY_ANALYTICS_SERVICE)
-							&& map.containsKey(COMPLIANCE_SERVICE) && map.containsKey(ORCHESTRATION_SERVICE)) {
-						break;
-					}
-					if (!map.containsKey(APM_SERVICE)) {
-						List<Link> links = internalInstance.getLinksWithProtocol("vanity/apm", "https");
-						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
-
-						if (links != null && !links.isEmpty()) {
-							lk = links.get(0);
-							LOGGER.debug("Retrieved base vanity URL for apm: {} ", lk.getHref());
-							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
-							LOGGER.debug("Tenant id is inserted into the base vanity URL for apm. The URL is {}", url);
-							map.put(APM_SERVICE, url);
-						}
-					}
-					if (!map.containsKey(ITA_SERVICE)) {
-						List<Link> links = internalInstance.getLinksWithProtocol("vanity/ita", "https");
-						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
-
-						if (links != null && !links.isEmpty()) {
-							lk = links.get(0);
-							LOGGER.debug("Retrieved base vanity URL for ita: {} ", lk.getHref());
-							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
-							LOGGER.debug("Tenant id is inserted into the base vanity URL for ita. The URL is {}", url);
-							map.put(ITA_SERVICE, url);
-							// ta/ita has the same URL pattern
-							map.put(TA_SERVICE, url);
-						}
-					}
-					if (!map.containsKey(LA_SERVICE)) {
-						List<Link> links = internalInstance.getLinksWithProtocol("vanity/la", "https");
-						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
-
-						if (links != null && !links.isEmpty()) {
-							lk = links.get(0);
-							LOGGER.debug("Retrieved base vanity URL for la: {} ", lk.getHref());
-							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
-							LOGGER.debug("Tenant id is inserted into the base vanity URL for la. The URL is {}", url);
-							map.put(LA_SERVICE, url);
-						}
-					}
-					if (!map.containsKey(MONITORING_SERVICE)) {
-						List<Link> links = internalInstance.getLinksWithProtocol("vanity/monitoring", "https");
-						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
-
-						if (links != null && !links.isEmpty()) {
-							lk = links.get(0);
-							LOGGER.debug("Retrieved base vanity URL for monitoring service: {} ", lk.getHref());
-							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
-							LOGGER.debug("Tenant id is inserted into the base vanity URL for monitoring service. The URL is {}",
-									url);
-							map.put(MONITORING_SERVICE, url);
-						}
-					}
-					if (!map.containsKey(SECURITY_ANALYTICS_SERVICE)) {
-						List<Link> links = internalInstance.getLinksWithProtocol("vanity/security", "https");
-						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
-
-						if (links != null && !links.isEmpty()) {
-							lk = links.get(0);
-							LOGGER.debug("Retrieved base vanity URL for Security Analytics service: {} ", lk.getHref());
-							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
-							LOGGER.debug(
-									"Tenant id is inserted into the base vanity URL for Security Analytics service. The URL is {}",
-									url);
-							map.put(SECURITY_ANALYTICS_SERVICE, url);
-						}
-					}
-					if (!map.containsKey(COMPLIANCE_SERVICE)) {
-						List<Link> links = internalInstance.getLinksWithProtocol("vanity/compliance", "https");
-						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
-
-						if (links != null && !links.isEmpty()) {
-							lk = links.get(0);
-							LOGGER.debug("Retrieved base vanity URL for Compliance service: {} ", lk.getHref());
-							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
-							LOGGER.debug("Tenant id is inserted into the base vanity URL for Compliance service. The URL is {}",
-									url);
-							map.put(COMPLIANCE_SERVICE, url);
-						}
-					}
-					if (!map.containsKey(ORCHESTRATION_SERVICE)) {
-						List<Link> links = internalInstance.getLinksWithProtocol("vanity/ocs", "https");
-						links = RegistryLookupUtil.getLinksWithProtocol("https", links);
-
-						if (links != null && !links.isEmpty()) {
-							lk = links.get(0);
-							LOGGER.debug("Retrieved base vanity URL for Orchestration service: {} ", lk.getHref());
-							String url = RegistryLookupUtil.insertTenantIntoVanityBaseUrl(tenantName, lk.getHref());
-							LOGGER.debug(
-									"Tenant id is inserted into the base vanity URL for Orchestration service. The URL is {}",
-									url);
-							map.put(ORCHESTRATION_SERVICE, url);
-						}
-					}
-				}
-			}
-		}
-		catch (Exception e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
-		}
-
-		if (LOGGER.isDebugEnabled() && !map.isEmpty()) {
-			LOGGER.debug("Printing out vanity URLs map:");
-			for (String service : map.keySet()) {
-				String url = map.get(service);
-				LOGGER.debug("service name is {}, and url is {}", service, url);
-			}
-		}
-		cm.getCache(CacheConstants.CACHES_VANITY_BASE_URL_CACHE).put(cacheKey, map);
-		return map;
-	}
-
 	private static String insertTenantIntoVanityBaseUrl(String tenantName, String vanityBaseUrl)
 	{
 		LOGGER.debug("/insertTenantIntoVanityBaseUrl/ Trying to insert tenant \"{}\" to base vanity url \"{}\"", tenantName,
@@ -530,64 +370,6 @@ public class RegistryLookupUtil
 			return sb.toString();
 		}
 		return vanityBaseUrl;
-	}
-
-	private static Link replaceVanityUrlDomainForLink(String domainPort, Link lk, String tenantName)
-	{
-		LOGGER.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"", lk != null ? lk.getHref()
-				: null, domainPort);
-		if (StringUtil.isEmpty(domainPort) || lk == null || StringUtil.isEmpty(lk.getHref())) {
-			return lk;
-		}
-		String replacedHref = RegistryLookupUtil.replaceVanityUrlDomainForUrl(domainPort, lk.getHref(), tenantName);
-		LOGGER.debug("/replaceDomainForLink/ Link \"{}\" URL (after replaced) is \"{}\"", lk.getHref(), replacedHref);
-		lk.withHref(replacedHref);
-		return lk;
-	}
-
-	private static String replaceVanityUrlDomainForUrl(String vanityBaseUrl, String targetUrl, String tenantName)
-	{
-		if (StringUtil.isEmpty(vanityBaseUrl) || StringUtil.isEmpty(targetUrl) || targetUrl.indexOf("://") == -1) {
-			return targetUrl;
-		}
-		// replace URLs started with tenant only
-		String[] splittedProtocol = targetUrl.split("://");
-		if (splittedProtocol == null || splittedProtocol.length < 2) {
-			LOGGER.warn("Specified url \"{}\" is invalid, can't splitted into multiple parts by '://'", targetUrl);
-			return targetUrl;
-		}
-		if (splittedProtocol[1] == null || !splittedProtocol[1].startsWith(tenantName)) {
-			LOGGER.debug(
-					"Do not need to replace the url with vanity URL, because the URL \"{}\" doesn't start with opc tenant id",
-					targetUrl);
-			return targetUrl;
-		}
-		LOGGER.info("Replacing with vanity base URL for target url. Vanity url is {}, url is {}", vanityBaseUrl, targetUrl);
-		String domainToReplace = vanityBaseUrl;
-		if (domainToReplace.indexOf("://") != -1) {
-			String[] splittedDomain = domainToReplace.split("://");
-			if (splittedDomain != null && splittedDomain.length > 1) {
-				domainToReplace = splittedDomain[1];
-			}
-		}
-		LOGGER.info("Replacing with vanity base url for url. Vanity url w/o protocol is {}", vanityBaseUrl);
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(splittedProtocol[0]);
-		sb.append("://");
-		sb.append(domainToReplace);
-
-		if (splittedProtocol[1].indexOf("/") != -1) {
-			String[] splitted = splittedProtocol[1].split("/");
-			if (splitted.length > 1) {
-				for (int i = 1; i < splitted.length; i++) {
-					sb.append("/");
-					sb.append(splitted[i]);
-				}
-			}
-		}
-		LOGGER.info("After replacing with vanity url, the target url is: \"{}\"", sb.toString());
-		return sb.toString();
 	}
 
 	private RegistryLookupUtil()

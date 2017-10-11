@@ -1111,7 +1111,7 @@ public class SearchAPI
 			if(linkInfo == null) {
 				return Response.status(Response.Status.NOT_FOUND).entity("Failed:"+serviceName+","+version+","+rel+","+TenantContext.getContext().gettenantName()).build();
 			}
-			Link link = RegistryLookupUtil.replaceWithVanityUrl(linkInfo, TenantContext.getContext().gettenantName(), serviceName);
+			Link link = oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.replaceWithVanityUrl(linkInfo, TenantContext.getContext().gettenantName(), serviceName);
 			if(link == null) {
 				return Response.status(Response.Status.NOT_FOUND).entity("The link is null").build();
 			}
