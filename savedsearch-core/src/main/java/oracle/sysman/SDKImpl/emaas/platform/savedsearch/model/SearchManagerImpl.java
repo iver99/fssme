@@ -23,6 +23,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EmAnalyticsProcessingException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.RequestContext.RequestType;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory;
@@ -1341,9 +1342,13 @@ public class SearchManagerImpl extends SearchManager
 			if (searchObj.getSearchGuid() != null) {
 				rtnObj.setGuid(searchObj.getSearchGuid().toString());
 			}
-
-			rtnObj.setName(searchObj.getName());
-			rtnObj.setDescription(searchObj.getDescription());
+			Boolean isSystemSearch = (searchObj.getSystemSearch()!= null) && (searchObj.getSystemSearch().intValue() == 1);
+			String searchName = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(),searchObj.getName()) : searchObj.getName();
+			rtnObj.setName(searchName);
+			String searchDescription = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(),searchObj.getDescription()) : searchObj.getDescription();
+			rtnObj.setDescription(searchDescription);
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreationDate(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());
@@ -1420,8 +1425,13 @@ public class SearchManagerImpl extends SearchManager
 		try {
 			rtnObj = new WidgetImpl();
 			rtnObj.setId(searchObj.getId());
-			rtnObj.setName(searchObj.getName());
-			rtnObj.setDescription(searchObj.getDescription());
+			Boolean isSystemSearch = (searchObj.getSystemSearch() != null ) && (searchObj.getSystemSearch().intValue() == 1);
+			String searchName =  isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(), searchObj.getName()) : searchObj.getName();
+			rtnObj.setName(searchName);
+			String searchDescription = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(), searchObj.getDescription()) : searchObj.getDescription();
+			rtnObj.setDescription(searchDescription);
 			rtnObj.setOwner(searchObj.getOwner());
 			rtnObj.setCreationDate(searchObj.getCreationDate());
 			rtnObj.setLastModifiedBy(searchObj.getLastModifiedBy());

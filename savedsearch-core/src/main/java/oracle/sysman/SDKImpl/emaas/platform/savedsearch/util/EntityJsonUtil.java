@@ -20,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 
 import org.apache.logging.log4j.LogManager;
@@ -240,13 +241,18 @@ public class EntityJsonUtil
 	public static AnalyticsSearchModel getJsonModel(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
 	{
 		AnalyticsSearchModel emSearch = new AnalyticsSearchModel();
+		Boolean isSystemSearch = "ORACLE".equalsIgnoreCase(m.get("OWNER").toString());
 		if(m.get("NAME")!=null){
-			emSearch.setName(m.get("NAME").toString());
+			String searchName = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(m.get("PROVIDER_NAME").toString(),m.get("NAME").toString()) : m.get("NAME").toString();
+			emSearch.setName(searchName);
 		}
 		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
-			emSearch.setDescription(m.get("DESCRIPTION").toString());
+			String searchDescription = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(m.get("PROVIDER_NAME").toString(), m.get("DESCRIPTION").toString()) : m.get("DESCRIPTION").toString();
+			emSearch.setDescription(searchDescription);
 		}else{
-			emSearch.setDescription("No description.");
+			emSearch.setDescription(DatabaseResourceBundleUtil.getTranslatedString(m.get("PROVIDER_NAME").toString(),"No description."));
 		}
 		if (m.get("CREATION_DATE") != null) {
 			emSearch.setCreationDate(Timestamp.valueOf(String.valueOf(m.get("CREATION_DATE"))));
