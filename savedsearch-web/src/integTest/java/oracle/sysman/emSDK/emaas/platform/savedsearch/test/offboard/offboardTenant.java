@@ -134,6 +134,6 @@ public class offboardTenant
 
 			.header(TestConstant.X_HEADER, TENANT_ID_USER).when().get("/search/" + id1);
 			Assert.assertTrue(res.getStatusCode() == 404);
-			Assert.assertEquals(res.asString(), "Search identified by id does not exist");
+			Assert.assertEquals(res.asString(), "Search identified by ID: " + id1 + " does not exist");
 	}
 }

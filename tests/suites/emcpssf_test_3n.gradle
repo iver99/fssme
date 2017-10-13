@@ -119,7 +119,7 @@ task QATest(type:EMTest,dependsOn: DEVTest2){
 	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/search/*"
 //	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
 	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/offboard/*"
+	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/offboard/*" //This class must be run at last
 	//useWebdriver = true
 	// include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
         useRestAssured=true
