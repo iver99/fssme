@@ -241,7 +241,7 @@ public class EntityJsonUtil
 	public static AnalyticsSearchModel getJsonModel(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
 	{
 		AnalyticsSearchModel emSearch = new AnalyticsSearchModel();
-		boolean isSystemSearch = "ORACLE".equalsIgnoreCase(m.get("OWNER").toString());
+		boolean isSystemSearch = false;
 
 		if (m.get("CREATION_DATE") != null) {
 			emSearch.setCreationDate(Timestamp.valueOf(String.valueOf(m.get("CREATION_DATE"))));
@@ -273,6 +273,9 @@ public class EntityJsonUtil
 			emSearch.setProviderName(m.get("C_PROVIDER_NAME").toString());
 		}
 
+		if(!StringUtil.isEmpty(emSearch.getOwner()) && "ORACLE".equalsIgnoreCase(emSearch.getOwner())){
+			isSystemSearch = true;
+		}
 		if(m.get("NAME")!=null){
 			String searchName = isSystemSearch ?
 					DatabaseResourceBundleUtil.getTranslatedString(emSearch.getProviderName(),m.get("NAME").toString()) : m.get("NAME").toString();

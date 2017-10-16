@@ -86,7 +86,7 @@ public class DatabaseResourceBundleControl extends ResourceBundle.Control {
                     .setParameter("serviceName", baseName)
                     .getResultList();
             if(rb != null && !rb.isEmpty()) {
-                LOGGER.warn("RB is not null" + rb.get(0).getPropertiesFile());
+                LOGGER.info("RB is not null" + rb.get(0).getPropertiesFile());
                 return rb.get(0);
             }
         } catch(Exception e) {
