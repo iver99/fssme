@@ -1,5 +1,6 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.nls;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +29,7 @@ public class DatabaseResourceBundleUtil {
 
     public static String getTranslatedString(String widgetProvider, String key) {
         String appType = null;
+        if(StringUtil.isEmpty(widgetProvider)) return key;
         switch(widgetProvider) {
             case APM_PROVIDER_APMUI:
                 appType = APM_STRING;
