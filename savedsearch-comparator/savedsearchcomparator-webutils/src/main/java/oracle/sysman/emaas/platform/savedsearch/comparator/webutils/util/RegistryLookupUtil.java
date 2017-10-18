@@ -11,11 +11,15 @@
 package oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.util.FriendlyUrlProvider;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.TenantInfoClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -38,6 +42,10 @@ public class RegistryLookupUtil
 	public static final String LA_SERVICE = "LoganService";
 	public static final String TA_SERVICE = "TargetAnalytics";
 	public static final String MONITORING_SERVICE = "MonitoringServiceUI";
+
+        // Cached the mapping of tenant ID to URL prefix
+        private static ConcurrentHashMap<String, String> cachedPublicURLPrefixes = 
+            new ConcurrentHashMap<String, String>();
 
 	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
@@ -379,6 +387,8 @@ public class RegistryLookupUtil
 			return vanityBaseUrl;
 		}
 
+                tenantName = mapTenantNameForEC(tenantName);
+
 		if (vanityBaseUrl.indexOf("://") != -1) {
 			String[] splittedProtocol = vanityBaseUrl.split("://");
 			StringBuilder sb = new StringBuilder();
@@ -443,4 +453,65 @@ public class RegistryLookupUtil
 		return sb.toString();
 	}
 
+        private static String mapTenantNameForEC(String tenantName)
+        {
+            String mappedTenantName = tenantName;
+            if (isExternalCompute()) {
+                try {
+                    FriendlyUrlProvider provider = new FriendlyUrlProvider();
+                   String publicURL = provider.mapToPublicURL(tenantName);
+                    if (publicURL != null) {
+                        // Parse the URL to extract the first label
+                        try {
+                            URI uri = new URI(publicURL);
+                            String serverName = uri.getHost();
+                            if (serverName == null || serverName.isEmpty())
+                            {
+                                throw new IllegalStateException("PublicUrlMapping for [" + tenantName +
+                                        "] returned a URI with an empty or null host");
+                            }
+                            String[] labels = serverName.split("\\.");
+                            if (labels == null || labels.length <= 1)
+                            {
+                                throw new IllegalStateException("PublicUrlMapping for [" + tenantName +
+                                        "] returned a URI with an invalid host [" + serverName + "]");
+                            }
+                            // The url prefix is the first label
+                            mappedTenantName = labels[0];
+                            // Update cache
+                            cachedPublicURLPrefixes.put(tenantName, mappedTenantName);
+                        } catch (URISyntaxException e) {
+                            throw new IllegalStateException("PublicUrlMapping for [" + tenantName +
+                                    "] returned an invalid URI [" + publicURL + "]", e);
+                        }
+                   } else {
+                        throw new IllegalStateException("PublicUrlMapping for [" + tenantName + "] returned null");
+                   }
+                } catch (Exception e) {
+                    // Something went wrong with the mapping
+                    LOGGER.error("Error mapping [" + tenantName + "] to public URL. Trying the cache", e);
+                    // Check if there is a cached value for the specific tenant ID
+                    String cachedPrefix = cachedPublicURLPrefixes.get(tenantName);
+                    if (cachedPrefix != null) {
+                        mappedTenantName = cachedPrefix;
+                   } else {
+                        throw new IllegalStateException("Couldn't find a cached public URL mapping for " + tenantName, e);
+                   }
+               }
+            }
+            return mappedTenantName;
+        }
+
+        private static final String EC_JVM_PARAM = "com.oracle.omc.external";
+
+        /**
+         * Whether this is an external compute environment.
+         *
+         * @return true if this is an external compute environment
+         */
+        private static boolean isExternalCompute()
+        {
+            String ecVal = System.getProperty(EC_JVM_PARAM);
+            return ecVal != null && "true".equalsIgnoreCase(ecVal);
+        }
 }
