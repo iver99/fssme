@@ -489,7 +489,7 @@ public class RegistryLookupUtil
                    }
                 } catch (Exception e) {
                     // Something went wrong with the mapping
-                    LOGGER.error("Error mapping [" + tenantName + "] to public URL. Trying the cache", e);
+                    logger.error("Error mapping [" + tenantName + "] to public URL. Trying the cache", e);
                     // Check if there is a cached value for the specific tenant ID
                     String cachedPrefix = cachedPublicURLPrefixes.get(tenantName);
                     if (cachedPrefix != null) {
