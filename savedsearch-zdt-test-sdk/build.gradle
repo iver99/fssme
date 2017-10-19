@@ -1,5 +1,5 @@
 apply from:'test.gradle'
-def emcpsrvsSDKVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
+def emcpsrvsSDKVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.1.+')
 
 
 

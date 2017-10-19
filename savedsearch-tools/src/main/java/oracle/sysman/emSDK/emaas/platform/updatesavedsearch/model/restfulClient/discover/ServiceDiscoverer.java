@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.TenantInfoClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
@@ -50,6 +51,7 @@ public class ServiceDiscoverer
 				lookupProps.setProperty("numberOfRetries", "1");
 			}
 			lm.initComponent(lookupProps);
+                        TenantInfoClient.getInstance().initComponent();
 		}
 		catch (Exception e) {
 			LOGGER.error("ServiceDiscoverer" + e);
