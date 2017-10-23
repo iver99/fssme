@@ -127,6 +127,12 @@ task QATest(type:EMTest,dependsOn: DEVTest2){
 		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.search.SearchesCRUD')
 		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.widget.WidgetAPITest')
 		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.widget.WidgetGroupAPITest')
+	//	'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.offboard.offboardTenant') //This class must be run at last		    
+        }
+    }  
+    
+    test('name': 'REST_APITest_offboardTenant', 'preserve-order':'true') {
+        classes([:]) {
 		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.offboard.offboardTenant') //This class must be run at last		    
         }
     }  
