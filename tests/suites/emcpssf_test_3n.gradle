@@ -110,7 +110,7 @@ task DEVTest2(type:EMTest,dependsOn: DEVTest){
 	ext.set("testType", "unit")
 }
 task QATest(type:EMTest,dependsOn: DEVTest2){		 
-	options.suiteXmlBuilder().suite('name': 'SSFTest') {
+	options.suiteXmlBuilder().suite('name': 'SSFTest', 'preserve-order':'true') {
     test('name': 'REST_APITest', 'preserve-order':'true') {
         classes([:]) {
 		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD')
