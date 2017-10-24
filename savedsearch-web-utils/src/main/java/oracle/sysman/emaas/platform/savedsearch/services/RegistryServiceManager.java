@@ -15,6 +15,7 @@ import javax.naming.InitialContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.TenantInfoClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
@@ -341,6 +342,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			LOGGER.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
+                        TenantInfoClient.getInstance().initComponent();
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
