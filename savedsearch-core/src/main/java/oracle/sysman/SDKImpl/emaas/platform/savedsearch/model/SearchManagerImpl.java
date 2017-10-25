@@ -1342,7 +1342,7 @@ public class SearchManagerImpl extends SearchManager
 			if (searchObj.getSearchGuid() != null) {
 				rtnObj.setGuid(searchObj.getSearchGuid().toString());
 			}
-			Boolean isSystemSearch = (searchObj.getSystemSearch()!= null) && (searchObj.getSystemSearch().intValue() == 1);
+			boolean isSystemSearch = (searchObj.getSystemSearch()!= null) && (searchObj.getSystemSearch().intValue() == 1);
 			String searchName = isSystemSearch ?
 					DatabaseResourceBundleUtil.getTranslatedString(searchObj.getPROVIDERNAME(),searchObj.getName()) : searchObj.getName();
 			rtnObj.setName(searchName);
