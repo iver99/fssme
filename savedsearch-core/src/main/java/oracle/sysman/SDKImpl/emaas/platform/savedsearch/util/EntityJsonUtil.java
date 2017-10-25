@@ -21,6 +21,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emaas.platform.savedsearch.model.AnalyticsSearchModel;
 
 import org.apache.logging.log4j.LogManager;
@@ -242,14 +243,8 @@ public class EntityJsonUtil
 	public static AnalyticsSearchModel getJsonModel(Map<String, Object> m, String screenshotUrl) throws EMAnalyticsFwkException
 	{
 		AnalyticsSearchModel emSearch = new AnalyticsSearchModel();
-		if(m.get("NAME")!=null){
-			emSearch.setName(m.get("NAME").toString());
-		}
-		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE_0.equals(m.get("DESCRIPTION"))) {
-			emSearch.setDescription(m.get("DESCRIPTION").toString());
-		}else{
-			emSearch.setDescription("No description.");
-		}
+		boolean isSystemSearch = false;
+
 		if (m.get("CREATION_DATE") != null) {
 			emSearch.setCreationDate(Timestamp.valueOf(String.valueOf(m.get("CREATION_DATE"))));
 		}
@@ -278,6 +273,23 @@ public class EntityJsonUtil
 		}
 		else {
 			emSearch.setProviderName(m.get("C_PROVIDER_NAME").toString());
+		}
+		if(!StringUtil.isEmpty(emSearch.getOwner()) && "ORACLE".equalsIgnoreCase(emSearch.getOwner())){
+			isSystemSearch = true;
+		}
+		if(m.get("NAME")!=null){
+			String searchName = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(emSearch.getProviderName(),m.get("NAME").toString()) : m.get("NAME").toString();
+			emSearch.setName(searchName);
+		}
+		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE_0.equals(m.get("DESCRIPTION"))) {
+			String searchDescription = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(emSearch.getProviderName(), m.get("DESCRIPTION").toString()) : m.get("DESCRIPTION").toString();
+			emSearch.setDescription(searchDescription);
+		}else{
+			String searchDescription = isSystemSearch ?
+					DatabaseResourceBundleUtil.getTranslatedString(emSearch.getProviderName(), "No description.") : "No description.";
+			emSearch.setDescription(searchDescription);
 		}
 		if (m.get("PROVIDER_VERSION") != null && !DEFAULT_DB_VALUE_0.equals(m.get("PROVIDER_VERSION"))) {
 			emSearch.setProviderVersion(m.get("PROVIDER_VERSION").toString());

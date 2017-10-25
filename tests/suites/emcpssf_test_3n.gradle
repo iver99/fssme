@@ -109,19 +109,38 @@ task DEVTest2(type:EMTest,dependsOn: DEVTest){
 	useRestAssured =true
 	ext.set("testType", "unit")
 }
-task QATest(type:EMTest,dependsOn: DEVTest2){
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/category/*"
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/common/*"
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/exception/*"
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/folder/*"
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/importsavedsearch/*"
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/navigations/*"
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/search/*"
-//	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/util/*"
-	include "oracle/sysman/emSDK/emaas/platform/savedsearch/test/widget/*"
+task QATest(type:EMTest,dependsOn: DEVTest2){		 
+	options.suiteXmlBuilder().suite('name': 'SSFTest', 'preserve-order':'true') {
+    test('name': 'REST_APITest', 'preserve-order':'true') {
+        classes([:]) {
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.CategoryCRUD')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.category.OOBCategoryCRUD')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.exception.EMAnalyticsWSExceptionTest')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.exception.ImportExceptionTest')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.folder.FolderCRUD')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.folder.OOBFolderCRUD')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.importsavedsearch.ImportTest')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.navigations.SavedSearchNavigations')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.search.OdsCURD')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.search.SearchesCRUD')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.widget.WidgetAPITest')
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.widget.WidgetGroupAPITest')
+	//	'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.offboard.offboardTenant') //This class must be run at last		    
+        }
+    }  
+    
+    test('name': 'REST_APITest_offboardTenant', 'preserve-order':'true') {
+        classes([:]) {
+		'class'('name': 'oracle.sysman.emSDK.emaas.platform.savedsearch.test.offboard.offboardTenant') //This class must be run at last		    
+        }
+    }  
+    }       
+
 	//useWebdriver = true
 	// include "oracle.sysman.emSDK.emaas.platform.savedsearch.ws.*"
-        useRestAssured=true
+    useRestAssured=true
 	ext.set("testType", "integration")
 }
 

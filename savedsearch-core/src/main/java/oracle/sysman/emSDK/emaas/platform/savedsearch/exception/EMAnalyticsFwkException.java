@@ -96,6 +96,8 @@ public class EMAnalyticsFwkException extends Exception
 
 	public static final int ERR_VALID_OAM_HEADER = 500114;
 	
+	public static final int ERR_CLEAN_TENANT = 500115;
+	
 	// dependency unavailable exception
 	public static final int ERR_DATABASE_UNAVAILABLE = 60010;
 
