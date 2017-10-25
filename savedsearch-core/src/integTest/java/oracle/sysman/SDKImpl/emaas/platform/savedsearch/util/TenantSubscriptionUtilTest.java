@@ -9,15 +9,12 @@ import javax.ws.rs.core.UriBuilder;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingCollection;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.AppMappingEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.DomainsEntity;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.ServiceRequestCollection;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.subscription2.TenantSubscriptionInfo;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
@@ -55,8 +52,8 @@ public class TenantSubscriptionUtilTest
 	DomainsEntity domainsEntity;
 	@Mocked
 	DomainEntity domainEntity;
-	@Mocked
-    ServiceRequestCollection serviceRequestCollection;
+//	@Mocked
+//    ServiceRequestCollection serviceRequestCollection;
 	@Mocked
 	AppMappingEntity appMappingEntity;
 	@Mocked
@@ -84,56 +81,6 @@ public class TenantSubscriptionUtilTest
         TenantSubscriptionUtil.getTenantSubscribedCategories("testtenant", true);
 	}
 
-	/*@Test
-	public void testGetTenantSubscribedServices() throws IOException {
-		final List<DomainEntity> list = new ArrayList<>();
-		list.add(domainEntity);
-		final List<AppMappingEntity> amecList = new ArrayList<>();
-		amecList.add(appMappingEntity);
-        final List<AppMappingEntity.AppMappingValue>  appMappingValues = new ArrayList<>();
-        appMappingValues.add(appMappingValue);
-        new Expectations() {
-			{
-//				RegistryLookupUtil.getServiceInternalLinkHttp(anyString, anyString, anyString, anyString);
-//				result = linkInfo;
-				StringUtil.isEmpty(anyString);
-				result = false;
-				UriBuilder.fromUri(anyString);
-				result = uriBuilder;
-				uriBuilder.build();
-				result = uri;
-				client.resource(withAny(uri));
-				result = webSource;
-				webSource.header(anyString, anyString);
-				result = builder;
-				builder.type(anyString);
-				result = builder;
-				builder.accept(anyString);
-				result = builder;
-				builder.get(String.class);
-				result = "uri.uri";
-				*//*JSONUtil.fromJsonToList(anyString, ServiceRequestCollection.class);
-				result = serviceRequestCollection;*//*
-				*//*domainsEntity.getItems();
-				result = list;
-				domainEntity.getDomainName();
-				result = "TenantApplicationMapping";
-				domainEntity.getCanonicalUrl();
-				result = "httyp://";*//*
-				JSONUtil.fromJsonToList(anyString, ServiceRequestCollection.class);
-				result = serviceRequestCollection;
-				*//*appMappingCollection.getItems();
-				result = amecList;
-                appMappingEntity.getValues();
-                result = appMappingValues;
-                appMappingValue.getOpcTenantId();
-                result = "testtenant";
-                appMappingValue.getApplicationNames();
-                result = "LogAnalytics,ITAnalytics,APM";*//*
-			}
-		};
-		TenantSubscriptionUtil.getTenantSubscribedServices("testtenant",new TenantSubscriptionInfo());
-	}*/
 	@Test
 	public void testGetProviderNameFromServiceName(){
 		TenantSubscriptionUtil.getProviderNameFromServiceName("ITAnalytics");
@@ -151,42 +98,6 @@ public class TenantSubscriptionUtilTest
 		amecList.add(appMappingEntity);
 		final List<AppMappingEntity.AppMappingValue>  appMappingValues = new ArrayList<>();
 		appMappingValues.add(appMappingValue);
-		new Expectations() {
-			{
-				RegistryLookupUtil.getServiceInternalLinkHttp(anyString, anyString, anyString, anyString);
-				result = linkInfo;
-				StringUtil.isEmpty(anyString);
-				result = false;
-				UriBuilder.fromUri(anyString);
-				result = uriBuilder;
-				uriBuilder.build();
-				result = uri;
-				client.resource(withAny(uri));
-				result = webSource;
-				webSource.header(anyString, anyString);
-				result = builder;
-				builder.type(anyString);
-				result = builder;
-				builder.accept(anyString);
-				result = builder;
-				builder.get(String.class);
-				result = "uri.uri";
-				/*domainEntity.getDomainName();
-				result = "TenantApplicationMapping";
-				domainEntity.getCanonicalUrl();
-				result = "httyp://";*/
-				JSONUtil.fromJsonToList(anyString, ServiceRequestCollection.class);
-				result = serviceRequestCollection;
-				/*appMappingCollection.getItems();
-				result = amecList;
-				appMappingEntity.getValues();
-				result = appMappingValues;
-				appMappingValue.getOpcTenantId();
-				result = "testtenant";
-				appMappingValue.getApplicationNames();
-				result = "LogAnalytics,ITAnalytics,APM";*/
-			}
-		};
 		TenantSubscriptionUtil.getTenantSubscribedServiceProviders("testtenant");
 	}
 }

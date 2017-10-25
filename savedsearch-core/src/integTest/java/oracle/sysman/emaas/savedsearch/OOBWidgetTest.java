@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-@Test
+//@Test
 public class OOBWidgetTest extends BaseTest{
     @Test
     public void testOOBWidgetParamNotNull() throws EMAnalyticsFwkException {
@@ -116,7 +116,7 @@ public class OOBWidgetTest extends BaseTest{
     }
 
 
-    @Test
+    //@Test
     public void testSecurityDNSWidget() throws EMAnalyticsFwkException {
         TenantContext.setContext(new TenantInfo(
                 TestUtils.getUsername(QAToolUtil.getTenantDetails().get(QAToolUtil.TENANT_USER_NAME).toString()),

@@ -45,11 +45,11 @@
                 <pipeline name="PRODUCT"/>                                                                                                             
         </pipelines>                                                                                                                                   
         </lrg--> 
-        <lrg name="emcpdf_test_3n" repos="emcpdf" description="Run emcpdf lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
+        <!--lrg name="emcpdf_test_3n" repos="emcpdf" description="Run emcpdf lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
         <pipelines>                                                                                                                                    
                 <pipeline name="PRODUCT"/>                                                                                                             
         </pipelines>                                                                                                                                   
-        </lrg> 
+        </lrg--> 
         <!--lrg name="emcapms_ui_webdriver_3n" repos="emcapms" description="Run emcapms lrg from emcpdm repository to ensure no function break caused by emcpdm code changes">                                                                                                                                           
         <pipelines>                                                                                                                                    
                 <pipeline name="PRODUCT"/>                                                                                                             
