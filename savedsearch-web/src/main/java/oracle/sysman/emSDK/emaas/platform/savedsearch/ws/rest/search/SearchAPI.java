@@ -2,13 +2,13 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
@@ -737,7 +737,7 @@ public class SearchAPI
 				    		// insert new row
 				    		searchObj = createSearchObjectForAdd(inputJsonObj);
 				    		searchObj.setEditable(true);
-				    		int num = new Random().nextInt(100);
+				    		int num = new SecureRandom().nextInt(100);
 				    		String newName = name + "_" + num;
 				    		searchObj.setName(newName);
 							Search savedSearch = searchManager.saveSearch(searchObj);

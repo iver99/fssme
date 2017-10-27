@@ -1250,7 +1250,7 @@ public class SearchManagerImpl extends SearchManager
 			 emAnalyticsSearch.setTenantId(DEFAULT_TENANT_ID);
 			 emAnalyticsSearch.setSystemSearch(new BigDecimal("1"));
 			 emAnalyticsSearch.setLastModifiedBy(DEFAULT_CURRENT_USER);
-			 emAnalyticsSearch.setDASHBOARDINELIGIBLE("TRUE".equals(search.getDashboardIneligible().toUpperCase())?"1":"0");
+			 emAnalyticsSearch.setDASHBOARDINELIGIBLE("TRUE".equalsIgnoreCase(search.getDashboardIneligible()) ? "1" : "0");
 			 emAnalyticsSearch.setCreationDate(search.getCreationDate());
 			 emAnalyticsSearch.setLastModificationDate(search.getLastModificationDate());
 			 for(EmAnalyticsSearchParam emAnalyticsSearchParam: emAnalyticsSearch.getEmAnalyticsSearchParams())
