@@ -3,11 +3,10 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle;
 import java.io.IOException;
 import java.util.List;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.ssflifecycle.SSFLifeCycleNotifyEntity.SSFNotificationType;
 
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +27,7 @@ public class SSFLifeCycleNotification {
         }
         LOGGER.info("Starts to notify an SSF lifecycle event. The entity type is {}", type);
         long start = System.currentTimeMillis();
-        List<VersionedLink> links = null;
+        List<RegistryLookupUtil.VersionedLink> links = null;
         try {
             links = RegistryLookupUtil.getAllServicesInternalLinksByRel(SSF_LIFECYCLE_REL);
         }
@@ -41,7 +40,7 @@ public class SSFLifeCycleNotification {
         }
         RestClient rc = new RestClient();
         SSFLifeCycleNotifyEntity lcne = new SSFLifeCycleNotifyEntity(type);
-        for (VersionedLink link : links) {
+        for (RegistryLookupUtil.VersionedLink link : links) {
             long innerStart = System.currentTimeMillis();
             // TODO: will be replaced by the RestClient impl from dashboards-sdk once it could be used by SSF
             try {
