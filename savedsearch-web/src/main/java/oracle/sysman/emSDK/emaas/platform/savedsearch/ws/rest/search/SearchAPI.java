@@ -691,7 +691,16 @@ public class SearchAPI
 		}
 	}
 
-	
+	/**
+	 * save imported widget data
+	 * @param override
+	 * @param importedData
+	 * @return Example:
+	 * 	{"2004":"191134497286884694333701301925787569634",
+	 * 	"2026":"303726178767420504723169950985867708641",
+	 * 	"2022":"182578934661553784711389571629249005671",
+	 * 	"2020":"65426205633609290111501435536176656608"}
+	 */
 	@PUT
 	@Path("/import")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -1010,9 +1019,8 @@ public class SearchAPI
 	public Response getSearchData(JSONArray inputJsonArray) throws JSONException
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/all");
-		String message = null;
-		int statusCode = 200;
-		SearchManager sman = SearchManager.getInstance();	
+		LOGGER.info("Input is {}", inputJsonArray);
+		SearchManager sman = SearchManager.getInstance();
 		ArrayNode outputJsonArray = new ObjectMapper().createArrayNode();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
@@ -1026,17 +1034,13 @@ public class SearchAPI
 				Search searchObj = sman.getSearchWithoutOwner(id);
 				outputJsonArray.add(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj));
 			}
-			message = outputJsonArray.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-			LOGGER.error(e.getLocalizedMessage());
-			statusCode = e.getStatusCode();
-			message= e.getMessage();
-			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
-					e.getStatusCode());
+			LOGGER.error(e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "Error occurred when get Search data!")).build();
 		}
-
-		return Response.status(statusCode).entity(message).build();
+		LOGGER.info("Get Search data is {]", outputJsonArray.toString());
+		return Response.status(Response.Status.OK).entity(outputJsonArray.toString()).build();
 	}
 
 
