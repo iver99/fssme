@@ -14,6 +14,7 @@ import weblogic.javaee.TransactionTimeoutSeconds;
 
 import static mockit.Deencapsulation.*;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -277,4 +278,27 @@ public class RegistryLookupUtilTest {
         Deencapsulation.invoke(RegistryLookupUtil.class,"replaceVanityUrlDomainForUrl","","https://emaastesttenant1.ita.replaced.link/home","emaastesttenant1");
     }*/
 
+    @Test(groups = { "s2" })
+    public void testGetLinksWithRelPrefixWithProtocol(){
+
+        Deencapsulation.invoke(RegistryLookupUtil.class, "getLinksWithRelPrefixWithProtocol","","",new ArrayList<Link>());
+        final List<Link> links =new ArrayList<>();
+        Link link1 = new Link();
+        link1.withHref("https://ita.replaced.link");
+        links.add(link1);
+        Deencapsulation.invoke(RegistryLookupUtil.class, "getLinksWithRelPrefixWithProtocol","abc","",links);
+
+    }
+
+    @Test(groups = { "s2" })
+    public void testReplaceVanityUrlDomainForUrl(){
+        Deencapsulation.invoke(RegistryLookupUtil.class, "replaceVanityUrlDomainForUrl","vanityBaseUrl","targetUrl","tenantName");
+        Deencapsulation.invoke(RegistryLookupUtil.class, "replaceVanityUrlDomainForUrl","vanity://BaseUrl","targetUrl://justfor://testing","tenantName");
+        Deencapsulation.invoke(RegistryLookupUtil.class, "replaceVanityUrlDomainForUrl","vanity://BaseUrl","targetUrl://tenantName/justfor://testing","tenantName");
+    }
+
+    @Test(groups = { "s2" })
+    public void testMapTenantNameForEC(){
+        Deencapsulation.invoke(RegistryLookupUtil.class, "mapTenantNameForEC","tenantname");
+    }
 }
