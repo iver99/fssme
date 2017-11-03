@@ -1010,9 +1010,6 @@ public class SearchManagerImpl extends SearchManager
 							searchEntity = null;
 						}
 						if (searchEntity == null) {
-							EmAnalyticsFolder folder = null;
-							Folder fld = null;
-
 							if (obj == null) {
 								continue;
 							}
@@ -1041,7 +1038,7 @@ public class SearchManagerImpl extends SearchManager
 							}
 
 							if (obj instanceof FolderImpl) {
-								fld = (Folder) obj;
+							    Folder fld = (Folder) obj;
 								if (fld.getParentId() == null || BigInteger.ZERO.equals(fld.getParentId())) {
 									fld.setParentId(BigInteger.ONE);
 								}
@@ -1088,7 +1085,7 @@ public class SearchManagerImpl extends SearchManager
 							}
 
 							if (obj instanceof FolderImpl && search.getFolderId() == null) {
-								folder = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
+							    EmAnalyticsFolder folder = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
 								folder.setTenantId(TenantContext.getContext().getTenantInternalId());
 								em.persist(folder);
 								search.setFolderId(folder.getFolderId());
@@ -1096,7 +1093,7 @@ public class SearchManagerImpl extends SearchManager
 
 							if (cateObj instanceof CategoryImpl && search.getCategoryId() == null) {
 								EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
-								folder.setTenantId(TenantContext.getContext().getTenantInternalId());
+								iCategory.setTenantId(TenantContext.getContext().getTenantInternalId());
 								em.persist(iCategory);
 								search.setCategoryId(iCategory.getCategoryId());
 							}
