@@ -741,8 +741,8 @@ public class SearchAPI
 				    		// insert new row
 				    		searchObj = createSearchObjectForAdd(inputJsonObj);
 				    		searchObj.setEditable(true);
-				    		//TODO new name is a random?
-				    		int num = new Random().nextInt(100);
+				    		//NOTE new name suffix now is a random
+				    		int num = new Random(System.currentTimeMillis()).nextInt(100);
 				    		String newName = name + "_" + num;
 				    		searchObj.setName(newName);
 							Search savedSearch = searchManager.saveSearch(searchObj);
