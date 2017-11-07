@@ -6,11 +6,10 @@ import java.util.List;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -19,16 +18,16 @@ import org.testng.annotations.Test;
  */
 @Test(groups = { "s2" })
 public class SSFLifeCycleNotificationTest {
-    private VersionedLink link;
-    private List<VersionedLink> links;
+    private RegistryLookupUtil.VersionedLink link;
+    private List<RegistryLookupUtil.VersionedLink> links;
     @BeforeMethod
     public void beforeMethod()
     {
-        link = new VersionedLink();
+        link = new RegistryLookupUtil.VersionedLink();
         link.withHref("http://test.link.com");
         link.withRel("ssf.lifecycle.ntf");
         link.setAuthToken("authToken");
-        links = new ArrayList<VersionedLink>();
+        links = new ArrayList<>();
         links.add(link);
     }
     

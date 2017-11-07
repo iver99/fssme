@@ -16,8 +16,6 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
@@ -30,6 +28,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
@@ -1139,7 +1138,7 @@ public class SearchAPITest {
     @Mocked
     private Link link;
     @Mocked
-    private VersionedLink linkInfo;
+    private RegistryLookupUtil.VersionedLink linkInfo;
     @Test
     public void testGetAssetRoot() throws JSONException, EMAnalyticsFwkException {
         new Expectations() {
