@@ -520,7 +520,8 @@ public class DataManagerTest
 		String dashboardIneligible="dashboardIneligible"; 
 		String providerName="providerName"; 
 		String providerVersion="providerVersion"; 
-		String providerAssetRoot="providerAssetRoot"; 
+		String providerAssetRoot="providerAssetRoot";
+		Integer federationSupported=0;
 		final Map<String, Object> objs = new HashMap<String,Object>();		
 		Date date = new Date();
 		objs.put("LAST_MODIFICATION_DATE", null);
@@ -538,49 +539,49 @@ public class DataManagerTest
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
-				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
+				dashboardIneligible, providerName, providerVersion, providerAssetRoot, federationSupported);
 		
 		dataManager.syncSearchTable(entityManager,null, name, owner, creationDate, lastModificationDate, 
 				lastModifiedBy, description, folderId, categoryId, systemSearch,isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
-				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
+				dashboardIneligible, providerName, providerVersion, providerAssetRoot, federationSupported);
 		
 		dataManager.syncSearchTable(entityManager,searchId, null, owner, creationDate, lastModificationDate, 
 				lastModifiedBy, description, folderId, categoryId, systemSearch,isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
-				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
+				dashboardIneligible, providerName, providerVersion, providerAssetRoot, federationSupported);
 		
 		dataManager.syncSearchTable(entityManager,searchId, name, owner, null, lastModificationDate, 
 				lastModifiedBy, description, folderId, categoryId, systemSearch, isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
-				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
+				dashboardIneligible, providerName, providerVersion, providerAssetRoot, federationSupported);
 		
 		dataManager.syncSearchTable(entityManager,searchId, name, owner, creationDate, null, 
 				lastModifiedBy, description, folderId, categoryId, systemSearch, isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
-				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
+				dashboardIneligible, providerName, providerVersion, providerAssetRoot, federationSupported);
 		
 		dataManager.syncSearchTable(entityManager,searchId, name, owner, creationDate, lastModificationDate, 
 				lastModifiedBy, description, folderId, null,  systemSearch,isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
-				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
+				dashboardIneligible, providerName, providerVersion, providerAssetRoot, federationSupported);
 		
 		dataManager.syncSearchTable(entityManager,searchId, name, owner, creationDate, lastModificationDate, 
 				lastModifiedBy, description, folderId, categoryId, systemSearch, isLocked, 
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
-				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
+				dashboardIneligible, providerName, providerVersion, providerAssetRoot, federationSupported);
 	}
 	
 	@Test
@@ -622,7 +623,8 @@ public class DataManagerTest
 		String dashboardIneligible="dashboardIneligible"; 
 		String providerName="providerName"; 
 		String providerVersion="providerVersion"; 
-		String providerAssetRoot="providerAssetRoot"; 
+		String providerAssetRoot="providerAssetRoot";
+		Integer federationSupported = 0;
 		
 		new Expectations(){
 			{
@@ -638,7 +640,7 @@ public class DataManagerTest
 				metaDataClob, searchDisplayStr, uiHidden, deleted, isWidget, tenantId, nameWidgetSource, 
 				widgetGroupName, widgetScreenshotHref, widgetIcon, widgetKocName, viewModel, widgetTemplate, 
 				widgetSupportTimeControl, widgetLinkedDashboard, widgetDefaultWidth, widgetDefaultHeight, 
-				dashboardIneligible, providerName, providerVersion, providerAssetRoot);
+				dashboardIneligible, providerName, providerVersion, providerAssetRoot, federationSupported);
 		
 	}
 

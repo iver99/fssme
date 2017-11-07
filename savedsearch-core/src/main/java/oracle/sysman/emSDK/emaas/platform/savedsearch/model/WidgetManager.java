@@ -35,6 +35,7 @@ public abstract class WidgetManager
 
 	public abstract String getWidgetJsonStringFromWidgetList(List<Widget> widgetList) throws EMAnalyticsFwkException;
 
-	public abstract List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+	public abstract List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames,
+						String widgetGroupId, boolean isFederationEnabled, boolean federationFeatureShowInUi)
 			throws EMAnalyticsFwkException;
 }

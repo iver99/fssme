@@ -3,6 +3,7 @@ package oracle.sysman.SDKImpl.emaas.platform.savedsearch.model;
 import java.math.BigInteger;
 import java.util.Date;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -89,5 +90,11 @@ public class SearchSummaryImplTest {
         searchSummaryImpl.setSystemSearch(false);
         searchSummaryImpl.isSystemSearch();
     }
+
+	@Test
+	public void testGetFederationSupported(){
+		searchSummaryImpl.setFederationSupported(FederationSupportedType.FEDERATION_AND_NON_FEDERATION_SRING);
+		Assert.assertEquals(searchSummaryImpl.getFederationSupported(), FederationSupportedType.FEDERATION_AND_NON_FEDERATION_SRING);
+	}
 
 }

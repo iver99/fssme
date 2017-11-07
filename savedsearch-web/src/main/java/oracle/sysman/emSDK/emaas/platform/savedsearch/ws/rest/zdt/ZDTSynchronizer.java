@@ -123,7 +123,8 @@ public class ZDTSynchronizer
 					e.getNameWidgetSource(), e.getWidgetGroupName(), e.getWidgetScreenshotHref(), e.getWidgetIcon(),
 					e.getWidgetKocName(), e.getWidgetViewModel(), e.getWidgetTemplate(), e.getWidgetSupportTimeControl(),
 					e.getWidgetLinkedDashboard(), e.getWidgetDefaulWidth(), e.getWidgetDefaultHeight(),
-					e.getDashboardIneligible(), e.getProviderName(), e.getProviderVersion(), e.getProviderAssetRoot());
+					e.getDashboardIneligible(), e.getProviderName(), e.getProviderVersion(),
+					e.getProviderAssetRoot(), e.getFederationSupported());
 
 		}
 		logger.info("Finished to sync table EMS_ANALYTICS_SEARCH table");

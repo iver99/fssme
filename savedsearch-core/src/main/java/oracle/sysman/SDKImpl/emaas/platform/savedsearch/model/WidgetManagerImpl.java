@@ -59,14 +59,18 @@ public class WidgetManagerImpl extends WidgetManager
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_1 = "SELECT s.SEARCH_ID,s.CREATION_DATE,s.LAST_MODIFICATION_DATE, s.NAME, s.DESCRIPTION, s.OWNER, "
 			+ "s.WIDGET_SOURCE, s.WIDGET_GROUP_NAME, s.WIDGET_SCREENSHOT_HREF, s.WIDGET_ICON, s.WIDGET_KOC_NAME, s.WIDGET_VIEWMODEL, s.WIDGET_TEMPLATE, "
 			+ "s.WIDGET_SUPPORT_TIME_CONTROL,s.WIDGET_LINKED_DASHBOARD,s.WIDGET_DEFAULT_WIDTH, s.WIDGET_DEFAULT_HEIGHT,s.DASHBOARD_INELIGIBLE,s.PROVIDER_NAME,s.PROVIDER_VERSION, s.PROVIDER_ASSET_ROOT, "
-			+ "s.CREATION_DATE, s.LAST_MODIFICATION_DATE, c.NAME as CATOGORY_NAME, c.PROVIDER_NAME as C_PROVIDER_NAME, c.PROVIDER_VERSION as C_PROVIDER_VERSION, c.PROVIDER_ASSET_ROOT as C_PROVIDER_ASSET_ROOT, "
+			+ "s.CREATION_DATE, s.LAST_MODIFICATION_DATE, s.FEDERATION_SUPPORTED, c.NAME as CATOGORY_NAME, "
+			+ "c.PROVIDER_NAME as C_PROVIDER_NAME, c.PROVIDER_VERSION as C_PROVIDER_VERSION, c.PROVIDER_ASSET_ROOT as C_PROVIDER_ASSET_ROOT, "
 			+ "CASE WHEN s.owner = ? THEN 'true' ELSE 'false' END as WIDGET_EDITABLE "
 			+ "FROM EMS_ANALYTICS_SEARCH s, EMS_ANALYTICS_CATEGORY c ";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_2 = "WHERE c.provider_name in (";
 	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_3 = ") " + "AND s.deleted=0 AND s.IS_WIDGET=1 AND (s.TENANT_ID=? OR s.TENANT_ID= -11) ";
-	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4 = "AND s.category_id=c.category_id ";
-	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_5 = "AND c.CATEGORY_ID=? ";
-	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_6 = "AND (s.DASHBOARD_INELIGIBLE IS NULL OR s.DASHBOARD_INELIGIBLE <>'1') ORDER BY s.SEARCH_ID ASC ";
+	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4_GF_ONLY = "AND (s.FEDERATION_SUPPORTED=0) ";
+	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4_GF = "AND (s.FEDERATION_SUPPORTED=0 or s.FEDERATION_SUPPORTED=1) ";
+	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_4_FED = "AND (s.FEDERATION_SUPPORTED=1 or s.FEDERATION_SUPPORTED=2) ";
+	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_5 = "AND s.category_id=c.category_id ";
+	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_6 = "AND c.CATEGORY_ID=? ";
+	private static final String SQL_WIDGET_LIST_BY_PROVIDERS_7 = "AND (s.DASHBOARD_INELIGIBLE IS NULL OR s.DASHBOARD_INELIGIBLE <>'1') ORDER BY s.SEARCH_ID ASC ";
 
 	public static final WidgetManagerImpl INSTANCE = new WidgetManagerImpl();
 
@@ -142,7 +146,8 @@ public class WidgetManagerImpl extends WidgetManager
 	 */
 	@Override
 	@SuppressWarnings("all")
-	public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+	public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId,
+																  boolean federationEnabled, boolean federationFeatureShowInUi)
 			throws EMAnalyticsFwkException
 			{
 		if (providerNames == null || providerNames.isEmpty()) {
@@ -151,7 +156,7 @@ public class WidgetManagerImpl extends WidgetManager
 
 		StringBuilder sb = new StringBuilder();
 		//concat get widgets SQL
-		List<Object> paramList = concatWidgetsSQL(providerNames, widgetGroupId, sb);
+		List<Object> paramList = concatWidgetsSQL(providerNames, widgetGroupId, federationEnabled, federationFeatureShowInUi, sb);
 		EntityManager em = null;
 		try {
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
@@ -197,7 +202,8 @@ public class WidgetManagerImpl extends WidgetManager
 		}
 			}
 
-	private List<Object> concatWidgetsSQL(List<String> providerNames, String widgetGroupId, StringBuilder sb)
+	private List<Object> concatWidgetsSQL(List<String> providerNames, String widgetGroupId, boolean federationEnabled,
+										  boolean federationFeatureShowInUi, StringBuilder sb)
 	{
 		List<Object> paramList = new ArrayList<Object>();
 		Long tenantId = TenantContext.getContext().getTenantInternalId();
@@ -215,12 +221,21 @@ public class WidgetManagerImpl extends WidgetManager
 		}
 		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_3);
 		paramList.add(tenantId);
-		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4);
+		if (!federationFeatureShowInUi) {
+			sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4_GF_ONLY);
+		} else {
+			if (!federationEnabled) { // running in greenfield mode
+				sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4_GF);
+			} else { // running in federation mode
+				sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_4_FED);
+			}
+		}
+		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_5);
 		if (widgetGroupId != null) {
-			sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_5);
+			sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_6);
 			paramList.add(widgetGroupId);
 		}
-		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_6);
+		sb.append(SQL_WIDGET_LIST_BY_PROVIDERS_7);
 		return paramList;
 	}
 

@@ -50,7 +50,7 @@ public class RowEntityTest {
 			1L, "dashboardIneligible",
 			1L, "1", "1",
 			"providerName", "providerVersion",
-			"providerAssetRoot");
+			"providerAssetRoot", 0);
 	SavedSearchSearchRowEntity searchEntity2 = new SavedSearchSearchRowEntity("1", "description",
 			"descriptionNlsid", "descriptionSubsystem",
 			"emPluginId", new Integer("1"), "lastModifiedBy",
@@ -66,7 +66,7 @@ public class RowEntityTest {
 			1L, "dashboardIneligible",
 			1L, "1", "1",
 			"providerName", "providerVersion",
-			"providerAssetRoot");
+			"providerAssetRoot", 0);
 	
 	@Test
 	public void testEquals() {
