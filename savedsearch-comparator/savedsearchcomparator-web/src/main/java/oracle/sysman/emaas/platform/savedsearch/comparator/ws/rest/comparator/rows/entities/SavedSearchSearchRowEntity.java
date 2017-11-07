@@ -119,7 +119,9 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	@JsonProperty("PROVIDER_ASSET_ROOT")
 	private String providerAssetRoot;
 	
-	
+	@JsonProperty("FEDERATION_SUPPORTED")
+	private Integer federationSupported;
+
 
 	public SavedSearchSearchRowEntity() {
 		super();
@@ -141,7 +143,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 			Long widgetDefaultHeight, String dashboardIneligible,
 			Long tenantId, String folderId, String categoryId,
 			String providerName, String providerVersion,
-			String providerAssetRoot) {
+			String providerAssetRoot, Integer federationSupported) {
 		super();
 		this.searchId = searchId;
 		this.description = description;
@@ -176,6 +178,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		this.providerName = providerName;
 		this.providerVersion = providerVersion;
 		this.providerAssetRoot = providerAssetRoot;
+		this.federationSupported = federationSupported;
 	}
 
 	public String getSearchGuid() {
@@ -440,6 +443,10 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	public String getWidgetViewModel()
 	{
 		return widgetViewModel;
+	}
+
+	public Integer getFederationSupported() {
+		return federationSupported;
 	}
 
 	/**
@@ -730,6 +737,10 @@ public class SavedSearchSearchRowEntity implements RowEntity
 		this.widgetViewModel = widgetViewModel;
 	}
 
+	public void setFederationSupported(Integer federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -748,7 +759,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 				+ widgetLinkedDashboard + ", widgetDefaulWidth=" + widgetDefaulWidth + ", widgetDefaultHeight="
 				+ widgetDefaultHeight + ", dashboardIneligible=" + dashboardIneligible + ", tenantId=" + tenantId + ", folderId="
 				+ folderId + ", categoryId=" + categoryId + ", providerName=" + providerName + ", providerVersion="
-				+ providerVersion + ", providerAssetRoot=" + providerAssetRoot + "]";
+				+ providerVersion + ", providerAssetRoot=" + providerAssetRoot + ", federationSupported=" + federationSupported + "]";
 	}
 
 	@Override
@@ -836,6 +847,8 @@ public class SavedSearchSearchRowEntity implements RowEntity
 				+ ((widgetTemplate == null) ? 0 : widgetTemplate.hashCode());
 		result = prime * result
 				+ ((widgetViewModel == null) ? 0 : widgetViewModel.hashCode());
+		result = prime * result
+				+ ((federationSupported == null) ? 0 : federationSupported.hashCode());
 		return result;
 	}
 
@@ -1013,6 +1026,11 @@ public class SavedSearchSearchRowEntity implements RowEntity
 			if (other.widgetViewModel != null)
 				return false;
 		} else if (!widgetViewModel.equals(other.widgetViewModel))
+			return false;
+		if (federationSupported == null) {
+			if (other.federationSupported != null)
+				return false;
+		} else if (!federationSupported.equals(other.federationSupported))
 			return false;
 		return true;
 	}

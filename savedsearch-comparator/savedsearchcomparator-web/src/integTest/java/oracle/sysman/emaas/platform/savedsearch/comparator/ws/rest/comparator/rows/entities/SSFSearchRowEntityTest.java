@@ -37,6 +37,10 @@ public class SSFSearchRowEntityTest {
 		entity1.setIsWidget(1);
 		entity2.setIsWidget(1);
 		Assert.assertEquals(entity1,entity2);
+
+		entity1.setFederationSupported(2);
+		entity2.setFederationSupported(2);
+		Assert.assertEquals(entity1,entity2);
 		
 		entity1.setLastModificationDate("2016-07-22 08:23:32.517");
 		entity2.setLastModificationDate("2016-07-22 08:23:32.518");
@@ -101,7 +105,7 @@ public class SSFSearchRowEntityTest {
 				1L, "dashboardIneligible",
 				1L, "folderId", "categoryId",
 				"providerName", "providerVersion",
-				"providerAssetRoot");
+				"providerAssetRoot", 0);
 		entity.getCategoryId();
 		entity.getCreationDate();
 		entity.getDashboardIneligible();

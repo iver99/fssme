@@ -72,6 +72,7 @@ public class WidgetAPITest
 			m.put("PROVIDER_NAME", "Test");
 			m.put("PROVIDER_VERSION", "100");
 			m.put("PROVIDER_ASSET_ROOT", "Test");
+			m.put("FEDERATION_SUPPORTED", "FEDERATION_ONLY");
 			map.add(m);
 		}
 		return map;
@@ -113,7 +114,7 @@ public class WidgetAPITest
 				result = persistenceManager;
 			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false", "false");
 	}
 
 	@Test
@@ -174,11 +175,11 @@ public class WidgetAPITest
 		//		};
 		new MockUp<WidgetManagerImpl>() {
 			@Mock
-			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled, boolean federationFeatureShowInUI)
 					throws EMAnalyticsFwkException
-					{
+			{
 				return WidgetAPITest.mockedWidgetObjects();
-					}
+			}
 		};
 		new MockUp<WidgetManagerImpl>() {
 			@Mock
@@ -187,7 +188,7 @@ public class WidgetAPITest
 				return "Widget Json Message";
 			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false", "false");
 	}
 
 	@Test
@@ -254,13 +255,13 @@ public class WidgetAPITest
 			}
 
 			@Mock
-			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled, boolean federationFeatureShowInUI)
 					throws EMAnalyticsFwkException
-					{
+			{
 				return WidgetAPITest.mockedWidgetObjects();
-					}
+			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false", "false");
 	}
 
 	@Test
@@ -327,13 +328,13 @@ public class WidgetAPITest
 			}
 
 			@Mock
-			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId)
+			public List<Map<String, Object>> getWidgetListByProviderNames(List<String> providerNames, String widgetGroupId, boolean federationEnabled, boolean federationFeatureShowInUI)
 					throws EMAnalyticsFwkException
-					{
+			{
 				return WidgetAPITest.mockedWidgetObjects();
-					}
+			}
 		};
-		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible);
+		widgetAPI.getAllWidgets(widgetAPI.uri, userTenant, widgetGroupId, includeDashboardIneligible, "false", "false");
 	}
 
 	@Test
