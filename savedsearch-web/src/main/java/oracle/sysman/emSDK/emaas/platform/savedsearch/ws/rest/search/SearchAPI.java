@@ -26,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FederationSupportedType;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
@@ -1228,8 +1229,15 @@ public class SearchAPI
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
 		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
+		searchObj.setFederationSupported(json.optString("federationSupported", searchObj.getFederationSupported()));
 		
 		boolean isWidget = searchObj.getIsWidget();
+		if ((FederationSupportedType.FEDERATION_ONLY_STRING.equals(searchObj.getFederationSupported()) ||
+				FederationSupportedType.FEDERATION_AND_NON_FEDERATION_SRING.equals(searchObj.getFederationSupported())) && !isWidget) {
+			throw new EMAnalyticsWSException("The search object contains invalid input: does support federation mode, but isn't a widget",
+					EMAnalyticsWSException.JSON_SEARCH_FEDERATION_MODE_INVALID);
+		}
+
 		boolean hasWidgetTemplate = false;
 		boolean hasWidgetViewModel = false;
 		boolean hasWidgetKocName = false;
@@ -1399,6 +1407,7 @@ public class SearchAPI
 		searchObj.setLocked(Boolean.parseBoolean(json.optString("locked", Boolean.toString(searchObj.isLocked()))));
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
 		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
+		searchObj.setFederationSupported(json.optString("federationSupported", searchObj.getFederationSupported()));
 
 		// Nullable properties !
 		searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));

@@ -475,6 +475,13 @@ class EmAnalyticsObjectUtil
 		searchEntity.setUiHidden(new java.math.BigDecimal(search.isUiHidden() ? 1 : 0));
 		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
 		searchEntity.setDeleted(BigInteger.ZERO);
+		FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
+		try {
+			fst = FederationSupportedType.fromJsonValue(search.getFederationSupported());
+		} catch (IllegalArgumentException e) {
+			LOGGER.error("Invalid federation support value. Using default value instead", e);
+		}
+		searchEntity.setFederationSupported(fst.getValue());
 		searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 		List<SearchParameter> params = search.getParameters();
 		//move values from search_params table to search table
@@ -548,6 +555,13 @@ class EmAnalyticsObjectUtil
 		searchEntity.setUiHidden(new java.math.BigDecimal(search != null && search.isUiHidden() ? 1 : 0));
 		searchEntity.setIsWidget(search.getIsWidget() ? 1 : 0);
 		searchEntity.setDeleted(BigInteger.ZERO);
+		FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
+		try {
+			fst = FederationSupportedType.fromJsonValue(search.getFederationSupported());
+		} catch (IllegalArgumentException e) {
+			LOGGER.error("Invalid federation support value. Using default value instead", e);
+		}
+		searchEntity.setFederationSupported(fst.getValue());
 		searchEntity.setName(search.getName());
 		List<SearchParameter> params = search.getParameters();
 		// Params handling !!

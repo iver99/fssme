@@ -21,6 +21,7 @@ public class EMAnalyticsWSException extends Exception
 	public static final int JSON_SEARCH_CATEGORY_ID_MISSING = 70024;
 	public static final int JSON_SEARCH_PARAM_TYPE_MISSING = 70025;
 	public static final int JSON_SEARCH_PARAM_TYPE_INVALID = 70026;
+	public static final int JSON_SEARCH_FEDERATION_MODE_INVALID = 70027;
 
 	//related to folder input JSON object
 	public static final int JSON_FOLDER_NAME_MISSING = 70030;
@@ -159,6 +160,9 @@ public class EMAnalyticsWSException extends Exception
 				statusCode = 400;
 				break;
 			case JSON_INVALID_LENGTH:
+				statusCode = 400;
+				break;
+			case JSON_SEARCH_FEDERATION_MODE_INVALID:
 				statusCode = 400;
 				break;
 			default:

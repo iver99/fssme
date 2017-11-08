@@ -1,15 +1,16 @@
 <?xml version="1.0" ?>
      <lrg-metadata>
-   <lrg name="emcpssf_test_3n" launcher="tests/suites/emcpssf_test_3n.gradle" description=" lrg for CI Test">
+<!--lrg name="emcpssf_test_3n" launcher="tests/suites/emcpssf_test_3n.gradle" description=" lrg for CI Test">
          <pipelines>
             <pipeline name="PRODUCT"/>
 	     <pipeline name="STAGE"/>
          </pipelines>
-     </lrg>
+     </lrg-->
 
    <lrg name="emcpssf_shared_4n" launcher="tests/suites/emcpssf_shared_4n.gradle" description=" lrg for upgrade/test 3n">
          <pipelines>
             <pipeline name="PRODUCT"/>
+	    <pipeline name="STAGE"/>
          </pipelines>
      </lrg>
      <lrg name="emcpssf_l0_test" launcher="tests/suites/emcpssf_l0_test.gradle" description="lrg for QAUnitTest"></lrg>
@@ -25,11 +26,11 @@
              </pipelines>
      </lrg-->
   
-<lrg name="emcpssf_upgrade_test_3n" launcher="tests/suites/emcpssf_upgrade_test_3n.gradle" description="product lrg for upgradeTest">
+<!--lrg name="emcpssf_upgrade_test_3n" launcher="tests/suites/emcpssf_upgrade_test_3n.gradle" description="product lrg for upgradeTest">
              <pipelines>
             <pipeline name="PRODUCT"/>
              </pipelines>
-     </lrg>
+     </lrg-->
  <!--<lrg name="emctas_uitsts_3n" repos="emctas" description="Run LRG from emcpssf to ensure the dependent service is not breaking it."> 
 	     <pipelines>
 	     <pipeline name="PRODUCT"/> 

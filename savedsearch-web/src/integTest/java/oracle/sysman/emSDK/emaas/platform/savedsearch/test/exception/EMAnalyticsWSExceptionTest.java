@@ -15,6 +15,7 @@ static final EMAnalyticsWSException EX_4 = new EMAnalyticsWSException("test mess
 static final EMAnalyticsWSException EX_5 = new EMAnalyticsWSException("test message", 70041, OBJECTS);
 static final EMAnalyticsWSException EX_6 = new EMAnalyticsWSException(THROWABLE);
 static final EMAnalyticsWSException EX_7 = new EMAnalyticsWSException("test message", 70040, OBJECTS);
+static final EMAnalyticsWSException EX_8 = new EMAnalyticsWSException("test message", 70027, OBJECTS);
   @Test (groups = {"s1"})
   public void getErrorCode() {
 	  
@@ -39,5 +40,6 @@ static final EMAnalyticsWSException EX_7 = new EMAnalyticsWSException("test mess
     Assert.assertEquals(EX_4.getStatusCode(), 400);
     Assert.assertEquals(EX_5.getStatusCode(), 500);
     Assert.assertEquals(EX_7.getStatusCode(), 500);
+    Assert.assertEquals(EX_8.getStatusCode(), 400);
   }
 }
