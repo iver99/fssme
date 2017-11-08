@@ -13,8 +13,6 @@ import javax.persistence.EntityManager;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
@@ -22,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.savedsearch.QAToolUtil;
 import oracle.sysman.emaas.savedsearch.TestUtils;
 
@@ -82,7 +81,7 @@ public class WidgetManagerImplTest
 		final Link link = new Link();
 		link.withRel("href");
 		link.withHref("http://widget");
-		final VersionedLink linkInfo = new VersionedLink(link, "auth");
+		final RegistryLookupUtil.VersionedLink linkInfo = new RegistryLookupUtil.VersionedLink(link, "auth");
 		new Expectations() {
 			{
 				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
@@ -105,6 +104,7 @@ public class WidgetManagerImplTest
 		final String providerName = "PROVIDER_NAME";
 		final String providerVersion = "PROVIDER_VERSION";
 		final String providerAssetRoot = "PROVIDER_ASSET_ROOT";
+		final String federationSupported = "federationSupported";
 
 		List<Map<String, Object>> widgets = new ArrayList<Map<String, Object>>();
 		Map<String, Object> widget1 = new HashMap<String, Object>();
@@ -123,12 +123,13 @@ public class WidgetManagerImplTest
 		widget1.put(providerName, "TargetAnalytics");
 		widget1.put(providerVersion, "1.0");
 		widget1.put(providerAssetRoot, "assetRoot");
+		widget1.put(federationSupported, "NON_FEDERATION_ONLY");
 		widgets.add(widget1);
 
 		String json = WidgetManagerImpl.getInstance().getSpelledJsonFromQueryResult(widgets);
 		Assert.assertEquals(
 				json,
-				"[{\"WIDGET_UNIQUE_ID\":\"2000\",\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
+				"[{\"federationSupported\":\"NON_FEDERATION_ONLY\",\"WIDGET_UNIQUE_ID\":\"2000\",\"WIDGET_NAME\":\"My_widget\",\"WIDGET_DESCRIPTION\":\"my desc\",\"WIDGET_OWNER\":\"emcsadmin\",\"WIDGET_SOURCE\":1,\"WIDGET_GROUP_NAME\":\"Data Explorer\",\"WIDGET_SUPPORT_TIME_CONTROL\":\"1\",\"WIDGET_KOC_NAME\":\"MY_WIDGET\",\"WIDGET_TEMPLATE\":\"/template.html\",\"WIDGET_VIEWMODEL\":\"/viewmodel.js\",\"PROVIDER_NAME\":\"TargetAnalytics\",\"PROVIDER_VERSION\":\"1.0\",\"PROVIDER_ASSET_ROOT\":\"assetRoot\"}]");
 	}
 
 	@Test
@@ -137,7 +138,7 @@ public class WidgetManagerImplTest
 		final Link link = new Link();
 		link.withRel("href");
 		link.withHref("http://widget");
-		final VersionedLink linkInfo = new VersionedLink(link, "auth");
+		final RegistryLookupUtil.VersionedLink linkInfo = new RegistryLookupUtil.VersionedLink(link, "auth");
 		new Expectations() {
 			{
 				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
@@ -244,7 +245,7 @@ public class WidgetManagerImplTest
 				ejbQuery.getResultList();
 			}
 		};
-		widgetManager.getWidgetListByProviderNames(providerNames, "1");
+		widgetManager.getWidgetListByProviderNames(providerNames, "1", false, false);
 	}
 
 	@Mocked
@@ -264,7 +265,7 @@ public class WidgetManagerImplTest
 				result = new Exception(throwable);
 			}
 		};
-		widgetManager.getWidgetListByProviderNames(providerNames, "1");
+		widgetManager.getWidgetListByProviderNames(providerNames, "1", false, false);
 	}
 	@Test
 	public void testGetWidgetListByProviderNameSessionException() throws EMAnalyticsFwkException {
@@ -289,12 +290,13 @@ public class WidgetManagerImplTest
 				jpaEntityManager.getActiveSession();
 				result = new Exception(throwable);			}
 		};
-		widgetManager.getWidgetListByProviderNames(providerNames, "1");
+		widgetManager.getWidgetListByProviderNames(providerNames, "1", false, false);
 	}
 	@Test
 	public void testGetWidgetListByProviderNamesNULL() throws EMAnalyticsFwkException {
 		WidgetManagerImpl widgetManager = WidgetManagerImpl.getInstance();
-		widgetManager.getWidgetListByProviderNames(null, "1");
+		widgetManager.getWidgetListByProviderNames(null, "1", false, false);
+		widgetManager.getWidgetListByProviderNames(null, "1", true, false);
 	}
 	@Test
 	public void testGetWidgetJsonStringFromWidgetListNull() throws EMAnalyticsFwkException {

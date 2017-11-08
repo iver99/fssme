@@ -58,6 +58,8 @@ public class AnalyticsSearchModel
 	private Long widgetDefaultWidth;
 	@JsonProperty("WIDGET_EDITABLE")
 	private String widgetEditable;
+	//@JsonProperty("FEDERATION_SUPPORTED") /* use federationSupported instead of FEDERATION_SUPPORTED to keep the same with dashboard side */
+	private String federationSupported;
 
 	/**
 	 * @return the id
@@ -397,6 +399,15 @@ public class AnalyticsSearchModel
 	public void setWidgetEditable(String widgetEditable)
 	{
 		this.widgetEditable = widgetEditable;
+	}
+
+
+	public String getFederationSupported() {
+		return federationSupported;
+	}
+
+	public void setFederationSupported(String federationSupported) {
+		this.federationSupported = federationSupported;
 	}
 
 

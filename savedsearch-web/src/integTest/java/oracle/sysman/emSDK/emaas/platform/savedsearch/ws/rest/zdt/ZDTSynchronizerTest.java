@@ -40,7 +40,7 @@ public class ZDTSynchronizerTest {
 		List<SavedSearchSearchRowEntity> savedSearchSearch = new ArrayList<SavedSearchSearchRowEntity>();
 		savedSearchSearch.add(new SavedSearchSearchRowEntity(null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-				null, null, null, null, null, null, null));
+				null, null, null, null, null, null, null, null));
 		ZDTTableRowEntity row = new ZDTTableRowEntity(savedSearchFoldersy, savedSearchSearchParams, savedSearchSearch);
 		
 		new Expectations() {
@@ -52,7 +52,7 @@ public class ZDTSynchronizerTest {
 				dm.syncSearchTable(em,(BigInteger) any, anyString, anyString, anyString, anyString, anyString, anyString, (BigInteger) any, 
 						(BigInteger) any, anyInt, anyInt, anyString, anyString, 
 						anyInt, (BigInteger) any, anyInt, anyLong, anyString, anyString, anyString, anyString, anyString, anyString, anyString, 
-						anyString, anyLong, anyLong, anyLong, anyString, anyString, anyString, anyString);
+						anyString, anyLong, anyLong, anyLong, anyString, anyString, anyString, anyString, anyInt);
 				dm.syncSearchParamsTable(em,(BigInteger) any, anyString, anyString, anyLong, anyString, anyString, anyLong, anyString, anyString,(Integer)any);
 			}
 		};

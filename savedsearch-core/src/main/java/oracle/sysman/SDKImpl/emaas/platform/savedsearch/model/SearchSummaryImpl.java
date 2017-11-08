@@ -25,6 +25,12 @@ public class SearchSummaryImpl extends EmBase implements SearchSummary, Serializ
 	protected boolean systemSearch;
 	protected String[] tags;
 	protected String dashboardIneligible;
+	protected String federationSupported;
+
+	public SearchSummaryImpl() {
+		// default values
+		federationSupported = FederationSupportedType.NON_FEDERATION_ONLY_STRING;
+	}
 
 	@Override
 	public String getDashboardIneligible() {
@@ -108,6 +114,11 @@ public class SearchSummaryImpl extends EmBase implements SearchSummary, Serializ
 		return tags;
 	}
 
+	@Override
+	public String getFederationSupported() {
+		return federationSupported;
+	}
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchSummary#isSystemSearch()
 	 */
@@ -170,6 +181,10 @@ public class SearchSummaryImpl extends EmBase implements SearchSummary, Serializ
 	public void setTags(String[] tags)
 	{
 		this.tags = tags;
+	}
+
+	public void setFederationSupported(String federationSupported) {
+		this.federationSupported = federationSupported;
 	}
 
 }
