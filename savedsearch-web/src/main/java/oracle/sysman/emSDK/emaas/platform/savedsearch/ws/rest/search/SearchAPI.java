@@ -742,8 +742,9 @@ public class SearchAPI
 				    		searchObj = createSearchObjectForAdd(inputJsonObj);
 				    		searchObj.setEditable(true);
 				    		//NOTE new name suffix now is a random
-				    		int num = new Random(System.currentTimeMillis()).nextInt(100);
+				    		int num = new Random(System.currentTimeMillis()).nextInt();
 				    		String newName = name + "_" + num;
+						LOGGER.info("new search name is {}", newName);
 				    		searchObj.setName(newName);
 							Search savedSearch = searchManager.saveSearch(searchObj);
 						    idMaps.put(originalId.toString(), savedSearch.getId().toString());
