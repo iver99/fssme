@@ -2,39 +2,24 @@ package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.r
 
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookupException;
-import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookups;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.config.ClientConfig;
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emaas.platform.savedsearch.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.counts.CountsEntity;
-import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstanceData;
-import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.InstancesComparedData;
-import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.SavedsearchRowsComparator;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.LeaseInfo.Builder;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
-
 import oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest.comparator.rows.entities.ZDTTableRowEntity;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import mockit.Deencapsulation;
-import mockit.Expectations;
-import mockit.Mocked;
 
 @Test(groups = { "s1" })
 public class SavedSearchRowsComparatorTest
@@ -240,19 +225,24 @@ public class SavedSearchRowsComparatorTest
 	}
 	
 	@Test
-	 public void testCompare() throws ZDTException, JSONException {
+	public void testCompare(@Mocked final TenantSubscriptionUtil.RestClient client, @Mocked final TenantSubscriptionUtil tenantSubscriptionUtil) throws ZDTException, JSONException {
 		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
 		final JSONObject obj = new JSONObject();
 		JSONArray array = new JSONArray();
 		array.put(123456);
 		obj.put("client1", array);
 		obj.put("client2", array);
+		final String response = "";
     	new Expectations(){
             {
                 abstractComparator.getOMCInstances();
                 result = lookupEntry;
     			lookupEntry.put("omc1",client1);
     	    	lookupEntry.put("omc2",client2);
+                new TenantSubscriptionUtil.RestClient();
+                result = client;
+                client.get(anyString,anyString,anyString);
+                result  = response;
             }
         };
         SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
@@ -290,14 +280,13 @@ public class SavedSearchRowsComparatorTest
         SavedsearchRowsComparator drc = new SavedsearchRowsComparator();
         final String response = "";
         final CountsEntity countsEntity = new CountsEntity();
-//		countsEntity.
         new Expectations(){
             {
                 new TenantSubscriptionUtil.RestClient();
                 result = client;
                 client.get(anyString,anyString,anyString);
                 result  = response;
-                jsonUtil.buildNormalMapper();
+                JsonUtil.buildNormalMapper();
                 result =jsonUtil;
                 jsonUtil.fromJson(anyString,CountsEntity.class);
                 result = countsEntity;
