@@ -1010,9 +1010,6 @@ public class SearchManagerImpl extends SearchManager
 							searchEntity = null;
 						}
 						if (searchEntity == null) {
-							EmAnalyticsFolder folder = null;
-							Folder fld = null;
-
 							if (obj == null) {
 								continue;
 							}
@@ -1041,7 +1038,7 @@ public class SearchManagerImpl extends SearchManager
 							}
 
 							if (obj instanceof FolderImpl) {
-								fld = (Folder) obj;
+							    Folder fld = (Folder) obj;
 								if (fld.getParentId() == null || BigInteger.ZERO.equals(fld.getParentId())) {
 									fld.setParentId(BigInteger.ONE);
 								}
@@ -1088,7 +1085,7 @@ public class SearchManagerImpl extends SearchManager
 							}
 
 							if (obj instanceof FolderImpl && search.getFolderId() == null) {
-								folder = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
+							    EmAnalyticsFolder folder = getEmAnalyticsFolderBySearch(tmpImportSrImpl, em);
 								folder.setTenantId(TenantContext.getContext().getTenantInternalId());
 								em.persist(folder);
 								search.setFolderId(folder.getFolderId());
@@ -1096,7 +1093,7 @@ public class SearchManagerImpl extends SearchManager
 
 							if (cateObj instanceof CategoryImpl && search.getCategoryId() == null) {
 								EmAnalyticsCategory iCategory = getEmAnalyticsCategoryBySearch(tmpImportSrImpl, em);
-								folder.setTenantId(TenantContext.getContext().getTenantInternalId());
+								iCategory.setTenantId(TenantContext.getContext().getTenantInternalId());
 								em.persist(iCategory);
 								search.setCategoryId(iCategory.getCategoryId());
 							}
@@ -1250,7 +1247,7 @@ public class SearchManagerImpl extends SearchManager
 			 emAnalyticsSearch.setTenantId(DEFAULT_TENANT_ID);
 			 emAnalyticsSearch.setSystemSearch(new BigDecimal("1"));
 			 emAnalyticsSearch.setLastModifiedBy(DEFAULT_CURRENT_USER);
-			 emAnalyticsSearch.setDASHBOARDINELIGIBLE("TRUE".equals(search.getDashboardIneligible().toUpperCase())?"1":"0");
+			 emAnalyticsSearch.setDASHBOARDINELIGIBLE("TRUE".equalsIgnoreCase(search.getDashboardIneligible()) ? "1" : "0");
 			 emAnalyticsSearch.setCreationDate(search.getCreationDate());
 			 emAnalyticsSearch.setLastModificationDate(search.getLastModificationDate());
 			 for(EmAnalyticsSearchParam emAnalyticsSearchParam: emAnalyticsSearch.getEmAnalyticsSearchParams())
@@ -1373,6 +1370,14 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setLastAccessDate(DateUtil.getCurrentUTCTime());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
 
+			FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
+			try {
+				fst = FederationSupportedType.fromValue(searchObj.getFederationSupported());
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Invalid federation support type value. Using default value instead", e);
+			}
+			rtnObj.setFederationSupported(fst.getJsonValue());
+
 			if (TenantContext.getContext() != null && TenantContext.getContext().getUsername() != null) {
 				rtnObj.setEditable(TenantContext.getContext().getUsername().equals(searchObj.getOwner()));
 			}
@@ -1440,6 +1445,13 @@ public class SearchManagerImpl extends SearchManager
 			rtnObj.setFolderId(searchObj.getEmAnalyticsFolder().getFolderId());
 			rtnObj.setLastAccessDate(DateUtil.getCurrentUTCTime());
 			rtnObj.setIsWidget(searchObj.getIsWidget() == 1 ? true : false);
+			FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
+			try {
+				fst = FederationSupportedType.fromValue(searchObj.getFederationSupported());
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Invalid federation support type value. Using default value instead", e);
+			}
+			rtnObj.setFederationSupported(fst.getJsonValue());
 
 			List<SearchParameter> searchParams = new ArrayList<SearchParameter>();
 			// get parameters

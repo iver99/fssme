@@ -316,6 +316,7 @@ public class EntityJsonUtilTest extends BaseTest
 		m.put("PROVIDER_NAME", "TestProviderName");
 		m.put("PROVIDER_VERSION", "TestProviderVersion");
 		m.put("PROVIDER_ASSET_ROOT", "TestProviderAssetRoot");
+		m.put("FEDERATION_SUPPORTED", "0");
 //		String result = null;
 		AnalyticsSearchModel model = EntityJsonUtil.getJsonModel(m, "testScreenshotUrl");
 		Assert.assertEquals(model.getId(), "1000");
@@ -333,10 +334,22 @@ public class EntityJsonUtilTest extends BaseTest
 		Assert.assertEquals(model.getProviderName(), "TestProviderName");
 		Assert.assertEquals(model.getProviderVersion(), "TestProviderVersion");
 		Assert.assertEquals(model.getProviderAssetRoot(), "TestProviderAssetRoot");
+		Assert.assertEquals(model.getFederationSupported(), "NON_FEDERATION_ONLY");
 		//test widget screenshot href
 		Assert.assertEquals(model.getWidgetScreenshotHref(), "testScreenshotUrl");
 		model = EntityJsonUtil.getJsonModel(m, null);
 		Assert.assertEquals(model.getWidgetScreenshotHref(), null);
+
+		// various federation support values
+		m.put("FEDERATION_SUPPORTED", "1");
+		model = EntityJsonUtil.getJsonModel(m, "testScreenshotUrl");
+		Assert.assertEquals(model.getFederationSupported(), "FEDERATION_AND_NON_FEDERATION");
+		m.put("FEDERATION_SUPPORTED", "2");
+		model = EntityJsonUtil.getJsonModel(m, "testScreenshotUrl");
+		Assert.assertEquals(model.getFederationSupported(), "FEDERATION_ONLY");
+		m.put("FEDERATION_SUPPORTED", "200");
+		model = EntityJsonUtil.getJsonModel(m, "testScreenshotUrl");
+		Assert.assertEquals(model.getFederationSupported(), "NON_FEDERATION_ONLY"); // use default value for invalid input
 		
 	}
 	

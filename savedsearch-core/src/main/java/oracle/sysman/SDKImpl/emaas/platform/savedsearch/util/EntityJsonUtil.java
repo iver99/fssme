@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FederationSupportedType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
@@ -132,7 +133,8 @@ public class EntityJsonUtil
 
 	private static final Integer MAX_DASHBOARD_TILE_WIDTH = 8;
 
-	private static final String DEFAULT_DB_VALUE = "0";
+	private static final String DEFAULT_DB_VALUE_0 = "0";
+	private static final String DEFAULT_DB_VALUE_1 = "1";
 
 	public static JSONObject getErrorJsonObject(String id, String message, long errorcode) throws EMAnalyticsFwkException
 	{
@@ -266,13 +268,12 @@ public class EntityJsonUtil
 		if (m.get("WIDGET_VIEWMODEL") != null) {
 			emSearch.setWidgetViewModel(m.get("WIDGET_VIEWMODEL").toString());
 		}
-		if (m.get("PROVIDER_NAME") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_NAME"))) {
+		if (m.get("PROVIDER_NAME") != null && !DEFAULT_DB_VALUE_0.equals(m.get("PROVIDER_NAME"))) {
 			emSearch.setProviderName(m.get("PROVIDER_NAME").toString());
 		}
 		else {
 			emSearch.setProviderName(m.get("C_PROVIDER_NAME").toString());
 		}
-
 		if(!StringUtil.isEmpty(emSearch.getOwner()) && "ORACLE".equalsIgnoreCase(emSearch.getOwner())){
 			isSystemSearch = true;
 		}
@@ -281,7 +282,7 @@ public class EntityJsonUtil
 					DatabaseResourceBundleUtil.getTranslatedString(emSearch.getProviderName(),m.get("NAME").toString()) : m.get("NAME").toString();
 			emSearch.setName(searchName);
 		}
-		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE.equals(m.get("DESCRIPTION"))) {
+		if (m.get("DESCRIPTION") != null && !DEFAULT_DB_VALUE_0.equals(m.get("DESCRIPTION"))) {
 			String searchDescription = isSystemSearch ?
 					DatabaseResourceBundleUtil.getTranslatedString(emSearch.getProviderName(), m.get("DESCRIPTION").toString()) : m.get("DESCRIPTION").toString();
 			emSearch.setDescription(searchDescription);
@@ -290,34 +291,47 @@ public class EntityJsonUtil
 					DatabaseResourceBundleUtil.getTranslatedString(emSearch.getProviderName(), "No description.") : "No description.";
 			emSearch.setDescription(searchDescription);
 		}
-		if (m.get("PROVIDER_VERSION") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_VERSION"))) {
+		if (m.get("PROVIDER_VERSION") != null && !DEFAULT_DB_VALUE_0.equals(m.get("PROVIDER_VERSION"))) {
 			emSearch.setProviderVersion(m.get("PROVIDER_VERSION").toString());
 		}
 		else {
 			emSearch.setProviderVersion(m.get("C_PROVIDER_VERSION").toString());
 		}
-		if (m.get("PROVIDER_ASSET_ROOT") != null && !DEFAULT_DB_VALUE.equals(m.get("PROVIDER_ASSET_ROOT"))) {
+		if (m.get("PROVIDER_ASSET_ROOT") != null && !DEFAULT_DB_VALUE_0.equals(m.get("PROVIDER_ASSET_ROOT"))) {
 			emSearch.setProviderAssetRoot(m.get("PROVIDER_ASSET_ROOT").toString());
 		}
 		else {
 			emSearch.setProviderAssetRoot(m.get("C_PROVIDER_ASSET_ROOT").toString());
 		}
 
-		if (m.get("WIDGET_DEFAULT_HEIGHT") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_HEIGHT").toString())) {
+		if (m.get("WIDGET_DEFAULT_HEIGHT") != null && !DEFAULT_DB_VALUE_0.equals(m.get("WIDGET_DEFAULT_HEIGHT").toString())) {
 			emSearch.setWidgetDefaultHeight(Long.valueOf(m.get("WIDGET_DEFAULT_HEIGHT").toString()));
 		}
-		if (m.get("DASHBOARD_INELIGIBLE") != null && !DEFAULT_DB_VALUE.equals(m.get("DASHBOARD_INELIGIBLE").toString())) {
+		if (m.get("DASHBOARD_INELIGIBLE") != null && !DEFAULT_DB_VALUE_0.equals(m.get("DASHBOARD_INELIGIBLE").toString())) {
 			emSearch.setDashboardIneligible(m.get("DASHBOARD_INELIGIBLE").toString());
 		}
-		if (m.get("WIDGET_LINKED_DASHBOARD") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_LINKED_DASHBOARD").toString())) {
+		if (m.get("WIDGET_LINKED_DASHBOARD") != null && !DEFAULT_DB_VALUE_0.equals(m.get("WIDGET_LINKED_DASHBOARD").toString())) {
 			emSearch.setWidgetLinkedDashboard(Long.valueOf(m.get("WIDGET_LINKED_DASHBOARD").toString()));
 		}
-		if (m.get("WIDGET_DEFAULT_WIDTH") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_DEFAULT_WIDTH").toString())) {
+		if (m.get("WIDGET_DEFAULT_WIDTH") != null && !DEFAULT_DB_VALUE_0.equals(m.get("WIDGET_DEFAULT_WIDTH").toString())) {
 			emSearch.setWidgetDefaultWidth(Long.valueOf(m.get("WIDGET_DEFAULT_WIDTH").toString()));
 		}
-		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE.equals(m.get("WIDGET_EDITABLE").toString())) {
+		if (m.get("WIDGET_EDITABLE") != null && !DEFAULT_DB_VALUE_0.equals(m.get("WIDGET_EDITABLE").toString())) {
 			emSearch.setWidgetEditable(m.get("WIDGET_EDITABLE").toString());
 		}
+		FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
+		Object objFedSupported = m.get("FEDERATION_SUPPORTED");
+		if (objFedSupported != null) {
+			try {
+				int intFedSupported = Integer.parseInt(objFedSupported.toString());
+				fst = FederationSupportedType.fromValue(intFedSupported);
+			} catch (NumberFormatException e) {
+				LOGGER.error("Invalid FEDERATION_SUPPOTED value. Using default value instead", e);
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Invalid FEDERATION_SUPPOTED value. Using default value instead", e);
+			}
+		}
+		emSearch.setFederationSupported(fst.getJsonValue()); // federation supported defaults to 0
 		emSearch.setId(m.get("SEARCH_ID").toString());
 
 		return emSearch;

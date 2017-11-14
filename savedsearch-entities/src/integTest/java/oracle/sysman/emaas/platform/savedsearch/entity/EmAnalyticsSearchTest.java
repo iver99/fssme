@@ -209,6 +209,13 @@ public class EmAnalyticsSearchTest
 	}
 
 	@Test(groups = { "s1" })
+	public void testGetFederationSupported()
+	{
+		emAnalyticsSearch.setFederationSupported(2);
+		Assert.assertEquals(Integer.valueOf(2), emAnalyticsSearch.getFederationSupported());
+	}
+
+	@Test(groups = { "s1" })
 	public void testGetWidgetParams()
 	{
 		emAnalyticsSearch.setWIDGETDEFAULTHEIGHT(1L);

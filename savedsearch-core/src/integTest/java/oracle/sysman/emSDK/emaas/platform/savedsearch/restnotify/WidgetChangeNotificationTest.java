@@ -10,15 +10,14 @@ import java.util.Map;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -26,7 +25,7 @@ import org.testng.annotations.Test;
 public class WidgetChangeNotificationTest
 {
 	private Link link;
-	private List<VersionedLink> links;
+	private List<RegistryLookupUtil.VersionedLink> links;
 
 	@BeforeMethod
 	public void beforeMethod()
@@ -34,8 +33,8 @@ public class WidgetChangeNotificationTest
 		link = new Link();
 		link.withHref("http://test.link.com");
 		link.withRel("ssf.widget.changed");
-		links = new ArrayList<VersionedLink>();
-		links.add(new VersionedLink(link, "auth"));
+		links = new ArrayList<>();
+		links.add(new RegistryLookupUtil.VersionedLink(link, "auth"));
 	}
 
 	@SuppressWarnings("unchecked")

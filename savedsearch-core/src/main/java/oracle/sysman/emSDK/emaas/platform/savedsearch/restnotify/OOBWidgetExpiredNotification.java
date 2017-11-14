@@ -3,10 +3,9 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify;
 import java.io.IOException;
 import java.util.List;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +18,7 @@ public class OOBWidgetExpiredNotification {
 
     public void notify(String fromService) {
         LOGGER.info("Start to notify that the OOB widgets have been expired!");
-        List<VersionedLink> links = null;
+        List<RegistryLookupUtil.VersionedLink> links = null;
         try {
             links = RegistryLookupUtil.getAllServicesInternalLinksByRel(REL);
         } catch (IOException e) {
@@ -30,7 +29,7 @@ public class OOBWidgetExpiredNotification {
             return;
         }
         RestClient rc = new RestClient();
-        for (VersionedLink link : links) {
+        for (RegistryLookupUtil.VersionedLink link : links) {
             // TODO: will be replaced by the RestClient impl from dashboards-sdk once it could be used by SSF
             try {
                 LOGGER.info("POST to {} to notify OOB widgets expired!", link.getHref());

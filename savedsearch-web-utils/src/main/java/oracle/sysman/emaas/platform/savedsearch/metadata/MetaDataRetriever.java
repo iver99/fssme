@@ -114,9 +114,11 @@ public class MetaDataRetriever {
             String response = restClient.get(versionedLink.getHref(), "CloudServices", versionedLink.getAuthToken());
             oobWidgetList = JSONUtil.fromJsonToListUnencoded(response, SearchImpl.class);
         } catch (UniformInterfaceException | ClientHandlerException responseException) {
+            LOGGER.error("Fail to fecth OOB Widgets from {} - {}", serviceName, responseException.getMessage());
             throw new EMAnalyticsFwkException("Fail to fecth OOB Widgets from " + serviceName,
                     EMAnalyticsFwkException.ERR_GENERIC, null, responseException);
         } catch (NullPointerException | IOException convertException) {
+            LOGGER.error("Fail into errors when convert the OOB Widgets from {} - {}", serviceName, convertException.getMessage());
             throw new EMAnalyticsFwkException("Fail into errors when convert the OOB Widgets from " + serviceName,
                     EMAnalyticsFwkException.JSON_JSON_TO_OBJECT, null, convertException);
         }
