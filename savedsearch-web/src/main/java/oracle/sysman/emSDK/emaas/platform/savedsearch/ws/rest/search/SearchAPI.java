@@ -739,6 +739,8 @@ public class SearchAPI
 				    		
 				    	} else {
 				    		// insert new row
+                            //hard code isWidget = 1
+							inputJsonObj.put("isWidget","true");
 				    		searchObj = createSearchObjectForAdd(inputJsonObj);
 				    		searchObj.setEditable(true);
 				    		//NOTE new name suffix now is a random
@@ -754,6 +756,8 @@ public class SearchAPI
 			    	
 			    } else {
 			        //id and name is not existing. create a new row
+                    //hard code isWidget = 1
+                    inputJsonObj.put("isWidget","true");
 			    	searchObj = createSearchObjectForAdd(inputJsonObj);
 			    	searchObj.setEditable(true);
 					Search savedSearch = searchManager.saveSearch(searchObj);
