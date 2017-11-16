@@ -739,6 +739,8 @@ public class SearchAPI
 				    		
 				    	} else {
 				    		// insert new row
+                            //hard code isWidget = 1
+							inputJsonObj.put("isWidget","true");
 				    		searchObj = createSearchObjectForAdd(inputJsonObj);
 				    		searchObj.setEditable(true);
 				    		//NOTE new name suffix now is a random
@@ -754,6 +756,8 @@ public class SearchAPI
 			    	
 			    } else {
 			        //id and name is not existing. create a new row
+                    //hard code isWidget = 1
+                    inputJsonObj.put("isWidget","true");
 			    	searchObj = createSearchObjectForAdd(inputJsonObj);
 			    	searchObj.setEditable(true);
 					Search savedSearch = searchManager.saveSearch(searchObj);
@@ -1199,13 +1203,6 @@ public class SearchAPI
 		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
 		searchObj.setFederationSupported(json.optString("federationSupported", searchObj.getFederationSupported()));
 		
-		boolean isWidget = searchObj.getIsWidget();
-		if ((FederationSupportedType.FEDERATION_ONLY_STRING.equals(searchObj.getFederationSupported()) ||
-				FederationSupportedType.FEDERATION_AND_NON_FEDERATION_SRING.equals(searchObj.getFederationSupported())) && !isWidget) {
-			throw new EMAnalyticsWSException("The search object contains invalid input: does support federation mode, but isn't a widget",
-					EMAnalyticsWSException.JSON_SEARCH_FEDERATION_MODE_INVALID);
-		}
-
 		boolean hasWidgetTemplate = false;
 		boolean hasWidgetViewModel = false;
 		boolean hasWidgetKocName = false;
@@ -1267,29 +1264,27 @@ public class SearchAPI
 		else {
 			searchObj.setParameters(null);
 		}
-		
-		if (isWidget) {
-			if (!hasWidgetTemplate) {
-				JSONObject obj = new JSONObject();
-				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
-				obj.put("message", "Widget template is a required field for a widget, please add it");	
-				throw new EMAnalyticsWSException(obj.toString(),
-						EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
-			}
-			if (!hasWidgetViewModel) {
-				JSONObject obj = new JSONObject();
-				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
-				obj.put("message", "Widget view model is a required field for a widget, please add it");	
-				throw new EMAnalyticsWSException(obj.toString(),
-						EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
-			}
-			if (!hasWidgetKocName) {
-				JSONObject obj = new JSONObject();
-				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
-				obj.put("message", "Widget koc name is a required field for a widget, please add it");	
-				throw new EMAnalyticsWSException(obj.toString(),
-						EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
-			}
+
+		if (!hasWidgetTemplate) {
+			JSONObject obj = new JSONObject();
+			obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
+			obj.put("message", "Widget template is a required field for a widget, please add it");
+			throw new EMAnalyticsWSException(obj.toString(),
+					EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
+		}
+		if (!hasWidgetViewModel) {
+			JSONObject obj = new JSONObject();
+			obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
+			obj.put("message", "Widget view model is a required field for a widget, please add it");
+			throw new EMAnalyticsWSException(obj.toString(),
+					EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
+		}
+		if (!hasWidgetKocName) {
+			JSONObject obj = new JSONObject();
+			obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
+			obj.put("message", "Widget koc name is a required field for a widget, please add it");
+			throw new EMAnalyticsWSException(obj.toString(),
+					EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
 		}
 
 		return searchObj;
