@@ -1202,6 +1202,8 @@ public class SearchAPI
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
 		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
 		searchObj.setFederationSupported(json.optString("federationSupported", searchObj.getFederationSupported()));
+
+		boolean isWidget = searchObj.getIsWidget();
 		
 		boolean hasWidgetTemplate = false;
 		boolean hasWidgetViewModel = false;
@@ -1264,27 +1266,28 @@ public class SearchAPI
 		else {
 			searchObj.setParameters(null);
 		}
-
-		if (!hasWidgetTemplate) {
-			JSONObject obj = new JSONObject();
-			obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
-			obj.put("message", "Widget template is a required field for a widget, please add it");
-			throw new EMAnalyticsWSException(obj.toString(),
-					EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
-		}
-		if (!hasWidgetViewModel) {
-			JSONObject obj = new JSONObject();
-			obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
-			obj.put("message", "Widget view model is a required field for a widget, please add it");
-			throw new EMAnalyticsWSException(obj.toString(),
-					EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
-		}
-		if (!hasWidgetKocName) {
-			JSONObject obj = new JSONObject();
-			obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
-			obj.put("message", "Widget koc name is a required field for a widget, please add it");
-			throw new EMAnalyticsWSException(obj.toString(),
-					EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
+		if(isWidget){
+			if (!hasWidgetTemplate) {
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
+				obj.put("message", "Widget template is a required field for a widget, please add it");
+				throw new EMAnalyticsWSException(obj.toString(),
+						EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
+			}
+			if (!hasWidgetViewModel) {
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
+				obj.put("message", "Widget view model is a required field for a widget, please add it");
+				throw new EMAnalyticsWSException(obj.toString(),
+						EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
+			}
+			if (!hasWidgetKocName) {
+				JSONObject obj = new JSONObject();
+				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
+				obj.put("message", "Widget koc name is a required field for a widget, please add it");
+				throw new EMAnalyticsWSException(obj.toString(),
+						EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
+			}
 		}
 
 		return searchObj;
