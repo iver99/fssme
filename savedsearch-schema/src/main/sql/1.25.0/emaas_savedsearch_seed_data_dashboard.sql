@@ -68,7 +68,7 @@ BEGIN
  V_LAST_MODIFICATION_DATE    := TO_TIMESTAMP(V_TIMESTAMP_STR,'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"');
  
  -- Dashboard Folder
- SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_FOLDERS WHERE FOLDER_ID = 11;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_FOLDERS WHERE FOLDER_ID = 11 AND TENANT_ID = V_TENANT_ID;
  IF V_COUNT > 0 THEN
     DBMS_OUTPUT.PUT_LINE('The folder for Dashboard has been added before, no need to add again!');
  ELSE
@@ -125,7 +125,7 @@ BEGIN
  END IF;
  
  -- Dashboard Category
- SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_CATEGORY WHERE CATEGORY_ID = 10;
+ SELECT COUNT(1) INTO  V_COUNT FROM EMS_ANALYTICS_CATEGORY WHERE CATEGORY_ID = 10 AND TENANT_ID = V_TENANT_ID;
  IF V_COUNT > 0 THEN
     DBMS_OUTPUT.PUT_LINE('The category data for Dashboard has been added before, no need to add again!');
  ELSE
@@ -204,7 +204,7 @@ END IF;
        V_WIDGET_VIEWMODEL                   :='/js/widgets/htmlwidget/js/htmlwidget.js';
        V_WIDGET_TEMPLATE                    :='/js/widgets/htmlwidget/htmlwidget.html';
        V_WIDGET_SUPPORT_TIME_CONTROL        :=0;
-       V_DASHBOARD_INELIGIBLE               :=0;
+       V_DASHBOARD_INELIGIBLE               :=1;
        V_PROVIDER_NAME                      :='Dashboard-UI';
        V_PROVIDER_VERSION                   :='1.0';
        V_PROVIDER_ASSET_ROOT                :='assetRoot';
