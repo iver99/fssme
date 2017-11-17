@@ -2,6 +2,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.*;
 
 import javax.ws.rs.Consumes;
@@ -744,7 +745,7 @@ public class SearchAPI
 				    		searchObj = createSearchObjectForAdd(inputJsonObj);
 				    		searchObj.setEditable(true);
 				    		//NOTE new name suffix now is a random
-				    		int num = new Random(System.currentTimeMillis()).nextInt();
+				    		int num = new SecureRandom().nextInt(9999);
 				    		String newName = name + "_" + num;
 						LOGGER.info("new search name is {}", newName);
 				    		searchObj.setName(newName);
