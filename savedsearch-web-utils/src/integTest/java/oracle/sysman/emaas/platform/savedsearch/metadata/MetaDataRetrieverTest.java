@@ -4,12 +4,11 @@ import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmsResourceBundle;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -27,14 +26,14 @@ public class MetaDataRetrieverTest {
     @Mocked
     RegistryLookupUtil registryLookupUtil;
     @Mocked
-    VersionedLink versionedLink;
+    RegistryLookupUtil.VersionedLink versionedLink;
     @Mocked
     RestClient restClient;
     @Test
     public void testGetOobWidgetListByServiceName() throws EMAnalyticsFwkException {
         new Expectations(){
             {
-                RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, null);
+                RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
                 result = versionedLink;
                 versionedLink.getHref();
                 result = "href";
@@ -53,7 +52,7 @@ public class MetaDataRetrieverTest {
     public void getResourceBundleByService() throws EMAnalyticsFwkException {
         new Expectations(){
             {
-                RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, null);
+                RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
                 result = versionedLink;
                 versionedLink.getHref();
                 result = "href";

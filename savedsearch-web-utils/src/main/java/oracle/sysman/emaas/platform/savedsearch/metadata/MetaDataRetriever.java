@@ -11,12 +11,11 @@ import java.util.Map;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.JSONUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RestClient;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.nls.DatabaseResourceBundleUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmsResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
@@ -103,8 +102,8 @@ public class MetaDataRetriever {
 
     public List<SearchImpl> getOobWidgetListByServiceName(String serviceName) throws EMAnalyticsFwkException {
         LOGGER.debug("Calling MetaDataRetriever.getOobWidgetListByServiceName");
-        List<SearchImpl> oobWidgetList = new ArrayList<>();
-        VersionedLink versionedLink = RegistryLookupUtil.getServiceInternalHttpLink(serviceName, "1.0+", "oob/widgets", null);
+        List<SearchImpl> oobWidgetList = null;
+        RegistryLookupUtil.VersionedLink versionedLink = RegistryLookupUtil.getServiceInternalLink(serviceName, "1.0+", "oob/widgets", null);
         if(versionedLink == null || versionedLink.getHref() == null){
             LOGGER.warn("{} has not provide api {} for fetching oob widgets", serviceName, "oob/widgets");
             return Collections.emptyList();
@@ -143,8 +142,8 @@ public class MetaDataRetriever {
     
     public List<EmsResourceBundle> getResourceBundleByService(String serviceName) throws EMAnalyticsFwkException {
         LOGGER.debug("Calling MetaDataRetriever.getResourceBundleByServiceName");
-        List<EmsResourceBundle> emsResourceBundles = new ArrayList<>();
-        VersionedLink versionedLink = RegistryLookupUtil.getServiceInternalHttpLink(serviceName, "1.0+", "oob/resource_bundle", null);
+        List<EmsResourceBundle> emsResourceBundles = null;
+        RegistryLookupUtil.VersionedLink versionedLink = RegistryLookupUtil.getServiceInternalLink(serviceName, "1.0+", "oob/resource_bundle", null);
         if(versionedLink == null || versionedLink.getHref() == null){
             LOGGER.warn("{} has not provide api {} for fetching oob resource_bundle", serviceName, "oob/resource_bundle");
             return Collections.emptyList();
