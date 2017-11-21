@@ -249,10 +249,15 @@ public class ZDTAPI
 						if (count == tenants.size()) {
 							 obj = new JSONObject();
 							obj.put("comparisonDateTime", comparisonDate);
+							logger.info("[Comparator report]: comparisonDateTime is {}", comparisonDate);
 							obj.put("comparisonType", compareType);
+							logger.info("[Comparator report]: comparisonType is {}", compareType);
 							obj.put("differentRowNum", totalDifferentRows);
+							logger.info("[Comparator report]: differentRowNum is {}", totalDifferentRows);
 							obj.put("totalRowNum", totalRow);
+							logger.info("[Comparator report]: totalRowNum is {}", totalRow);
 							obj.put("divergencePercentage", percentage * 100 + "%");
+							logger.info("[Comparator report]: divergencePercentage is {}", (percentage * 100 + "%"));
 							if(isCompared){
 								obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared.");// here we take cloud1's last compared date.
 							}else{
@@ -265,6 +270,7 @@ public class ZDTAPI
 								subObj.put(result.getInstance1().getKey(), sb2.toString());
 								subObj.put(result.getInstance2().getKey(), sb1.toString());
 								obj.put("divergenceSummary", subObj);
+								logger.info("[Comparator report]: divergenceSummary is {}", subObj);
 							}							
 						}						
 						result = null;

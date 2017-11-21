@@ -851,6 +851,7 @@ public class DataManager
 
 	public int updateHalfSyncStatus(String syncResult, String type){
 
+		logger.info("[Sync report]: Half Sync finished with result [{}] and type [{}]", syncResult, type);
 		logger.info("Prepare to update half sync status.");
 		EntityManager em = null;
 		try {
