@@ -7,7 +7,7 @@
 	<artifact name="software" loc="deploy-list.xml"/>
 </Service>
 
-<Service Name="SavedsearchService-comparator" Version="1.25.0" type="app">
+<Service Name="SavedsearchService-comparator" Version="1.26.0" type="app">
 	<artifact name="softwarejson" loc="software-definitions/SavedSearchComparator.json"/>
         <artifact name="cookbook" loc="savedsearch-chef/cookbook-emcs-savedsearch-comparator"/>
         <artifact name="software" loc="savedsearch-comparator/deploy-list.xml"/>
