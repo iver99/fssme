@@ -11,10 +11,8 @@
 package oracle.sysman.emaas.platform.savedsearch.comparator.ws.rest;
 
 import java.text.DecimalFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.text.DecimalFormatSymbols;
+import java.util.*;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -217,7 +215,8 @@ public class ZDTAPI
 						if (count == tenants.size()) {
 							// the last tenant is fetched										
 							double percen = (double)totalDifferentRows/(double)totalRow;
-							DecimalFormat df = new DecimalFormat("#.##########");
+							DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+							DecimalFormat df = new DecimalFormat("#.##########", symbols);
 							percentage = Double.parseDouble(df.format(percen));
 						}
 						
@@ -282,7 +281,8 @@ public class ZDTAPI
 					logger.info("comparedNum={}",comparedDataNum);
 					totalDifferentRows = totalDifferentRows + comparedDataNum;
 					double percen = (double)comparedDataNum/(double)totalRow;
-					DecimalFormat df = new DecimalFormat("#.##########");
+					DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+					DecimalFormat df = new DecimalFormat("#.##########", symbols);
 					double percentage = Double.parseDouble(df.format(percen));
 					Date currentUtcDate = TimeUtil.getCurrentUTCTime();
 					String comparisonDate = TimeUtil.getTimeString(currentUtcDate);
