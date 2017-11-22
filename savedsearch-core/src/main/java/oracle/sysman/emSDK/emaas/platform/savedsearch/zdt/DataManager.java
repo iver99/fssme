@@ -203,6 +203,7 @@ public class DataManager
 			em.createNativeQuery(SQL_INSERT_TO_ZDT_SYNC_TABLE).setParameter(1, syncDate).setParameter(2, nextSyncDate).setParameter(3, SyncType)
 			.setParameter(4, syncResult).setParameter(5, divergencePercentage).setParameter(6, lastComparisonDate).executeUpdate();
 			em.getTransaction().commit();
+			logger.info("[Sync report]: Sync finished with result [{}] at [{}] with sync type [{}]", syncResult, syncDate, SyncType);
 			return 0;
 		} catch (Exception e) {
 			logger.error("errors occurs in saveToComparatorTalbe, ", e.getLocalizedMessage());
@@ -850,8 +851,6 @@ public class DataManager
 	}
 
 	public int updateHalfSyncStatus(String syncResult, String type){
-
-		logger.info("[Sync report]: Half Sync finished with result [{}] and type [{}]", syncResult, type);
 		logger.info("Prepare to update half sync status.");
 		EntityManager em = null;
 		try {
@@ -870,6 +869,7 @@ public class DataManager
 			}
 			em.createNativeQuery(sql).setParameter(1, syncResult).executeUpdate();
 			em.getTransaction().commit();
+			logger.info("[Sync report]: Half Sync finished with result [{}] and type [{}]", syncResult, type);
 		}catch (Exception e) {
 			em.getTransaction().rollback();
 			logger.error("errors occurs in updateHalfSyncStatus,{}", e);

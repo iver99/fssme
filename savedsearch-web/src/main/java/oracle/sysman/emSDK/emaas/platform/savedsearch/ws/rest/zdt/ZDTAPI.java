@@ -640,7 +640,6 @@ public class ZDTAPI
 	}
 
 	private int saveToSyncTable(String syncDateStr, String type, String syncResult, String lastComparisonDate) {
-		logger.info("[Sync report]: Sync finished with result [{}] at [{}] with sync type [{}]", syncResult, syncDateStr, type);
 		Date syncDate = null;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
