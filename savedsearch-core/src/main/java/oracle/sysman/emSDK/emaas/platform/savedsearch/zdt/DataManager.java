@@ -863,7 +863,7 @@ public class DataManager
 			String sql = "update EMS_ANALYTICS_ZDT_SYNC set SYNC_RESULT= ? where SYNC_TYPE = 'half'";
 			String sql2 = "update EMS_ANALYTICS_ZDT_SYNC set SYNC_RESULT= ?, SYNC_TYPE=? where SYNC_TYPE = 'half'";
 			if(type !=null){
-				em.createNativeQuery(sql).setParameter(1, syncResult).setParameter(2, type).executeUpdate();
+				em.createNativeQuery(sql2).setParameter(1, syncResult).setParameter(2, type).executeUpdate();
 			}else{
 				em.createNativeQuery(sql).setParameter(1, syncResult).executeUpdate();
 			}
