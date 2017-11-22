@@ -4,12 +4,11 @@ import java.math.BigInteger;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
 import org.testng.Assert;
@@ -21,16 +20,16 @@ public class OdsDataServiceTest {
 	public static final String MOCKED_AUTH = "authToken";
 	OdsDataService odsService = OdsDataServiceImpl.getInstance();
 	
-	public void testCreateOdsEntity(@Mocked final RegistryLookupUtil registryLookupUtil, 
+	public void testCreateOdsEntity(@Mocked final RegistryLookupUtil registryLookupUtil,
 			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info, @Mocked final VersionedLink linkInfo) throws Exception {
+			@Mocked final TenantInfo info, @Mocked final RegistryLookupUtil.VersionedLink linkInfo) throws Exception {
 		new Expectations() {
 			{
 				TenantContext.getContext();
 				result = info;
 				info.gettenantName();
 				result = "tenant";
-				RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = linkInfo;
 				linkInfo.getHref();
 				result = "http://xxx";
@@ -48,14 +47,14 @@ public class OdsDataServiceTest {
 	
 	public void testDeleteOdsEntity(@Mocked final SearchManager sman, @Mocked final RegistryLookupUtil registryLookupUtil, 
 			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info, @Mocked final VersionedLink linkInfo) throws Exception {
+			@Mocked final TenantInfo info, @Mocked final RegistryLookupUtil.VersionedLink linkInfo) throws Exception {
 		new Expectations() {
 			{
 				TenantContext.getContext();
 				result = info;
 				info.gettenantName();
 				result = "tenant";
-				RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = linkInfo;
 				linkInfo.getHref();
 				result = "http://xxx";
@@ -73,14 +72,14 @@ public class OdsDataServiceTest {
 	
 	public void testCreateOdsEntityType(@Mocked final RegistryLookupUtil registryLookupUtil, 
 			@Mocked final RestRequestUtil restRequestUtil, @Mocked final TenantContext context,
-			@Mocked final TenantInfo info, @Mocked final VersionedLink linkInfo) throws Exception {
+			@Mocked final TenantInfo info, @Mocked final RegistryLookupUtil.VersionedLink linkInfo) throws Exception {
 		new Expectations() {
 			{
 				TenantContext.getContext();
 				result = info;
 				info.gettenantName();
 				result = "tenant";
-				RegistryLookupUtil.getServiceInternalHttpLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = linkInfo;
 				linkInfo.getHref();
 				result = "http://xxx";
