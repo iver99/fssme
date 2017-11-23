@@ -1221,6 +1221,26 @@ public class SearchAPI
 					EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING, je);
 		}
 
+		String owner = "";
+		try {
+			if (json.has("owner")) {
+				owner = json.getString("owner");
+				if (StringUtil.isSpecialCharFound(desc)) {
+					throw new EMAnalyticsWSException(
+							"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
+							EMAnalyticsWSException.JSON_INVALID_CHAR);
+				}
+				if(owner.equals("ORACLE")){
+					throw new EMAnalyticsWSException(
+							"The search input owner is \"ORACLE\" , please correct this input owner and retry",
+							EMAnalyticsWSException.JSON_INVALID_OWNER);
+				}
+			}
+		}
+		catch (JSONException je) {
+			LOGGER.error(je.getLocalizedMessage());
+		}
+
 		// Nullable properties !
 		searchObj.setMetadata(json.optString("metadata", searchObj.getMetadata()));
 		searchObj.setQueryStr(json.optString("queryStr", searchObj.getQueryStr()));

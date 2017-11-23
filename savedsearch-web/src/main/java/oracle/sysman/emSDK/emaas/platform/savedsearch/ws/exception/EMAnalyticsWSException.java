@@ -33,6 +33,7 @@ public class EMAnalyticsWSException extends Exception
 	public static final int JSON_TENANT_ID_MISSING = 70042;
 
 	public static final int JSON_INVALID_CHAR = 70042;
+	public static final int JSON_INVALID_OWNER = 70043;
 	public static final int JSON_INVALID_LENGTH = 70045;
 	
 	// the minimal required fields for a widget
@@ -157,6 +158,9 @@ public class EMAnalyticsWSException extends Exception
 				statusCode = 500;
 				break;
 			case JSON_INVALID_CHAR:
+				statusCode = 400;
+				break;
+			case JSON_INVALID_OWNER:
 				statusCode = 400;
 				break;
 			case JSON_INVALID_LENGTH:
