@@ -3,13 +3,7 @@ package oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.search;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -47,12 +41,15 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetDeletionN
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotificationType;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetNotifyEntity;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.exception.EMAnalyticsWSException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ImportException;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.exception.ModifySystemDataException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.StringUtil;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.ws.rest.util.ValidationUtil;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
+import oracle.sysman.emaas.platform.savedsearch.model.ImportMsgModel;
 import oracle.sysman.emaas.platform.savedsearch.services.DependencyStatus;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataService;
 import oracle.sysman.emaas.platform.savedsearch.targetmodel.services.OdsDataServiceImpl;
@@ -66,6 +63,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.eclipse.persistence.internal.oxm.schema.model.Import;
 
 /**
  * The Search Services
@@ -694,25 +692,31 @@ public class SearchAPI
 		}
 	}
 
-	
+	/**
+	 * save imported widget data
+	 * @param override
+	 * @param importedData
+	 * @return Example:
+	 * 	{"2004":"191134497286884694333701301925787569634",
+	 * 	"2026":"303726178767420504723169950985867708641",
+	 * 	"2022":"182578934661553784711389571629249005671",
+	 * 	"2020":"65426205633609290111501435536176656608"}
+	 */
 	@PUT
 	@Path("/import")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response importData(@QueryParam("override") boolean override, JSONArray importedData) {
 
-		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import");
-		String message = "";
-		int statusCode = 201;
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import?override={}", override);
 		SearchManager searchManager = SearchManager.getInstance();
-		Map<String, String> idMaps = new HashMap<String, String>();
-		
+		Map<String, String> idMaps = new HashMap<>();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
 				throw new EMAnalyticsDatabaseUnavailException();
 			}
-		   int count = importedData.length();
-			for (int i = 0; i < count; i++) {
+		   int widgetCount = importedData.length();
+			for (int i = 0; i < widgetCount; i++) {
 				JSONObject inputJsonObj = importedData.getJSONObject(i);
 				String originalId = inputJsonObj.getString("id");
 				List<Map<String, Object>> idAndNameList = getIdAndNameByUniqueKey(inputJsonObj);
@@ -726,103 +730,77 @@ public class SearchAPI
 				    		if (inputJsonObj.getBoolean("editable")) {
 				    			searchObj = createSearchObjectForEdit(inputJsonObj, searchManager.getSearch(id), false);
 				    			searchObj.setEditable(true);
-					    		Search savedSearch = searchManager.editSearch(searchObj);
+					    		searchManager.editSearch(searchObj);
 					    		idMaps.put(originalId.toString(), id.toString());
-								//message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
-				    		} else {
-				    			message = message + "System search can not be edited, no update operation needed!";
+				    		}else {
+				    		    //need throw a exception here.
+                                LOGGER.error("User try to override a system search!");
+                                throw new ModifySystemDataException();
 				    		}
 				    		
 				    	} else {
 				    		// insert new row
+                            //hard code isWidget = 1
+							inputJsonObj.put("isWidget","true");
 				    		searchObj = createSearchObjectForAdd(inputJsonObj);
 				    		searchObj.setEditable(true);
-				    		int num = new SecureRandom().nextInt(100);
+				    		//NOTE new name suffix now is a random
+				    		int num = new SecureRandom().nextInt(9999);
 				    		String newName = name + "_" + num;
+						LOGGER.info("new search name is {}", newName);
 				    		searchObj.setName(newName);
 							Search savedSearch = searchManager.saveSearch(searchObj);
 						    idMaps.put(originalId.toString(), savedSearch.getId().toString());
 							// see if an ODS entity needs to be create
-							if(searchObj != null && searchObj.getParameters() != null) {
-								for (SearchParameter param : searchObj.getParameters()) {
-									if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
-											&& "TRUE".equalsIgnoreCase(param.getValue())) {
-										OdsDataService ods = OdsDataServiceImpl.getInstance();
-										String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
-											
-										// add ODS Entity ID as one of search parameters of the saved search
-										savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
-										
-										// store the whole saved search again
-										// TODO provide new API to add a search parameter solely
-										savedSearch = searchManager.editSearch(savedSearch);
-										break;
-									}
-								}
-							}				
-							//message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+                            createOdsEntity(searchManager, searchObj, savedSearch);
 				    	}
 			    	
 			    } else {
+			        //id and name is not existing. create a new row
+                    //hard code isWidget = 1
+                    inputJsonObj.put("isWidget","true");
 			    	searchObj = createSearchObjectForAdd(inputJsonObj);
 			    	searchObj.setEditable(true);
 					Search savedSearch = searchManager.saveSearch(searchObj);
 					
 					idMaps.put(originalId.toString(), savedSearch.getId().toString());
 					// see if an ODS entity needs to be create
-					if(searchObj != null && searchObj.getParameters() != null) {
-						for (SearchParameter param : searchObj.getParameters()) {
-							if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
-									&& "TRUE".equalsIgnoreCase(param.getValue())) {
-								OdsDataService ods = OdsDataServiceImpl.getInstance();
-								String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
-									
-								// add ODS Entity ID as one of search parameters of the saved search
-								savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
-								
-								// store the whole saved search again
-								// TODO provide new API to add a search parameter solely
-								savedSearch = searchManager.editSearch(savedSearch);
-								break;
-							}
-						}
-					}				
-					//message = message + EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString();
+                    createOdsEntity(searchManager, searchObj, savedSearch);
 			    }
 				
-			}			
-		}
-		catch (EMAnalyticsFwkException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
-		}
-		catch (EMAnalyticsWSException e) {
-			message = e.getMessage();
-			statusCode = e.getStatusCode();
-			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + message, e);
-		} catch (JSONException e) {
-			LOGGER.error("errors while getting single savedsearch json object from json array - {}", e.getLocalizedMessage());
-		}
-		if (!idMaps.isEmpty()) {
-			Set<String> keySet = idMaps.keySet();
-			JSONObject obj = new JSONObject();
-			for (String key : keySet) {				
-				try {
-					obj.put(key, idMaps.get(key));
-				} catch (JSONException e) {
-					LOGGER.error("errors while convert id map to JSONObject, {}",e.getLocalizedMessage());
-				}
 			}
-			return Response.status(statusCode).entity(obj.toString()).build();
-		} else {
-			return Response.status(statusCode).entity(message).build();	
-		}
-			
+            if (!idMaps.isEmpty()) {
+                Set<String> keySet = idMaps.keySet();
+                JSONObject obj = new JSONObject();
+                for (String key : keySet) {
+                    obj.put(key, idMaps.get(key));
+                }
+                LOGGER.info("import API will return response {}", obj.toString());
+                return Response.status(Response.Status.OK).entity(obj.toString()).build();
+            } else {
+			    LOGGER.warn("import API will return no_content response...");
+                return Response.status(Response.Status.NO_CONTENT).build();
+            }
+		}catch(ModifySystemDataException e){
+            LOGGER.error(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "ModifySystemDataException found in SSF service!")).build();
+        }catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "EMAnalyticsFwkException found in SSF service!")).build();
+        }catch (EMAnalyticsWSException e) {
+            LOGGER.error(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "EMAnalyticsWSException found in SSF service!")).build();
+        } catch (JSONException e) {
+		    LOGGER.error(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "JSONException found in SSF service!")).build();
+		}catch(Exception e){
+            LOGGER.error(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "Exception found in SSF service!")).build();
+        }
 	}
 
 
-	/**
+    /**
 	 * Get details of saved-search with given id<br>
 	 * <br>
 	 * URL: <font color="blue">http://&lt;host-name&gt;:&lt;port
@@ -1047,9 +1025,8 @@ public class SearchAPI
 	public Response getSearchData(JSONArray inputJsonArray) throws JSONException
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/all");
-		String message = null;
-		int statusCode = 200;
-		SearchManager sman = SearchManager.getInstance();	
+		LOGGER.info("Input is {}", inputJsonArray);
+		SearchManager sman = SearchManager.getInstance();
 		ArrayNode outputJsonArray = new ObjectMapper().createArrayNode();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
@@ -1063,17 +1040,13 @@ public class SearchAPI
 				Search searchObj = sman.getSearchWithoutOwner(id);
 				outputJsonArray.add(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj));
 			}
-			message = outputJsonArray.toString();
 		}
 		catch (EMAnalyticsFwkException e) {
-			LOGGER.error(e.getLocalizedMessage());
-			statusCode = e.getStatusCode();
-			message= e.getMessage();
-			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
-					e.getStatusCode());
+			LOGGER.error(e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "Error occurred when get Search data!")).build();
 		}
-
-		return Response.status(statusCode).entity(message).build();
+		LOGGER.info("Get Search data is {]", outputJsonArray.toString());
+		return Response.status(Response.Status.OK).entity(outputJsonArray.toString()).build();
 	}
 
 
@@ -1141,7 +1114,7 @@ public class SearchAPI
 		} catch(Exception e) {
 			LOGGER.error(e);
 		}
-		return null;
+		return Collections.emptyList();
 	}
 	
 	private Search createSearchObjectForAdd(JSONObject json) throws EMAnalyticsWSException, JSONException
@@ -1250,14 +1223,9 @@ public class SearchAPI
 		searchObj.setUiHidden(Boolean.parseBoolean(json.optString("uiHidden", Boolean.toString(searchObj.isUiHidden()))));
 		searchObj.setIsWidget(Boolean.parseBoolean(json.optString("isWidget", Boolean.toString(searchObj.getIsWidget()))));
 		searchObj.setFederationSupported(json.optString("federationSupported", searchObj.getFederationSupported()));
-		
-		boolean isWidget = searchObj.getIsWidget();
-		if ((FederationSupportedType.FEDERATION_ONLY_STRING.equals(searchObj.getFederationSupported()) ||
-				FederationSupportedType.FEDERATION_AND_NON_FEDERATION_SRING.equals(searchObj.getFederationSupported())) && !isWidget) {
-			throw new EMAnalyticsWSException("The search object contains invalid input: does support federation mode, but isn't a widget",
-					EMAnalyticsWSException.JSON_SEARCH_FEDERATION_MODE_INVALID);
-		}
 
+		boolean isWidget = searchObj.getIsWidget();
+		
 		boolean hasWidgetTemplate = false;
 		boolean hasWidgetViewModel = false;
 		boolean hasWidgetKocName = false;
@@ -1319,26 +1287,25 @@ public class SearchAPI
 		else {
 			searchObj.setParameters(null);
 		}
-		
-		if (isWidget) {
+		if(isWidget){
 			if (!hasWidgetTemplate) {
 				JSONObject obj = new JSONObject();
 				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
-				obj.put("message", "Widget template is a required field for a widget, please add it");	
+				obj.put("message", "Widget template is a required field for a widget, please add it");
 				throw new EMAnalyticsWSException(obj.toString(),
 						EMAnalyticsWSException.JSON_MISSING_WIDGET_TEMPLATE);
 			}
 			if (!hasWidgetViewModel) {
 				JSONObject obj = new JSONObject();
 				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
-				obj.put("message", "Widget view model is a required field for a widget, please add it");	
+				obj.put("message", "Widget view model is a required field for a widget, please add it");
 				throw new EMAnalyticsWSException(obj.toString(),
 						EMAnalyticsWSException.JSON_MISSING_WIDGET_VIEWMODEL);
 			}
 			if (!hasWidgetKocName) {
 				JSONObject obj = new JSONObject();
 				obj.put("errorCode", EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
-				obj.put("message", "Widget koc name is a required field for a widget, please add it");	
+				obj.put("message", "Widget koc name is a required field for a widget, please add it");
 				throw new EMAnalyticsWSException(obj.toString(),
 						EMAnalyticsWSException.JSON_MISSING_WIDGET_KOC_NAME);
 			}
@@ -1491,5 +1458,24 @@ public class SearchAPI
 		return searchObj;
 
 	}
+    private void createOdsEntity(SearchManager searchManager, Search searchObj, Search savedSearch) throws EMAnalyticsFwkException {
+        if(searchObj != null && searchObj.getParameters() != null) {
+            for (SearchParameter param : searchObj.getParameters()) {
+                if (param.getName().equalsIgnoreCase(OdsDataService.ENTITY_FLAG)
+                        && "TRUE".equalsIgnoreCase(param.getValue())) {
+                    OdsDataService ods = OdsDataServiceImpl.getInstance();
+                    String meId = ods.createOdsEntity(savedSearch.getId().toString(), savedSearch.getName());
+
+                    // add ODS Entity ID as one of search parameters of the saved search
+                    savedSearch.getParameters().add(generateOdsEntitySearchParam(meId));
+
+                    // store the whole saved search again
+                    // TODO provide new API to add a search parameter solely
+                    searchManager.editSearch(savedSearch);
+                    break;
+                }
+            }
+        }
+    }
 
 }
