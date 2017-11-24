@@ -1198,14 +1198,14 @@ public class SearchAPI
 		try {
 			if (json.has("owner")) {
 				owner = json.getString("owner");
-				if (StringUtil.isSpecialCharFound(desc)) {
+				if (StringUtil.isSpecialCharFound(owner)) {
 					throw new EMAnalyticsWSException(
 							"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
 							EMAnalyticsWSException.JSON_INVALID_CHAR);
 				}
-				if(owner.equals("ORACLE")){
+				if("ORACLE".equals(owner)){
 					throw new EMAnalyticsWSException(
-							"The search input owner is \"ORACLE\" , please correct this input owner and retry",
+							"The owner of customer search can not be ORACLE. Please correct the owner and retry",
 							EMAnalyticsWSException.JSON_INVALID_OWNER);
 				}
 			}
