@@ -61,7 +61,7 @@ public class SavedSearchSyncCompareTest
 
 		int i = comparatorURL.indexOf("/emcpssfcomparator/api/v1/");
 
-		return comparatorURL.substring(0,i);
+		return comparatorURL.substring(2,i);
 
 	}
 
