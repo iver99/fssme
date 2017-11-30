@@ -1108,9 +1108,12 @@ public class SearchAPI
 		  String folderIdStr = json.getJSONObject("folder").getString("id");
 		  BigInteger folderId = new BigInteger(folderIdStr);
 		  BigInteger deleted = new BigInteger("0");
-		  String owner = json.getString("owner");
+		  //EMCPSSF-649 fix
+		  String currentUser = TenantContext.getContext().getUsername();
+		  LOGGER.info("Current user is {}", currentUser);
+//		  String owner = json.getString("owner");
 		  SearchManager searchManager = SearchManager.getInstance();
-		  return searchManager.getSearchIdAndNameByUniqueKey(name, folderId, categoryId, deleted,owner);
+		  return searchManager.getSearchIdAndNameByUniqueKey(name, folderId, categoryId, deleted,currentUser);
 		} catch(Exception e) {
 			LOGGER.error(e);
 		}
