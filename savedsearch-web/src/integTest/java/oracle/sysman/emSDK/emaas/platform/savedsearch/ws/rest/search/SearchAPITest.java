@@ -976,10 +976,10 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchIdAndNameByUniqueKey("Demo Search", new BigInteger("999"), new BigInteger("1119"), new BigInteger("0"),"me");
-                result = idAndNameList;
-                searchManager.editSearch((Search)any);
-                result = search;
+//                searchManager.getSearchIdAndNameByUniqueKey("Demo Search", new BigInteger("999"), new BigInteger("1119"), new BigInteger("0"),"me");
+//                result = idAndNameList;
+//                searchManager.editSearch((Search)any);
+//                result = search;
             }
         };
         api.importData(true,array);
