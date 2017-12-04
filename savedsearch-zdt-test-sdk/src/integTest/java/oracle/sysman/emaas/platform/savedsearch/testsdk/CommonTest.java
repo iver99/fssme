@@ -48,6 +48,7 @@ public class CommonTest
 	private String authToken;
 	private String tenantid;
 	private String remoteuser;
+	private String apigw_sr;
 
 	/**
 	 * Sets up RESTAssured defaults before executing test cases Enables logging Reading the inputs from the testenv.properties
@@ -70,6 +71,7 @@ public class CommonTest
 			RestAssured.baseURI = serveruri;
 			RestAssured.basePath = "/savedsearch/v1";
 			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
+			apigw_sr = Utils.getProperty("APIGWAY_SERVICE_URL");
 		}
 		catch (Exception e) {
 			LOGGER.error("an error occurred while retrving ssf deployment details" + " " + url + " " + portno + e.toString());
@@ -160,4 +162,5 @@ public class CommonTest
 	{
 		return tenantid;
 	}
+	public String getApigw_SR() {return apigw_sr;}
 }

@@ -30,6 +30,7 @@ public class SavedSearchSyncCompareTest
 	static String authToken;
 	static String tenantid;
 	static String remoteuser;
+	static String apigw_sr;
 
 	@BeforeClass
 	public static void setUp()
@@ -41,7 +42,26 @@ public class SavedSearchSyncCompareTest
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenant();
 		remoteuser = ct.getRemoteUser();
+		apigw_sr = ct.getApigw_SR();
 
+	}
+
+	private String generateComparatorServiceURL()
+	{
+		RestAssured.baseURI = apigw_sr.substring(0,apigw_sr.indexOf("/registry/servicemanager/registry/v1"));
+		RestAssured.basePath = "/registry/servicemanager/registry/v1";
+		Response res = RestAssured
+				.given()
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
+				"Authorization", authToken).when().get("/instances?serviceName=SavedsearchService-comparator");
+
+		String comparatorURL = res.jsonPath().get("items.links.href").toString();
+
+		int i = comparatorURL.indexOf("/emcpssfcomparator/api/v1/");
+
+		return comparatorURL.substring(2,i);
 
 	}
 
@@ -55,7 +75,7 @@ public class SavedSearchSyncCompareTest
 	{
 		DatabaseUtil.Cloud1InsertData();
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpssfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -81,7 +101,7 @@ public class SavedSearchSyncCompareTest
 	public void testFullCompareStatus()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpssfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -105,7 +125,7 @@ public class SavedSearchSyncCompareTest
 	public void testFullSync()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpssfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -129,7 +149,7 @@ public class SavedSearchSyncCompareTest
 	public void testFullSyncStatus()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpssfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -157,7 +177,7 @@ public class SavedSearchSyncCompareTest
 		try {
 
 			DatabaseUtil.Cloud2InsertData();
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpssfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -184,7 +204,7 @@ public class SavedSearchSyncCompareTest
 	public void testIncrementalCompareStatus()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpssfcomparator/api/v1";
 			Response res = RestAssured
 					.given()
@@ -208,7 +228,7 @@ public class SavedSearchSyncCompareTest
 	public void testIncrementalSync()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpssfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -232,7 +252,7 @@ public class SavedSearchSyncCompareTest
 	public void testIncrementalSyncStatus()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpssfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
