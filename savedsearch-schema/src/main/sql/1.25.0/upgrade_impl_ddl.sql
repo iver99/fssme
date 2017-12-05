@@ -21,6 +21,7 @@ BEGIN
   EXCEPTION
   WHEN OTHERS THEN
     ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('>>>SSF DDL ERROR<<<');
     DBMS_OUTPUT.PUT_LINE('Failed to run the sql for federated dashboard support due to: '||SQLERRM);
     RAISE;
 END;
