@@ -50,8 +50,8 @@ public class TestZDTSyncComparisonAfterUpgradeTest {
                     .everything()
                     .header("Authorization", authToken)
 		    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/zdt/compare/status");
-            Assert.assertTrue(res.getStatusCode() == 200);
-            Assert.assertTrue(res.jsonPath().getString("lastComparisonDateTime").contains("2017-05-12 15:20:21"));
+            Assert.assertEquals(res.getStatusCode(), 200);;
+            Assert.assertEquals(res.jsonPath().getString("lastComparisonDateTime"), "2017-05-12 15:20:21.000");
         }
         catch (Exception e)
         {
