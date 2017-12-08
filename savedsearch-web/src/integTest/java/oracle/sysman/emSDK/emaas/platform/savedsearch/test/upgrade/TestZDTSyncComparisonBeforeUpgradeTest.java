@@ -1,22 +1,19 @@
 package oracle.sysman.emSDK.emaas.platform.savedsearch.test.upgrade;
 
-import oracle.sysman.qatool.uifwk.utils.Utils;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.CommonTest;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.test.common.TestConstant;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeClass;
-
 import org.codehaus.jettison.json.JSONException;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-
-import java.util.Date;
-import java.text.SimpleDateFormat;
 /**
  * Created by shangwan on 2017/12/7.
  */
