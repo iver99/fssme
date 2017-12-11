@@ -11,6 +11,8 @@ import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkEx
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch;
 
+import javax.persistence.EntityManager;
+
 /**
  * The class <code>SearchManager</code> provides CRUD and other management operations over the Search entity in EM Analytics.
  *
@@ -97,6 +99,19 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Search editSearch(Search search) throws EMAnalyticsFwkException;
+
+	/**
+	 * Edits an existing search entity in the analytics sub-system.
+	 * Don't allow edit system search by default.
+	 *
+	 * NOTE: in this method ,it will not open a txn nor commit, and will NOT close em.
+	 *
+	 * @param search
+	 *            search to be modified
+	 * @return re-loaded search object with generated dates
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Search editSearchWithEm(Search search, boolean canEditSysSearch, EntityManager em) throws EMAnalyticsFwkException;
 	
 	/**
 	 * 
@@ -235,6 +250,18 @@ public abstract class SearchManager
 	public abstract Search saveSearch(Search search) throws EMAnalyticsFwkException;
 
 	/**
+	 * Saves a completely specified search entity in the analytics sub-system with EM,
+	 * NOTE: #1.will not close em in side this method.
+	 * 		 #2. transaction already open outside this method
+	 *
+	 * @param search
+	 *            search to be saved
+	 * @return re-loaded search object with generated ids and dates
+	 * @throws EMAnalyticsFwkException
+	 */
+	public abstract Search saveSearchWithEm(Search search, EntityManager em) throws EMAnalyticsFwkException;
+
+	/**
 	 *
 	 * @param search
 	 * @return
@@ -258,8 +285,19 @@ public abstract class SearchManager
 	 */
 	public abstract List<Search> getSearchListByIds(List<BigInteger> ids) throws EMAnalyticsFwkException;
 
-		
-	public abstract List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name, BigInteger folderId,
-			BigInteger categoryId, BigInteger deleted,String owner);
+
+	/**
+	 * This method need to pass a reference of EntityManager, and will not close it inside this method.
+	 * NOTE: #1.will not close em in side this method.
+	 * 		 #2. transaction already open outside this method
+	 * @param name
+	 * @param folderId
+	 * @param categoryId
+	 * @param deleted
+	 * @param owner
+	 * @param em
+	 * @return
+	 */
+	public abstract List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name, BigInteger folderId, BigInteger categoryId, BigInteger deleted, String owner, EntityManager em);
 	
 }

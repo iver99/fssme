@@ -325,6 +325,44 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
+	public Search editSearchWithEm(Search search,  boolean canEditSysSearch, EntityManager em) throws EMAnalyticsFwkException {
+		LOGGER.info("Editing search with id : " + search.getId());
+		try {
+			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
+			if (searchEntity != null && searchEntity.getSystemSearch() != null && searchEntity.getSystemSearch().intValue() == 1
+					&& !canEditSysSearch) {
+				throw new EMAnalyticsFwkException(
+						"Search with Id: " + searchEntity.getId() + " is system search and NOT allowed to edit",
+						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);
+			}
+			searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
+			em.merge(searchEntity);
+			if (searchEntity.getIsWidget() == 1L) {
+				new WidgetChangeNotification().notify(search, null);
+			}
+			return createSearchObject(searchEntity, null);
+		}
+		catch (EMAnalyticsFwkException eme) {
+
+			LOGGER.error("Search with name " + search.getName() + " was updated but could not be retrieved back", eme);
+			throw eme;
+		}
+		catch (PersistenceException dmlce) {
+			processUniqueConstraints(search, em, dmlce);
+			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, null);
+			LOGGER.error("Persistence Error while updating the search: " + search.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, dmlce);
+
+		}
+		catch (Exception e) {
+			LOGGER.error("Error while updating the search: " + search.getName(), e);
+			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, e);
+		}
+	}
+
+	@Override
 	public Search getSearch(BigInteger searchId) throws EMAnalyticsFwkException
 	{
 		//Get full search data
@@ -1174,6 +1212,43 @@ public class SearchManagerImpl extends SearchManager
 		}
 	}
 
+	/**
+	 * This method will not open a tnx nor commit a txn.
+	 * @param search
+	 *            search to be saved
+	 * @param em
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	@Override
+	public Search saveSearchWithEm(Search search, EntityManager em) throws EMAnalyticsFwkException {
+		try {
+			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
+			searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
+			//Save into cache, not flushed into DB yet.
+			em.persist(searchEntity);
+			//FIXME, fix this refresh and double check if this is correct
+			em.refresh(searchEntity);
+			return createSearchObject(searchEntity, null);
+		}
+		catch (EMAnalyticsFwkException eme) {
+			LOGGER.error("Search with name " + search.getName() + " was saved but could not be retrieved back", eme);
+			throw eme;
+		}
+		catch (PersistenceException dmlce) {
+			processUniqueConstraints(search, em, dmlce);
+			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, search.getName());
+			LOGGER.error("Persistence error while saving the search: " + search.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, dmlce);
+		}
+		catch (Exception e) {
+			LOGGER.error("Error while saving the search: " + search.getName(), e);
+			throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, e);
+		}
+
+	}
 
 	@Override
 	public List<BigInteger> getSearchIdsByCategory(BigInteger categoryId) throws EMAnalyticsFwkException {
@@ -1822,25 +1897,28 @@ public class SearchManagerImpl extends SearchManager
 		return null;
 	}
 
+	/**
+	 * this method will not close em. please be aware
+	 * @param name
+	 * @param folderId
+	 * @param categoryId
+	 * @param deleted
+	 * @param owner
+	 * @param em
+	 * @return
+	 */
 	@Override
-	public List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name,
-			BigInteger folderId, BigInteger categoryId, BigInteger deleted,String owner) {
-		EntityManager em = null;
-		try {
+	public List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name, BigInteger folderId, BigInteger categoryId, BigInteger deleted,String owner, EntityManager em) {
+		if(em == null){
 			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+		}
 			Query q1 = em.createNativeQuery(SQL_GET_ID_NAME_BY_UNIQUE_KEY).setParameter(1, name).setParameter(2, categoryId)
 				.setParameter(3, folderId).setParameter(4, deleted).setParameter(5, owner);
 			q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> result = q1.getResultList();
 		
-			return result;
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
+		return result;
 	}
 
 }

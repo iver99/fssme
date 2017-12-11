@@ -5,16 +5,8 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.*;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.persistence.EntityManager;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -22,6 +14,7 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FederationSupportedType;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
@@ -706,20 +699,30 @@ public class SearchAPI
 	@Path("/import")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response importData(@QueryParam("override") boolean override, JSONArray importedData) {
+	public Response importData(@QueryParam("override") @DefaultValue("false") boolean override, JSONArray importedData) {
 
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import?override={}", override);
 		SearchManager searchManager = SearchManager.getInstance();
 		Map<String, String> idMaps = new HashMap<>();
+        EntityManager em = null;
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
 				throw new EMAnalyticsDatabaseUnavailException();
 			}
+            em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if(em == null){
+				LOGGER.error("EntityManager is NULL/Not fetched correctly.");
+				throw new Exception("EntityManager is NULL/Not fetched correctly.");
+			}
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
+
 		   int widgetCount = importedData.length();
 			for (int i = 0; i < widgetCount; i++) {
 				JSONObject inputJsonObj = importedData.getJSONObject(i);
 				String originalId = inputJsonObj.getString("id");
-				List<Map<String, Object>> idAndNameList = getIdAndNameByUniqueKey(inputJsonObj);
+				List<Map<String, Object>> idAndNameList = getIdAndNameByUniqueKey(inputJsonObj, em);
 				Search searchObj = null;
 			    if (idAndNameList != null && !idAndNameList.isEmpty()) {
 			    	Map<String, Object> idAndName = idAndNameList.get(0);
@@ -730,8 +733,8 @@ public class SearchAPI
 				    		if (inputJsonObj.getBoolean("editable")) {
 				    			searchObj = createSearchObjectForEdit(inputJsonObj, searchManager.getSearch(id), false);
 				    			searchObj.setEditable(true);
-					    		searchManager.editSearch(searchObj);
-					    		idMaps.put(originalId.toString(), id.toString());
+					    		searchManager.editSearchWithEm(searchObj, false, em);
+					    		idMaps.put(originalId, id.toString());
 				    		}else {
 				    		    //need throw a exception here.
                                 LOGGER.error("User try to override a system search!");
@@ -749,8 +752,8 @@ public class SearchAPI
 				    		String newName = name + "_" + num;
 						LOGGER.info("new search name is {}", newName);
 				    		searchObj.setName(newName);
-							Search savedSearch = searchManager.saveSearch(searchObj);
-						    idMaps.put(originalId.toString(), savedSearch.getId().toString());
+							Search savedSearch = searchManager.saveSearchWithEm(searchObj, em);
+						    idMaps.put(originalId, savedSearch.getId().toString());
 							// see if an ODS entity needs to be create
                             createOdsEntity(searchManager, searchObj, savedSearch);
 				    	}
@@ -761,9 +764,9 @@ public class SearchAPI
                     inputJsonObj.put("isWidget","true");
 			    	searchObj = createSearchObjectForAdd(inputJsonObj);
 			    	searchObj.setEditable(true);
-					Search savedSearch = searchManager.saveSearch(searchObj);
+					Search savedSearch = searchManager.saveSearchWithEm(searchObj, em);
 					
-					idMaps.put(originalId.toString(), savedSearch.getId().toString());
+					idMaps.put(originalId, savedSearch.getId().toString());
 					// see if an ODS entity needs to be create
                     createOdsEntity(searchManager, searchObj, savedSearch);
 			    }
@@ -775,28 +778,40 @@ public class SearchAPI
                 for (String key : keySet) {
                     obj.put(key, idMaps.get(key));
                 }
+                //Commit this big transaction.
                 LOGGER.info("import API will return response {}", obj.toString());
+				em.getTransaction().begin();
                 return Response.status(Response.Status.OK).entity(obj.toString()).build();
             } else {
+				em.getTransaction().begin();
 			    LOGGER.warn("import API will return no_content response...");
                 return Response.status(Response.Status.NO_CONTENT).build();
             }
 		}catch(ModifySystemDataException e){
             LOGGER.error(e);
+			em.getTransaction().rollback();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "ModifySystemDataException found in SSF service!")).build();
         }catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e);
+			em.getTransaction().rollback();
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "EMAnalyticsFwkException found in SSF service!")).build();
         }catch (EMAnalyticsWSException e) {
             LOGGER.error(e);
+			em.getTransaction().rollback();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "EMAnalyticsWSException found in SSF service!")).build();
         } catch (JSONException e) {
 		    LOGGER.error(e);
+			em.getTransaction().rollback();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "JSONException found in SSF service!")).build();
 		}catch(Exception e){
             LOGGER.error(e);
+			em.getTransaction().rollback();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "Exception found in SSF service!")).build();
-        }
+        }finally {
+			if(em != null){
+				em.close();
+			}
+		}
 	}
 
 
@@ -1096,7 +1111,7 @@ public class SearchAPI
 		}
 	}
 	
-	private List<Map<String, Object>> getIdAndNameByUniqueKey(JSONObject json) {
+	private List<Map<String, Object>> getIdAndNameByUniqueKey(JSONObject json, EntityManager em) {
 		try {
 			String name = json.getString("name");
 			if (name != null && "".equals(name.trim())) {
@@ -1113,7 +1128,7 @@ public class SearchAPI
 		  LOGGER.info("Current user is {}", currentUser);
 //		  String owner = json.getString("owner");
 		  SearchManager searchManager = SearchManager.getInstance();
-		  return searchManager.getSearchIdAndNameByUniqueKey(name, folderId, categoryId, deleted,currentUser);
+		  return searchManager.getSearchIdAndNameByUniqueKey(name, folderId, categoryId, deleted, currentUser, em);
 		} catch(Exception e) {
 			LOGGER.error(e);
 		}
@@ -1273,7 +1288,7 @@ public class SearchAPI
 					throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
 							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
 				}
-				if ("STRING".equals(type) | "CLOB".equals(type)) {
+				if ("STRING".equals(type) || "CLOB".equals(type)) {
 					searchParam.setType(ParameterType.valueOf(type));
 				}
 				else {
@@ -1440,7 +1455,7 @@ public class SearchAPI
 					throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
 							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
 				}
-				if ("STRING".equals(type) | "CLOB".equals(type)) {
+				if ("STRING".equals(type) || "CLOB".equals(type)) {
 					searchParam.setType(ParameterType.valueOf(type));
 				}
 				else {
