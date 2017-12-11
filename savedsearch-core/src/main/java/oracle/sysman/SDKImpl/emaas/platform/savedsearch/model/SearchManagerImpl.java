@@ -1909,9 +1909,6 @@ public class SearchManagerImpl extends SearchManager
 	 */
 	@Override
 	public List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name, BigInteger folderId, BigInteger categoryId, BigInteger deleted,String owner, EntityManager em) {
-		if(em == null){
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
-		}
 			Query q1 = em.createNativeQuery(SQL_GET_ID_NAME_BY_UNIQUE_KEY).setParameter(1, name).setParameter(2, categoryId)
 				.setParameter(3, folderId).setParameter(4, deleted).setParameter(5, owner);
 			q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
