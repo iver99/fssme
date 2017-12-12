@@ -68,6 +68,7 @@ task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup
 
 task emcpssf_shared_4n(dependsOn:[pre_upgrade,post_upgrade,omcTeardown]){
     post_upgrade.mustRunAfter pre_upgrade
+    omcCloudUpgrade.mustRunAfter pre_upgrade
     omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
     
     /*** Shared OMC LRG Configuration ***/
@@ -76,10 +77,6 @@ task emcpssf_shared_4n(dependsOn:[pre_upgrade,post_upgrade,omcTeardown]){
         "lrgemcpssf_test_3n" : [:]
     ]
     /*** End of Shared OMC LRG Configuration ***/
-        
-
-
-
 
     apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
 }
