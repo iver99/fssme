@@ -55,7 +55,7 @@ public class TestZDTSyncComparisonBeforeUpgradeTest {
                     .everything()
                     .header("Authorization", authToken)
 		    .header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString).when().put("/zdt/compare/result");
-            Assert.assertTrue(res1.getStatusCode() == 200);
+            Assert.assertEquals(res1.getStatusCode(), 200);
 
             //call sync API to insert data into ems_zdt_sync table
             Response res = RestAssured
@@ -66,8 +66,20 @@ public class TestZDTSyncComparisonBeforeUpgradeTest {
                     .header("Authorization", authToken)
 		    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/zdt/sync");
             //verify sync API successfully
-            Assert.assertTrue(res.getStatusCode() == 200);
-            Assert.assertTrue("Sync is successful!".equals(res.jsonPath().getString("msg").trim()));
+            Assert.assertEquals(res.getStatusCode(), 200);
+            Assert.assertEquals(res.jsonPath().getString("msg").trim(), "Sync is successful!");
+
+	    //verify there is data in sync table
+            Response res5 = RestAssured
+                    .given()
+                    .contentType(ContentType.JSON)
+                    .log()
+                    .everything()
+                    .header("Authorization", authToken)
+		    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/zdt/sync/status");
+            //verify sync API successfully
+            Assert.assertEquals(res5.getStatusCode(), 200);
+            Assert.assertEquals(res5.jsonPath().getString("syncType").trim(),"full");
 
            //verify the compare status
             Response res2 = RestAssured
@@ -77,7 +89,7 @@ public class TestZDTSyncComparisonBeforeUpgradeTest {
                     .everything()
                     .header("Authorization", authToken)
 		    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/zdt/compare/status");
-            Assert.assertTrue(res2.getStatusCode() == 200);
+            Assert.assertEquals(res2.getStatusCode(), 200);
             Assert.assertTrue(res2.jsonPath().getString("lastComparisonDateTime").contains("2017-05-12 15:20:21"));
 
             Date now = new Date();
@@ -92,7 +104,7 @@ public class TestZDTSyncComparisonBeforeUpgradeTest {
                     .everything()
                     .header("Authorization", authToken)
 		    .header(TestConstant.OAM_HEADER, TENANT_ID1).body(jsonString1).when().put("/zdt/compare/result");
-            Assert.assertTrue(res3.getStatusCode() == 200);
+            Assert.assertEquals(res3.getStatusCode(), 200);
 
             Response res4 = RestAssured
                     .given()
@@ -101,7 +113,7 @@ public class TestZDTSyncComparisonBeforeUpgradeTest {
                     .everything()
                     .header("Authorization", authToken)
 		    .header(TestConstant.OAM_HEADER, TENANT_ID1).when().get("/zdt/compare/status");
-            Assert.assertTrue(res4.getStatusCode() == 200);
+            Assert.assertEquals(res4.getStatusCode(), 200);
             Assert.assertTrue(res4.jsonPath().getString("lastComparisonDateTime").contains(currentDate));
         }
         catch(Exception e)
