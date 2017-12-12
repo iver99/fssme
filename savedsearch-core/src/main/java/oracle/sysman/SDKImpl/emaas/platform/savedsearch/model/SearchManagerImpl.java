@@ -1227,8 +1227,10 @@ public class SearchManagerImpl extends SearchManager
 			searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
 			//Save into cache, not flushed into DB yet.
 			em.persist(searchEntity);
-			//FIXME, fix this refresh and double check if this is correct
+			//flush to db, yet commit.
+			em.flush();
 			em.refresh(searchEntity);
+			LOGGER.info("search id after flush and refresh is {}", searchEntity.getId());
 			return createSearchObject(searchEntity, null);
 		}
 		catch (EMAnalyticsFwkException eme) {

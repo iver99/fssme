@@ -780,10 +780,10 @@ public class SearchAPI
                 }
                 //Commit this big transaction.
                 LOGGER.info("import API will return response {}", obj.toString());
-				em.getTransaction().begin();
+				em.getTransaction().commit();
                 return Response.status(Response.Status.OK).entity(obj.toString()).build();
             } else {
-				em.getTransaction().begin();
+				em.getTransaction().commit();
 			    LOGGER.warn("import API will return no_content response...");
                 return Response.status(Response.Status.NO_CONTENT).build();
             }
