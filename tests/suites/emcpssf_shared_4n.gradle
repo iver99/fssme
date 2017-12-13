@@ -37,7 +37,7 @@ dependencies {
 
 //Add data population(pre-upgrade) tests or tasks here
 //task omcUpgradeDataPopulation (type: EMTest, overwrite: true){
-task pre_upgrade (type: EMTest, dependsOn: omcSetup){
+task pre_upgrade (type: EMTest, dependsOn: omcCloudSetup){
 println "Customizing the UpgradeDataPopulation"
     options.suiteXmlBuilder().suite('name': 'PreUpg') {
         test('name': 'pre_upg') {
