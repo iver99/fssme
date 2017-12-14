@@ -2,11 +2,10 @@ package oracle.sysman.emaas.platform.savedsearch.targetmodel.services;
 
 import java.math.BigInteger;
 
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.RegistryLookupUtil;
-import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.json.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.savedsearch.utils.RestRequestUtil;
 
 import org.apache.logging.log4j.LogManager;
@@ -140,7 +139,7 @@ public class OdsDataServiceImpl implements OdsDataService
 	 */
 	private EndPointInfo retriveEndpoint(String rel, String resource)
 	{
-		VersionedLink link = RegistryLookupUtil.getServiceInternalHttpLink(SERVICE_NAME, VERSION, rel, TenantContext.getContext()
+		RegistryLookupUtil.VersionedLink link = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, rel, TenantContext.getContext()
 				.gettenantName());
 		StringBuilder mesUrl = new StringBuilder();
 		mesUrl.append(link.getHref()).append(HTTP_DELIMITER).append(resource);

@@ -1108,9 +1108,12 @@ public class SearchAPI
 		  String folderIdStr = json.getJSONObject("folder").getString("id");
 		  BigInteger folderId = new BigInteger(folderIdStr);
 		  BigInteger deleted = new BigInteger("0");
-		  String owner = json.getString("owner");
+		  //EMCPSSF-649 fix
+		  String currentUser = TenantContext.getContext().getUsername();
+		  LOGGER.info("Current user is {}", currentUser);
+//		  String owner = json.getString("owner");
 		  SearchManager searchManager = SearchManager.getInstance();
-		  return searchManager.getSearchIdAndNameByUniqueKey(name, folderId, categoryId, deleted,owner);
+		  return searchManager.getSearchIdAndNameByUniqueKey(name, folderId, categoryId, deleted,currentUser);
 		} catch(Exception e) {
 			LOGGER.error(e);
 		}
@@ -1192,6 +1195,26 @@ public class SearchAPI
 		catch (JSONException je) {
 			throw new EMAnalyticsWSException("The folder key for search is missing in the input JSON Object",
 					EMAnalyticsWSException.JSON_SEARCH_FOLDER_ID_MISSING, je);
+		}
+
+		String owner = "";
+		try {
+			if (json.has("owner")) {
+				owner = json.getString("owner");
+				if (StringUtil.isSpecialCharFound(owner)) {
+					throw new EMAnalyticsWSException(
+							"The search description contains at least one invalid character ('<' or '>'), please correct search description and retry",
+							EMAnalyticsWSException.JSON_INVALID_CHAR);
+				}
+				if("ORACLE".equals(owner)){
+					throw new EMAnalyticsWSException(
+							"The owner of customer search can not be ORACLE. Please correct the owner and retry",
+							EMAnalyticsWSException.JSON_INVALID_OWNER);
+				}
+			}
+		}
+		catch (JSONException je) {
+			LOGGER.error(je.getLocalizedMessage());
 		}
 
 		// Nullable properties !

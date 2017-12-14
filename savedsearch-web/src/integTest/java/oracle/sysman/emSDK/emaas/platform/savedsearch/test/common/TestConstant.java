@@ -34,7 +34,7 @@ public class TestConstant
 	public static final String TENANT_ID1 = "1.User1";
 	public static final String TENANT_ID2 = "2.User2";
 	public static final String TENANT_ID3 = "3.User3";
-	public static final String TENANT_ID0 = "emaastesttenant1.emga";
+	public static final String TENANT_ID0 = "emaastesttenant1.User0";
 	public static final String SSF_HEADER_VALUE = "ssfheadertestvalue";
 	public static final String OAM_HEADER = "OAM_REMOTE_USER";
 	public static final String X_HEADER = "X-REMOTE-USER";

@@ -551,6 +551,35 @@ public class SearchAPITest {
         api.createSearch(inputJson);
     }
 
+    public void testCreateSearch15th() throws JSONException, EMAnalyticsFwkException,EMAnalyticsWSException {
+        JSONObject category = new JSONObject();
+        category.put("id","998");
+        JSONObject folder = new JSONObject();
+        folder.put("id","999");
+        JSONObject p = new JSONObject();
+        p.put("name","ODS_ENTITY");
+        p.put("type","STRING");
+        p.put("value","TRUE");
+        JSONArray parameter = new JSONArray();
+        parameter.put(p);
+
+        JSONObject inputJson = new JSONObject();
+        inputJson.put("name","Demo Search");
+        inputJson.put("category",category);
+        inputJson.put("folder",folder);
+        inputJson.put("parameters",parameter);
+        inputJson.put("owner","ORACLE");
+        new Expectations(){
+            {
+                dependencyStatus.isDatabaseUp();
+                result = true;
+                SearchManager.getInstance();
+                result = searchManager;
+            }
+        };
+        api.createSearch(inputJson);
+    }
+
     @Test
     public void testDeleteSearch() throws JSONException, EMAnalyticsFwkException {
         new Expectations() {
@@ -947,10 +976,10 @@ public class SearchAPITest {
                 result = true;
                 SearchManager.getInstance();
                 result = searchManager;
-                searchManager.getSearchIdAndNameByUniqueKey("Demo Search", new BigInteger("999"), new BigInteger("1119"), new BigInteger("0"),"me");
-                result = idAndNameList;
-                searchManager.editSearch((Search)any);
-                result = search;
+//                searchManager.getSearchIdAndNameByUniqueKey("Demo Search", new BigInteger("999"), new BigInteger("1119"), new BigInteger("0"),"me");
+//                result = idAndNameList;
+//                searchManager.editSearch((Search)any);
+//                result = search;
             }
         };
         api.importData(true,array);

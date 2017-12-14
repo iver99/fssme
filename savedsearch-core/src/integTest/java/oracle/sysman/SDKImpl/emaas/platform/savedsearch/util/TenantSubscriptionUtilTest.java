@@ -31,8 +31,6 @@ public class TenantSubscriptionUtilTest
 	@Mocked
 	VersionedLink linkInfo;
 	@Mocked
-	RegistryLookupUtil registryLookupUtil;
-	@Mocked
 	StringUtil stringUtil;
 	@Mocked
 	UriBuilder uriBuilder;

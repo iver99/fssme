@@ -134,7 +134,10 @@ public class TenantSubscriptionUtil
 			LOGGER.info("Adding TargetAnalytics into providers...");
 			providers.add(SERVICE_PROVIDER_NAME_TA);
 		}
+		// some service are not in the subscribed app list
 		providers.add("EventUI");
+//		providers.add("Dashboard-UI"); // hide the HTML widget from right panel
+		
 		LOGGER.debug("Get subscribed provider names: {} for tenant {}",
 				StringUtil.arrayToCommaDelimitedString(providers.toArray()), tenant);
 		return providers;
