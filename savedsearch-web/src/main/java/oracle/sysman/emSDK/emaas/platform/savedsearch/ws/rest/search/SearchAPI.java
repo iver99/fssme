@@ -799,24 +799,31 @@ public class SearchAPI
 				throw new Exception("import API will return no_content response which is unexpected...");
             }
 		}catch(ModifySystemDataException e){
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
             LOGGER.error(e);
             return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "ModifySystemDataException found in SSF service!"))).build();
         }catch (EMAnalyticsFwkException e) {
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
 			LOGGER.error(e);
 			return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "EMAnalyticsFwkException found in SSF service!"))).build();
         }catch (EMAnalyticsWSException e) {
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
             LOGGER.error(e);
             return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "EMAnalyticsWSException found in SSF service!"))).build();
         } catch (JSONException e) {
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
 		    LOGGER.error(e);
             return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "JSONException found in SSF service!"))).build();
 		}catch(Exception e){
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
             LOGGER.error(e);
             return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "Exception found in SSF service! " + e.getMessage()))).build();
         }finally {
-			em.getTransaction().rollback();
-			LOGGER.error("Rollback txn due to exception occurred!");
-
 			if(em != null){
 				em.close();
 			}
