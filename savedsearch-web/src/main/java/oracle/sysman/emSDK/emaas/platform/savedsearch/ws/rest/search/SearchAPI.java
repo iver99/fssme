@@ -714,11 +714,15 @@ public class SearchAPI
 				LOGGER.error("EntityManager is NULL/Not fetched correctly.");
 				throw new Exception("EntityManager is NULL/Not fetched correctly.");
 			}
+			int widgetCount = importedData.length();
+			if(importedData == null || (importedData != null && widgetCount == 0)){
+				LOGGER.error("Input cannot be null or empty");
+				return Response.status(Response.Status.BAD_REQUEST).entity(new ImportMsgModel(false, "Input cannot be null or empty!")).build();
+			}
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
 
-		   int widgetCount = importedData.length();
 			for (int i = 0; i < widgetCount; i++) {
 				JSONObject inputJsonObj = importedData.getJSONObject(i);
 				String originalId = inputJsonObj.getString("id");
