@@ -358,6 +358,79 @@ public class SearchAPI
 		return Response.status(statusCode).build();
 	}
 
+	/**
+	 * This API will delete searches by Ids.
+	 * NOTE: 1. Because this api have input parameters, so set the API as HTTP PUT in case DELETE method not support body.
+	 * 		 2. If you input multiple ids, if anyone of these ids is not existing in DB, will return err to client and delete Nothing finally.
+	 * 		 3. Searches will be soft deleted.
+	 * 		 4. Till now I plan to delete search one by one, if hit PSR issue in the future, we can consider delete search in bulk.
+	 *
+	 * 		 Input ex: ["1000,", "1001", "1002"]
+	 */
+	@PUT
+	@Path("/delete")
+	public Response deleteSearchesByIds(JSONArray searchIdArray)
+	{
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/delete");
+		LOGGER.info("input search id list is {}", searchIdArray);
+		OdsDataService odsService = OdsDataServiceImpl.getInstance();
+		SearchManager sman = SearchManager.getInstance();
+		EntityManager em = null;
+
+		try {
+			//check input integrity Part I
+			if(searchIdArray == null || (searchIdArray != null && searchIdArray.length() == 0)){
+				LOGGER.error("Input Search id list can't be null or empty");
+				return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "Input can't be null or empty!"))).build();
+			}
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if(em == null){
+				LOGGER.error("Can't get EntityManager instance correctly!");
+				throw new Exception("Can't get EntityManager instance correctly!");
+			}
+			//open a txn
+			if(!em.getTransaction().isActive()){
+				em.getTransaction().begin();
+			}
+
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			int searchCount = searchIdArray.length();
+			for(int i =0; i<searchCount; i++){
+				BigInteger searchId = new BigInteger(searchIdArray.getJSONObject(i).toString());
+				odsService.deleteOdsEntity(searchId);
+				EmAnalyticsSearch eas = sman.deleteSearch(searchId, false);//Soft delete
+				// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
+				Date deletionTime = DateUtil.getCurrentUTCTime();
+				WidgetNotifyEntity wne = new WidgetNotifyEntity(eas, deletionTime, WidgetNotificationType.DELETE);
+				if (eas.getIsWidget() == 1L) {
+					new WidgetDeletionNotification().notify(wne);
+				}
+			}
+			//Commit txn
+			em.getTransaction().commit();
+			LOGGER.info("Delete searches and commit txn successfully!");
+		}catch (EMAnalyticsFwkException e) {
+			em.getTransaction().rollback();
+			LOGGER.warn("Rollback txn due to Exception occurred!");
+			LOGGER.error(e.getLocalizedMessage());
+			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+		}catch (Exception e){
+			em.getTransaction().rollback();
+			LOGGER.warn("Rollback txn due to Exception occurred!");
+			LOGGER.error(e);
+			return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper()
+					.toJson(new ImportMsgModel(false, "Exception occurred when delete searches by id list!"))).build();
+		}finally {
+			if(em !=null && em.isOpen()){
+				em.close();
+			}
+		}
+
+		return Response.status(Response.Status.OK).build();
+	}
+
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteSearchByName(@QueryParam("searchName") String name, @QueryParam("isExactly") String isExactly) {
