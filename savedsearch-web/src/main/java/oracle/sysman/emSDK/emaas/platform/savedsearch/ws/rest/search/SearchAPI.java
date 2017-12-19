@@ -715,9 +715,10 @@ public class SearchAPI
 				throw new Exception("EntityManager is NULL/Not fetched correctly.");
 			}
 			int widgetCount = importedData.length();
+			LOGGER.info("Import search count is {}", widgetCount);
 			if(importedData == null || (importedData != null && widgetCount == 0)){
 				LOGGER.error("Input cannot be null or empty");
-				return Response.status(Response.Status.BAD_REQUEST).entity(new ImportMsgModel(false, "Input cannot be null or empty!")).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "Input cannot be null or empty!"))).build();
 			}
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
@@ -726,7 +727,9 @@ public class SearchAPI
 			for (int i = 0; i < widgetCount; i++) {
 				JSONObject inputJsonObj = importedData.getJSONObject(i);
 				String originalId = inputJsonObj.getString("id");
+				LOGGER.info("Begin to import search with id {}", originalId);
 				List<Map<String, Object>> idAndNameList = getIdAndNameByUniqueKey(inputJsonObj, em);
+				LOGGER.info("get Id and Name By UK for search id {} is {}", originalId, idAndNameList);
 				Search searchObj = null;
 			    if (idAndNameList != null && !idAndNameList.isEmpty()) {
 			    	Map<String, Object> idAndName = idAndNameList.get(0);
@@ -734,6 +737,7 @@ public class SearchAPI
 			    	String name = idAndName.get("NAME").toString();
 			    	if (override) {
 				    		// override existing row
+							LOGGER.info("Begin to edit search with id {}, override is {}", originalId, override);
 				    		if (inputJsonObj.getBoolean("editable")) {
 				    			searchObj = createSearchObjectForEdit(inputJsonObj, searchManager.getSearch(id), false);
 				    			searchObj.setEditable(true);
@@ -749,15 +753,16 @@ public class SearchAPI
 				    		// insert new row
                             //hard code isWidget = 1
 							inputJsonObj.put("isWidget","true");
-				    		searchObj = createSearchObjectForAdd(inputJsonObj);
-				    		searchObj.setEditable(true);
-				    		//NOTE new name suffix now is a random
-				    		int num = new SecureRandom().nextInt(9999);
-				    		String newName = name + "_" + num;
+						searchObj = createSearchObjectForAdd(inputJsonObj);
+						searchObj.setEditable(true);
+						//NOTE new name suffix now is a random
+						int num = new SecureRandom().nextInt(9999);
+						String newName = name + "_" + num;
 						LOGGER.info("new search name is {}", newName);
-				    		searchObj.setName(newName);
-							Search savedSearch = searchManager.saveSearchWithEm(searchObj, em);
-						    idMaps.put(originalId, savedSearch.getId().toString());
+						searchObj.setName(newName);
+						Search savedSearch = searchManager.saveSearchWithEm(searchObj, em);
+						LOGGER.info("Begin to create search with original id {}, new search id is {}, override is {}", originalId, savedSearch.getId(), override);
+						idMaps.put(originalId, savedSearch.getId().toString());
 							// see if an ODS entity needs to be create
                             createOdsEntity(searchManager, searchObj, savedSearch);
 				    	}
@@ -766,16 +771,18 @@ public class SearchAPI
 			        //id and name is not existing. create a new row
                     //hard code isWidget = 1
                     inputJsonObj.put("isWidget","true");
-			    	searchObj = createSearchObjectForAdd(inputJsonObj);
-			    	searchObj.setEditable(true);
+					searchObj = createSearchObjectForAdd(inputJsonObj);
+					searchObj.setEditable(true);
 					Search savedSearch = searchManager.saveSearchWithEm(searchObj, em);
-					
+					LOGGER.info("Begin to create search with original id {}, new search id is {}, override is {}", originalId, savedSearch.getId(), override);
+
 					idMaps.put(originalId, savedSearch.getId().toString());
 					// see if an ODS entity needs to be create
                     createOdsEntity(searchManager, searchObj, savedSearch);
 			    }
 				
 			}
+			LOGGER.info("Save Searches successfully but not commit yet. preparing response...");
             if (!idMaps.isEmpty()) {
                 Set<String> keySet = idMaps.keySet();
                 JSONObject obj = new JSONObject();
@@ -785,32 +792,37 @@ public class SearchAPI
                 //Commit this big transaction.
                 LOGGER.info("import API will return response {}", obj.toString());
 				em.getTransaction().commit();
-                return Response.status(Response.Status.OK).entity(obj.toString()).build();
+				LOGGER.info("Import searches successfully, commit txn successfully!");
+				return Response.status(Response.Status.OK).entity(obj.toString()).build();
             } else {
-				em.getTransaction().commit();
-			    LOGGER.warn("import API will return no_content response...");
-                return Response.status(Response.Status.NO_CONTENT).build();
+			    LOGGER.error("import API will return no_content response which is unexpected...");
+				throw new Exception("import API will return no_content response which is unexpected...");
             }
 		}catch(ModifySystemDataException e){
             LOGGER.error(e);
 			em.getTransaction().rollback();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "ModifySystemDataException found in SSF service!")).build();
+			LOGGER.error("Rollback txn due to exception occurred!");
+            return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "ModifySystemDataException found in SSF service!"))).build();
         }catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e);
 			em.getTransaction().rollback();
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "EMAnalyticsFwkException found in SSF service!")).build();
+			LOGGER.error("Rollback txn due to exception occurred!");
+			return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "EMAnalyticsFwkException found in SSF service!"))).build();
         }catch (EMAnalyticsWSException e) {
             LOGGER.error(e);
 			em.getTransaction().rollback();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "EMAnalyticsWSException found in SSF service!")).build();
+			LOGGER.error("Rollback txn due to exception occurred!");
+            return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "EMAnalyticsWSException found in SSF service!"))).build();
         } catch (JSONException e) {
 		    LOGGER.error(e);
 			em.getTransaction().rollback();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "JSONException found in SSF service!")).build();
+			LOGGER.error("Rollback txn due to exception occurred!");
+            return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "JSONException found in SSF service!"))).build();
 		}catch(Exception e){
             LOGGER.error(e);
 			em.getTransaction().rollback();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "Exception found in SSF service!")).build();
+			LOGGER.error("Rollback txn due to exception occurred!");
+            return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "Exception found in SSF service! " + e.getMessage()))).build();
         }finally {
 			if(em != null){
 				em.close();
