@@ -8,5 +8,5 @@ Rem
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
-@&EMSAAS_SQL_ROOT/1.26.0/emaas_search_name_length.sql
+@&EMSAAS_SQL_ROOT/1.27.0/emaas_search_name_length.sql
 
