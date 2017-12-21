@@ -604,6 +604,48 @@ public class SearchAPI
 		return Response.status(statusCode).entity(message).build();
 
 	}
+
+	/**
+	 * Update search in bulk, NOTE: this api have multiple txn, not in one transaction, need to fix later.
+	 * @param jsonArray
+	 * @return
+	 */
+	@PUT
+	@Path("update")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editSearches(JSONArray jsonArray)
+	{
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/update");
+		Search searchObj;
+		SearchManager sman = SearchManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			if(jsonArray == null || (jsonArray!=null && jsonArray.length() == 0)){
+				LOGGER.error("input json array can not be null or empty!");
+				throw new Exception("input json array can not be null or empty!");
+			}
+			JSONArray result = new JSONArray();
+			for(int i = 0 ; i <jsonArray.length(); i++){
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				searchObj = createSearchObjectForEdit(jsonObject, sman.getSearch(new BigInteger(jsonObject.get("id").toString())), false);
+				Search savedSearch = sman.editSearch(searchObj);
+				JSONObject jsonObject1 = new JSONObject(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString());
+				result.put(jsonObject1);
+			}
+			return Response.status(Response.Status.OK).entity(result.toString()).build();
+		}catch (EMAnalyticsFwkException |EMAnalyticsWSException e) {
+			LOGGER.error(e);
+		}catch (Exception e){
+			LOGGER.error(e);
+		}
+
+		return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().
+				toJson(new ImportMsgModel(false, "Can't finish searches edit actions! Please check log!"))).build();
+
+	}
 	
 	@PUT
 	@Path("{id: [0-9]*}/odsentity")
