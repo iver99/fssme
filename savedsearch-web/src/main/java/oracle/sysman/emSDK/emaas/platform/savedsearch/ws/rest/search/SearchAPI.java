@@ -369,6 +369,7 @@ public class SearchAPI
 	 */
 	@PUT
 	@Path("/delete")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteSearchesByIds(JSONArray searchIdArray)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/delete");
@@ -399,10 +400,10 @@ public class SearchAPI
 			int searchCount = searchIdArray.length();
 			LOGGER.info("Deleting search id list length is {}, ids are {}", searchCount, searchIdArray.toString());
 			for(int i =0; i<searchCount; i++){
-				BigInteger searchId = new BigInteger(searchIdArray.getJSONObject(i).toString());
+				BigInteger searchId = new BigInteger(searchIdArray.getString(i));
 				LOGGER.info("Prepare to delete search with id {}", searchId);
 				odsService.deleteOdsEntity(searchId);
-				EmAnalyticsSearch eas = sman.deleteSearch(searchId, false);//Soft delete
+				EmAnalyticsSearch eas = sman.deleteSearchWithEm(searchId, em, false);//Soft delete
 				// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
 				Date deletionTime = DateUtil.getCurrentUTCTime();
 				WidgetNotifyEntity wne = new WidgetNotifyEntity(eas, deletionTime, WidgetNotificationType.DELETE);
@@ -417,7 +418,8 @@ public class SearchAPI
 			em.getTransaction().rollback();
 			LOGGER.warn("Rollback txn due to Exception occurred!");
 			LOGGER.error(e.getLocalizedMessage());
-			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper()
+					.toJson(new ImportMsgModel(false, "EMAnalyticsFwkException occurred when delete searches by id list!"))).build();
 		}catch (Exception e){
 			em.getTransaction().rollback();
 			LOGGER.warn("Rollback txn due to Exception occurred!");

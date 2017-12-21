@@ -159,6 +159,53 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
+	public EmAnalyticsSearch deleteSearchWithEm(BigInteger searchId, EntityManager em, boolean permanently) throws EMAnalyticsFwkException
+	{
+		LOGGER.info("Deleting search with id: " + searchId);
+		EmAnalyticsSearch searchObj = null;
+		try {
+			if (permanently) {
+				searchObj = EmAnalyticsObjectUtil.getSearchByIdForDelete(searchId, em);
+			}
+			else {
+				searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
+			}
+			if (searchObj == null) {
+				throw new EMAnalyticsFwkException("Search with Id: " + searchId + " does not exist",
+						EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null);
+			}
+
+			if (searchObj.getSystemSearch() != null && searchObj.getSystemSearch().intValue() == 1) {
+				throw new EMAnalyticsFwkException("Search with Id: " + searchId + " is system search and NOT allowed to delete",
+						EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
+			}
+			searchObj.setDeleted(searchId);
+			searchObj.setLastModificationDate(DateUtil.getGatewayTime());
+			searchObj.setTenantId(TenantContext.getContext().getTenantInternalId());
+			em.setProperty("permanent", permanently);
+			if (permanently) {
+				em.remove(searchObj);
+			}
+			else {
+				em.merge(searchObj);
+			}
+			return searchObj;
+		}
+		catch (EMAnalyticsFwkException eme) {
+			LOGGER.error("Search with Id: " + searchId + " does not exist", eme);
+			throw eme;
+		}
+		catch (Exception e) {
+
+			EmAnalyticsProcessingException.processSearchPersistantException(e, searchObj.getName());
+			LOGGER.error("Error while getting the search object by ID: " + searchId, e);
+			throw new EMAnalyticsFwkException("Error while deleting the search object by ID: " + searchId,
+					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { searchId }, e);
+
+		}
+	}
+
+	@Override
 	public void deleteSearchByName(String searchName, boolean isExactly) throws EMAnalyticsFwkException
 	{
 		LOGGER.info("Deleting search with Name: {}, Exactly {}", searchName, isExactly);

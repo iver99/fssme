@@ -52,6 +52,8 @@ public abstract class SearchManager
 	 */
 	public abstract EmAnalyticsSearch deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException;
 
+	public abstract EmAnalyticsSearch deleteSearchWithEm(BigInteger searchId, EntityManager em, boolean permanently) throws EMAnalyticsFwkException;
+
 	/**
 	 *
 	 * @param searchId
