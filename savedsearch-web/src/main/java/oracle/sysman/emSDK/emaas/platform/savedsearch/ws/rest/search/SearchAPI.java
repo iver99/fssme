@@ -621,9 +621,19 @@ public class SearchAPI
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/update");
 		Search searchObj;
 		SearchManager sman = SearchManager.getInstance();
+		EntityManager em = null;
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
 				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if(em == null){
+				LOGGER.error("Can't get EntityManager instance correctly!");
+				throw new Exception("Can't get EntityManager instance correctly!");
+			}
+			//open a txn
+			if(!em.getTransaction().isActive()){
+				em.getTransaction().begin();
 			}
 			if(jsonArray == null || (jsonArray!=null && jsonArray.length() == 0)){
 				LOGGER.error("input json array can not be null or empty!");
@@ -632,16 +642,27 @@ public class SearchAPI
 			JSONArray result = new JSONArray();
 			for(int i = 0 ; i <jsonArray.length(); i++){
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				LOGGER.info("Prepare to update search with id {}", jsonObject.get("id"));
 				searchObj = createSearchObjectForEdit(jsonObject, sman.getSearch(new BigInteger(jsonObject.get("id").toString())), false);
-				Search savedSearch = sman.editSearch(searchObj);
+				Search savedSearch = sman.editSearchWithEm(searchObj, em, false);
 				JSONObject jsonObject1 = new JSONObject(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString());
 				result.put(jsonObject1);
 			}
+			LOGGER.info("Searches are updated and txn is committed successfully!");
+			em.getTransaction().commit();
 			return Response.status(Response.Status.OK).entity(result.toString()).build();
 		}catch (EMAnalyticsFwkException |EMAnalyticsWSException e) {
+			em.getTransaction().rollback();
+			LOGGER.error("Transaction will be roll back due to exception occurred!");
 			LOGGER.error(e);
 		}catch (Exception e){
+			em.getTransaction().rollback();
+			LOGGER.error("Transaction will be roll back due to exception occurred!");
 			LOGGER.error(e);
+		}finally {
+			if(em !=null && em.isOpen()){
+				em.close();
+			}
 		}
 
 		return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().
