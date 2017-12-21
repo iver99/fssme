@@ -7,7 +7,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  */
 public class ImportMsgModel {
 
-    @JsonProperty("true")
+    @JsonProperty("success")
     private boolean success;
     private String msg;
 

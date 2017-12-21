@@ -1017,7 +1017,6 @@ public class SearchAPI
 	public Response getSearchesByIds(JSONArray jsonArray){
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/ids");
 
-		String message = null;
 		SearchManager sman = SearchManager.getInstance();
 		LOGGER.info("Prepare to get searches by ids: {}", jsonArray);
 		try {
@@ -1036,23 +1035,22 @@ public class SearchAPI
 				String[] pathArray = null;
 				String searchString = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj, pathArray).toString();
 				sb.append(searchString);
-				if(i < jsonArray.length()){
+				if(i < jsonArray.length()-1){
 					sb.append(",");
 				}
 			}
 			sb.append("]");
 			LOGGER.info("Retrieved searches are: {}", sb.toString());
-			return Response.status(Response.Status.OK).entity(message).build();
+			return Response.status(Response.Status.OK).entity(sb.toString()).build();
 		}catch (EMAnalyticsFwkException e) {
 			LOGGER.error(e.getLocalizedMessage());
-			message = e.getMessage();
 			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
 					e.getStatusCode());
 		}catch(Exception e){
 			LOGGER.error(e);
 		}
 
-		return Response.status(Response.Status.BAD_REQUEST).entity(message).build();
+		return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "Bad request! check you input!"))).build();
 	}
 	
 	/**
