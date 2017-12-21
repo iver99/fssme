@@ -397,8 +397,10 @@ public class SearchAPI
 				throw new EMAnalyticsDatabaseUnavailException();
 			}
 			int searchCount = searchIdArray.length();
+			LOGGER.info("Deleting search id list length is {}, ids are {}", searchCount, searchIdArray.toString());
 			for(int i =0; i<searchCount; i++){
 				BigInteger searchId = new BigInteger(searchIdArray.getJSONObject(i).toString());
+				LOGGER.info("Prepare to delete search with id {}", searchId);
 				odsService.deleteOdsEntity(searchId);
 				EmAnalyticsSearch eas = sman.deleteSearch(searchId, false);//Soft delete
 				// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
@@ -1002,6 +1004,55 @@ public class SearchAPI
 		}
 
 		return Response.status(statusCode).entity(message).build();
+	}
+
+	/**
+	 * get searches by id list, set method into a PUT method because there need a body
+	 * @param jsonArray
+	 * @return
+	 */
+	@PUT
+	@Path("ids")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSearchesByIds(JSONArray jsonArray){
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/ids");
+
+		String message = null;
+		SearchManager sman = SearchManager.getInstance();
+		LOGGER.info("Prepare to get searches by ids: {}", jsonArray);
+		try {
+			if(jsonArray == null || (jsonArray !=null && jsonArray.length() == 0)){
+				LOGGER.error("input id array can't be null or empty!");
+				throw new Exception("input id array can't be null or empty!");
+			}
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			StringBuilder sb = new StringBuilder("[");
+			for(int i =0; i<jsonArray.length(); i++){
+				BigInteger id = new BigInteger(jsonArray.get(i).toString());
+				LOGGER.info("Prepare to retrieve search with id {}", id);
+				Search searchObj = sman.getSearchWithoutOwner(id);
+				String[] pathArray = null;
+				String searchString = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj, pathArray).toString();
+				sb.append(searchString);
+				if(i < jsonArray.length()){
+					sb.append(",");
+				}
+			}
+			sb.append("]");
+			LOGGER.info("Retrieved searches are: {}", sb.toString());
+			return Response.status(Response.Status.OK).entity(message).build();
+		}catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
+			message = e.getMessage();
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+					e.getStatusCode());
+		}catch(Exception e){
+			LOGGER.error(e);
+		}
+
+		return Response.status(Response.Status.BAD_REQUEST).entity(message).build();
 	}
 	
 	/**
