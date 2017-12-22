@@ -828,13 +828,21 @@ public class SearchAPI
 
 	/**
 	 * save imported widget data
+     * NOTE: *If you are override a search, you should not modify its PK(name,cat id,folder id....etc) fields,
+     * otherwise this search can't be found!!!(Actually will create a new Search)*
 	 * @param override
 	 * @param importedData
 	 * @return Example:
+     *  override=false:
 	 * 	{"2004":"191134497286884694333701301925787569634",
 	 * 	"2026":"303726178767420504723169950985867708641",
 	 * 	"2022":"182578934661553784711389571629249005671",
 	 * 	"2020":"65426205633609290111501435536176656608"}
+     *
+     * 	override = true:
+     * 	{
+     *   "18990242278817038474213646037468377095": "18990242278817038474213646037468377095"
+     *   }
 	 */
 	@PUT
 	@Path("/import")
@@ -867,6 +875,7 @@ public class SearchAPI
 
 			for (int i = 0; i < widgetCount; i++) {
 				JSONObject inputJsonObj = importedData.getJSONObject(i);
+				//original id is DB's id
 				String originalId = inputJsonObj.getString("id");
 				LOGGER.info("Begin to import search with id {}", originalId);
 				List<Map<String, Object>> idAndNameList = getIdAndNameByUniqueKey(inputJsonObj, em);
@@ -874,6 +883,7 @@ public class SearchAPI
 				Search searchObj = null;
 			    if (idAndNameList != null && !idAndNameList.isEmpty()) {
 			    	Map<String, Object> idAndName = idAndNameList.get(0);
+			    	//NOTE: this id should be same with original id if you are override a search!!!!
 			    	BigInteger id  = new BigInteger(idAndName.get("SEARCH_ID").toString());
 			    	String name = idAndName.get("NAME").toString();
 			    	if (override) {
