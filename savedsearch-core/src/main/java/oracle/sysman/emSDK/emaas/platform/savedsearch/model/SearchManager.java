@@ -52,6 +52,8 @@ public abstract class SearchManager
 	 */
 	public abstract EmAnalyticsSearch deleteSearch(BigInteger searchId, boolean permanently) throws EMAnalyticsFwkException;
 
+	public abstract EmAnalyticsSearch deleteSearchWithEm(BigInteger searchId, EntityManager em, boolean permanently) throws EMAnalyticsFwkException;
+
 	/**
 	 *
 	 * @param searchId
@@ -121,6 +123,9 @@ public abstract class SearchManager
 	 * @throws EMAnalyticsFwkException
 	 */
 	public abstract Search editSearch(Search search, boolean canEditSysSearch) throws EMAnalyticsFwkException;
+
+
+	public abstract Search editSearchWithEm(Search search, EntityManager em, boolean canEditSysSearch) throws EMAnalyticsFwkException;
 
 	/**
 	 * Returns the search object identified by the given identifier.

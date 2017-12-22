@@ -400,10 +400,10 @@ public class SearchAPI
 			int searchCount = searchIdArray.length();
 			LOGGER.info("Deleting search id list length is {}, ids are {}", searchCount, searchIdArray.toString());
 			for(int i =0; i<searchCount; i++){
-				BigInteger searchId = new BigInteger(searchIdArray.getJSONObject(i).toString());
+				BigInteger searchId = new BigInteger(searchIdArray.getString(i));
 				LOGGER.info("Prepare to delete search with id {}", searchId);
 				odsService.deleteOdsEntity(searchId);
-				EmAnalyticsSearch eas = sman.deleteSearch(searchId, false);//Soft delete
+				EmAnalyticsSearch eas = sman.deleteSearchWithEm(searchId, em, false);//Soft delete
 				// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
 				Date deletionTime = DateUtil.getCurrentUTCTime();
 				WidgetNotifyEntity wne = new WidgetNotifyEntity(eas, deletionTime, WidgetNotificationType.DELETE);
@@ -418,7 +418,8 @@ public class SearchAPI
 			em.getTransaction().rollback();
 			LOGGER.warn("Rollback txn due to Exception occurred!");
 			LOGGER.error(e.getLocalizedMessage());
-			return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper()
+					.toJson(new ImportMsgModel(false, "EMAnalyticsFwkException occurred when delete searches by id list!"))).build();
 		}catch (Exception e){
 			em.getTransaction().rollback();
 			LOGGER.warn("Rollback txn due to Exception occurred!");
@@ -621,9 +622,19 @@ public class SearchAPI
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/update");
 		Search searchObj;
 		SearchManager sman = SearchManager.getInstance();
+		EntityManager em = null;
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
 				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if(em == null){
+				LOGGER.error("Can't get EntityManager instance correctly!");
+				throw new Exception("Can't get EntityManager instance correctly!");
+			}
+			//open a txn
+			if(!em.getTransaction().isActive()){
+				em.getTransaction().begin();
 			}
 			if(jsonArray == null || (jsonArray!=null && jsonArray.length() == 0)){
 				LOGGER.error("input json array can not be null or empty!");
@@ -632,16 +643,27 @@ public class SearchAPI
 			JSONArray result = new JSONArray();
 			for(int i = 0 ; i <jsonArray.length(); i++){
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				LOGGER.info("Prepare to update search with id {}", jsonObject.get("id"));
 				searchObj = createSearchObjectForEdit(jsonObject, sman.getSearch(new BigInteger(jsonObject.get("id").toString())), false);
-				Search savedSearch = sman.editSearch(searchObj);
+				Search savedSearch = sman.editSearchWithEm(searchObj, em, false);
 				JSONObject jsonObject1 = new JSONObject(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString());
 				result.put(jsonObject1);
 			}
+			LOGGER.info("Searches are updated and txn is committed successfully!");
+			em.getTransaction().commit();
 			return Response.status(Response.Status.OK).entity(result.toString()).build();
 		}catch (EMAnalyticsFwkException |EMAnalyticsWSException e) {
+			em.getTransaction().rollback();
+			LOGGER.error("Transaction will be roll back due to exception occurred!");
 			LOGGER.error(e);
 		}catch (Exception e){
+			em.getTransaction().rollback();
+			LOGGER.error("Transaction will be roll back due to exception occurred!");
 			LOGGER.error(e);
+		}finally {
+			if(em !=null && em.isOpen()){
+				em.close();
+			}
 		}
 
 		return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().
