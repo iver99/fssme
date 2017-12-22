@@ -894,6 +894,8 @@ public class SearchAPI
 				    		// insert new row
                             //hard code isWidget = 1
 							inputJsonObj.put("isWidget","true");
+						//remove owner fields for import api, will set current user later
+						inputJsonObj.remove("owner");
 						searchObj = createSearchObjectForAdd(inputJsonObj);
 						searchObj.setEditable(true);
 						//NOTE new name suffix now is a random
@@ -912,6 +914,8 @@ public class SearchAPI
 			        //id and name is not existing. create a new row
                     //hard code isWidget = 1
                     inputJsonObj.put("isWidget","true");
+                    //remove owner fields for import api, will set current user later
+					inputJsonObj.remove("owner");
 					searchObj = createSearchObjectForAdd(inputJsonObj);
 					searchObj.setEditable(true);
 					Search savedSearch = searchManager.saveSearchWithEm(searchObj, em);
