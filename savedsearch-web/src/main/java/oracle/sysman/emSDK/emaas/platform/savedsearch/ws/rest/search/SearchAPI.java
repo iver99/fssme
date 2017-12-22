@@ -369,6 +369,7 @@ public class SearchAPI
 	 */
 	@PUT
 	@Path("/delete")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteSearchesByIds(JSONArray searchIdArray)
 	{
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/delete");
@@ -430,7 +431,8 @@ public class SearchAPI
 			}
 		}
 
-		return Response.status(Response.Status.OK).build();
+		return Response.status(Response.Status.OK).entity(JsonUtil.buildNormalMapper().
+				toJson(new ImportMsgModel(false, "All specified search ids are deleted. " + searchIdArray.toString()))).build();
 	}
 
 	@DELETE
