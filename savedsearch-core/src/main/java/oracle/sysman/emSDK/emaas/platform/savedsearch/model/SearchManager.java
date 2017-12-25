@@ -125,8 +125,6 @@ public abstract class SearchManager
 	public abstract Search editSearch(Search search, boolean canEditSysSearch) throws EMAnalyticsFwkException;
 
 
-	public abstract Search editSearchWithEm(Search search, EntityManager em, boolean canEditSysSearch) throws EMAnalyticsFwkException;
-
 	/**
 	 * Returns the search object identified by the given identifier.
 	 *

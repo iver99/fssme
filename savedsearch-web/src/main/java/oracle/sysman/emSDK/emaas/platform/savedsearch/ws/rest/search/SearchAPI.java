@@ -645,7 +645,7 @@ public class SearchAPI
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
 				LOGGER.info("Prepare to update search with id {}", jsonObject.get("id"));
 				searchObj = createSearchObjectForEdit(jsonObject, sman.getSearch(new BigInteger(jsonObject.get("id").toString())), false);
-				Search savedSearch = sman.editSearchWithEm(searchObj, em, false);
+				Search savedSearch = sman.editSearchWithEm(searchObj, false, em);
 				JSONObject jsonObject1 = new JSONObject(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString());
 				result.put(jsonObject1);
 			}

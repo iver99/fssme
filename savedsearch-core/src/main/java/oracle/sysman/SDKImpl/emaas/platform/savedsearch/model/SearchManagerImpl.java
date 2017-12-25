@@ -372,45 +372,6 @@ public class SearchManagerImpl extends SearchManager
 	}
 
 	@Override
-	public Search editSearchWithEm(Search search, EntityManager em, boolean canEditSysSearch) throws EMAnalyticsFwkException
-	{
-		LOGGER.info("Editing search with id : " + search.getId());
-		try {
-			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
-			if (searchEntity != null && searchEntity.getSystemSearch() != null && searchEntity.getSystemSearch().intValue() == 1
-					&& !canEditSysSearch) {
-				throw new EMAnalyticsFwkException(
-						"Search with Id: " + searchEntity.getId() + " is system search and NOT allowed to edit",
-						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);
-			}
-			searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
-			em.merge(searchEntity);
-			if (searchEntity.getIsWidget() == 1L) {
-				new WidgetChangeNotification().notify(search, null);
-			}
-			return createSearchObject(searchEntity, null);
-		}
-		catch (EMAnalyticsFwkException eme) {
-
-			LOGGER.error("Search with name " + search.getName() + " was updated but could not be retrieved back", eme);
-			throw eme;
-		}
-		catch (PersistenceException dmlce) {
-			processUniqueConstraints(search, em, dmlce);
-			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, null);
-			LOGGER.error("Persistence Error while updating the search: " + search.getName(), dmlce);
-			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
-					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, dmlce);
-
-		}
-		catch (Exception e) {
-			LOGGER.error("Error while updating the search: " + search.getName(), e);
-			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
-					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, e);
-		}
-	}
-
-	@Override
 	public Search editSearchWithEm(Search search,  boolean canEditSysSearch, EntityManager em) throws EMAnalyticsFwkException {
 		LOGGER.info("Editing search with id : " + search.getId());
 		try {
