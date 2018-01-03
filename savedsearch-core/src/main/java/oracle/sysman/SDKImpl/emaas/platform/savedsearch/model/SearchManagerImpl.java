@@ -145,7 +145,7 @@ public class SearchManagerImpl extends SearchManager
 		catch (Exception e) {
 
 			EmAnalyticsProcessingException.processSearchPersistantException(e, searchObj.getName());
-			LOGGER.error("Error while getting the search object by ID: " + searchId, e);
+			LOGGER.error("Error while deleting the search object by ID: " + searchId, e);
 			throw new EMAnalyticsFwkException("Error while deleting the search object by ID: " + searchId,
 					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { searchId }, e);
 
@@ -198,7 +198,7 @@ public class SearchManagerImpl extends SearchManager
 		catch (Exception e) {
 
 			EmAnalyticsProcessingException.processSearchPersistantException(e, searchObj.getName());
-			LOGGER.error("Error while getting the search object by ID: " + searchId, e);
+			LOGGER.error("Error while deleting the search object by ID: " + searchId, e);
 			throw new EMAnalyticsFwkException("Error while deleting the search object by ID: " + searchId,
 					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { searchId }, e);
 
