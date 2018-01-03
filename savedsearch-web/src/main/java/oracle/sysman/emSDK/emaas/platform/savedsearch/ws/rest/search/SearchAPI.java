@@ -614,12 +614,12 @@ public class SearchAPI
 	 * @return
 	 */
 	@PUT
-	@Path("update")
+	@Path("searches")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response editSearches(JSONArray jsonArray)
 	{
-		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/update");
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/searches");
 		Search searchObj;
 		SearchManager sman = SearchManager.getInstance();
 		EntityManager em = null;
@@ -636,7 +636,7 @@ public class SearchAPI
 			if(!em.getTransaction().isActive()){
 				em.getTransaction().begin();
 			}
-			if(jsonArray == null || (jsonArray!=null && jsonArray.length() == 0)){
+			if(jsonArray == null || jsonArray.length() == 0){
 				LOGGER.error("input json array can not be null or empty!");
 				throw new Exception("input json array can not be null or empty!");
 			}
