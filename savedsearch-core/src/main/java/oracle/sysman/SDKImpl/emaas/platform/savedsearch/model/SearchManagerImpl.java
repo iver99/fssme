@@ -979,7 +979,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		if (StringUtil.isEmpty(screenshot)) {
 			LOGGER.debug("Screenshot for widget with id={} is null or empty. Use default widget screenshot instead", widgetId);
-			screenshot = SearchManager.DEFAULT_WIDGET_SCREENSHOT;
+			screenshot = SearchConstants.DEFAULT_WIDGET_SCREENSHOT;
 		}
 		ScreenshotData ssd = new ScreenshotData(screenshot, search.getCreatedOn(), search.getLastModifiedOn());
 		return ssd;
