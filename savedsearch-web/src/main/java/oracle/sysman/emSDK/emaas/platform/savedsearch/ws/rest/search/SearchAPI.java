@@ -624,10 +624,10 @@ public class SearchAPI
 		SearchManager sman = SearchManager.getInstance();
 		EntityManager em = null;
 		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
 				throw new EMAnalyticsDatabaseUnavailException();
 			}
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
 			if(em == null){
 				LOGGER.error("Can't get EntityManager instance correctly!");
 				throw new Exception("Can't get EntityManager instance correctly!");

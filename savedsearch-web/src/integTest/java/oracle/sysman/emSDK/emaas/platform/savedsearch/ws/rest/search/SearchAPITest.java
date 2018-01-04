@@ -1267,4 +1267,103 @@ public class SearchAPITest {
         Assert.assertEquals(res.getStatus(), 400);
         Assert.assertNotNull(api.getSearchByParam("name", "value"));
     }
+
+    @Test
+    public void testEditSearches(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager em){
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = em;
+            }
+        };
+        JSONArray jsonArray = new JSONArray();
+        new SearchAPI().editSearches(jsonArray);
+    }
+
+    @Test
+    public void testEditSearches2(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager em) throws JSONException {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = em;
+                dependencyStatus.isDatabaseUp();
+                result = true;
+            }
+        };
+        JSONArray jsonArray = new JSONArray(ssfString);
+        new SearchAPI().editSearches(jsonArray);
+    }
+
+    @Test
+    public void testDeleteSearchesByIds(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager em){
+        JSONArray jsonArray = new JSONArray();
+        new SearchAPI().deleteSearchesByIds(jsonArray);
+    }
+
+    @Test
+    public void testDeleteSearchesByIds2(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager em) throws JSONException {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = em;
+            }
+        };
+        JSONArray jsonArray = new JSONArray("[\"2000\", \"2001\"]");
+        new SearchAPI().deleteSearchesByIds(jsonArray);
+    }
+
+    @Test
+    public void testDeleteSearchesByIds3(@Mocked final PersistenceManager persistenceManager, @Mocked final EntityManager em) throws JSONException {
+        new Expectations(){
+            {
+                PersistenceManager.getInstance();
+                result = persistenceManager;
+                persistenceManager.getEntityManager((TenantInfo) any);
+                result = em;
+                dependencyStatus.isDatabaseUp();
+                result = true;
+            }
+        };
+        JSONArray jsonArray = new JSONArray("[\"2000\", \"2001\"]");
+        new SearchAPI().deleteSearchesByIds(jsonArray);
+    }
+
+    private String ssfString = "[{\n" +
+            "                \"creationDate\": \"2015-12-15T02:31:03.057Z\",\n" +
+            "                \"lastModificationDate\": \"2015-12-15T02:31:03.057Z\",\n" +
+            "                \"id\": \"2017\",\n" +
+            "                \"name\": \"Access Log Error Status Codes\",\n" +
+            "                \"description\": \"Top 4xx and 5xx errors codes in HTTP Access Logs. \",\n" +
+            "                \"owner\": \"ORACLE\",\n" +
+            "                \"lastModifiedBy\": \"ORACLE\",\n" +
+            "                \"lastAccessDate\": \"2018-01-03T05:42:59.980Z\",\n" +
+            "                \"systemSearch\": true,\n" +
+            "                \"federationSupported\": \"NON_FEDERATION_ONLY\",\n" +
+            "                \"parameters\": [\n" +
+            "                    {\n" +
+            "                        \"name\": \"time\",\n" +
+            "                        \"value\": \"{\\\"type\\\":\\\"relative\\\", \\\"duration\\\":\\\"60\\\", \\\"timeUnit\\\":\\\"MINUTE\\\"}\",\n" +
+            "                        \"type\": \"STRING\"\n" +
+            "                    }\n" +
+            "                ],\n" +
+            "                \"queryStr\": \"'Log Source' LIKE \\\"*Access Logs*\\\" AND Status IN ('400', '401', '402', '403', '404', '405', '406', '407', '408', '409', '410', '411', '412', '413', '414', '415', '416', '417','500', '501', '502', '503', '504', '505') | stats count by 'log source'\",\n" +
+            "                \"editable\": false,\n" +
+            "                \"createdOn\": \"2015-12-15T02:31:03.057Z\",\n" +
+            "                \"lastModifiedOn\": \"2015-12-15T02:31:03.057Z\",\n" +
+            "                \"folder\": {\n" +
+            "                    \"id\": \"2\",\n" +
+            "                    \"href\": \"http://den02dtf.us.oracle.com:7019/savedsearch/v1/folder/2\"\n" +
+            "                },\n" +
+            "                \"category\": {\n" +
+            "                    \"id\": \"1\",\n" +
+            "                    \"href\": \"http://den02dtf.us.oracle.com:7019/savedsearch/v1/category/1\"\n" +
+            "                },\n" +
+            "                \"href\": \"http://den02dtf.us.oracle.com:7019/savedsearch/v1/search/2017\"\n" +
+            "            }]";
 }
