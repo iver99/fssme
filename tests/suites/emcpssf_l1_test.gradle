@@ -114,6 +114,7 @@ ext.set("testType", "integration")
 	   /*****************savedsearch-webutils project*****************/
 	   include "oracle/sysman/emaas/platform/savedsearch/metadata/*.class"
 	   include "oracle/sysman/emaas/platform/savedsearch/property/*.class"
+	   include "oracle/sysman/emaas/platform/savedsearch/model/*.class"
 	   include "oracle/sysman/emaas/platform/savedsearch/services/*.class"
 	   include "oracle/sysman/emaas/platform/savedsearch/targetmodel/services/*.class"
 	   include "oracle/sysman/emaas/platform/savedsearch/utils/*.class"

@@ -21,17 +21,7 @@ import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.ZDTContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.common.ExecutionContext;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.exception.EMAnalyticsFwkException;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Category;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.CategoryManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Folder;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.FolderManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.ParameterType;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Search;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchManager;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.SearchParameter;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantContext;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.TenantInfo;
-import oracle.sysman.emSDK.emaas.platform.savedsearch.model.Widget;
+import oracle.sysman.emSDK.emaas.platform.savedsearch.model.*;
 import oracle.sysman.emSDK.emaas.platform.savedsearch.restnotify.WidgetChangeNotification;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
@@ -506,7 +496,7 @@ public class SearchManagerTest extends BaseTest
 
 		// not include dashboard ineligible widgets
 		SearchParameter wp1 = new SearchParameter();
-		wp1.setName(SearchManager.SEARCH_PARAM_DASHBOARD_INELIGIBLE);
+		wp1.setName(SearchConstants.SEARCH_PARAM_DASHBOARD_INELIGIBLE);
 		wp1.setType(ParameterType.STRING);
 		wp1.setValue("1");
 		widget2.getParameters().add(wp1);
@@ -578,7 +568,7 @@ public class SearchManagerTest extends BaseTest
 			ScreenshotData screnshotForWidget1 = sm.getWidgetScreenshotById(widget1.getId());
 			ScreenshotData screnshotForWidget2 = sm.getWidgetScreenshotById(widget2.getId());
 			AssertJUnit.assertEquals(screnshotForWidget1.getScreenshot(), screenshot);
-			AssertJUnit.assertEquals(screnshotForWidget2.getScreenshot(), SearchManager.DEFAULT_WIDGET_SCREENSHOT);
+			AssertJUnit.assertEquals(screnshotForWidget2.getScreenshot(), SearchConstants.DEFAULT_WIDGET_SCREENSHOT);
 		}
 		catch (EMAnalyticsFwkException e) {
 			AssertJUnit.fail();

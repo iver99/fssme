@@ -145,7 +145,7 @@ public class SearchManagerImpl extends SearchManager
 		catch (Exception e) {
 
 			EmAnalyticsProcessingException.processSearchPersistantException(e, searchObj.getName());
-			LOGGER.error("Error while getting the search object by ID: " + searchId, e);
+			LOGGER.error("Error while deleting the search object by ID: " + searchId, e);
 			throw new EMAnalyticsFwkException("Error while deleting the search object by ID: " + searchId,
 					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { searchId }, e);
 
@@ -154,6 +154,53 @@ public class SearchManagerImpl extends SearchManager
 			if (em != null) {
 				em.close();
 			}
+
+		}
+	}
+
+	@Override
+	public EmAnalyticsSearch deleteSearchWithEm(BigInteger searchId, EntityManager em, boolean permanently) throws EMAnalyticsFwkException
+	{
+		LOGGER.info("Deleting search with id: " + searchId);
+		EmAnalyticsSearch searchObj = null;
+		try {
+			if (permanently) {
+				searchObj = EmAnalyticsObjectUtil.getSearchByIdForDelete(searchId, em);
+			}
+			else {
+				searchObj = EmAnalyticsObjectUtil.getSearchById(searchId, em);
+			}
+			if (searchObj == null) {
+				throw new EMAnalyticsFwkException("Search with Id: " + searchId + " does not exist",
+						EMAnalyticsFwkException.ERR_GET_SEARCH_FOR_ID, null);
+			}
+
+			if (searchObj.getSystemSearch() != null && searchObj.getSystemSearch().intValue() == 1) {
+				throw new EMAnalyticsFwkException("Search with Id: " + searchId + " is system search and NOT allowed to delete",
+						EMAnalyticsFwkException.ERR_DELETE_SEARCH, null);
+			}
+			searchObj.setDeleted(searchId);
+			searchObj.setLastModificationDate(DateUtil.getGatewayTime());
+			searchObj.setTenantId(TenantContext.getContext().getTenantInternalId());
+			em.setProperty("permanent", permanently);
+			if (permanently) {
+				em.remove(searchObj);
+			}
+			else {
+				em.merge(searchObj);
+			}
+			return searchObj;
+		}
+		catch (EMAnalyticsFwkException eme) {
+			LOGGER.error("Search with Id: " + searchId + " does not exist", eme);
+			throw eme;
+		}
+		catch (Exception e) {
+
+			EmAnalyticsProcessingException.processSearchPersistantException(e, searchObj.getName());
+			LOGGER.error("Error while deleting the search object by ID: " + searchId, e);
+			throw new EMAnalyticsFwkException("Error while deleting the search object by ID: " + searchId,
+					EMAnalyticsFwkException.ERR_DELETE_SEARCH, new Object[] { searchId }, e);
 
 		}
 	}
@@ -321,6 +368,44 @@ public class SearchManagerImpl extends SearchManager
 				em.close();
 			}
 
+		}
+	}
+
+	@Override
+	public Search editSearchWithEm(Search search,  boolean canEditSysSearch, EntityManager em) throws EMAnalyticsFwkException {
+		LOGGER.info("Editing search with id : " + search.getId());
+		try {
+			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForEdit(search, em);
+			if (searchEntity != null && searchEntity.getSystemSearch() != null && searchEntity.getSystemSearch().intValue() == 1
+					&& !canEditSysSearch) {
+				throw new EMAnalyticsFwkException(
+						"Search with Id: " + searchEntity.getId() + " is system search and NOT allowed to edit",
+						EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null);
+			}
+			searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
+			em.merge(searchEntity);
+			if (searchEntity.getIsWidget() == 1L) {
+				new WidgetChangeNotification().notify(search, null);
+			}
+			return createSearchObject(searchEntity, null);
+		}
+		catch (EMAnalyticsFwkException eme) {
+
+			LOGGER.error("Search with name " + search.getName() + " was updated but could not be retrieved back", eme);
+			throw eme;
+		}
+		catch (PersistenceException dmlce) {
+			processUniqueConstraints(search, em, dmlce);
+			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, null);
+			LOGGER.error("Persistence Error while updating the search: " + search.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, dmlce);
+
+		}
+		catch (Exception e) {
+			LOGGER.error("Error while updating the search: " + search.getName(), e);
+			throw new EMAnalyticsFwkException("Error while updating the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_UPDATE_SEARCH, null, e);
 		}
 	}
 
@@ -894,7 +979,7 @@ public class SearchManagerImpl extends SearchManager
 		}
 		if (StringUtil.isEmpty(screenshot)) {
 			LOGGER.debug("Screenshot for widget with id={} is null or empty. Use default widget screenshot instead", widgetId);
-			screenshot = SearchManager.DEFAULT_WIDGET_SCREENSHOT;
+			screenshot = SearchConstants.DEFAULT_WIDGET_SCREENSHOT;
 		}
 		ScreenshotData ssd = new ScreenshotData(screenshot, search.getCreatedOn(), search.getLastModifiedOn());
 		return ssd;
@@ -1174,6 +1259,45 @@ public class SearchManagerImpl extends SearchManager
 		}
 	}
 
+	/**
+	 * This method will not open a tnx nor commit a txn.
+	 * @param search
+	 *            search to be saved
+	 * @param em
+	 * @return
+	 * @throws EMAnalyticsFwkException
+	 */
+	@Override
+	public Search saveSearchWithEm(Search search, EntityManager em) throws EMAnalyticsFwkException {
+		try {
+			EmAnalyticsSearch searchEntity = EmAnalyticsObjectUtil.getEmAnalyticsSearchForAdd(search, em);
+			searchEntity.setTenantId(TenantContext.getContext().getTenantInternalId());
+			//Save into cache, not flushed into DB yet.
+			em.persist(searchEntity);
+			//flush to db, yet commit.
+			em.flush();
+			em.refresh(searchEntity);
+			LOGGER.info("search id after flush and refresh is {}", searchEntity.getId());
+			return createSearchObject(searchEntity, null);
+		}
+		catch (EMAnalyticsFwkException eme) {
+			LOGGER.error("Search with name " + search.getName() + " was saved but could not be retrieved back", eme);
+			throw eme;
+		}
+		catch (PersistenceException dmlce) {
+			processUniqueConstraints(search, em, dmlce);
+			EmAnalyticsProcessingException.processSearchPersistantException(dmlce, search.getName());
+			LOGGER.error("Persistence error while saving the search: " + search.getName(), dmlce);
+			throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, dmlce);
+		}
+		catch (Exception e) {
+			LOGGER.error("Error while saving the search: " + search.getName(), e);
+			throw new EMAnalyticsFwkException("Error while saving the search: " + search.getName(),
+					EMAnalyticsFwkException.ERR_CREATE_SEARCH, null, e);
+		}
+
+	}
 
 	@Override
 	public List<BigInteger> getSearchIdsByCategory(BigInteger categoryId) throws EMAnalyticsFwkException {
@@ -1822,25 +1946,25 @@ public class SearchManagerImpl extends SearchManager
 		return null;
 	}
 
+	/**
+	 * this method will not close em. please be aware
+	 * @param name
+	 * @param folderId
+	 * @param categoryId
+	 * @param deleted
+	 * @param owner
+	 * @param em
+	 * @return
+	 */
 	@Override
-	public List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name,
-			BigInteger folderId, BigInteger categoryId, BigInteger deleted,String owner) {
-		EntityManager em = null;
-		try {
-			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+	public List<Map<String, Object>> getSearchIdAndNameByUniqueKey(String name, BigInteger folderId, BigInteger categoryId, BigInteger deleted,String owner, EntityManager em) {
 			Query q1 = em.createNativeQuery(SQL_GET_ID_NAME_BY_UNIQUE_KEY).setParameter(1, name).setParameter(2, categoryId)
 				.setParameter(3, folderId).setParameter(4, deleted).setParameter(5, owner);
 			q1.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> result = q1.getResultList();
 		
-			return result;
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
+		return result;
 	}
 
 }
