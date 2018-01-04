@@ -5,16 +5,8 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.*;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.persistence.EntityManager;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -22,6 +14,7 @@ import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.FederationSupportedType;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.model.SearchImpl;
+import oracle.sysman.SDKImpl.emaas.platform.savedsearch.persistence.PersistenceManager;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.DateUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.EntityJsonUtil;
 import oracle.sysman.SDKImpl.emaas.platform.savedsearch.util.IdGenerator;
@@ -365,6 +358,84 @@ public class SearchAPI
 		return Response.status(statusCode).build();
 	}
 
+	/**
+	 * This API will delete searches by Ids.
+	 * NOTE: 1. Because this api have input parameters, so set the API as HTTP PUT in case DELETE method not support body.
+	 * 		 2. If you input multiple ids, if anyone of these ids is not existing in DB, will return err to client and delete Nothing finally.
+	 * 		 3. Searches will be soft deleted.
+	 * 		 4. Till now I plan to delete search one by one, if hit PSR issue in the future, we can consider delete search in bulk.
+	 *
+	 * 		 Input ex: ["1000,", "1001", "1002"]
+	 */
+	@PUT
+	@Path("/delete")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteSearchesByIds(JSONArray searchIdArray)
+	{
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/delete");
+		LOGGER.info("input search id list is {}", searchIdArray);
+		OdsDataService odsService = OdsDataServiceImpl.getInstance();
+		SearchManager sman = SearchManager.getInstance();
+		EntityManager em = null;
+
+		try {
+			//check input integrity Part I
+			if(searchIdArray == null || (searchIdArray != null && searchIdArray.length() == 0)){
+				LOGGER.error("Input Search id list can't be null or empty");
+				return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "Input can't be null or empty!"))).build();
+			}
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if(em == null){
+				LOGGER.error("Can't get EntityManager instance correctly!");
+				throw new Exception("Can't get EntityManager instance correctly!");
+			}
+			//open a txn
+			if(!em.getTransaction().isActive()){
+				em.getTransaction().begin();
+			}
+
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			int searchCount = searchIdArray.length();
+			LOGGER.info("Deleting search id list length is {}, ids are {}", searchCount, searchIdArray.toString());
+			for(int i =0; i<searchCount; i++){
+				BigInteger searchId = new BigInteger(searchIdArray.getString(i));
+				LOGGER.info("Prepare to delete search with id {}", searchId);
+				odsService.deleteOdsEntity(searchId);
+				EmAnalyticsSearch eas = sman.deleteSearchWithEm(searchId, em, false);//Soft delete
+				// TODO: when merging with ZDT, this deletionTime should be from the APIGW request
+				Date deletionTime = DateUtil.getCurrentUTCTime();
+				WidgetNotifyEntity wne = new WidgetNotifyEntity(eas, deletionTime, WidgetNotificationType.DELETE);
+				if (eas.getIsWidget() == 1L) {
+					new WidgetDeletionNotification().notify(wne);
+				}
+			}
+			//Commit txn
+			em.getTransaction().commit();
+			LOGGER.info("Delete searches and commit txn successfully!");
+		}catch (EMAnalyticsFwkException e) {
+			em.getTransaction().rollback();
+			LOGGER.warn("Rollback txn due to Exception occurred!");
+			LOGGER.error(e.getLocalizedMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper()
+					.toJson(new ImportMsgModel(false, "EMAnalyticsFwkException occurred when delete searches by id list!"))).build();
+		}catch (Exception e){
+			em.getTransaction().rollback();
+			LOGGER.warn("Rollback txn due to Exception occurred!");
+			LOGGER.error(e);
+			return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper()
+					.toJson(new ImportMsgModel(false, "Exception occurred when delete searches by id list!"))).build();
+		}finally {
+			if(em !=null && em.isOpen()){
+				em.close();
+			}
+		}
+
+		return Response.status(Response.Status.OK).entity(JsonUtil.buildNormalMapper().
+				toJson(new ImportMsgModel(false, "All specified search ids are deleted. " + searchIdArray.toString()))).build();
+	}
+
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteSearchByName(@QueryParam("searchName") String name, @QueryParam("isExactly") String isExactly) {
@@ -536,6 +607,69 @@ public class SearchAPI
 		return Response.status(statusCode).entity(message).build();
 
 	}
+
+	/**
+	 * Update search in bulk, NOTE: this api have multiple txn, not in one transaction, need to fix later.
+	 * @param jsonArray
+	 * @return
+	 */
+	@PUT
+	@Path("searches")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editSearches(JSONArray jsonArray)
+	{
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/searches");
+		Search searchObj;
+		SearchManager sman = SearchManager.getInstance();
+		EntityManager em = null;
+		try {
+			em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			if(em == null){
+				LOGGER.error("Can't get EntityManager instance correctly!");
+				throw new Exception("Can't get EntityManager instance correctly!");
+			}
+			//open a txn
+			if(!em.getTransaction().isActive()){
+				em.getTransaction().begin();
+			}
+			if(jsonArray == null || jsonArray.length() == 0){
+				LOGGER.error("input json array can not be null or empty!");
+				throw new Exception("input json array can not be null or empty!");
+			}
+			JSONArray result = new JSONArray();
+			for(int i = 0 ; i <jsonArray.length(); i++){
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				LOGGER.info("Prepare to update search with id {}", jsonObject.get("id"));
+				searchObj = createSearchObjectForEdit(jsonObject, sman.getSearch(new BigInteger(jsonObject.get("id").toString())), false);
+				Search savedSearch = sman.editSearchWithEm(searchObj, false, em);
+				JSONObject jsonObject1 = new JSONObject(EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), savedSearch).toString());
+				result.put(jsonObject1);
+			}
+			LOGGER.info("Searches are updated and txn is committed successfully!");
+			em.getTransaction().commit();
+			return Response.status(Response.Status.OK).entity(result.toString()).build();
+		}catch (EMAnalyticsFwkException |EMAnalyticsWSException e) {
+			em.getTransaction().rollback();
+			LOGGER.error("Transaction will be roll back due to exception occurred!");
+			LOGGER.error(e);
+		}catch (Exception e){
+			em.getTransaction().rollback();
+			LOGGER.error("Transaction will be roll back due to exception occurred!");
+			LOGGER.error(e);
+		}finally {
+			if(em !=null && em.isOpen()){
+				em.close();
+			}
+		}
+
+		return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().
+				toJson(new ImportMsgModel(false, "Can't finish searches edit actions! Please check log!"))).build();
+
+	}
 	
 	@PUT
 	@Path("{id: [0-9]*}/odsentity")
@@ -694,44 +828,72 @@ public class SearchAPI
 
 	/**
 	 * save imported widget data
+     * NOTE: *If you are override a search, you should not modify its PK(name,cat id,folder id....etc) fields,
+     * otherwise this search can't be found!!!(Actually will create a new Search)*
 	 * @param override
 	 * @param importedData
 	 * @return Example:
+     *  override=false:
 	 * 	{"2004":"191134497286884694333701301925787569634",
 	 * 	"2026":"303726178767420504723169950985867708641",
 	 * 	"2022":"182578934661553784711389571629249005671",
 	 * 	"2020":"65426205633609290111501435536176656608"}
+     *
+     * 	override = true:
+     * 	{
+     *   "18990242278817038474213646037468377095": "18990242278817038474213646037468377095"
+     *   }
 	 */
 	@PUT
 	@Path("/import")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response importData(@QueryParam("override") boolean override, JSONArray importedData) {
+	public Response importData(@QueryParam("override") @DefaultValue("false") boolean override, JSONArray importedData) {
 
 		LogUtil.getInteractionLogger().info("Service calling to (PUT) savedsearch/v1/search/import?override={}", override);
 		SearchManager searchManager = SearchManager.getInstance();
 		Map<String, String> idMaps = new HashMap<>();
+        EntityManager em = null;
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp()) {
 				throw new EMAnalyticsDatabaseUnavailException();
 			}
-		   int widgetCount = importedData.length();
+            em = PersistenceManager.getInstance().getEntityManager(TenantContext.getContext());
+			if(em == null){
+				LOGGER.error("EntityManager is NULL/Not fetched correctly.");
+				throw new Exception("EntityManager is NULL/Not fetched correctly.");
+			}
+			if(importedData == null || importedData.length() == 0){
+				LOGGER.error("Input cannot be null or empty");
+				return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "Input cannot be null or empty!"))).build();
+			}
+			int widgetCount = importedData.length();
+			LOGGER.info("Import search count is {}", widgetCount);
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
+
 			for (int i = 0; i < widgetCount; i++) {
 				JSONObject inputJsonObj = importedData.getJSONObject(i);
+				//original id is DB's id
 				String originalId = inputJsonObj.getString("id");
-				List<Map<String, Object>> idAndNameList = getIdAndNameByUniqueKey(inputJsonObj);
+				LOGGER.info("Begin to import search with id {}", originalId);
+				List<Map<String, Object>> idAndNameList = getIdAndNameByUniqueKey(inputJsonObj, em);
+				LOGGER.info("get Id and Name By UK for search id {} is {}", originalId, idAndNameList);
 				Search searchObj = null;
 			    if (idAndNameList != null && !idAndNameList.isEmpty()) {
 			    	Map<String, Object> idAndName = idAndNameList.get(0);
+			    	//NOTE: this id should be same with original id if you are override a search!!!!
 			    	BigInteger id  = new BigInteger(idAndName.get("SEARCH_ID").toString());
 			    	String name = idAndName.get("NAME").toString();
 			    	if (override) {
 				    		// override existing row
+							LOGGER.info("Begin to edit search with id {}, override is {}", originalId, override);
 				    		if (inputJsonObj.getBoolean("editable")) {
 				    			searchObj = createSearchObjectForEdit(inputJsonObj, searchManager.getSearch(id), false);
 				    			searchObj.setEditable(true);
-					    		searchManager.editSearch(searchObj);
-					    		idMaps.put(originalId.toString(), id.toString());
+					    		searchManager.editSearchWithEm(searchObj, false, em);
+					    		idMaps.put(originalId, id.toString());
 				    		}else {
 				    		    //need throw a exception here.
                                 LOGGER.error("User try to override a system search!");
@@ -742,15 +904,18 @@ public class SearchAPI
 				    		// insert new row
                             //hard code isWidget = 1
 							inputJsonObj.put("isWidget","true");
-				    		searchObj = createSearchObjectForAdd(inputJsonObj);
-				    		searchObj.setEditable(true);
-				    		//NOTE new name suffix now is a random
-				    		int num = new SecureRandom().nextInt(9999);
-				    		String newName = name + "_" + num;
+						//remove owner fields for import api, will set current user later
+						inputJsonObj.remove("owner");
+						searchObj = createSearchObjectForAdd(inputJsonObj);
+						searchObj.setEditable(true);
+						//NOTE new name suffix now is a random
+						int num = new SecureRandom().nextInt(9999);
+						String newName = name + "_" + num;
 						LOGGER.info("new search name is {}", newName);
-				    		searchObj.setName(newName);
-							Search savedSearch = searchManager.saveSearch(searchObj);
-						    idMaps.put(originalId.toString(), savedSearch.getId().toString());
+						searchObj.setName(newName);
+						Search savedSearch = searchManager.saveSearchWithEm(searchObj, em);
+						LOGGER.info("Begin to create search with original id {}, new search id is {}, override is {}", originalId, savedSearch.getId(), override);
+						idMaps.put(originalId, savedSearch.getId().toString());
 							// see if an ODS entity needs to be create
                             createOdsEntity(searchManager, searchObj, savedSearch);
 				    	}
@@ -759,44 +924,65 @@ public class SearchAPI
 			        //id and name is not existing. create a new row
                     //hard code isWidget = 1
                     inputJsonObj.put("isWidget","true");
-			    	searchObj = createSearchObjectForAdd(inputJsonObj);
-			    	searchObj.setEditable(true);
-					Search savedSearch = searchManager.saveSearch(searchObj);
-					
-					idMaps.put(originalId.toString(), savedSearch.getId().toString());
+                    //remove owner fields for import api, will set current user later
+					inputJsonObj.remove("owner");
+					searchObj = createSearchObjectForAdd(inputJsonObj);
+					searchObj.setEditable(true);
+					Search savedSearch = searchManager.saveSearchWithEm(searchObj, em);
+					LOGGER.info("Begin to create search with original id {}, new search id is {}, override is {}", originalId, savedSearch.getId(), override);
+
+					idMaps.put(originalId, savedSearch.getId().toString());
 					// see if an ODS entity needs to be create
                     createOdsEntity(searchManager, searchObj, savedSearch);
 			    }
 				
 			}
+			LOGGER.info("Save Searches successfully but not commit yet. preparing response...");
             if (!idMaps.isEmpty()) {
                 Set<String> keySet = idMaps.keySet();
                 JSONObject obj = new JSONObject();
                 for (String key : keySet) {
                     obj.put(key, idMaps.get(key));
                 }
+                //Commit this big transaction.
                 LOGGER.info("import API will return response {}", obj.toString());
-                return Response.status(Response.Status.OK).entity(obj.toString()).build();
+				em.getTransaction().commit();
+				LOGGER.info("Import searches successfully, commit txn successfully!");
+				return Response.status(Response.Status.OK).entity(obj.toString()).build();
             } else {
-			    LOGGER.warn("import API will return no_content response...");
-                return Response.status(Response.Status.NO_CONTENT).build();
+			    LOGGER.error("import API will return no_content response which is unexpected...");
+				throw new Exception("import API will return no_content response which is unexpected...");
             }
 		}catch(ModifySystemDataException e){
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
             LOGGER.error(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "ModifySystemDataException found in SSF service!")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "ModifySystemDataException found in SSF service!"))).build();
         }catch (EMAnalyticsFwkException e) {
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
 			LOGGER.error(e);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "EMAnalyticsFwkException found in SSF service!")).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "EMAnalyticsFwkException found in SSF service!"))).build();
         }catch (EMAnalyticsWSException e) {
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
             LOGGER.error(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "EMAnalyticsWSException found in SSF service!")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "EMAnalyticsWSException found in SSF service!"))).build();
         } catch (JSONException e) {
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
 		    LOGGER.error(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "JSONException found in SSF service!")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "JSONException found in SSF service!"))).build();
 		}catch(Exception e){
+			em.getTransaction().rollback();
+			LOGGER.error("Rollback txn due to exception occurred!");
             LOGGER.error(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ImportMsgModel(false, "Exception found in SSF service!")).build();
-        }
+            return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "Exception found in SSF service! " + e.getMessage()))).build();
+        }finally {
+			if(em != null){
+				em.close();
+			}
+		}
 	}
 
 
@@ -898,6 +1084,53 @@ public class SearchAPI
 		}
 
 		return Response.status(statusCode).entity(message).build();
+	}
+
+	/**
+	 * get searches by id list, set method into a PUT method because there need a body
+	 * @param jsonArray
+	 * @return
+	 */
+	@PUT
+	@Path("ids")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSearchesByIds(JSONArray jsonArray){
+		LogUtil.getInteractionLogger().info("Service calling to (PUT) /savedsearch/v1/search/ids");
+
+		SearchManager sman = SearchManager.getInstance();
+		LOGGER.info("Prepare to get searches by ids: {}", jsonArray);
+		try {
+			if(jsonArray == null || (jsonArray !=null && jsonArray.length() == 0)){
+				LOGGER.error("input id array can't be null or empty!");
+				throw new Exception("input id array can't be null or empty!");
+			}
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				throw new EMAnalyticsDatabaseUnavailException();
+			}
+			StringBuilder sb = new StringBuilder("[");
+			for(int i =0; i<jsonArray.length(); i++){
+				BigInteger id = new BigInteger(jsonArray.get(i).toString());
+				LOGGER.info("Prepare to retrieve search with id {}", id);
+				Search searchObj = sman.getSearchWithoutOwner(id);
+				String[] pathArray = null;
+				String searchString = EntityJsonUtil.getFullSearchJsonObj(uri.getBaseUri(), searchObj, pathArray).toString();
+				sb.append(searchString);
+				if(i < jsonArray.length()-1){
+					sb.append(",");
+				}
+			}
+			sb.append("]");
+			LOGGER.info("Retrieved searches are: {}", sb.toString());
+			return Response.status(Response.Status.OK).entity(sb.toString()).build();
+		}catch (EMAnalyticsFwkException e) {
+			LOGGER.error(e.getLocalizedMessage());
+			LOGGER.error((TenantContext.getContext() != null ? TenantContext.getContext().toString() : "") + e.getMessage(),
+					e.getStatusCode());
+		}catch(Exception e){
+			LOGGER.error(e);
+		}
+
+		return Response.status(Response.Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportMsgModel(false, "Bad request! check you input!"))).build();
 	}
 	
 	/**
@@ -1096,7 +1329,7 @@ public class SearchAPI
 		}
 	}
 	
-	private List<Map<String, Object>> getIdAndNameByUniqueKey(JSONObject json) {
+	private List<Map<String, Object>> getIdAndNameByUniqueKey(JSONObject json, EntityManager em) {
 		try {
 			String name = json.getString("name");
 			if (name != null && "".equals(name.trim())) {
@@ -1113,7 +1346,7 @@ public class SearchAPI
 		  LOGGER.info("Current user is {}", currentUser);
 //		  String owner = json.getString("owner");
 		  SearchManager searchManager = SearchManager.getInstance();
-		  return searchManager.getSearchIdAndNameByUniqueKey(name, folderId, categoryId, deleted,currentUser);
+		  return searchManager.getSearchIdAndNameByUniqueKey(name, folderId, categoryId, deleted, currentUser, em);
 		} catch(Exception e) {
 			LOGGER.error(e);
 		}
@@ -1273,7 +1506,7 @@ public class SearchAPI
 					throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
 							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
 				}
-				if ("STRING".equals(type) | "CLOB".equals(type)) {
+				if ("STRING".equals(type) || "CLOB".equals(type)) {
 					searchParam.setType(ParameterType.valueOf(type));
 				}
 				else {
@@ -1440,7 +1673,7 @@ public class SearchAPI
 					throw new EMAnalyticsWSException("The type key for search param is missing in the input JSON Object",
 							EMAnalyticsWSException.JSON_SEARCH_PARAM_TYPE_MISSING, je);
 				}
-				if ("STRING".equals(type) | "CLOB".equals(type)) {
+				if ("STRING".equals(type) || "CLOB".equals(type)) {
 					searchParam.setType(ParameterType.valueOf(type));
 				}
 				else {

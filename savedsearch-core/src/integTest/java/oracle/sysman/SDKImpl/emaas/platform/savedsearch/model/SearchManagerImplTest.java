@@ -177,6 +177,22 @@ public class SearchManagerImplTest
 		searchManager.deleteSearch(TEST_ID, false);
 	}
 
+	@Test
+	public void testDeleteSearchMocked2() throws EMAnalyticsFwkException
+	{
+		new Expectations() {
+			{
+				EmAnalyticsObjectUtil.getSearchByIdForDelete((BigInteger) any, entityManager);
+				result = emAnalyticsSearch;
+
+			}
+		};
+		searchManager.deleteSearchWithEm(TEST_ID, entityManager,true);
+		searchManager.deleteSearchWithEm(TEST_ID, entityManager,false);
+	}
+
+
+
 	@Test(expectedExceptions = { EMAnalyticsFwkException.class })
 	public void testDeleteSearchMockednull() throws EMAnalyticsFwkException
 	{
